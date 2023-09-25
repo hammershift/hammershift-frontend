@@ -1,1 +1,0 @@
-# hammershift-frontend
