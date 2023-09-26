@@ -49,7 +49,7 @@ const LiveGames = () => {
       <div className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={LiveGamesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-          <div className='tw-font-bold tw-text-3xl tw-ml-4'>Live Games</div>
+          <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Live Games</div>
         </div>
         <div className='tw-flex'>
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
@@ -86,7 +86,7 @@ const TeamBattles = () => {
       <div className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-          <div className='tw-font-bold tw-text-3xl tw-ml-4'>Team Battles</div>
+          <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Team Battles</div>
         </div>
         <div className='tw-flex'>
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
@@ -106,7 +106,7 @@ const Tournaments = () => {
       <div className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TournamentsIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-          <div className='tw-font-bold tw-text-3xl tw-ml-4'>Tournaments</div>
+          <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Tournaments</div>
         </div>
         <div className='tw-flex'>
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
