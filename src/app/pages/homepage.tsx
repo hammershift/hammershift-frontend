@@ -22,8 +22,29 @@ import SubaruLogo from '../../../public/images/brand-logos/subaru-logo.svg'
 import TeslaLogo from '../../../public/images/brand-logos/tesla-logo.svg'
 import ToyotaLogo from '../../../public/images/brand-logos/toyota-logo.svg'
 import FordLogo from '../../../public/images/brand-logos/ford-logo.svg'
+import TransitionPattern from '../../../public/images/transition-pattern.svg'
 
 
+interface carDataProps {
+  id: string,
+  url: string,
+  year: string,
+  name: string,
+  description: string,
+  time: string
+}
+
+interface LiveGamesProps {
+  carData: carDataProps[];
+}
+
+interface LiveGamesCardProps {
+  url: string;
+  year: string;
+  name: string;
+  description: string;
+  time: string;
+}
 
 const Homepage = () => {
   return (
@@ -33,7 +54,7 @@ const Homepage = () => {
         <Carousel />
       </div>
       <div className='tw-mt-16'>
-        <LiveGames />
+        <LiveGames carData={carData} />
       </div>
       <div className='tw-mt-16'>
         <TeamBattles />
@@ -53,7 +74,6 @@ const Homepage = () => {
     </div>
   )
 }
-
 export default Homepage
 
 
@@ -67,9 +87,9 @@ const Carousel = () => {
   )
 }
 
-const LiveGames = () => {
+const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
+    <div className="tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8">
       <div className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={LiveGamesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -80,40 +100,36 @@ const LiveGames = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </div>
-      <div className='tw-mt-6'>
-        <LiveGamesCard />
-        {/* carData.map((item) => {
-            <LiveGamesCard key={item.id} url={item.url} year={item.year} name={item.name} description={item.description} time={item.time} />
-          }) */}
-
+      <div className="tw-mt-14 tw-grid tw-grid-cols-5 tw-gap-8">
+        {carData.map((item) => (
+          <LiveGamesCard
+            key={item.id}
+            url={item.url}
+            year={item.year}
+            name={item.name}
+            description={item.description}
+            time={item.time}
+          />
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-const LiveGamesCard = () => {
-  const carData = {
-    id: 1,
-    url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
-    year: "1969",
-    name: "Shelby Mustang",
-    description: "GT350",
-    time: "12:17:00",
-    isLive: true
-  }
+const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, description, time }) => {
 
   return (
     <div className='tw-w-[200px] tw-flex tw-flex-col tw-items-center'>
       <div className='tw-w-[200px] tw-h-[218px] tw-relative'>
         <div className='tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[70px]'>LIVE</div>
-        <img src={carData.url} width={200} height={200} alt="car" className='tw-w-[200px] tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
+        <img src={url} width={200} height={200} alt="car" className='tw-w-[200px] tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
       </div>
       <div className='info tw-my-3 tw-flex tw-flex-col tw-items-center'>
-        <div className='tw-mt-3 tw-font-medium'>{carData.year} {carData.name}</div>
-        <div className='tw-my-1.5 tw-font-medium'>{carData.description}</div>
+        <div className='tw-mt-3 tw-font-medium'>{year} {name}</div>
+        <div className='tw-my-1.5 tw-font-medium'>{description}</div>
         <div className='tw-flex tw-items-center'>
           <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
-          <div>{carData.time}</div>
+          <div>{time}</div>
         </div>
       </div>
       <div className='tw-mt-1.5'>
@@ -138,8 +154,28 @@ const TeamBattles = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </div>
-      <div>
-        {/* insert content */}
+      <div className='left-container tw-grid tw-grid-cols-2 tw-gap-8 tw-mt-16'>
+        <div
+          style={{ backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)` }}
+          className='tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end'>
+          <div className='tw-text-2xl tw-font-medium'>1954 Siata 300BC Convertible by Motto</div>
+          <div className='tw-flex tw-items-center'>
+            <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
+            <div>12:17:00</div>
+          </div>
+
+
+        </div>
+        <div className='right-container tw-grid tw-grid-cols-2 tw-gap-4 tw-w-[288px] tw-h-[356px]'>
+          <div>
+            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-[288px] tw-h-[356px] tw-mr-1 tw-object-cover' />
+
+          </div>
+          <div>
+            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-[288px] tw-h-[356px] tw-mr-1 tw-object-cover' />
+
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -164,6 +200,16 @@ const Tournaments = () => {
     </div>
   )
 }
+
+const TournamentsCard = () => {
+  return (
+    <div>
+
+    </div>
+  )
+}
+
+
 
 const NewEraWagering = () => {
   return (
@@ -215,7 +261,7 @@ const NewEraWagering = () => {
 
 
 const GamesByMake = () => {
-  // const carList = [BMWLogo, AudiLogo, DodgeLogo, FordLogo, HondaLogo, JeepLogo, NissanLogo, SubaruLogo, TeslaLogo, ToyotaLogo];
+  // sample data
   const carList = [{ name: BMWLogo, width: 100 }, { name: AudiLogo, width: 120 }, { name: DodgeLogo, width: 180 }, { name: FordLogo, width: 160 }, { name: HondaLogo, width: 120 }, { name: JeepLogo, width: 100 }, { name: NissanLogo, width: 120 }, { name: SubaruLogo, width: 120 }, { name: TeslaLogo, width: 160 }, { name: ToyotaLogo, width: 120 }]
 
 

@@ -10,7 +10,7 @@ import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 
 
 const Navbar = () => {
-    const isLoggedIn = true; // state of login
+    const isLoggedIn = false; // state of login
     return (
         <div>
             {isLoggedIn
