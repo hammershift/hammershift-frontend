@@ -5,3 +5,25 @@
     border-radius: 0.25rem;
     font-weight: 700;
 }
+.btn-yellow {
+    padding: 0.625rem 0.75rem;
+    color: black;
+    background-color: #f2ca16;
+    border-radius: 0.25rem;
+    font-weight: 700;
+}
+.btn-dark {
+    padding: 0.625rem 0.75rem;
+    color: white;
+    background-color: #172431;
+    border-radius: 0.25rem;
+    font-weight: 700;
+}
+.btn-transparent {
+    padding: 0.625rem 0.75rem;
+    color: black;
+    background-color: none;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    border: 1px solid black;
+}
