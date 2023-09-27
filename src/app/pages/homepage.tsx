@@ -57,7 +57,7 @@ const LiveGames = () => {
         </div>
       </div>
       <div>
-
+        <LiveGamesCard />
         {/* carData.map((item) => {
             <LiveGamesCard key={item.id} url={item.url} year={item.year} name={item.name} description={item.description} time={item.time} />
           }) */}
@@ -67,14 +67,24 @@ const LiveGames = () => {
   )
 }
 
-const LiveGamesCard = (url, year, name, description, time) => {
+const LiveGamesCard = () => {
+  const carData = {
+    id: 1,
+    url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
+    year: "1969",
+    name: "Shelby Mustang",
+    description: "GT350",
+    time: "12:17:00"
+  }
+
   return (
     <div className='tw-w-auto'>
       <div>
-        <div> </div>
-        <div></div>
-        <div></div>
+        <img src={carData.url} width={200} height={200} alt="car" className='tw-w-[200px] tw-h-[200px] tw-rounded-full tw-object-cover' />
       </div>
+      <div></div>
+      <div></div>
+
     </div>
   )
 }
