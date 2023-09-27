@@ -11,6 +11,7 @@ import TournamentsIcon from '../../../public/images/tournaments-icon.svg'
 import HourGlassIcon from '../../../public/images/hour-glass.svg'
 import PlayersIcon from '../../../public/images/players.svg'
 import GamesByMakeIcon from '../../../public/images/games-by-make-icon.svg'
+import Avatar from '../../../public/images/avatar.svg'
 
 import BMWLogo from '../../../public/images/brand-logos/bmw-logo.svg'
 import AudiLogo from '../../../public/images/brand-logos/audi-logo.svg'
@@ -124,7 +125,7 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, descript
         <div className='tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]'>LIVE</div>
         <img src={url} width={200} height={200} alt="car" className='tw-w-[120px] sm:tw-w-[200px] tw-h-[120px] sm:tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
       </div>
-      <div>
+      <div className='tw-ml-4 sm:tw-ml-0'>
         <div className='info tw-my-3 tw-flex tw-flex-col tw-items-center'>
           <div className='tw-mt-3 tw-font-medium'>{year} {name}</div>
           <div className='tw-my-1.5 tw-font-medium'>{description}</div>
@@ -196,16 +197,59 @@ const Tournaments = () => {
         </div>
       </div>
       <div>
-        {/* insert content */}
+        <TournamentsCard />
       </div>
     </div>
   )
 }
 
 const TournamentsCard = () => {
+  const userList = [{
+    number: "1",
+    img: Avatar,
+    username: "Username",
+    points: "936"
+  },
+  {
+    number: "2",
+    img: Avatar,
+    username: "Username",
+    points: "984"
+  }, {
+    number: "3",
+    img: Avatar,
+    username: "Username",
+    points: "1,000"
+  }]
   return (
-    <div>
+    <div className=''>
+      <div>
+        {/* transition images*/}
+      </div>
+      <div className='tw-bg-[#1A2C3D] tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-16' >
+        <div className='tw-text-[18px] tw-font-bold'>2000s Tournament</div>
+        <div className='tw-text-[#53944F]'>Just Ended</div>
+        <div>
 
+          {
+            userList.map((user) => (
+              <div key={user.username} className='tw-flex tw-items-center tw-justify-between tw-my-3'>
+                <div className='tw-flex tw-items-center'>
+                  <div>{user.number}</div>
+                  <Image src={user.img} width={40} height={40} alt="avatar" className='tw-w-[40px] tw-h-[40px] tw-mx-3' />
+                  <div>{user.username}</div>
+                </div>
+                <div className='tw-text-[#F2CA16] tw-font-bold'>{`${user.points} pts.`}</div>
+              </div>
+            ))
+          }
+
+          {/* other users*/}
+        </div>
+        <div>
+          <button className='btn-yellow tw-w-full'>View Results</button>
+        </div>
+      </div>
     </div>
   )
 }
