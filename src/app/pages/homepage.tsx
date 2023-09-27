@@ -100,7 +100,7 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </div>
-      <div className="tw-mt-14 tw-grid tw-grid-cols-5 tw-gap-8">
+      <div className="tw-mt-14 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-8">
         {carData.map((item) => (
           <LiveGamesCard
             key={item.id}
@@ -119,22 +119,25 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
 const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, description, time }) => {
 
   return (
-    <div className='tw-w-[200px] tw-flex tw-flex-col tw-items-center'>
-      <div className='tw-w-[200px] tw-h-[218px] tw-relative'>
-        <div className='tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[70px]'>LIVE</div>
-        <img src={url} width={200} height={200} alt="car" className='tw-w-[200px] tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
+    <div className='tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center'>
+      <div className='tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-relative'>
+        <div className='tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]'>LIVE</div>
+        <img src={url} width={200} height={200} alt="car" className='tw-w-[120px] sm:tw-w-[200px] tw-h-[120px] sm:tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
       </div>
-      <div className='info tw-my-3 tw-flex tw-flex-col tw-items-center'>
-        <div className='tw-mt-3 tw-font-medium'>{year} {name}</div>
-        <div className='tw-my-1.5 tw-font-medium'>{description}</div>
-        <div className='tw-flex tw-items-center'>
-          <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
-          <div>{time}</div>
+      <div>
+        <div className='info tw-my-3 tw-flex tw-flex-col tw-items-center'>
+          <div className='tw-mt-3 tw-font-medium'>{year} {name}</div>
+          <div className='tw-my-1.5 tw-font-medium'>{description}</div>
+          <div className='tw-flex tw-items-center'>
+            <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
+            <div>{time}</div>
+          </div>
+        </div>
+        <div className='tw-mt-1.5'>
+          <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-[152px] tw-h-[40px]' />
         </div>
       </div>
-      <div className='tw-mt-1.5'>
-        <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-[152px] tw-h-[40px]' />
-      </div>
+
 
     </div>
   )
@@ -154,7 +157,7 @@ const TeamBattles = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </div>
-      <div className='left-container tw-grid tw-grid-cols-2 tw-gap-8 tw-mt-16'>
+      <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-16'>
         <div
           style={{ backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)` }}
           className='tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end'>
@@ -163,16 +166,14 @@ const TeamBattles = () => {
             <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
             <div>12:17:00</div>
           </div>
-
-
         </div>
-        <div className='right-container tw-grid tw-grid-cols-2 tw-gap-4 tw-w-[288px] tw-h-[356px]'>
+        <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-w-auto tw-h-auto'>
           <div>
-            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-[288px] tw-h-[356px] tw-mr-1 tw-object-cover' />
+            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-auto tw-mr-1 tw-object-cover' />
 
           </div>
           <div>
-            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-[288px] tw-h-[356px] tw-mr-1 tw-object-cover' />
+            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-auto tw-mr-1 tw-object-cover' />
 
           </div>
         </div>
