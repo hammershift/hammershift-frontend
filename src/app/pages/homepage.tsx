@@ -352,11 +352,11 @@ const WagerByCatergory = () => {
       </div>
       <div className='content-container'>
 
-        <div className='first-row tw-mt-8 tw-grid tw-grid-cols-2 tw-gap-6'>
+        <div className='first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6'>
           <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
             <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
               <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Sedans</div>
-              <div className='tw-my-4'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+              <div className='tw-my-4 '>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
               <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Sedans</div>
             </div>
             <div className='tw-relative'>
@@ -375,11 +375,11 @@ const WagerByCatergory = () => {
           </div>
         </div>
 
-        <div className='second-row tw-mt-8 tw-grid tw-grid-cols-3 tw-gap-6'>
-          <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
+        <div className='second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6'>
+          <div className='tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
+            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
               <div className='tw-text-[30px] tw-font-bold tw-x-auto'>EVs & Hybrids</div>
-              <div className='tw-my-4'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+              <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
               <div className='tw-font-bold tw-text-[#F2CA16]'>Explore EVs & Hybrids</div>
             </div>
             <div className='tw-relative'>
@@ -387,9 +387,9 @@ const WagerByCatergory = () => {
             </div>
           </div>
           <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
+            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
               <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Luxury</div>
-              <div className='tw-my-4'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+              <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
               <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Luxury</div>
             </div>
             <div className='tw-relative'>
@@ -397,9 +397,9 @@ const WagerByCatergory = () => {
             </div>
           </div>
           <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
+            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
               <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Pickup Trucks</div>
-              <div className='tw-my-4'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+              <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
               <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Pickup Trucks</div>
             </div>
             <div className='tw-relative'>
