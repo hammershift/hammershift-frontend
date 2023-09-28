@@ -79,6 +79,9 @@ const Homepage = () => {
       <div className='tw-mt-16'>
         <WagerByCatergory />
       </div>
+      <div className=''>
+        <SkillStrategyAndStakes />
+      </div>
     </div>
   )
 }
@@ -350,6 +353,7 @@ const WagerByCatergory = () => {
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Wager by Category</div>
         </div>
       </div>
+
       <div className='content-container'>
 
         <div className='first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6'>
@@ -408,6 +412,29 @@ const WagerByCatergory = () => {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+const SkillStrategyAndStakes = () => {
+  return (
+    <div className='tw-w-screen tw-m-0'>
+      <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-screen tw-h-auto tw-mr-1 tw-object-cover' />
+      <div className=' tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8 tw-pb-16'>
+        <header>
+          <h1 className=''>
+            Skill, Strategy & Stakes
+          </h1>
+
+        </header>
+
+        <div className='content-container'>
+
+          {/* add content */}
+
+        </div>
+      </div>
+
     </div>
   )
 }
