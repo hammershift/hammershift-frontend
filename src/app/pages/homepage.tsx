@@ -1,6 +1,9 @@
 import React from 'react'
 import Navbar from '../components/navbar'
-import Card from '@/app/components/card'
+import Card from '../components/card'
+import HowHammerShiftWorks from '../components/how_hammeshift_works'
+import Footer from '../components/footer'
+import StayInTheFastLane from '../components/stay_fast_lane'
 
 import Banner from '../../../public/images/banner.svg'
 import Image from 'next/image'
@@ -99,6 +102,12 @@ const Homepage = () => {
       </div>
       <div className='tw-mt-16'>
         <HowHammerShiftWorks />
+      </div>
+      <div className='tw-mt-16'>
+        <StayInTheFastLane />
+      </div>
+      <div className='tw-mt-16'>
+        <Footer />
       </div>
     </div>
   )
@@ -567,16 +576,3 @@ const MostBids = () => {
   )
 }
 
-const HowHammerShiftWorks = () => {
-  return (
-    <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
-      <header>
-        <h1>How HammerShift Works</h1>
-      </header>
-
-      <section>
-        <div></div>
-      </section>
-    </div>
-  )
-}
