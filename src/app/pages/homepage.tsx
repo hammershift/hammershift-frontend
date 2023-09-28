@@ -469,7 +469,7 @@ const NewGames = () => {
       </header>
 
       <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-12 sm:tw-gap-8 tw-mt-12'>
           {/* to be replaced by array.map */}
           <Card />
           <Card />
@@ -497,7 +497,7 @@ const WhatsTrending = () => {
       </header>
 
       <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-12 sm:tw-gap-8 tw-mt-12'>
           {/* to be replaced by array.map */}
           <Card />
           <Card />
@@ -525,7 +525,7 @@ const MostExpensiveCars = () => {
       </header>
 
       <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-12 sm:tw-gap-8 tw-mt-12'>
           {/* to be replaced by array.map */}
           <Card />
           <Card />
@@ -553,7 +553,7 @@ const MostBids = () => {
       </header>
 
       <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-12 sm:tw-gap-8 tw-mt-12'>
           {/* to be replaced by array.map */}
           <Card />
           <Card />
