@@ -97,6 +97,9 @@ const Homepage = () => {
       <div className='tw-mt-16'>
         <MostBids />
       </div>
+      <div className='tw-mt-16'>
+        <HowHammerShiftWorks />
+      </div>
     </div>
   )
 }
@@ -559,6 +562,20 @@ const MostBids = () => {
           <Card />
           <Card />
         </div>
+      </section>
+    </div>
+  )
+}
+
+const HowHammerShiftWorks = () => {
+  return (
+    <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+      <header>
+        <h1>How HammerShift Works</h1>
+      </header>
+
+      <section>
+        <div></div>
       </section>
     </div>
   )

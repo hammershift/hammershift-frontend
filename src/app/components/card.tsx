@@ -18,12 +18,14 @@ const cardData = {
     time_left: "02:16:00",
     activity: [
         {
+            id: "a1",
             username: "damientine",
             avatar: AvatarOne,
             wager: "$292,000",
             time: "12m ago"
         },
         {
+            id: "a2",
             username: "addisonmx",
             avatar: AvatarTwo,
             wager: "$29,500",
@@ -63,7 +65,7 @@ const card = () => {
             <div className=' tw-bg-[#172431] tw-p-4 tw-my-4'>
                 {cardData.activity.map((item) => {
 
-                    return <div key={item.username} className='tw-flex tw-mb-2'>
+                    return <div key={item.id} className='tw-flex tw-mb-2'>
                         <Image src={item.avatar} width={24} height={24} alt='dollar' className='tw-w-[24px] tw-h-[24px]' />
                         <div className='tw-text-[#42A0FF] tw-px-2'>{`@${item.username}`}</div>
                         <div>{`wagered ${item.wager}`}</div>
