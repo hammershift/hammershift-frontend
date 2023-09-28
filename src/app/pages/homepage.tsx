@@ -1,5 +1,7 @@
 import React from 'react'
 import Navbar from '../components/navbar'
+import Card from '@/app/components/card'
+
 import Banner from '../../../public/images/banner.svg'
 import Image from 'next/image'
 import { carData } from '@/sample_data'
@@ -24,6 +26,7 @@ import TeslaLogo from '../../../public/images/brand-logos/tesla-logo.svg'
 import ToyotaLogo from '../../../public/images/brand-logos/toyota-logo.svg'
 import FordLogo from '../../../public/images/brand-logos/ford-logo.svg'
 import TransitionPattern from '../../../public/images/transition-pattern.svg'
+
 
 import WhiteCar from '../../../public/images/wager-by-category/white-car.svg'
 import RedCar from '../../../public/images/wager-by-category/red-car.svg'
@@ -183,11 +186,11 @@ const TeamBattles = () => {
         </div>
         <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-w-auto tw-h-auto'>
           <div>
-            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-auto tw-mr-1 tw-object-cover' />
+            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px] tw-mr-1 tw-object-cover' />
 
           </div>
           <div>
-            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-auto tw-mr-1 tw-object-cover' />
+            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px] tw-mr-1 tw-object-cover' />
 
           </div>
         </div>
@@ -446,8 +449,8 @@ const NewGames = () => {
       <header>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
-            <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Team Battles</div>
+            <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>New Games</div>
           </div>
           <div className='tw-flex'>
             <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
@@ -457,8 +460,10 @@ const NewGames = () => {
       </header>
 
       <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-16'>
-          {/* insert code */}
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-16'>
+          <Card />
+          <Card />
+          <Card />
         </div>
       </section>
     </div>

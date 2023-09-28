@@ -12,6 +12,13 @@
     border-radius: 0.25rem;
     font-weight: 700;
 }
+.btn-yellow-thin {
+    padding: 0.375rem 0.75rem;
+    color: black;
+    background-color: #f2ca16;
+    border-radius: 0.25rem;
+    font-weight: 700;
+}
 .btn-dark {
     padding: 0.625rem 0.75rem;
     color: white;
