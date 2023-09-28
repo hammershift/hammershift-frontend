@@ -82,6 +82,9 @@ const Homepage = () => {
       <div className=''>
         <SkillStrategyAndStakes />
       </div>
+      <div className='tw-mt-16'>
+        <NewGames />
+      </div>
     </div>
   )
 }
@@ -278,8 +281,8 @@ const NewEraWagering = () => {
       </div>
       <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-py-24 tw-px-4 md:tw-px-16 xl:tw-px-36'>
         <div className='tw-relative'>
-          <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' >A New Era</div>
-          <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' >of Wagering</div>
+          <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
+          <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' ></div>
         </div>
         <div>
           <p>Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc posthac, sitientis piros Afros. Cum sociis natoque penatibus et magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?<br /><br />
@@ -321,7 +324,7 @@ const GamesByMake = () => {
 
 
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-16'>
       <div className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -346,7 +349,7 @@ const GamesByMake = () => {
 
 const WagerByCatergory = () => {
   return (
-    <div className='tw-bg-[#1A2C3D] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8 tw-pb-16'>
+    <div className='tw-bg-[#1A2C3D] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-32'>
       <div>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -419,22 +422,45 @@ const WagerByCatergory = () => {
 const SkillStrategyAndStakes = () => {
   return (
     <div className='tw-w-screen tw-m-0'>
-      <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-screen tw-h-auto tw-mr-1 tw-object-cover' />
+      <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-absolute tw-z-[-1] tw-w-screen tw-h-auto tw-mr-1 tw-object-cover' />
       <div className=' tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8 tw-pb-16'>
         <header>
-          <h1 className=''>
-            Skill, Strategy & Stakes
+          <h1 className='tw-pt-16 tw-w-[528px] tw-text-5xl md:tw-text-7xl tw-leading-normal tw-font-bold'>
+            Skill, Strategy <br />& Stakes
           </h1>
-
         </header>
 
-        <div className='content-container'>
-
-          {/* add content */}
-
-        </div>
+        <section>
+          <p className='tw-max-w-[752px] tw-my-12'>The excitement of sports betting meets the thrill of car auctions. Car enthusiasts, put your skills to the test by predicting the outcomes of car auctions with unmatched precision. Combine knowledge, strategy, and a keen eye for value as the gavel drops and the bidding wars ignite. Join the action by placing wagers on the final price the vehicles will go for, which vehicles will command the highest bids, achieve record-breaking prices, or even which ones will surprise the crowd with unexpected deals. Sharpen your instincts, analyze market trends, and immerse yourself in the world of rare classics, luxury exotics, and iconic muscle cars.</p>
+          <button className='btn-yellow'>Join and get 100 credits</button>
+        </section>
       </div>
 
+    </div>
+  )
+}
+
+const NewGames = () => {
+  return (
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
+      <header>
+        <div className='tw-flex tw-justify-between'>
+          <div className='tw-flex tw-items-center'>
+            <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Team Battles</div>
+          </div>
+          <div className='tw-flex'>
+            <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
+            <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-16'>
+          {/* insert code */}
+        </div>
+      </section>
     </div>
   )
 }
