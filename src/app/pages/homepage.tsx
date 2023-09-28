@@ -88,6 +88,15 @@ const Homepage = () => {
       <div className='tw-mt-16'>
         <NewGames />
       </div>
+      <div className='tw-mt-16'>
+        <WhatsTrending />
+      </div>
+      <div className='tw-mt-16'>
+        <MostExpensiveCars />
+      </div>
+      <div className='tw-mt-16'>
+        <MostBids />
+      </div>
     </div>
   )
 }
@@ -445,7 +454,7 @@ const SkillStrategyAndStakes = () => {
 
 const NewGames = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
       <header>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
@@ -460,7 +469,92 @@ const NewGames = () => {
       </header>
 
       <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-16'>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+          {/* to be replaced by array.map */}
+          <Card />
+          <Card />
+          <Card />
+        </div>
+      </section>
+    </div>
+  )
+}
+
+const WhatsTrending = () => {
+  return (
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+      <header>
+        <div className='tw-flex tw-justify-between'>
+          <div className='tw-flex tw-items-center'>
+            <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>{"What\'s Trending"}</div>
+          </div>
+          <div className='tw-flex'>
+            <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
+            <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+          {/* to be replaced by array.map */}
+          <Card />
+          <Card />
+          <Card />
+        </div>
+      </section>
+    </div>
+  )
+}
+
+const MostExpensiveCars = () => {
+  return (
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+      <header>
+        <div className='tw-flex tw-justify-between'>
+          <div className='tw-flex tw-items-center'>
+            <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Most Expensive Cars</div>
+          </div>
+          <div className='tw-flex'>
+            <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
+            <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+          {/* to be replaced by array.map */}
+          <Card />
+          <Card />
+          <Card />
+        </div>
+      </section>
+    </div>
+  )
+}
+
+const MostBids = () => {
+  return (
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+      <header>
+        <div className='tw-flex tw-justify-between'>
+          <div className='tw-flex tw-items-center'>
+            <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Most Bids</div>
+          </div>
+          <div className='tw-flex'>
+            <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
+            <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-8 tw-mt-12'>
+          {/* to be replaced by array.map */}
           <Card />
           <Card />
           <Card />

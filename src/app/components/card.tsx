@@ -2,6 +2,10 @@ import React from 'react'
 import Image from 'next/image'
 import Dollar from '../../../public/images/dollar.svg'
 import HourGlass from '../../../public/images/hour-glass.svg'
+import AvatarOne from '../../../public/images/avatar-one.svg'
+import AvatarTwo from '../../../public/images/avatar-two.svg'
+import AvatarThree from '../../../public/images/avatar-three.svg'
+import AvatarFour from '../../../public/images/avatar-four.svg'
 
 const cardData = {
     id: "1",
@@ -15,13 +19,26 @@ const cardData = {
     activity: [
         {
             username: "damientine",
+            avatar: AvatarOne,
             wager: "$292,000",
             time: "12m ago"
+        },
+        {
+            username: "addisonmx",
+            avatar: AvatarTwo,
+            wager: "$29,500",
+            time: "16m ago"
         }
     ],
     players: [
-        { username: "user1" },
-        { username: "user2" }
+        {
+            username: "user1",
+            avatar: AvatarOne
+        },
+        {
+            username: "user2",
+            avatar: AvatarTwo
+        }
     ]
 }
 
@@ -43,7 +60,19 @@ const card = () => {
                 <div className='tw-px-2'>Current Bid:</div>
                 <div className='tw-text-[#C2451E] tw-font-bold'>{cardData.current_bid}</div>
             </div>
-            <div></div>
+            <div className=' tw-bg-[#172431] tw-p-4 tw-my-4'>
+                {cardData.activity.map((item) => {
+
+                    return <div key={item.username} className='tw-flex tw-mb-2'>
+                        <Image src={item.avatar} width={24} height={24} alt='dollar' className='tw-w-[24px] tw-h-[24px]' />
+                        <div className='tw-text-[#42A0FF] tw-px-2'>{`@${item.username}`}</div>
+                        <div>{`wagered ${item.wager}`}</div>
+                        <div className='tw-text-[#DCE0D9] tw-ml-1'>{item.time}</div>
+                    </div>
+                }
+                )}
+
+            </div>
             <button className='btn-yellow-thin tw-py-1'>Play Game</button>
         </div>
     )
