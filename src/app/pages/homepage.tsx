@@ -103,7 +103,7 @@ const Homepage = () => {
       <div className='tw-mt-16'>
         <HowHammerShiftWorks />
       </div>
-      <div className='tw-mt-16'>
+      <div className=''>
         <StayInTheFastLane />
       </div>
       <div className='tw-mt-16'>
