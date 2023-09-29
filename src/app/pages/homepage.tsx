@@ -17,6 +17,8 @@ import HourGlassIcon from '../../../public/images/hour-glass.svg'
 import PlayersIcon from '../../../public/images/players.svg'
 import GamesByMakeIcon from '../../../public/images/games-by-make-icon.svg'
 import Avatar from '../../../public/images/avatar.svg'
+import TrophyIconGreen from '../../../public/images/trophy-icon-green.svg'
+import TrophyIconBlue from '../../../public/images/trophy-icon-blue.svg'
 
 import BMWLogo from '../../../public/images/brand-logos/bmw-logo.svg'
 import AudiLogo from '../../../public/images/brand-logos/audi-logo.svg'
@@ -206,14 +208,32 @@ const TeamBattles = () => {
           </div>
         </div>
         <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-w-auto tw-h-auto'>
-          <div>
-            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px] tw-mr-1 tw-object-cover' />
 
+          <div className='tw-relative '>
+            <div className='tw-px-5'>
+              <Image src={TrophyIconGreen} width={52} height={52} alt="dollar" className='tw-w-[52px] tw-h-[52px] ' />
+            </div>
+            <div className='tw-absolute tw-top-[26px] tw-h-[362px] tw-z-[-1]'>
+              <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
+              <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#49C74233]'></div>
+            </div>
           </div>
-          <div>
-            <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px] tw-mr-1 tw-object-cover' />
 
+          <div className='tw-relative'>
+            <div className='tw-px-5'>
+              <Image src={TrophyIconBlue} width={52} height={52} alt="dollar" className='tw-w-[52px] tw-h-[52px] ' />
+              <div className='tw-font-bold tw-text-[18px]'>Team A</div>
+              <div className='tw-text-[14px]'>11 Players</div>
+              <div>
+
+              </div>
+            </div>
+            <div className='tw-absolute tw-top-[26px] tw-h-[362px] tw-z-[-1]'>
+              <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
+              <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]'></div>
+            </div>
           </div>
+
         </div>
       </section>
     </div>
@@ -229,7 +249,7 @@ const Tournaments = () => {
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Tournaments</div>
         </div>
         <div className='tw-flex'>
-          <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
+          <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8' />
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
