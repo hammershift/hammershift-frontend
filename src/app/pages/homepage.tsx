@@ -124,9 +124,11 @@ export default Homepage
 
 const Carousel = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen'>
-      <div>
-        <Image src={Banner} width={1312} height={280} alt='banner' className='tw-w-full' />
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen '>
+      <div className=' tw-py-16 tw-px-8 tw-bg-[#1A2C3D]'>
+        <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
+        <div className='tw-font-euro tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
+        <button className='btn-yellow tw-mt-6'>SIGN UP & WAGER</button>
       </div>
     </div>
   )

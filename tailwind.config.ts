@@ -21,6 +21,9 @@ const config: Config = {
         shade: {
           '100': '#172431'
         }
+      },
+      fontFamily: {
+        'euro': 'euro-star-black-extended'
       }
     },
     screens: {

@@ -7,6 +7,11 @@
     color: white;
 }
 
+@font-face {
+    src: url("../../../public/fonts/eurostarblackextended.ttf");
+    font-family: "euro-star-black-extended";
+}
+
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
