@@ -19,6 +19,7 @@ import GamesByMakeIcon from '../../../public/images/games-by-make-icon.svg'
 import Avatar from '../../../public/images/avatar.svg'
 import TrophyIconGreen from '../../../public/images/trophy-icon-green.svg'
 import TrophyIconBlue from '../../../public/images/trophy-icon-blue.svg'
+import DiagonalLinesCarousel from '../../../public/images/diagonal-lines-carousel.svg'
 
 import BMWLogo from '../../../public/images/brand-logos/bmw-logo.svg'
 import AudiLogo from '../../../public/images/brand-logos/audi-logo.svg'
@@ -126,15 +127,17 @@ export default Homepage
 
 const Carousel = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen '>
-      <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between tw-items-start sm:tw-items-center tw-overflow-hidden'>
-        <div className='tw-w-[608px] tw-py-16 tw-px-8'>
+    <div className='tw-relative tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-overflow-hidden'>
+      <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between  sm:tw-items-center tw-overflow-hidden'>
+        <div className='tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-8 lg:tw-py-16 tw-px-6 sm:tw-px-8 tw-z-[1]'>
           <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
-          <div className='tw-font-euro tw-text-[32px]  sm:tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
+          <div className='tw-font-euro tw-text-[32px] tw-w-4/6 sm:tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
           <button className='btn-yellow tw-mt-6'>SIGN UP & WAGER</button>
         </div>
-        <Image src={YellowSportsCarFull} width={569} height={213} alt="dollar" className='tw-w-auto tw-h-[93px] md:tw-h-[150px] lg:tw-h-[213px] tw-top-6 tw-absolute sm:tw-block tw-right-0' />
+        <Image src={YellowSportsCarFull} width={569} height={213} alt="dollar" className='tw-w-auto tw-h-[93px] sm:tw-h-[120px] md:tw-h-[150px] lg:tw-h-[213px] tw-top-8 sm:tw-top-12 tw-absolute sm:tw-block tw-right-[-32px] sm:tw-right-0 tw-z-[1]' />
+        <Image src={DiagonalLinesCarousel} width={733} height={664} alt="dollar" className='tw-w-auto tw-h-[300px] tw-absolute tw-top-0 tw-right-0 sm:tw-right-4 md:tw-right-8 lg:tw-right-36' />
       </div>
+
     </div>
   )
 }
@@ -530,7 +533,7 @@ const SkillStrategyAndStakes = () => {
       <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-absolute tw-z-[-1] tw-w-screen tw-h-auto tw-mr-1 tw-object-cover' />
       <div className=' tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8 tw-pb-16'>
         <header>
-          <h1 className='tw-pt-16 tw-w-[528px] tw-text-5xl md:tw-text-7xl tw-leading-normal tw-font-bold'>
+          <h1 className='tw-pt-16 tw-w-auto tw-text-5xl md:tw-text-7xl tw-leading-normal tw-font-bold'>
             Skill, Strategy <br />& Stakes
           </h1>
         </header>
