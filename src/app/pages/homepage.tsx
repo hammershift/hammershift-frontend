@@ -224,7 +224,7 @@ const TeamBattles = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-16 tw-mt-16'>
+      <section className='left-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-16 tw-mt-16'>
         <div
           style={{ backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)` }}
           className='tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end'>
