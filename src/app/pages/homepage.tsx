@@ -128,7 +128,7 @@ const Carousel = () => {
 const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
   return (
     <div className="tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8">
-      <div className='tw-flex tw-justify-between'>
+      <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={LiveGamesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Live Games</div>
@@ -137,8 +137,8 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
-      </div>
-      <div className="tw-mt-14 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-8">
+      </header>
+      <section className="tw-mt-14 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-8">
         {carData.map((item) => (
           <LiveGamesCard
             key={item.id}
@@ -149,7 +149,7 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
             time={item.time}
           />
         ))}
-      </div>
+      </section>
     </div>
   );
 };
@@ -185,7 +185,7 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, descript
 const TeamBattles = () => {
   return (
     <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
-      <div className='tw-flex tw-justify-between'>
+      <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Team Battles</div>
@@ -194,8 +194,8 @@ const TeamBattles = () => {
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
-      </div>
-      <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-16'>
+      </header>
+      <section className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-16'>
         <div
           style={{ backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)` }}
           className='tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end'>
@@ -215,7 +215,7 @@ const TeamBattles = () => {
 
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
@@ -223,7 +223,7 @@ const TeamBattles = () => {
 const Tournaments = () => {
   return (
     <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
-      <div className='tw-flex tw-justify-between'>
+      <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TournamentsIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Tournaments</div>
@@ -232,10 +232,13 @@ const Tournaments = () => {
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
-      </div>
-      <div>
+      </header>
+      <section className='tw-grid tw-grid-cols-3 tw-gap-8 '>
+        {/* to be replaced by array.map */}
         <TournamentsCard />
-      </div>
+        <TournamentsCard />
+        <TournamentsCard />
+      </section>
     </div>
   )
 }
@@ -263,7 +266,7 @@ const TournamentsCard = () => {
       <div>
         {/* transition images*/}
       </div>
-      <div className='tw-bg-[#1A2C3D] tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-16' >
+      <div className='tw-bg-[#1A2C3D] tw-w-auto tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-16' >
         <div className='tw-text-[18px] tw-font-bold'>2000s Tournament</div>
         <div className='tw-text-[#53944F]'>Just Ended</div>
         <div>
@@ -349,7 +352,7 @@ const GamesByMake = () => {
 
   return (
     <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-16'>
-      <div className='tw-flex tw-justify-between'>
+      <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Games by Make</div>
@@ -358,14 +361,14 @@ const GamesByMake = () => {
           <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
-      </div>
-      <div className='tw-grid tw-grid-cols-2 tw-grid-rows-5 md:tw-grid-cols-5 md:tw-grid-rows-2 tw-gap-8 tw-mt-16'>
+      </header>
+      <section className='tw-grid tw-grid-cols-2 tw-grid-rows-5 md:tw-grid-cols-5 md:tw-grid-rows-2 tw-gap-8 tw-mt-16'>
         {carList.map((car) => {
           return <div key={car.name}>
             <Image src={car.name} width={car.width} height={100} alt={car.name} style={{ width: car.width, height: "100px" }} className='tw-block tw-mx-auto' />
           </div>
         })}
-      </div>
+      </section>
     </div>
   )
 }
@@ -374,15 +377,13 @@ const GamesByMake = () => {
 const WagerByCatergory = () => {
   return (
     <div className='tw-bg-[#1A2C3D] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-32'>
-      <div>
+      <header>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
           <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Wager by Category</div>
         </div>
-      </div>
-
-      <div className='content-container'>
-
+      </header>
+      <section>
         <div className='first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6'>
           <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
             <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
@@ -438,7 +439,7 @@ const WagerByCatergory = () => {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
