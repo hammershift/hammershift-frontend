@@ -640,9 +640,9 @@ const MostExpensiveCars = () => {
 
 const MostBids = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen tw-py-12'>
+    <div className='tw-px-4 md:tw-px-16 xl:tw-px-auto tw-w-screen tw-py-12 tw-text-center'>
 
-      <header>
+      <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
