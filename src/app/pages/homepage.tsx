@@ -31,6 +31,7 @@ import TeslaLogo from '../../../public/images/brand-logos/tesla-logo.svg'
 import ToyotaLogo from '../../../public/images/brand-logos/toyota-logo.svg'
 import FordLogo from '../../../public/images/brand-logos/ford-logo.svg'
 import TransitionPattern from '../../../public/images/transition-pattern.svg'
+import YellowSportsCarFull from '../../../public/images/yellow-sportscar-full.svg'
 
 
 import WhiteCar from '../../../public/images/wager-by-category/white-car.svg'
@@ -38,6 +39,7 @@ import RedCar from '../../../public/images/wager-by-category/red-car.svg'
 import YellowSportsCar from '../../../public/images/wager-by-category/yellow-sportscar.svg'
 import SilverPickup from '../../../public/images/wager-by-category/silver-pickup.svg'
 import SilverSUV from '../../../public/images/wager-by-category/silver-suv.svg'
+
 
 import AvatarOne from '../../../public/images/avatar-one.svg'
 import AvatarTwo from '../../../public/images/avatar-two.svg'
@@ -125,10 +127,13 @@ export default Homepage
 const Carousel = () => {
   return (
     <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen '>
-      <div className=' tw-py-16 tw-px-8 tw-bg-[#1A2C3D]'>
-        <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
-        <div className='tw-font-euro tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
-        <button className='btn-yellow tw-mt-6'>SIGN UP & WAGER</button>
+      <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between tw-items-start sm:tw-items-center tw-overflow-hidden'>
+        <div className='tw-w-[608px] tw-py-16 tw-px-8'>
+          <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
+          <div className='tw-font-euro tw-text-[32px]  sm:tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
+          <button className='btn-yellow tw-mt-6'>SIGN UP & WAGER</button>
+        </div>
+        <Image src={YellowSportsCarFull} width={569} height={213} alt="dollar" className='tw-w-auto tw-h-[93px] sm:tw-h-[213px] tw-top-6 tw-absolute sm:tw-block tw-right-0' />
       </div>
     </div>
   )
@@ -308,7 +313,7 @@ const Tournaments = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className='tw-grid tw-grid-cols-3 tw-gap-8 '>
+      <section className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-8 '>
         {/* to be replaced by array.map */}
         <TournamentsCard />
         <TournamentsCard />
