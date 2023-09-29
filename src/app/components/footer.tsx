@@ -1,6 +1,10 @@
 import React from 'react'
 import Logo from '../../../public/images/hammershift-logo.svg'
 import Image from 'next/image'
+import FacebookIcon from '../../../public/images/social-icons/facebook-icon.svg'
+import LinkedinIcon from '../../../public/images/social-icons/linkedin-icon.svg'
+import PinterestIcon from '../../../public/images/social-icons/pinterest-icon.svg'
+import TwitterIcon from '../../../public/images/social-icons/twitter-icon.svg'
 
 const companyList = ["HOW IT WORKS", "ABOUT", "PRESS KIT", "PRIVACY NOTICE", "TERMS & CONDITIONS", "CONTRACT"];
 const productList = ["DISCOVER", "AUCTIONS", "NEWLY LISTED", "MOST EXPENSIVE", "MOST BIDS", "ENDING SOON", "MOST WAGERS",]
@@ -39,7 +43,12 @@ const Footer = () => {
                 <div className='tw-my-8'>
                     <div className='tw-font-bold tw-text-xl'>The Ultimate Playground for Car Enthusiasts</div>
                     <div>Skill-based wagering for those in the know</div>
-                    <div>{/* insert sm icons */}</div>
+                    <div className='tw-pt-6 tw-flex'>
+                        <Image src={TwitterIcon} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6 tw-mr-6' />
+                        <Image src={LinkedinIcon} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6 tw-mr-6' />
+                        <Image src={FacebookIcon} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6 tw-mr-6' />
+                        <Image src={PinterestIcon} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6 tw-mr-6' />
+                    </div>
 
                 </div>
                 <div className='tw-flex tw-flex-col tw-items-end'>
