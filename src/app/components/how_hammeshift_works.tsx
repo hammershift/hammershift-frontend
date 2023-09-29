@@ -31,7 +31,7 @@ const HowHammerShiftWorks = () => {
             <section>
                 <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-4 tw-gap-16'>
                     {articleData.map((data) => {
-                        return <div key={data.id} className='tw-flex tw-py-8'>
+                        return <div key={data.id} className='tw-flex tw-py-8 tw-justify-between tw-w-full'>
                             <div>
                                 <div className='tw-text-[#53944F] tw-font-bold'>Topic</div>
                                 <div>{data.title}</div>

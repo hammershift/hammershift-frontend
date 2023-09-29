@@ -133,7 +133,7 @@ const Carousel = () => {
           <div className='tw-font-euro tw-text-[32px]  sm:tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
           <button className='btn-yellow tw-mt-6'>SIGN UP & WAGER</button>
         </div>
-        <Image src={YellowSportsCarFull} width={569} height={213} alt="dollar" className='tw-w-auto tw-h-[93px] sm:tw-h-[213px] tw-top-6 tw-absolute sm:tw-block tw-right-0' />
+        <Image src={YellowSportsCarFull} width={569} height={213} alt="dollar" className='tw-w-auto tw-h-[93px] md:tw-h-[150px] lg:tw-h-[213px] tw-top-6 tw-absolute sm:tw-block tw-right-0' />
       </div>
     </div>
   )
