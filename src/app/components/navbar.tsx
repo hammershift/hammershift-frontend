@@ -14,7 +14,7 @@ const Navbar = () => {
     return (
         <div>
             {isLoggedIn
-                ? <div className=" tw-flex tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                ? <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
                     <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Image src={Logo} width={176} height={64} alt="logo" className="tw-hidden sm:tw-block tw-w-auto tw-h-auto" />
@@ -40,7 +40,7 @@ const Navbar = () => {
                     <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
                 </div>
 
-                : <div className=" tw-flex tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                : <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
                     <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Image src={Logo} width={176} height={64} alt="logo" className="tw-block tw-w-auto tw-h-auto" />
