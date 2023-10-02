@@ -73,16 +73,11 @@ interface LiveGamesCardProps {
 }
 
 const Homepage = () => {
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
+
+  const isLoggedIn = false; // state of login
   return (
     <div className='2xl:tw-flex tw-flex-col tw-items-center'>
-      <Navbar />
-      <div className='tw-relative'>
-        {
-          menuIsOpen
-          && <DropdownMenu />
-        }
-      </div>
+      <Navbar isLoggedIn={isLoggedIn} />
       <Carousel />
       <LiveGames carData={carData} />
       <TeamBattles />

@@ -9,9 +9,12 @@ import LogoSmall from "../../../public/images/logo-small.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 import CancelIcon from "../../../public/images/x-icon.svg"
 
+export interface NavbarProps {
+    isLoggedIn: boolean;
+}
 
-const Navbar = () => {
-    const isLoggedIn = false; // state of login
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
+
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     return (
         <div>
@@ -73,29 +76,43 @@ const Navbar = () => {
             }
             {
                 menuIsOpen
-                && <DropdownMenu />
+                && <DropdownMenu isLoggedIn={isLoggedIn} />
             }
         </div>
 
     );
 };
-
 export default Navbar;
 
-const DropdownMenu = () => {
+
+interface DropdownMenuProps {
+    isLoggedIn: boolean;
+}
+
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
     return (
-        <div className="tw-absolute tw-text-white tw-bg-black tw-w-full tw-h-full tw-z-50"> Hello
-            {/* <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
-        <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
-        <input
-          className="tw-ml-2 tw-bg-shade-100 "
-          placeholder="Search make, model, year..."
-        ></input>
-        <div>
-          <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
-          <div>MY WATCHLIST</div>
-        </div>
-      </div> */}
+        <div className="tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+            <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
+                <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+                <input
+                    className="tw-ml-2 tw-bg-shade-100 "
+                    placeholder="Search make, model, year..."
+                ></input>
+            </div>
+            <div className="tw-flex tw-pt-4">
+                <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
+                <div className="tw-ml-4">MY WATCHLIST</div>
+            </div>
+            <div className="tw-flex tw-pt-4">
+                <Image src={WagersIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
+                <div className="tw-ml-4">MY WAGERS</div>
+            </div>
+            <div className="tw-mt-4">
+                {
+                    !isLoggedIn
+                    && <button className="btn-white tw-w-full">CREATE ACCOUNT</button>
+                }
+            </div>
         </div>
     )
 }
