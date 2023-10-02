@@ -62,14 +62,16 @@ const card = () => {
                 <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
                 <div className='tw-text-[#C2451E] tw-font-bold'>{cardData.current_bid}</div>
             </div>
-            <div className=' tw-bg-[#172431] tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]'>
+            <div className=' tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]'>
                 {cardData.activity.map((item) => {
 
-                    return <div key={item.id} className='tw-flex tw-flex-wrap tw-mb-2'>
+                    return <div key={item.id} className='tw-flex tw-mb-2'>
                         <Image src={item.avatar} width={24} height={24} alt='dollar' className='tw-w-[24px] tw-h-[24px]' />
-                        <div className='tw-text-[#42A0FF] tw-px-2'>{`@${item.username}`}</div>
-                        <div>{`wagered ${item.wager}`}</div>
-                        <div className='tw-text-[#DCE0D9] tw-ml-1'>{item.time}</div>
+                        <div className='tw-ml-1 tw-flex tw-flex-wrap'>
+                            <div className='tw-text-[#42A0FF] tw-mr-2'>{`@${item.username}`}</div>
+                            <div>{`wagered ${item.wager}`}</div>
+                            <div className='tw-text-[#DCE0D9] tw-ml-2'>{item.time}</div>
+                        </div>
                     </div>
                 }
                 )}
