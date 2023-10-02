@@ -12,7 +12,7 @@ const vehiclesList = ["MAKE", "TYPE", "ERA", "LOCATION"]
 
 const Footer = () => {
     return (
-        <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-[120px] tw-pb-20'>
+        <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-16 md:tw-pt-[120px] tw-pb-16 md:tw-pb-20'>
             <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-8 md:tw-gap-0 tw-mb-16'>
                 <div>
                     <Image src={Logo} width={177} height={32} alt="hammershift logo" className='tw-w-[177px] tw-h-[32px]' />
@@ -38,7 +38,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <hr />
+            <hr style={{ borderColor: 'white', opacity: "10%" }} />
             <div className='tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-end'>
                 <div className='tw-my-8'>
                     <div className='tw-font-bold tw-text-xl'>The Ultimate Playground for Car Enthusiasts</div>
