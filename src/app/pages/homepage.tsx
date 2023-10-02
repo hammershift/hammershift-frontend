@@ -3,7 +3,7 @@ import Navbar from '../components/navbar'
 import Card from '../components/card'
 import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import Footer from '../components/footer'
-import StayInTheFastLane from '../components/stay_fast_lane'
+import Subscribe from '../components/subscribe'
 
 import Image from 'next/image'
 import { carData } from '@/sample_data'
@@ -32,6 +32,7 @@ import SubaruLogo from '../../../public/images/brand-logos/subaru-logo.svg'
 import TeslaLogo from '../../../public/images/brand-logos/tesla-logo.svg'
 import ToyotaLogo from '../../../public/images/brand-logos/toyota-logo.svg'
 import FordLogo from '../../../public/images/brand-logos/ford-logo.svg'
+
 import TransitionPattern from '../../../public/images/transition-pattern.svg'
 import YellowSportsCarFull from '../../../public/images/yellow-sportscar-full.svg'
 
@@ -83,12 +84,9 @@ const Homepage = () => {
         }
       </div>
       <Carousel />
-      <div className='tw-mt-16'>
-        <LiveGames carData={carData} />
-      </div>
-      <div className='tw-mt-16'>
-        <TeamBattles />
-      </div>
+      <LiveGames carData={carData} />
+      <TeamBattles />
+
       <div className='tw-mt-16'>
         <Tournaments />
       </div>
@@ -100,9 +98,7 @@ const Homepage = () => {
       <div className=''>
         <SkillStrategyAndStakes />
       </div>
-      <div className='tw-mt-16'>
-        <NewGames />
-      </div>
+      <NewGames />
       <div className='tw-mt-16'>
         <WhatsTrending />
       </div>
@@ -112,11 +108,10 @@ const Homepage = () => {
       <div className='tw-mt-16'>
         <MostBids />
       </div>
-      <div className='tw-mt-16'>
-        <HowHammerShiftWorks />
-      </div>
+      <HowHammerShiftWorks />
+
       <div className=''>
-        <StayInTheFastLane />
+        <Subscribe />
       </div>
       <div className='tw-mt-16'>
         <Footer />
@@ -128,7 +123,7 @@ export default Homepage
 
 const DropdownMenu = () => {
   return (
-    <div className="tw-absolute"> Hello
+    <div className="tw-absolute tw-text-white"> Hello
       {/* <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
         <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
         <input
@@ -254,7 +249,7 @@ const TeamBattles = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className='left-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-16 tw-mt-16'>
+      <section className='left-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8 sm:tw-gap-16 tw-mt-8 sm:tw-mt-16'>
         <div
           style={{ backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)` }}
           className='tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end'>
@@ -264,7 +259,7 @@ const TeamBattles = () => {
             <div>12:17:00</div>
           </div>
         </div>
-        <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 xl:tw-gap-16 tw-w-auto tw-h-auto'>
+        <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-16 xl:tw-gap-16 tw-w-auto tw-h-auto'>
           {/* Team A */}
           <div className='tw-relative'>
             <div className='tw-px-5 tw-w-full tw-h-[356px]'>
@@ -282,12 +277,12 @@ const TeamBattles = () => {
                   </div>
                 })}
               </div>
-              <button className='btn-green tw-absolute tw-bottom-[-20px] tw-right-[16px]'>Wager on Team B</button>
             </div>
-            {/* Background */}
+            {/* Background and button*/}
             <div className='tw-absolute tw-top-[26px] tw-h-[362px] tw-z-[-1]'>
               <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
               <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#49C74233]'></div>
+              <button className='btn-green tw-absolute tw-bottom-[-20px] tw-right-[16px]'>Wager on Team B</button>
             </div>
           </div>
 
@@ -296,7 +291,7 @@ const TeamBattles = () => {
             <div className='tw-px-5 tw-w-full tw-h-[356px]'>
               <Image src={TrophyIconBlue} width={52} height={52} alt="dollar" className='tw-w-[52px] tw-h-[52px] ' />
               <div className='tw-font-bold tw-text-[18px]'>Team B</div>
-              <div className='tw-text-[14px]'>11 Players</div>
+              <div className='tw-text-[14px]'>10 Players</div>
               <div className='tw-relative tw-mt-4'>
                 {teamPlayers.map((player) => {
                   return <div key={player.id} className='tw-mb-4 tw-flex'>
@@ -308,12 +303,12 @@ const TeamBattles = () => {
                   </div>
                 })}
               </div>
-              <button className='btn-blue tw-absolute tw-bottom-[-20px] tw-right-[16px]'>Wager on Team B</button>
             </div>
-            {/* Background */}
+            {/* Background and button*/}
             <div className='tw-absolute tw-top-[26px] tw-h-[362px] tw-z-[-1]'>
               <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
               <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]'></div>
+              <button className='btn-blue tw-absolute tw-bottom-[-20px] tw-right-[16px]'>Wager on Team B</button>
             </div>
           </div>
 
@@ -470,7 +465,7 @@ const GamesByMake = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className='tw-grid tw-grid-cols-2 tw-grid-rows-5 md:tw-grid-cols-5 md:tw-grid-rows-2 tw-gap-8 tw-mt-16'>
+      <section className='tw-grid tw-grid-cols-3 sm:tw-grid-cols-2 md:tw-grid-cols-5 tw-gap-8 tw-mt-16'>
         {carList.map((car) => {
           return <div key={car.name}>
             <Image src={car.name} width={car.width} height={100} alt={car.name} style={{ width: car.width, height: "100px" }} className='tw-block tw-mx-auto' />
@@ -568,7 +563,7 @@ const SkillStrategyAndStakes = () => {
 
         <section>
           <p className='tw-max-w-[752px] tw-my-12'>The excitement of sports betting meets the thrill of car auctions. Car enthusiasts, put your skills to the test by predicting the outcomes of car auctions with unmatched precision. Combine knowledge, strategy, and a keen eye for value as the gavel drops and the bidding wars ignite. Join the action by placing wagers on the final price the vehicles will go for, which vehicles will command the highest bids, achieve record-breaking prices, or even which ones will surprise the crowd with unexpected deals. Sharpen your instincts, analyze market trends, and immerse yourself in the world of rare classics, luxury exotics, and iconic muscle cars.</p>
-          <button className='btn-yellow'>Join and get 100 credits</button>
+          <button className='btn-yellow tw-w-full sm:tw-w-auto'>Join and get 100 credits</button>
         </section>
       </div>
 
@@ -578,7 +573,7 @@ const SkillStrategyAndStakes = () => {
 
 const NewGames = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
@@ -612,7 +607,7 @@ const NewGames = () => {
 
 const WhatsTrending = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
@@ -647,7 +642,7 @@ const WhatsTrending = () => {
 
 const MostExpensiveCars = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
@@ -684,7 +679,7 @@ const MostExpensiveCars = () => {
 
 const MostBids = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>

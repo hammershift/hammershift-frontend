@@ -75,7 +75,7 @@ const card = () => {
                 )}
 
             </div>
-            <button className='btn-yellow-thin tw-py-1'>Play Game</button>
+            <button className='btn-yellow-thin tw-py-1 tw-w-full sm:tw-w-auto'>Play Game</button>
         </div>
     )
 }

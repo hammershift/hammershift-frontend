@@ -1,3 +1,7 @@
+hr {
+    border-color: #0f1923;
+    opacity: 10%;
+}
 .btn-white {
     padding: 0.625rem 0.75rem;
     color: black;
@@ -5,16 +9,20 @@
     border-radius: 0.25rem;
     font-weight: 700;
 }
+.btn-white:hover,
+.btn-dark:hover {
+    background-color: #f2ca16;
+}
 .btn-green {
     padding: 0.625rem 0.75rem;
-    color: black;
+    color: white;
     background-color: #53944f;
     border-radius: 0.25rem;
     font-weight: 700;
 }
 .btn-blue {
     padding: 0.625rem 0.75rem;
-    color: black;
+    color: white;
     background-color: #156cc3;
     border-radius: 0.25rem;
     font-weight: 700;
@@ -25,6 +33,10 @@
     background-color: #f2ca16;
     border-radius: 0.25rem;
     font-weight: 700;
+}
+.btn-yellow:hover,
+.btn-yellow-thin:hover {
+    background-color: #ebcb48;
 }
 .btn-yellow-thin {
     padding: 0.375rem 0.75rem;
@@ -47,4 +59,9 @@
     border-radius: 0.25rem;
     font-weight: 500;
     border: 1px solid black;
+}
+.btn-transparent:hover {
+    background-color: #0f1923;
+    color: white;
+    font-weight: 700;
 }
