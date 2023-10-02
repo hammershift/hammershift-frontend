@@ -72,7 +72,7 @@ interface LiveGamesCardProps {
 
 const Homepage = () => {
   return (
-    <div>
+    <div className=''>
       <Navbar />
       <div className='tw-mt-16'>
         <Carousel />
@@ -127,7 +127,7 @@ export default Homepage
 
 const Carousel = () => {
   return (
-    <div className='tw-relative tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-overflow-hidden'>
+    <div className='tw-relative tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen 2xl:tw-w-[1440px] tw-overflow-hidden'>
       <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between  sm:tw-items-center tw-overflow-hidden'>
         <div className='tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-8 lg:tw-py-16 tw-px-6 sm:tw-px-8 tw-z-[1]'>
           <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
