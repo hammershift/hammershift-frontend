@@ -72,7 +72,7 @@ interface LiveGamesCardProps {
 
 const Homepage = () => {
   return (
-    <div className=''>
+    <div className='2xl:tw-flex tw-flex-col tw-items-center'>
       <Navbar />
       <div className='tw-mt-16'>
         <Carousel />
@@ -127,7 +127,7 @@ export default Homepage
 
 const Carousel = () => {
   return (
-    <div className='tw-relative tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen 2xl:tw-w-[1440px] tw-overflow-hidden'>
+    <div className='tw-relative tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-overflow-hidden'>
       <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between  sm:tw-items-center tw-overflow-hidden'>
         <div className='tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-8 lg:tw-py-16 tw-px-6 sm:tw-px-8 tw-z-[1]'>
           <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
@@ -144,7 +144,7 @@ const Carousel = () => {
 
 const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
   return (
-    <div className="tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8">
+    <div className="tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8">
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={LiveGamesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -223,7 +223,7 @@ const TeamBattles = () => {
   },
   ]
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -305,7 +305,7 @@ const TeamBattles = () => {
 
 const Tournaments = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TournamentsIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -381,7 +381,7 @@ const TournamentsCard = () => {
 
 const NewEraWagering = () => {
   return (
-    <div className='tw-w-screen tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px]'>
+    <div className='tw-w-screen 2xl:tw-w-[1440px] tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px]'>
       <div>
         <div className='tw-h-[6px]'></div>
         <div className='tw-bg-[#0F1923] tw-h-[40px]'></div>
@@ -389,7 +389,7 @@ const NewEraWagering = () => {
         <div className='tw-bg-[#0F1923] tw-h-[8px] tw-mt-8'></div>
         <div className='tw-bg-[#0F1923] tw-h-[4px] tw-mt-12'></div>
       </div>
-      <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-py-24 tw-px-4 md:tw-px-16 xl:tw-px-36'>
+      <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-py-24 tw-px-4 md:tw-px-16'>
         <div className='tw-relative'>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' ></div>
@@ -403,7 +403,7 @@ const NewEraWagering = () => {
           </div>
         </div>
       </div>
-      <div className='options tw-grid tw-cols-1 md:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16 xl:tw-px-36'>
+      <div className='options tw-grid tw-cols-1 md:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16'>
         <div className=' tw-bg-white tw-rounded-lg tw-text-center tw-py-[32px] tw-px-[24px]'>
           <Image src={LiveGamesIcon} width={68} height={68} alt="dollar" className='tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px] ' />
           <h1 className='tw-font-bold tw-text-[24px] tw-mt-3'>Guess the Price</h1>
@@ -434,7 +434,7 @@ const GamesByMake = () => {
 
 
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-16'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -459,77 +459,80 @@ const GamesByMake = () => {
 
 const WagerByCatergory = () => {
   return (
-    <div className='tw-bg-[#1A2C3D] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-32'>
-      <header>
-        <div className='tw-flex tw-items-center'>
-          <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-          <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Wager by Category</div>
-        </div>
-      </header>
-      <section>
-        <div className='first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6'>
-          <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
-              <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Sedans</div>
-              <div className='tw-my-4 '>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
-              <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Sedans</div>
+    <div className='tw-w-screen tw-bg-[#1A2C3D] tw-flex tw-flex-col tw-items-center'>
+      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen tw-w-[1440px] tw-py-32'>
+        <header>
+          <div className='tw-flex tw-items-center'>
+            <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Wager by Category</div>
+          </div>
+        </header>
+        <section>
+          <div className='first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6'>
+            <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
+              <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
+                <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Sedans</div>
+                <div className='tw-my-4 '>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+                <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Sedans</div>
+              </div>
+              <div className='tw-relative'>
+                <Image src={WhiteCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+              </div>
             </div>
-            <div className='tw-relative'>
-              <Image src={WhiteCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+            <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
+              <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
+                <div className='tw-text-[30px] tw-font-bold tw-x-auto'>SUVs</div>
+                <div className='tw-my-4'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+                <div className='tw-font-bold tw-text-[#F2CA16]'>Explore SUVs</div>
+              </div>
+              <div className='tw-relative'>
+                <Image src={SilverSUV} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+              </div>
             </div>
           </div>
-          <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6'>
-              <div className='tw-text-[30px] tw-font-bold tw-x-auto'>SUVs</div>
-              <div className='tw-my-4'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
-              <div className='tw-font-bold tw-text-[#F2CA16]'>Explore SUVs</div>
-            </div>
-            <div className='tw-relative'>
-              <Image src={SilverSUV} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
-            </div>
-          </div>
-        </div>
 
-        <div className='second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6'>
-          <div className='tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
-              <div className='tw-text-[30px] tw-font-bold tw-x-auto'>EVs & Hybrids</div>
-              <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
-              <div className='tw-font-bold tw-text-[#F2CA16]'>Explore EVs & Hybrids</div>
+          <div className='second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6'>
+            <div className='tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
+              <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
+                <div className='tw-text-[30px] tw-font-bold tw-x-auto'>EVs & Hybrids</div>
+                <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+                <div className='tw-font-bold tw-text-[#F2CA16]'>Explore EVs & Hybrids</div>
+              </div>
+              <div className='tw-relative'>
+                <Image src={RedCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+              </div>
             </div>
-            <div className='tw-relative'>
-              <Image src={RedCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+            <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
+              <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
+                <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Luxury</div>
+                <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+                <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Luxury</div>
+              </div>
+              <div className='tw-relative'>
+                <Image src={YellowSportsCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+              </div>
+            </div>
+            <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
+              <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
+                <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Pickup Trucks</div>
+                <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
+                <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Pickup Trucks</div>
+              </div>
+              <div className='tw-relative'>
+                <Image src={SilverPickup} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+              </div>
             </div>
           </div>
-          <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
-              <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Luxury</div>
-              <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
-              <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Luxury</div>
-            </div>
-            <div className='tw-relative'>
-              <Image src={YellowSportsCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
-            </div>
-          </div>
-          <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
-            <div className='tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]'>
-              <div className='tw-text-[30px] tw-font-bold tw-x-auto'>Pickup Trucks</div>
-              <div className='tw-my-4 tw-text-ellipsis tw-overflow-hidden'>Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis iudicium purus sit amet fermentum.</div>
-              <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Pickup Trucks</div>
-            </div>
-            <div className='tw-relative'>
-              <Image src={SilverPickup} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
+
   )
 }
 
 const SkillStrategyAndStakes = () => {
   return (
-    <div className='tw-w-screen tw-m-0'>
+    <div className='tw-w-screen 2xl:tw-w-[1440px] tw-m-0 tw-flex tw-justify-center'>
       <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-absolute tw-z-[-1] tw-w-screen tw-h-auto tw-mr-1 tw-object-cover' />
       <div className=' tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8 tw-pb-16'>
         <header>
@@ -550,7 +553,7 @@ const SkillStrategyAndStakes = () => {
 
 const NewGames = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
       <header>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
@@ -578,7 +581,7 @@ const NewGames = () => {
 
 const WhatsTrending = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
       <header>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
@@ -609,7 +612,7 @@ const WhatsTrending = () => {
 
 const MostExpensiveCars = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-12'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
       <header>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
@@ -640,7 +643,7 @@ const MostExpensiveCars = () => {
 
 const MostBids = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 xl:tw-px-auto tw-w-screen tw-py-12 tw-text-center'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
