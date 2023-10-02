@@ -7,11 +7,12 @@ import WatchlistIcon from "../../../public/images/watchlist-icon.svg"
 import AccountIcon from "../../../public/images/account-icon.svg"
 import LogoSmall from "../../../public/images/logo-small.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
+import CancelIcon from "../../../public/images/x-icon.svg"
 
 
 const Navbar = () => {
     const isLoggedIn = false; // state of login
-    const [isOpen, setIsOpen] = useState(false);
+    const [menuIsOpen, setMenuIsOpen] = useState(false)
     return (
         <div>
             {isLoggedIn
@@ -32,7 +33,14 @@ const Navbar = () => {
                         <Image src={WagersIcon} width={24} height={24} alt="wagers" className="tw-w-[24px] tw-h-[24px]" />
                         <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
                     </div>
-                    <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                    <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                        {
+                            menuIsOpen
+                                ? <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                : <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                        }
+                    </button>
+
                 </div>
 
                 :
@@ -54,8 +62,13 @@ const Navbar = () => {
                         </div>
                     </div>
                     <button className="btn-white hover:tw-bg-gold-200 tw-hidden md:tw-block ">CREATE ACCOUNT</button>
-                    <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
-
+                    <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                        {
+                            menuIsOpen
+                                ? <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                : <Image src={CancelIcon} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
+                        }
+                    </button>
                 </div>
 
             }
@@ -66,6 +79,23 @@ const Navbar = () => {
 
 export default Navbar;
 
+const DropdownMenu = () => {
+    return (
+        <div className="tw-absolute tw-text-white"> Hello
+            {/* <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
+        <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+        <input
+          className="tw-ml-2 tw-bg-shade-100 "
+          placeholder="Search make, model, year..."
+        ></input>
+        <div>
+          <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
+          <div>MY WATCHLIST</div>
+        </div>
+      </div> */}
+        </div>
+    )
+}
 
 
 
