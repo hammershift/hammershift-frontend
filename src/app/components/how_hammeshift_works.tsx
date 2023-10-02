@@ -23,26 +23,29 @@ const articleData = [{
 
 const HowHammerShiftWorks = () => {
     return (
-        <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-py-40'>
-            <header>
-                <h1 className='tw-text-5xl tw-font-bold'>How HammerShift Works</h1>
-            </header>
+        <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-screen tw-flex tw-justify-center'>
+            <div className=' tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-40'>
+                <header>
+                    <h1 className='tw-text-5xl tw-font-bold'>How HammerShift Works</h1>
+                </header>
 
-            <section>
-                <div className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-4 tw-gap-16'>
-                    {articleData.map((data) => {
-                        return <div key={data.id} className='tw-flex tw-py-8 tw-justify-between tw-w-full'>
-                            <div>
-                                <div className='tw-text-[#53944F] tw-font-bold'>Topic</div>
-                                <div>{data.title}</div>
+                <section>
+                    <div className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-4 tw-gap-16'>
+                        {articleData.map((data) => {
+                            return <div key={data.id} className='tw-flex tw-py-8 tw-justify-between tw-w-full'>
+                                <div>
+                                    <div className='tw-text-[#53944F] tw-font-bold'>Topic</div>
+                                    <div>{data.title}</div>
+                                </div>
+                                <img src={data.url} width={80} height={80} alt='car' className='tw-w-20 tw-h-20 tw-object-cover tw-ml-6' />
+
                             </div>
-                            <img src={data.url} width={80} height={80} alt='car' className='tw-w-20 tw-h-20 tw-object-cover tw-ml-6' />
+                        })}
 
-                        </div>
-                    })}
+                    </div>
+                </section>
+            </div>
 
-                </div>
-            </section>
         </div>
     )
 }
