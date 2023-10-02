@@ -5,6 +5,7 @@
 :root {
     background: #0f1923;
     color: white;
+    box-sizing: border-box;
 }
 
 @font-face {

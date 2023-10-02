@@ -74,9 +74,7 @@ const Homepage = () => {
   return (
     <div className='2xl:tw-flex tw-flex-col tw-items-center'>
       <Navbar />
-      <div className='tw-mt-16'>
-        <Carousel />
-      </div>
+      <Carousel />
       <div className='tw-mt-16'>
         <LiveGames carData={carData} />
       </div>
@@ -127,7 +125,7 @@ export default Homepage
 
 const Carousel = () => {
   return (
-    <div className='tw-relative tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-overflow-hidden'>
+    <div className='tw-relative tw-px-4 md:tw-px-16 tw-py-8 sm:tw-py-16 tw-w-screen 2xl:tw-w-[1440px] tw-overflow-hidden'>
       <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between  sm:tw-items-center tw-overflow-hidden'>
         <div className='tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-8 lg:tw-py-16 tw-px-6 sm:tw-px-8 tw-z-[1]'>
           <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
@@ -144,7 +142,7 @@ const Carousel = () => {
 
 const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
   return (
-    <div className="tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8">
+    <div className="tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16">
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={LiveGamesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -180,16 +178,16 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, descript
         <img src={url} width={200} height={200} alt="car" className='tw-w-[120px] sm:tw-w-[200px] tw-h-[120px] sm:tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
       </div>
       <div className='tw-ml-4 sm:tw-ml-0'>
-        <div className='info tw-my-3 tw-flex tw-flex-col tw-items-center'>
-          <div className='tw-mt-3 tw-font-medium'>{year} {name}</div>
+        <div className='info tw-my-3 tw-flex tw-flex-col tw-items-start sm:tw-items-center'>
+          <div className='tw-mt-0 sm:tw-mt-3 tw-font-medium'>{year} {name}</div>
           <div className='tw-my-1.5 tw-font-medium'>{description}</div>
           <div className='tw-flex tw-items-center'>
             <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
             <div>{time}</div>
           </div>
+          <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-auto tw-mt-2 sm:tw-mt-4 tw-h-[32px] sm:tw-h-[40px]' />
         </div>
         <div className='tw-mt-1.5'>
-          <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-[152px] tw-h-[40px]' />
         </div>
       </div>
 
@@ -223,7 +221,7 @@ const TeamBattles = () => {
   },
   ]
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -244,7 +242,7 @@ const TeamBattles = () => {
             <div>12:17:00</div>
           </div>
         </div>
-        <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-16 tw-w-auto tw-h-auto'>
+        <div className='right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 xl:tw-gap-16 tw-w-auto tw-h-auto'>
           {/* Team A */}
           <div className='tw-relative'>
             <div className='tw-px-5 tw-w-full tw-h-[356px]'>
@@ -305,7 +303,7 @@ const TeamBattles = () => {
 
 const Tournaments = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TournamentsIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -390,21 +388,23 @@ const NewEraWagering = () => {
         <div className='tw-bg-[#0F1923] tw-h-[8px] tw-mt-8'></div>
         <div className='tw-bg-[#0F1923] tw-h-[4px] tw-mt-12'></div>
       </div>
-      <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-py-24 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
+
+      <div className='tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-pt-16 sm:tw-pt-[120px] tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
         <div className='tw-relative'>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' ></div>
         </div>
         <div>
-          <p>Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc posthac, sitientis piros Afros. Cum sociis natoque penatibus et magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?<br /><br />
+          <p className='tw-mt-8 sm:tw-mt-16'>Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc posthac, sitientis piros Afros. Cum sociis natoque penatibus et magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?<br /><br />
             Quam temere in vitiis, legem sancimus haerentia. Phasellus laoreet lorem vel dolor tempus vehicula. Qui ipsorum lingua Celtae, nostra Galli appellantur. Curabitur blandit tempus ardua ridiculus sed magna. Tu quoque, Brute, fili mi, nihil timor populi, nihil! Donec sed odio operae, eu vulputate felis rhoncus.</p>
-          <div className='tw-mt-6'>
+          <div className='tw-mt-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-start'>
             <button className='btn-dark'>Sign up to win</button>
-            <button className='btn-transparent tw-ml-4'>About HammerShift</button>
+            <button className='btn-transparent tw-mt-4 sm:tw-mt-0 sm:tw-ml-4'>About HammerShift</button>
           </div>
         </div>
       </div>
-      <div className='options tw-grid tw-cols-1 md:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
+
+      <div className='options tw-grid tw-cols-1 lg:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16 tw-pt-16 sm:tw-pt-[120px] tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
         <div className=' tw-bg-white tw-rounded-lg tw-text-center tw-py-[32px] tw-px-[24px]'>
           <Image src={LiveGamesIcon} width={68} height={68} alt="dollar" className='tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px] ' />
           <h1 className='tw-font-bold tw-text-[24px] tw-mt-3'>Guess the Price</h1>
@@ -437,7 +437,7 @@ const GamesByMake = () => {
 
 
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 s:tw-py-16'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
