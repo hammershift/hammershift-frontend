@@ -153,7 +153,7 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className="tw-mt-14 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-8">
+      <section className="tw-mt-8 sm:tw-mt-14 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-4 sm:tw-gap-8">
         {carData.map((item) => (
           <LiveGamesCard
             key={item.id}
