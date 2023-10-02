@@ -54,15 +54,15 @@ const card = () => {
             <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>This 1981 Ferrari 512 BB is one of 929 carbureted examples produced between 1976 and 1981, and it was imported to the US in July 1981. The car was registered in Oregon through the late 2000s and was acquired by the selling dealer in 2022, reportedly from its second owner. It has been refinished in silver over black leather</p>
             <div className='tw-flex tw-mt-2'>
                 <Image src={Dollar} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
-                <div className='tw-px-2'>Current Bid:</div>
+                <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
                 <div className='tw-text-[#49C742] tw-font-bold'>{cardData.current_bid}</div>
             </div>
             <div className='tw-flex'>
                 <Image src={HourGlass} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
-                <div className='tw-px-2'>Current Bid:</div>
+                <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
                 <div className='tw-text-[#C2451E] tw-font-bold'>{cardData.current_bid}</div>
             </div>
-            <div className=' tw-bg-[#172431] tw-p-4 tw-my-4'>
+            <div className=' tw-bg-[#172431] tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]'>
                 {cardData.activity.map((item) => {
 
                     return <div key={item.id} className='tw-flex tw-flex-wrap tw-mb-2'>

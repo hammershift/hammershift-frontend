@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../components/navbar'
 import Card from '../components/card'
 import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import Footer from '../components/footer'
 import StayInTheFastLane from '../components/stay_fast_lane'
 
-import Banner from '../../../public/images/banner.svg'
 import Image from 'next/image'
 import { carData } from '@/sample_data'
 import LiveGamesIcon from '../../../public/images/live-games-icon.svg'
@@ -20,6 +19,8 @@ import Avatar from '../../../public/images/avatar.svg'
 import TrophyIconGreen from '../../../public/images/trophy-icon-green.svg'
 import TrophyIconBlue from '../../../public/images/trophy-icon-blue.svg'
 import DiagonalLinesCarousel from '../../../public/images/diagonal-lines-carousel.svg'
+import MagnifyingGlass from "../../../public/images/magnifying-glass.svg"
+import WatchlistIcon from "../../../public/images/watchlist-icon.svg"
 
 import BMWLogo from '../../../public/images/brand-logos/bmw-logo.svg'
 import AudiLogo from '../../../public/images/brand-logos/audi-logo.svg'
@@ -71,9 +72,16 @@ interface LiveGamesCardProps {
 }
 
 const Homepage = () => {
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
   return (
     <div className='2xl:tw-flex tw-flex-col tw-items-center'>
       <Navbar />
+      <div className='tw-relative'>
+        {
+          menuIsOpen
+          && <DropdownMenu />
+        }
+      </div>
       <Carousel />
       <div className='tw-mt-16'>
         <LiveGames carData={carData} />
@@ -117,6 +125,24 @@ const Homepage = () => {
   )
 }
 export default Homepage
+
+const DropdownMenu = () => {
+  return (
+    <div className="tw-absolute"> Hello
+      {/* <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
+        <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+        <input
+          className="tw-ml-2 tw-bg-shade-100 "
+          placeholder="Search make, model, year..."
+        ></input>
+        <div>
+          <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
+          <div>MY WATCHLIST</div>
+        </div>
+      </div> */}
+    </div>
+  )
+}
 
 
 const Carousel = () => {
@@ -580,9 +606,6 @@ const NewGames = () => {
           </div>
         </div>
       </section>
-
-
-
     </div>
   )
 }

@@ -11,6 +11,7 @@ import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 
 const Navbar = () => {
     const isLoggedIn = false; // state of login
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div>
             {isLoggedIn
@@ -24,13 +25,7 @@ const Navbar = () => {
                         <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
                     </div>
                     <div className="tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12">
-                        <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
-                            <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
-                            <input
-                                className="tw-ml-2 tw-bg-shade-100 "
-                                placeholder="Search make, model, year..."
-                            ></input>
-                        </div>
+
                     </div>
                     <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
                         <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
@@ -40,7 +35,8 @@ const Navbar = () => {
                     <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
                 </div>
 
-                : <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                :
+                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
                     <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Image src={Logo} width={176} height={64} alt="logo" className="tw-block tw-w-auto tw-h-auto" />
@@ -61,6 +57,7 @@ const Navbar = () => {
                     <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
 
                 </div>
+
             }
         </div>
 
@@ -68,3 +65,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+
+
