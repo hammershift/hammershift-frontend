@@ -4,9 +4,10 @@ import Card from '../components/card'
 import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import Footer from '../components/footer'
 import Subscribe from '../components/subscribe'
-
-import Image from 'next/image'
 import { carData } from '@/sample_data'
+import { articleData } from '@/sample_data';
+import Image from 'next/image'
+
 import LiveGamesIcon from '../../../public/images/live-games-icon.svg'
 import ArrowRight from '../../../public/images/arrow-right.svg'
 import ArrowLeft from '../../../public/images/arrow-left.svg'
@@ -90,7 +91,7 @@ const Homepage = () => {
       <WhatsTrending />
       <MostExpensiveCars />
       <MostBids />
-      <HowHammerShiftWorks />
+      <HowHammerShiftWorks articleData={articleData} />
       <Subscribe />
       <Footer />
 

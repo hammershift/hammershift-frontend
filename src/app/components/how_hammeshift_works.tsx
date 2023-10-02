@@ -1,27 +1,18 @@
 import React from 'react'
 
-const articleData = [{
-    id: "r1",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: "https://libn.com/wp-content/blogs.dir/1/files/2013/12/auto-sales-_Edit-972x648.jpg"
-},
-{
-    id: "r2",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: "https://libn.com/wp-content/blogs.dir/1/files/2013/12/auto-sales-_Edit-972x648.jpg"
-},
-{
-    id: "r3",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: "https://libn.com/wp-content/blogs.dir/1/files/2013/12/auto-sales-_Edit-972x648.jpg"
-},
-{
-    id: "r4",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: "https://libn.com/wp-content/blogs.dir/1/files/2013/12/auto-sales-_Edit-972x648.jpg"
-}]
 
-const HowHammerShiftWorks = () => {
+
+interface ArticleData {
+    id: string;
+    title: string;
+    url: string;
+}
+
+interface HowHammerShiftWorksProps {
+    articleData: ArticleData[];
+}
+
+const HowHammerShiftWorks: React.FC<HowHammerShiftWorksProps> = ({ articleData }) => {
     return (
         <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-screen tw-flex tw-justify-center'>
             <div className=' tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16 md:tw-py-[120px]'>
