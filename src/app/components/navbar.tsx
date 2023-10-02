@@ -36,11 +36,10 @@ const Navbar = () => {
                     <button onClick={() => setMenuIsOpen((prev) => !prev)}>
                         {
                             menuIsOpen
-                                ? <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
-                                : <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
                         }
                     </button>
-
                 </div>
 
                 :
@@ -65,12 +64,16 @@ const Navbar = () => {
                     <button onClick={() => setMenuIsOpen((prev) => !prev)}>
                         {
                             menuIsOpen
-                                ? <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
-                                : <Image src={CancelIcon} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
+                                ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
                         }
                     </button>
                 </div>
 
+            }
+            {
+                menuIsOpen
+                && <DropdownMenu />
             }
         </div>
 
@@ -81,7 +84,7 @@ export default Navbar;
 
 const DropdownMenu = () => {
     return (
-        <div className="tw-absolute tw-text-white"> Hello
+        <div className="tw-absolute tw-text-white tw-bg-black tw-w-full tw-h-full tw-z-50"> Hello
             {/* <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
         <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
         <input
