@@ -86,36 +86,19 @@ const Homepage = () => {
       <Carousel />
       <LiveGames carData={carData} />
       <TeamBattles />
-
-      <div className='tw-mt-16'>
-        <Tournaments />
-      </div>
+      <Tournaments />
       <NewEraWagering />
       <GamesByMake />
-      <div className='tw-mt-16'>
-        <WagerByCatergory />
-      </div>
-      <div className=''>
-        <SkillStrategyAndStakes />
-      </div>
+      <WagerByCatergory />
+      <SkillStrategyAndStakes />
       <NewGames />
-      <div className='tw-mt-16'>
-        <WhatsTrending />
-      </div>
-      <div className='tw-mt-16'>
-        <MostExpensiveCars />
-      </div>
-      <div className='tw-mt-16'>
-        <MostBids />
-      </div>
+      <WhatsTrending />
+      <MostExpensiveCars />
+      <MostBids />
       <HowHammerShiftWorks />
+      <Subscribe />
+      <Footer />
 
-      <div className=''>
-        <Subscribe />
-      </div>
-      <div className='tw-mt-16'>
-        <Footer />
-      </div>
     </div>
   )
 }
@@ -249,7 +232,7 @@ const TeamBattles = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className='left-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8 sm:tw-gap-16 tw-mt-8 sm:tw-mt-16'>
+      <section className='left-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8 md:tw-gap-16 tw-mt-8 sm:tw-mt-16'>
         <div
           style={{ backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)` }}
           className='tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end'>
@@ -287,7 +270,7 @@ const TeamBattles = () => {
           </div>
 
           {/* Team B */}
-          <div className='tw-relative'>
+          <div className='tw-relative tw-pb-8 sm:tw-pb-0'>
             <div className='tw-px-5 tw-w-full tw-h-[356px]'>
               <Image src={TrophyIconBlue} width={52} height={52} alt="dollar" className='tw-w-[52px] tw-h-[52px] ' />
               <div className='tw-font-bold tw-text-[18px]'>Team B</div>
@@ -454,7 +437,7 @@ const GamesByMake = () => {
 
 
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 lg:tw-py-[120px]'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 md:tw-py-[120px]'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -480,7 +463,7 @@ const GamesByMake = () => {
 const WagerByCatergory = () => {
   return (
     <div className='tw-w-screen tw-bg-[#1A2C3D] tw-flex tw-flex-col tw-items-center'>
-      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen 2xl:tw-w-[1440px] tw-py-8 lg:tw-py-[120px]'>
+      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen 2xl:tw-w-[1440px] tw-py-8 md:tw-py-[120px]'>
         <header>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
