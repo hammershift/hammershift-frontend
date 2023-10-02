@@ -381,7 +381,8 @@ const TournamentsCard = () => {
 
 const NewEraWagering = () => {
   return (
-    <div className='tw-w-screen 2xl:tw-w-[1440px] tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px]'>
+
+    <div className='tw-w-screen tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px] tw-flex tw-flex-col'>
       <div>
         <div className='tw-h-[6px]'></div>
         <div className='tw-bg-[#0F1923] tw-h-[40px]'></div>
@@ -389,7 +390,7 @@ const NewEraWagering = () => {
         <div className='tw-bg-[#0F1923] tw-h-[8px] tw-mt-8'></div>
         <div className='tw-bg-[#0F1923] tw-h-[4px] tw-mt-12'></div>
       </div>
-      <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-py-24 tw-px-4 md:tw-px-16'>
+      <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-py-24 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
         <div className='tw-relative'>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' ></div>
@@ -403,7 +404,7 @@ const NewEraWagering = () => {
           </div>
         </div>
       </div>
-      <div className='options tw-grid tw-cols-1 md:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16'>
+      <div className='options tw-grid tw-cols-1 md:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
         <div className=' tw-bg-white tw-rounded-lg tw-text-center tw-py-[32px] tw-px-[24px]'>
           <Image src={LiveGamesIcon} width={68} height={68} alt="dollar" className='tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px] ' />
           <h1 className='tw-font-bold tw-text-[24px] tw-mt-3'>Guess the Price</h1>
@@ -424,6 +425,8 @@ const NewEraWagering = () => {
         </div>
       </div>
     </div>
+
+
   )
 }
 
@@ -460,7 +463,7 @@ const GamesByMake = () => {
 const WagerByCatergory = () => {
   return (
     <div className='tw-w-screen tw-bg-[#1A2C3D] tw-flex tw-flex-col tw-items-center'>
-      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen tw-w-[1440px] tw-py-32'>
+      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen 2xl:tw-w-[1440px] tw-py-32'>
         <header>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -532,7 +535,7 @@ const WagerByCatergory = () => {
 
 const SkillStrategyAndStakes = () => {
   return (
-    <div className='tw-w-screen 2xl:tw-w-[1440px] tw-m-0 tw-flex tw-justify-center'>
+    <div className='tw-w-screen 2xl:tw-w-[1440px] tw-mt-[-1px] tw-flex tw-justify-center'>
       <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-absolute tw-z-[-1] tw-w-screen tw-h-auto tw-mr-1 tw-object-cover' />
       <div className=' tw-px-4 md:tw-px-16 xl:tw-px-36 tw-w-screen tw-pt-8 tw-pb-16'>
         <header>
@@ -553,90 +556,109 @@ const SkillStrategyAndStakes = () => {
 
 const NewGames = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
-      <header>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+
+      <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
             <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>New Games</div>
           </div>
-          <div className='tw-flex'>
-            <Image src={ArrowLeft} width={32} height={32} alt="arrow left" className='tw-w-8 tw-h-8 ' />
-            <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
-          </div>
+          <div className='tw-text-[#49C742]'>See All</div>
         </div>
       </header>
 
-      <section>
-        <div className='left-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-12 sm:tw-gap-8 tw-mt-12'>
-          {/* to be replaced by array.map */}
-          <Card />
-          <Card />
-          <Card />
+      <section className='tw-overflow-hidden'>
+        <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
+          <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
+            {/* to be replaced by array.map */}
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+          </div>
         </div>
       </section>
+
+
+
     </div>
   )
 }
 
 const WhatsTrending = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
-      <header>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+
+      <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>{"What\'s Trending"}</div>
+            <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>{`What\'s Trending`}</div>
           </div>
           <div className='tw-text-[#49C742]'>See All</div>
         </div>
       </header>
 
-      <section className='tw-overflow-hidden tw-min-w-[632px] tw-max-w-[1312px]'>
-        <div className=' tw-grid tw-grid-cols-3 tw-w-[1312px] tw-gap-4 lg:tw-gap-[32px] tw-mt-12'>
-          {/* to be replaced by array.map */}
-          <div className='tw-w-[200px] sm:tw-w-[416px]'>
-            <Card />
-          </div>
-          <div className='tw-w-[200px] sm:tw-w-[416px]'>
-            <Card />
-          </div>
-          <div className='tw-w-[200px] sm:tw-w-[416px]'>
-            <Card />
+      <section className='tw-overflow-hidden'>
+        <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
+          <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
+            {/* to be replaced by array.map */}
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
           </div>
         </div>
       </section>
+
     </div>
   )
 }
 
 const MostExpensiveCars = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
-      <header>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 tw-text-center'>
+
+      <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
             <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Most Expensive Cars</div>
           </div>
-          <div className=' tw-text-[#49C742]'>See All</div>
+          <div className='tw-text-[#49C742]'>See All</div>
         </div>
       </header>
 
-      <section className='tw-overflow-hidden tw-min-w-[632px] tw-max-w-[1312px]'>
-        <div className=' tw-grid tw-grid-cols-3 tw-w-[1312px] tw-gap-4 lg:tw-gap-[32px] tw-mt-12'>
-          {/* to be replaced by array.map */}
-          <div className='tw-w-[200px] sm:tw-w-[416px]'>
-            <Card />
-          </div>
-          <div className='tw-w-[200px] sm:tw-w-[416px]'>
-            <Card />
-          </div>
-          <div className='tw-w-[200px] sm:tw-w-[416px]'>
-            <Card />
+      <section className='tw-overflow-hidden'>
+        <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
+          <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
+            {/* to be replaced by array.map */}
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
+            <div className='tw-w-[200px] sm:tw-w-[416px]'>
+              <Card />
+            </div>
           </div>
         </div>
       </section>
+
+
+
     </div>
   )
 }
