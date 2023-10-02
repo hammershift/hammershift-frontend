@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Logo from "../../../public/images/hammershift-logo.svg";
+import LogoSmall from "../../../public/images/logo-small.svg";
 import MagnifyingGlass from "../../../public/images/magnifying-glass.svg"
 import WagersIcon from "../../../public/images/wagers-icon.svg"
 import WatchlistIcon from "../../../public/images/watchlist-icon.svg"
 import AccountIcon from "../../../public/images/account-icon.svg"
-import LogoSmall from "../../../public/images/logo-small.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 import CancelIcon from "../../../public/images/x-icon.svg"
 
@@ -91,7 +91,7 @@ interface DropdownMenuProps {
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
     return (
-        <div className="tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+        <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
             <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
                 <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
                 <input
