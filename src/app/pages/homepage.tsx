@@ -84,12 +84,8 @@ const Homepage = () => {
       <div className='tw-mt-16'>
         <Tournaments />
       </div>
-      <div className='tw-mt-16'>
-        <NewEraWagering />
-      </div>
-      <div className='tw-mt-16'>
-        <GamesByMake />
-      </div>
+      <NewEraWagering />
+      <GamesByMake />
       <div className='tw-mt-16'>
         <WagerByCatergory />
       </div>
@@ -327,18 +323,18 @@ const Tournaments = () => {
 const TournamentsCard = () => {
   const userList = [{
     number: "1",
-    img: Avatar,
+    img: AvatarOne,
     username: "Username",
     points: "936"
   },
   {
     number: "2",
-    img: Avatar,
+    img: AvatarTwo,
     username: "Username",
     points: "984"
   }, {
     number: "3",
-    img: Avatar,
+    img: AvatarThree,
     username: "Username",
     points: "1,000"
   }]
@@ -381,7 +377,7 @@ const NewEraWagering = () => {
   return (
 
     <div className='tw-w-screen tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px] tw-flex tw-flex-col'>
-      <div>
+      <div className='design-container'>
         <div className='tw-h-[6px]'></div>
         <div className='tw-bg-[#0F1923] tw-h-[40px]'></div>
         <div className='tw-bg-[#0F1923] tw-h-[24px] tw-mt-3.5'></div>
@@ -391,11 +387,11 @@ const NewEraWagering = () => {
 
       <div className='tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-pt-16 sm:tw-pt-[120px] tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
         <div className='tw-relative'>
-          <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
+          <div className=' tw-font-bold tw-text-[48px] md:tw-text-[56px] lg:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' ></div>
         </div>
         <div>
-          <p className='tw-mt-8 sm:tw-mt-16'>Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc posthac, sitientis piros Afros. Cum sociis natoque penatibus et magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?<br /><br />
+          <p className='tw-mt-8 lg:tw-mt-0'>Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc posthac, sitientis piros Afros. Cum sociis natoque penatibus et magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?<br /><br />
             Quam temere in vitiis, legem sancimus haerentia. Phasellus laoreet lorem vel dolor tempus vehicula. Qui ipsorum lingua Celtae, nostra Galli appellantur. Curabitur blandit tempus ardua ridiculus sed magna. Tu quoque, Brute, fili mi, nihil timor populi, nihil! Donec sed odio operae, eu vulputate felis rhoncus.</p>
           <div className='tw-mt-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-start'>
             <button className='btn-dark'>Sign up to win</button>
@@ -437,7 +433,7 @@ const GamesByMake = () => {
 
 
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 s:tw-py-16'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 lg:tw-py-[120px]'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -463,7 +459,7 @@ const GamesByMake = () => {
 const WagerByCatergory = () => {
   return (
     <div className='tw-w-screen tw-bg-[#1A2C3D] tw-flex tw-flex-col tw-items-center'>
-      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen 2xl:tw-w-[1440px] tw-py-32'>
+      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen 2xl:tw-w-[1440px] tw-py-8 lg:tw-py-[120px]'>
         <header>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
