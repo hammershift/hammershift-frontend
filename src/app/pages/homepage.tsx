@@ -100,24 +100,6 @@ const Homepage = () => {
 }
 export default Homepage
 
-const DropdownMenu = () => {
-  return (
-    <div className="tw-absolute tw-text-white"> Hello
-      {/* <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
-        <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
-        <input
-          className="tw-ml-2 tw-bg-shade-100 "
-          placeholder="Search make, model, year..."
-        ></input>
-        <div>
-          <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
-          <div>MY WATCHLIST</div>
-        </div>
-      </div> */}
-    </div>
-  )
-}
-
 
 const Carousel = () => {
   return (
