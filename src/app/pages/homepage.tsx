@@ -322,10 +322,16 @@ const TournamentsCard = () => {
   }]
   return (
     <div className=''>
-      <div className='tw-relative'>
-        <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-left-[5%] tw-opacity-[50%]' />
-        <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={100} height={100} alt='image' className='tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full  tw-left-[35%]' />
-        <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-left-[70%] tw-opacity-[50%]' />
+      <div className='tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4'>
+        <div className='tw-flex tw-justify-end '>
+          <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
+        </div>
+        <div className='tw-flex tw-justify-center'>
+          <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={100} height={100} alt='image' className='tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full ' />
+        </div>
+        <div className='tw-flex tw-justify-start'>
+          <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
+        </div>
       </div>
       <div className='tw-bg-[#1A2C3D] tw-w-auto tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20' >
         <div className='tw-text-[18px] tw-font-bold'>2000s Tournament</div>
