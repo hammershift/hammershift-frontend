@@ -46,14 +46,14 @@ hr {
     font-weight: 700;
 }
 .btn-dark {
-    padding: 24px 16px;
+    padding: 16px 24px;
     color: white;
     background-color: #172431;
     border-radius: 0.25rem;
     font-weight: 700;
 }
 .btn-transparent {
-    padding: 24px 16px;
+    padding: 16px 24px;
     color: black;
     background-color: none;
     border-radius: 0.25rem;
