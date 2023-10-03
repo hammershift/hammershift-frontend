@@ -12,7 +12,7 @@ const Subscribe = () => {
                         <p className='tw-my-10'>Are you ready to dive deeper into the captivating world of car auction wagering? Join the exclusive HammerShift newsletter to get access to a treasure trove of insider knowledge, expert tips, and captivating insights that will elevate your wagering game.</p>
                         <div className='tw-flex tw-flex-col sm:tw-flex-row tw-w-auto'>
                             <input placeholder='Email Address' className='tw-px-6 tw-py-4 tw-grow tw-rounded tw-font-bold' />
-                            <button className='btn-dark sm:tw-ml-3 tw-mt-4 sm:tw-mt-0 tw-w-full'>Subscribe</button>
+                            <button className='btn-dark sm:tw-ml-3 tw-mt-4 sm:tw-mt-0 tw-w-auto'>Subscribe</button>
                         </div>
                     </div>
                     <div>
