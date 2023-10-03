@@ -75,7 +75,7 @@ interface LiveGamesCardProps {
 
 const Homepage = () => {
 
-  const isLoggedIn = false; // state of login
+  const isLoggedIn = true; // state of login
   return (
     <div className='2xl:tw-flex tw-flex-col tw-items-center'>
       <Navbar isLoggedIn={isLoggedIn} />

@@ -16,6 +16,7 @@ export interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
     const [menuIsOpen, setMenuIsOpen] = useState(false)
+    const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false)
     return (
         <div>
             {isLoggedIn
@@ -36,13 +37,19 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                         <Image src={WagersIcon} width={24} height={24} alt="wagers" className="tw-w-[24px] tw-h-[24px]" />
                         <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
                     </div>
-                    <button onClick={() => setMenuIsOpen((prev) => !prev)}>
-                        {
-                            menuIsOpen
-                                ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
-                                : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
-                        }
-                    </button>
+                    <div>
+                        <button onClick={() => setMyAccountMenuOpen((prev) => !prev)} className="tw-mr-4">
+                            <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
+                        </button>
+                        <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                            {
+                                menuIsOpen
+                                    ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                    : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+
+                            }
+                        </button>
+                    </div>
                 </div>
 
                 :
@@ -79,6 +86,10 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
             {
                 menuIsOpen
                 && <DropdownMenu isLoggedIn={isLoggedIn} />
+            }
+            {
+                myAccountMenuOpen
+                && <MyAccountMenu isLoggedIn={isLoggedIn} />
             }
         </div>
 
@@ -121,3 +132,17 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
 
 
 
+interface MyAccountMenuProps {
+    isLoggedIn: boolean;
+}
+
+const MyAccountMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
+    return (
+        <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto tw-z-50">
+            <div className="tw-text-lg tw-font-bold">MY ACCOUNT</div>
+            <div className="tw-m-1.5">Profile</div>
+            <div className="tw-m-1.5" >Setting</div>
+            <div className="tw-m-1.5" >Logout</div>
+        </div>
+    )
+}
