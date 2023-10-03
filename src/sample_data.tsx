@@ -1,5 +1,5 @@
 export const carData = [{
-    id: "1",
+    id: "car1",
     url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
     year: "1969",
     name: "Shelby Mustang",
@@ -8,7 +8,7 @@ export const carData = [{
 
 },
 {
-    id: "2",
+    id: "car2",
     url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
     year: "1969",
     name: "Shelby Mustang",
@@ -17,7 +17,7 @@ export const carData = [{
 
 },
 {
-    id: "3",
+    id: "car3",
     url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
     year: "1969",
     name: "Shelby Mustang",
@@ -26,7 +26,7 @@ export const carData = [{
 
 },
 {
-    id: "4",
+    id: "car4",
     url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
     year: "1969",
     name: "Shelby Mustang",
@@ -34,7 +34,7 @@ export const carData = [{
     time: "12:17:00"
 
 }, {
-    id: "5",
+    id: "car5",
     url: "https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg",
     year: "1969",
     name: "Shelby Mustang",
