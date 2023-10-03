@@ -6,7 +6,7 @@ const Subscribe = () => {
     return (
 
         <div className='tw-relative tw-text-[#0F1923] tw-bg-[#F2CA16] tw-h-auto md:tw-max-h-[664px] tw-flex  tw-justify-center tw-w-screen tw-mt-[-1px] tw-overflow-hidden'>
-            <div className='tw-relative tw-mt-80 md:tw-mt-0 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16 md:tw-py-32 tw-z-50 '>
+            <div className='tw-relative tw-mt-[350px] md:tw-mt-0 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16 md:tw-py-32 tw-z-50 '>
                 <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 '>
                     <div>
                         <h1 className='tw-text-6xl tw-font-bold'>Stay in the Fast Lane</h1>
