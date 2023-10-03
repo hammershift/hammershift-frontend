@@ -5,7 +5,7 @@ import Image from 'next/image'
 const Subscribe = () => {
     return (
 
-        <div className='tw-relative tw-text-[#0F1923] tw-bg-[#F2CA16] tw-h-auto md:tw-max-h-[664px] tw-flex  tw-items-center tw-w-screen tw-mt-[-1px] tw-overflow-hidden'>
+        <div className='tw-relative tw-text-[#0F1923] tw-bg-[#F2CA16] tw-h-auto md:tw-max-h-[664px] tw-flex  tw-justify-center tw-w-screen tw-mt-[-1px] tw-overflow-hidden'>
             <div className='tw-relative tw-mt-80 md:tw-mt-0 tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16 md:tw-py-32 tw-z-50 '>
                 <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 '>
                     <div>
@@ -25,14 +25,14 @@ const Subscribe = () => {
                     <div style={{
 
                         transform: 'skew(-28deg)',
-                        backgroundColor: '#fff'
-                        // backgroundColor: '#F2CA16'
+                        // backgroundColor: '#fff'
+                        backgroundColor: '#F2CA16'
 
 
                         // borderBottom: '664px solid transparent',
                         // borderLeft: '360px solid #fff'
 
-                    }} className='tw-absolute tw-h-[644px] md:tw-h-auto tw-w-[400px] md:tw-width tw-right-[400px] sm:tw-right-[542px] md:tw-right-[500px]'>
+                    }} className='tw-absolute tw-h-[664px] tw-w-[400px] md:tw-width tw-right-[400px] sm:tw-right-[542px] '>
                     </div>
                     <div style={{
 
@@ -54,7 +54,7 @@ const Subscribe = () => {
                         borderRight: '360px solid #F2CA16'
                     }} className='tw-absolute tw-w-[997px] tw-h-[644px] w-top-[2px] tw-right-[-80px] sm:tw-right-[-60px]'>
                     </div>
-                    <Image src={CarDesign} width={997} height={644} alt='design' className='tw-w-[640px] md:tw-w-auto tw-h-[350px] md:tw-h-auto tw-z-[-1] tw-mt-[1px] tw-object-cover' />
+                    <Image src={CarDesign} width={997} height={644} alt='design' className='tw-w-[640px] md:tw-w-auto tw-h-[350px] md:tw-h-auto tw-z-[-1] tw-object-cover' />
                 </div>
             </div>
         </div >
