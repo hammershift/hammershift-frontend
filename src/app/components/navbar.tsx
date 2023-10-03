@@ -30,22 +30,28 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                         <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
                     </div>
                     <div className="tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12">
-
+                        <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
+                            <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+                            <input
+                                className="tw-ml-2 tw-bg-shade-100 "
+                                placeholder="Search make, model, year..."
+                            ></input>
+                        </div>
                     </div>
                     <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
                         <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
                         <Image src={WagersIcon} width={24} height={24} alt="wagers" className="tw-w-[24px] tw-h-[24px]" />
                         <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
                     </div>
-                    <div>
+                    <div className="sm:tw-hidden">
                         <button onClick={() => setMyAccountMenuOpen((prev) => !prev)} className="tw-mr-4">
                             <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
                         </button>
                         <button onClick={() => setMenuIsOpen((prev) => !prev)}>
                             {
                                 menuIsOpen
-                                    ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
-                                    : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                    ? <Image src={CancelIcon} width={24} height={24} alt="menu" className=" tw-w-auto tw-h-auto" />
+                                    : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className=" tw-w-auto tw-h-auto" />
 
                             }
                         </button>
