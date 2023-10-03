@@ -67,7 +67,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                     <button onClick={() => setMenuIsOpen((prev) => !prev)}>
                         {
                             menuIsOpen
-                                ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="sm:tw-hidden tw-w-auto tw-h-auto" />
+                                ? <Image src={CancelIcon} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
                                 : <Image src={HamburgerMenu} width={24} height={24} alt="menu" className="md:tw-hidden tw-w-auto tw-h-auto" />
                         }
                     </button>
