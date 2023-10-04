@@ -33,7 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                         <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
                             <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
                             <input
-                                className="tw-ml-2 tw-bg-shade-100 "
+                                className="tw-ml-2 tw-bg-shade-100 tw-w-full "
                                 placeholder="Search make, model, year..."
                             ></input>
                         </div>
@@ -71,7 +71,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                         <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
                             <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
                             <input
-                                className="tw-ml-2 tw-bg-shade-100 "
+                                className="tw-ml-2 tw-bg-shade-100 tw-w-full"
                                 placeholder="Search make, model, year..."
                             ></input>
                         </div>
