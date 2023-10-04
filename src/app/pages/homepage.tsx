@@ -103,14 +103,14 @@ export default Homepage
 
 const Carousel = () => {
   const [sliderTransform, setSlidertransform] = useState(0);
-  const leftArrowHandler = () => {
+  const rightArrowHandler = () => {
     if (sliderTransform === -75) {
       setSlidertransform(0)
     } else {
       setSlidertransform((prev) => prev - 25)
     }
   }
-  const rightArrowHandler = () => {
+  const leftArrowHandler = () => {
     if (sliderTransform === 0) {
       setSlidertransform(-75)
     } else {
@@ -127,12 +127,49 @@ const Carousel = () => {
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 4</div>
         </div>
         <div className='controller-container'>
-          <button className='arrow-left' onClick={leftArrowHandler}>
-            <Image src={ArrowLeft} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px]' />
+          <button onClick={leftArrowHandler}>
+            <Image src={ArrowLeft} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] arrow-slider tw-rounded-full' />
           </button>
-          <button className='arrow-right' onClick={rightArrowHandler}>
-            <Image src={ArrowRight} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] tw-right-0' />
+          <button onClick={rightArrowHandler}>
+            <Image src={ArrowRight} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] tw-right-0 arrow-slider tw-rounded-full' />
           </button>
+          <ul className='tw-w-[72px] tw-flex tw-justify-between tw-items-end tw-absolute tw-bottom-[16px] tw-left-1/2 tw-translate-x-[-50%]'>
+            <li>
+              <button >
+                <div
+                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
+                </div>
+              </button>
+            </li>
+            <li>
+              <button >
+                <div
+                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
+                </div>
+              </button>
+            </li>
+            <li>
+              <button >
+                <div
+                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
+                </div>
+              </button>
+            </li>
+            <li>
+              <button >
+                <div
+                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
+                </div>
+              </button>
+            </li>
+            <li>
+              <button >
+                <div
+                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
+                </div>
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
 

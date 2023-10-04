@@ -5,6 +5,9 @@ hr {
     border-color: #0f1923;
     opacity: 10%;
 }
+.arrow-slider:hover {
+    background-color: #f2ca16;
+}
 .btn-white {
     padding: 0.625rem 0.75rem;
     color: black;
