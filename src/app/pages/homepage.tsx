@@ -104,27 +104,35 @@ export default Homepage
 const Carousel = () => {
   const [sliderTransform, setSlidertransform] = useState(0);
   const rightArrowHandler = () => {
-    if (sliderTransform === -75) {
+    if (sliderTransform === -80) {
       setSlidertransform(0)
     } else {
-      setSlidertransform((prev) => prev - 25)
+      setSlidertransform((prev) => prev - 20)
     }
   }
   const leftArrowHandler = () => {
     if (sliderTransform === 0) {
-      setSlidertransform(-75)
+      setSlidertransform(-80)
     } else {
-      setSlidertransform((prev) => prev + 25)
+      setSlidertransform((prev) => prev + 20)
     }
   }
+  const sliderButtonsData = [
+    { id: "slide1", transform: 0 },
+    { id: "slide1", transform: -20 },
+    { id: "slide1", transform: -40 },
+    { id: "slide1", transform: -60 },
+    { id: "slide1", transform: -80 },
+  ]
   return (
-    <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px]'>
+    <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px] tw-overflow-hidden'>
       <div className='carousel-container tw-relative tw-w-full tw-h-full tw-border-solid tw-border-inherit tw-border-2'>
-        <div className='slider-containerr tw-flex tw-h-full tw-w-[400%]' style={{ transform: `translate(${sliderTransform}%)` }}>
+        <div className='slider-container tw-transition tw-duration-[2000ms] tw-flex tw-h-full' style={{ transform: `translate(${sliderTransform}%)`, width: "500%" }}>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 1</div>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 2</div>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 3</div>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 4</div>
+          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 5</div>
         </div>
         <div className='controller-container'>
           <button onClick={leftArrowHandler}>
@@ -134,42 +142,19 @@ const Carousel = () => {
             <Image src={ArrowRight} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] tw-right-0 arrow-slider tw-rounded-full' />
           </button>
           <ul className='tw-w-[72px] tw-flex tw-justify-between tw-items-end tw-absolute tw-bottom-[16px] tw-left-1/2 tw-translate-x-[-50%]'>
-            <li>
-              <button >
-                <div
-                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
-                </div>
-              </button>
-            </li>
-            <li>
-              <button >
-                <div
-                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
-                </div>
-              </button>
-            </li>
-            <li>
-              <button >
-                <div
-                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
-                </div>
-              </button>
-            </li>
-            <li>
-              <button >
-                <div
-                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
-                </div>
-              </button>
-            </li>
-            <li>
-              <button >
-                <div
-                  className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'>
-                </div>
-              </button>
-            </li>
+            {sliderButtonsData.map((slide) => {
+              return <li key={slide.id}>
+                <button onClick={() => setSlidertransform(slide.transform)}>
+                  <div
+                    className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'
+                    style={{ opacity: `${sliderTransform === slide.transform ? "100%" : "20%"}` }}>
+                  </div>
+                </button>
+              </li>
+            })}
+
           </ul>
+
         </div>
       </div>
 
