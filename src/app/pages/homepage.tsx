@@ -103,8 +103,19 @@ export default Homepage
 
 const Carousel = () => {
   return (
-    <div className='tw-relative tw-px-4 md:tw-px-16 tw-py-8 sm:tw-py-16 tw-w-screen 2xl:tw-w-[1440px] tw-overflow-hidden'>
-      <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between  sm:tw-items-center tw-overflow-hidden'>
+    <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px] tw-overflow-hidden'>
+      <div className='tw-w-full tw-h-full tw-border-solid tw-border-inherit tw-border-2'>
+        <div className='slider tw-flex tw-h-full tw-w-[400%]'>
+          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 1</div>
+          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 2</div>
+          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 3</div>
+          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 4</div>
+        </div>
+      </div>
+
+
+
+      {/* <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between  sm:tw-items-center tw-overflow-hidden'>
         <div className='tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-8 lg:tw-py-16 tw-px-6 sm:tw-px-8 tw-z-[1]'>
           <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
           <div className='tw-font-euro tw-text-[32px] tw-w-4/6 sm:tw-text-[40px] tw-leading-none'>100 WELCOME <br />CREDITS</div>
@@ -112,8 +123,7 @@ const Carousel = () => {
         </div>
         <Image src={YellowSportsCarFull} width={569} height={213} alt="dollar" className='tw-w-auto tw-h-[93px] sm:tw-h-[120px] md:tw-h-[150px] lg:tw-h-[213px] tw-top-8 sm:tw-top-12 tw-absolute sm:tw-block tw-right-[-32px] sm:tw-right-0 tw-z-[1]' />
         <Image src={DiagonalLinesCarousel} width={733} height={664} alt="dollar" className='tw-w-auto tw-h-[300px] tw-absolute tw-top-0 tw-right-0 sm:tw-right-4 md:tw-right-8 lg:tw-right-36' />
-      </div>
-
+      </div> */}
     </div>
   )
 }

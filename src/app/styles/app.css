@@ -1,3 +1,6 @@
+button {
+    cursor: pointer;
+}
 hr {
     border-color: #0f1923;
     opacity: 10%;
@@ -19,6 +22,7 @@ hr {
     background-color: #53944f;
     border-radius: 0.25rem;
     font-weight: 700;
+    cursor: pointer;
 }
 .btn-blue {
     padding: 0.625rem 0.75rem;
@@ -26,6 +30,7 @@ hr {
     background-color: #156cc3;
     border-radius: 0.25rem;
     font-weight: 700;
+    cursor: pointer;
 }
 .btn-yellow {
     padding: 0.625rem 0.75rem;
