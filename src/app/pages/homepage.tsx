@@ -102,14 +102,37 @@ export default Homepage
 
 
 const Carousel = () => {
+  const [sliderTransform, setSlidertransform] = useState(0);
+  const leftArrowHandler = () => {
+    if (sliderTransform === -75) {
+      setSlidertransform(0)
+    } else {
+      setSlidertransform((prev) => prev - 25)
+    }
+  }
+  const rightArrowHandler = () => {
+    if (sliderTransform === 0) {
+      setSlidertransform(-75)
+    } else {
+      setSlidertransform((prev) => prev + 25)
+    }
+  }
   return (
-    <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px] tw-overflow-hidden'>
-      <div className='tw-w-full tw-h-full tw-border-solid tw-border-inherit tw-border-2'>
-        <div className='slider tw-flex tw-h-full tw-w-[400%]'>
+    <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px]'>
+      <div className='carousel-container tw-relative tw-w-full tw-h-full tw-border-solid tw-border-inherit tw-border-2'>
+        <div className='slider-containerr tw-flex tw-h-full tw-w-[400%]' style={{ transform: `translate(${sliderTransform}%)` }}>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 1</div>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 2</div>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 3</div>
           <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 4</div>
+        </div>
+        <div className='controller-container'>
+          <button className='arrow-left' onClick={leftArrowHandler}>
+            <Image src={ArrowLeft} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px]' />
+          </button>
+          <button className='arrow-right' onClick={rightArrowHandler}>
+            <Image src={ArrowRight} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] tw-right-0' />
+          </button>
         </div>
       </div>
 
