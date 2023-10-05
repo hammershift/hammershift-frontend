@@ -209,7 +209,43 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
 };
 
 const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, description, time }) => {
-
+  const playersData = [
+    {
+      id: "pl1",
+      username: "user1",
+      avatar: AvatarOne
+    },
+    {
+      id: "pl2",
+      username: "user2",
+      avatar: AvatarTwo
+    },
+    {
+      id: "pl3",
+      username: "user2",
+      avatar: AvatarThree
+    },
+    {
+      id: "pl4",
+      username: "user2",
+      avatar: AvatarFour
+    },
+    {
+      id: "pl5",
+      username: "user2",
+      avatar: AvatarOne
+    },
+    {
+      id: "pl6",
+      username: "user2",
+      avatar: AvatarTwo
+    },
+    {
+      id: "pl7",
+      username: "user2",
+      avatar: AvatarThree
+    }
+  ]
   return (
     <div className='tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center'>
       <div className='tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-relative'>
@@ -224,7 +260,19 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, descript
             <Image src={HourGlassIcon} width={12} height={14} alt="hour glass" className='tw-w-[12px] tw-h-[14px] tw-mr-1 ' />
             <div>{time}</div>
           </div>
-          <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-auto tw-mt-2 sm:tw-mt-4 tw-h-[32px] sm:tw-h-[40px]' />
+          <div className='avatars-container tw-mt-2 sm:tw-mt-4 tw-flex sm:tw-justify-center tw-w-full'>
+            <div className='tw-flex sm:tw-translate-x-[20%]'>
+              {playersData.slice(0, 5).map((item) => {
+
+                return <div key={item.id} style={{ transform: `translate(${-10 + -10 * playersData.slice(0, 5).indexOf(item)}px ,0)` }}>
+                  <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                </div>
+              }
+              )}
+            </div>
+
+          </div>
+          {/* <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-auto tw-mt-2 sm:tw-mt-4 tw-h-[32px] sm:tw-h-[40px]' /> */}
         </div>
         <div className='tw-mt-1.5'>
         </div>
