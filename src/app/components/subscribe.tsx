@@ -10,7 +10,7 @@ const Subscribe = () => {
                 <div className='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 '>
                     <div>
                         <h1 className='tw-text-6xl tw-font-bold'>Stay in the Fast Lane</h1>
-                        <p className='tw-my-10 tw-max-h-[120px] tw-ellispis tw-overflow-hidden'>Are you ready to dive deeper into the captivating world of car auction wagering? Join the exclusive HammerShift newsletter to get access to a treasure trove of insider knowledge, expert tips, and captivating insights that will elevate your wagering game.</p>
+                        <p className='tw-my-10 tw-max-h-[100px] tw-ellispis tw-overflow-hidden'>Are you ready to dive deeper into the captivating world of car auction wagering? Join the exclusive HammerShift newsletter to get access to a treasure trove of insider knowledge, expert tips, and captivating insights that will elevate your wagering game.</p>
                         <div className='tw-flex tw-flex-col sm:tw-flex-row tw-w-auto'>
                             <input placeholder='Email Address' className='tw-px-6 tw-py-4 tw-grow tw-rounded tw-font-bold' />
                             <button className='btn-dark sm:tw-ml-3 tw-mt-4 sm:tw-mt-0 tw-w-auto'>Subscribe</button>
@@ -21,7 +21,7 @@ const Subscribe = () => {
             </div>
 
             <div>
-                <div className='tw-absolute tw-top-0 tw-right-0 tw-w-full sm:tw-w-auto tw-h-auto'>
+                <div className='tw-absolute tw-top-0 tw-right-0 md:tw-right-[-200px] lg:tw-right-0 tw-w-full sm:tw-w-auto tw-h-auto'>
                     <div style={{
 
                         transform: 'skew(-28deg)',
