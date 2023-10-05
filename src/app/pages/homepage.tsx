@@ -710,7 +710,7 @@ const MostExpensiveCars = () => {
 
 const MostBids = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
+    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 sm:tw-mb-16'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>

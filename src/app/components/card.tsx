@@ -34,12 +34,39 @@ const cardData = {
     ],
     players: [
         {
+            id: "player1",
             username: "user1",
             avatar: AvatarOne
         },
         {
+            id: "player2",
             username: "user2",
             avatar: AvatarTwo
+        },
+        {
+            id: "player3",
+            username: "user2",
+            avatar: AvatarThree
+        },
+        {
+            id: "player4",
+            username: "user2",
+            avatar: AvatarFour
+        },
+        {
+            id: "player5",
+            username: "user2",
+            avatar: AvatarOne
+        },
+        {
+            id: "player6",
+            username: "user2",
+            avatar: AvatarTwo
+        },
+        {
+            id: "player7",
+            username: "user2",
+            avatar: AvatarThree
         }
     ]
 }
@@ -76,6 +103,35 @@ const card = () => {
                 }
                 )}
 
+                <div className='tw-relative tw-flex tw-items-center'>
+                    {/* avatar images - hidden for screens smaller than sm */}
+                    <div className=' tw-w-auto tw-hidden sm:tw-flex'>
+                        <Image src={cardData.players[0].avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                        <div className='tw-flex'>
+                            {cardData.players.slice(1, 5).map((item) => {
+
+                                return <div key={item.id} style={{ transform: `translate(${-10 + -10 * cardData.players.slice(1, 5).indexOf(item)}px ,0)` }}>
+                                    <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                                </div>
+                            }
+                            )}
+                        </div>
+                    </div>
+                    <div className='tw-ml-1 tw--translate-x-8 sm:tw-block tw-hidden'>{`and ${cardData.players.length - 5} more players to join`}</div>
+                    {/* avatar images - hidden for screens bigger than sm */}
+                    <div className='tw-flex tw-w-auto sm:tw-hidden tw-block'>
+                        <div className='tw-flex'>
+                            {cardData.players.slice(0, 2).map((item) => {
+
+                                return <div key={item.id} style={{ transform: `translate(${-10 + -10 * cardData.players.slice(1, 5).indexOf(item)}px ,0)` }}>
+                                    <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                                </div>
+                            }
+                            )}
+                        </div>
+                    </div>
+                    <div className='tw-ml-1 tw--translate-x-1 tw-block sm:tw-hidden'>{`${cardData.players.length} players`}</div>
+                </div>
             </div>
             <button className='btn-yellow-thin tw-py-1 tw-w-full sm:tw-w-auto'>Play Game</button>
         </div>
