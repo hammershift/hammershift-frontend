@@ -40,7 +40,7 @@ const HowHammerShiftWorks: React.FC<HowHammerShiftWorksProps> = ({ articleData }
                                 <img src={articleData[1].url} width={80} height={80} alt='car' className='tw-w-20 tw-h-20 tw-object-cover tw-ml-6' />
                             </div>
                         </div>
-                        <hr style={{ borderColor: 'black', opacity: "10%" }} className='tw-block md:tw-hidden lg:tw-block tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0' />
+                        <hr style={{ borderColor: 'black', opacity: "10%" }} className='tw-hidden lg:tw-block tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0' />
                         <div className='tw-flex tw-flex-wrap'>
                             <div className='tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 '>
                                 <div>
