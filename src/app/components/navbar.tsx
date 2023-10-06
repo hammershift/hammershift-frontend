@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import Image from "next/image";
 import Logo from "../../../public/images/hammershift-logo.svg";
