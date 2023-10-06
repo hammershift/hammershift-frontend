@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react'
-import Navbar from '../components/navbar'
 import Card from '../components/card'
 import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import Footer from '../components/footer'
