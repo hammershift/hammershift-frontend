@@ -13,7 +13,7 @@ const AuctionListingPage = () => {
 export default AuctionListingPage
 
 
-const TopNavigation = () => {
+export const TopNavigation = () => {
     return (
         <main className='tw-flex tw-justify-center tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='tw-grid tw-grid-cols-5 tw-gap-10 tw-py-4'>
