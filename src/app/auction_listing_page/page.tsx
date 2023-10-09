@@ -32,7 +32,7 @@ export const TopNavigation = () => {
 const Filters = () => {
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
-            <div className='left-container tw-flex'>
+            <div className='left-container-marker tw-flex'>
                 <div>Live Games</div>
                 <div>100</div>
                 <div>Dropdown</div>
@@ -41,7 +41,7 @@ const Filters = () => {
                 <div>Dropdown</div>
 
             </div>
-            <div className='right-container tw-flex'>
+            <div className='right-container-marker tw-flex'>
                 <div>image</div>
                 <div>image</div>
                 <div>Dropdown</div>
