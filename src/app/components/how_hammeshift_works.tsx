@@ -15,7 +15,7 @@ interface HowHammerShiftWorksProps {
 const HowHammerShiftWorks: React.FC<HowHammerShiftWorksProps> = ({ articleData }) => {
     return (
         <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-screen tw-flex tw-justify-center'>
-            <div className=' tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-16 md:tw-py-[120px]'>
+            <div className=' section-container tw-py-16 md:tw-py-[120px]'>
                 <header>
                     <h1 className='tw-text-5xl tw-font-bold'>How HammerShift Works</h1>
                 </header>

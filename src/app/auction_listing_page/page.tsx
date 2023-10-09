@@ -15,7 +15,7 @@ export default AuctionListingPage
 
 export const TopNavigation = () => {
     return (
-        <main className='tw-flex tw-justify-center tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
+        <main className='section-container tw-flex tw-justify-center'>
             <div className='tw-grid tw-grid-cols-5 tw-gap-10 tw-py-4'>
                 <Link href="/homepage">{`TODAY\'S MINI GAME`}</Link >
                 <Link href="/homepage">{`TOURNAMENTS`}</Link>

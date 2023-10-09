@@ -124,14 +124,14 @@ const Carousel = () => {
     { id: "slide5", transform: -80 },
   ]
   return (
-    <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px] tw-overflow-hidden'>
+    <div className=' section-container tw-relative tw-pt-8 md:tw-pt-16 tw-h-[344px] tw-overflow-hidden'>
       <div className='carousel-container tw-relative tw-w-full tw-h-[280px] tw-overflow-hidden'>
         <div className='slider-container tw-transition tw-duration-[2000ms] tw-flex tw-h-[280px]' style={{ transform: `translate(${sliderTransform}%)`, width: "500%" }}>
           <SlideOne />
-          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 2</div>
-          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 3</div>
-          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 4</div>
-          <div className='section-container tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 5</div>
+          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 2</div>
+          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 3</div>
+          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 4</div>
+          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 5</div>
         </div>
         <div className='controller-container'>
           <button onClick={leftArrowHandler}>
@@ -180,7 +180,7 @@ const SlideOne = () => {
 
 const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
   return (
-    <div className="tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16">
+    <div className="section-container tw-py-8 sm:tw-py-16">
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={LiveGamesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -306,7 +306,7 @@ const TeamBattles = () => {
   },
   ]
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16'>
+    <div className='section-container tw-py-8 sm:tw-py-16'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TeamBattlesIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -388,7 +388,7 @@ const TeamBattles = () => {
 
 const Tournaments = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16'>
+    <div className='section-container tw-py-8 sm:tw-py-16'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={TournamentsIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -483,7 +483,7 @@ const NewEraWagering = () => {
         <div className='tw-bg-[#0F1923] tw-h-[4px] tw-mt-12'></div>
       </div>
 
-      <div className='tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-pt-16 sm:tw-pt-[120px] tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-self-center'>
+      <div className='section-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-pt-16 sm:tw-pt-[120px]  tw-self-center'>
         <div className='tw-relative'>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[56px] lg:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight' >A New Era <br />of Wagering</div>
           <div className=' tw-font-bold tw-text-[48px] md:tw-text-[60px] lg:tw-text-[80px]' ></div>
@@ -531,7 +531,7 @@ const GamesByMake = () => {
 
 
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 md:tw-py-[120px]'>
+    <div className='section-container tw-py-8 md:tw-py-[120px]'>
       <header className='tw-flex tw-justify-between'>
         <div className='tw-flex tw-items-center'>
           <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -557,7 +557,7 @@ const GamesByMake = () => {
 const WagerByCatergory = () => {
   return (
     <div className='tw-w-screen tw-bg-[#1A2C3D] tw-flex tw-flex-col tw-items-center'>
-      <div className=' tw-px-4 md:tw-px-16 tw-w-auto tw-w-screen 2xl:tw-w-[1440px] tw-py-8 md:tw-py-[120px]'>
+      <div className=' section-container tw-py-8 md:tw-py-[120px]'>
         <header>
           <div className='tw-flex tw-items-center'>
             <Image src={GamesByMakeIcon} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
@@ -650,7 +650,7 @@ const SkillStrategyAndStakes = () => {
 
 const NewGames = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-12'>
+    <div className='section-container tw-py-8 sm:tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
@@ -684,7 +684,7 @@ const NewGames = () => {
 
 const WhatsTrending = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
+    <div className='section-container tw-py-8 sm:tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
@@ -719,7 +719,7 @@ const WhatsTrending = () => {
 
 const MostExpensiveCars = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12'>
+    <div className='section-container tw-py-8 sm:tw-py-12'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>
@@ -756,7 +756,7 @@ const MostExpensiveCars = () => {
 
 const MostBids = () => {
   return (
-    <div className='tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-py-12 sm:tw-mb-16'>
+    <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16'>
 
       <header className='tw-max-w-[1312px]'>
         <div className='tw-flex tw-justify-between'>

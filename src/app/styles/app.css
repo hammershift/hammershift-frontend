@@ -5,6 +5,11 @@ hr {
     border-color: #0f1923;
     opacity: 10%;
 }
+.section-container {
+    width: 100vw;
+    padding-left: 16px;
+    padding-right: 16px;
+}
 
 .arrow-slider:hover {
     background-color: #f2ca16;
@@ -123,3 +128,17 @@ hr {
         opacity: 1;
     }
 }
+
+@media screen and (min-width: 768px) {
+    .section-container {
+        padding-left: 64px;
+        padding-right: 64px;
+    }
+}
+@media screen and (min-width: 1536px) {
+    .section-container {
+        width: 1440px;
+    }
+}
+/* 
+tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
