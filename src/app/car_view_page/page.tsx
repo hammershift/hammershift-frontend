@@ -20,6 +20,7 @@ import ThreeDots from '../../../public/images/dots-vertical.svg'
 import OpenWebLogo from '../../../public/images/open-web-logo.svg'
 import ArrowDown from '../../../public/images/arrow-down.svg'
 import DiagonalLines from '../../../public/images/green-diagonal.svg'
+import TransitionPattern from '../../../public/images/transition-pattern.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -57,16 +58,16 @@ const CarViewPage = () => {
             <TopNavigation />
             <GuessThePrice />
             <div className='section-container tw-flex tw-mt-8'>
-                <div className='left-container  tw-bg-gray-500 tw-mr-8'>
+                <div className='left-container  tw-mr-8'>
                     <TitleContainer />
                     <PhotosLayout />
                     <ArticleSection />
                     <CommentsSection />
 
                 </div>
-                <div className='right-container tw-w-[416px] tw-bg-gray-500 tw-ml-8'>
-                    <RightContainer />
-
+                <div className='right-container tw-w-[416px]  tw-ml-8'>
+                    <WagersSection />
+                    <DetailsSection />
                 </div>
             </div>
             <GamesYouMightLike />
@@ -258,15 +259,6 @@ const CommentsCard = () => {
     )
 }
 
-const RightContainer = () => {
-    return (
-        <div className=''>
-
-            Right Container
-        </div>
-    )
-}
-
 
 const GamesYouMightLike = () => {
     return (
@@ -301,6 +293,74 @@ const GamesYouMightLike = () => {
 
 
 
+        </div>
+    )
+}
+
+
+const WagersSection = () => {
+    const teamPlayers = [{
+        id: "wager1",
+        username: "Username",
+        avatar: AvatarOne,
+        time: "2 hours ago"
+    }, {
+        id: "wager2",
+        username: "Username",
+        avatar: AvatarTwo,
+        time: "3 hours ago"
+    }, {
+        id: "wager3",
+        username: "Username",
+        avatar: AvatarThree,
+        time: "2 days ago"
+    }, {
+        id: "wager4",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
+    }
+    ]
+    return (
+        <div>
+            <div className='tw-relative tw-pb-8 sm:tw-pb-0'>
+                <div className='tw-px-5 tw-w-full tw-h-auto tw-pt-8'>
+                    <div className='tw-flex tw-justify-between'>
+                        <div className='tw-font-bold tw-text-[18px]'>WAGERS</div>
+                        <Image src={ArrowDown} width={20} height={20} alt="arrow down" className='tw-w-5 tw-h-5' />
+                    </div>
+                    <div className='tw-text-[14px]'>10 Players</div>
+                    <div className='tw-relative tw-mt-4'>
+                        {teamPlayers.map((player) => {
+                            return <div key={player.id} className='tw-my-5 tw-flex tw-justify-between'>
+
+                                <div className='tw-flex'>
+                                    <Image src={player.avatar} width={40} height={40} alt="dollar" className='tw-w-[40px] tw-h-[40px] tw-mr-4' />
+                                    <div className='tw-text-sm '>
+                                        <div className='tw-font-bold'>{player.username}</div>
+                                        <div className='tw-opacity-50'>{player.time}</div>
+                                    </div>
+                                </div>
+                                <button className='tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold'>Wager: $152,000</button>
+                            </div>
+                        })}
+                    </div>
+                    <button className='btn-yellow tw-w-full tw-mt-2'>JOIN GAME</button>
+                </div>
+                {/* Background and button*/}
+                <div className='tw-absolute tw-top-0 tw-h-[416px] tw-z-[-1]'>
+                    <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
+                    <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]'></div>
+
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const DetailsSection = () => {
+    return (
+        <div className='tw-mt-16 tw-bg-[#172431] tw-p-6'>Details
         </div>
     )
 }
