@@ -4,7 +4,7 @@ import Image from "next/image";
 import Logo from "../../../public/images/hammershift-logo.svg";
 import LogoSmall from "../../../public/images/logo-small.svg";
 import MagnifyingGlass from "../../../public/images/magnifying-glass.svg"
-import WagersIcon from "../../../public/images/wagers-icon.svg"
+import WagersIcon from "../../../public/images/dollar-coin.svg"
 import WatchlistIcon from "../../../public/images/watchlist-icon.svg"
 import AccountIcon from "../../../public/images/account-icon.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"

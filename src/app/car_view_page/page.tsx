@@ -8,7 +8,7 @@ import HashtagIcon from '../../../public/images/hash-02.svg'
 import PlayersIcon from '../../../public/images/users-01.svg'
 import HourGlassIcon from '../../../public/images/hour-glass.svg'
 import PrizeIcon from '../../../public/images/monetization-browser-bag.svg'
-import LiveGamesIcon from '../../../public/images/live-games-icon.svg'
+import LiveGamesIcon from '../../../public/images/currency-dollar-circle.svg'
 import CameraPlus from '../../../public/images/camera-plus.svg'
 import GifIcon from '../../../public/images/image-document-gif.svg'
 

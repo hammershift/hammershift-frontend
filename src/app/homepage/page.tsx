@@ -8,11 +8,11 @@ import { carData } from '@/sample_data'
 import { articleData } from '@/sample_data';
 import Image from 'next/image'
 
-import LiveGamesIcon from '../../../public/images/live-games-icon.svg'
+import LiveGamesIcon from '../../../public/images/currency-dollar-circle.svg'
 import ArrowRight from '../../../public/images/arrow-right.svg'
 import ArrowLeft from '../../../public/images/arrow-left.svg'
 import TeamBattlesIcon from '../../../public/images/team-battles-icon.svg'
-import TournamentsIcon from '../../../public/images/tournaments-icon.svg'
+import TournamentsIcon from '../../../public/images/award-trophy-star-1.svg'
 import HourGlassIcon from '../../../public/images/hour-glass.svg'
 import PlayersIcon from '../../../public/images/players.svg'
 import GamesByMakeIcon from '../../../public/images/games-by-make-icon.svg'
