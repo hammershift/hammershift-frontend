@@ -10,6 +10,7 @@ import AccountIcon from "../../../public/images/account-icon.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 import CancelIcon from "../../../public/images/x-icon.svg"
 
+
 export interface NavbarProps {
     isLoggedIn: boolean;
 }
