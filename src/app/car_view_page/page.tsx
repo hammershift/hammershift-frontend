@@ -34,7 +34,7 @@ import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
-import Subscribe from '../components/subscribe'
+import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
 
 const CarViewData = {
@@ -71,7 +71,7 @@ const CarViewPage = () => {
             </div>
             <GamesYouMightLike />
             <HowHammerShiftWorks articleData={articleData} />
-            <Subscribe />
+            <SubscribeSmall />
             <Footer />
         </div>
     )
