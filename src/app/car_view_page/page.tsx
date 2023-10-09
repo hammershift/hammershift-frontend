@@ -4,10 +4,10 @@ import Image from 'next/image'
 
 import DollarIcon from '../../../public/images/dollar.svg'
 import CalendarIcon from '../../../public/images/calendar-icon.svg'
-import HashtagIcon from '../../../public/images/hashtag-icon.svg'
-import PlayersIcon from '../../../public/images/players-icon.svg'
+import HashtagIcon from '../../../public/images/hash-02.svg'
+import PlayersIcon from '../../../public/images/users-01.svg'
 import HourGlassIcon from '../../../public/images/hour-glass.svg'
-import PrizeIcon from '../../../public/images/prize-icon.svg'
+import PrizeIcon from '../../../public/images/monetization-browser-bag.svg'
 import LiveGamesIcon from '../../../public/images/live-games-icon.svg'
 import CameraPlus from '../../../public/images/camera-plus.svg'
 import GifIcon from '../../../public/images/image-document-gif.svg'
@@ -17,6 +17,11 @@ import PhotoTwo from '../../../public/images/car-view-page/photoTwo.svg'
 import PhotoThree from '../../../public/images/car-view-page/photoThree.svg'
 import PhotoFour from '../../../public/images/car-view-page/photoFour.svg'
 import PhotoFive from '../../../public/images/car-view-page/photoOne.svg'
+
+import AvatarOne from '../../../public/images/avatar-one.svg'
+import AvatarTwo from '../../../public/images/avatar-two.svg'
+import AvatarThree from '../../../public/images/avatar-three.svg'
+import AvatarFour from '../../../public/images/avatar-four.svg'
 
 const CarViewData = {
     name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -143,7 +148,7 @@ const PhotosLayout = () => {
 
 const ArticleSection = () => {
     return (
-        <div className='tw-flex tw-flex-col tw-mt-16'>
+        <div className='tw-flex tw-flex-col tw-mt-16 tw-max-w-[832px]'>
             <div className='tw-w-[832px]'>{CarViewData.description}</div>
             <button className='btn-transparent-white tw-mt-16'>VIEW MORE DETAILS</button>
             <button className='btn-yellow tw-mt-3'>PLACE MY WAGER</button>
@@ -160,17 +165,42 @@ const ArticleSection = () => {
 
 const CommentsSection = () => {
     return (
-        <div className='tw-mt-16'>
-            <div>Comments</div>
-            <div className='tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded'>
-                <div className='tw-flex'>
+        <div className='tw-mt-16 tw-max-w-[832px]'>
+            <div className='tw-text-3xl'><span className='tw-font-bold'>Comments</span>{`(16)`}</div>
+            <div className='tw-flex'>
+                <div className='tw-flex tw-flex-grow tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded'>
                     <input placeholder='Add a comment' className='tw-bg-[#172431] tw-flex-grow' />
                     <Image src={CameraPlus} width={20} height={20} alt="camera plus" className='tw-w-5 tw-h-5' />
                     <Image src={GifIcon} width={20} height={20} alt="camera plus" className='tw-w-5 tw-h-5 tw-ml-2' />
                 </div>
-                <div></div>
+                <button className='btn-white tw-ml-2'>Comment</button>
             </div>
+            <div>Sort by <span className='tw-font-bold'>Best</span></div>
+            <section>
 
+                {/* To be replaced by map */}
+                <CommentsCard />
+            </section>
+
+        </div>
+    )
+}
+
+const CommentsCard = () => {
+    const commentsData = [{
+        id: "com1",
+        username: "@johnadams",
+        text: " Nihil hic munitissimus habendi senatus locus, nihil horum? Qui ipsorum lingua Celtae, nostra Galli appellantur. Ambitioni dedisse scripsisse iudicaretur. Paullum deliquit, ponderibus modulisque suis ratio utitur.Nihil hic munitissimus habendi senatus locus, nihil horum? Praeterea iter est quasdam res quas ex communi.Cum sociis natoque penatibus et magnis dis parturient.Contra legem facit qui id facit quod lex prohibet.Ambitioni dedisse scripsisse iudicaretur.Quid securi etiam tamquam eu fugiat nulla pariatur.Quam diu etiam furor iste tuus nos eludet? Tu quoque, Brute, fili mi, nihil timor populi, nihil! Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae.Unam incolunt Belgae, aliam Aquitani, tertiam.Excepteur sint obcaecat cupiditat non proident culpa.Petierunt uti sibi concilium totius Galliae in diem certam indicere.Phasellus laoreet lorem vel dolor tempus vehicula.Quis aute iure reprehenderit in voluptate velit esse.Quo usque tandem abutere, Catilina, patientia nostra? Prima luce, cum quibus mons aliud consensu ab eo."
+    }]
+    return (
+        <div className='tw-flex'>
+            <Image src={AvatarOne} width={40} height={40} alt="camera plus" className='tw-w-10 tw-h-10 tw-ml-2' />
+            <div className='tw-ml-4'>
+                <div><span className='tw-font-bold'>Jane Doe</span> <span className='tw-text-[#F2CA16]'>Seller</span> <span className='tw-opacity-50'>14 hours ago</span></div>
+                <div><span className='tw-text-[#42A0FF]'>{commentsData[0].username}</span>{commentsData[0].text}</div>
+                <div className='tw-opacity-50'>Reply</div>
+                <div className='tw-text-[#42A0FF]'>1 Replay</div>
+            </div>
         </div>
     )
 }
