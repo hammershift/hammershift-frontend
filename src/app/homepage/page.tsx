@@ -43,6 +43,7 @@ import RedCar from '../../../public/images/wager-by-category/red-car.svg'
 import YellowSportsCar from '../../../public/images/wager-by-category/yellow-sportscar.svg'
 import SilverPickup from '../../../public/images/wager-by-category/silver-pickup.svg'
 import SilverSUV from '../../../public/images/wager-by-category/silver-suv.svg'
+import BlackMercedes from '../../../public/images/black-mercedes.svg'
 
 
 import AvatarOne from '../../../public/images/avatar-one.svg'
@@ -117,10 +118,10 @@ const Carousel = () => {
   }
   const sliderButtonsData = [
     { id: "slide1", transform: 0 },
-    { id: "slide1", transform: -20 },
-    { id: "slide1", transform: -40 },
-    { id: "slide1", transform: -60 },
-    { id: "slide1", transform: -80 },
+    { id: "slide2", transform: -20 },
+    { id: "slide3", transform: -40 },
+    { id: "slide4", transform: -60 },
+    { id: "slide5", transform: -80 },
   ]
   return (
     <div className='tw-relative tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-h-[344px] tw-overflow-hidden'>
@@ -248,7 +249,7 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, descript
     <div className='tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center'>
       <div className='tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-relative'>
         <div className='tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]'>LIVE</div>
-        <img src={url} width={200} height={200} alt="car" className='tw-w-[120px] sm:tw-w-[200px] tw-h-[120px] sm:tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
+        <Image src={url} width={200} height={200} alt="car" className='tw-w-[120px] sm:tw-w-[200px] tw-h-[120px] sm:tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500' />
       </div>
       <div className='tw-ml-4 sm:tw-ml-0'>
         <div className='info tw-my-3 tw-flex tw-flex-col tw-items-start sm:tw-items-center'>
@@ -270,7 +271,6 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({ url, year, name, descript
             </div>
 
           </div>
-          {/* <Image src={PlayersIcon} width={152} height={40} alt="players" className='tw-w-auto tw-mt-2 sm:tw-mt-4 tw-h-[32px] sm:tw-h-[40px]' /> */}
         </div>
         <div className='tw-mt-1.5'>
         </div>
@@ -431,13 +431,13 @@ const TournamentsCard = () => {
     <div className=''>
       <div className='tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4'>
         <div className='tw-flex tw-justify-end '>
-          <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
+          <Image src={BlackMercedes} width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
         </div>
         <div className='tw-flex tw-justify-center'>
-          <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={100} height={100} alt='image' className='tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full ' />
+          <Image src={BlackMercedes} width={100} height={100} alt='image' className='tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full ' />
         </div>
         <div className='tw-flex tw-justify-start'>
-          <img src='https://classifieds.singaporeexpats.com/data/16/15950784501YKvxw.jpg' width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
+          <Image src={BlackMercedes} width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
         </div>
       </div>
       <div className='tw-bg-[#1A2C3D] tw-w-auto tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20' >
@@ -573,7 +573,7 @@ const WagerByCatergory = () => {
                 <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Sedans</div>
               </div>
               <div className='tw-relative'>
-                <Image src={WhiteCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+                <Image src={WhiteCar} width={511} height={255} alt="white car" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
               </div>
             </div>
             <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
@@ -583,7 +583,7 @@ const WagerByCatergory = () => {
                 <div className='tw-font-bold tw-text-[#F2CA16]'>Explore SUVs</div>
               </div>
               <div className='tw-relative'>
-                <Image src={SilverSUV} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+                <Image src={SilverSUV} width={511} height={255} alt="silver suv" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
               </div>
             </div>
           </div>
@@ -596,7 +596,7 @@ const WagerByCatergory = () => {
                 <div className='tw-font-bold tw-text-[#F2CA16]'>Explore EVs & Hybrids</div>
               </div>
               <div className='tw-relative'>
-                <Image src={RedCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+                <Image src={RedCar} width={511} height={255} alt="red sportscar" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
               </div>
             </div>
             <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
@@ -606,7 +606,7 @@ const WagerByCatergory = () => {
                 <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Luxury</div>
               </div>
               <div className='tw-relative'>
-                <Image src={YellowSportsCar} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+                <Image src={YellowSportsCar} width={511} height={255} alt="yellow sportcar" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
               </div>
             </div>
             <div className='tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5'>
@@ -616,7 +616,7 @@ const WagerByCatergory = () => {
                 <div className='tw-font-bold tw-text-[#F2CA16]'>Explore Pickup Trucks</div>
               </div>
               <div className='tw-relative'>
-                <Image src={SilverPickup} width={511} height={255} alt="arrow left" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
+                <Image src={SilverPickup} width={511} height={255} alt="silver pickup" className='tw-w-auto tw-h-auto tw-absolute tw-right-0' />
               </div>
             </div>
           </div>
