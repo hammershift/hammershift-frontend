@@ -1,3 +1,4 @@
+import '../styles/app.css'
 import React from 'react'
 import Image from 'next/image'
 import Dollar from '../../../public/images/dollar.svg'
@@ -133,7 +134,7 @@ const card = () => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block sm:tw-hidden'>{`${cardData.players.length} players`}</div>
                 </div>
             </div>
-            <button className='btn-yellow-thin tw-py-1 tw-w-full sm:tw-w-auto'>Play Game</button>
+            <button className='btn-yellow-thin tw-w-full sm:tw-w-auto'>Play Game</button>
         </div>
     )
 }
