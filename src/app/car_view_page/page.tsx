@@ -174,7 +174,12 @@ const ArticleSection = () => {
     return (
         <div className='tw-flex tw-flex-col tw-mt-16 tw-max-w-[832px]'>
             <div className='tw-w-[832px]'>{CarViewData.description}</div>
-            <button className='btn-transparent-white tw-mt-16'>VIEW MORE DETAILS</button>
+            <button className='btn-transparent-white tw-mt-16'>
+                <span className='tw-w-full tw-flex tw-items-center tw-justify-center'>
+                    VIEW MORE DETAILS
+                    <Image src={ArrowDown} width={20} height={20} alt="car" className='tw-w-[20px] tw-h-[20px] tw-ml-2' />
+                </span>
+            </button>
             <button className='btn-yellow tw-mt-3'>PLACE MY WAGER</button>
             <div className='tw-mt-16 tw-p-6 tw-bg-[#172431]'>
                 <Image src={LiveGamesIcon} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
