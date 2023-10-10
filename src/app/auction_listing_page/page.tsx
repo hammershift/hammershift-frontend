@@ -6,6 +6,8 @@ import Image from 'next/image'
 import DropdownArrow from '../../../public/images/dropdown.svg'
 import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 import CheckIcon from '../../../public/images/check-black.svg'
+import GridIcon from '../../../public/images/grid-01.svg'
+import ListIcon from '../../../public/images/list.svg'
 
 const AuctionListingPage = () => {
     return (
@@ -49,10 +51,10 @@ const Filters = () => {
                 <LocationDropdown />
 
             </div>
-            <div className='right-container-marker tw-flex'>
-                <div>image</div>
-                <div>image</div>
-                <div>Dropdown</div>
+            <div className='right-container-marker tw-flex tw-items-center'>
+                <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
+                <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
+                <SortDropdown />
             </div>
 
         </div>
@@ -78,7 +80,7 @@ const MakeDropdown = () => {
     return (
         <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
             <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
                     Make
                     <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                 </button>
@@ -162,7 +164,7 @@ const CategoryDropdown = () => {
     return (
         <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
             <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
                     Category
                     <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                 </button>
@@ -228,7 +230,7 @@ const EraDropdown = () => {
     return (
         <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
             <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
                     Era
                     <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                 </button>
@@ -294,7 +296,7 @@ const LocationDropdown = () => {
     return (
         <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
             <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
                     Location
                     <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                 </button>
@@ -329,6 +331,53 @@ const LocationDropdown = () => {
                                                 <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
                                             </div>
                                             <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+
+    )
+}
+
+const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
+
+
+const SortDropdown = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [bgColor, setBgColor] = useState({});
+    useEffect(() => {
+        if (menuOpen === true) {
+            setBgColor({ backgroundColor: "#1A2C3D" })
+        } else {
+            setBgColor({})
+        }
+    }, [menuOpen])
+    return (
+        <div className="tw-relative tw-text-left tw-mx-2">
+            <div>
+                <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                    Sort by:
+                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                </button>
+            </div>
+
+            {menuOpen &&
+
+                <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                    <div>
+                        <div className='tw-p-4'>
+                            <div>
+                                {
+                                    SortList.map((item) => {
+                                        return <div className='hover:tw-bg-white/5 tw-rounded tw-p-2' key={item}>
+                                            <button className='tw-pl-3 tw-w-full '>{item}</button>
                                         </div>
                                     })
                                 }
