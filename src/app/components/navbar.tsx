@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Logo from "../../../public/images/hammershift-logo.svg";
 import LogoSmall from "../../../public/images/logo-small.svg";
 import MagnifyingGlass from "../../../public/images/magnifying-glass.svg"
@@ -25,11 +26,15 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                 ? <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
                     <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
-                            <Image src={Logo} width={176} height={64} alt="logo" className="tw-hidden sm:tw-block tw-w-auto tw-h-auto" />
-                            <Image src={LogoSmall} width={32} height={32} alt="logo" className=" tw-block sm:tw-hidden tw-w-auto tw-h-auto" />
+                            <Link href="/homepage">
+                                <Image src={Logo} width={176} height={64} alt="logo" className="tw-hidden sm:tw-block tw-w-auto tw-h-auto" />
+                                <Image src={LogoSmall} width={32} height={32} alt="logo" className=" tw-block sm:tw-hidden tw-w-auto tw-h-auto" />
+                            </Link>
                         </div>
                         <div className="tw-block tw-mx-2 sm:tw-mx-4 ">DISCOVER</div>
-                        <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
+                        <Link href="/auction_listing_page">
+                            <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
+                        </Link>
                     </div>
                     <div className="tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12">
                         <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
@@ -64,10 +69,14 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                 <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
                     <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
-                            <Image src={Logo} width={176} height={64} alt="logo" className="tw-block tw-w-auto tw-h-auto" />
+                            <Link href="/homepage">
+                                <Image src={Logo} width={176} height={64} alt="logo" className="tw-block tw-w-auto tw-h-auto" />
+                            </Link>
                         </div>
                         <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">DISCOVER</div>
-                        <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">AUCTIONS</div>
+                        <Link href="/auction_listing_page">
+                            <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">AUCTIONS</div>
+                        </Link>
                     </div>
                     <div className="tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12">
                         <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
