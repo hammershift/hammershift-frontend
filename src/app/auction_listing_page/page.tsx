@@ -3,17 +3,33 @@ import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import GiftIcon from '../../../public/images/gift-02.svg'
 import Image from 'next/image'
+import Card from '../components/card'
 import DropdownArrow from '../../../public/images/dropdown.svg'
 import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'
 import ListIcon from '../../../public/images/list.svg'
+import HowHammerShiftWorks from '../components/how_hammeshift_works'
+import { articleData } from '@/sample_data'
+import { SubscribeSmall } from '../components/subscribe'
+import Footer from '../components/footer'
 
 const AuctionListingPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <TopNavigation />
             <Filters />
+            <div className='tw-my-16'>
+                {/* To be replaced by array.map */}
+                <GamesSection />
+                <GamesSection />
+                <GamesSection />
+                <div className='tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4'>Showing 21 of 100 auctions</div>
+                <button className='btn-transparent-white tw-w-full tw-text-[18px]' style={{ paddingTop: "16px", paddingBottom: "16px" }}>Load more</button>
+            </div>
+            <HowHammerShiftWorks articleData={articleData} />
+            <SubscribeSmall />
+            <Footer />
 
         </div>
     )
@@ -390,5 +406,26 @@ const SortDropdown = () => {
             }
         </div>
 
+    )
+}
+
+const GamesSection = () => {
+    return (
+        <section className='tw-overflow-hidden'>
+            <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
+                <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
+                    {/* to be replaced by array.map */}
+                    <div className='tw-w-[200px] sm:tw-w-[416px]'>
+                        <Card />
+                    </div>
+                    <div className='tw-w-[200px] sm:tw-w-[416px]'>
+                        <Card />
+                    </div>
+                    <div className='tw-w-[200px] sm:tw-w-[416px]'>
+                        <Card />
+                    </div>
+                </div>
+            </div>
+        </section>
     )
 }
