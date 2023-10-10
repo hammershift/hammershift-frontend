@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
+import GiftIcon from '../../../public/images/gift-02.svg'
+import Image from 'next/image'
 
 const AuctionListingPage = () => {
     return (
@@ -17,7 +19,9 @@ export const TopNavigation = () => {
     return (
         <main className='section-container tw-flex tw-justify-center'>
             <div className='tw-grid tw-grid-cols-5 tw-gap-10 tw-py-4'>
-                <Link href="/homepage">{`TODAY\'S MINI GAME`}</Link >
+                <Link href="/homepage" className='tw-flex'>
+                    <Image src={GiftIcon} width={20} height={20} alt="gift icon" className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
+                    {`TODAY\'S MINI GAME`}</Link >
                 <Link href="/homepage">{`TOURNAMENTS`}</Link>
                 <Link href="/homepage">{`HIGH-ROLLERS`}</Link>
                 <Link href="/homepage">{`ABOUT HAMMERSHIFT`}</Link>

@@ -24,6 +24,7 @@ import TransitionPattern from '../../../public/images/transition-pattern.svg'
 import BringATrailerLogo from '../../../public/images/bring-a-trailer-logo.svg'
 import ProfilePhoto from '../../../public/images/ellipse-415.svg'
 import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
+import GiftIcon from '../../../public/images/gift-02.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -87,8 +88,8 @@ export default CarViewPage
 
 const GuessThePrice = () => {
     return (
-        <div className='section-container tw-flex tw-justify-between'>
-            <div className='tw-w-auto tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
+        <div className='section-container tw-flex tw-justify-between tw-mt-8'>
+            <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
             <div>
                 <button className='btn-transparent-white'>WATCH</button>
                 <button className='btn-yellow tw-ml-2'>PLACE MY WAGER</button>
