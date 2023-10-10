@@ -5,13 +5,14 @@ import GiftIcon from '../../../public/images/gift-02.svg'
 import Image from 'next/image'
 import DropdownArrow from '../../../public/images/dropdown.svg'
 import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
+import CheckIcon from '../../../public/images/check-black.svg'
 
 const AuctionListingPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <TopNavigation />
             <Filters />
-            <Dropdown />
+
         </div>
     )
 }
@@ -40,13 +41,11 @@ export const TopNavigation = () => {
 const Filters = () => {
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
-            <div className='left-container-marker tw-flex'>
-                <div>Live Games</div>
-                <div>100</div>
-                <div>Dropdown</div>
-                <div>Dropdown</div>
-                <div>Dropdown</div>
-                <div>Dropdown</div>
+            <div className='left-container-marker tw-flex tw-items-center'>
+                <div>Live Games <span className='tw-opacity-50'> 100</span></div>
+                <MakeDropdown />
+                <CategoryDropdown />
+                <EraDropdown />
 
             </div>
             <div className='right-container-marker tw-flex'>
@@ -61,9 +60,11 @@ const Filters = () => {
 }
 
 
+const MakeListColumnOne = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus"];
+const MakeListColumnTwo = ["Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren"];
+const MakeListColumnThree = ["Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"];
 
-
-const Dropdown = () => {
+const MakeDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [bgColor, setBgColor] = useState({});
     useEffect(() => {
@@ -74,9 +75,9 @@ const Dropdown = () => {
         }
     }, [menuOpen])
     return (
-        <div className="tw-relative tw-inline-block tw-text-left">
+        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
             <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" aria-expanded="true" aria-haspopup="true" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
                     Make
                     <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                 </button>
@@ -90,12 +91,184 @@ const Dropdown = () => {
                             <Image src={MagnifyingGlass} width={20} height={20} alt='dropdown arrow' className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
                             <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
                         </div>
-                        <a href="#" className="tw-text-white tw-block tw-px-4 tw-py-2 tw-text-sm" role="menuitem" tabIndex={-1} id="menu-item-0">Account settings</a>
-                        <a href="#" className="tw-text-white tw-block tw-px-4 tw-py-2 tw-text-sm" role="menuitem" tabIndex={-1} id="menu-item-1">Support</a>
-                        <a href="#" className="tw-text-white tw-block tw-px-4 tw-py-2 tw-text-sm" role="menuitem" tabIndex={-1} id="menu-item-2">License</a>
-                        <form method="POST" action="#" role="none">
-                            <button type="submit" className="tw-text-white tw-block tw-w-full tw-px-4 tw-py-2 tw-text-left tw-text-sm" role="menuitem" tabIndex={-1} id="menu-item-3">Sign out</button>
-                        </form>
+                        <div className='tw-mt-2 tw-p-2 tw-grid tw-grid-cols-3'>
+                            <div>
+                                {
+                                    MakeListColumnOne.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            <div>
+                                {
+                                    MakeListColumnTwo.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            <div>
+                                {
+                                    MakeListColumnThree.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+
+    )
+}
+
+const CategoryListColumnOne = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans"];
+const CategoryListColumnTwo = ["Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
+
+const CategoryDropdown = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [bgColor, setBgColor] = useState({});
+    useEffect(() => {
+        if (menuOpen === true) {
+            setBgColor({ backgroundColor: "#1A2C3D" })
+        } else {
+            setBgColor({})
+        }
+    }, [menuOpen])
+    return (
+        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+            <div>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                    Category
+                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                </button>
+            </div>
+
+            {menuOpen &&
+
+                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                    <div>
+                        <div className='tw-p-4 tw-grid tw-grid-cols-2'>
+                            <div>
+                                {
+                                    CategoryListColumnOne.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            <div>
+                                {
+                                    CategoryListColumnTwo.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+
+    )
+}
+
+const EraListColumnOne = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s"];
+const EraListColumnTwo = ["1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
+
+const EraDropdown = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [bgColor, setBgColor] = useState({});
+    useEffect(() => {
+        if (menuOpen === true) {
+            setBgColor({ backgroundColor: "#1A2C3D" })
+        } else {
+            setBgColor({})
+        }
+    }, [menuOpen])
+    return (
+        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+            <div>
+                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-sm  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" id="menu-button" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
+                    Era
+                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                </button>
+            </div>
+
+            {menuOpen &&
+
+                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                    <div>
+                        <div className='tw-p-4 tw-grid tw-grid-cols-2'>
+                            <div>
+                                {
+                                    EraListColumnOne.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            <div>
+                                {
+                                    EraListColumnTwo.map((item) => {
+                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                            </div>
+                                            <label className='tw-pl-3'>{item}</label><br />
+                                        </div>
+                                    })
+                                }
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             }
