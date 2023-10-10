@@ -67,14 +67,16 @@ export default Subscribe
 
 export const SubscribeSmall = () => {
     return (
-        <div className='section-container tw-flex tw-justify-between tw-items-center tw-bg-[#F2CA16] tw-text-[#0F1923] tw-py-[60px]'>
-            <div>
-                <div className='tw-text-[20px] tw-font-bold'>Stay in the Fast Lane</div>
-                <div>Join the exclusive HammerShift newsletter to get access to insider knowledge</div>
-            </div>
-            <div className='tw-flex'>
-                <input placeholder="Email Address" className='tw-w-[299px] tw-px-6 tw-rounded' />
-                <button className='btn-dark tw-ml-3'>Subscribe</button>
+        <div className='tw-w-screen tw-h-auto  tw-bg-[#F2CA16] tw-flex tw-justify-center'>
+            <div className='section-container tw-flex tw-justify-between tw-items-center tw-text-[#0F1923] tw-py-[60px]'>
+                <div>
+                    <div className='tw-text-[20px] tw-font-bold'>Stay in the Fast Lane</div>
+                    <div>Join the exclusive HammerShift newsletter to get access to insider knowledge</div>
+                </div>
+                <div className='tw-flex'>
+                    <input placeholder="Email Address" className='tw-w-[299px] tw-px-6 tw-rounded' />
+                    <button className='btn-dark tw-ml-3'>Subscribe</button>
+                </div>
             </div>
         </div>
     )
