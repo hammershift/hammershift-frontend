@@ -21,6 +21,9 @@ import OpenWebLogo from '../../../public/images/open-web-logo.svg'
 import ArrowDown from '../../../public/images/arrow-down.svg'
 import DiagonalLines from '../../../public/images/green-diagonal.svg'
 import TransitionPattern from '../../../public/images/transition-pattern.svg'
+import BringATrailerLogo from '../../../public/images/bring-a-trailer-logo.svg'
+import ProfilePhoto from '../../../public/images/ellipse-415.svg'
+import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -37,6 +40,7 @@ import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
+import Link from 'next/link'
 
 const CarViewData = {
     name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -359,8 +363,110 @@ const WagersSection = () => {
 }
 
 const DetailsSection = () => {
+    const DetailsData = {
+        auction: { name: "Bring a Trailer", logo: BringATrailerLogo },
+        make: "Mercedes Benz",
+        model: "E55 AMG",
+        seller: { name: "John Adams", image: ProfilePhoto },
+        location: "San Diego, CA, 92121",
+        mileage: "55,400",
+        listing_type: "Private Property",
+        lot_num: "112459",
+        listing_details: ["Chassis: WDDRJ7HA0BA000819",
+            "13k Miles",
+            "6.2 - Liter V8",
+            "Seven - Speed Dual - Clutch Automatic Transaxle",
+            "Limited - Slip Differential",
+            "Iridium Silver Metallic Paint",
+            "Charcoal Exclusive Leather Upholstery",
+            "19\" & 20\" Seven - Spoke Alloy Wheels",
+            "Gullwing Doors",
+            "Speed - Activated Aerofoil",
+            "Bi - Xenon Headlights",
+            "Parktronic",
+            "Heated Power - Adjustable Seats",
+            "Keyless - Go",
+            "COMAND Infortainment",
+            "Carbon - Fiber Interior Trim",
+            "Radar Detector",
+            "Bang & Olufsen Sound System",
+            "Dual - Zone Automatic Climate Control",
+            "Clean Carfax Report"]
+    }
     return (
-        <div className='tw-mt-16 tw-bg-[#172431] tw-p-6'>Details
+        <div className='tw-mt-16 tw-bg-[#172431] tw-p-6'>
+            <div className='tw-flex tw-justify-between tw-py-2'>
+                <div className='tw-font-bold tw-text-[18px]'>DETAILS</div>
+                <Image src={ArrowDown} width={20} height={20} alt="arrow down" className='tw-w-[20px] tw-h-[20px]' />
+            </div>
+            <div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Auction</div>
+                    <div className='tw-flex tw-items-center '>{DetailsData.auction.name}
+                        <Image src={DetailsData.auction.logo} width={32} height={32} alt="bring a trailer logo" className='tw-w-[32px] tw-h-[32px] tw-ml-2' />
+                    </div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Make</div>
+                    <div className='tw-underline tw-underline-offset-4'>{DetailsData.make}</div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Model</div>
+                    <div>{DetailsData.model}</div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Seller</div>
+                    <div className='tw-flex tw-items-center'>{DetailsData.seller.name}
+                        <Image src={DetailsData.seller.image} width={32} height={32} alt="bring a trailer logo" className='tw-w-[32px] tw-h-[32px] tw-ml-2' />
+                    </div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Location</div>
+                    <div>{DetailsData.location}</div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Mileage</div>
+                    <div>{DetailsData.mileage}</div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Listing Type</div>
+                    <div>{DetailsData.listing_type}</div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Lot #</div>
+                    <div>{DetailsData.lot_num}</div>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-py-2'>
+                    <div className='tw-opacity-50'>Listing Details</div>
+                    <ul className='tw-list-disc tw-list-inside tw-my-2 tw-pl-2'>
+                        {
+                            DetailsData.listing_details.map((item: string) => {
+                                return <li key={item}>{item}</li>
+                            })
+                        }
+                    </ul>
+                </div>
+                <hr className='tw-border-white tw-opacity-5' />
+                <div className='tw-flex tw-justify-between tw-py-2'>
+                    <div className='tw-opacity-50'>Photos</div>
+                    <Link href={"/"}>
+                        <span className='tw-underline tw-underline-offset-4'>
+                            88 photos
+                        </span>
+                    </Link>
+                </div>
+                <Image src={CarFaxLogo} width={130} height={44} alt="bring a trailer logo" className='tw-w-[130px] tw-h-[44px] tw-my-4' />
+
+            </div>
         </div>
     )
 }
