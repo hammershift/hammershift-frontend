@@ -9,7 +9,7 @@ import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import BlackMercedes from '../../../public/images/black-mercedes.svg'
 
-const cardData = {
+export const cardData = {
     id: "1",
     year: "1981",
     brand: "Ferrari",
