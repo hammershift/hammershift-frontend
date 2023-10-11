@@ -18,6 +18,8 @@ import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import BlackMercedes from '../../../public/images/black-mercedes.svg'
+import ArrowDown from '../../../public/images/arrow-down.svg'
+import CancelIcon from '../../../public/images/x-icon.svg'
 
 import { LatestNews } from '../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
@@ -73,6 +75,8 @@ export const TopNavigation = () => {
 }
 
 const Filters = () => {
+    const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
+    const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='left-container-marker tw-flex tw-items-center'>
@@ -91,14 +95,68 @@ const Filters = () => {
                 <SortDropdown />
             </div>
             <div className='tw-flex xl:tw-hidden'>
-                <Image src={FilterFunnel} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
-                <Image src={ArrowsDown} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-ml-6' />
+                <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
+                    <Image src={FilterFunnel} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
+                </button>
+                <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
+                    <Image src={ArrowsDown} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-ml-6' />
+
+                </button>
             </div>
+            {/* Filter Dropdown */}
+            {
+                filterDropdownOpen &&
+                <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
+                    <div className='tw-flex tw-justify-between'>
+                        <div>FILTER</div>
+                        <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
+                            <Image src={CancelIcon} width={24} height={24} alt="magnifying glass" className="tw-w-6 tw-h-6" />
+                        </button>
+                    </div>
+                    <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
+                        <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+                        <input
+                            className="tw-ml-2 tw-bg-shade-100 "
+                            placeholder="Search make, model, year..."
+                        ></input>
+                    </div>
+                    <div>
+                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                            <div className='tw-font-bold'>Make</div>
+                            <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
+                        </div>
+                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                            <div className='tw-font-bold'>Category</div>
+                            <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
+                        </div>
+                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                            <div className='tw-font-bold'>Era</div>
+                            <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
+                        </div>
+                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                            <div className='tw-font-bold'>Location</div>
+                            <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
+                        </div>
+                    </div>
 
+                </div>
+            }
+            {
+                sortDropdownOpen &&
+                <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
+                    <div className='tw-flex tw-justify-between'>
+                        <div>SORT</div>
+                        <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
+                            <Image src={CancelIcon} width={24} height={24} alt="magnifying glass" className="tw-w-6 tw-h-6" />
+                        </button>
+                    </div>
+                </div>
+            }
         </div>
-
     )
 }
+
+
 
 
 const MakeListColumnOne = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus"];
@@ -584,3 +642,17 @@ const GamesCard = () => {
     )
 }
 
+const FilterDropdownMenu = () => {
+    return (
+        <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+            <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
+                <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+                <input
+                    className="tw-ml-2 tw-bg-shade-100 "
+                    placeholder="Search make, model, year..."
+                ></input>
+            </div>
+
+        </div>
+    )
+}
