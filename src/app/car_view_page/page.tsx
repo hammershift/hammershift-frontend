@@ -67,7 +67,7 @@ const CarViewPage = () => {
                     <TitleContainer />
                     <PhotosLayout />
                     <ArticleSection />
-
+                    <InfoSection />
                     <CommentsSection />
 
                 </div>
@@ -103,16 +103,20 @@ const GuessThePrice = () => {
 const TitleContainer = () => {
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
-            <div className='title-section-marker tw-flex  tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
-            <div className='info-section-marker tw-flex tw-mt-4'>
+            <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
+            <div className='info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4'>
                 <div className='info-left-marker tw-w-[300px]'>
                     <div className='tw-flex'>
                         <div>
                             <Image src={DollarIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                         </div>
-                        <span className='tw-opacity-80'>Current Bid: <span className='tw-text-[#49C742] tw-font-bold'>{CarViewData.currentBid}</span></span>
+                        <div className='tw-opacity-80 tw-flex'>Current Bid:
+                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{CarViewData.currentBid}
+                            </span>
+                            <span className='tw-block md:tw-hidden tw-ml-2'>{`(${CarViewData.bids} bids)`}</span>
+                        </div>
                     </div>
-                    <div className='tw-flex tw-mt-1'>
+                    <div className='tw-flex tw-mt-0 md:tw-mt-1'>
                         <div>
                             <Image src={CalendarIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                         </div>
@@ -120,8 +124,8 @@ const TitleContainer = () => {
                     </div>
                 </div>
                 <div className='right-section-marker'>
-                    <div className='top-section-marker tw-flex tw-justify-between'>
-                        <div className='tw-flex tw-w-[160px]'>
+                    <div className='top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between'>
+                        <div className='tw-w-[160px] tw-hidden md:tw-flex'>
                             <div>
                                 <Image src={HashtagIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
@@ -134,7 +138,7 @@ const TitleContainer = () => {
                             <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{CarViewData.timeLeft}</span></span>
                         </div>
                     </div>
-                    <div className='bottom-section-marker tw-mt-1 tw-flex'>
+                    <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
                         <div className='tw-flex  tw-w-[160px]'>
                             <div>
                                 <Image src={PlayersIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
@@ -157,14 +161,14 @@ const TitleContainer = () => {
 const PhotosLayout = () => {
     return (
         <div className=' tw-my-8'>
-            <Image src={PhotoOne} width={832} height={520} alt="car" className='tw-w-full tw-h-[520px] tw-object-cover tw-rounded' />
-            <div className='tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full'>
-                <Image src={PhotoTwo} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-rounded' />
-                <Image src={PhotoThree} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-rounded' />
-                <Image src={PhotoFour} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-rounded' />
-                <div className='tw-relative tw-w-auto'>
-                    <Image src={PhotoFive} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-opacity-40 tw-rounded' />
-                    <div className='tw-absolute  tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>88 photos</div>
+            <Image src={PhotoOne} width={832} height={520} alt="car" className='tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto' />
+            <div className='tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full tw-h-auto'>
+                <Image src={PhotoTwo} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
+                <Image src={PhotoThree} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
+                <Image src={PhotoFour} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
+                <div className='tw-relative'>
+                    <Image src={PhotoFive} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto' />
+                    <div className='tw-absolute tw-flex tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>88 <span className='tw-hidden md:tw-block tw-ml-1'>photos</span><span className='tw-block md:tw-hidden'>+</span></div>
                 </div>
             </div>
         </div>
@@ -203,10 +207,10 @@ const InfoSection = () => {
 
 const CommentsSection = () => {
     return (
-        <div className='tw-mt-16 tw-max-w-[832px]'>
+        <div className='tw-mt-16 tw-max-w-[832px] tw-mb-16 sm:tw-mb-0'>
             <div className='tw-flex tw-justify-between'>
-                <div className='tw-text-3xl'><span className='tw-font-bold'>Comments</span>{`(16)`}</div>
-                <div className='tw-flex tw-items-center'>
+                <div className='tw-text-xl md:tw-text-3xl'><span className='tw-font-bold'>Comments</span>{`(16)`}</div>
+                <div className='tw-flex tw-items-center tw-text-sm sm:tw-text-base'>
                     <Image src={BellIcon} width={16} height={16} alt='Bell' className='tw-w-4 tw-h-4' />
                     <div className='tw-text-[14px] tw-opacity-50 tw-ml-4'>Log in</div>
                     <div className='tw-text-[14px] tw-opacity-50 tw-ml-4'>Sign Up</div>
@@ -214,14 +218,14 @@ const CommentsSection = () => {
                 </div>
             </div>
             <div className='tw-flex tw-mt-2'>
-                <div className='tw-flex tw-flex-grow tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded'>
-                    <input placeholder='Add a comment' className='tw-bg-[#172431] tw-flex-grow' />
+                <div className='tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded'>
+                    <input placeholder='Add a comment' className='tw-bg-[#172431] tw-w-full' />
                     <Image src={CameraPlus} width={20} height={20} alt="camera plus" className='tw-w-5 tw-h-5' />
                     <Image src={GifIcon} width={20} height={20} alt="gif" className='tw-w-5 tw-h-5 tw-ml-2' />
                 </div>
                 <button className='btn-white tw-ml-2'>Comment</button>
             </div>
-            <div className='tw-mt-2 tw-flex tw-items-center'>Sort by
+            <div className='tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base'>Sort by
                 <span className='tw-font-bold tw-ml-2'>Best</span>
                 <Image src={ArrowDown} width={14} height={14} alt="arrow down" className='tw-w-[14px] tw-h-[14px] tw-ml-2' />
             </div>
@@ -233,7 +237,7 @@ const CommentsSection = () => {
                     <CommentsCard />
 
                 </div>
-                <button className='btn-transparent-white tw-w-full tw-mt-8 tw-text-[14px]'>Load 12 more comments</button>
+                <button className='btn-transparent-white tw-w-full tw-mt-8 tw-text-sm'>Load 12 more comments</button>
                 <div className='tw-flex tw-items-center tw-mt-8'>
                     <span>Powered by</span>
                     <Image src={OpenWebLogo} width={97} height={28} alt="camera plus" className='tw-w-[97px] tw-h-[28px] tw-ml-2' />
