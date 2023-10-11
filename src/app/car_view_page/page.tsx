@@ -25,6 +25,7 @@ import BringATrailerLogo from '../../../public/images/bring-a-trailer-logo.svg'
 import ProfilePhoto from '../../../public/images/ellipse-415.svg'
 import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
 import GiftIcon from '../../../public/images/gift-02.svg'
+import WatchListIcon from '../../../public/images/watchlist-icon.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -61,10 +62,18 @@ const CarViewPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <TopNavigation />
-            <GuessThePrice />
+            <div className='section-container tw-flex tw-justify-between tw-items-center'>
+                <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
+                <div className='tw-hidden sm:tw-block'>
+                    <GuessThePrice />
+                </div>
+            </div>
             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
                     <TitleContainer />
+                    <div className='tw-block sm:tw-hidden tw-mt-8'>
+                        <GuessThePrice />
+                    </div>
                     <PhotosLayout />
                     <ArticleSection />
                     <InfoSection />
@@ -89,14 +98,14 @@ export default CarViewPage
 
 const GuessThePrice = () => {
     return (
-        <div className='section-container tw-flex tw-justify-between tw-mt-8'>
-            <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
-            <div>
-                <button className='btn-transparent-white'>WATCH</button>
-                <button className='btn-yellow tw-ml-2'>PLACE MY WAGER</button>
-            </div>
-
+        <div className='tw-flex'>
+            <button className='btn-transparent-white tw-flex '>
+                <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                WATCH
+            </button>
+            <button className='btn-yellow tw-ml-2'>PLACE MY WAGER</button>
         </div>
+
     )
 }
 
@@ -177,8 +186,8 @@ const PhotosLayout = () => {
 
 const ArticleSection = () => {
     return (
-        <div className='tw-flex tw-flex-col tw-mt-16 tw-w-full'>
-            <div className='tw-w-full'>{CarViewData.description}</div>
+        <div className='tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full'>
+            <div className='tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden'>{CarViewData.description}</div>
             <button className='btn-transparent-white tw-mt-16'>
                 <span className='tw-w-full tw-flex tw-items-center tw-justify-center'>
                     VIEW MORE DETAILS
@@ -266,7 +275,7 @@ const CommentsCard = () => {
                     </div>
                     <Image src={ThreeDots} width={16} height={16} alt="thumbs up" className='tw-w-4 tw-h-4 tw-ml-4' />
                 </div>
-                <div className='tw-my-3'><span className='tw-text-[#42A0FF]'>{commentsData[0].username}</span>{commentsData[0].text}</div>
+                <div className=' tw-my-3 tw-h-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden'><span className='tw-text-[#42A0FF]'>{commentsData[0].username}</span>{commentsData[0].text}</div>
                 <div className='tw-flex tw-opacity-50'>Reply
                     <span className='tw-ml-4'>·</span>
                     <Image src={ThumbsUp} width={16} height={16} alt="thumbs up" className='tw-w-4 tw-h-4 tw-ml-4' />
@@ -288,10 +297,10 @@ const GamesYouMightLike = () => {
         <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-16'>
 
             <header className='tw-max-w-[1312px]'>
-                <div className='tw-flex tw-justify-between'>
+                <div className='tw-flex tw-justify-between tw-items-end'>
                     <div className='tw-flex tw-items-center'>
                         <Image src={DiagonalLines} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-                        <div className='tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4'>Games You Might Like</div>
+                        <div className='tw-font-bold tw-text-2xl tw-w-[200px] sm:tw-w-auto sm:tw-text-3xl tw-ml-4'>Games You Might Like</div>
                     </div>
                     <div className='tw-text-[#49C742]'>See All</div>
                 </div>
