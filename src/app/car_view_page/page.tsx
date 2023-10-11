@@ -222,17 +222,16 @@ const InfoSection = () => {
 
 const CommentsSection = () => {
     return (
-        <div className='tw-mt-16 tw-max-w-[832px] tw-mb-16 sm:tw-mb-0'>
+        <div className='tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0'>
             <div className='tw-flex tw-justify-between'>
                 <div className='tw-text-xl md:tw-text-3xl'><span className='tw-font-bold'>Comments</span>{`(16)`}</div>
                 <div className='tw-flex tw-items-center tw-text-sm sm:tw-text-base'>
                     <Image src={BellIcon} width={16} height={16} alt='Bell' className='tw-w-4 tw-h-4' />
                     <div className='tw-text-[14px] tw-opacity-50 tw-ml-4'>Log in</div>
                     <div className='tw-text-[14px] tw-opacity-50 tw-ml-4'>Sign Up</div>
-
                 </div>
             </div>
-            <div className='tw-flex tw-mt-2'>
+            <div className='tw-flex tw-my-3'>
                 <div className='tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded'>
                     <input placeholder='Add a comment' className='tw-bg-[#172431] tw-w-full' />
                     <Image src={CameraPlus} width={20} height={20} alt="camera plus" className='tw-w-5 tw-h-5' />
@@ -300,7 +299,7 @@ const CommentsCard = () => {
 
 const GamesYouMightLike = () => {
     return (
-        <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-16'>
+        <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-8 md:tw-mt-16'>
 
             <header className='tw-max-w-[1312px]'>
                 <div className='tw-flex tw-justify-between tw-items-end'>
