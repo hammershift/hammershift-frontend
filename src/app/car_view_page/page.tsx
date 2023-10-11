@@ -65,22 +65,28 @@ const CarViewPage = () => {
             <div className='section-container tw-flex tw-justify-between tw-items-center'>
                 <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
                 <div className='tw-hidden sm:tw-block'>
-                    <GuessThePrice />
+                    <WatchAndWagerButtons />
                 </div>
             </div>
             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
                     <TitleContainer />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <GuessThePrice />
+                        <WatchAndWagerButtons />
                     </div>
                     <PhotosLayout />
                     <ArticleSection />
+                    <div className='tw-block sm:tw-hidden tw-mt-8'>
+                        <WagersSection />
+                    </div>
                     <InfoSection />
+                    <div className='tw-block sm:tw-hidden tw-mt-8'>
+                        <DetailsSection />
+                    </div>
                     <CommentsSection />
 
                 </div>
-                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8'>
+                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
                     <WagersSection />
                     <DetailsSection />
                 </div>
@@ -96,7 +102,7 @@ const CarViewPage = () => {
 export default CarViewPage
 
 
-const GuessThePrice = () => {
+const WatchAndWagerButtons = () => {
     return (
         <div className='tw-flex'>
             <button className='btn-transparent-white tw-flex '>
@@ -203,7 +209,7 @@ const ArticleSection = () => {
 const InfoSection = () => {
     return (
         <div>
-            <div className='tw-mt-16 tw-p-6 tw-bg-[#172431]'>
+            <div className='tw-mt-8 lg:tw-mt-16 tw-p-6 tw-bg-[#172431]'>
                 <Image src={LiveGamesIcon} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
                 <div className='tw-text-2xl tw-font-bold tw-mt-8'>What is Guess the Price</div>
                 <div className='tw-my-4'>Wager on the car auction and guess the final hammer price. Closest player wins the prize. Duis anim adipisicing minim nisi elit quis. Cillum ullamco qui dolore non incididunt incididunt non. Aute adipisicing et esse exercitation sunt irure proident enim eu esse nulla. Est excepteur est non. Adipisicing occaecat minim ex duis excepteur.</div>
@@ -365,7 +371,6 @@ const WagersSection = () => {
                     <div className='tw-relative tw-mt-4'>
                         {teamPlayers.map((player) => {
                             return <div key={player.id} className='tw-my-5 tw-flex tw-justify-between'>
-
                                 <div className='tw-flex'>
                                     <Image src={player.avatar} width={40} height={40} alt="dollar" className='tw-w-[40px] tw-h-[40px] tw-mr-4' />
                                     <div className='tw-text-sm '>
@@ -373,7 +378,7 @@ const WagersSection = () => {
                                         <div className='tw-opacity-50'>{player.time}</div>
                                     </div>
                                 </div>
-                                <button className='tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold'>Wager: $152,000</button>
+                                <button className='tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold'><span className='tw-hidden xl:tw-inline-block'>Wager:</span> $152,000</button>
                             </div>
                         })}
                     </div>
@@ -422,7 +427,7 @@ const DetailsSection = () => {
             "Clean Carfax Report"]
     }
     return (
-        <div className='tw-mt-16 tw-bg-[#172431] tw-p-6'>
+        <div className='tw-mt-8 lg:tw-mt-16 tw-bg-[#172431] tw-p-6'>
             <div className='tw-flex tw-justify-between tw-py-2'>
                 <div className='tw-font-bold tw-text-[18px]'>DETAILS</div>
                 <Image src={ArrowDown} width={20} height={20} alt="arrow down" className='tw-w-[20px] tw-h-[20px]' />
