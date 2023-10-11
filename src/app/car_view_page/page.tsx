@@ -38,7 +38,7 @@ import AvatarOne from '../../../public/images/avatar-one.svg'
 import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
-import HowHammerShiftWorks from '../components/how_hammeshift_works'
+import { LatestNews } from '../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
@@ -92,7 +92,7 @@ const CarViewPage = () => {
                 </div>
             </div>
             <GamesYouMightLike />
-            <HowHammerShiftWorks articleData={articleData} />
+            <LatestNews articleData={articleData} />
             <SubscribeSmall />
             <Footer />
         </div>
