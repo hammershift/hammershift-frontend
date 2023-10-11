@@ -9,7 +9,9 @@ import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'
 import ListIcon from '../../../public/images/list.svg'
-import HowHammerShiftWorks from '../components/how_hammeshift_works'
+import FilterFunnel from '../../../public/images/filter-funnel-02.svg'
+import ArrowsDown from '../../../public/images/arrows-down.svg'
+import { LatestNews } from '../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
@@ -27,7 +29,7 @@ const AuctionListingPage = () => {
                 <div className='tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4'>Showing 21 of 100 auctions</div>
                 <button className='btn-transparent-white tw-w-full tw-text-[18px]' style={{ paddingTop: "16px", paddingBottom: "16px" }}>Load more</button>
             </div>
-            <HowHammerShiftWorks articleData={articleData} />
+            <LatestNews articleData={articleData} />
             <SubscribeSmall />
             <Footer />
 
@@ -64,16 +66,22 @@ const Filters = () => {
         <div className='tw-flex tw-justify-between tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='left-container-marker tw-flex tw-items-center'>
                 <div>Live Games <span className='tw-opacity-50'> 100</span></div>
-                <MakeDropdown />
-                <CategoryDropdown />
-                <EraDropdown />
-                <LocationDropdown />
+                <div className='tw-hidden md:tw-flex'>
+                    <MakeDropdown />
+                    <CategoryDropdown />
+                    <EraDropdown />
+                    <LocationDropdown />
+                </div>
 
             </div>
-            <div className='right-container-marker tw-flex tw-items-center'>
+            <div className='right-container-marker tw-flex tw-items-center tw-hidden md:tw-flex'>
                 <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
                 <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
                 <SortDropdown />
+            </div>
+            <div className='tw-flex md:tw-hidden'>
+                <Image src={FilterFunnel} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
+                <Image src={ArrowsDown} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-ml-6' />
             </div>
 
         </div>
