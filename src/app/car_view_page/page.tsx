@@ -62,15 +62,16 @@ const CarViewPage = () => {
         <div className='tw-flex tw-flex-col tw-items-center'>
             <TopNavigation />
             <GuessThePrice />
-            <div className='section-container tw-flex tw-mt-8'>
-                <div className='left-container  tw-mr-8'>
+            <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
+                <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
                     <TitleContainer />
                     <PhotosLayout />
                     <ArticleSection />
+
                     <CommentsSection />
 
                 </div>
-                <div className='right-container tw-w-[416px]  tw-ml-8'>
+                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8'>
                     <WagersSection />
                     <DetailsSection />
                 </div>
@@ -101,7 +102,7 @@ const GuessThePrice = () => {
 
 const TitleContainer = () => {
     return (
-        <div className=' tw-flex tw-flex-col tw-flex-grow'>
+        <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
             <div className='title-section-marker tw-flex  tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
             <div className='info-section-marker tw-flex tw-mt-4'>
                 <div className='info-left-marker tw-w-[300px]'>
@@ -156,13 +157,13 @@ const TitleContainer = () => {
 const PhotosLayout = () => {
     return (
         <div className=' tw-my-8'>
-            <Image src={PhotoOne} width={832} height={520} alt="car" className='tw-w-auto tw-h-[520px] tw-object-cover tw-rounded' />
-            <div className='tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2'>
-                <Image src={PhotoTwo} width={202} height={120} alt="car" className='tw-w-auto tw-h-[120px] tw-object-cover tw-rounded' />
-                <Image src={PhotoThree} width={202} height={120} alt="car" className='tw-w-auto tw-h-[120px] tw-object-cover tw-rounded' />
-                <Image src={PhotoFour} width={202} height={120} alt="car" className='tw-w-auto tw-h-[120px] tw-object-cover tw-rounded' />
-                <div className='tw-relative'>
-                    <Image src={PhotoFive} width={202} height={120} alt="car" className='tw-w-auto tw-h-[120px] tw-object-cover tw-opacity-40 tw-rounded' />
+            <Image src={PhotoOne} width={832} height={520} alt="car" className='tw-w-full tw-h-[520px] tw-object-cover tw-rounded' />
+            <div className='tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full'>
+                <Image src={PhotoTwo} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-rounded' />
+                <Image src={PhotoThree} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-rounded' />
+                <Image src={PhotoFour} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-rounded' />
+                <div className='tw-relative tw-w-auto'>
+                    <Image src={PhotoFive} width={202} height={120} alt="car" className='tw-w-full tw-h-[120px] tw-object-cover tw-opacity-40 tw-rounded' />
                     <div className='tw-absolute  tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>88 photos</div>
                 </div>
             </div>
@@ -172,8 +173,8 @@ const PhotosLayout = () => {
 
 const ArticleSection = () => {
     return (
-        <div className='tw-flex tw-flex-col tw-mt-16 tw-max-w-[832px]'>
-            <div className='tw-w-[832px]'>{CarViewData.description}</div>
+        <div className='tw-flex tw-flex-col tw-mt-16 tw-w-full'>
+            <div className='tw-w-full'>{CarViewData.description}</div>
             <button className='btn-transparent-white tw-mt-16'>
                 <span className='tw-w-full tw-flex tw-items-center tw-justify-center'>
                     VIEW MORE DETAILS
@@ -181,6 +182,14 @@ const ArticleSection = () => {
                 </span>
             </button>
             <button className='btn-yellow tw-mt-3'>PLACE MY WAGER</button>
+
+        </div>
+    )
+}
+
+const InfoSection = () => {
+    return (
+        <div>
             <div className='tw-mt-16 tw-p-6 tw-bg-[#172431]'>
                 <Image src={LiveGamesIcon} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
                 <div className='tw-text-2xl tw-font-bold tw-mt-8'>What is Guess the Price</div>
@@ -358,8 +367,8 @@ const WagersSection = () => {
                     <button className='btn-yellow tw-w-full tw-mt-2'>JOIN GAME</button>
                 </div>
                 {/* Background and button*/}
-                <div className='tw-absolute tw-top-0 tw-h-[416px] tw-z-[-1]'>
-                    <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
+                <div className='tw-absolute tw-top-0 tw-h-[416px] tw-z-[-1] tw-w-full'>
+                    <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-full tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
                     <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]'></div>
 
                 </div>
