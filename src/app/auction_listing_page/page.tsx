@@ -110,7 +110,7 @@ const Filters = () => {
             {/* Filter Dropdown */}
             {
                 filterDropdownOpen &&
-                <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-40 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
+                <div className='slide-in-top tw-w-screen tw-h-screen tw-fixed tw-z-40 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
                     <div className='tw-flex tw-justify-between'>
                         <div>FILTER</div>
                         <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
@@ -139,7 +139,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {categoryDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto" >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
                                 <CategoryContent columns={1} />
                             </div>
                         }
@@ -148,7 +148,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {eraDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto" >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
                                 <EraContent columns={1} />
                             </div>
                         }
@@ -157,7 +157,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {locationDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/4 tw-overflow-y-auto" >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto" >
                                 <LocationContent columns={1} />
                             </div>
                         }
@@ -168,7 +168,7 @@ const Filters = () => {
             {/* Sort Dropdown */}
             {
                 sortDropdownOpen &&
-                <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
+                <div className='slide-in-top tw-w-screen tw-h-screen tw-fixed tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
                     <div className='tw-flex tw-justify-between tw-py-4'>
                         <div>SORT</div>
                         <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
