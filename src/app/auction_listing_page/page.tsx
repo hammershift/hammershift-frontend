@@ -130,7 +130,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {makeDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
                                 <MakeContent columns={1} />
                             </div>
                         }
@@ -139,8 +139,8 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {categoryDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
-                                Hello
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                                <CategoryContent columns={1} />
                             </div>
                         }
                         <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setEraDropdownOpen((prev) => !prev)}>
@@ -148,8 +148,8 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {eraDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
-                                Hello
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                                <EraContent columns={1} />
                             </div>
                         }
                         <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setLocationDropdownOpen((prev) => !prev)}>
@@ -157,7 +157,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {locationDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
                                 Hello
                             </div>
                         }
@@ -185,14 +185,7 @@ const Filters = () => {
 
 
 
-
-
-// const MakeListColumnOne = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus"];
-// const MakeListColumnTwo = ["Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren"];
-// const MakeListColumnThree = ["Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"];
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
-
-
 
 const MakeDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -255,8 +248,8 @@ const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
 
 
 
-const CategoryListColumnOne = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans"];
-const CategoryListColumnTwo = ["Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
+const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans", "Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
+
 
 const CategoryDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -280,40 +273,7 @@ const CategoryDropdown = () => {
             {menuOpen &&
 
                 <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                    <div>
-                        <div className='tw-p-4 tw-grid tw-grid-cols-2'>
-                            <div>
-                                {
-                                    CategoryListColumnOne.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-                            <div>
-                                {
-                                    CategoryListColumnTwo.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <CategoryContent columns={2} />
                 </div>
             }
         </div>
@@ -321,8 +281,34 @@ const CategoryDropdown = () => {
     )
 }
 
-const EraListColumnOne = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s"];
-const EraListColumnTwo = ["1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
+interface CategoryContentProps {
+    columns: number;
+}
+
+const CategoryContent: React.FC<CategoryContentProps> = ({ columns }) => {
+    return (
+        <div className={`tw-p-2 tw-grid tw-grid-cols-${columns}`}>
+            {
+                CategoryDropdownContent.map((item) => {
+                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                        </div>
+                        <label className='tw-pl-3'>{item}</label><br />
+                    </div>
+                })
+            }
+        </div>
+    )
+}
+
+
+
+
+const EraListColumnOne = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
+
 
 const EraDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -346,46 +332,37 @@ const EraDropdown = () => {
             {menuOpen &&
 
                 <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                    <div>
-                        <div className='tw-p-4 tw-grid tw-grid-cols-2'>
-                            <div>
-                                {
-                                    EraListColumnOne.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-                            <div>
-                                {
-                                    EraListColumnTwo.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-
-                        </div>
-
-                    </div>
+                    <EraContent columns={2} />
                 </div>
             }
         </div>
-
     )
 }
+
+interface EraContentProps {
+    columns: number;
+}
+
+const EraContent: React.FC<EraContentProps> = ({ columns }) => {
+    return (
+        <div className={`tw-p-4 tw-grid tw-grid-cols-${columns}`}>
+            {
+                EraListColumnOne.map((item) => {
+                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                        </div>
+                        <label className='tw-pl-3'>{item}</label><br />
+                    </div>
+                })
+            }
+        </div>
+    )
+}
+
+
 
 const LocationListColumnOne = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California"];
 const LocationListColumnTwo = ["Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
