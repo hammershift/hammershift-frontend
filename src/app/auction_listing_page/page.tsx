@@ -141,15 +141,17 @@ const Filters = () => {
 
                 </div>
             }
+            {/* Sort Dropdown */}
             {
                 sortDropdownOpen &&
                 <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
-                    <div className='tw-flex tw-justify-between'>
+                    <div className='tw-flex tw-justify-between tw-py-4'>
                         <div>SORT</div>
                         <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
                             <Image src={CancelIcon} width={24} height={24} alt="magnifying glass" className="tw-w-6 tw-h-6" />
                         </button>
                     </div>
+                    <SortContent />
                 </div>
             }
         </div>
@@ -174,7 +176,7 @@ const MakeDropdown = () => {
         }
     }, [menuOpen])
     return (
-        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+        <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
             <div>
                 <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
                     Make
@@ -463,29 +465,31 @@ const SortDropdown = () => {
                     <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                 </button>
             </div>
-
             {menuOpen &&
-
-                <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
                     <div>
                         <div className='tw-p-4'>
-                            <div>
-                                {
-                                    SortList.map((item) => {
-                                        return <div className='hover:tw-bg-white/5 tw-rounded tw-p-2' key={item}>
-                                            <button className='tw-pl-3 tw-w-full '>{item}</button>
-                                        </div>
-                                    })
-                                }
-                            </div>
-
+                            <SortContent />
                         </div>
-
                     </div>
                 </div>
             }
         </div>
+    )
+}
 
+
+const SortContent = () => {
+    return (
+        <div>
+            {
+                SortList.map((item) => {
+                    return <div className='hover:tw-bg-white/5 tw-rounded tw-p-2 ' key={item}>
+                        <button className=''>{item}</button>
+                    </div>
+                })
+            }
+        </div>
     )
 }
 
