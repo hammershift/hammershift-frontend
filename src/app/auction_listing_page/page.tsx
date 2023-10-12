@@ -56,7 +56,7 @@ export default AuctionListingPage
 export const TopNavigation = () => {
     return (
         <main className='section-container '>
-            <div className='tw-w-full tw-overflow-hidden tw-flex'>
+            <div className='tw-w-full tw-overflow-scroll tw-flex'>
                 <div className='tw-flex tw-justify-start xl:tw-justify-center tw-py-4 tw-w-full  tw-min-w-[901px]'>
                     <Link href="/homepage" className='tw-flex'>
                         <Image src={GiftIcon} width={20} height={20} alt="gift icon" className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
