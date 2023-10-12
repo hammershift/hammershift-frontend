@@ -76,6 +76,10 @@ export const TopNavigation = () => {
 
 const Filters = () => {
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
+    const [makeDropdownOpen, setMakeDropdownOpen] = useState(false)
+    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false)
+    const [eraDropdownOpen, setEraDropdownOpen] = useState(false)
+    const [locationDropdownOpen, setLocationDropdownOpen] = useState(false)
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
@@ -106,7 +110,7 @@ const Filters = () => {
             {/* Filter Dropdown */}
             {
                 filterDropdownOpen &&
-                <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
+                <div className='slide-in-top tw-w-screen tw-h-screen tw-absolute tw-z-40 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
                     <div className='tw-flex tw-justify-between'>
                         <div>FILTER</div>
                         <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
@@ -121,22 +125,42 @@ const Filters = () => {
                         ></input>
                     </div>
                     <div>
-                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setMakeDropdownOpen((prev) => !prev)} >
                             <div className='tw-font-bold'>Make</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
-                        </div>
-                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                        </button>
+                        {makeDropdownOpen &&
+                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                                Hello
+                            </div>
+                        }
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setCategoryDropdownOpen((prev) => !prev)}>
                             <div className='tw-font-bold'>Category</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
-                        </div>
-                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                        </button>
+                        {categoryDropdownOpen &&
+                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                                Hello
+                            </div>
+                        }
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setEraDropdownOpen((prev) => !prev)}>
                             <div className='tw-font-bold'>Era</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
-                        </div>
-                        <div className='tw-flex tw-justify-between tw-mt-4'>
+                        </button>
+                        {eraDropdownOpen &&
+                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                                Hello
+                            </div>
+                        }
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setLocationDropdownOpen((prev) => !prev)}>
                             <div className='tw-font-bold'>Location</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
-                        </div>
+                        </button>
+                        {locationDropdownOpen &&
+                            <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                                Hello
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -154,6 +178,14 @@ const Filters = () => {
                     <SortContent />
                 </div>
             }
+        </div>
+    )
+}
+
+const DropdownBase = () => {
+    return (
+        <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
+            Hello
         </div>
     )
 }
@@ -186,7 +218,7 @@ const MakeDropdown = () => {
 
             {menuOpen &&
 
-                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
                     <div className="tw-p-4" role="none">
                         <div className='tw-flex tw-items-center tw-bg-white/5 tw-rounded tw-py-2 tw-px-3'>
                             <Image src={MagnifyingGlass} width={20} height={20} alt='dropdown arrow' className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
