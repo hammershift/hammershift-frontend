@@ -158,7 +158,7 @@ const Filters = () => {
                         </button>
                         {locationDropdownOpen &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
-                                Hello
+                                <LocationContent columns={1} />
                             </div>
                         }
                     </div>
@@ -247,9 +247,7 @@ const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
 
 
 
-
 const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans", "Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
-
 
 const CategoryDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -305,10 +303,7 @@ const CategoryContent: React.FC<CategoryContentProps> = ({ columns }) => {
 }
 
 
-
-
-const EraListColumnOne = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
-
+const EraDropdownContent = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
 
 const EraDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -347,7 +342,7 @@ const EraContent: React.FC<EraContentProps> = ({ columns }) => {
     return (
         <div className={`tw-p-4 tw-grid tw-grid-cols-${columns}`}>
             {
-                EraListColumnOne.map((item) => {
+                EraDropdownContent.map((item) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
                         <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
 
@@ -362,10 +357,7 @@ const EraContent: React.FC<EraContentProps> = ({ columns }) => {
     )
 }
 
-
-
-const LocationListColumnOne = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California"];
-const LocationListColumnTwo = ["Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
+const LocationDropdownContent = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
 
 const LocationDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -388,47 +380,37 @@ const LocationDropdown = () => {
 
             {menuOpen &&
 
-                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                    <div>
-                        <div className='tw-p-4 tw-grid tw-grid-cols-2'>
-                            <div>
-                                {
-                                    LocationListColumnOne.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-                            <div>
-                                {
-                                    LocationListColumnTwo.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-
-                        </div>
-
-                    </div>
+                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
+                    <LocationContent columns={2} />
                 </div>
             }
         </div>
-
     )
 }
+
+interface LocationContentProps {
+    columns: number;
+}
+
+const LocationContent: React.FC<LocationContentProps> = ({ columns }) => {
+    return (
+        <div className={`tw-p-4 tw-grid tw-grid-cols-${columns}`}>
+            {
+                LocationDropdownContent.map((item) => {
+                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+
+                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                        </div>
+                        <label className='tw-pl-3'>{item}</label><br />
+                    </div>
+                })
+            }
+        </div>
+    )
+}
+
 
 const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
 
@@ -453,21 +435,20 @@ const SortDropdown = () => {
             </div>
             {menuOpen &&
                 <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
-                    <div>
-                        <div className='tw-p-4'>
-                            <SortContent />
-                        </div>
+
+                    <div className='tw-p-4'>
+                        <SortContent />
                     </div>
+
                 </div>
             }
         </div>
     )
 }
 
-
 const SortContent = () => {
     return (
-        <div>
+        <div >
             {
                 SortList.map((item) => {
                     return <div className='hover:tw-bg-white/5 tw-rounded tw-p-2 ' key={item}>
