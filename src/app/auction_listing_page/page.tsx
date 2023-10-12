@@ -131,7 +131,7 @@ const Filters = () => {
                         </button>
                         {makeDropdownOpen &&
                             <div className="tw-absolute tw-left-0 tw-z-50 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
-                                Hello
+                                <MakeContent columns={1} />
                             </div>
                         }
                         <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setCategoryDropdownOpen((prev) => !prev)}>
@@ -182,20 +182,17 @@ const Filters = () => {
     )
 }
 
-const DropdownBase = () => {
-    return (
-        <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
-            Hello
-        </div>
-    )
-}
 
 
 
 
-const MakeListColumnOne = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus"];
-const MakeListColumnTwo = ["Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren"];
-const MakeListColumnThree = ["Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"];
+
+// const MakeListColumnOne = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus"];
+// const MakeListColumnTwo = ["Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren"];
+// const MakeListColumnThree = ["Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"];
+const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
+
+
 
 const MakeDropdown = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -224,59 +221,39 @@ const MakeDropdown = () => {
                             <Image src={MagnifyingGlass} width={20} height={20} alt='dropdown arrow' className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
                             <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
                         </div>
-                        <div className='tw-mt-2 tw-p-2 tw-grid tw-grid-cols-3'>
-                            <div>
-                                {
-                                    MakeListColumnOne.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-                            <div>
-                                {
-                                    MakeListColumnTwo.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-                            <div>
-                                {
-                                    MakeListColumnThree.map((item) => {
-                                        return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                                            <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
-
-                                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                                            </div>
-                                            <label className='tw-pl-3'>{item}</label><br />
-                                        </div>
-                                    })
-                                }
-                            </div>
-
-                        </div>
-
+                        <MakeContent columns={3} />
                     </div>
                 </div>
             }
         </div>
-
     )
 }
+
+interface MakeContentProps {
+    columns: number;
+}
+const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
+    return (
+        <div className={`tw-mt-2 tw-p-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
+
+            {
+                MakeDropdownContent.map((item) => {
+                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
+                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" />
+
+                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
+                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                        </div>
+                        <label className='tw-pl-3'>{item}</label><br />
+                    </div>
+                })
+            }
+        </div>
+    )
+}
+
+
+
 
 const CategoryListColumnOne = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans"];
 const CategoryListColumnTwo = ["Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
