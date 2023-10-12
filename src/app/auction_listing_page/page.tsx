@@ -130,7 +130,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {makeDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
                                 <MakeContent columns={1} />
                             </div>
                         }
@@ -139,7 +139,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {categoryDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto" >
                                 <CategoryContent columns={1} />
                             </div>
                         }
@@ -148,7 +148,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {eraDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto" >
                                 <EraContent columns={1} />
                             </div>
                         }
@@ -157,7 +157,7 @@ const Filters = () => {
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
                         {locationDropdownOpen &&
-                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 " >
+                            <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/4 tw-overflow-y-auto" >
                                 <LocationContent columns={1} />
                             </div>
                         }
@@ -214,7 +214,9 @@ const MakeDropdown = () => {
                             <Image src={MagnifyingGlass} width={20} height={20} alt='dropdown arrow' className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
                             <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
                         </div>
-                        <MakeContent columns={3} />
+                        <div className='tw-mt-2 tw-h-[280px] tw-overflow-y-auto'>
+                            <MakeContent columns={3} />
+                        </div>
                     </div>
                 </div>
             }
@@ -227,7 +229,7 @@ interface MakeContentProps {
 }
 const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
     return (
-        <div className={` tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
+        <div className={` tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
 
             {
                 MakeDropdownContent.map((item) => {
@@ -270,7 +272,7 @@ const CategoryDropdown = () => {
 
             {menuOpen &&
 
-                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
                     <CategoryContent columns={2} />
                 </div>
             }
@@ -326,7 +328,7 @@ const EraDropdown = () => {
 
             {menuOpen &&
 
-                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
                     <EraContent columns={2} />
                 </div>
             }
@@ -380,7 +382,7 @@ const LocationDropdown = () => {
 
             {menuOpen &&
 
-                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
+                <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
                     <LocationContent columns={2} />
                 </div>
             }
