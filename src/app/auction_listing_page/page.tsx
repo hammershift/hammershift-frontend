@@ -227,7 +227,7 @@ interface MakeContentProps {
 }
 const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
     return (
-        <div className={`tw-mt-2 tw-p-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
+        <div className={` tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
 
             {
                 MakeDropdownContent.map((item) => {
@@ -285,7 +285,7 @@ interface CategoryContentProps {
 
 const CategoryContent: React.FC<CategoryContentProps> = ({ columns }) => {
     return (
-        <div className={`tw-p-2 tw-grid tw-grid-cols-${columns}`}>
+        <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 CategoryDropdownContent.map((item) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
@@ -340,7 +340,7 @@ interface EraContentProps {
 
 const EraContent: React.FC<EraContentProps> = ({ columns }) => {
     return (
-        <div className={`tw-p-4 tw-grid tw-grid-cols-${columns}`}>
+        <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 EraDropdownContent.map((item) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
@@ -394,7 +394,7 @@ interface LocationContentProps {
 
 const LocationContent: React.FC<LocationContentProps> = ({ columns }) => {
     return (
-        <div className={`tw-p-4 tw-grid tw-grid-cols-${columns}`}>
+        <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 LocationDropdownContent.map((item) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
@@ -435,7 +435,6 @@ const SortDropdown = () => {
             </div>
             {menuOpen &&
                 <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
-
                     <div className='tw-p-4'>
                         <SortContent />
                     </div>
