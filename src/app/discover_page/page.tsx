@@ -7,6 +7,7 @@ import DollarIcon from '../../../public/images/dollar.svg'
 import HourGlass from '../../../public/images/hour-glass.svg'
 import ArrowLeft from '../../../public/images/arrow-left.svg'
 import ArrowRight from '../../../public/images/arrow-right.svg'
+import Links from '../components/links'
 
 const DiscoveryPageData = {
     title: "2005 Ford GT Speed Yellow",
@@ -22,6 +23,7 @@ const DiscoveryPageData = {
 const DiscoverPage = () => {
     return (
         <div className='page-container'>
+            <Links />
             <div className='section-container tw-flex tw-flex-col md:tw-flex-row-reverse tw-items-end tw-gap-8 md:tw-gap-16 lg:tw-gap-24 xl:tw-gap-36'>
 
                 <div className='tw-basis-2/3 tw-h-auto'>
