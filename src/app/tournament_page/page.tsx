@@ -79,7 +79,7 @@ const TournamentPage = () => {
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WagersSection />
                     </div>
-                    <InfoSection />
+                    <TournamentInfoSection />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <DetailsSection />
                     </div>
@@ -203,7 +203,7 @@ const ArticleSection = () => {
     )
 }
 
-const InfoSection = () => {
+const TournamentInfoSection = () => {
     return (
         <div>
             <div className='tw-mt-8 lg:tw-mt-16 tw-p-6 tw-bg-[#172431]'>
@@ -314,35 +314,68 @@ const WagersSection = () => {
         username: "Username",
         avatar: AvatarFour,
         time: "2 days ago"
+    }, {
+        id: "wager5",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
+    }, {
+        id: "wager6",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
+    }, {
+        id: "wager7",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
+    }, {
+        id: "wager8",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
+    }, {
+        id: "wager9",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
+    }, {
+        id: "wager10",
+        username: "Username",
+        avatar: AvatarFour,
+        time: "2 days ago"
     }
     ]
     return (
         <div>
             <div className='tw-relative tw-pb-8 sm:tw-pb-0'>
-                <div className='tw-px-5 tw-w-full tw-h-auto tw-pt-8'>
+                <div className='tw-px-5 tw-w-full tw-h-auto tw-pt-8 tw-pb-6'>
                     <div className='tw-flex tw-justify-between'>
                         <div className='tw-font-bold tw-text-[18px]'>WAGERS</div>
                         <Image src={ArrowDown} width={20} height={20} alt="arrow down" className='tw-w-5 tw-h-5' />
                     </div>
-                    <div className='tw-text-[14px]'>10 Players</div>
+                    <div className='tw-text-[14px]'>18 Players</div>
                     <div className='tw-relative tw-mt-4'>
-                        {teamPlayers.map((player) => {
-                            return <div key={player.id} className='tw-my-5 tw-flex tw-justify-between'>
-                                <div className='tw-flex'>
-                                    <Image src={player.avatar} width={40} height={40} alt="dollar" className='tw-w-[40px] tw-h-[40px] tw-mr-4' />
-                                    <div className='tw-text-sm '>
-                                        <div className='tw-font-bold'>{player.username}</div>
-                                        <div className='tw-opacity-50'>{player.time}</div>
+                        {
+                            teamPlayers.map((player) => {
+                                return <div key={player.id} className='tw-my-5 tw-flex'>
+                                    <div className='tw-flex'>
+                                        <Image src={player.avatar} width={40} height={40} alt="dollar" className='tw-w-[40px] tw-h-[40px] tw-mr-4' />
+                                        <div className='tw-text-sm '>
+                                            <div className='tw-font-bold'>{player.username}</div>
+                                            <div className='tw-opacity-50'>{`Joined ${player.time}`}</div>
+                                        </div>
                                     </div>
+
                                 </div>
-                                <button className='tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold'><span className='tw-hidden xl:tw-inline-block'>Wager:</span> $152,000</button>
-                            </div>
-                        })}
+                            })
+                        }
                     </div>
-                    <button className='btn-yellow tw-w-full tw-mt-2'>JOIN GAME</button>
+                    <button className='btn-transparent-white tw-w-full tw-mt-2'>More Players...</button>
+                    <button className='btn-yellow tw-w-full tw-mt-2'>JOIN TOURNAMENT</button>
                 </div>
                 {/* Background and button*/}
-                <div className='tw-absolute tw-top-0 tw-h-[416px] tw-z-[-1] tw-w-full'>
+                <div className='tw-absolute tw-top-0 tw-h-full tw-z-[-1] tw-w-full'>
                     <Image src={TransitionPattern} width={288} height={356} alt="pattern" className='tw-w-full tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover' />
                     <div className='tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]'></div>
 
@@ -384,7 +417,7 @@ const DetailsSection = () => {
             "Clean Carfax Report"]
     }
     return (
-        <div className='tw-mt-8 lg:tw-mt-16 tw-bg-[#172431] tw-p-6'>
+        <div className='tw-mt-8 tw-bg-[#172431] tw-p-6'>
             <div className='tw-flex tw-justify-between tw-py-2'>
                 <div className='tw-font-bold tw-text-[18px]'>DETAILS</div>
                 <Image src={ArrowDown} width={20} height={20} alt="arrow down" className='tw-w-[20px] tw-h-[20px]' />
