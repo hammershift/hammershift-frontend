@@ -5,6 +5,11 @@ hr {
     border-color: #0f1923;
     opacity: 10%;
 }
+.page-container {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
 .section-container {
     width: 100vw;
     padding-left: 16px;
@@ -141,4 +146,5 @@ hr {
     }
 }
 /* 
+SECTION-CONTAINER
 tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
