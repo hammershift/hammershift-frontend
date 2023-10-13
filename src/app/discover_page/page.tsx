@@ -38,14 +38,14 @@ const DiscoverPage = () => {
                     <div className='tw-mt-4 tw-text-sm sm:tw-text-base'>
                         <div className='tw-flex'>
                             <Image src={DollarIcon} width={20} height={20} alt='dollar icon' className='tw-w-5 tw-h-5 ' />
-                            <span className='tw-opacity-80 tw-ml-1'>Current Bid:</span>
-                            <span className='tw-text-[#F2CA16] tw-ml-1 tw-font-bold'>{DiscoveryPageData.current_bid}</span>
-                            <span className='tw-opacity-50 tw-ml-1'>{`${DiscoveryPageData.bids} bids`}</span>
+                            <span className='tw-opacity-80 tw-ml-2'>Current Bid:</span>
+                            <span className='tw-text-[#F2CA16] tw-ml-2 tw-font-bold'>{DiscoveryPageData.current_bid}</span>
+                            <span className='tw-opacity-50 tw-ml-2'>{`${DiscoveryPageData.bids} bids`}</span>
                         </div>
                         <div className='tw-flex tw-mt-2'>
                             <Image src={HourGlass} width={20} height={20} alt='dollar icon' className='tw-w-5 tw-h-5 ' />
-                            <span className='tw-opacity-80 tw-ml-1'>Time Left:</span>
-                            <span className=' tw-ml-1 tw-font-bold'>{DiscoveryPageData.current_bid}</span>
+                            <span className='tw-opacity-80 tw-ml-2'>Time Left:</span>
+                            <span className=' tw-ml-2 tw-font-bold'>{DiscoveryPageData.current_bid}</span>
                         </div>
                     </div>
                     <div className='tw-mt-8'>
