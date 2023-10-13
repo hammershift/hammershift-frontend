@@ -22,20 +22,20 @@ const DiscoveryPageData = {
 
 const DiscoverPage = () => {
     return (
-        <div className='page-container'>
+        <div className='page-container '>
             <Links />
-            <div className='section-container tw-flex tw-flex-col md:tw-flex-row-reverse tw-items-end tw-gap-8 md:tw-gap-16 lg:tw-gap-24 xl:tw-gap-36'>
+            <div className='section-container tw-flex tw-flex-col lg:tw-flex-row-reverse tw-items-end tw-gap-8 md:tw-gap-16 lg:tw-gap-24 xl:tw-gap-36'>
 
                 <div className='tw-basis-2/3 tw-h-auto'>
                     <Carousel imageList={DiscoveryPageData.photos} />
                 </div>
-                <div className='tw-basis-1/3'>
+                <div className='tw-basis-1/3 tw-mt-4 lg:tw-mt-0'>
                     <div className='tw-text-[#49C742] tw-font-bold'>FEATURE</div>
-                    <div className='tw-text-5xl tw-font-bold tw-mt-4'>{DiscoveryPageData.title}</div>
-                    <div className='tw-opacity-80 tw-h-[120px] tw-ellipsis tw-overflow-hidden tw-mt-4'>
+                    <div className='tw-text-3xl xl:tw-text-4xl 2xl:tw-text-5xl tw-font-bold tw-mt-4'>{DiscoveryPageData.title}</div>
+                    <div className='tw-opacity-80 tw-h-[120px] tw-ellipsis tw-overflow-hidden tw-mt-4 tw-text-sm sm:tw-text-base'>
                         {DiscoveryPageData.description}
                     </div>
-                    <div className='tw-mt-4'>
+                    <div className='tw-mt-4 tw-text-sm sm:tw-text-base'>
                         <div className='tw-flex'>
                             <Image src={DollarIcon} width={20} height={20} alt='dollar icon' className='tw-w-5 tw-h-5 ' />
                             <span className='tw-opacity-80 tw-ml-1'>Current Bid:</span>
