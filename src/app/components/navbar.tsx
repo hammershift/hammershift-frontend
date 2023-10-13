@@ -31,7 +31,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                                 <Image src={LogoSmall} width={32} height={32} alt="logo" className=" tw-block sm:tw-hidden tw-w-auto tw-h-auto" />
                             </Link>
                         </div>
-                        <div className="tw-block tw-mx-2 sm:tw-mx-4 ">DISCOVER</div>
+                        <Link href={"/discover_page"}>
+                            <div className="tw-block tw-mx-2 sm:tw-mx-4 ">DISCOVER</div>
+                        </Link>
                         <Link href="/auction_listing_page">
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
                         </Link>
@@ -121,7 +123,7 @@ interface DropdownMenuProps {
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
     return (
-        <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+        <div className="slide-in-top tw-fixed tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
             <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
                 <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
                 <input
@@ -153,7 +155,7 @@ interface MyAccountMenuProps {
     isLoggedIn: boolean;
 }
 
-const MyAccountMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
+const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
     return (
         <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto tw-z-50">
             <div className="tw-text-lg tw-font-bold">MY ACCOUNT</div>
