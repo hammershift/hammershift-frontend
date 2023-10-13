@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import GiftIcon from '../../../public/images/gift-02.svg'
 import Image from 'next/image'
 import Card from '../components/card'
+import Links from '../components/links'
 import DropdownArrow from '../../../public/images/dropdown.svg'
 import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 import CheckIcon from '../../../public/images/check-black.svg'
@@ -31,7 +32,7 @@ import Footer from '../components/footer'
 const AuctionListingPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
-            <TopNavigation />
+            <Links />
             <Filters />
             <div className='tw-pb-16 '>
                 {/* To be replaced by array.map */}
@@ -53,26 +54,7 @@ const AuctionListingPage = () => {
 export default AuctionListingPage
 
 
-export const TopNavigation = () => {
-    return (
-        <main className='section-container '>
-            <div className='tw-w-full tw-overflow-scroll tw-flex'>
-                <div className='tw-flex tw-justify-start xl:tw-justify-center tw-py-4 tw-w-full  tw-min-w-[901px]'>
-                    <Link href="/homepage" className='tw-flex'>
-                        <Image src={GiftIcon} width={20} height={20} alt="gift icon" className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
-                        {`TODAY\'S MINI GAME`}</Link >
-                    <Link href="/homepage" className='tw-ml-4 md:tw-ml-9'>TOURNAMENTS</Link>
-                    <Link href="/homepage" className='tw-ml-4 md:tw-ml-9'>HIGH-ROLLERS</Link>
-                    <Link href="/homepage" className='tw-ml-4 md:tw-ml-9'>ABOUT HAMMERSHIFT</Link>
-                    <Link href="/homepage" className='tw-ml-4 md:tw-ml-9'>HOW IT WORKS</Link>
 
-                </div>
-
-            </div>
-        </main>
-
-    )
-}
 
 const Filters = () => {
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
