@@ -1,5 +1,5 @@
 import React from 'react'
-import { TopNavigation } from '../auction_listing_page/page'
+import Links from '../components/links'
 import Image from 'next/image'
 import Card from '../components/card'
 
@@ -61,7 +61,7 @@ const CarViewData = {
 const CarViewPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
-            <TopNavigation />
+            <Links />
             <div className='section-container tw-flex tw-justify-between tw-items-center'>
                 <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
                 <div className='tw-hidden sm:tw-block'>

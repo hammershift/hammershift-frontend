@@ -197,7 +197,9 @@ const GamesCard = () => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden'>{`${cardData.players.length} players`}</div>
                 </div>
             </div>
-            <button className='btn-yellow-thin tw-w-full md:tw-w-auto'>Play Game</button>
+            <Link href={"/car_view_page"}>
+                <button className='btn-yellow-thin tw-w-full md:tw-w-auto'>Play Game</button>
+            </Link>
         </div>
     )
 }
