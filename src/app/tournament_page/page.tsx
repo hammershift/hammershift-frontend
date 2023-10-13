@@ -1,7 +1,6 @@
 import React from 'react'
 import Links from '../components/links'
 import Image from 'next/image'
-import Card from '../components/card'
 
 import DollarIcon from '../../../public/images/dollar.svg'
 import CalendarIcon from '../../../public/images/calendar-icon.svg'
@@ -26,6 +25,7 @@ import ProfilePhoto from '../../../public/images/ellipse-415.svg'
 import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
 import GiftIcon from '../../../public/images/gift-02.svg'
 import WatchListIcon from '../../../public/images/watchlist-icon.svg'
+import ThropyIconBlue from '../../../public/images/thropy-blue-big.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -58,28 +58,28 @@ const CarViewData = {
 }
 
 
-const CarViewPage = () => {
+const TournamentPage = () => {
     return (
-        <div className='tw-flex tw-flex-col tw-items-center'>
+        <div className='page-container'>
             <Links />
-            <div className='section-container tw-flex tw-justify-between tw-items-center'>
-                <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
+            <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-16'>
+                <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>TOURNAMENT</div>
                 <div className='tw-hidden sm:tw-block'>
-                    <WatchAndWagerButtons />
+                    <TournamentButtons />
                 </div>
             </div>
             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
                     <TitleContainer />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <WatchAndWagerButtons />
+                        <TournamentButtons />
                     </div>
                     <PhotosLayout />
                     <ArticleSection />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WagersSection />
                     </div>
-                    <GuessThePriceInfoSection />
+                    <InfoSection />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <DetailsSection />
                     </div>
@@ -91,25 +91,22 @@ const CarViewPage = () => {
                     <DetailsSection />
                 </div>
             </div>
-            <GamesYouMightLike />
-            <LatestNews articleData={articleData} />
-            <SubscribeSmall />
-            <Footer />
+
+
         </div>
     )
 }
 
-export default CarViewPage
+export default TournamentPage
 
-
-const WatchAndWagerButtons = () => {
+const TournamentButtons = () => {
     return (
         <div className='tw-flex'>
             <button className='btn-transparent-white tw-flex '>
                 <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                 WATCH
             </button>
-            <button className='btn-yellow tw-ml-2'>PLACE MY WAGER</button>
+            <button className='btn-yellow tw-ml-2'>BUY-IN FOR $100</button>
         </div>
 
     )
@@ -206,13 +203,13 @@ const ArticleSection = () => {
     )
 }
 
-const GuessThePriceInfoSection = () => {
+const InfoSection = () => {
     return (
         <div>
             <div className='tw-mt-8 lg:tw-mt-16 tw-p-6 tw-bg-[#172431]'>
-                <Image src={LiveGamesIcon} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
-                <div className='tw-text-2xl tw-font-bold tw-mt-6'>What is Guess the Price</div>
-                <div className='tw-my-4'>Wager on the car auction and guess the final hammer price. Closest player wins the prize. Duis anim adipisicing minim nisi elit quis. Cillum ullamco qui dolore non incididunt incididunt non. Aute adipisicing et esse exercitation sunt irure proident enim eu esse nulla. Est excepteur est non. Adipisicing occaecat minim ex duis excepteur.</div>
+                <Image src={ThropyIconBlue} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
+                <div className='tw-text-2xl tw-font-bold tw-mt-6'>What is a Tournament?</div>
+                <div className='tw-my-4'>Get more points the closer you are to the hammer price of a curated set of car auctions. Duis anim adipisicing minim nisi elit quis. Cillum ullamco qui dolore non incididunt incididunt non. Aute adipisicing et esse exercitation sunt irure proident enim eu esse nulla. Est excepteur est non. Adipisicing occaecat minim ex duis excepteur.</div>
                 <div className='tw-text-[#42A0FF]'>View Auctions</div>
             </div>
         </div>
@@ -295,45 +292,6 @@ const CommentsCard = () => {
         </div>
     )
 }
-
-
-const GamesYouMightLike = () => {
-    return (
-        <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-8 md:tw-mt-16'>
-
-            <header className='tw-max-w-[1312px]'>
-                <div className='tw-flex tw-justify-between tw-items-end'>
-                    <div className='tw-flex tw-items-center'>
-                        <Image src={DiagonalLines} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
-                        <div className='tw-font-bold tw-text-2xl tw-w-[200px] sm:tw-w-auto sm:tw-text-3xl tw-ml-4'>Games You Might Like</div>
-                    </div>
-                    <div className='tw-text-[#49C742]'>See All</div>
-                </div>
-            </header>
-
-            <section className='tw-overflow-hidden'>
-                <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
-                    <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
-                        {/* to be replaced by array.map */}
-                        <div className='tw-w-[200px] sm:tw-w-[416px]'>
-                            <Card />
-                        </div>
-                        <div className='tw-w-[200px] sm:tw-w-[416px]'>
-                            <Card />
-                        </div>
-                        <div className='tw-w-[200px] sm:tw-w-[416px]'>
-                            <Card />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-
-        </div>
-    )
-}
-
 
 const WagersSection = () => {
     const teamPlayers = [{

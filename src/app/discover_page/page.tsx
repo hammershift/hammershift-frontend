@@ -44,8 +44,8 @@ const DiscoverPage = () => {
                         </div>
                         <div className='tw-flex tw-mt-2'>
                             <Image src={HourGlass} width={20} height={20} alt='dollar icon' className='tw-w-5 tw-h-5 ' />
-                            <span className='tw-opacity-80 tw-ml-2'>Time Left:</span>
-                            <span className=' tw-ml-2 tw-font-bold'>{DiscoveryPageData.current_bid}</span>
+                            <span className='tw-opacity-80 tw-ml-2 '>Time Left:</span>
+                            <span className=' tw-ml-2  tw-font-bold'>{DiscoveryPageData.current_bid}</span>
                         </div>
                     </div>
                     <div className='tw-mt-8'>

@@ -73,7 +73,7 @@ export default HowHammerShiftWorks
 
 export const LatestNews: React.FC<HowHammerShiftWorksProps> = ({ articleData }) => {
     return (
-        <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-screen tw-flex tw-justify-center'>
+        <div className='tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-screen tw-flex tw-justify-center' >
             <div className=' section-container tw-py-16 md:tw-py-[120px]'>
                 <header>
                     <h1 className='tw-text-3xl tw-font-bold'>Latest News</h1>
