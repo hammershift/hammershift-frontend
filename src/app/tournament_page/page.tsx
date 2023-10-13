@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import Links from '../components/links'
 import Image from 'next/image'
 
@@ -26,6 +27,7 @@ import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
 import GiftIcon from '../../../public/images/gift-02.svg'
 import WatchListIcon from '../../../public/images/watchlist-icon.svg'
 import ThropyIconBlue from '../../../public/images/thropy-blue-big.svg'
+import CarsImage from '../../../public/images/cars-icon.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -60,6 +62,7 @@ const CarViewData = {
 
 
 const TournamentPage = () => {
+    const [selected, setSelected] = useState(false)
     return (
         <div className='page-container'>
             <Links />
@@ -69,29 +72,47 @@ const TournamentPage = () => {
                     <TournamentButtons />
                 </div>
             </div>
-            <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
-                <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
-                    <TitleContainer />
-                    <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <TournamentButtons />
-                    </div>
-                    <PhotosLayout />
-                    <ArticleSection />
-                    <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <WagersSection />
-                    </div>
-                    <TournamentInfoSection />
-                    <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <DetailsSection />
-                    </div>
-                    <CommentsSection />
+            {
+                selected
+                    ?
+                    <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
+                        <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
+                            <TitleSingleCarContainer />
+                            <div className='tw-block sm:tw-hidden tw-mt-8'>
+                                <TournamentButtons />
+                            </div>
+                            <PhotosLayout />
+                            <ArticleSection />
+                            <div className='tw-block sm:tw-hidden tw-mt-8'>
+                                <WagersSection />
+                            </div>
+                            <TournamentInfoSection />
+                            <div className='tw-block sm:tw-hidden tw-mt-8'>
+                                <DetailsSection />
+                            </div>
+                            <CommentsSection />
 
-                </div>
-                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
-                    <WagersSection />
-                    <DetailsSection />
-                </div>
-            </div>
+                        </div>
+                        <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
+                            <WagersSection />
+                            <DetailsSection />
+                        </div>
+                    </div>
+                    :
+                    <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
+                        <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
+                            <TitleTournamentsList />
+                            {/* Insert List Here */}
+
+                            <CommentsSection />
+                        </div>
+                        <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
+                            <WagersSection />
+                            <TournamentInfoSection />
+                        </div>
+                    </div>
+            }
+
             <TournamentsYouMightLike />
             <LatestNews articleData={articleData} />
             <SubscribeSmall />
@@ -117,7 +138,7 @@ const TournamentButtons = () => {
     )
 }
 
-const TitleContainer = () => {
+const TitleSingleCarContainer = () => {
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
             <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
@@ -175,6 +196,76 @@ const TitleContainer = () => {
     )
 }
 
+const TitleTournamentsList = () => {
+    const TournamentsListData = {
+        title: "Sedan Champions Tournament",
+        cars: 5,
+        buy_in_ends: "02:16:00",
+        tournament_ends: "Jul 5, 2023, 7:00 pm",
+        prize: "$1,000",
+        list: [{ img: "", name: "", description: "", time: "" }]
+
+    }
+    return (
+        <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
+            <Image src={CarsImage} width={144} height={32} alt="cars image" className='tw-w-36 tw-h-auto' />
+            <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
+            <div className='info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4'>
+                <div className='info-left-marker tw-w-[300px]'>
+                    <div className='tw-flex'>
+                        <div>
+                            <Image src={DollarIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                        </div>
+                        <div className='tw-opacity-80 tw-flex'>Current Bid:
+                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{CarViewData.currentBid}
+                            </span>
+                            <span className='tw-block md:tw-hidden tw-ml-2'>{`(${CarViewData.bids} bids)`}</span>
+                        </div>
+                    </div>
+                    <div className='tw-flex tw-mt-0 md:tw-mt-1'>
+                        <div>
+                            <Image src={CalendarIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                        </div>
+                        <span className='tw-opacity-80'>Ending: <span className='tw-font-bold'>{CarViewData.endingDate}</span></span>
+                    </div>
+                </div>
+                <div className='right-section-marker'>
+                    <div className='top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between'>
+                        <div className='tw-w-[160px] tw-hidden md:tw-flex'>
+                            <div>
+                                <Image src={HashtagIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                            </div>
+                            <span className='tw-opacity-80'>Bids: <span className='tw-font-bold'>{CarViewData.bids}</span></span>
+                        </div>
+                        <div className='tw-flex'>
+                            <div>
+                                <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                            </div>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{CarViewData.timeLeft}</span></span>
+                        </div>
+                    </div>
+                    <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
+                        <div className='tw-flex  tw-w-[160px]'>
+                            <div>
+                                <Image src={PlayersIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                            </div>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold '>{CarViewData.players}</span></span>
+                        </div>
+                        <div className='tw-flex'>
+                            <div>
+                                <Image src={PrizeIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5 tw-mr-2' />
+                            </div>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold '>{CarViewData.prize}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
+
 const PhotosLayout = () => {
     return (
         <div className=' tw-my-8'>
@@ -215,7 +306,7 @@ const TournamentInfoSection = () => {
                 <Image src={ThropyIconBlue} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
                 <div className='tw-text-2xl tw-font-bold tw-mt-6'>What is a Tournament?</div>
                 <div className='tw-my-4'>Get more points the closer you are to the hammer price of a curated set of car auctions. Duis anim adipisicing minim nisi elit quis. Cillum ullamco qui dolore non incididunt incididunt non. Aute adipisicing et esse exercitation sunt irure proident enim eu esse nulla. Est excepteur est non. Adipisicing occaecat minim ex duis excepteur.</div>
-                <div className='tw-text-[#42A0FF]'>View Auctions</div>
+                <div className='tw-text-[#42A0FF]'>View Tournaments</div>
             </div>
         </div>
     )
