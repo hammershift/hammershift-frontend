@@ -41,6 +41,7 @@ import AvatarFour from '../../../public/images/avatar-four.svg'
 import { LatestNews } from '../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
+import { TournamentsCard } from '../components/card'
 import Footer from '../components/footer'
 import Link from 'next/link'
 
@@ -91,6 +92,10 @@ const TournamentPage = () => {
                     <DetailsSection />
                 </div>
             </div>
+            <TournamentsYouMightLike />
+            <LatestNews articleData={articleData} />
+            <SubscribeSmall />
+            <Footer />
 
 
         </div>
@@ -490,6 +495,30 @@ const DetailsSection = () => {
                 <Image src={CarFaxLogo} width={130} height={44} alt="bring a trailer logo" className='tw-w-[130px] tw-h-[44px] tw-my-4' />
 
             </div>
+        </div>
+    )
+}
+
+const TournamentsYouMightLike = () => {
+    return (
+        <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8  tw-mt-8 '>
+
+            <header className='tw-max-w-[1312px]'>
+                <div className='tw-flex tw-justify-between tw-items-end'>
+                    <div className='tw-flex tw-items-center'>
+                        <Image src={DiagonalLines} width={40} height={40} alt="dollar" className='tw-w-10 tw-h-10' />
+                        <div className='tw-font-bold tw-text-2xl tw-w-[200px] sm:tw-w-auto sm:tw-text-3xl tw-ml-4'>Tournaments You Might Like</div>
+                    </div>
+                    <div className='tw-text-[#49C742]'>See All</div>
+                </div>
+            </header>
+
+            <section className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-8 tw-mt-8'>
+                {/* to be replaced by array.map */}
+                <TournamentsCard />
+                <TournamentsCard />
+                <TournamentsCard />
+            </section>
         </div>
     )
 }

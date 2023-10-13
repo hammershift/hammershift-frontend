@@ -276,3 +276,64 @@ export const GamesCard = () => {
         </div>
     )
 }
+
+
+export const TournamentsCard = () => {
+    const userList = [{
+        number: "1",
+        img: AvatarOne,
+        username: "Username",
+        points: "936"
+    },
+    {
+        number: "2",
+        img: AvatarTwo,
+        username: "Username",
+        points: "984"
+    }, {
+        number: "3",
+        img: AvatarThree,
+        username: "Username",
+        points: "1,000"
+    }]
+    return (
+        <div className=''>
+            <div className='tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4'>
+                <div className='tw-flex tw-justify-end '>
+                    <Image src={BlackMercedes} width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
+                </div>
+                <div className='tw-flex tw-justify-center'>
+                    <Image src={BlackMercedes} width={100} height={100} alt='image' className='tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full ' />
+                </div>
+                <div className='tw-flex tw-justify-start'>
+                    <Image src={BlackMercedes} width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
+                </div>
+            </div>
+            <div className='tw-bg-[#1A2C3D] tw-w-auto tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20' >
+                <div className='tw-text-[18px] tw-font-bold'>2000s Tournament</div>
+                <div className='tw-text-[#53944F]'>Just Ended</div>
+                <div>
+
+                    {
+                        userList.map((user) => (
+                            <div key={user.username} className='tw-flex tw-items-center tw-justify-between tw-my-3'>
+                                <div className='tw-flex tw-items-center'>
+                                    <div>{user.number}</div>
+                                    <Image src={user.img} width={40} height={40} alt="avatar" className='tw-w-[40px] tw-h-[40px] tw-mx-3' />
+                                    <div>{user.username}</div>
+                                </div>
+                                <div className='tw-text-[#F2CA16] tw-font-bold'>{`${user.points} pts.`}</div>
+                            </div>
+                        ))
+                    }
+
+                    {/* other users*/}
+                </div>
+                <div>
+                    <button className='btn-yellow tw-w-full'>View Results</button>
+                </div>
+
+            </div>
+        </div>
+    )
+}
