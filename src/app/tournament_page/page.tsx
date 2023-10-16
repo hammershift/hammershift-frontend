@@ -28,6 +28,7 @@ import GiftIcon from '../../../public/images/gift-02.svg'
 import WatchListIcon from '../../../public/images/watchlist-icon.svg'
 import ThropyIconBlue from '../../../public/images/thropy-blue-big.svg'
 import CarsImage from '../../../public/images/cars-icon.svg'
+import CarIcon from '../../../public/images/car-01.svg'
 
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
@@ -66,7 +67,7 @@ const TournamentPage = () => {
     return (
         <div className='page-container'>
             <Links />
-            <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-16'>
+            <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-16'>
                 <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>TOURNAMENT</div>
                 <div className='tw-hidden sm:tw-block'>
                     <TournamentButtons />
@@ -99,9 +100,13 @@ const TournamentPage = () => {
                         </div>
                     </div>
                     :
-                    <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
+                    <div className='section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                         <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
                             <TitleTournamentsList />
+                            <div className='sm:tw-hidden tw-mt-4'>
+                                <TournamentButtons />
+
+                            </div>
                             {/* Insert List Here */}
 
                             <CommentsSection />
@@ -210,54 +215,30 @@ const TitleTournamentsList = () => {
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
             <Image src={CarsImage} width={144} height={32} alt="cars image" className='tw-w-36 tw-h-auto' />
             <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
-            <div className='info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4'>
-                <div className='info-left-marker tw-w-[300px]'>
-                    <div className='tw-flex'>
-                        <div>
-                            <Image src={DollarIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                        </div>
-                        <div className='tw-opacity-80 tw-flex'>Current Bid:
-                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{CarViewData.currentBid}
-                            </span>
-                            <span className='tw-block md:tw-hidden tw-ml-2'>{`(${CarViewData.bids} bids)`}</span>
-                        </div>
+            <div className=' tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6'>
+                <div className='tw-flex'>
+                    <div>
+                        <Image src={CarIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                     </div>
-                    <div className='tw-flex tw-mt-0 md:tw-mt-1'>
-                        <div>
-                            <Image src={CalendarIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                        </div>
-                        <span className='tw-opacity-80'>Ending: <span className='tw-font-bold'>{CarViewData.endingDate}</span></span>
-                    </div>
+                    <span className='tw-opacity-80'>Cars: <span className='tw-font-bold'>{TournamentsListData.cars}{" cars"}</span></span>
                 </div>
-                <div className='right-section-marker'>
-                    <div className='top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between'>
-                        <div className='tw-w-[160px] tw-hidden md:tw-flex'>
-                            <div>
-                                <Image src={HashtagIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                            </div>
-                            <span className='tw-opacity-80'>Bids: <span className='tw-font-bold'>{CarViewData.bids}</span></span>
-                        </div>
-                        <div className='tw-flex'>
-                            <div>
-                                <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                            </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{CarViewData.timeLeft}</span></span>
-                        </div>
+                <div className='tw-flex'>
+                    <div>
+                        <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                     </div>
-                    <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
-                        <div className='tw-flex  tw-w-[160px]'>
-                            <div>
-                                <Image src={PlayersIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                            </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold '>{CarViewData.players}</span></span>
-                        </div>
-                        <div className='tw-flex'>
-                            <div>
-                                <Image src={PrizeIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5 tw-mr-2' />
-                            </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold '>{CarViewData.prize}</span></span>
-                        </div>
+                    <span className='tw-opacity-80'>Buy-in Ends: <span className='tw-font-bold tw-text-[#C2451E]'>{TournamentsListData.buy_in_ends}</span></span>
+                </div>
+                <div className='tw-flex tw-mt-0 md:tw-mt-1'>
+                    <div>
+                        <Image src={CalendarIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                     </div>
+                    <span className='tw-opacity-80'>Tournament Ends: <span className='tw-font-bold'>{TournamentsListData.tournament_ends}</span></span>
+                </div>
+                <div className='tw-flex'>
+                    <div>
+                        <Image src={PrizeIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5 tw-mr-2' />
+                    </div>
+                    <span className='tw-opacity-80'>Prize: <span className='tw-font-bold '>{TournamentsListData.prize}</span></span>
                 </div>
             </div>
         </div>
@@ -315,7 +296,7 @@ const TournamentInfoSection = () => {
 
 const CommentsSection = () => {
     return (
-        <div className='tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0'>
+        <div className='tw-mt-8 md:tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0'>
             <div className='tw-flex tw-justify-between'>
                 <div className='tw-text-xl md:tw-text-3xl'><span className='tw-font-bold'>Comments</span>{`(16)`}</div>
                 <div className='tw-flex tw-items-center tw-text-sm sm:tw-text-base'>
