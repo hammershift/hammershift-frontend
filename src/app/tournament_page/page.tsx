@@ -246,8 +246,8 @@ const TitleTournamentsList = () => {
 
 const TournamentsList = () => {
     return (
-        <div>
-            <div>Cars in Tournament</div>
+        <div className='tw-mt-8 md:tw-mt-16'>
+            <div className='tw-text-3xl tw-font-bold'>Cars in Tournament</div>
             <div className='tw-flex tw-flex-col'>
                 <TournamentsListCard />
                 <TournamentsListCard />
@@ -255,6 +255,7 @@ const TournamentsList = () => {
                 <TournamentsListCard />
                 <TournamentsListCard />
             </div>
+            <button className='btn-yellow tw-w-full tw-mt-8'>BUY-IN FOR $100</button>
         </div>
     )
 }
