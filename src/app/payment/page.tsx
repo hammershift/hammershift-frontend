@@ -18,10 +18,18 @@ import CountryOptions from '../components/country_option'
 const Payment = () => {
     const cardSaved = true
     const [paymentChoice, setPaymentChoice] = useState<string | null>(null) //null, Credit Card, Paypal, Apple Pay, Google Pay
+    const [isLoading, setIsLoading] = useState(false)
+    const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false)
+
+    // To test loading
+    setTimeout(() => {
+        setIsLoading(false);
+        //go to payment successful page
+    }, 5000)
 
     return (
         <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center'>
-            <div className='tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6'>
+            <div className='tw-relative tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6'>
                 {/* title */}
                 <div className='tw-flex tw-justify-between tw-mb-16'>
                     <div className='tw-text-3xl tw-font-bold'>Pay with</div>
@@ -130,7 +138,7 @@ const Payment = () => {
                         <hr className='tw-border-white' />
                         <div className='tw-py-4 tw-flex tw-justify-end'>
                             <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
-                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                            <button className='btn-yellow tw-ml-4' onClick={() => setIsLoading((prev) => true)}>CONTINUE</button>
                         </div>
                     </div>
 
@@ -161,9 +169,13 @@ const Payment = () => {
                         <div>Google Pay</div>
                         <div className='tw-py-4 tw-flex tw-justify-end'>
                             <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
-                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                            <button className='btn-yellow tw-ml-4' >CONTINUE</button>
                         </div>
                     </div>
+                }
+                {isLoading === true
+                    &&
+                    <Loading />
                 }
             </div>
 
@@ -173,3 +185,28 @@ const Payment = () => {
 
 export default Payment
 
+
+const Loading = () => {
+    return (
+        <div className='tw-bg-[#0F1923] tw-w-full tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center'>
+            <div className=''>
+                <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] rotating' />
+            </div>
+            <div className='tw-mt-4'>Verifying payment. Please wait.</div>
+            <div>Do not close this window</div>
+        </div>
+    )
+}
+
+const PaymentSuccessful = () => {
+    return (
+        <div className='tw-bg-[#0F1923] tw-w-full tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center'>
+            <div className=''>
+                <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] ' />
+            </div>
+            <div className='tw-mt-4'>Payment Successful</div>
+            <div>Quam temere in vitiis, legem sancimus haerentia</div>
+            <div className='btn-transparent-white'>BACK TO HOME</div>
+        </div>
+    )
+}
