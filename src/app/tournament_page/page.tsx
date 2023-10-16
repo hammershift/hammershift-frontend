@@ -86,7 +86,7 @@ const TournamentPage = () => {
                             <PhotosLayout />
                             <ArticleSection />
                             <div className='tw-block sm:tw-hidden tw-mt-8'>
-                                <WagersSection />
+                                <PlayersSection />
                             </div>
                             <TournamentInfoSection />
                             <div className='tw-block sm:tw-hidden tw-mt-8'>
@@ -96,7 +96,7 @@ const TournamentPage = () => {
 
                         </div>
                         <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
-                            <WagersSection />
+                            <PlayersSection />
                             <DetailsSection />
                         </div>
                     </div>
@@ -108,10 +108,14 @@ const TournamentPage = () => {
                                 <TournamentButtons />
                             </div>
                             <TournamentsList />
+                            <div className='sm:tw-hidden tw-my-8'>
+                                <PlayersSection />
+                                <TournamentInfoSection />
+                            </div>
                             <CommentsSection />
                         </div>
                         <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
-                            <WagersSection />
+                            <PlayersSection />
                             <TournamentInfoSection />
                         </div>
                     </div>
@@ -310,7 +314,7 @@ const TournamentInfoSection = () => {
 
 const CommentsSection = () => {
     return (
-        <div className='tw-mt-8 md:tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0'>
+        <div className='tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0'>
             <div className='tw-flex tw-justify-between'>
                 <div className='tw-text-xl md:tw-text-3xl'><span className='tw-font-bold'>Comments</span>{`(16)`}</div>
                 <div className='tw-flex tw-items-center tw-text-sm sm:tw-text-base'>
@@ -384,7 +388,7 @@ const CommentsCard = () => {
     )
 }
 
-const WagersSection = () => {
+const PlayersSection = () => {
     const teamPlayers = [{
         id: "wager1",
         username: "Username",
@@ -442,7 +446,7 @@ const WagersSection = () => {
             <div className='tw-relative tw-pb-8 sm:tw-pb-0'>
                 <div className='tw-px-5 tw-w-full tw-h-auto tw-pt-8 tw-pb-6'>
                     <div className='tw-flex tw-justify-between'>
-                        <div className='tw-font-bold tw-text-[18px]'>WAGERS</div>
+                        <div className='tw-font-bold tw-text-[18px]'>PLAYERS</div>
                         <Image src={ArrowDown} width={20} height={20} alt="arrow down" className='tw-w-5 tw-h-5' />
                     </div>
                     <div className='tw-text-[14px]'>18 Players</div>
