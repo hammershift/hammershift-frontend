@@ -1,3 +1,4 @@
+"use client"
 import Image from 'next/image'
 import React, { useState } from 'react'
 import CancelIcon from '../../../public/images/x-icon.svg'
@@ -16,7 +17,8 @@ import CountryOptions from '../components/country_option'
 
 const Payment = () => {
     const cardSaved = true
-    const paymentChoice = "Credit Card"
+    const [paymentChoice, setPaymentChoice] = useState<string | null>(null) //null, Credit Card, Paypal, Apple Pay, Google Pay
+
     return (
         <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center'>
             <div className='tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6'>
@@ -31,7 +33,7 @@ const Payment = () => {
                 {paymentChoice === null
                     &&
                     <div className='tw-grid tw-gap-6 '>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between  tw-rounded'>
+                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between  tw-rounded' onClick={() => setPaymentChoice((prev) => "Credit Card")} >
                             <div className=''>Credit or Debit Card</div>
                             <div className='tw-flex tw-grid tw-grid-cols-4 tw-gap-2'>
                                 <Image src={VisaLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
@@ -40,18 +42,19 @@ const Payment = () => {
                                 <Image src={DiscoverLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
                             </div>
                         </button>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded'>
+                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded' onClick={() => setPaymentChoice((prev) => "Paypal")}>
                             <div className=''>Pay with PayPal</div>
                             <Image src={PaypalLogo} width={112} height={30} alt='x' className='tw-w-[112px] tw-h-[30px]' />
                         </button>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded'>
-                            <div className=''>Pay with PayPal</div>
+                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded' onClick={() => setPaymentChoice((prev) => "Apple Pay")}>
+                            <div className=''>Apple Pay</div>
                             <Image src={ApplePayLogo} width={73} height={30} alt='x' className='tw-w-[73px] tw-h-[30px]' />
                         </button>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded'>
-                            <div className=''>Pay with PayPal</div>
+                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded' onClick={() => setPaymentChoice((prev) => "Google Pay")}>
+                            <div className=''>Google Pay</div>
                             <Image src={GooglePayLogo} width={81} height={30} alt='x' className='tw-w-[81px] tw-h-[30px]' />
                         </button>
+                        {/* If card is saved */}
                         {cardSaved &&
                             <div className='tw-mt-11'>
                                 <div>Add payment method</div>
@@ -126,11 +129,41 @@ const Payment = () => {
                         </div>
                         <hr className='tw-border-white' />
                         <div className='tw-py-4 tw-flex tw-justify-end'>
-                            <button className='btn-transparent-white'>CANCEL</button>
+                            <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
                             <button className='btn-yellow tw-ml-4'>CONTINUE</button>
                         </div>
                     </div>
 
+                }
+                {paymentChoice === "Paypal"
+                    &&
+                    <div>
+                        <div>Paypal Payment</div>
+                        <div className='tw-py-4 tw-flex tw-justify-end'>
+                            <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
+                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                        </div>
+                    </div>
+                }
+                {paymentChoice === "Apple Pay"
+                    &&
+                    <div>
+                        <div>Apple Pay</div>
+                        <div className='tw-py-4 tw-flex tw-justify-end'>
+                            <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
+                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                        </div>
+                    </div>
+                }
+                {paymentChoice === "Google Pay"
+                    &&
+                    <div>
+                        <div>Google Pay</div>
+                        <div className='tw-py-4 tw-flex tw-justify-end'>
+                            <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
+                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                        </div>
+                    </div>
                 }
             </div>
 
@@ -138,4 +171,5 @@ const Payment = () => {
     )
 }
 
-export default Payment   
+export default Payment
+
