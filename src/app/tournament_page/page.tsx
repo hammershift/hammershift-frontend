@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import Links from '../components/links'
+import { TournamentsListCard } from '../components/card'
 import Image from 'next/image'
 
 import DollarIcon from '../../../public/images/dollar.svg'
@@ -105,10 +106,8 @@ const TournamentPage = () => {
                             <TitleTournamentsList />
                             <div className='sm:tw-hidden tw-mt-4'>
                                 <TournamentButtons />
-
                             </div>
-                            {/* Insert List Here */}
-
+                            <TournamentsList />
                             <CommentsSection />
                         </div>
                         <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
@@ -245,6 +244,20 @@ const TitleTournamentsList = () => {
     )
 }
 
+const TournamentsList = () => {
+    return (
+        <div>
+            <div>Cars in Tournament</div>
+            <div className='tw-flex tw-flex-col'>
+                <TournamentsListCard />
+                <TournamentsListCard />
+                <TournamentsListCard />
+                <TournamentsListCard />
+                <TournamentsListCard />
+            </div>
+        </div>
+    )
+}
 
 
 const PhotosLayout = () => {

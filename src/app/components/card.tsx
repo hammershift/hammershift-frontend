@@ -9,6 +9,7 @@ import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import BlackMercedes from '../../../public/images/black-mercedes.svg'
+import CarTournamnetsListOne from '../../../public/images/tournaments-list/tournaments-list-car-1.svg'
 
 export const cardData = {
     id: "1",
@@ -333,6 +334,29 @@ export const TournamentsCard = () => {
                     <button className='btn-yellow tw-w-full'>View Results</button>
                 </div>
 
+            </div>
+        </div>
+    )
+}
+
+export const TournamentsListCard = () => {
+    const tournamentsListCardData = {
+        name: "1974 Maserati Bora 4.9",
+        description: "Nisi anim cupidatat elit proident ipsum reprehenderit adipisicing ullamco do pariatur quis sunt exercitation officia. Tempor magna duis mollit culpa. Laborum esse eu occaecat dolor laborum exercitation. Sunt labore et sunt consequat culpa velit non do culpa ex tempor irure. Deserunt est exercitation consectetur nisi id.",
+        time: "05:16:00"
+
+    }
+    return (
+        <div className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8'>
+            <Image src={CarTournamnetsListOne} width={416} height={240} alt='car' className='tw-w-full tw-h-auto tw-object-cover tw-aspect-auto' />
+            <div>
+                <div className='tw-opacity-30 tw-text-2xl tw-font-bold'>1</div>
+                <div className='tw-text-2xl tw-font-bold tw-mt-4'>{tournamentsListCardData.name}</div>
+                <div className='tw-h-[72px] tw-ellipsis tw-overflow-hidden'>{tournamentsListCardData.description}</div>
+                <div className='tw-flex tw-mt-4'>
+                    <Image src={HourGlass} width={20} height={20} alt='car' className='tw-w-5 tw-h-5' />
+                    <span className='tw-text-[#F2CA16] tw-font-bold tw-ml-2'>{tournamentsListCardData.time}</span>
+                </div>
             </div>
         </div>
     )
