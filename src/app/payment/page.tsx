@@ -1,6 +1,8 @@
 "use client"
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import CancelIcon from '../../../public/images/x-icon.svg'
 import AmexLogo from '../../../public/images/payments-logo/Amex.svg'
 import ApplePayLogo from '../../../public/images/payments-logo/apple-pay.svg'
@@ -11,30 +13,38 @@ import PaypalLogo from '../../../public/images/payments-logo/paypal.svg'
 import VisaLogo from '../../../public/images/payments-logo/visa.svg'
 import CardIcon from '../../../public/images/payments-logo/card.svg'
 import HelpIcon from '../../../public/images/payments-logo/help-icon.svg'
+import Check from '../../../public/images/check.svg'
 
 import CountryOptions from '../components/country_option'
 
 
 const Payment = () => {
+    const router = useRouter()
     const cardSaved = true
     const [paymentChoice, setPaymentChoice] = useState<string | null>(null) //null, Credit Card, Paypal, Apple Pay, Google Pay
     const [isLoading, setIsLoading] = useState(false)
     const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false)
-
+    // const [errorValidating, setErrorValidating] = useState(false)
+    const errorValidating = false
     // To test loading
-    setTimeout(() => {
-        setIsLoading(false);
-        //go to payment successful page
-    }, 5000)
+    useEffect(() => {
+        if (isLoading) {
+            setTimeout(() => {
+                setIsLoading(false);
+                setIsPaymentSuccessful(true)
+            }, 5000)
+
+        }
+    }, [isLoading])
 
     return (
-        <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center'>
+        <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0'>
             <div className='tw-relative tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6'>
                 {/* title */}
-                <div className='tw-flex tw-justify-between tw-mb-16'>
+                <div className='tw-flex tw-justify-between tw-mb-12'>
                     <div className='tw-text-3xl tw-font-bold'>Pay with</div>
                     <div className='tw-w-[35px] tw-h-[35px] tw-flex tw-justify-center tw-items-center'>
-                        <Image src={CancelIcon} width={15} height={15} alt='x' className='tw-w-[15px] tw-h-[15px]' />
+                        <Image src={CancelIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
                     </div>
                 </div>
                 {/* Content */}
@@ -84,7 +94,7 @@ const Payment = () => {
                     paymentChoice === "Credit Card"
                     &&
                     <div className='tw-bg-[#172431] tw-p-4 tw-rounded'>
-                        <div className=' tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between  tw-rounded tw-mb-3'>
+                        <div className=' tw-h-[60px] tw-w-full tw-flex tw-items-center tw-justify-between  tw-rounded tw-mb-2'>
                             <div className=''>Credit or Debit Card</div>
                             <div className='tw-flex tw-grid tw-grid-cols-4 tw-gap-2'>
                                 <Image src={VisaLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
@@ -93,7 +103,12 @@ const Payment = () => {
                                 <Image src={DiscoverLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
                             </div>
                         </div>
-                        <hr className='tw-border-white ' />
+                        {errorValidating
+                            ?
+                            <div className='tw-text-sm tw-text-[#C2451E] tw-pt-2'>There was an error in validating your payment. Please try again</div>
+                            :
+                            <hr className='tw-border-white ' />
+                        }
                         {/* inputs */}
                         <div className='tw-grid tw-gap-3 tw-py-6'>
                             <div>
@@ -149,7 +164,7 @@ const Payment = () => {
                         <div>Paypal Payment</div>
                         <div className='tw-py-4 tw-flex tw-justify-end'>
                             <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
-                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                            <button className='btn-yellow tw-ml-4' onClick={() => setIsLoading((prev) => true)}>CONTINUE</button>
                         </div>
                     </div>
                 }
@@ -159,7 +174,7 @@ const Payment = () => {
                         <div>Apple Pay</div>
                         <div className='tw-py-4 tw-flex tw-justify-end'>
                             <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
-                            <button className='btn-yellow tw-ml-4'>CONTINUE</button>
+                            <button className='btn-yellow tw-ml-4' onClick={() => setIsLoading((prev) => true)}>CONTINUE</button>
                         </div>
                     </div>
                 }
@@ -169,13 +184,17 @@ const Payment = () => {
                         <div>Google Pay</div>
                         <div className='tw-py-4 tw-flex tw-justify-end'>
                             <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
-                            <button className='btn-yellow tw-ml-4' >CONTINUE</button>
+                            <button className='btn-yellow tw-ml-4' onClick={() => setIsLoading((prev) => true)}>CONTINUE</button>
                         </div>
                     </div>
                 }
                 {isLoading === true
                     &&
                     <Loading />
+                }
+                {isPaymentSuccessful === true
+                    &&
+                    <PaymentSuccessful />
                 }
             </div>
 
@@ -202,11 +221,14 @@ const PaymentSuccessful = () => {
     return (
         <div className='tw-bg-[#0F1923] tw-w-full tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center'>
             <div className=''>
-                <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] ' />
+                <Image src={Check} width={80} height={80} alt='x' className='tw-w-[80px] tw-h-[80px] ' />
             </div>
-            <div className='tw-mt-4'>Payment Successful</div>
+            <div className='tw-mt-4 tw-text-2xl tw-font-bold'>Payment Successful</div>
             <div>Quam temere in vitiis, legem sancimus haerentia</div>
-            <div className='btn-transparent-white'>BACK TO HOME</div>
+            {/* TODO: replace href */}
+            <Link href={"/homepage"} className='tw-mt-4'>
+                <div className='btn-transparent-white'>BACK TO HOME</div>
+            </Link>
         </div>
     )
 }
