@@ -94,6 +94,10 @@ const WagerPage = () => {
                         </div>
                     </div>
                 </div>
+                <div className='tw-absolute tw-items-center tw-flex tw-justify-between tw-bottom-0 tw-left-0 tw-h-[80px] tw-w-full tw-p-8 tw-bg-white/5'>
+                    <button>CANCEL</button>
+                    <button className='btn-yellow tw-h-[48px]'>PLACE MY WAGER</button>
+                </div>
             </div>
         </div>
     )
