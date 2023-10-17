@@ -128,7 +128,7 @@ const WagerCreateAccount = () => {
         <div className='tw-w-[640px] tw-h-[505px] tw-flex tw-flex-col tw-gap-8'>
             <div>
                 <div className='tw-font-bold tw-text-4xl'>Create Account</div>
-                <div>Already a member?
+                <div className='tw-mt-1'>Already a member?
                     <button className='tw-text-[#F2CA16] tw-ml-2'>Login Here</button>
                 </div>
             </div>
