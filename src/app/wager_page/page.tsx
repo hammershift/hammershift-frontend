@@ -14,8 +14,9 @@ import AppleSocial from '../../../public/images/social-apple-logo.svg'
 import CancelIcon from '../../../public/images/x-icon.svg'
 
 const WagerPage = () => {
+    // Change to false to see create account
     const user = {
-        isregistered: true
+        isregistered: false
     }
 
     const WagerPageData = {
@@ -26,7 +27,7 @@ const WagerPage = () => {
         time_left: "02:16:00"
     }
     return (
-        <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0'>
+        <div className='tw-bg-black md:tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-absolute tw-top-0 tw-left-0'>
 
             {/* Content */}
             {user.isregistered
@@ -129,9 +130,12 @@ export default WagerPage
 
 const WagerCreateAccount = () => {
     return (
-        <div className='tw-w-[640px] tw-h-[505px] tw-flex tw-flex-col tw-gap-8'>
+        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
             <div>
-                <div className='tw-font-bold tw-text-4xl'>Create Account</div>
+                <div className='tw-flex tw-justify-between md:tw-justify-start'>
+                    <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Create Account</div>
+                    <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
+                </div>
                 <div className='tw-mt-1'>Already a member?
                     <button className='tw-text-[#F2CA16] tw-ml-2'>Login Here</button>
                 </div>
