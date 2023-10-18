@@ -48,6 +48,7 @@ import { SubscribeSmall } from '../components/subscribe'
 import { TournamentsCard } from '../components/card'
 import Footer from '../components/footer'
 import Link from 'next/link'
+import TournamentWagerPage from '../tournament_wager_page/page'
 
 const CarViewData = {
     name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -64,9 +65,11 @@ const CarViewData = {
 
 
 const TournamentPage = () => {
+    // Change to true for tournament single car page
     const [selected, setSelected] = useState(false)
+    const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false)
     return (
-        <div className='page-container'>
+        <div className='page-container tw-relative'>
             <Links />
             <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-16'>
                 <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>TOURNAMENT</div>
@@ -125,7 +128,11 @@ const TournamentPage = () => {
             <LatestNews articleData={articleData} />
             <SubscribeSmall />
             <Footer />
-
+            {/* TODO: Check if working*/}
+            {/* <TournamentWagerPage /> */}
+            {isWagerMenuOpen &&
+                <div className='tw-bg-black tw-w-screen tw-h-full'></div>
+            }
 
         </div>
     )
@@ -200,6 +207,7 @@ const TitleSingleCarContainer = () => {
                     </div>
                 </div>
             </div>
+
         </div>
     )
 }

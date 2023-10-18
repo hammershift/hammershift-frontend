@@ -39,7 +39,7 @@ const TournamentWagerPage = () => {
         time_left: "12:17:00"
     }]
     return (
-        <div className='tw-bg-black/50 tw-w-screen tw-h-auto sm:tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0'>
+        <div className='tw-bg-black/80 tw-w-screen tw-h-auto sm:tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0'>
             <div className='tw-relative tw-bg-[#0F1923] tw-w-full sm:tw-w-[864px] tw-h-full sm:tw-h-[900px] tw-pt-8'>
                 <div className='tw-flex tw-flex-col tw-gap-4  tw-px-6'>
                     <div className='tw-flex tw-items-center tw-justify-between sm:tw-justify-start'>
