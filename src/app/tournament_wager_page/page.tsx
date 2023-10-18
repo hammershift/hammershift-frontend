@@ -39,9 +39,9 @@ const TournamentWagerPage = () => {
     }]
     return (
         <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0'>
-            <div className='tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-[900px] tw-py-8 tw-px-6'>
+            <div className='tw-relative tw-bg-[#0F1923] tw-w-full sm:tw-w-[864px] tw-h-full sm:tw-h-[900px] tw-py-8 tw-px-6'>
                 <div className='tw-flex tw-flex-col tw-gap-4'>
-                    <div className='tw-text-4xl tw-font-bold'>Sedan Champions Tournament</div>
+                    <div className='tw-text-2xl sm:tw-text-4xl tw-font-bold'>Sedan Champions Tournament</div>
                     <div>Get more points the closer you are to the hammer price of a curated set of car auctions. Guess the price for each of the cars listed below and buy-in to lock in your wagers. <span>Learn more</span></div>
                     <div className='tw-text-[#49C742] tw-text-lg tw-py-3 tw-px-4 tw-bg-[#49C74233] tw-grid tw-grid-cols-2'>
                         <div className='tw-flex tw-items-center tw-gap-2'>
@@ -69,6 +69,10 @@ const TournamentWagerPage = () => {
                             )
                         }
                     </div>
+                    <div className='tw-absolute tw-items-center tw-flex tw-justify-between tw-bottom-0 tw-left-0 tw-h-[80px] tw-w-full tw-p-6 tw-bg-[#172431]'>
+                        <button>CANCEL</button>
+                        <button className='btn-yellow tw-h-[48px] tw-w-[224px]'>BUY-IN FOR $100</button>
+                    </div>
                 </div>
             </div>
 
@@ -88,7 +92,7 @@ interface TournamentWagerPageCardProps {
 
 const TournamentWagerPageCard: React.FC<TournamentWagerPageCardProps> = ({ img, name, current_bid, time_left }) => {
     return (
-        <div className='tw-text-sm tw-flex tw-justify-between tw-items-center'>
+        <div className='tw-text-sm tw-flex tw-flex-col sm:tw-flex-row sm:tw-justify-between tw-items-center'>
             <div className='tw-flex tw-gap-4'>
                 <Image src={img} width={100} height={100} alt='sedan' className='tw-w-[100px] tw-h-[100px]' />
                 <div className='tw-flex tw-flex-col tw-justify-center'>
@@ -101,18 +105,15 @@ const TournamentWagerPageCard: React.FC<TournamentWagerPageCardProps> = ({ img, 
                     <div className='tw-flex tw-gap-2 tw-items-center'>
                         <Image src={HourGlass} width={14} height={14} alt='sedan' className='tw-w-[14px] tw-h-[14px]' />
                         <span className='tw-opacity-80'>Time Left:</span>
-                        <span>{current_bid}</span>
+                        <span>{time_left}</span>
                     </div>
                 </div>
             </div>
-            <div className='tw-relative tw-flex tw-items-center tw-rounded tw-w-[224px]'>
+            <div className='tw-relative tw-flex tw-items-center tw-rounded tw-w-full sm:tw-w-[224px]'>
                 <div className='tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20' >$</div>
                 <input className='tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 ' />
             </div>
-            <div className='tw-absolute tw-items-center tw-flex tw-justify-between tw-bottom-0 tw-left-0 tw-h-[80px] tw-w-full tw-p-8 tw-bg-[#172431]'>
-                <button>CANCEL</button>
-                <button className='btn-yellow tw-h-[48px] tw-w-[224px]'>BUY-IN FOR $100</button>
-            </div>
+
         </div>
     )
 }
