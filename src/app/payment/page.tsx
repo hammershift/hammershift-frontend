@@ -38,11 +38,12 @@ const Payment = () => {
     }, [isLoading])
 
     return (
-        <div className='tw-bg-black/50 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0'>
+        <div className='tw-bg-black/80 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-absolute tw-top-0 tw-left-0'>
             <div className='tw-relative tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6'>
                 {/* title */}
                 <div className='tw-flex tw-justify-between tw-mb-12'>
                     <div className='tw-text-3xl tw-font-bold'>Pay with</div>
+                    <hr className='tw-border-white' />
                     <div className='tw-w-[35px] tw-h-[35px] tw-flex tw-justify-center tw-items-center'>
                         <Image src={CancelIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
                     </div>
@@ -50,8 +51,8 @@ const Payment = () => {
                 {/* Content */}
                 {paymentChoice === null
                     &&
-                    <div className='tw-grid tw-gap-6 '>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between  tw-rounded' onClick={() => setPaymentChoice((prev) => "Credit Card")} >
+                    <div className='tw-grid tw-gap-3 '>
+                        <button className='tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-4 tw-px-4 tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-items-center sm:tw-justify-between tw-gap-2 tw-rounded' onClick={() => setPaymentChoice((prev) => "Credit Card")} >
                             <div className=''>Credit or Debit Card</div>
                             <div className='tw-flex tw-grid tw-grid-cols-4 tw-gap-2'>
                                 <Image src={VisaLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
@@ -60,23 +61,23 @@ const Payment = () => {
                                 <Image src={DiscoverLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
                             </div>
                         </button>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded' onClick={() => setPaymentChoice((prev) => "Paypal")}>
+                        <button className='tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-4 tw-px-4 tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-items-center sm:tw-justify-between tw-gap-2 tw-rounded' onClick={() => setPaymentChoice((prev) => "Paypal")}>
                             <div className=''>Pay with PayPal</div>
                             <Image src={PaypalLogo} width={112} height={30} alt='x' className='tw-w-[112px] tw-h-[30px]' />
                         </button>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded' onClick={() => setPaymentChoice((prev) => "Apple Pay")}>
+                        <button className='tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-4 tw-px-4 tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-items-center sm:tw-justify-between tw-gap-2 tw-rounded' onClick={() => setPaymentChoice((prev) => "Apple Pay")}>
                             <div className=''>Apple Pay</div>
                             <Image src={ApplePayLogo} width={73} height={30} alt='x' className='tw-w-[73px] tw-h-[30px]' />
                         </button>
-                        <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-rounded' onClick={() => setPaymentChoice((prev) => "Google Pay")}>
+                        <button className='tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-4 tw-px-4 tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-items-center sm:tw-justify-between tw-gap-2 tw-rounded' onClick={() => setPaymentChoice((prev) => "Google Pay")}>
                             <div className=''>Google Pay</div>
                             <Image src={GooglePayLogo} width={81} height={30} alt='x' className='tw-w-[81px] tw-h-[30px]' />
                         </button>
                         {/* If card is saved */}
                         {cardSaved &&
                             <div className='tw-mt-11'>
-                                <div>Add payment method</div>
-                                <button className='tw-bg-[#172431] tw-h-[60px] tw-px-4 tw-w-full tw-flex tw-items-center tw-justify-between tw-mt-3 tw-rounded'>
+                                <div className='tw-font-bold'>Add payment method</div>
+                                <button className='tw-bg-[#172431] tw-h-auto tw-py-2 tw-px-4 tw-w-full tw-flex tw-flex-col sm:tw-flex-row tw-items-center sm:tw-justify-between tw-gap-2 tw-rounded tw-mt-3'>
                                     <div className=''>Credit or Debit Card</div>
                                     <div className='tw-flex tw-grid tw-grid-cols-4 tw-gap-2'>
                                         <Image src={VisaLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
