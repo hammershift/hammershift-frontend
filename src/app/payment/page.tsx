@@ -221,8 +221,10 @@ export default Payment
 const Loading = () => {
     return (
         <div className='tw-bg-[#0F1923] tw-w-screen sm:tw-w-full tw-h-full sm:tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-4'>
-            <div className=''>
-                <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] rotating' />
+            <div className='tw-w-[60px]'>
+                <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" className='loading-animation'>
+                    <circle id="c" fill="none" stroke-width="8" stroke-linecap="square" stroke="white" cx="45" cy="45" r="40" />
+                </svg>
             </div>
             <div className='tw-mt-4'>Verifying payment. Please wait.</div>
             <div>Do not close this window</div>
