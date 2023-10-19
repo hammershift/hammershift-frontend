@@ -45,7 +45,9 @@ const Payment = () => {
                     <div className='tw-text-3xl tw-font-bold'>Pay with</div>
                     <hr className='tw-border-white' />
                     <div className='tw-w-[35px] tw-h-[35px] tw-flex tw-justify-center tw-items-center'>
-                        <Image src={CancelIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
+                        <Link href={"/wager_page"}>
+                            <Image src={CancelIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
+                        </Link>
                     </div>
                 </div>
                 {/* Content */}

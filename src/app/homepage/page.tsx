@@ -188,7 +188,7 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className="tw-mt-8 sm:tw-mt-14 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-5 tw-gap-4 sm:tw-gap-8">
+      <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto tw-gap-4 sm:tw-gap-8 tw-mt-8">
         {carData.map((item) => (
           <LiveGamesCard
             key={item.id}
@@ -601,7 +601,7 @@ const NewGames = () => {
         </div>
       </header>
 
-      <section className='tw-overflow-hidden'>
+      <section className='tw-overflow-x-auto tw-w-full'>
         <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
           <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
             {/* to be replaced by array.map */}
@@ -635,7 +635,7 @@ const WhatsTrending = () => {
         </div>
       </header>
 
-      <section className='tw-overflow-hidden'>
+      <section className='tw-overflow-x-auto tw-w-full'>
         <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
           <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
             {/* to be replaced by array.map */}
@@ -670,7 +670,7 @@ const MostExpensiveCars = () => {
         </div>
       </header>
 
-      <section className='tw-overflow-hidden'>
+      <section className='tw-overflow-x-auto tw-w-full'>
         <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
           <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
             {/* to be replaced by array.map */}
@@ -707,7 +707,7 @@ const MostBids = () => {
         </div>
       </header>
 
-      <section className='tw-overflow-hidden'>
+      <section className='tw-overflow-x-auto tw-w-full'>
         <div className=' tw-w-[632px] sm:tw-w-[1312px] '>
           <div className=' tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 '>
             {/* to be replaced by array.map */}

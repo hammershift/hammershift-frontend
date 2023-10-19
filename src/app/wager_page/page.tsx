@@ -1,5 +1,7 @@
+'use client'
 import Image from 'next/image'
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import CarPhoto from '../../../public/images/wager-car-photo.svg'
 import DollarIcon from '../../../public/images/dollar.svg'
 import HashtagIcon from '../../../public/images/hash-02.svg'
@@ -15,6 +17,8 @@ import CancelIcon from '../../../public/images/x-icon.svg'
 import Link from 'next/link'
 
 const WagerPage = () => {
+    const router = useRouter()
+
     // Change to false to see create account
     const user = {
         isregistered: true
@@ -86,14 +90,14 @@ const WagerPage = () => {
                         <label className='tw-text-lg'>How much will this sell for?</label>
                         <div className='tw-relative tw-flex tw-items-center tw-rounded '>
                             <div className='tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20' >$</div>
-                            <input className='tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 ' />
+                            <input className='tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded' />
                         </div>
                     </div>
                     <div className=' tw-flex tw-flex-col tw-gap-3 tw-px-6'>
                         <label className='tw-text-lg'>Wager</label>
                         <div className='tw-relative tw-flex tw-items-center tw-rounded '>
                             <div className='tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20' >$</div>
-                            <input className='tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 ' />
+                            <input className='tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded' />
                         </div>
                     </div>
                     <div className='tw-text-[#49C742] tw-text-lg  tw-py-3 tw-px-4 tw-bg-[#49C74233] tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4 tw-mx-6 tw-px-6 tw-rounded'>
@@ -113,8 +117,8 @@ const WagerPage = () => {
                         </div>
                     </div>
                     <div className='md:tw-absolute md:tw-bottom-0 md:tw-left-0 tw-items-center tw-flex tw-justify-between tw-h-[80px] tw-w-full tw-p-6 tw-bg-white/5'>
-                        <button className='tw-hidden md:tw-block'>CANCEL</button>
-                        <button className='btn-yellow tw-h-[48px] tw-w-full md:tw-w-auto'>PLACE MY WAGER</button>
+                        <button className='tw-hidden md:tw-block' onClick={() => router.push('/car_view_page')}>CANCEL</button>
+                        <button className='btn-yellow tw-h-[48px] tw-w-full md:tw-w-auto' onClick={() => router.push('/payment')}>PLACE MY WAGER</button>
                     </div>
 
                 </div>
