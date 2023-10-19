@@ -94,48 +94,49 @@ const Payment = () => {
                 {
                     paymentChoice === "Credit Card"
                     &&
-                    <div className='tw-bg-[#172431] tw-p-4 tw-rounded'>
-                        <div className=' tw-h-[60px] tw-w-full tw-flex tw-items-center tw-justify-between  tw-rounded tw-mb-2'>
-                            <div className=''>Credit or Debit Card</div>
-                            <div className='tw-flex tw-grid tw-grid-cols-4 tw-gap-2'>
-                                <Image src={VisaLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
-                                <Image src={MasterCardLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
-                                <Image src={AmexLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
-                                <Image src={DiscoverLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
+                    <div>
+                        <div className='tw-bg-[#172431] tw-p-4 tw-rounded tw-flex tw-flex-col tw-gap-4'>
+                            <div className=' tw-h-[60px] tw-w-full tw-flex tw-items-center tw-flex-col sm:tw-flex-row sm:tw-justify-between tw-gap-2 tw-rounded'>
+                                <div className=''>Credit or Debit Card</div>
+                                <div className='tw-flex tw-grid tw-grid-cols-4 tw-gap-2'>
+                                    <Image src={VisaLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
+                                    <Image src={MasterCardLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
+                                    <Image src={AmexLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
+                                    <Image src={DiscoverLogo} width={52} height={36} alt='x' className='tw-w-[52px] tw-h-[36px]' />
+                                </div>
                             </div>
-                        </div>
-                        {errorValidating
-                            ?
-                            <div className='tw-text-sm tw-text-[#C2451E] tw-pt-2'>There was an error in validating your payment. Please try again</div>
-                            :
-                            <hr className='tw-border-white ' />
-                        }
-                        {/* inputs */}
-                        <div className='tw-grid tw-gap-3 tw-py-6'>
+                            {errorValidating
+                                ?
+                                <div className='tw-text-sm tw-text-[#C2451E] tw-pt-2'>There was an error in validating your payment. Please try again</div>
+                                :
+                                <hr className='tw-border-white tw-mt-3' />
+                            }
+                            {/* inputs */}
+
                             <div>
                                 <label>Card Number</label>
                                 <div className='tw-bg-white/5 tw-flex tw-h-11 tw-py-2.5 tw-px-3 tw-mt-2'>
                                     <Image src={CardIcon} width={35} height={24} alt='x' className='tw-w-[35px] tw-h-[24px]' />
-                                    <input className='tw-bg-transparent tw-ml-2' placeholder='0000 0000 0000 0000' />
+                                    <input className='tw-bg-transparent tw-ml-2 tw-w-full' placeholder='0000 0000 0000 0000' />
                                 </div>
                             </div>
                             <div className='tw-grid tw-grid-cols-2 tw-gap-4'>
                                 <div>
                                     <label>Expiration</label>
-                                    <div className='tw-bg-white/5 tw-flex tw-items-center tw-h-11 tw-py-2.5 tw-px-3 tw-mt-2'>
+                                    <div className='tw-relative tw-bg-white/5 tw-flex tw-items-center tw-h-11 tw-py-2.5 tw-px-3 tw-mt-2'>
                                         <input className='tw-bg-transparent tw-ml-2' placeholder='MM/YY' />
-                                        <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
+                                        <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] tw-absolute tw-right-3' />
                                     </div>
                                 </div>
                                 <div>
                                     <label>CVV</label>
-                                    <div className='tw-bg-white/5 tw-flex tw-items-center tw-h-11 tw-py-2.5 tw-px-3 tw-mt-2'>
+                                    <div className='tw-relative tw-bg-white/5 tw-flex tw-items-center tw-h-11 tw-py-2.5 tw-px-3 tw-mt-2'>
                                         <input className='tw-bg-transparent tw-ml-2' placeholder='123' />
-                                        <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
+                                        <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] tw-absolute tw-right-3' />
                                     </div>
                                 </div>
                             </div>
-                            <div className='tw-grid tw-grid-cols-2 tw-gap-4 tw-bg-[#1018280D]'>
+                            <div className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4 tw-bg-[#1018280D]'>
                                 <div>
                                     <label>Country</label>
                                     <div className='tw-bg-white/5 tw-flex tw-items-center tw-h-11 tw-py-2.5 tw-px-3 tw-mt-2'>
@@ -150,15 +151,24 @@ const Payment = () => {
                                     </div>
                                 </div>
                             </div>
+                            {errorValidating
+                                ?
+                                <div className='tw-text-sm tw-text-[#C2451E] tw-pt-2'>Delete Payment Method</div>
+                                :
+                                <hr className='tw-border-white tw-hidden sm:tw-block' />
+                            }
+                            <div className='tw-py-4 tw-hidden sm:tw-flex tw-justify-end '>
+                                <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
+                                <button className='btn-yellow tw-ml-4' onClick={() => setIsLoading((prev) => true)}>CONTINUE</button>
+                            </div>
                         </div>
-                        <hr className='tw-border-white' />
-                        <div className='tw-py-4 tw-flex tw-justify-end'>
+                        <div className='tw-py-4 tw-grid tw-grid-cols-2 sm:tw-hidden tw-mt-6'>
                             <button className='btn-transparent-white' onClick={() => setPaymentChoice((prev) => null)}>CANCEL</button>
                             <button className='btn-yellow tw-ml-4' onClick={() => setIsLoading((prev) => true)}>CONTINUE</button>
                         </div>
                     </div>
-
                 }
+
                 {paymentChoice === "Paypal"
                     &&
                     <div>
