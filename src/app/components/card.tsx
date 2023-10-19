@@ -315,7 +315,7 @@ export const TournamentsCard = () => {
                     <Image src={BlackMercedes} width={90} height={90} alt='image' className='tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]' />
                 </div>
             </div>
-            <div className='tw-bg-[#1A2C3D] tw-w-auto tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20' >
+            <div className='tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20' >
                 <div className='tw-text-[18px] tw-font-bold'>2000s Tournament</div>
                 <div className='tw-text-[#53944F]'>Just Ended</div>
                 <div>

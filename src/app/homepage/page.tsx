@@ -396,7 +396,7 @@ const Tournaments = () => {
           <Image src={ArrowRight} width={32} height={32} alt="arrow right" className='tw-w-8 tw-h-8 tw-ml-4' />
         </div>
       </header>
-      <section className='tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-8 tw-mt-8'>
+      <section className='tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto tw-gap-4 sm:tw-gap-8 tw-mt-8'>
         {/* to be replaced by array.map. Tournaments Card in card component*/}
         <TournamentsCard />
         <TournamentsCard />
