@@ -12,11 +12,12 @@ import FacebookSocial from '../../../public/images/social-facebook-logo.svg'
 import TwitterSocial from '../../../public/images/social-twitter-logo.svg'
 import AppleSocial from '../../../public/images/social-apple-logo.svg'
 import CancelIcon from '../../../public/images/x-icon.svg'
+import Link from 'next/link'
 
 const WagerPage = () => {
     // Change to false to see create account
     const user = {
-        isregistered: false
+        isregistered: true
     }
 
     const WagerPageData = {
@@ -36,7 +37,9 @@ const WagerPage = () => {
                     <div className='tw-flex tw-flex-col md:tw-flex-row tw-gap-6 tw-px-6'>
                         <div className='tw-flex md:tw-hidden tw-items-center tw-justify-between  md:tw-justify-start tw-w-full'>
                             <div className='tw-text-2xl sm:tw-text-4xl tw-font-bold'>Guess the Price</div>
-                            <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] ' />
+                            <Link href={"/car_view_page"}>
+                                <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] ' />
+                            </Link>
                         </div>
                         <Image src={CarPhoto} width={360} height={173} alt='fray car' className='tw-w-full md:tw-w-[136px] tw-h-auto md:tw-h-[136px] tw-object-cover tw-aspect-3/4 md:tw-aspect-auto' />
                         <div className='md:tw-ml-6 md:tw-mt-0 tw-text-3xl'>

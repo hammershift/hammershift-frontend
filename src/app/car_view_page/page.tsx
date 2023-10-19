@@ -1,4 +1,6 @@
+"use client"
 import React from 'react'
+import { useRouter } from 'next/navigation'
 import Links from '../components/links'
 import Image from 'next/image'
 import Card from '../components/card'
@@ -62,7 +64,7 @@ const CarViewPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />
-            <div className='section-container tw-flex tw-justify-between tw-items-center'>
+            <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
                 <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
                 <div className='tw-hidden sm:tw-block'>
                     <WatchAndWagerButtons />
@@ -103,13 +105,14 @@ export default CarViewPage
 
 
 const WatchAndWagerButtons = () => {
+    const router = useRouter()
     return (
         <div className='tw-flex'>
             <button className='btn-transparent-white tw-flex '>
                 <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                 WATCH
             </button>
-            <button className='btn-yellow tw-ml-2'>PLACE MY WAGER</button>
+            <button className='btn-yellow tw-ml-2' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
         </div>
 
     )
@@ -191,6 +194,7 @@ const PhotosLayout = () => {
 }
 
 const ArticleSection = () => {
+    const router = useRouter()
     return (
         <div className='tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full'>
             <div className='tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden'>{CarViewData.description}</div>
@@ -200,7 +204,7 @@ const ArticleSection = () => {
                     <Image src={ArrowDown} width={20} height={20} alt="car" className='tw-w-[20px] tw-h-[20px] tw-ml-2' />
                 </span>
             </button>
-            <button className='btn-yellow tw-mt-3'>PLACE MY WAGER</button>
+            <button className='btn-yellow tw-mt-3' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
 
         </div>
     )
@@ -298,9 +302,8 @@ const CommentsCard = () => {
 
 
 
-
-
 const WagersSection = () => {
+    const router = useRouter()
     const teamPlayers = [{
         id: "wager1",
         username: "Username",
@@ -346,7 +349,7 @@ const WagersSection = () => {
                             </div>
                         })}
                     </div>
-                    <button className='btn-yellow tw-w-full tw-mt-2'>JOIN GAME</button>
+                    <button className='btn-yellow tw-w-full tw-mt-2' onClick={() => router.push('/wager_page')}>JOIN GAME</button>
                 </div>
                 {/* Background and button*/}
                 <div className='tw-absolute tw-top-0 tw-h-[416px] tw-z-[-1] tw-w-full'>

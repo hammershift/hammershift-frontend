@@ -24,7 +24,7 @@ const DiscoverPage = () => {
     return (
         <div className='page-container '>
             <Links />
-            <div className='section-container tw-flex tw-flex-col lg:tw-flex-row-reverse tw-items-end tw-gap-8 md:tw-gap-16 lg:tw-gap-24 xl:tw-gap-36'>
+            <div className='section-container tw-flex tw-flex-col lg:tw-flex-row-reverse tw-items-end tw-gap-8 md:tw-gap-16 lg:tw-gap-24 xl:tw-gap-36 md:tw-mt-12 tw-mb-20'>
 
                 <div className='tw-basis-2/3 tw-h-auto'>
                     <Carousel imageList={DiscoveryPageData.photos} />

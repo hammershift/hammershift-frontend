@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import Links from '../components/links'
+import { useRouter } from 'next/navigation'
 import { TournamentsListCard } from '../components/card'
 import Image from 'next/image'
 
@@ -141,13 +142,14 @@ const TournamentPage = () => {
 export default TournamentPage
 
 const TournamentButtons = () => {
+    const router = useRouter()
     return (
         <div className='tw-flex'>
             <button className='btn-transparent-white tw-flex '>
                 <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                 WATCH
             </button>
-            <button className='btn-yellow tw-ml-2'>BUY-IN FOR $100</button>
+            <button className='btn-yellow tw-ml-2' onClick={() => router.push('/tournament_wager_page')}>BUY-IN FOR $100</button>
         </div>
 
     )
@@ -257,6 +259,7 @@ const TitleTournamentsList = () => {
 }
 
 const TournamentsList = () => {
+    const router = useRouter()
     return (
         <div className='tw-mt-8 md:tw-mt-16'>
             <div className='tw-text-3xl tw-font-bold'>Cars in Tournament</div>
@@ -267,7 +270,7 @@ const TournamentsList = () => {
                 <TournamentsListCard />
                 <TournamentsListCard />
             </div>
-            <button className='btn-yellow tw-w-full tw-mt-8'>BUY-IN FOR $100</button>
+            <button className='btn-yellow tw-w-full tw-mt-8' onClick={() => router.push('/tournament_wager_page')}>BUY-IN FOR $100</button>
         </div>
     )
 }

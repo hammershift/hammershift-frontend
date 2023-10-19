@@ -1,7 +1,9 @@
+"use client"
 import '../styles/app.css'
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Dollar from '../../../public/images/dollar.svg'
 import HourGlass from '../../../public/images/hour-glass.svg'
 import AvatarOne from '../../../public/images/avatar-one.svg'
@@ -280,6 +282,9 @@ export const GamesCard = () => {
 
 
 export const TournamentsCard = () => {
+
+    const router = useRouter()
+
     const userList = [{
         number: "1",
         img: AvatarOne,
@@ -331,7 +336,7 @@ export const TournamentsCard = () => {
                     {/* other users*/}
                 </div>
                 <div>
-                    <button className='btn-yellow tw-w-full'>View Results</button>
+                    <button className='btn-yellow tw-w-full' onClick={() => router.push('/tournament_page')}>View Results</button>
                 </div>
 
             </div>

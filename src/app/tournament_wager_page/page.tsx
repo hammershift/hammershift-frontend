@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import MoneyBag from '../../../public/images/money-bag-green.svg'
 import PlayersIcon from '../../../public/images/players-icon-green.svg'
@@ -44,7 +45,9 @@ const TournamentWagerPage = () => {
                 <div className='tw-flex tw-flex-col tw-gap-4  tw-px-6'>
                     <div className='tw-flex tw-items-center tw-justify-between sm:tw-justify-start'>
                         <div className='tw-text-2xl sm:tw-text-4xl tw-font-bold'>Sedan Champions Tournament</div>
-                        <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
+                        <Link href={"/tournament_page"}>
+                            <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
+                        </Link>
                     </div>
                     <div>Get more points the closer you are to the hammer price of a curated set of car auctions. Guess the price for each of the cars listed below and buy-in to lock in your wagers. <span className='tw-text-[#49C742]'>Learn more</span></div>
                     <div className='tw-text-[#49C742] tw-text-lg tw-py-3 tw-px-4 tw-bg-[#49C74233] tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-4'>
