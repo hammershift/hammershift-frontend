@@ -5,6 +5,9 @@ hr {
     border-color: #0f1923;
     opacity: 10%;
 }
+option {
+    background-color: #172431;
+}
 .page-container {
     width: 100vw;
     display: flex;

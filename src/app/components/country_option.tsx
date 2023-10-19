@@ -3,7 +3,7 @@ import React from 'react'
 const CountryOptions = () => {
     return (
 
-        <select className='tw-w-full tw-bg-[#1018280D] '>
+        <select className='tw-w-full tw-bg-transparent'>
             <option value="Afghanistan">Afghanistan</option>
             <option value="Albania">Albania</option>
             <option value="Algeria">Algeria</option>
