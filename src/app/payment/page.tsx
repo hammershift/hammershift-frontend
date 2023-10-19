@@ -220,7 +220,7 @@ export default Payment
 
 const Loading = () => {
     return (
-        <div className='tw-bg-[#0F1923] tw-w-full tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center'>
+        <div className='tw-bg-[#0F1923] tw-w-screen sm:tw-w-full tw-h-full sm:tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-4'>
             <div className=''>
                 <Image src={HelpIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px] rotating' />
             </div>
@@ -232,12 +232,12 @@ const Loading = () => {
 
 const PaymentSuccessful = () => {
     return (
-        <div className='tw-bg-[#0F1923] tw-w-full tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center'>
+        <div className='tw-bg-[#0F1923] tw-w-screen sm:tw-w-full tw-h-full sm:tw-h-[720px] tw-absolute tw-top-0 tw-left-0 tw-flex tw-flex-col tw-items-center tw-justify-center'>
             <div className=''>
                 <Image src={Check} width={80} height={80} alt='x' className='tw-w-[80px] tw-h-[80px] ' />
             </div>
             <div className='tw-mt-4 tw-text-2xl tw-font-bold'>Payment Successful</div>
-            <div>Quam temere in vitiis, legem sancimus haerentia</div>
+            <div className='tw-text-sm sm:tw-text-base'>Quam temere in vitiis, legem sancimus haerentia</div>
             {/* TODO: replace href */}
             <Link href={"/homepage"} className='tw-mt-4'>
                 <div className='btn-transparent-white'>BACK TO HOME</div>
