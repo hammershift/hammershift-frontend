@@ -13,12 +13,17 @@ import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 
 
 const FiltersAndSort = () => {
+    type DropdownMenu = null | "Make" | "Era" | "Category" | "Location" | "Sort";
+
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
     const [makeDropdownOpen, setMakeDropdownOpen] = useState(false)
     const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false)
     const [eraDropdownOpen, setEraDropdownOpen] = useState(false)
     const [locationDropdownOpen, setLocationDropdownOpen] = useState(false)
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
+
+    const [dropdownMenu, setDropdownMenu] = useState<DropdownMenu>(null)
+
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='left-container-marker tw-flex tw-items-center'>
@@ -63,38 +68,42 @@ const FiltersAndSort = () => {
                         ></input>
                     </div>
                     <div>
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setMakeDropdownOpen((prev) => !prev)} >
+                        {/* Dropdown for MAKE */}
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Make") return null; else return "Make" })} >
                             <div className='tw-font-bold'>Make</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {makeDropdownOpen &&
+                        {dropdownMenu === "Make" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
                                 <MakeContent columns={1} />
                             </div>
                         }
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setCategoryDropdownOpen((prev) => !prev)}>
+                        {/* Dropdown for CATEGORY */}
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Category") return null; else return "Category" })} >
                             <div className='tw-font-bold'>Category</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {categoryDropdownOpen &&
+                        {dropdownMenu === "Category" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
                                 <CategoryContent columns={1} />
                             </div>
                         }
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setEraDropdownOpen((prev) => !prev)}>
+                        {/* Dropdown for ERA */}
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Era") return null; else return "Era" })} >
                             <div className='tw-font-bold'>Era</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {eraDropdownOpen &&
+                        {dropdownMenu === "Era" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
                                 <EraContent columns={1} />
                             </div>
                         }
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setLocationDropdownOpen((prev) => !prev)}>
+                        {/* Dropdown for LOCATION */}
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Location") return null; else return "Location" })} >
                             <div className='tw-font-bold'>Location</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {locationDropdownOpen &&
+                        {dropdownMenu === "Location" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto" >
                                 <LocationContent columns={1} />
                             </div>
