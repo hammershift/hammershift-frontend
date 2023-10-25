@@ -12,34 +12,87 @@ import CancelIcon from '../../../public/images/x-icon.svg'
 import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 
 
+type DropdownMenuProps = null | "Make" | "Era" | "Category" | "Location" | "Sort";
 const FiltersAndSort = () => {
-    type DropdownMenu = null | "Make" | "Era" | "Category" | "Location" | "Sort";
 
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
-    const [makeDropdownOpen, setMakeDropdownOpen] = useState(false)
-    const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false)
-    const [eraDropdownOpen, setEraDropdownOpen] = useState(false)
-    const [locationDropdownOpen, setLocationDropdownOpen] = useState(false)
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
+    const [dropdownMenuRegular, setDropdownMenuRegular] = useState<DropdownMenuProps>(null);
 
-    const [dropdownMenu, setDropdownMenu] = useState<DropdownMenu>(null)
+    const [dropdownMenuSmall, setDropdownMenuSmall] = useState<DropdownMenuProps>(null)
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [bgColor, setBgColor] = useState({});
 
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='left-container-marker tw-flex tw-items-center'>
                 <div>Live Games <span className='tw-opacity-50'> 100</span></div>
                 <div className='tw-hidden xl:tw-flex'>
-                    <MakeDropdown />
-                    <CategoryDropdown />
-                    <EraDropdown />
-                    <LocationDropdown />
+                    {/* TODO:  Filter Dropdown for regular screens*/}
+                    {/* Dropdown for Make filtler*/}
+                    <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
+                        <div>
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Make" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Make") return null; else return "Make" })}>
+                                Make
+                                <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                            </button>
+                        </div>
+                        {dropdownMenuRegular === "Make" &&
+                            <MakeDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                        }
+                    </div>
+                    {/* Dropdown for Category filtler*/}
+                    <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+                        <div>
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Category" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Category") return null; else return "Category" })}>
+                                Category
+                                <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                            </button>
+                        </div>
+                        {dropdownMenuRegular === "Category" &&
+                            <CategoryDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                        }
+                    </div>
+                    <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+                        <div>
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Era" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Era") return null; else return "Era" })}>
+                                Era
+                                <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                            </button>
+                        </div>
+                        {dropdownMenuRegular === "Era" &&
+                            <EraDropdown dropdownMenuRegular={dropdownMenuRegular} />
+
+                        }
+                    </div>
+                    <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+                        <div>
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Location" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Location") return null; else return "Location" })}>
+                                Location
+                                <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                            </button>
+                        </div>
+                        {dropdownMenuRegular === "Location" &&
+                            <LocationDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                        }
+                    </div>
                 </div>
 
             </div>
             <div className='right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex'>
                 <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
                 <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
-                <SortDropdown />
+                <div className="tw-relative tw-text-left tw-mx-2">
+                    <div>
+                        <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
+                            Sort by:
+                            <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
+                        </button>
+                    </div>
+                    {dropdownMenuRegular === "Sort" &&
+                        <SortDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                    }
+                </div>
             </div>
             <div className='tw-flex xl:tw-hidden'>
                 <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
@@ -50,7 +103,7 @@ const FiltersAndSort = () => {
 
                 </button>
             </div>
-            {/* Filter Dropdown */}
+            {/* Filter Dropdown for small screens*/}
             {
                 filterDropdownOpen &&
                 <div className='slide-in-top tw-w-screen tw-h-screen tw-fixed tw-z-40 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4'>
@@ -69,41 +122,41 @@ const FiltersAndSort = () => {
                     </div>
                     <div>
                         {/* Dropdown for MAKE */}
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Make") return null; else return "Make" })} >
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenuSmall((prev) => { if (prev === "Make") return null; else return "Make" })} >
                             <div className='tw-font-bold'>Make</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {dropdownMenu === "Make" &&
+                        {dropdownMenuSmall === "Make" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
                                 <MakeContent columns={1} />
                             </div>
                         }
                         {/* Dropdown for CATEGORY */}
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Category") return null; else return "Category" })} >
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenuSmall((prev) => { if (prev === "Category") return null; else return "Category" })} >
                             <div className='tw-font-bold'>Category</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {dropdownMenu === "Category" &&
+                        {dropdownMenuSmall === "Category" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
                                 <CategoryContent columns={1} />
                             </div>
                         }
                         {/* Dropdown for ERA */}
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Era") return null; else return "Era" })} >
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenuSmall((prev) => { if (prev === "Era") return null; else return "Era" })} >
                             <div className='tw-font-bold'>Era</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {dropdownMenu === "Era" &&
+                        {dropdownMenuSmall === "Era" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
                                 <EraContent columns={1} />
                             </div>
                         }
                         {/* Dropdown for LOCATION */}
-                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenu((prev) => { if (prev === "Location") return null; else return "Location" })} >
+                        <button className='tw-flex tw-justify-between tw-mt-4 tw-w-full' onClick={() => setDropdownMenuSmall((prev) => { if (prev === "Location") return null; else return "Location" })} >
                             <div className='tw-font-bold'>Location</div>
                             <Image src={ArrowDown} width={32} height={32} alt="magnifying glass" className="tw-w-8 tw-h-8" />
                         </button>
-                        {dropdownMenu === "Location" &&
+                        {dropdownMenuSmall === "Location" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto" >
                                 <LocationContent columns={1} />
                             </div>
@@ -131,29 +184,14 @@ const FiltersAndSort = () => {
 export default FiltersAndSort
 
 
-
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
 
-const MakeDropdown = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
-    useEffect(() => {
-        if (menuOpen === true) {
-            setBgColor({ backgroundColor: "#1A2C3D" })
-        } else {
-            setBgColor({})
-        }
-    }, [menuOpen])
+// TODO:
+const MakeDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
     return (
-        <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
-            <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
-                    Make
-                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
-                </button>
-            </div>
 
-            {menuOpen &&
+        <div>
+            {dropdownMenuRegular === "Make" &&
 
                 <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
                     <div className="tw-p-4" role="none">
@@ -198,32 +236,20 @@ const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
 
 const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans", "Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
 
-const CategoryDropdown = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
-    useEffect(() => {
-        if (menuOpen === true) {
-            setBgColor({ backgroundColor: "#1A2C3D" })
-        } else {
-            setBgColor({})
-        }
-    }, [menuOpen])
-    return (
-        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
-            <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
-                    Category
-                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
-                </button>
-            </div>
+const CategoryDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
 
-            {menuOpen &&
+    return (
+        <div>
+            {dropdownMenuRegular === "Category" &&
 
                 <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
                     <CategoryContent columns={2} />
                 </div>
             }
+
+
         </div>
+
 
     )
 }
@@ -254,26 +280,12 @@ const CategoryContent: React.FC<CategoryContentProps> = ({ columns }) => {
 
 const EraDropdownContent = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
 
-const EraDropdown = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
-    useEffect(() => {
-        if (menuOpen === true) {
-            setBgColor({ backgroundColor: "#1A2C3D" })
-        } else {
-            setBgColor({})
-        }
-    }, [menuOpen])
-    return (
-        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
-            <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
-                    Era
-                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
-                </button>
-            </div>
+const EraDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
 
-            {menuOpen &&
+    return (
+
+        <div>
+            {dropdownMenuRegular &&
 
                 <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
                     <EraContent columns={2} />
@@ -308,27 +320,10 @@ const EraContent: React.FC<EraContentProps> = ({ columns }) => {
 
 const LocationDropdownContent = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
 
-const LocationDropdown = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
-    useEffect(() => {
-        if (menuOpen === true) {
-            setBgColor({ backgroundColor: "#1A2C3D" })
-        } else {
-            setBgColor({})
-        }
-    }, [menuOpen])
+const LocationDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
     return (
-        <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
-            <div>
-                <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
-                    Location
-                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
-                </button>
-            </div>
-
-            {menuOpen &&
-
+        <div>
+            {dropdownMenuRegular &&
                 <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
                     <LocationContent columns={2} />
                 </div>
@@ -364,25 +359,11 @@ const LocationContent: React.FC<LocationContentProps> = ({ columns }) => {
 const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
 
 
-const SortDropdown = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
-    useEffect(() => {
-        if (menuOpen === true) {
-            setBgColor({ backgroundColor: "#1A2C3D" })
-        } else {
-            setBgColor({})
-        }
-    }, [menuOpen])
+const SortDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
+
     return (
-        <div className="tw-relative tw-text-left tw-mx-2">
-            <div>
-                <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={bgColor} onClick={() => setMenuOpen(prev => !prev)}>
-                    Sort by:
-                    <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
-                </button>
-            </div>
-            {menuOpen &&
+        <div>
+            {dropdownMenuRegular &&
                 <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
                     <div className='tw-p-4'>
                         <SortContent />
