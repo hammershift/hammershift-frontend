@@ -10,6 +10,7 @@ import WatchlistIcon from "../../../public/images/watchlist-icon.svg"
 import AccountIcon from "../../../public/images/account-icon.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 import CancelIcon from "../../../public/images/x-icon.svg"
+import WatchlistBig from "../../../public/images/watchlist-icon-big.svg"
 
 
 export interface NavbarProps {
@@ -20,6 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false)
+    const [watchlistDropdownMenu, setWatchlistDropdownMenu] = useState(false)
     return (
         <div>
             {isLoggedIn
@@ -47,10 +49,21 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                             ></input>
                         </div>
                     </div>
+                    {/* Buttons for logged in accounts */}
                     <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
-                        <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
-                        <Image src={WagersIcon} width={24} height={24} alt="wagers" className="tw-w-[24px] tw-h-[24px]" />
-                        <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
+                        <button className="tw-relative" onClick={() => { setWatchlistDropdownMenu((prev) => !prev) }}>
+                            <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
+                            {
+                                watchlistDropdownMenu &&
+                                <MyWatchlistDropdownMenu />
+                            }
+                        </button>
+                        <button>
+                            <Image src={WagersIcon} width={24} height={24} alt="wagers" className="tw-w-[24px] tw-h-[24px]" />
+                        </button>
+                        <button>
+                            <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
+                        </button>
                     </div>
                     <div className="sm:tw-hidden">
                         <button onClick={() => setMyAccountMenuOpen((prev) => !prev)} className="tw-mr-4">
@@ -163,5 +176,50 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
             <div className="tw-m-1.5" >Setting</div>
             <div className="tw-m-1.5" >Logout</div>
         </div>
+    )
+}
+
+
+const MyWatchlistDropdownMenu = () => {
+    return (
+        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
+            <div className="tw-px-6 tw-font-bold tw-text-lg">MY WATCHLIST</div>
+            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full">
+                <div>
+                    <button>
+                        ACTIVE
+                    </button>
+                </div>
+                <div>
+                    <button>
+                        COMPLETED
+                    </button>
+                </div>
+            </div>
+            <hr className="" />
+            <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                <Image src={WatchlistBig} width={80} height={80} alt="watchlist icon" className="tw-w-[80px] tw-h-[80px]" />
+                <div className="tw-">
+                    <div className="tw-font-bold tw-text-xl">Watchlist is empty</div>
+                    <div className="tw-opacity-70">Quam temere in vitiis, legem sancimus haerentia</div>
+                </div>
+                <button className="btn-transparent-white">DISCOVER AUCTIONS</button>
+            </div>
+        </div>
+    )
+}
+
+
+const MyWagersDropdownMenu = () => {
+    return (
+        <div></div>
+    )
+}
+
+
+
+const MyAccountDropdownMenu = () => {
+    return (
+        <div></div>
     )
 }

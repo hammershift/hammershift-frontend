@@ -29,7 +29,7 @@ const FiltersAndSort = () => {
                 <div>Live Games <span className='tw-opacity-50'> 100</span></div>
                 <div className='tw-hidden xl:tw-flex'>
                     {/* TODO:  Filter Dropdown for regular screens*/}
-                    {/* Dropdown for Make filtler*/}
+                    {/* Dropdown for Make filter*/}
                     <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
                             <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Make" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Make") return null; else return "Make" })}>
@@ -41,7 +41,7 @@ const FiltersAndSort = () => {
                             <MakeDropdown dropdownMenuRegular={dropdownMenuRegular} />
                         }
                     </div>
-                    {/* Dropdown for Category filtler*/}
+                    {/* Dropdown for Category filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
                             <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Category" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Category") return null; else return "Category" })}>
@@ -53,6 +53,7 @@ const FiltersAndSort = () => {
                             <CategoryDropdown dropdownMenuRegular={dropdownMenuRegular} />
                         }
                     </div>
+                    {/* Dropdown for Era filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
                             <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Era" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Era") return null; else return "Era" })}>
@@ -65,6 +66,7 @@ const FiltersAndSort = () => {
 
                         }
                     </div>
+                    {/* Dropdown for Location filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
                             <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Location" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Location") return null; else return "Location" })}>
@@ -82,6 +84,7 @@ const FiltersAndSort = () => {
             <div className='right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex'>
                 <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
                 <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
+                {/* Dropdown for Sort*/}
                 <div className="tw-relative tw-text-left tw-mx-2">
                     <div>
                         <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
