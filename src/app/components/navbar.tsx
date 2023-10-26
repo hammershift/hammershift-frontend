@@ -400,7 +400,7 @@ const MyWagersDropdownMenu = () => {
     return (
         <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
             <div className="tw-px-6 tw-font-bold tw-text-lg">MY WAGERS</div>
-            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full tw-mt-4">
+            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full">
                 <div>
                     <button>
                         ACTIVE
