@@ -11,17 +11,20 @@ import AccountIcon from "../../../public/images/account-icon.svg"
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg"
 import CancelIcon from "../../../public/images/x-icon.svg"
 import WatchlistBig from "../../../public/images/watchlist-icon-big.svg"
+import Wallet from "../../../public/images/wallet--money-payment-finance-wallet.svg"
 
 
 export interface NavbarProps {
     isLoggedIn: boolean;
 }
 
+type NavbarDropdownMenuProps = null | "My Watchlist" | "My Wagers" | "My Account"
+
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
     const [menuIsOpen, setMenuIsOpen] = useState(false)
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false)
-    const [watchlistDropdownMenu, setWatchlistDropdownMenu] = useState(false)
+    const [navDropdownMenu, setNavDropdownMenu] = useState<NavbarDropdownMenuProps>(null)
     return (
         <div>
             {isLoggedIn
@@ -51,18 +54,26 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                     </div>
                     {/* Buttons for logged in accounts */}
                     <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
-                        <button className="tw-relative" onClick={() => { setWatchlistDropdownMenu((prev) => !prev) }}>
+                        <button className="tw-relative" onClick={() => setNavDropdownMenu((prev) => { if (prev === "My Watchlist") return null; else return "My Watchlist" })}>
                             <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
                             {
-                                watchlistDropdownMenu &&
+                                navDropdownMenu === "My Watchlist" &&
                                 <MyWatchlistDropdownMenu />
                             }
                         </button>
-                        <button>
+                        <button className="tw-relative" onClick={() => setNavDropdownMenu((prev) => { if (prev === "My Wagers") return null; else return "My Wagers" })}>
                             <Image src={WagersIcon} width={24} height={24} alt="wagers" className="tw-w-[24px] tw-h-[24px]" />
+                            {
+                                navDropdownMenu === "My Wagers" &&
+                                <MyWagersDropdownMenu />
+                            }
                         </button>
-                        <button>
+                        <button className="tw-relative" onClick={() => setNavDropdownMenu((prev) => { if (prev === "My Account") return null; else return "My Account" })}>
                             <Image src={AccountIcon} width={24} height={24} alt="account" className="tw-w-[24px] tw-h-[24px]" />
+                            {
+                                navDropdownMenu === "My Account" &&
+                                <MyAccountDropdownMenu />
+                            }
                         </button>
                     </div>
                     <div className="sm:tw-hidden">
@@ -179,7 +190,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
     )
 }
 
-
+// Dropdown Menus
 const MyWatchlistDropdownMenu = () => {
     return (
         <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
@@ -212,14 +223,57 @@ const MyWatchlistDropdownMenu = () => {
 
 const MyWagersDropdownMenu = () => {
     return (
-        <div></div>
+        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
+            <div className="tw-px-6 tw-font-bold tw-text-lg">MY WAGERS</div>
+            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full">
+                <div>
+                    <button>
+                        ACTIVE
+                    </button>
+                </div>
+                <div>
+                    <button>
+                        COMPLETED
+                    </button>
+                </div>
+            </div>
+            <hr className="" />
+            <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                <Image src={WatchlistBig} width={80} height={80} alt="watchlist icon" className="tw-w-[80px] tw-h-[80px]" />
+                <div className="tw-">
+                    <div className="tw-font-bold tw-text-xl">Watchlist is empty</div>
+                    <div className="tw-opacity-70">Quam temere in vitiis, legem sancimus haerentia</div>
+                </div>
+                <button className="btn-transparent-white">DISCOVER AUCTIONS</button>
+            </div>
+        </div>
     )
 }
 
 
 
 const MyAccountDropdownMenu = () => {
+    const account_load = 100;
     return (
-        <div></div>
+        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
+            <div className="tw-px-6 tw-font-bold tw-text-lg">MY ACCOUNT</div>
+            {
+                account_load &&
+                <div className="tw-px-6 tw-w-full">
+                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                        <Image src={Wallet} width={32} height={32} alt="wallet icon" className="tw-w-8 tw-h-8" />
+                        <div className="tw-flex tw-flex-col tw-items-start tw-grow">
+                            <span className="tw-font-bold tw-text-xl tw-py-1">${account_load}.00</span>
+                            <span className="tw-text-[#49C742]">Withdraw</span>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div className="tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full">
+                <button className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full">Profile</button>
+                <button className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full">Settings</button>
+                <button className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full">Logout</button>
+            </div>
+        </div>
     )
 }

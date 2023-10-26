@@ -13,6 +13,7 @@ import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 
 
 type DropdownMenuProps = null | "Make" | "Era" | "Category" | "Location" | "Sort";
+
 const FiltersAndSort = () => {
 
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
