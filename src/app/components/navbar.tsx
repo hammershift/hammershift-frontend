@@ -238,7 +238,7 @@ const MyWatchlistDropdownMenu = () => {
     return (
         <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
             <div className="tw-px-6 tw-font-bold tw-text-lg">MY WATCHLIST</div>
-            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full tw-mt-4">
+            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full">
                 <div>
                     <button>
                         ACTIVE
@@ -297,12 +297,17 @@ interface MyWatchlistCardProps {
 const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ type, title, img, my_wager, current_bid, time_left, potential_prize, place }) => {
     return (
         <div className="tw-px-6 tw-w-full tw-my-4">
-            <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
-                <Image src={img} width={100} height={100} alt="wallet icon" className="tw-w-[100px] tw-h-[100px] tw-self-start" />
-                {
-                    type === "Single" &&
+
+            {
+                type === "Single" &&
+                <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                    <Link href={"/car_view_page"} className="tw-self-start">
+                        <Image src={img} width={100} height={100} alt="wallet icon" className="tw-w-[100px] tw-h-[100px] tw-self-start" />
+                    </Link>
                     <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        <Link href={"/car_view_page"} className="tw-self-start">
+                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        </Link>
                         <div className="tw-w-full tw-mt-1">
                             <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                                 <Image src={Dollar} width={14} height={14} alt="wallet icon" className="tw-w-[14px] tw-h-[14px]" />
@@ -316,11 +321,18 @@ const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ type, title, img, my_
                             </div>
                         </div>
                     </div>
-                }
-                {
-                    type === "Tournament" &&
+                </div>
+            }
+            {
+                type === "Tournament" &&
+                <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                    <Link href={"/tournament_page"} className="tw-self-start">
+                        <Image src={img} width={100} height={100} alt="wallet icon" className="tw-w-[100px] tw-h-[100px] tw-self-start" />
+                    </Link>
                     <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        <Link href={"/tournament_page"} className="tw-self-start">
+                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        </Link>
                         <div className="tw-w-full tw-mt-1">
                             <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                                 <Image src={Hourglass} width={14} height={14} alt="wallet icon" className="tw-w-[14px] tw-h-[14px]" />
@@ -329,9 +341,10 @@ const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ type, title, img, my_
                             </div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
+
     )
 }
 
@@ -447,12 +460,16 @@ interface MyWagersCardProps {
 const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager, current_bid, time_left, potential_prize, place }) => {
     return (
         <div className="tw-px-6 tw-w-full tw-my-4">
-            <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
-                <Image src={img} width={100} height={100} alt="wallet icon" className="tw-w-[100px] tw-h-[100px] tw-self-start" />
-                {
-                    type === "Single" &&
+            {
+                type === "Single" &&
+                <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                    <Link href={"/car_view_page"} className="tw-self-start">
+                        <Image src={img} width={100} height={100} alt="wallet icon" className="tw-w-[100px] tw-h-[100px]" />
+                    </Link>
                     <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        <Link href={"/car_view_page"} className="tw-self-start">
+                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        </Link>
                         <div className="tw-w-full tw-mt-1">
                             <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                                 <Image src={WalletSmall} width={14} height={14} alt="wallet icon" className="tw-w-[14px] tw-h-[14px]" />
@@ -476,11 +493,18 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
                             <div className="tw-text-[#49C742] tw-font-bold tw-text-left">{potential_prize}</div>
                         </div>
                     </div>
-                }
-                {
-                    type === "Tournament" &&
+                </div>
+            }
+            {
+                type === "Tournament" &&
+                <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                    <Link href={"/tournament_page"} className="tw-self-start">
+                        <Image src={img} width={100} height={100} alt="wallet icon" className="tw-w-[100px] tw-h-[100px] tw-self-start" />
+                    </Link>
                     <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        <Link href={"/tournament_page"} className="tw-self-start">
+                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">{title}</div>
+                        </Link>
                         <div className="tw-w-full tw-mt-1">
                             <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                                 <Image src={RankingStarTop} width={14} height={14} alt="wallet icon" className="tw-w-[14px] tw-h-[14px]" />
@@ -499,8 +523,9 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
                             <div className="tw-text-[#49C742] tw-font-bold tw-text-left">{potential_prize}</div>
                         </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
+
         </div>
     )
 }
