@@ -12,7 +12,7 @@ const CreateAccount = () => {
     type createAccountPageProps = "page one" | "page two"
     const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>("page one")
     return (
-        <div className="tw-w-screen tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center">
+        <div className="tw-w-screen xl:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 xl:tw-mt-0">
             {createAccountPage === "page one" &&
                 <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
                     <div>
@@ -65,12 +65,15 @@ const CreateAccount = () => {
 
 export default CreateAccount
 
+
+
+
 const SetupYourProfile = () => {
     return (
         <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
-            <div className="tw-font-bold tw-text-[44px]">Setup your profile</div>
+            <div className="tw-font-bold tw-text-4xl sm:tw-text-[44px]">Setup your profile</div>
             <div className="tw-flex tw-flex-col tw-gap-5">
-                <div className="tw-flex tw-gap-6">
+                <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-6">
                     <div className="tw-bg-[#F2CA16] tw-rounded-full tw-w-[120px] tw-h-[120px] tw-flex tw-justify-center tw-items-center">
                         <Image src={UserImage} width={52} height={52} alt="user profile" className="tw-w-[52px] tw-h-[52px]" />
                     </div>
