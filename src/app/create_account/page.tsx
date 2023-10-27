@@ -9,6 +9,7 @@ import CancelIcon from '../../../public/images/x-icon.svg'
 import Onfido from '../../../public/images/onfido.svg'
 import SingleNeutral from '../../../public/images/single-neutral-id-card-3.svg'
 import UserImage from '../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg'
+import Link from "next/link"
 
 const CreateAccount = () => {
     type createAccountPageProps = "page one" | "page two" | "page three"
@@ -23,7 +24,7 @@ const CreateAccount = () => {
                             <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
                         </div>
                         <div className='tw-mt-1'>Already a member?
-                            <button className='tw-text-[#F2CA16] tw-ml-2'>Login Here</button>
+                            <Link href={"/login_page"} className='tw-text-[#F2CA16] tw-ml-2'>Login Here</Link>
                         </div>
                     </div>
                     <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>

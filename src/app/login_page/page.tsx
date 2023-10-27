@@ -49,7 +49,7 @@ const CreateAccount = () => {
                         </div>
                         <button className="tw-appearance-none tw-text-[#F2CA16]" onClick={() => { setCreateAccountPage("reset password") }}>Forgot password</button>
                     </div>
-                    <button className='btn-yellow'>CREATE ACCOUNT</button>
+                    <button className='btn-yellow'>Sign In</button>
 
                     <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-8'>
                         <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
