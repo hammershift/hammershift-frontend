@@ -39,7 +39,7 @@ const CreateAccount = () => {
                         </div>
 
                     </div>
-                    <div className="tw-flex tw-justify-between">
+                    <div className="tw-flex tw-justify-between tw-text-sm sm:tw-text-base">
                         <div className="tw-relative tw-flex tw-items-center tw-gap-2">
                             <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
                             <div className="tw-pointer-events-none tw-absolute tw-top-3 tw-left-[14px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
@@ -75,7 +75,6 @@ const CreateAccount = () => {
                     <div>
                         <div className='tw-flex tw-justify-between md:tw-justify-start'>
                             <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
-                            <Image src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
                         </div>
                         <div className='tw-mt-1'>Enter your email to receive instructions on how to reset your password.
                         </div>
