@@ -97,7 +97,38 @@ const CreateAccount = () => {
                 </div>
             }
             {createAccountPage === "page three" &&
-                <AccountVerification />
+                //Account Verification
+                <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+                    <div>
+                        <div className="tw-font-bold tw-text-4xl sm:tw-text-[44px] tw-py-1">Select document to upload</div>
+                        <div>We need your identification to lorem ipsum dolor sit amet. Data is processed securely.</div>
+                    </div>
+                    <div className="tw-flex tw-gap-2 tw-items-center">
+                        <span>Powered by</span>
+                        <Image src={Onfido} width={107} height={24} alt="user profile" className="tw-w-[107px] tw-h-[24px]" />
+                    </div>
+                    <div className="tw-grid tw-gap-4">
+                        <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
+                            <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
+                                <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                            </div>
+                            <div>{"Driver's License"}</div>
+                        </div>
+                        <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
+                            <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
+                                <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                            </div>
+                            <div>Passport</div>
+                        </div>
+                        <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
+                            <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
+                                <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                            </div>
+                            <div>Identity Card</div>
+                        </div>
+                    </div>
+                    <button className="btn-yellow">Continue</button>
+                </div>
             }
 
 
@@ -106,41 +137,3 @@ const CreateAccount = () => {
 }
 
 export default CreateAccount
-
-
-const AccountVerification = () => {
-    return (
-        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
-            <div>
-                <div className="tw-font-bold tw-text-4xl sm:tw-text-[44px] tw-py-1">Select document to upload</div>
-                <div>We need your identification to lorem ipsum dolor sit amet. Data is processed securely.</div>
-            </div>
-            <div className="tw-flex tw-gap-2 tw-items-center">
-                <span>Powered by</span>
-                <Image src={Onfido} width={107} height={24} alt="user profile" className="tw-w-[107px] tw-h-[24px]" />
-            </div>
-            <div className="tw-grid tw-gap-4">
-                <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
-                    <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
-                        <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
-                    </div>
-                    <div>{"Driver's License"}</div>
-                </div>
-                <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
-                    <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
-                        <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
-                    </div>
-                    <div>Passport</div>
-                </div>
-                <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
-                    <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
-                        <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
-                    </div>
-                    <div>Identity Card</div>
-                </div>
-            </div>
-            <button className="btn-yellow">Continue</button>
-        </div>
-    )
-
-}
