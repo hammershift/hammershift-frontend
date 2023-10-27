@@ -9,6 +9,8 @@ import CancelIcon from '../../../public/images/x-icon.svg'
 import Onfido from '../../../public/images/onfido.svg'
 import SingleNeutral from '../../../public/images/single-neutral-id-card-3.svg'
 import UserImage from '../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg'
+import Passport from '../../../public/images/passport.svg'
+import IDCard from '../../../public/images/single-neutral-id-card-1.svg'
 import Link from "next/link"
 
 const CreateAccount = () => {
@@ -109,23 +111,32 @@ const CreateAccount = () => {
                         <Image src={Onfido} width={107} height={24} alt="user profile" className="tw-w-[107px] tw-h-[24px]" />
                     </div>
                     <div className="tw-grid tw-gap-4">
-                        <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
-                            <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
-                                <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                        <div className="tw-flex tw-justify-between tw-bg-[#172431] tw-p-4 tw-items-center">
+                            <div className="tw-flex tw-items-center tw-gap-4  tw-rounded">
+                                <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
+                                    <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                                </div>
+                                <div>{"Driver's License"}</div>
                             </div>
-                            <div>{"Driver's License"}</div>
+                            <input type='radio' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-full tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
                         </div>
-                        <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
-                            <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
-                                <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                        <div className="tw-flex tw-justify-between tw-bg-[#172431] tw-p-4 tw-items-center">
+                            <div className="tw-flex tw-items-center tw-gap-4  tw-rounded">
+                                <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
+                                    <Image src={Passport} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                                </div>
+                                <div>Passport</div>
                             </div>
-                            <div>Passport</div>
+                            <input type='radio' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-full tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
                         </div>
-                        <div className="tw-bg-[#172431] tw-flex tw-items-center tw-gap-4 tw-p-4 tw-rounded">
-                            <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
-                                <Image src={SingleNeutral} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                        <div className="tw-flex tw-justify-between tw-bg-[#172431] tw-p-4 tw-items-center">
+                            <div className="tw-flex tw-items-center tw-gap-4  tw-rounded">
+                                <div className="tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center">
+                                    <Image src={IDCard} width={36} height={36} alt="user profile" className="tw-w-[36px] tw-h-[36px]" />
+                                </div>
+                                <div>Identity Card</div>
                             </div>
-                            <div>Identity Card</div>
+                            <input type='radio' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-full tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
                         </div>
                     </div>
                     <button className="btn-yellow">Continue</button>
