@@ -3,6 +3,13 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import Plus from "../../../public/images/plus-icon.svg"
 import Minus from "../../../public/images/minus-icon.svg"
+import Mail from "../../../public/images/mail-01.svg"
+import Marker from "../../../public/images/marker-pin-02.svg"
+import Phone from "../../../public/images/phone.svg"
+import HowHammerShiftWorks from '../components/how_hammeshift_works'
+import { SubscribeSmall } from '../components/subscribe'
+import Footer from '../components/footer'
+import { articleData } from '@/sample_data';
 
 const Support_Page = () => {
     // type questionProps = "how it works" | "anyone can participate" | "multiple users" | "limit to wagers" | "how winners are determined" | "cancel wager" | "different payment methods" | null
@@ -153,17 +160,54 @@ const Support_Page = () => {
                             <input placeholder='Full name' className='tw-bg-[#172431] tw-mt-2 tw-py-2.5 tw-px-3' />
                         </div>
                         <div className='tw-flex tw-flex-col'>
-                            <label>Name</label>
+                            <label>Email</label>
                             <input placeholder='you@email.com' className='tw-bg-[#172431] tw-mt-2 tw-py-2.5 tw-px-3' />
                         </div>
                         <div className='tw-flex tw-flex-col'>
-                            <label>Name</label>
+                            <label>Message</label>
                             <textarea className='tw-bg-[#172431] tw-mt-2 tw-py-2.5 tw-px-3' rows={5} />
                         </div>
                     </div>
                     <button className='btn-yellow tw-w-full tw-mt-8'>SEND MESSAGE</button>
                 </div>
             </div>
+            <div className='section-container tw-mb-[120px]'>
+                <div className='tw-w-full tw-bg-[#1A2C3D] tw-py-16 tw-px-8 tw-rounded-lg tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-8'>
+                    <div className='tw-flex tw-flex-col tw-items-center tw-gap-5'>
+                        <div className='tw-bg-[#53944F] tw-w-16 tw-h-16 tw-rounded-full tw-flex tw-justify-center tw-items-center'>
+                            <Image src={Mail} width={24} height={24} alt='' className='tw-w-[24px] tw-h-[24px]' />
+                        </div>
+                        <div className='tw-text-center'>
+                            <div className='tw-font-bold tw-text-lg'>Email</div>
+                            <div className='tw-opacity-50'>Our friendly team is here to help.</div>
+                        </div>
+                        <div className='tw-text-[#53944F] tw-font-bold'>support@hammershift.com</div>
+                    </div>
+                    <div className='tw-flex tw-flex-col tw-items-center tw-gap-5'>
+                        <div className='tw-bg-[#53944F] tw-w-16 tw-h-16 tw-rounded-full tw-flex tw-justify-center tw-items-center'>
+                            <Image src={Marker} width={24} height={24} alt='' className='tw-w-[24px] tw-h-[24px]' />
+                        </div>
+                        <div className='tw-text-center'>
+                            <div className='tw-font-bold tw-text-lg'>Office</div>
+                            <div className='tw-opacity-50'>Our HQ</div>
+                        </div>
+                        <div className='tw-text-[#53944F] tw-font-bold tw-text-center'>100 Smith Street<br />Collingwood VIC 3066 NJ</div>
+                    </div>
+                    <div className='tw-flex tw-flex-col tw-items-center tw-gap-5'>
+                        <div className='tw-bg-[#53944F] tw-w-16 tw-h-16 tw-rounded-full tw-flex tw-justify-center tw-items-center'>
+                            <Image src={Phone} width={24} height={24} alt='' className='tw-w-[24px] tw-h-[24px]' />
+                        </div>
+                        <div className='tw-text-center'>
+                            <div className='tw-font-bold tw-text-lg'>Phone</div>
+                            <div className='tw-opacity-50'>Mon-Fri from 8am to 5pm.</div>
+                        </div>
+                        <div className='tw-text-[#53944F] tw-font-bold'>+1 (555) 000-0000</div>
+                    </div>
+                </div>
+            </div>
+            <HowHammerShiftWorks articleData={articleData} />
+            <SubscribeSmall />
+            <Footer />
         </div>
     )
 }
