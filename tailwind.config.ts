@@ -13,8 +13,40 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      colors: {
+        gold: {
+          '100': '#EBCB48', //lighter yellow
+          '200': '#F2CA16'  // darker yellow
+        },
+        shade: {
+          '100': '#172431'
+        }
+      },
+      fontFamily: {
+        'euro': 'euro-star-black-extended'
+      }
     },
+    screens: {
+      'sx': '390px',
+      // => @media (min-width: 390px) { ... }
+
+      'sm': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '768px',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1280px',
+      // => @media (min-width: 1280px) { ... }
+
+      '2xl': '1440px',
+      // => @media (min-width: 1440px) { ... }
+    }
   },
+  prefix: 'tw-',
   plugins: [],
 }
 export default config
