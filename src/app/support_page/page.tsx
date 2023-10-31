@@ -149,7 +149,7 @@ const Support_Page = () => {
             </div>
             {/* ContactUs */}
             <div className='tw-py-[120px] tw-flex tw-justify-center'>
-                <div className='tw-w-[640px]'>
+                <div className='tw-w-full md:tw-w-[640px] tw-px-6 md:tw-px-0'>
                     <div className='tw-grid tw-gap-2'>
                         <span className='tw-text-4xl tw-font-bold'>Contact Us</span>
                         <span>{"We’d love to hear from you. Our friendly team is always here to chat."}</span>
