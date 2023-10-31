@@ -22,12 +22,12 @@ const Support_Page = () => {
     const [auctionTransactions, setAuctionTransactions] = useState(false);
     return (
         <div className='tw-w-screen tw-flex tw-flex-col tw-items-center'>
-            <div className='tw-py-16 tw-w-[640px]'>
+            <div className='tw-py-16 tw-w-full md:tw-w-[640px] tw-px-6 md:tw-px-0'>
                 <div className='tw-text-center tw-flex tw-flex-col tw-gap-4'>
                     <div className='tw-text-5xl tw-font-bold'>Get Support</div>
                     <div className='tw-opacity-80'>Qui ipsorum lingua Celtae, nostra Galli appellantur. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. A communi observantia non est recedendum.</div>
                 </div>
-                <div className='tw-flex tw-gap-4 tw-mt-8 tw-flex tw-justify-center'>
+                <div className='tw-flex tw-gap-4 tw-mt-8 tw-flex-col sm:tw-flex-row tw-justify-center'>
                     <button className='btn-yellow'>FREQUENTLY ASKED QUESTONS</button>
                     <button className='btn-transparent-white'>CONTACT US</button>
                 </div>
