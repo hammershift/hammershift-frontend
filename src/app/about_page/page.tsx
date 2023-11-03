@@ -12,10 +12,10 @@ const AboutPage = () => {
     return (
         <div className='page-container tw-pt-16 tw-gap-16'>
             <div className='section-container tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-pb-8 tw-gap-6'>
-                <div className='tw-w-full md:tw-w-[640px] tw-text-6xl tw-font-bold'>We are building a<br />vibrant community for <span className='tw-text-[#F2CA16]'>car enthusiasts</span></div>
+                <div className='tw-w-full md:tw-w-[640px] tw-text-5xl md:tw-text-6xl tw-font-bold'>We are building a<br />vibrant community for <span className='tw-text-[#F2CA16]'>car enthusiasts</span></div>
                 <div className='tw-w-full md:tw-w-[528px] tw-opacity-80 tw-self-end'>Esse Lorem velit sunt magna duis qui cupidatat nostrud id nulla mollit ea nisi. Non elit exercitation tempor veniam Lorem. Officia amet ea labore consequat irure excepteur labore reprehenderit dolore.</div>
             </div>
-            <Image src={AboutImage} width={1440} height={495} alt='smiling people' className='tw-w-[1440px] tw-h-[312px] sm:tw-h-[495px] tw-object-cover' />
+            <Image src={AboutImage} width={1440} height={495} alt='smiling people' className='sm:tw-w-[1440px] tw-h-[495px] tw-object-cover' />
             <div className='section-container tw-pt-8 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-6'>
                 <div className='tw-font-bold tw-text-5xl'>Passion for <br />automobiles</div>
                 <div className=' tw-text-2xl tw-max-w-[752px]'>
