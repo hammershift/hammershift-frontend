@@ -7,7 +7,6 @@ import { TournamentsCard } from '../app/components/card'
 import Footer from '../app/components/footer'
 import Subscribe from '../app/components/subscribe'
 import { carData } from '@/sample_data'
-import { articleData } from '@/sample_data';
 import Image from 'next/image'
 
 import LiveGamesIcon from '../../public/images/currency-dollar-circle.svg'
@@ -92,7 +91,7 @@ const Homepage = () => {
       <WhatsTrending />
       <MostExpensiveCars />
       <MostBids />
-      <HowHammerShiftWorks articleData={articleData} />
+      <HowHammerShiftWorks />
       <Subscribe />
       <Footer />
 

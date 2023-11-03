@@ -37,7 +37,7 @@ const AuctionListingPage = () => {
 
                 </div>
             </div>
-            <LatestNews articleData={articleData} />
+            <LatestNews />
             <SubscribeSmall />
             <Footer />
 
