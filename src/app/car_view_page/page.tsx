@@ -94,7 +94,7 @@ const CarViewPage = () => {
                 </div>
             </div>
             <GamesYouMightLike />
-            <LatestNews articleData={articleData} />
+            <LatestNews />
             <SubscribeSmall />
             <Footer />
         </div>
