@@ -44,7 +44,6 @@ import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import { LatestNews } from '../components/how_hammeshift_works'
-import { articleData } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import { TournamentsCard } from '../components/card'
 import Footer from '../components/footer'
@@ -126,7 +125,7 @@ const TournamentPage = () => {
             }
 
             <TournamentsYouMightLike />
-            <LatestNews articleData={articleData} />
+            <LatestNews />
             <SubscribeSmall />
             <Footer />
             {/* TODO: Check if working*/}

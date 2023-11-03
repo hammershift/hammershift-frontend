@@ -9,7 +9,7 @@ import Phone from "../../../public/images/phone.svg"
 import HowHammerShiftWorks from '../components/how_hammeshift_works'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
-import { articleData } from '@/sample_data';
+
 
 const Support_Page = () => {
     // type questionProps = "how it works" | "anyone can participate" | "multiple users" | "limit to wagers" | "how winners are determined" | "cancel wager" | "different payment methods" | null
@@ -205,7 +205,7 @@ const Support_Page = () => {
                     </div>
                 </div>
             </div>
-            <HowHammerShiftWorks articleData={articleData} />
+            <HowHammerShiftWorks />
             <SubscribeSmall />
             <Footer />
         </div>
