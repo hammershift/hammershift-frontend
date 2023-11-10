@@ -41,7 +41,7 @@ import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import { LatestNews } from '../components/how_hammeshift_works'
-import { auctionDataOne } from '@/sample_data'
+import { carDataOne, auctionDataOne } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
 import Link from 'next/link'
@@ -59,8 +59,39 @@ const CarViewData = {
 
 }
 
+interface carDataOneProps {
+    price: string,
+    year: string,
+    make: string,
+    model: string,
+    img: string,
+    chassis: string,
+    seller: string,
+    location: string,
+    lot_num: string,
+    listing_type: string,
+    auction_id: string,
+    website: string,
+    description: string,
+    images_list: string,
+    listing_details: string,
+}
 
-const CarViewPage = () => {
+interface auctionDataOneProps {
+    current_bid: string,
+    bids_num: number,
+    ending_date: string,
+    time_left: string,
+    players_num: number,
+    prize: string
+}
+
+interface CarViewPageProps {
+    carDataOne: carDataOneProps
+    auctionDataOne: auctionDataOneProps
+}
+
+const CarViewPage: React.FC<CarViewPageProps> = ({ carDataOne, auctionDataOne }) => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />
@@ -72,7 +103,7 @@ const CarViewPage = () => {
             </div>
             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
-                    <TitleContainer />
+                    <TitleContainer year={carDataOne.year} make={carDataOne.make} model={carDataOne.model} />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WatchAndWagerButtons />
                     </div>
@@ -118,10 +149,16 @@ const WatchAndWagerButtons = () => {
     )
 }
 
-const TitleContainer = () => {
+interface TitleContainerProps {
+    year: string
+    make: string
+    model: string
+}
+
+const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model }) => {
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
-            <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{CarViewData.name}</div>
+            <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{year} {model} {make}</div>
             <div className='info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4'>
                 <div className='info-left-marker tw-w-[300px]'>
                     <div className='tw-flex'>
@@ -161,13 +198,13 @@ const TitleContainer = () => {
                             <div>
                                 <Image src={PlayersIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold '>{CarViewData.players}</span></span>
+                            <span className='tw-opacity-80'>Players: <span className='tw-font-bold '>{CarViewData.players}</span></span>
                         </div>
                         <div className='tw-flex'>
                             <div>
                                 <Image src={PrizeIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5 tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold '>{CarViewData.prize}</span></span>
+                            <span className='tw-opacity-80'>Prize: <span className='tw-font-bold '>{CarViewData.prize}</span></span>
                         </div>
                     </div>
                 </div>

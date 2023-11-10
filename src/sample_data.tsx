@@ -67,7 +67,7 @@ export const articleData = [{
     url: TwoCars
 }]
 
-export const auctionDataOne = {
+export const carDataOne = {
     price: '$1,402,000',
     year: '1963',
     make: 'Ferrari',
@@ -124,4 +124,13 @@ export const auctionDataOne = {
         'Refurbished Between 2000s & 2014',
         'Invoices Dating Back to Late 1990s'
     ]
+}
+
+export const auctionDataOne = {
+    current_bid: "$64,000",
+    bids_num: 48,
+    ending_date: "Jul 5, 2023, 7:00 PM",
+    time_left: "02:16:00",
+    players_num: 4,
+    prize: "$1,000"
 }
