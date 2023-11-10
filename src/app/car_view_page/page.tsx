@@ -41,7 +41,7 @@ import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import { LatestNews } from '../components/how_hammeshift_works'
-import { articleData } from '@/sample_data'
+import { auctionDataOne } from '@/sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
 import Link from 'next/link'
@@ -179,7 +179,7 @@ const TitleContainer = () => {
 const PhotosLayout = () => {
     return (
         <div className=' tw-my-8'>
-            <Image src={PhotoOne} width={832} height={520} alt="car" className='tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto' />
+            <Image src={"https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-13-31363.jpg"} width={832} height={520} alt="car" className='tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto' />
             <div className='tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full tw-h-auto'>
                 <Image src={PhotoTwo} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
                 <Image src={PhotoThree} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
