@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Links from '../components/links'
 import Image from 'next/image'
@@ -21,6 +21,7 @@ import CornerDownRight from '../../../public/images/corner-down-right.svg'
 import ThreeDots from '../../../public/images/dots-vertical.svg'
 import OpenWebLogo from '../../../public/images/open-web-logo.svg'
 import ArrowDown from '../../../public/images/arrow-down.svg'
+import ArrowUp from '../../../public/images/chevron-up.svg'
 import DiagonalLines from '../../../public/images/green-diagonal.svg'
 import TransitionPattern from '../../../public/images/transition-pattern.svg'
 import BringATrailerLogo from '../../../public/images/bring-a-trailer-logo.svg'
@@ -57,7 +58,7 @@ const CarViewData = {
 
 }
 
-interface carDataOneProps {
+interface CarDataOneProps {
     price: string,
     year: string,
     make: string,
@@ -71,11 +72,11 @@ interface carDataOneProps {
     auction_id: string,
     website: string,
     description: string,
-    images_list: {}[],
+    images_list: { placing: number, src: string }[],
     listing_details: string,
 }
 
-interface auctionDataOneProps {
+interface AuctionDataOneProps {
     current_bid: string,
     bids_num: number,
     ending_date: string,
@@ -85,8 +86,8 @@ interface auctionDataOneProps {
 }
 
 interface CarViewPageProps {
-    carDataOne: carDataOneProps
-    auctionDataOne: auctionDataOneProps
+    carDataOne: CarDataOneProps
+    auctionDataOne: AuctionDataOneProps
 }
 
 const CarViewPage = () => {
@@ -115,8 +116,8 @@ const CarViewPage = () => {
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WatchAndWagerButtons />
                     </div>
-                    <PhotosLayout />
-                    <ArticleSection />
+                    <PhotosLayout images_list={carDataOne.images_list} img={carDataOne.img} />
+                    <ArticleSection images_list={carDataOne.images_list} description={carDataOne.description} />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WagersSection />
                     </div>
@@ -132,6 +133,7 @@ const CarViewPage = () => {
                             listing_type={carDataOne.listing_type}
                             lot_num={carDataOne.lot_num}
                             listing_details={carDataOne.listing_details}
+                            images_list={carDataOne.images_list}
                         />
                     </div>
                     <CommentsSection />
@@ -149,6 +151,7 @@ const CarViewPage = () => {
                         listing_type={carDataOne.listing_type}
                         lot_num={carDataOne.lot_num}
                         listing_details={carDataOne.listing_details}
+                        images_list={carDataOne.images_list}
                     />
                 </div>
             </div>
@@ -248,35 +251,58 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
     )
 }
 
-const PhotosLayout = () => {
+interface PhotosLayoutProps {
+    images_list: { placing: number, src: string }[];
+    img: string;
+}
+const PhotosLayout: React.FC<PhotosLayoutProps> = ({ images_list, img }) => {
     return (
         <div className=' tw-my-8'>
-            <Image src={"https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-13-31363.jpg"} width={832} height={520} alt="car" className='tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto' />
+            <Image src={img} width={832} height={520} alt="car" className='tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto' />
             <div className='tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full tw-h-auto'>
-                <Image src={PhotoTwo} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
-                <Image src={PhotoThree} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
-                <Image src={PhotoFour} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
+                <Image src={images_list[0].src} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
+                <Image src={images_list[1].src} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
+                <Image src={images_list[2].src} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
                 <div className='tw-relative'>
-                    <Image src={PhotoFive} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto' />
-                    <div className='tw-absolute tw-flex tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>88 <span className='tw-hidden md:tw-block tw-ml-1'>photos</span><span className='tw-block md:tw-hidden'>+</span></div>
+                    <Image src={images_list[3].src} width={202} height={120} alt="car" className='tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto' />
+                    <div className='tw-absolute tw-flex tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>{images_list.length + 1} <span className='tw-hidden md:tw-block tw-ml-1'>photos</span><span className='tw-block md:tw-hidden'>+</span></div>
                 </div>
             </div>
         </div>
     )
 }
 
-const ArticleSection = () => {
+interface ArticleSectionProps {
+    description: string[];
+    images_list: { placing: number; src: string }[]
+}
+const ArticleSection: React.FC<ArticleSectionProps> = ({ description, images_list }) => {
     const router = useRouter()
+    const [showDetails, setShowDetails] = useState(false);
     return (
-        <div className='tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full'>
-            <div className='tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden'>{CarViewData.description}</div>
-            <button className='btn-transparent-white tw-mt-16'>
-                <span className='tw-w-full tw-flex tw-items-center tw-justify-center'>
-                    VIEW MORE DETAILS
-                    <Image src={ArrowDown} width={20} height={20} alt="car" className='tw-w-[20px] tw-h-[20px] tw-ml-2' />
-                </span>
-            </button>
-            <button className='btn-yellow tw-mt-3' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
+        <div className='tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full tw-gap-16'>
+            <div className='tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden'>{description[0]}</div>
+            {
+                showDetails &&
+                images_list.map((image) =>
+                    <div key={"image" + image.placing} className='tw-grid tw-gap-8 md:tw-gap-16'>
+                        <Image src={image.src} width={832} height={500} alt='car' className='tw-w-full tw-h-auto tw-object-cover tw-aspect-ratio-auto' />
+                        <div>{description[image.placing]}</div>
+                    </div>)
+
+            }
+            <div className='tw-grid tw-gap-3'>
+                <button className='btn-transparent-white' onClick={() => setShowDetails((prev) => !prev)}>
+                    <span className='tw-w-full tw-flex tw-items-center tw-justify-center'>
+                        {showDetails ? "CLOSE DETAILS" : "VIEW MORE DETAILS"}
+                        {
+                            !showDetails &&
+                            <Image src={ArrowDown} width={20} height={20} alt="car" className='tw-w-[20px] tw-h-[20px] tw-ml-2 tw-color-white' />
+                        }
+                    </span>
+                </button>
+                <button className='btn-yellow' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
+            </div>
 
         </div>
     )
@@ -435,18 +461,19 @@ const WagersSection = () => {
 }
 
 interface DetailsSectionProps {
-    website: string
-    make: string
-    model: string
-    seller: string
-    location: string
-    mileage: string
-    listing_type: string
-    lot_num: string
-    listing_details: string[]
+    website: string;
+    make: string;
+    model: string;
+    seller: string;
+    location: string;
+    mileage: string;
+    listing_type: string;
+    lot_num: string;
+    listing_details: string[];
+    images_list: { placing: number; src: string }[];
 }
 
-const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, seller, location, mileage, listing_type, lot_num, listing_details }) => {
+const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, seller, location, mileage, listing_type, lot_num, listing_details, images_list }) => {
     const logo = BringATrailerLogo
     const seller_img = ProfilePhoto
     const DetailsData = {
@@ -546,7 +573,7 @@ const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, s
                     <div className='tw-opacity-50'>Photos</div>
                     <Link href={"/"}>
                         <span className='tw-underline tw-underline-offset-4'>
-                            88 photos
+                            {images_list.length + 1} photos
                         </span>
                     </Link>
                 </div>
