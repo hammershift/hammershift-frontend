@@ -26,9 +26,7 @@ import TransitionPattern from '../../../public/images/transition-pattern.svg'
 import BringATrailerLogo from '../../../public/images/bring-a-trailer-logo.svg'
 import ProfilePhoto from '../../../public/images/ellipse-415.svg'
 import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
-import GiftIcon from '../../../public/images/gift-02.svg'
 import WatchListIcon from '../../../public/images/watchlist-icon.svg'
-
 
 import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
 import PhotoTwo from '../../../public/images/car-view-page/photoTwo.svg'
@@ -41,7 +39,7 @@ import AvatarTwo from '../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../public/images/avatar-four.svg'
 import { LatestNews } from '../components/how_hammeshift_works'
-import { carDataOne, auctionDataOne } from '@/sample_data'
+import { carDataOne, auctionDataOne } from '../../sample_data'
 import { SubscribeSmall } from '../components/subscribe'
 import Footer from '../components/footer'
 import Link from 'next/link'
@@ -73,7 +71,7 @@ interface carDataOneProps {
     auction_id: string,
     website: string,
     description: string,
-    images_list: string,
+    images_list: {}[],
     listing_details: string,
 }
 
@@ -91,7 +89,7 @@ interface CarViewPageProps {
     auctionDataOne: auctionDataOneProps
 }
 
-const CarViewPage: React.FC<CarViewPageProps> = ({ carDataOne, auctionDataOne }) => {
+const CarViewPage = () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />
@@ -103,7 +101,17 @@ const CarViewPage: React.FC<CarViewPageProps> = ({ carDataOne, auctionDataOne })
             </div>
             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
-                    <TitleContainer year={carDataOne.year} make={carDataOne.make} model={carDataOne.model} />
+                    <TitleContainer
+                        year={carDataOne.year}
+                        make={carDataOne.make}
+                        model={carDataOne.model}
+                        current_bid={auctionDataOne.current_bid}
+                        bids_num={auctionDataOne.bids_num}
+                        ending_date={auctionDataOne.ending_date}
+                        time_left={auctionDataOne.time_left}
+                        players_num={auctionDataOne.players_num}
+                        prize={auctionDataOne.prize}
+                    />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WatchAndWagerButtons />
                     </div>
@@ -114,14 +122,34 @@ const CarViewPage: React.FC<CarViewPageProps> = ({ carDataOne, auctionDataOne })
                     </div>
                     <GuessThePriceInfoSection />
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <DetailsSection />
+                        <DetailsSection
+                            website={carDataOne.website}
+                            make={carDataOne.make}
+                            model={carDataOne.model}
+                            seller={carDataOne.seller}
+                            location={carDataOne.location}
+                            mileage="55,400"
+                            listing_type={carDataOne.listing_type}
+                            lot_num={carDataOne.lot_num}
+                            listing_details={carDataOne.listing_details}
+                        />
                     </div>
                     <CommentsSection />
 
                 </div>
                 <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
                     <WagersSection />
-                    <DetailsSection />
+                    <DetailsSection
+                        website={carDataOne.website}
+                        make={carDataOne.make}
+                        model={carDataOne.model}
+                        seller={carDataOne.seller}
+                        location={carDataOne.location}
+                        mileage="55,400"
+                        listing_type={carDataOne.listing_type}
+                        lot_num={carDataOne.lot_num}
+                        listing_details={carDataOne.listing_details}
+                    />
                 </div>
             </div>
             <GamesYouMightLike />
@@ -153,12 +181,19 @@ interface TitleContainerProps {
     year: string
     make: string
     model: string
+    current_bid: string
+    bids_num: number
+    ending_date: string
+    time_left: string
+    players_num: number
+    prize: string
+
 }
 
-const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model }) => {
+const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, time_left, players_num, prize }) => {
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
-            <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{year} {model} {make}</div>
+            <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{year}  {make} {model}</div>
             <div className='info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4'>
                 <div className='info-left-marker tw-w-[300px]'>
                     <div className='tw-flex'>
@@ -166,16 +201,16 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model }) =>
                             <Image src={DollarIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                         </div>
                         <div className='tw-opacity-80 tw-flex'>Current Bid:
-                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{CarViewData.currentBid}
+                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{current_bid}
                             </span>
-                            <span className='tw-block md:tw-hidden tw-ml-2'>{`(${CarViewData.bids} bids)`}</span>
+                            <span className='tw-block md:tw-hidden tw-ml-2'>{`(${bids_num} bids)`}</span>
                         </div>
                     </div>
                     <div className='tw-flex tw-mt-0 md:tw-mt-1'>
                         <div>
                             <Image src={CalendarIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                         </div>
-                        <span className='tw-opacity-80'>Ending: <span className='tw-font-bold'>{CarViewData.endingDate}</span></span>
+                        <span className='tw-opacity-80'>Ending: <span className='tw-font-bold'>{ending_date}</span></span>
                     </div>
                 </div>
                 <div className='right-section-marker'>
@@ -184,13 +219,13 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model }) =>
                             <div>
                                 <Image src={HashtagIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Bids: <span className='tw-font-bold'>{CarViewData.bids}</span></span>
+                            <span className='tw-opacity-80'>Bids: <span className='tw-font-bold'>{bids_num}</span></span>
                         </div>
                         <div className='tw-flex'>
                             <div>
                                 <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{CarViewData.timeLeft}</span></span>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{time_left}</span></span>
                         </div>
                     </div>
                     <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
@@ -198,13 +233,13 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model }) =>
                             <div>
                                 <Image src={PlayersIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Players: <span className='tw-font-bold '>{CarViewData.players}</span></span>
+                            <span className='tw-opacity-80'>Players: <span className='tw-font-bold '>{players_num}</span></span>
                         </div>
                         <div className='tw-flex'>
                             <div>
                                 <Image src={PrizeIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5 tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Prize: <span className='tw-font-bold '>{CarViewData.prize}</span></span>
+                            <span className='tw-opacity-80'>Prize: <span className='tw-font-bold '>{prize}</span></span>
                         </div>
                     </div>
                 </div>
@@ -399,7 +434,21 @@ const WagersSection = () => {
     )
 }
 
-const DetailsSection = () => {
+interface DetailsSectionProps {
+    website: string
+    make: string
+    model: string
+    seller: string
+    location: string
+    mileage: string
+    listing_type: string
+    lot_num: string
+    listing_details: string[]
+}
+
+const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, seller, location, mileage, listing_type, lot_num, listing_details }) => {
+    const logo = BringATrailerLogo
+    const seller_img = ProfilePhoto
     const DetailsData = {
         auction: { name: "Bring a Trailer", logo: BringATrailerLogo },
         make: "Mercedes Benz",
@@ -440,53 +489,53 @@ const DetailsSection = () => {
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Auction</div>
-                    <div className='tw-flex tw-items-center '>{DetailsData.auction.name}
-                        <Image src={DetailsData.auction.logo} width={32} height={32} alt="bring a trailer logo" className='tw-w-[32px] tw-h-[32px] tw-ml-2' />
+                    <div className='tw-flex tw-items-center '>{website}
+                        <Image src={logo} width={32} height={32} alt="bring a trailer logo" className='tw-w-[32px] tw-h-[32px] tw-ml-2' />
                     </div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Make</div>
-                    <div className='tw-underline tw-underline-offset-4'>{DetailsData.make}</div>
+                    <div className='tw-underline tw-underline-offset-4'>{make}</div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Model</div>
-                    <div>{DetailsData.model}</div>
+                    <div>{model}</div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Seller</div>
-                    <div className='tw-flex tw-items-center'>{DetailsData.seller.name}
-                        <Image src={DetailsData.seller.image} width={32} height={32} alt="bring a trailer logo" className='tw-w-[32px] tw-h-[32px] tw-ml-2' />
+                    <div className='tw-flex tw-items-center'>{seller}
+                        <Image src={seller_img} width={32} height={32} alt="bring a trailer logo" className='tw-w-[32px] tw-h-[32px] tw-ml-2' />
                     </div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Location</div>
-                    <div>{DetailsData.location}</div>
+                    <div>{location}</div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Mileage</div>
-                    <div>{DetailsData.mileage}</div>
+                    <div>{mileage}</div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Listing Type</div>
-                    <div>{DetailsData.listing_type}</div>
+                    <div>{listing_type}</div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-flex tw-justify-between tw-py-2'>
                     <div className='tw-opacity-50'>Lot #</div>
-                    <div>{DetailsData.lot_num}</div>
+                    <div>{lot_num}</div>
                 </div>
                 <hr className='tw-border-white tw-opacity-5' />
                 <div className='tw-py-2'>
                     <div className='tw-opacity-50'>Listing Details</div>
                     <ul className='tw-list-disc tw-list-inside tw-my-2 tw-pl-2'>
                         {
-                            DetailsData.listing_details.map((item: string) => {
+                            listing_details.map((item: string) => {
                                 return <li key={item}>{item}</li>
                             })
                         }

@@ -77,7 +77,7 @@ export const carDataOne = {
     chassis: '4421',
     seller: 'FantasyJunction',
     location: 'Emeryville, California 94608',
-    lot_num: 'ional charges from this dealer: USD $70 Document Fee',
+    lot_num: '125325',
     listing_type: 'Private Property',
     auction_id: '64864945',
     website: 'Bring A Trailer',
@@ -95,15 +95,15 @@ export const carDataOne = {
         'There is currently a lien on the car, and the current owner’s lender will need to be paid off before the title can be transferred to the new owner.'
     ],
     images_list: [
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-13-31363.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-09-31344.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-12-31359.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-27-31747.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-24-31732.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-39-31807.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_Lusso-U-22-32030.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-52-31868.jpg',
-        'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_c536ab5f-925a-4ee7-8dea-2fc4ab26832f-20487.jpeg'
+        { placing: 1, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-13-31363.jpg' },
+        { placing: 2, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-09-31344.jpg' },
+        { placing: 3, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-12-31359.jpg' },
+        { placing: 4, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-27-31747.jpg' },
+        { placing: 5, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-24-31732.jpg' },
+        { placing: 6, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-39-31807.jpg' },
+        { placing: 7, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_Lusso-U-22-32030.jpg' },
+        { placing: 8, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-W-52-31868.jpg' },
+        { placing: 9, src: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_c536ab5f-925a-4ee7-8dea-2fc4ab26832f-20487.jpeg' },
     ],
     listing_details: [
         'Chassis: 4421',
