@@ -45,6 +45,22 @@ import { SubscribeSmall } from '../../components/subscribe'
 import Footer from '../../components/footer'
 import Link from 'next/link'
 
+const getCarDetails = async () => {
+    try {
+        const res = await fetch("http://localhost:3000/api/cars", {
+            cache: "no-store",
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch topics");
+        }
+
+        return res.json();
+    } catch (error) {
+        console.log("Error loading topics: ", error);
+    }
+};
+
 
 interface CarDataOneProps {
     price: string,
@@ -79,6 +95,8 @@ interface CarViewPageProps {
 }
 
 const CarViewPage = () => {
+
+
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />
