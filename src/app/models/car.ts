@@ -21,4 +21,6 @@ const carSchema = new Schema(
 
 );
 
-const Topic = mongoose.model("Car", carSchema);
+const Car = mongoose.model("Car", carSchema);
+
+export default Car
