@@ -1,18 +1,19 @@
 'use client'
 import Image from 'next/image'
 import React from 'react'
-import { useRouter } from 'next/navigation'
-import CarPhoto from '../../../public/images/wager-car-photo.svg'
-import DollarIcon from '../../../public/images/dollar.svg'
-import HashtagIcon from '../../../public/images/hash-02.svg'
-import CalendarIcon from '../../../public/images/calendar-icon.svg'
-import HourGlassIcon from '../../../public/images/hour-glass.svg'
-import MoneyBag from '../../../public/images/money-bag-green.svg'
-import Players from '../../../public/images/players-icon-green.svg'
-import CancelIcon from '../../../public/images/x-icon.svg'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import CreateAccount from '../create_account/page'
 
-import CreateAccount from '../(pages)/create_account/page'
+import CarPhoto from '../../../../public/images/wager-car-photo.svg'
+import DollarIcon from '../../../../public/images/dollar.svg'
+import HashtagIcon from '../../../../public/images/hash-02.svg'
+import CalendarIcon from '../../../../public/images/calendar-icon.svg'
+import HourGlassIcon from '../../../../public/images/hour-glass.svg'
+import MoneyBag from '../../../../public/images/money-bag-green.svg'
+import Players from '../../../../public/images/players-icon-green.svg'
+import CancelIcon from '../../../../public/images/x-icon.svg'
+
 
 const WagerPage = () => {
     const router = useRouter()

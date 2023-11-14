@@ -1,13 +1,13 @@
 "use client"
 import React, { useState } from 'react'
 import Image from 'next/image'
+import Links from '../../components/links'
 
-import FeaturedPhoto from '../../../public/images/featured-photo.svg'
-import DollarIcon from '../../../public/images/dollar.svg'
-import HourGlass from '../../../public/images/hour-glass.svg'
-import ArrowLeft from '../../../public/images/arrow-left.svg'
-import ArrowRight from '../../../public/images/arrow-right.svg'
-import Links from '../components/links'
+import FeaturedPhoto from '../../../../public/images/featured-photo.svg'
+import DollarIcon from '../../../../public/images/dollar.svg'
+import HourGlass from '../../../../public/images/hour-glass.svg'
+import ArrowLeft from '../../../../public/images/arrow-left.svg'
+import ArrowRight from '../../../../public/images/arrow-right.svg'
 
 const DiscoveryPageData = {
     title: "2005 Ford GT Speed Yellow",

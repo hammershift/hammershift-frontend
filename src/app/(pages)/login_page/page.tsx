@@ -1,16 +1,17 @@
 "use client"
 import React, { useState } from "react"
 import Image from "next/image"
-import GoogleSocial from '../../../public/images/social-google-logo.svg'
-import FacebookSocial from '../../../public/images/social-facebook-logo.svg'
-import TwitterSocial from '../../../public/images/social-twitter-logo.svg'
-import AppleSocial from '../../../public/images/social-apple-logo.svg'
-import CancelIcon from '../../../public/images/x-icon.svg'
-import CheckIcon from '../../../public/images/check-black.svg'
-import Onfido from '../../../public/images/onfido.svg'
-import SingleNeutral from '../../../public/images/single-neutral-id-card-3.svg'
-import UserImage from '../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg'
 import Link from "next/link"
+
+import GoogleSocial from '../../../../public/images/social-google-logo.svg'
+import FacebookSocial from '../../../../public/images/social-facebook-logo.svg'
+import TwitterSocial from '../../../../public/images/social-twitter-logo.svg'
+import AppleSocial from '../../../../public/images/social-apple-logo.svg'
+import CancelIcon from '../../../../public/images/x-icon.svg'
+import CheckIcon from '../../../../public/images/check-black.svg'
+import Onfido from '../../../../public/images/onfido.svg'
+import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg'
+import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg'
 
 const CreateAccount = () => {
     type createAccountPageProps = "sign in" | "reset password"
