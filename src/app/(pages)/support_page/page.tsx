@@ -1,14 +1,15 @@
 "use client"
 import React, { useState } from 'react'
 import Image from 'next/image'
-import Plus from "../../../public/images/plus-icon.svg"
-import Minus from "../../../public/images/minus-icon.svg"
-import Mail from "../../../public/images/mail-01.svg"
-import Marker from "../../../public/images/marker-pin-02.svg"
-import Phone from "../../../public/images/phone.svg"
-import HowHammerShiftWorks from '../components/how_hammeshift_works'
-import { SubscribeSmall } from '../components/subscribe'
-import Footer from '../components/footer'
+import { SubscribeSmall } from '../../components/subscribe'
+import Footer from '../../components/footer'
+import HowHammerShiftWorks from '../../components/how_hammeshift_works'
+
+import Plus from "../../../../public/images/plus-icon.svg"
+import Minus from "../../../../public/images/minus-icon.svg"
+import Mail from "../../../../public/images/mail-01.svg"
+import Marker from "../../../../public/images/marker-pin-02.svg"
+import Phone from "../../../../public/images/phone.svg"
 
 
 const Support_Page = () => {

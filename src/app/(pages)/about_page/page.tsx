@@ -1,12 +1,12 @@
 'use client'
 import React from 'react'
 import Image from 'next/image'
-import AboutImage from '../../../public/images/about-image.svg'
-import RyanTurri from '../../../public/images/ryan-turri.svg'
-import RickDeacon from '../../../public/images/rick-deacon.svg'
-import HowHammerShiftWorks from '../components/how_hammeshift_works'
-import { SubscribeSmall } from '../components/subscribe'
-import Footer from '../components/footer'
+import AboutImage from '../../../../public/images/about-image.svg'
+import RyanTurri from '../../../../public/images/ryan-turri.svg'
+import RickDeacon from '../../../../public/images/rick-deacon.svg'
+import HowHammerShiftWorks from '../../components/how_hammeshift_works'
+import { SubscribeSmall } from '../../components/subscribe'
+import Footer from '../../components/footer'
 
 const AboutPage = () => {
     return (
@@ -51,8 +51,8 @@ const AboutPage = () => {
             <div>
                 <HowHammerShiftWorks />
                 <SubscribeSmall />
-                <Footer />
             </div>
+            <Footer />
         </div>
     )
 }
