@@ -12,7 +12,7 @@ import Players from '../../../public/images/players-icon-green.svg'
 import CancelIcon from '../../../public/images/x-icon.svg'
 import Link from 'next/link'
 
-import CreateAccount from '../create_account/page'
+import CreateAccount from '../(pages)/create_account/page'
 
 const WagerPage = () => {
     const router = useRouter()

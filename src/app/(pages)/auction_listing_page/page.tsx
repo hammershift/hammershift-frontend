@@ -3,24 +3,14 @@ import Link from 'next/link'
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-import Links from '../components/links'
-import FiltersAndSort from '../components/filter_and_sort'
-import GamesCard from '../components/card'
+import Links from '../../components/links'
+import FiltersAndSort from '../../components/filter_and_sort'
+import GamesCard from '../../components/card'
+import { LatestNews } from '../../components/how_hammeshift_works'
+import { SubscribeSmall } from '../../components/subscribe'
+import Footer from '../../components/footer'
 
-import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
-import Dollar from '../../../public/images/dollar.svg'
-import HourGlass from '../../../public/images/hour-glass.svg'
-import AvatarOne from '../../../public/images/avatar-one.svg'
-import AvatarTwo from '../../../public/images/avatar-two.svg'
-import AvatarThree from '../../../public/images/avatar-three.svg'
-import AvatarFour from '../../../public/images/avatar-four.svg'
-import BlackMercedes from '../../../public/images/black-mercedes.svg'
-
-import { LatestNews } from '../components/how_hammeshift_works'
-import { articleData } from '@/sample_data'
-import { SubscribeSmall } from '../components/subscribe'
-import Footer from '../components/footer'
-
+import MagnifyingGlass from '../../../../public/images/magnifying-glass.svg'
 
 
 const AuctionListingPage = () => {
