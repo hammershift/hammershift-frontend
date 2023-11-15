@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Links from '../../components/links'
 import Image from 'next/image'
@@ -107,15 +107,17 @@ const initialState = {
 
 const getCarDetails = async () => {
     try {
-        const res = await fetch("http://localhost:3000/api/cars", {
-            cache: "no-store",
-        });
+        // const res = await fetch("http://localhost:3000/api/cars", {
+        //     cache: "no-store",
+        // });
+        // console.log(res);
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch car data");
-        }
+        // if (!res.ok) {
+        //     throw new Error("Failed to fetch car data");
+        // }
 
-        return res.json();
+        // return res.json();
+        return await (await fetch("http://localhost:3000/api/cars"));
     } catch (error) {
         console.log("Error loading car data: ", error);
     }
@@ -123,7 +125,6 @@ const getCarDetails = async () => {
 
 const CarViewPage = () => {
     // const [carDataOne, setCarDataOne] = useState(initialState);
-    // const [error, setError] = useState(null);
 
     // useEffect(() => {
     //     const fetchData = async () => {
@@ -212,7 +213,7 @@ const CarViewPage = () => {
     )
 }
 
-export default CarViewPage
+export default CarViewPage;
 
 
 const WatchAndWagerButtons = () => {
