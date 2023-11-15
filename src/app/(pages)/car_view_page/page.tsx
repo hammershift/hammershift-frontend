@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Links from '../../components/links'
 import Image from 'next/image'
@@ -29,12 +29,6 @@ import ProfilePhoto from '../../../../public/images/ellipse-415.svg'
 import CarFaxLogo from '../../../../public/images/show-me-carfax.svg'
 import WatchListIcon from '../../../../public/images/watchlist-icon.svg'
 
-import PhotoOne from '../../../../public/images/car-view-page/photoOne.svg'
-import PhotoTwo from '../../../../public/images/car-view-page/photoTwo.svg'
-import PhotoThree from '../../../../public/images/car-view-page/photoThree.svg'
-import PhotoFour from '../../../../public/images/car-view-page/photoFour.svg'
-import PhotoFive from '../../../../public/images/car-view-page/photoOne.svg'
-
 import AvatarOne from '../../../../public/images/avatar-one.svg'
 import AvatarTwo from '../../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../../public/images/avatar-three.svg'
@@ -45,21 +39,7 @@ import { SubscribeSmall } from '../../components/subscribe'
 import Footer from '../../components/footer'
 import Link from 'next/link'
 
-const getCarDetails = async () => {
-    try {
-        const res = await fetch("http://localhost:3000/api/cars", {
-            cache: "no-store",
-        });
 
-        if (!res.ok) {
-            throw new Error("Failed to fetch topics");
-        }
-
-        return res.json();
-    } catch (error) {
-        console.log("Error loading topics: ", error);
-    }
-};
 
 
 interface CarDataOneProps {
@@ -93,9 +73,72 @@ interface CarViewPageProps {
     carDataOne: CarDataOneProps
     auctionDataOne: AuctionDataOneProps
 }
+const initialState = {
+    price: '',
+    year: '',
+    make: 'F',
+    model: '',
+    page_url: '',
+    img: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2956-17001-scaled.jpg",
+    chassis: '',
+    seller: '',
+    location: '',
+    lot_num: '',
+    listing_type: '',
+    auction_id: '',
+    website: '',
+    description: [
+        '',
+        ''
+    ],
+    images_list: [
+        { placing: 1, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2956-17001-scaled.jpg" },
+        { placing: 2, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2945-17027-scaled.jpg" },
+        { placing: 3, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2894-17370-scaled.jpg" },
+        { placing: 4, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2897-17394-scaled.jpg" },
+        { placing: 5, src: "https://bringatrailer.com/wp-content/uploads/2023/07/1974_bmw_2002-turbo_5D5A5368-18936-scaled.jpg" },
+
+    ],
+    listing_details: [
+        '',
+        '',
+    ]
+}
+
+const getCarDetails = async () => {
+    try {
+        const res = await fetch("http://localhost:3000/api/cars", {
+            cache: "no-store",
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to fetch car data");
+        }
+
+        return res.json();
+    } catch (error) {
+        console.log("Error loading car data: ", error);
+    }
+};
 
 const CarViewPage = () => {
+    // const [carDataOne, setCarDataOne] = useState(initialState);
+    // const [error, setError] = useState(null);
 
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const data = await getCarDetails();
+    //             console.log(data)
+    //             setCarDataOne(data.cars);
+    //         } catch (error) {
+    //             console.error("Error in CarViewPage: ", error);
+    //             // setError(error);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
 
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
