@@ -1,62 +1,52 @@
 "use client"
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Links from '../components/links'
+import Links from '../../components/links'
 import Image from 'next/image'
-import Card from '../components/card'
-
-import DollarIcon from '../../../public/images/dollar.svg'
-import CalendarIcon from '../../../public/images/calendar-icon.svg'
-import HashtagIcon from '../../../public/images/hash-02.svg'
-import PlayersIcon from '../../../public/images/users-01.svg'
-import HourGlassIcon from '../../../public/images/hour-glass.svg'
-import PrizeIcon from '../../../public/images/monetization-browser-bag.svg'
-import LiveGamesIcon from '../../../public/images/currency-dollar-circle.svg'
-import CameraPlus from '../../../public/images/camera-plus.svg'
-import GifIcon from '../../../public/images/image-document-gif.svg'
-import BellIcon from '../../../public/images/bell-02.svg'
-import ThumbsUp from '../../../public/images/thumbs-up.svg'
-import ThumbsDown from '../../../public/images/thumbs-down.svg'
-import CornerDownRight from '../../../public/images/corner-down-right.svg'
-import ThreeDots from '../../../public/images/dots-vertical.svg'
-import OpenWebLogo from '../../../public/images/open-web-logo.svg'
-import ArrowDown from '../../../public/images/arrow-down.svg'
-import ArrowUp from '../../../public/images/chevron-up.svg'
-import DiagonalLines from '../../../public/images/green-diagonal.svg'
-import TransitionPattern from '../../../public/images/transition-pattern.svg'
-import BringATrailerLogo from '../../../public/images/bring-a-trailer-logo.svg'
-import ProfilePhoto from '../../../public/images/ellipse-415.svg'
-import CarFaxLogo from '../../../public/images/show-me-carfax.svg'
-import WatchListIcon from '../../../public/images/watchlist-icon.svg'
-
-import PhotoOne from '../../../public/images/car-view-page/photoOne.svg'
-import PhotoTwo from '../../../public/images/car-view-page/photoTwo.svg'
-import PhotoThree from '../../../public/images/car-view-page/photoThree.svg'
-import PhotoFour from '../../../public/images/car-view-page/photoFour.svg'
-import PhotoFive from '../../../public/images/car-view-page/photoOne.svg'
-
-import AvatarOne from '../../../public/images/avatar-one.svg'
-import AvatarTwo from '../../../public/images/avatar-two.svg'
-import AvatarThree from '../../../public/images/avatar-three.svg'
-import AvatarFour from '../../../public/images/avatar-four.svg'
-import { LatestNews } from '../components/how_hammeshift_works'
-import { carDataOne, auctionDataOne } from '../../sample_data'
-import { SubscribeSmall } from '../components/subscribe'
-import Footer from '../components/footer'
+import Card from '../../components/card'
+import { LatestNews } from '../../components/how_hammeshift_works'
+import { carDataOne, auctionDataOne } from '../../../sample_data'
+import { SubscribeSmall } from '../../components/subscribe'
+import Footer from '../../components/footer'
 import Link from 'next/link'
 
-const CarViewData = {
-    name: "13k-Mile 2011 Mercedes Benz SLS AMG",
-    currentBid: "$64,000",
-    endingDate: "Jul 5, 2023, 7:00 PM",
-    bids: 48,
-    players: 4,
-    timeLeft: "02:16:00",
-    prize: "$1,000",
-    images: [PhotoOne, PhotoTwo, PhotoThree, PhotoFour, PhotoFive],
-    description: "This 2011 Mercedes-Benz SLS AMG was initially sold by Ray Catena Mercedes Benz Union in New Jersey, and remained registered in the state prior to being acquired by the selling dealer in 2023 and now has 13k miles. It is powered by a 6.2-liter V8 linked with a seven-speed dual-clutch automatic transaxle and a limited-slip differential. Finished in Iridium Silver Metallic over Charcoal Exclusive leather upholstery, the car is equipped with 19″ and 20″ seven-spoke alloy wheels, gullwing doors, a speed-activated aerofoil, bi-xenon headlights, Parktronic, heated power-adjustable seats, Keyless-Go, a rearview camera, COMAND infotainment, navigation, a radar detector, a Bang & Olufsen sound system, carbon-fiber interior trim, and dual-zone automatic climate control. This SLS AMG is now offered in Texas by the selling dealer at no reserve with a clean Carfax report and a clean New Jersey title."
+import DollarIcon from '../../../../public/images/dollar.svg'
+import CalendarIcon from '../../../../public/images/calendar-icon.svg'
+import HashtagIcon from '../../../../public/images/hash-02.svg'
+import PlayersIcon from '../../../../public/images/users-01.svg'
+import HourGlassIcon from '../../../../public/images/hour-glass.svg'
+import PrizeIcon from '../../../../public/images/monetization-browser-bag.svg'
+import LiveGamesIcon from '../../../../public/images/currency-dollar-circle.svg'
+import CameraPlus from '../../../../public/images/camera-plus.svg'
 
-}
+import GifIcon from '../../../../public/images/image-document-gif.svg'
+import BellIcon from '../../../../public/images/bell-02.svg'
+import ThumbsUp from '../../../../public/images/thumbs-up.svg'
+import ThumbsDown from '../../../../public/images/thumbs-down.svg'
+import CornerDownRight from '../../../../public/images/corner-down-right.svg'
+import ThreeDots from '../../../../public/images/dots-vertical.svg'
+import OpenWebLogo from '../../../../public/images/open-web-logo.svg'
+import ArrowDown from '../../../../public/images/arrow-down.svg'
+
+import DiagonalLines from '../../../../public/images/green-diagonal.svg'
+import TransitionPattern from '../../../../public/images/transition-pattern.svg'
+import BringATrailerLogo from '../../../../public/images/bring-a-trailer-logo.svg'
+import ProfilePhoto from '../../../../public/images/ellipse-415.svg'
+import CarFaxLogo from '../../../../public/images/show-me-carfax.svg'
+import WatchListIcon from '../../../../public/images/watchlist-icon.svg'
+
+import PhotoOne from '../../../../public/images/car-view-page/photoOne.svg'
+import PhotoTwo from '../../../../public/images/car-view-page/photoTwo.svg'
+import PhotoThree from '../../../../public/images/car-view-page/photoThree.svg'
+import PhotoFour from '../../../../public/images/car-view-page/photoFour.svg'
+import PhotoFive from '../../../../public/images/car-view-page/photoOne.svg'
+
+import AvatarOne from '../../../../public/images/avatar-one.svg'
+import AvatarTwo from '../../../../public/images/avatar-two.svg'
+import AvatarThree from '../../../../public/images/avatar-three.svg'
+import AvatarFour from '../../../../public/images/avatar-four.svg'
+
+
 
 interface CarDataOneProps {
     price: string,
