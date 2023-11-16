@@ -1,22 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import Car from "@/app/models/car"
 import connectMongoDB from '@/app/lib/mongodb'
 
-
-// get one document using auction_id
-export async function GET() {
-
-    await connectMongoDB();
-    const cars = await Car.findOne({ auction_id: "66514736" });
-    return NextResponse.json({ cars });
+type Props = {
+    params: {
+        id: string
+    }
 }
 
+// get one document using auction_id
+export async function GET(request: NextRequest) {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
 
-
-
-
-// delete 18:36
-// post 22:03
-// put 26:12
-
+    await connectMongoDB();
+    const cars = await Car.findOne({ auction_id: id });
+    return NextResponse.json({ cars });
+}

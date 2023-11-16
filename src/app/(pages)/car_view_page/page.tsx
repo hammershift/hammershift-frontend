@@ -107,39 +107,26 @@ const initialState = {
 
 const getCarDetails = async () => {
     try {
-        // const res = await fetch("http://localhost:3000/api/cars", {
-        //     cache: "no-store",
-        // });
-        // console.log(res);
+        const res = await fetch("http://localhost:3000/api/cars?id=66514736", {
+            cache: "no-store",
+        });
 
-        // if (!res.ok) {
-        //     throw new Error("Failed to fetch car data");
-        // }
+        console.log(res);
+        if (!res.ok) {
+            throw new Error("Failed to fetch car data");
+        }
 
-        // return res.json();
-        return await (await fetch("http://localhost:3000/api/cars"));
+
     } catch (error) {
         console.log("Error loading car data: ", error);
     }
 };
 
 const CarViewPage = () => {
-    // const [carDataOne, setCarDataOne] = useState(initialState);
+    useEffect(() => {
+        getCarDetails();
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const data = await getCarDetails();
-    //             console.log(data)
-    //             setCarDataOne(data.cars);
-    //         } catch (error) {
-    //             console.error("Error in CarViewPage: ", error);
-    //             // setError(error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, []);
+    }, []);
 
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
