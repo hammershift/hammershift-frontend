@@ -8,8 +8,8 @@ import connectMongoDB from '@/app/lib/mongodb'
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-    const limit = searchParams.get("limit");
-    const offset = searchParams.get("offset");
+    // const limit = searchParams.get("limit");
+    // const offset = searchParams.get("offset");
     await connectMongoDB();
     if (id) {
         try {
