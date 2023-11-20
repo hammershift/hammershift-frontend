@@ -19,6 +19,7 @@ const carSchema = new mongoose.Schema({
   model: String,
   price: String,
   seller: String,
+  status: Number,
   updatedAt: Date,
   website: String,
   year: String,
