@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
 
     if (!auction_id) {
       const cars = await Cars.find().limit(limit).skip(offset);
-      return NextResponse.json(cars);
+      return Response.json(cars);
     } else {
       const car = await Cars.findOne({ auction_id: auction_id });
-      return NextResponse.json(car);
+      return Response.json(car);
     }
   } catch (error) {
     console.log(error);
