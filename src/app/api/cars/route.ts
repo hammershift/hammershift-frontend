@@ -11,11 +11,11 @@ export async function GET(req: NextRequest) {
 
     if (auction_id) {
       const car = await Cars.findOne({ auction_id: auction_id });
-      return Response.json(car);
+      return NextResponse.json(car);
     }
     const cars = await Cars.find().limit(limit).skip(offset);
-    return Response.json(cars);
+    return NextResponse.json(cars);
   } catch (error) {
-    console.log(error);
+    return NextResponse.json({ message: 'Internal server error' })
   }
 }
