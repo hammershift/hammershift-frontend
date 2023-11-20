@@ -40,7 +40,7 @@ import Link from 'next/link'
 
 
 
-interface CarDataOneProps {
+export interface CarDataOneProps {
     price: string,
     year: string,
     make: string,
@@ -56,6 +56,7 @@ interface CarDataOneProps {
     description: string,
     images_list: { placing: number, src: string }[],
     listing_details: string,
+    status: Number
 }
 
 interface AuctionDataOneProps {

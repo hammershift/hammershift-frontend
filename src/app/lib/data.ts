@@ -1,6 +1,9 @@
+
+
 export async function fetchCarData() {
+
     try {
-        const res = await fetch("http://localhost:3000/api/cars?id=66514736");
+        const res = await fetch("http://localhost:3000/api/cars?auction_id=67253867", { cache: 'no-store' });
 
         console.log(res);
         if (!res.ok) {
