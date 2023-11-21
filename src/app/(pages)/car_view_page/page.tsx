@@ -9,7 +9,7 @@ import { fetchCarData } from '@/app/lib/data'
 
 
 const CarViewPage = async () => {
-    // fetchCarData();
+    fetchCarData();
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />
