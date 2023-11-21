@@ -13,7 +13,6 @@ import Onfido from '../../../../public/images/onfido.svg';
 import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import { signIn } from 'next-auth/react';
-import { useNavigation } from 'next/navigation';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -22,22 +21,18 @@ const CreateAccount = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
-  const navigation = useNavigation();
 
-  const handleSignIn = async (e: any) => {
+  const handleSignIn = async () => {
     try {
-      e.preventDefault();
       const result = await signIn('credentials', {
-        redirect: false,
+        redirect: true,
         email: email,
         password: password,
       });
       if (result?.error) {
         setError(result.error);
-      } else {
-        navigation.push('/');
       }
-    } catch (error: any) {
+    } catch (error) {
       setError('An unexpected error occurred');
     }
   };
