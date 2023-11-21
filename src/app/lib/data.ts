@@ -1,6 +1,8 @@
 
 export function getCarData(ID: string) {
-    return fetch(process.env.LOCAL_HOST + `api/cars?auction_id=${ID}`)
+    //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
+    const URL = process.env.DOMAIN || "http://localhost:3000/"
+    return fetch(URL + `api/cars?auction_id=${ID}`)
         .then((res) => res.json())
         .then(data => {
             return data;
