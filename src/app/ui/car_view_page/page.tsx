@@ -72,7 +72,7 @@ interface CarViewPageProps {
     carDataOne: CarDataOneProps
     auctionDataOne: AuctionDataOneProps
 }
-const initialState = {
+export const initialState = {
     price: '',
     year: '',
     make: 'F',
