@@ -1,10 +1,9 @@
 
-
-export async function fetchCarData() {
-
-    try {
-        fetch("http://localhost:3000/api/cars?auction_id=67253867").then((res) => console.log(res)).catch(error => console.log(error.json()))
-    } catch (error) {
-        console.log("Error loading car data: ", error);
-    }
+export async function getCarData() {
+    await fetch('http://localhost:3000/api/cars?auction_id=66558179')
+        .then(res => res.json())
+        .then(data => {
+            return data;
+        })
+        .catch(error => console.error(error));
 }

@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Links from '../../components/links'
 import { WatchAndWagerButtons, TitleContainer, PhotosLayout, ArticleSection, WagersSection, GuessThePriceInfoSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/page'
-import { carDataOne, auctionDataOne } from '../../../sample_data'
+import { auctionDataOne } from '../../../sample_data'
 import { SubscribeSmall } from '../../components/subscribe'
 import Footer from '../../components/footer'
 import { LatestNews } from '../../components/how_hammeshift_works'
-import { fetchCarData } from '@/app/lib/data'
+import { getCarData } from '@/app/lib/data'
 
 
 const CarViewPage = async () => {
-    fetchCarData();
+    const carDataOne = await getCarData();
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />

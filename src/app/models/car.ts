@@ -1,26 +1,30 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from 'mongoose';
 
-const carSchema = new Schema(
-    {
-        price: String,
-        year: String,
-        make: String,
-        model: String,
-        img: String,
-        chassis: String,
-        seller: String,
-        location: String,
-        lot_num: String,
-        listing_type: String,
-        auction_id: { type: String, unique: true },
-        website: String,
-        description: [String],
-        images_list: [Object],
-        listing_details: [String],
-    },
-    { timestamps: true }
-);
+const carSchema = new mongoose.Schema({
+    auction_id: String,
+    chassis: String,
+    createdAt: Date,
+    description: [String],
+    images_list: [
+        {
+            placing: Number,
+            src: String,
+        },
+    ],
+    listing_details: [String],
+    listing_type: String,
+    location: String,
+    lot_num: String,
+    make: String,
+    model: String,
+    price: String,
+    seller: String,
+    status: Number,
+    updatedAt: Date,
+    website: String,
+    year: String,
+});
 
-const Car = mongoose.model("Car", carSchema);
+const Cars = mongoose.models.cars || mongoose.model('cars', carSchema);
 
-export default Car
+export default Cars;
