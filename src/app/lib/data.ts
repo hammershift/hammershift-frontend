@@ -1,6 +1,6 @@
 
 export function getCarData(ID: string) {
-    return fetch(`http://localhost:3000/api/cars?auction_id=${ID}`)
+    return fetch(process.env.DOMAIN + `api/cars?auction_id=${ID}`)
         .then((res) => res.json())
         .then(data => {
             return data;
