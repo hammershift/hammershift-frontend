@@ -9,7 +9,8 @@ import { getCarData } from '@/app/lib/data'
 
 
 const CarViewPage = async () => {
-    const carDataOne = await getCarData();
+    const ID = '66558179'
+    const carDataOne = await getCarData(ID);
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />

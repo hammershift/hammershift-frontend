@@ -1,9 +1,12 @@
 
-export async function getCarData() {
-    await fetch('http://localhost:3000/api/cars?auction_id=66558179')
-        .then(res => res.json())
+export function getCarData(ID: string) {
+    return fetch(`http://localhost:3000/api/cars?auction_id=${ID}`)
+        .then((res) => res.json())
         .then(data => {
             return data;
         })
-        .catch(error => console.error(error));
+        .catch((error) => {
+            console.error(error)
+            throw error;
+        })
 }
