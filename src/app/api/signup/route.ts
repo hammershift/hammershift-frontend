@@ -1,6 +1,7 @@
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcrypt';
 
+// TEST IMPLEMENTATION
 export async function POST(req: Request) {
   console.log('Received request to the registration endpoint');
 
