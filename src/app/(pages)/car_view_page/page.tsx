@@ -48,6 +48,7 @@ import AvatarFour from '../../../../public/images/avatar-four.svg'
 
 
 
+
 interface CarDataOneProps {
     price: string,
     year: string,
@@ -81,6 +82,7 @@ interface CarViewPageProps {
 }
 
 const CarViewPage = () => {
+
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
             <Links />
