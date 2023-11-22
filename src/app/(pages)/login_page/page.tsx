@@ -27,11 +27,14 @@ const CreateAccount = () => {
 
   const handleSignIn = async () => {
     try {
+      console.log('Attempting to sign in with:', { email });
       const result = await signIn('credentials', {
         redirect: false,
         email: email,
         password: password,
       });
+
+      console.log('signIn result:', result);
 
       if (result?.error) {
         setError(result.error);
@@ -40,6 +43,7 @@ const CreateAccount = () => {
         router.push('/');
       }
     } catch (error) {
+      console.error('An unexpected error occurred during login:', error);
       setError('An unexpected error occurred');
     }
   };

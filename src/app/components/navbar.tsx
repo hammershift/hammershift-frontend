@@ -500,6 +500,15 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
 
 const MyAccountDropdownMenu = () => {
   const account_load = 100;
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      console.log('User successfully logged out');
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    }
+  };
   return (
     <div className='tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black '>
       <div className='tw-px-6 tw-font-bold tw-text-lg'>MY ACCOUNT</div>
@@ -517,7 +526,7 @@ const MyAccountDropdownMenu = () => {
       <div className='tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full'>
         <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Profile</button>
         <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Settings</button>
-        <button onClick={() => signOut()} className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>
+        <button onClick={handleSignOut} className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>
           Logout
         </button>
       </div>
