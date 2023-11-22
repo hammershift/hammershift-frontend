@@ -22,6 +22,7 @@ import RankingStarTop from '../../../public/images/ranking-star-top.svg';
 import MyWagerPhotoOne from '../../../public/images/my-wagers-navbar/my-wager-photo-one.svg';
 import MyWagerPhotoTwo from '../../../public/images/my-wagers-navbar/my-wager-photo-two.svg';
 import MyWagerPhotoThree from '../../../public/images/my-wagers-navbar/my-wager-photo-three.svg';
+import { signOut, useSession } from 'next-auth/react';
 
 // export interface NavbarProps {
 //   isLoggedIn: boolean;
@@ -29,10 +30,15 @@ import MyWagerPhotoThree from '../../../public/images/my-wagers-navbar/my-wager-
 
 type NavbarDropdownMenuProps = null | 'My Watchlist' | 'My Wagers' | 'My Account';
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
   const [navDropdownMenu, setNavDropdownMenu] = useState<NavbarDropdownMenuProps>(null);
+
+  const { data: session } = useSession();
+  console.log('Session data:', session);
+  const isLoggedIn = !!session;
+
   return (
     <div>
       {isLoggedIn ? (
@@ -511,7 +517,9 @@ const MyAccountDropdownMenu = () => {
       <div className='tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full'>
         <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Profile</button>
         <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Settings</button>
-        <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Logout</button>
+        <button onClick={() => signOut()} className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>
+          Logout
+        </button>
       </div>
     </div>
   );

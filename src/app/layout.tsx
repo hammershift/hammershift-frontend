@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang='en'>
       <SessionProvider>
         <body className={inter.className}>
-          <Navbar isLoggedIn={true} />
+          <Navbar />
           {children}
         </body>
       </SessionProvider>
