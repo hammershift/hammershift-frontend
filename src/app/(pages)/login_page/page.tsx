@@ -12,10 +12,38 @@ import CheckIcon from '../../../../public/images/check-black.svg';
 import Onfido from '../../../../public/images/onfido.svg';
 import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
   const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>('sign in');
+
+  // TEST IMPLEMENTATION
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSignIn = async () => {
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: email,
+        password: password,
+      });
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        console.log('Login successful');
+        router.push('/');
+      }
+    } catch (error) {
+      setError('An unexpected error occurred');
+    }
+  };
+
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {createAccountPage === 'sign in' && (
@@ -35,11 +63,11 @@ const CreateAccount = () => {
           <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Email</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' />
+              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' />
+              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
           <div className='tw-flex tw-justify-between tw-text-sm sm:tw-text-base'>
@@ -63,7 +91,9 @@ const CreateAccount = () => {
               Forgot password
             </button>
           </div>
-          <button className='btn-yellow'>Sign In</button>
+          <button onClick={handleSignIn} className='btn-yellow'>
+            Sign In
+          </button>
 
           <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-8'>
             <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
