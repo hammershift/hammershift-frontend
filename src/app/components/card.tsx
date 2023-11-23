@@ -140,7 +140,7 @@ const Card = () => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block sm:tw-hidden'>{`${cardData.players.length} players`}</div>
                 </div>
             </div>
-            <button className='btn-yellow-thin tw-w-full sm:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/66558179`)}>Play Game</button>
+            <button className='btn-yellow-thin tw-w-full sm:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/67232853`)}>Play Game</button>
         </div>
     )
 }
@@ -274,7 +274,7 @@ export const GamesCard = () => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden'>{`${cardData.players.length} players`}</div>
                 </div>
             </div>
-            <button className='btn-yellow-thin tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/66558179`)}>Play Game</button>
+            <button className='btn-yellow-thin tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/67232853`)}>Play Game</button>
         </div>
     )
 }

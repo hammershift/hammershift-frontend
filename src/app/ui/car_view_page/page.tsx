@@ -105,84 +105,6 @@ export const initialState = {
 }
 
 
-// const CarViewPage = () => {
-
-
-//     return (
-//         <div className='tw-flex tw-flex-col tw-items-center'>
-//             <Links />
-//             <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
-//                 <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
-//                 <div className='tw-hidden sm:tw-block'>
-//                     <WatchAndWagerButtons />
-//                 </div>
-//             </div>
-//             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
-//                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
-//                     <TitleContainer
-//                         year={carDataOne.year}
-//                         make={carDataOne.make}
-//                         model={carDataOne.model}
-//                         current_bid={auctionDataOne.current_bid}
-//                         bids_num={auctionDataOne.bids_num}
-//                         ending_date={auctionDataOne.ending_date}
-//                         time_left={auctionDataOne.time_left}
-//                         players_num={auctionDataOne.players_num}
-//                         prize={auctionDataOne.prize}
-//                     />
-//                     <div className='tw-block sm:tw-hidden tw-mt-8'>
-//                         <WatchAndWagerButtons />
-//                     </div>
-//                     <PhotosLayout images_list={carDataOne.images_list} img={carDataOne.img} />
-//                     <ArticleSection images_list={carDataOne.images_list} description={carDataOne.description} />
-//                     <div className='tw-block sm:tw-hidden tw-mt-8'>
-//                         <WagersSection />
-//                     </div>
-//                     <GuessThePriceInfoSection />
-//                     <div className='tw-block sm:tw-hidden tw-mt-8'>
-//                         <DetailsSection
-//                             website={carDataOne.website}
-//                             make={carDataOne.make}
-//                             model={carDataOne.model}
-//                             seller={carDataOne.seller}
-//                             location={carDataOne.location}
-//                             mileage="55,400"
-//                             listing_type={carDataOne.listing_type}
-//                             lot_num={carDataOne.lot_num}
-//                             listing_details={carDataOne.listing_details}
-//                             images_list={carDataOne.images_list}
-//                         />
-//                     </div>
-//                     <CommentsSection />
-
-//                 </div>
-//                 <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
-//                     <WagersSection />
-//                     <DetailsSection
-//                         website={carDataOne.website}
-//                         make={carDataOne.make}
-//                         model={carDataOne.model}
-//                         seller={carDataOne.seller}
-//                         location={carDataOne.location}
-//                         mileage="55,400"
-//                         listing_type={carDataOne.listing_type}
-//                         lot_num={carDataOne.lot_num}
-//                         listing_details={carDataOne.listing_details}
-//                         images_list={carDataOne.images_list}
-//                     />
-//                 </div>
-//             </div>
-//             <GamesYouMightLike />
-//             <LatestNews />
-//             <SubscribeSmall />
-//             <Footer />
-//         </div>
-//     )
-// }
-
-// export default CarViewPage;
-
-
 export const WatchAndWagerButtons = () => {
     const router = useRouter()
     return (
@@ -204,13 +126,45 @@ interface TitleContainerProps {
     current_bid: string
     bids_num: number
     ending_date: string
-    time_left: string
+    deadline: Date
     players_num: number
     prize: string
 
 }
 
-export const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, time_left, players_num, prize }) => {
+export const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize }) => {
+    const [timeLeft, setTimeLeft] = useState({})
+    function calculateTimeDifference(targetDateISOString: string) {
+        // Parse the target date string into a Date object
+        const targetDate = new Date(targetDateISOString);
+
+        // Get the current date and time
+        const currentDate = new Date();
+
+        // Calculate the time difference in milliseconds
+        const timeDifference = targetDate.getTime() - currentDate.getTime();
+
+        // Calculate the time difference in days, hours, minutes, and seconds
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+        console.log(days, hours, minutes, seconds);
+        // Return an object with the calculated values
+        setTimeLeft({
+            days,
+            hours,
+            minutes,
+            seconds
+        });
+    }
+
+
+    // setInterval(() => {
+    //     calculateTimeDifference(String(deadline));
+    // }, 1000)
+
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
             <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{year}  {make} {model}</div>
@@ -221,7 +175,7 @@ export const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, mode
                             <Image src={DollarIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                         </div>
                         <div className='tw-opacity-80 tw-flex'>Current Bid:
-                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{current_bid}
+                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{`$ ${String(current_bid)}`}
                             </span>
                             <span className='tw-block md:tw-hidden tw-ml-2'>{`(${bids_num} bids)`}</span>
                         </div>
@@ -245,7 +199,7 @@ export const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, mode
                             <div>
                                 <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{time_left}</span></span>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>02:01:00</span></span>
                         </div>
                     </div>
                     <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
