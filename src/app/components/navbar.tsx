@@ -49,7 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                         <Link href={"/discover_page"}>
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">DISCOVER</div>
                         </Link>
-                        <Link href="/auction_listing_page">
+                        <Link href="/auctions">
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
                         </Link>
                     </div>
