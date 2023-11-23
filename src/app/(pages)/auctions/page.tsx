@@ -1,6 +1,5 @@
 import FiltersAndSort from "@/app/components/filter_and_sort"
 import { getAllCars } from "@/app/lib/data"
-import { GamesSection } from "@/app/ui/auction_listing_page/page"
 import { GamesCard } from "@/app/components/card"
 
 const AuctionListingPage = async () => {
@@ -14,6 +13,7 @@ const AuctionListingPage = async () => {
                         <div className=' tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 '>
                             {listCarData.map((car: any) => <div key={car._id}>
                                 <GamesCard
+                                    auction_id={car.auction_id}
                                     make={car.make}
                                     year={car.year}
                                     model={car.model}

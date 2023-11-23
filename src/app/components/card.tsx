@@ -162,6 +162,7 @@ interface GamesCardProps {
 
 export const GamesCard = (props: any) => {
     const router = useRouter()
+    const currencyString = new Intl.NumberFormat().format(props.price)
 
     const activity = [
         {
@@ -217,14 +218,14 @@ export const GamesCard = (props: any) => {
         }
     ]
     return (
-        <div>
+        <div className='tw-relative'>
             <Image src={props.img} width={416} height={219} alt='ferrari' className='tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto' />
             <div className='tw-font-bold tw-text-[24px] tw-py-[12px]'>{props.year} {props.make} {props.model}</div>
             <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>{props.description[0]}</p>
             <div className='tw-flex tw-mt-2'>
                 <Image src={Dollar} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
                 <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
-                <div className='tw-text-[#49C742] tw-font-bold'>{props.price}</div>
+                <div className='tw-text-[#49C742] tw-font-bold'>${currencyString}</div>
             </div>
             <div className='tw-flex'>
                 <Image src={HourGlass} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
@@ -275,7 +276,7 @@ export const GamesCard = (props: any) => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden'>{`${players.length} players`}</div>
                 </div>
             </div>
-            <button className='btn-yellow-thin tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/67232853`)}>Play Game</button>
+            <button className='btn-yellow-thin tw-relative tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/${props.auction_id}`)}>Play Game</button>
         </div>
     )
 }

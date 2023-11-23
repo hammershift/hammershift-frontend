@@ -17,26 +17,6 @@ import { model } from 'mongoose'
 
 
 
-
-
-
-
-export const GamesSection = ({ data }: { data: any }) => {
-    return (
-        <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
-            <div className=' tw-w-full 2xl:tw-w-[1312px] '>
-                <div className=' tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 '>
-
-
-
-                </div>
-            </div>
-        </section>
-    )
-}
-
-
-
 export const FilterDropdownMenu = () => {
     return (
         <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
