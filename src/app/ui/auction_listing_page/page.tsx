@@ -13,6 +13,7 @@ import { LatestNews } from '../../components/how_hammeshift_works'
 import { articleData } from '@/sample_data'
 import { SubscribeSmall } from '../../components/subscribe'
 import Footer from '../../components/footer'
+import { model } from 'mongoose'
 
 
 
@@ -20,24 +21,13 @@ import Footer from '../../components/footer'
 
 
 
-export const GamesSection = () => {
+export const GamesSection = ({ data }: { data: any }) => {
     return (
         <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
             <div className=' tw-w-full 2xl:tw-w-[1312px] '>
                 <div className=' tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 '>
-                    {/* to be replaced by array.map */}
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
-                    <GamesCard />
+
+
 
                 </div>
             </div>
