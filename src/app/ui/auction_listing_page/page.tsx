@@ -15,34 +15,12 @@ import { SubscribeSmall } from '../../components/subscribe'
 import Footer from '../../components/footer'
 
 
-const AuctionListingPage = () => {
-    return (
-        <div className='tw-flex tw-flex-col tw-items-center'>
-            <Links />
-            <FiltersAndSort />
-            <div className='tw-pb-16 '>
-                {/* To be replaced by array.map */}
-                <GamesSection />
-                <div className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] '>
-                    <div className='tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4'>Showing 21 of 100 auctions</div>
-                    <button className='btn-transparent-white tw-w-full tw-text-[18px]' style={{ paddingTop: "16px", paddingBottom: "16px" }}>Load more</button>
-
-                </div>
-            </div>
-            <LatestNews />
-            <SubscribeSmall />
-            <Footer />
-
-        </div>
-    )
-}
-
-export default AuctionListingPage
 
 
 
 
-const GamesSection = () => {
+
+export const GamesSection = () => {
     return (
         <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
             <div className=' tw-w-full 2xl:tw-w-[1312px] '>
@@ -69,7 +47,7 @@ const GamesSection = () => {
 
 
 
-const FilterDropdownMenu = () => {
+export const FilterDropdownMenu = () => {
     return (
         <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
             <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">

@@ -130,7 +130,7 @@ export const carDataTwo = {
     price: '$1,402,000',
     year: '1963',
     make: 'Ferrari',
-    model: '250 GT Lusso',
+    model: '250 GT (DEFAULT)',
     page_url: 'https://bringatrailer.com/listing/1963-ferrari-250-gt-lusso/',
     img: 'https://bringatrailer.com/wp-content/uploads/2023/09/1963_ferrari_250-gt-lusso_230727-Lusso-OS-01-31304.jpg',
     chassis: '4421',
