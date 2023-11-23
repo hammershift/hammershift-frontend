@@ -9,11 +9,12 @@ export async function GET(req: NextRequest) {
     const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
     const limit = Number(req.nextUrl.searchParams.get('limit')) || 12;
 
+    // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
       const car = await Cars.findOne({ auction_id: auction_id });
       return NextResponse.json(car);
     }
-
+    // api/cars to get all cars
     const cars = await Cars.find().limit(limit).skip(offset);
     return NextResponse.json(cars);
 
