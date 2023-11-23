@@ -79,7 +79,8 @@ export const cardData = {
 
 
 
-const card = () => {
+const Card = () => {
+    const router = useRouter();
     return (
         <div>
             <Image src={cardData.url} width={416} height={219} alt='ferrari' className='tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px]  tw-object-cover' />
@@ -139,18 +140,18 @@ const card = () => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block sm:tw-hidden'>{`${cardData.players.length} players`}</div>
                 </div>
             </div>
-            <Link href={"/car_view_page"}>
-                <button className='btn-yellow-thin tw-w-full sm:tw-w-auto'>Play Game</button>
-            </Link>
+            <button className='btn-yellow-thin tw-w-full sm:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/66558179`)}>Play Game</button>
         </div>
     )
 }
 
-export default card
+export default Card
 
 
 
 export const GamesCard = () => {
+    const router = useRouter()
+
     const cardData = {
         id: "carddata1",
         year: "1981",
@@ -273,9 +274,7 @@ export const GamesCard = () => {
                     <div className='tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden'>{`${cardData.players.length} players`}</div>
                 </div>
             </div>
-            <Link href={"/car_view_page"}>
-                <button className='btn-yellow-thin tw-w-full md:tw-w-auto'>Play Game</button>
-            </Link>
+            <button className='btn-yellow-thin tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/66558179`)}>Play Game</button>
         </div>
     )
 }
