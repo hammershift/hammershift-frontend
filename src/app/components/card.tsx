@@ -218,65 +218,70 @@ export const GamesCard = (props: any) => {
         }
     ]
     return (
-        <div className='tw-relative'>
-            <Image src={props.img} width={416} height={219} alt='ferrari' className='tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto' />
-            <div className='tw-font-bold tw-text-[24px] tw-py-[12px]'>{props.year} {props.make} {props.model}</div>
-            <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>{props.description[0]}</p>
-            <div className='tw-flex tw-mt-2'>
-                <Image src={Dollar} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
-                <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
-                <div className='tw-text-[#49C742] tw-font-bold'>${currencyString}</div>
-            </div>
-            <div className='tw-flex'>
-                <Image src={HourGlass} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
-                <div className='tw-px-2 tw-hidden sm:tw-block'>Time Left:</div>
-                <div className='tw-text-[#C2451E] tw-font-bold'>2:16:00</div>
-            </div>
-            <div className=' tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]'>
-                {activity.map((item) => {
+        <div className='tw-h-full tw-flex tw-flex-col tw-justify-between'>
+            <div>
 
-                    return <div key={item.id} className='tw-flex tw-mb-2'>
-                        <Image src={item.avatar} width={24} height={24} alt='dollar' className='tw-w-[24px] tw-h-[24px]' />
-                        <div className='tw-ml-1 tw-flex tw-flex-wrap'>
-                            <div className='tw-text-[#42A0FF] tw-mr-2'>{`@${item.username}`}</div>
-                            <div>{`wagered ${item.wager}`}</div>
-                            <div className='tw-text-[#DCE0D9] tw-ml-2'>{item.time}</div>
+                <Image src={props.img} width={416} height={219} alt='ferrari' className='tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto' />
+                <div className='tw-font-bold tw-text-[24px] tw-py-[12px]'>{props.year} {props.make} {props.model}</div>
+                <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>{props.description[0]}</p>
+                <div className='tw-flex tw-mt-2'>
+                    <Image src={Dollar} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
+                    <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
+                    <div className='tw-text-[#49C742] tw-font-bold'>${currencyString}</div>
+                </div>
+                <div className='tw-flex'>
+                    <Image src={HourGlass} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
+                    <div className='tw-px-2 tw-hidden sm:tw-block'>Time Left:</div>
+                    <div className='tw-text-[#C2451E] tw-font-bold'>2:16:00</div>
+                </div>
+                <div className=' tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]'>
+                    {activity.map((item) => {
+
+                        return <div key={item.id} className='tw-flex tw-mb-2'>
+                            <Image src={item.avatar} width={24} height={24} alt='dollar' className='tw-w-[24px] tw-h-[24px]' />
+                            <div className='tw-ml-1 tw-flex tw-flex-wrap'>
+                                <div className='tw-text-[#42A0FF] tw-mr-2'>{`@${item.username}`}</div>
+                                <div>{`wagered ${item.wager}`}</div>
+                                <div className='tw-text-[#DCE0D9] tw-ml-2'>{item.time}</div>
+                            </div>
                         </div>
-                    </div>
-                }
-                )}
+                    }
+                    )}
 
-                <div className='tw-relative tw-flex tw-items-center'>
-                    {/* avatar images - hidden for screens smaller than sm */}
-                    <div className=' tw-w-auto tw-hidden xl:tw-flex'>
-                        <Image src={players[0].avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
-                        <div className='tw-flex'>
-                            {players.slice(1, 5).map((item) => {
+                    <div className='tw-relative tw-flex tw-items-center'>
+                        {/* avatar images - hidden for screens smaller than sm */}
+                        <div className=' tw-w-auto tw-hidden xl:tw-flex'>
+                            <Image src={players[0].avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                            <div className='tw-flex'>
+                                {players.slice(1, 5).map((item) => {
 
-                                return <div key={item.id} style={{ transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)}px ,0)` }}>
-                                    <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
-                                </div>
-                            }
-                            )}
+                                    return <div key={item.id} style={{ transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)}px ,0)` }}>
+                                        <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                                    </div>
+                                }
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <div className='tw-ml-1 tw--translate-x-8 xl:tw-block tw-hidden'>{`and ${players.length - 5} more players to join`}</div>
-                    {/* avatar images - hidden for screens bigger than sm */}
-                    <div className='tw-flex tw-w-auto xl:tw-hidden tw-block'>
-                        <div className='tw-flex'>
-                            {players.slice(0, 2).map((item) => {
+                        <div className='tw-ml-1 tw--translate-x-8 xl:tw-block tw-hidden'>{`and ${players.length - 5} more players to join`}</div>
+                        {/* avatar images - hidden for screens bigger than sm */}
+                        <div className='tw-flex tw-w-auto xl:tw-hidden tw-block'>
+                            <div className='tw-flex'>
+                                {players.slice(0, 2).map((item) => {
 
-                                return <div key={item.id} style={{ transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)}px ,0)` }}>
-                                    <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
-                                </div>
-                            }
-                            )}
+                                    return <div key={item.id} style={{ transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)}px ,0)` }}>
+                                        <Image src={item.avatar} width={32} height={32} alt='avatar' className='tw-w-8 tw-h-8 tw-rounded-full' style={{ border: '1px solid black' }} />
+                                    </div>
+                                }
+                                )}
+                            </div>
                         </div>
+                        <div className='tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden'>{`${players.length} players`}</div>
                     </div>
-                    <div className='tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden'>{`${players.length} players`}</div>
                 </div>
             </div>
-            <button className='btn-yellow-thin tw-relative tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/${props.auction_id}`)}>Play Game</button>
+            <div>
+                <button className='btn-yellow-thin tw-w-full md:tw-w-auto' onClick={() => router.push(`/auctions/car_view_page/${props.auction_id}`)}>Play Game</button>
+            </div>
         </div>
     )
 }
