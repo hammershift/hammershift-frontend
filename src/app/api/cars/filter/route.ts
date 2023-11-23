@@ -159,6 +159,10 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    // SEARCH is NOT used in combination with other filters EXCEPT completed filter (completed=true = status: 2 and vice versa)
+    //api/cars/filter?search=911 Coupe or api/cars/filter?search=911%20Coupe
+    //api/cars/filter?search=911%20Coupe&completed=true
+    //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
     if (searchedKeyword) {
       const searchedCars = await Cars.find({
         status: { $in: completed },
@@ -205,6 +209,11 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    //ALL filters can be used in combination with other filters including sort (filters and sort are case sensitive)
+    //use the delimiter "$" when filter mutiple makes, era, category or location
+    //use "%20" or " " for 2-word queries
+    //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Newly%20Listed
+    //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
     const filteredCars = await Cars.find({
       status: { $in: completed },
       make: { $in: [...make] },
