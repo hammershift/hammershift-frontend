@@ -5,7 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 interface SortQuery {
   createdAt?: number,
-  price?: number
+  price?: number,
+  deadline?: number,
+  bids?: number
 }
 
 const categoryFilter = [
@@ -148,7 +150,7 @@ export async function GET(req: NextRequest) {
     let category: string | string[] = req.nextUrl.searchParams.get('category') || "All";
     let make: string | string[] = req.nextUrl.searchParams.get('make') || "All";
     let location: string | string[] = req.nextUrl.searchParams.get('location') || "All";
-    let sort: string | string[] | SortQuery = req.nextUrl.searchParams.get('sort') || "Newly Listed";
+    let sort: string | SortQuery = req.nextUrl.searchParams.get('sort') || "Newly Listed";
 
     if (completed) {
       if (completed === 'true') {
@@ -203,6 +205,21 @@ export async function GET(req: NextRequest) {
         case "Newly Listed":
           sort = { createdAt: -1 }
           break;
+        case "Ending Soon":
+          sort = { deadline: 1 }
+          break;
+        case "Most Expensive":
+          sort = { price: -1 }
+          break;
+        case "Least Expensive":
+          sort = { price: 1 }
+          break;
+        case "Most Bids":
+          sort = { bids: -1 }
+          break;
+        case "Least Bids":
+          sort = { bids: 1 }
+          break;
         //other sorts here
         default:
           break;
@@ -212,7 +229,7 @@ export async function GET(req: NextRequest) {
     //ALL filters can be used in combination with other filters including sort (filters and sort are case sensitive)
     //use the delimiter "$" when filter mutiple makes, era, category or location
     //use "%20" or " " for 2-word queries
-    //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Newly%20Listed
+    //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
     const filteredCars = await Cars.find({
       status: { $in: completed },
