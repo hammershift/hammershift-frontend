@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { getCarsWithFilterProps } from '@/app/lib/data'
 
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'
@@ -15,7 +16,7 @@ import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 
 type DropdownMenuProps = null | "Make" | "Era" | "Category" | "Location" | "Sort";
 
-const FiltersAndSort = () => {
+const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
 
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false)

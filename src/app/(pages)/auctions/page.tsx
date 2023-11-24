@@ -9,7 +9,7 @@ const AuctionListingPage = async () => {
     const carsCount = await getCarsCount();
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
-            <FiltersAndSort />
+
             <AuctionListing defaultListing={listCarData} carsCount={carsCount} />
         </div>
     )
