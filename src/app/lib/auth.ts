@@ -6,9 +6,6 @@ import { NextAuthOptions, getServerSession } from 'next-auth';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import FacebookProvider from 'next-auth/providers/facebook';
-import AppleProvider from 'next-auth/providers/apple';
-import TwitterProvider from 'next-auth/providers/twitter';
 
 // Google providers
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
@@ -20,51 +17,6 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 
   if (!clientSecret || clientSecret.length === 0) {
     throw new Error('Missing GOOGLE_CLIENT_SECRET');
-  }
-
-  return { clientId, clientSecret };
-}
-
-// Facebook providers
-function getFacebookCredentials(): { clientId: string; clientSecret: string } {
-  const clientId = process.env.FACEBOOK_CLIENT_ID;
-  const clientSecret = process.env.FACEBOOK_CLIENT_SECRET;
-  if (!clientId || clientId.length === 0) {
-    throw new Error('Missing FACEBOOK_CLIENT_ID');
-  }
-
-  if (!clientSecret || clientSecret.length === 0) {
-    throw new Error('Missing FACEBOOK_CLIENT_SECRET');
-  }
-
-  return { clientId, clientSecret };
-}
-
-// // Apple providers
-// function getAppleCredentials(): { clientId: string; clientSecret: string } {
-//   const clientId = process.env.APPLE_ID;
-//   const clientSecret = process.env.APPLE_SECRET;
-//   if (!clientId || clientId.length === 0) {
-//     throw new Error('Missing APPLE_ID');
-//   }
-
-//   if (!clientSecret || clientSecret.length === 0) {
-//     throw new Error('Missing APPLE_SECRET');
-//   }
-
-//   return { clientId, clientSecret };
-// }
-
-// Twitter providers
-function getTwitterCredentials(): { clientId: string; clientSecret: string } {
-  const clientId = process.env.TWITTER_CLIENT_ID;
-  const clientSecret = process.env.TWITTER_CLIENT_SECRET;
-  if (!clientId || clientId.length === 0) {
-    throw new Error('Missing TWITTER_CLIENT_ID');
-  }
-
-  if (!clientSecret || clientSecret.length === 0) {
-    throw new Error('Missing TWITTER_CLIENT_SECRET');
   }
 
   return { clientId, clientSecret };
@@ -101,18 +53,6 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: getGoogleCredentials().clientId,
       clientSecret: getGoogleCredentials().clientSecret,
-    }),
-    FacebookProvider({
-      clientId: getFacebookCredentials().clientId,
-      clientSecret: getFacebookCredentials().clientSecret,
-    }),
-    // AppleProvider({
-    //   clientId: getAppleCredentials().clientId,
-    //   clientSecret: getAppleCredentials().clientSecret,
-    // }),
-    TwitterProvider({
-      clientId: getTwitterCredentials().clientId,
-      clientSecret: getTwitterCredentials().clientSecret,
     }),
   ],
   callbacks: {
