@@ -1,29 +1,17 @@
-import { MongoClient } from 'mongodb';
+import clientPromise from '@/app/lib/mongodb';
 import bcrypt from 'bcrypt';
 
-// TEST IMPLEMENTATION
 export async function POST(req: Request) {
-  console.log('Received request to the registration endpoint');
-
-  if (req.method !== 'POST') {
-    console.log('Request method is not POST');
-    return new Response(JSON.stringify({ message: 'Method not allowed' }), { status: 405 });
-  }
-
   const data = await req.json();
   const { email, password } = data;
-  console.log(`Received email: ${email}`);
 
+  // basic validation
   if (!email || !password || !email.includes('@') || password.trim().length < 7) {
     return new Response(JSON.stringify({ message: 'Invalid input' }), { status: 422 });
   }
 
-  let client;
   try {
-    if (!process.env.MONGODB_URI) {
-      throw new Error('MongoDB URI not set in environment variables');
-    }
-    client = await MongoClient.connect(process.env.MONGODB_URI);
+    const client = await clientPromise;
     const db = client.db();
 
     const existingUser = await db.collection('users').findOne({ email });
@@ -31,21 +19,18 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ message: 'User already exists' }), { status: 422 });
     }
 
+    // hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
+
+    // insert the new user into the db
     await db.collection('users').insertOne({
       email,
       password: hashedPassword,
     });
 
-    console.log('User created successfully');
     return new Response(JSON.stringify({ message: 'User created' }), { status: 201 });
   } catch (error: any) {
     console.error('Error during registration process:', error);
-    const errorMessage = typeof error === 'string' ? error : error.message;
-    return new Response(JSON.stringify({ message: 'Something went wrong', error: errorMessage }), { status: 500 });
-  } finally {
-    if (client) {
-      await client.close();
-    }
+    return new Response(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
   }
 }

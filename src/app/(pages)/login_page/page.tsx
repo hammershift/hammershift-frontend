@@ -60,42 +60,6 @@ const CreateAccount = () => {
     }
   };
 
-  // for Facebook signin
-  const handleFacebookSignIn = async (provider: string) => {
-    try {
-      const result = await signIn(provider, { callbackUrl: '/' });
-      if (result?.url) {
-        window.location.href = result.url;
-      }
-    } catch (error) {
-      console.error(`Error during ${provider} sign in:`, error);
-    }
-  };
-
-  // for Apple signin
-  const handleAppleSignIn = async (provider: string) => {
-    try {
-      const result = await signIn(provider, { callbackUrl: '/' });
-      if (result?.url) {
-        window.location.href = result.url;
-      }
-    } catch (error) {
-      console.error(`Error during ${provider} sign in:`, error);
-    }
-  };
-
-  // for Twitter signin
-  const handleTwitterSignIn = async (provider: string) => {
-    try {
-      const result = await signIn(provider, { callbackUrl: '/' });
-      if (result?.url) {
-        window.location.href = result.url;
-      }
-    } catch (error) {
-      console.error(`Error during ${provider} sign in:`, error);
-    }
-  };
-
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {createAccountPage === 'sign in' && (
@@ -151,13 +115,13 @@ const CreateAccount = () => {
             <div onClick={() => handleGoogleSignIn('google')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div onClick={() => handleFacebookSignIn('facebook')} className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+            <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div onClick={() => handleAppleSignIn('apple')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+            <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div onClick={() => handleTwitterSignIn('twitter')} className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+            <div className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
             </div>
           </div>
