@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,7 +13,7 @@ import Onfido from '../../../../public/images/onfido.svg';
 import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -24,6 +24,13 @@ const CreateAccount = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      console.log('Logged in userID:', session.user.id);
+    }
+  }, [session]);
 
   const handleSignIn = async () => {
     try {
@@ -40,6 +47,7 @@ const CreateAccount = () => {
         setError(result.error);
       } else {
         console.log('Login successful');
+        console.log('Logged in userID:', session?.user.id);
         router.push('/');
       }
     } catch (error) {
