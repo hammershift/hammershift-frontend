@@ -1,5 +1,6 @@
 import clientPromise from '@/app/lib/mongodb';
 import bcrypt from 'bcrypt';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const data = await req.json();
@@ -7,7 +8,7 @@ export async function POST(req: Request) {
 
   // basic validation
   if (!email || !password || !email.includes('@') || password.trim().length < 7) {
-    return new Response(JSON.stringify({ message: 'Invalid input' }), { status: 422 });
+    return NextResponse.json({ message: 'Invalid input' }, { status: 422 });
   }
 
   try {
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
 
     const existingUser = await db.collection('users').findOne({ email });
     if (existingUser) {
-      return new Response(JSON.stringify({ message: 'User already exists' }), { status: 422 });
+      return NextResponse.json({ message: 'User already exists' }, { status: 422 });
     }
 
     // hash the password
@@ -28,9 +29,9 @@ export async function POST(req: Request) {
       password: hashedPassword,
     });
 
-    return new Response(JSON.stringify({ message: 'User created' }), { status: 201 });
+    return NextResponse.json({ message: 'User created' }, { status: 201 });
   } catch (error: any) {
     console.error('Error during registration process:', error);
-    return new Response(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
+    return NextResponse.json({ message: 'Invalid server error' }, { status: 500 });
   }
 }
