@@ -150,15 +150,7 @@ export default Card
 
 
 
-interface GamesCardProps {
-    make: string,
-    year: string
-    model: string,
-    description: string[],
-    img: string,
-    price: number,
 
-}
 
 export const GamesCard = (props: any) => {
     const router = useRouter()
