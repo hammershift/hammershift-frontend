@@ -1,28 +1,68 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CarDesign from "../../../public/images/car-design.svg";
 import Image from "next/image";
 
 const Subscribe = () => {
   const [newEmail, setNewEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailList, setEmailList] = useState<string[]>([]);
+
+  const fetchEmails = async () => {
+    try {
+      const response = await fetch("api/emails", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("data: ", data.emails);
+        setEmailList(data.emails);
+      } else {
+        console.error("Failed to fetch email list!");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmails();
+  }, []);
 
   const handleSubscribeButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+
+    if (!newEmail || !/\S+@\S+\.\S+/.test(newEmail)) {
+      console.log("Please input a valid email");
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+
     try {
-      const response = await fetch("api/emails", {
+      const response = await fetch("/api/emails", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: newEmail }),
       });
 
-      if (response.ok) {
-        console.log("Subscription successful!");
-        setNewEmail("");
-      } else {
+      const data = await response.json();
+
+      if (!response.ok) {
         console.error("Subscription failed!");
+      } else if (data.message === "Email already subscribed!") {
+        console.log("Email already subscribed!", data);
+        setEmailError(true);
+      } else {
+        console.log("Subscription successful!");
+        console.log(data);
+        setEmailError(false);
+        setNewEmail("");
       }
     } catch (err) {
       console.error(err);
@@ -43,10 +83,18 @@ const Subscribe = () => {
             </p>
             <div className="tw-flex tw-flex-col sm:tw-flex-row tw-w-auto">
               <input
-                placeholder="Email Address"
+                placeholder={
+                  emailError ? "Please input a valid email" : "Email Address"
+                }
                 value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                className="tw-px-6 tw-py-4 tw-grow tw-rounded tw-font-bold"
+                onChange={(e) => {
+                  setNewEmail(e.target.value);
+                  setEmailError(false);
+                }}
+                className={"tw-px-6 tw-py-4 tw-grow tw-rounded tw-font-bold"}
+                style={{
+                  color: emailError ? "#F44336" : "#000000",
+                }}
               />
               <button
                 onClick={handleSubscribeButtonClick}
