@@ -14,10 +14,24 @@ import CancelIcon from '../../../public/images/x-icon.svg'
 import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 
 
+const filtersInitialState = {
+    make: ["BMW"],
+    category: ["Crossovers"],
+    era: ["2010s"],
+    location: ["Alaska"]
+}
+export type filtersProps = {
+    make: string[],
+    category: string[],
+    era: string[],
+    location: string[]
+}
+
 type DropdownMenuProps = null | "Make" | "Era" | "Category" | "Location" | "Sort";
 
-const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
+const FiltersAndSort = () => {
 
+    const [filters, setFilters] = useState(filtersInitialState)
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false)
     const [dropdownMenuRegular, setDropdownMenuRegular] = useState<DropdownMenuProps>(null);
@@ -31,7 +45,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
             <div className='left-container-marker tw-flex tw-items-center'>
                 <div>Live Games <span className='tw-opacity-50'> 100</span></div>
                 <div className='tw-hidden xl:tw-flex'>
-                    {/* TODO:  Filter Dropdown for regular screens*/}
+                    {/* Filter Dropdown for regular screens*/}
                     {/* Dropdown for Make filter*/}
                     <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
@@ -40,9 +54,11 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
-                        {dropdownMenuRegular === "Make" &&
-                            <MakeDropdown dropdownMenuRegular={dropdownMenuRegular} />
-                        }
+                        <div onBlur={() => setDropdownMenuRegular(null)}>
+                            {dropdownMenuRegular === "Make" &&
+                                <MakeDropdown filters={filters} />
+                            }
+                        </div>
                     </div>
                     {/* Dropdown for Category filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
@@ -53,7 +69,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                             </button>
                         </div>
                         {dropdownMenuRegular === "Category" &&
-                            <CategoryDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                            <CategoryDropdown filters={filters} />
                         }
                     </div>
                     {/* Dropdown for Era filter*/}
@@ -65,7 +81,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                             </button>
                         </div>
                         {dropdownMenuRegular === "Era" &&
-                            <EraDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                            <EraDropdown filters={filters} />
 
                         }
                     </div>
@@ -78,7 +94,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                             </button>
                         </div>
                         {dropdownMenuRegular === "Location" &&
-                            <LocationDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                            <LocationDropdown filters={filters} />
                         }
                     </div>
                 </div>
@@ -134,7 +150,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                         </button>
                         {dropdownMenuSmall === "Make" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
-                                <MakeContent columns={1} />
+                                <MakeContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for CATEGORY */}
@@ -144,7 +160,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                         </button>
                         {dropdownMenuSmall === "Category" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
-                                <CategoryContent columns={1} />
+                                <CategoryContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for ERA */}
@@ -154,7 +170,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                         </button>
                         {dropdownMenuSmall === "Era" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
-                                <EraContent columns={1} />
+                                <EraContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for LOCATION */}
@@ -164,7 +180,7 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
                         </button>
                         {dropdownMenuSmall === "Location" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto" >
-                                <LocationContent columns={1} />
+                                <LocationContent columns={1} filters={filters} />
                             </div>
                         }
                     </div>
@@ -190,49 +206,59 @@ const FiltersAndSort = (filters: getCarsWithFilterProps, setFilters: any) => {
 export default FiltersAndSort
 
 
+
+interface MakeDropdownProps {
+    dropdownMenuRegular: DropdownMenuProps;
+    setName: React.Dispatch<React.SetStateAction<string>>;
+}
+
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
 
 // TODO:
-const MakeDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
+const MakeDropdown = ({ filters }: { filters: filtersProps }) => {
     return (
-
-        <div>
-            {dropdownMenuRegular === "Make" &&
-
-                <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
-                    <div className="tw-p-4" role="none">
-                        <div className='tw-flex tw-items-center tw-bg-white/5 tw-rounded tw-py-2 tw-px-3'>
-                            <Image src={MagnifyingGlass} width={20} height={20} alt='dropdown arrow' className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
-                            <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
-                        </div>
-                        <div className='tw-mt-2 tw-h-[280px] tw-overflow-y-auto'>
-                            <MakeContent columns={3} />
-                        </div>
+        <>
+            <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
+                <div className="tw-p-4" role="none">
+                    <div className='tw-flex tw-items-center tw-bg-white/5 tw-rounded tw-py-2 tw-px-3'>
+                        <Image src={MagnifyingGlass} width={20} height={20} alt='dropdown arrow' className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
+                        <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
+                    </div>
+                    <div className='tw-mt-2 tw-h-[280px] tw-overflow-y-auto'>
+                        <MakeContent columns={3} filters={filters} />
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+
+        </>
     )
 }
 
 interface MakeContentProps {
     columns: number;
+    filters: filtersProps
 }
-const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
+const MakeContent: React.FC<MakeContentProps> = ({ columns, filters }) => {
+    const addToFilters = (value: string) => {
+
+
+    }
     return (
         <div className={` tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
-
             {
-                MakeDropdownContent.map((item) => {
-                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" />
+                MakeDropdownContent.map((value) => (
+                    <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value} >
+                        <input type='checkbox' className={`tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""}`} />
+                        {
+                            filters['make'].includes(value) &&
 
-                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                        </div>
-                        <label className='tw-pl-3'>{item}</label><br />
+                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                            </div>
+                        }
+                        <label className='tw-pl-3'>{value}</label><br />
                     </div>
-                })
+                ))
             }
         </div>
     )
@@ -242,19 +268,15 @@ const MakeContent: React.FC<MakeContentProps> = ({ columns }) => {
 
 const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans", "Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
 
-const CategoryDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
+const CategoryDropdown = ({ filters }: { filters: filtersProps }) => {
 
     return (
-        <div>
-            {dropdownMenuRegular === "Category" &&
+        <>
 
-                <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                    <CategoryContent columns={2} />
-                </div>
-            }
-
-
-        </div>
+            <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                <CategoryContent columns={2} filters={filters} />
+            </div>
+        </>
 
 
     )
@@ -262,22 +284,26 @@ const CategoryDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: Dropdo
 
 interface CategoryContentProps {
     columns: number;
+    filters: filtersProps
 }
 
-const CategoryContent: React.FC<CategoryContentProps> = ({ columns }) => {
+const CategoryContent: React.FC<CategoryContentProps> = ({ columns, filters }) => {
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
-                CategoryDropdownContent.map((item) => {
-                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+                CategoryDropdownContent.map((value) => (
+                    <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
+                        <input type='checkbox' className={`tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity ${filters['category'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""}} `} />
+                        {
+                            filters['category'].includes(value) &&
 
-                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                        </div>
-                        <label className='tw-pl-3'>{item}</label><br />
+                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                            </div>
+                        }
+                        <label className='tw-pl-3'>{value}</label><br />
                     </div>
-                })
+                ))
             }
         </div>
     )
@@ -286,37 +312,41 @@ const CategoryContent: React.FC<CategoryContentProps> = ({ columns }) => {
 
 const EraDropdownContent = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
 
-const EraDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
+const EraDropdown = ({ filters }: { filters: filtersProps }) => {
 
     return (
 
         <div>
-            {dropdownMenuRegular &&
-
-                <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                    <EraContent columns={2} />
-                </div>
-            }
+            <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
+                <EraContent columns={2} filters={filters} />
+            </div>
         </div>
     )
 }
 
 interface EraContentProps {
     columns: number;
+    filters: filtersProps
 }
 
-const EraContent: React.FC<EraContentProps> = ({ columns }) => {
+const EraContent: React.FC<EraContentProps> = ({ columns, filters }) => {
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
-                EraDropdownContent.map((item) => {
-                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" value="All" />
+                EraDropdownContent.map((value) => {
+                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
+                        <input type='checkbox' className={`tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity ${filters['era'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""}`} />
 
-                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                        </div>
-                        <label className='tw-pl-3'>{item}</label><br />
+
+
+                        {
+                            filters['era'].includes(value) &&
+
+                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                            </div>
+                        }
+                        <label className='tw-pl-3'>{value}</label><br />
                     </div>
                 })
             }
@@ -326,34 +356,37 @@ const EraContent: React.FC<EraContentProps> = ({ columns }) => {
 
 const LocationDropdownContent = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
 
-const LocationDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
+const LocationDropdown = ({ filters }: { filters: filtersProps }) => {
     return (
         <div>
-            {dropdownMenuRegular &&
-                <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
-                    <LocationContent columns={2} />
-                </div>
-            }
+            <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
+                <LocationContent columns={2} filters={filters} />
+            </div>
         </div>
     )
 }
 
 interface LocationContentProps {
     columns: number;
+    filters: filtersProps
 }
 
-const LocationContent: React.FC<LocationContentProps> = ({ columns }) => {
+const LocationContent: React.FC<LocationContentProps> = ({ columns, filters }) => {
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
-                LocationDropdownContent.map((item) => {
-                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={item}>
-                        <input type='checkbox' className="tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]" />
+                LocationDropdownContent.map((value) => {
+                    return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
+                        <input type='checkbox' className={`tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity ${filters['location'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""}`} />
 
-                        <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100">
-                            <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                        </div>
-                        <label className='tw-pl-3'>{item}</label><br />
+                        {
+                            filters['location'].includes(value) &&
+
+                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                            </div>
+                        }
+                        <label className='tw-pl-3'>{value}</label><br />
                     </div>
                 })
             }

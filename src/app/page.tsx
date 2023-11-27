@@ -1,11 +1,11 @@
 "use client"
 import "./styles/app.css";
 import React, { useState } from 'react'
-import Card from '../app/components/card'
-import HowHammerShiftWorks from '../app/components/how_hammeshift_works'
-import { TournamentsCard } from '../app/components/card'
-import Footer from '../app/components/footer'
-import Subscribe from '../app/components/subscribe'
+import Card from './_components/card'
+import HowHammerShiftWorks from './_components/how_hammeshift_works'
+import { TournamentsCard } from './_components/card'
+import Footer from './_components/footer'
+import Subscribe from './_components/subscribe'
 import { carData } from '@/sample_data'
 import Image from 'next/image'
 

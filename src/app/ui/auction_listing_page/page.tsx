@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Suspense } from 'react'
 import { getCars } from '@/app/lib/data'
-import { GamesCard } from '../../components/card'
+import { GamesCard } from '../../_components/card'
 import MagnifyingGlass from '../../../../public/images/magnifying-glass.svg'
 import { getCarsWithFilter } from '@/app/lib/data'
-import FiltersAndSort from '@/app/components/filter_and_sort'
+import FiltersAndSort from '@/app/_components/filter_and_sort'
 
 
 export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: any, carsCount: number }) => {
@@ -26,7 +26,13 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
     //adds 21 to loadMore when button is clicked
     const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
-        if (!loading) setLoadMore((prev) => prev + 21);
+        if (!loading) {
+            if (listing.length > totalAuctions - 21) {
+                setLoadMore((prev) => totalAuctions);
+            } else {
+                setLoadMore((prev) => prev + 21)
+            }
+        };
     }
 
     //updates listing if loadMore changes
@@ -43,7 +49,7 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
 
     return (
         <>
-            <FiltersAndSort filters={filters} setFilters={setFilters} />
+            <FiltersAndSort />
             <div className='tw-pb-16 '>
                 <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                     <div className=' tw-w-full 2xl:tw-w-[1312px] '>

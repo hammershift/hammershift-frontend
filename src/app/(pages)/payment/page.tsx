@@ -3,7 +3,7 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import CountryOptions from '../../components/country_option'
+import CountryOptions from '../../_components/country_option'
 
 import CancelIcon from '../../../../public/images/x-icon.svg'
 import AmexLogo from '../../../../public/images/payments-logo/amex.svg'

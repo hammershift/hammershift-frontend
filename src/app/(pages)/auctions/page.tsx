@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
-import FiltersAndSort from "@/app/components/filter_and_sort"
+import FiltersAndSort from "@/app/_components/filter_and_sort"
 import { getCars, getCarsCount } from "@/app/lib/data"
-import { GamesCard } from "@/app/components/card"
+import { GamesCard } from "@/app/_components/card"
 import { AuctionListing } from '@/app/ui/auction_listing_page/page';
 
 const AuctionListingPage = async () => {
