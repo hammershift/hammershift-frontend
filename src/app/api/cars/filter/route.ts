@@ -143,7 +143,7 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
-    const limit = Number(req.nextUrl.searchParams.get('limit')) || 12;
+    const limit = Number(req.nextUrl.searchParams.get('limit')) || 21;
     const searchedKeyword = req.nextUrl.searchParams.get('search');
     let completed = req.nextUrl.searchParams.get('completed') || [1, 2];
     let era: string | string[] = req.nextUrl.searchParams.get('era') || "All";
@@ -161,7 +161,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // SEARCH is NOT used in combination with other filters EXCEPT completed filter (completed=true = status: 2 and vice versa)
+    // SEARCH is NOT used in combination with other filters EXCEPT completed filter (completed=true === status: 2 and vice versa)
     //api/cars/filter?search=911 Coupe or api/cars/filter?search=911%20Coupe
     //api/cars/filter?search=911%20Coupe&completed=true
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
