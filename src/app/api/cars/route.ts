@@ -5,9 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   try {
     await connectToDB();
-    const auction_id = req.nextUrl.searchParams.get('auction_id');
-    const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
-    const limit = Number(req.nextUrl.searchParams.get('limit')) || 12;
+    const auction_id = req.nextUrl.searchParams.get("auction_id");
+    const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
+    const limit = Number(req.nextUrl.searchParams.get("limit")) || 12;
 
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
@@ -17,8 +17,7 @@ export async function GET(req: NextRequest) {
     // api/cars to get all cars
     const cars = await Cars.find().limit(limit).skip(offset);
     return NextResponse.json(cars);
-
   } catch (error) {
-    return NextResponse.json({ message: 'Internal server error' })
+    return NextResponse.json({ message: "Internal server error" });
   }
 }

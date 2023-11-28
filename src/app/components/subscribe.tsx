@@ -32,6 +32,10 @@ const Subscribe = () => {
     fetchEmails();
   }, []);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewEmail(e.target.value);
+  };
+
   const handleSubscribeButtonClick = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -87,10 +91,7 @@ const Subscribe = () => {
                   emailError ? "Please input a valid email" : "Email Address"
                 }
                 value={newEmail}
-                onChange={(e) => {
-                  setNewEmail(e.target.value);
-                  setEmailError(false);
-                }}
+                onChange={handleChange}
                 className={"tw-px-6 tw-py-4 tw-grow tw-rounded tw-font-bold"}
                 style={{
                   color: emailError ? "#F44336" : "#000000",
