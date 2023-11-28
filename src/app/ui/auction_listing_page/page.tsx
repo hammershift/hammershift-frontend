@@ -21,7 +21,6 @@ const filtersInitialState = {
 
 export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: any, carsCount: number }) => {
     const [filters, setFilters] = useState(filtersInitialState)
-    const [hasFilters, setHasFilters] = useState(false);
     const [loadMore, setLoadMore] = useState(21)
     const [listing, setListing] = useState(Array());
     const [loading, setLoading] = useState(false);
@@ -45,28 +44,19 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
         };
     }
 
-    //if filters are changed, set hasFilters to true
-    useEffect(() => {
-        if (filters !== filtersInitialState) {
-            setHasFilters(true)
-        } else {
-            setHasFilters(false)
-        }
-    }, [filters])
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
         setLoadMore(21)
     }, [filters])
 
+    //if filters are changed, fetch new data
     useEffect(() => {
-
         const filterWithLimit = { ...filters, limit: loadMore }
         getCarsWithFilter(filterWithLimit).then((res) => {
             setTotalAuctions(res.total);
             setListing(res.cars);
         })
-
     }, [filters, loadMore])
 
 

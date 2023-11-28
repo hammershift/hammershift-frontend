@@ -68,7 +68,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .join('&');
 
-    return fetch(URL + `api/cars/filter?` + queries, {
+    return fetch(URL + `api/cars/filter?status=1&` + queries, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())

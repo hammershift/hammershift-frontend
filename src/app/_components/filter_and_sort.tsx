@@ -268,27 +268,6 @@ interface FiltersContentProps {
     setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
 const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-    // const addToFilters = (value: string) => {
-    //     setFilters(prevFilters => {
-    //         if (prevFilters.make.includes(value)) {
-    //             return {
-    //                 ...prevFilters,
-    //                 make: prevFilters.make.filter(item => item !== value)
-    //             };
-    //         } else {
-    //             let newFilters = [...prevFilters.make];
-    //             const allIndex = newFilters.indexOf("All");
-    //             if (allIndex > -1) {
-    //                 newFilters.splice(allIndex, 1);
-    //             }
-    //             newFilters.push(value);
-    //             return {
-    //                 ...prevFilters,
-    //                 make: newFilters
-    //             };
-    //         }
-    //     });
-    // }
 
     return (
         <div className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
@@ -323,7 +302,6 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 
     return (
         <>
-
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
                 <CategoryContent columns={2} filters={filters} setFilters={setFilters} />
             </div>
@@ -375,10 +353,6 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =>
     )
 }
 
-interface EraContentProps {
-    columns: number;
-    filters: filtersProps
-}
 
 const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
     return (
@@ -416,11 +390,6 @@ const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
             </div>
         </div>
     )
-}
-
-interface LocationContentProps {
-    columns: number;
-    filters: filtersProps
 }
 
 const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
