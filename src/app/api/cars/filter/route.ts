@@ -143,7 +143,7 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
-    const limit = Number(req.nextUrl.searchParams.get('limit')) || 21;
+    const limit = Number(req.nextUrl.searchParams.get('limit'));
     const searchedKeyword = req.nextUrl.searchParams.get('search');
     let completed = req.nextUrl.searchParams.get('completed') || [1, 2];
     let era: string | string[] = req.nextUrl.searchParams.get('era') || "All";

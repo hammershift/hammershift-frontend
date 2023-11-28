@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     await connectToDB();
     const auction_id = req.nextUrl.searchParams.get('auction_id');
     const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
-    const limit = Number(req.nextUrl.searchParams.get('limit')) || 21;
+    const limit = Number(req.nextUrl.searchParams.get('limit'));
 
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
