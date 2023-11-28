@@ -15,10 +15,10 @@ import MagnifyingGlass from '../../../public/images/magnifying-glass.svg'
 
 
 const filtersInitialState = {
-    make: ["BMW"],
-    category: ["Crossovers"],
-    era: ["2010s"],
-    location: ["Alaska"]
+    make: ["All"],
+    category: ["All"],
+    era: ["All"],
+    location: ["All"]
 }
 export type filtersProps = {
     make: string[],
@@ -259,7 +259,7 @@ const MakeContent: React.FC<MakeContentProps> = ({ columns, filters, setFilters 
                         <div onClick={() => addToFilters(value)}>
                             <input
                                 type='checkbox'
-                                className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity `} />
+                                className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
                                 filters['make'].includes(value) &&
 
