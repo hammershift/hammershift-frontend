@@ -47,11 +47,11 @@ export function getCarsCount() {
 }
 
 export interface getCarsWithFilterProps {
-    make?: string | string[],
-    category?: string | string[],
-    era?: string | string[],
-    location?: string | string[],
-    limit: number
+    make?: string[],
+    category?: string[],
+    era?: string[],
+    location?: string[],
+    limit?: number
 }
 
 export function getCarsWithFilter(props: getCarsWithFilterProps) {

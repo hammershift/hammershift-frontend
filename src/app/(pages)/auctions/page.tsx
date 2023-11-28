@@ -10,7 +10,7 @@ const AuctionListingPage = async () => {
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
 
-            <AuctionListing defaultListing={listCarData} carsCount={carsCount} />
+            <AuctionListing defaultListing={listCarData.cars} carsCount={listCarData.total} />
         </div>
     )
 }

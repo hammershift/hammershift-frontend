@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Image from 'next/image'
 import { Suspense } from 'react'
 import { getCars } from '@/app/lib/data'
@@ -9,9 +9,19 @@ import MagnifyingGlass from '../../../../public/images/magnifying-glass.svg'
 import { getCarsWithFilter } from '@/app/lib/data'
 import FiltersAndSort from '@/app/_components/filter_and_sort'
 
+const filtersInitialState = {
+    make: ["All"],
+    category: ["All"],
+    era: ["All"],
+    location: ["All"]
+}
+
+
+
 
 export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: any, carsCount: number }) => {
-    const [filters, setFilters] = useState({})
+    const [filters, setFilters] = useState(filtersInitialState)
+    const [hasFilters, setHasFilters] = useState(false);
     const [loadMore, setLoadMore] = useState(21)
     const [listing, setListing] = useState(Array());
     const [loading, setLoading] = useState(false);
@@ -35,21 +45,34 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
         };
     }
 
-    //updates listing if loadMore changes
+    //if filters are changed, set hasFilters to true
     useEffect(() => {
-        setLoading(true);
-        getCars({ limit: loadMore })
-            .then((data) => {
-                setLoading(false)
-                setListing((prev) => data)
-            })
-    }, [loadMore])
+        if (filters !== filtersInitialState) {
+            setHasFilters(true)
+        } else {
+            setHasFilters(false)
+        }
+    }, [filters])
 
-    // getCarsWithFilter({ location: ["New York", "North Carolina"], limit: 21 }).then((res) => console.log(res))
+    //if filters are changed, reset loadMore to 21
+    useEffect(() => {
+        setLoadMore(21)
+    }, [filters])
+
+    useEffect(() => {
+
+        const filterWithLimit = { ...filters, limit: loadMore }
+        getCarsWithFilter(filterWithLimit).then((res) => {
+            setTotalAuctions(res.total);
+            setListing(res.cars);
+        })
+
+    }, [filters, loadMore])
+
 
     return (
         <>
-            <FiltersAndSort />
+            <FiltersAndSort filters={filters} setFilters={setFilters} />
             <div className='tw-pb-16 '>
                 <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                     <div className=' tw-w-full 2xl:tw-w-[1312px] '>
