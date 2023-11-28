@@ -19,7 +19,8 @@ export type filtersProps = {
     make: string[],
     category: string[],
     era: string[],
-    location: string[]
+    location: string[],
+    sort: string
 }
 
 interface FiltersAndSortProps {
@@ -107,7 +108,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                 <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
                 <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
                 {/* Dropdown for Sort*/}
-                <div className="tw-relative tw-text-left tw-mx-2" onBlur={() => setDropdownMenuRegular(null)}>
+                <div className="tw-relative tw-text-left tw-mx-2">
                     <div>
                         <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
                             Sort by:
@@ -115,7 +116,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                         </button>
                     </div>
                     {dropdownMenuRegular === "Sort" &&
-                        <SortDropdown dropdownMenuRegular={dropdownMenuRegular} />
+                        <SortDropdown filters={filters} setFilters={setFilters} />
                     }
                 </div>
             </div>
@@ -200,7 +201,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                             <Image src={CancelIcon} width={24} height={24} alt="magnifying glass" className="tw-w-6 tw-h-6" />
                         </button>
                     </div>
-                    <SortContent />
+                    <SortContent filters={filters} setFilters={setFilters} />
                 </div>
             }
         </div>
@@ -263,7 +264,7 @@ const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =
 }
 
 interface FiltersContentProps {
-    columns: number;
+    columns?: number;
     filters: filtersProps;
     setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
@@ -419,35 +420,39 @@ const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
 }
 
 
-const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
 
 
-const SortDropdown = ({ dropdownMenuRegular }: { dropdownMenuRegular: DropdownMenuProps }) => {
+const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
 
     return (
-        <div>
-            {dropdownMenuRegular &&
-                <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
-                    <div className='tw-p-4'>
-                        <SortContent />
-                    </div>
+        <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
+            <div className='tw-p-4'>
+                <SortContent filters={filters} setFilters={setFilters} />
+            </div>
 
-                </div>
-            }
         </div>
     )
 }
 
-const SortContent = () => {
+const SortContent: React.FC<FiltersContentProps> = ({ filters, setFilters }) => {
+    const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
+
+    const addSort = (value: string) => {
+        setFilters({
+            ...filters,
+            ['sort']: value
+        });
+    }
+
     return (
-        <div >
+        <>
             {
-                SortList.map((item) => {
-                    return <div className='hover:tw-bg-white/5 tw-rounded tw-p-2 ' key={item}>
-                        <button className=''>{item}</button>
+                SortList.map((value) => {
+                    return <div className={`${filters['sort'] === value ? "tw-bg-white/10" : ""} hover:tw-bg-white/5 tw-rounded tw-p-2 `} key={value}>
+                        <button onClick={() => addSort(value)}>{value}</button>
                     </div>
                 })
             }
-        </div>
+        </>
     )
 }

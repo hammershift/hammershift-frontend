@@ -13,8 +13,10 @@ const filtersInitialState = {
     make: ["All"],
     category: ["All"],
     era: ["All"],
-    location: ["All"]
+    location: ["All"],
+    sort: "Newly Listed"
 }
+
 
 
 
