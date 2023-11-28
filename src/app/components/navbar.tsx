@@ -41,14 +41,31 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false)
     const [navDropdownMenu, setNavDropdownMenu] = useState<NavbarDropdownMenuProps>(null)
 
-    window.onclick = () => {
-        setSearchBoxDropDown(false);
-    }
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const searchBox = document.getElementById('search-box');
+            const searchBar = document.getElementById('search-bar-input'); 
+    
+            if (searchBox && !searchBox.contains(e.target as Node) && searchBar && !searchBar.contains(e.target as Node)) {
+            setSearchBoxDropDown(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+
+        }, [setSearchBoxDropDown]);
+
 
     const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
         const data = await response.json()
+        console.log(data);
+        
         setSearchedData(data)
         setSearchBoxDropDown(false);
         router.push('/auction_listing_page')
@@ -58,23 +75,35 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
         setSearchKeyword(e.target.value)
         const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
         const data = await response.json()
-        console.log(data);
-        
-        if(data.length === 0){
-            setSearchBoxDropDown(false);
-        } else {
+
+        if(data.length !== 0){
             setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
         }
         setSearchedData(data)
+    }
+
+    const handleInputClick = () => {
+        if(searchedData.length !== 0) {
+            setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
+        }
     }
 
     const handleSearchClick = async (carMake: string, carModel: string) => {
         router.push('/auction_listing_page');
         const searchInput = document.getElementById("search-bar-input") as HTMLInputElement;
+        const dropdownSearchInput = document.getElementById("dropdown-search-bar") as HTMLInputElement;
         if (searchInput) {
             searchInput.value = `${carMake} ${carModel}`;
         }
+        if(dropdownSearchInput) {
+            dropdownSearchInput.value = `${carMake} ${carModel}`;
+        }
         setSearchBoxDropDown(false);
+        // setMenuIsOpen(false)
     }
 
     return (
@@ -105,6 +134,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                                         type="text"
                                         className="tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none"
                                         placeholder="Search make, model, year..."
+                                        onClick={handleInputClick}
                                         onChange={handleChange}
                                     ></input>
                             </div>
@@ -187,7 +217,16 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
             }
             {
                 menuIsOpen
-                && <DropdownMenu isLoggedIn={isLoggedIn} />
+                && <DropdownMenu 
+                        searchedData={searchedData} 
+                        isLoggedIn={isLoggedIn} 
+                        handleSubmit={handleSumbit} 
+                        handleChange={handleChange} 
+                        onSearchClick={handleSearchClick} 
+                        searchBoxDropDown={searchBoxDropDown}
+                        setSearchBoxDropDown={setSearchBoxDropDown}
+                        handleInputClick={handleInputClick}
+                    />
             }
             {
                 myAccountMenuOpen
@@ -202,17 +241,45 @@ export default Navbar;
 
 interface DropdownMenuProps {
     isLoggedIn: boolean;
+    searchBoxDropDown: boolean;
+    setSearchBoxDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+    searchedData: SearchDatas[];
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSearchClick: (carMake: string, carModel: string) => void;
+    handleInputClick: () => void;
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn, searchedData, handleSubmit, handleChange, onSearchClick, searchBoxDropDown, setSearchBoxDropDown, handleInputClick }) => {
+    const onclck = () => {
+        if(searchedData.length !== 0) {
+            setSearchBoxDropDown(true)
+        }
+    }
+
+    console.log(searchBoxDropDown);
+    
+    
     return (
-        <div className="slide-in-top tw-fixed tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
-            <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
+        <div className="slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+            <div className="tw-relative">
+            <form autoComplete="off" onSubmit={handleSubmit} className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
                 <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
                 <input
-                    className="tw-ml-2 tw-bg-shade-100 "
+                    id="dropdown-search-bar"
+                    className="tw-ml-2 tw-bg-shade-100 tw-outline-none"
                     placeholder="Search make, model, year..."
+                    name="search"
+                    type="text"
+                    onChange={handleChange}
+                    onClick={() => {
+                        setSearchBoxDropDown(true)
+                        console.log(searchBoxDropDown);
+                        
+                    }}
                 ></input>
+            </form>
+            {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={onSearchClick} />}
             </div>
             <div className="tw-flex tw-pt-4">
                 <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
@@ -236,6 +303,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
 
 interface MyAccountMenuProps {
     isLoggedIn: boolean;
+    
 }
 
 const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
@@ -608,7 +676,7 @@ const MyAccountDropdownMenu = () => {
 const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchClick }) => {
 
     return (
-        <div className="tw-absolute tw-left-0 tw-right-0 tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]">
+        <div id="search-box" className="tw-bg-shade-100 tw-absolute tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]">
             {searchedData.map((carData) => {
                 return (
                     <div key={carData.auction_id} onClick={() => onSearchClick(`${carData.make}`, `${carData.model}`)} className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded">{carData.make} {carData.model}</div>
@@ -655,5 +723,5 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
 
     interface SearchDropDownProps {
         searchedData: SearchDatas[];
-        onSearchClick: (carMake: string, carModel: string) => void;
+        onSearchClick?: (carMake: string, carModel: string) => void;
     }
