@@ -135,7 +135,9 @@ const Navbar: React.FC = () => {
             </div>
           </div>
           <div className='tw-flex tw-items-center'>
-            <button className='btn-white  hover:tw-bg-gold-200 tw-hidden md:tw-block '>CREATE ACCOUNT</button>
+            <Link href='/create_account' passHref>
+              <button className='btn-white hover:tw-bg-gold-200 tw-hidden md:tw-block'>CREATE ACCOUNT</button>
+            </Link>{' '}
             <button onClick={() => setMenuIsOpen((prev) => !prev)}>
               {menuIsOpen ? (
                 <Image src={CancelIcon} width={24} height={24} alt='menu' className='md:tw-hidden tw-w-auto tw-h-auto' />
