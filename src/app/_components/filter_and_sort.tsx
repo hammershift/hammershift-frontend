@@ -56,7 +56,7 @@ const FiltersAndSort = () => {
                         </div>
                         <div onBlur={() => setDropdownMenuRegular(null)}>
                             {dropdownMenuRegular === "Make" &&
-                                <MakeDropdown filters={filters} />
+                                <MakeDropdown filters={filters} setFilters={setFilters} />
                             }
                         </div>
                     </div>
@@ -150,7 +150,7 @@ const FiltersAndSort = () => {
                         </button>
                         {dropdownMenuSmall === "Make" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
-                                <MakeContent columns={1} filters={filters} />
+                                <MakeContent columns={1} filters={filters} setFilters={setFilters} />
                             </div>
                         }
                         {/* Dropdown for CATEGORY */}
@@ -208,14 +208,14 @@ export default FiltersAndSort
 
 
 interface MakeDropdownProps {
-    dropdownMenuRegular: DropdownMenuProps;
-    setName: React.Dispatch<React.SetStateAction<string>>;
+    filters: filtersProps;
+    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
 
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
 
 // TODO:
-const MakeDropdown = ({ filters }: { filters: filtersProps }) => {
+const MakeDropdown: React.FC<MakeDropdownProps> = ({ filters, setFilters }) => {
     return (
         <>
             <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
@@ -225,7 +225,7 @@ const MakeDropdown = ({ filters }: { filters: filtersProps }) => {
                         <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
                     </div>
                     <div className='tw-mt-2 tw-h-[280px] tw-overflow-y-auto'>
-                        <MakeContent columns={3} filters={filters} />
+                        <MakeContent columns={3} filters={filters} setFilters={setFilters} />
                     </div>
                 </div>
             </div>
@@ -236,27 +236,39 @@ const MakeDropdown = ({ filters }: { filters: filtersProps }) => {
 
 interface MakeContentProps {
     columns: number;
-    filters: filtersProps
+    filters: filtersProps;
+    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
-const MakeContent: React.FC<MakeContentProps> = ({ columns, filters }) => {
+const MakeContent: React.FC<MakeContentProps> = ({ columns, filters, setFilters }) => {
     const addToFilters = (value: string) => {
-
-
+        setFilters(prevFilters => {
+            if (!filters.make.includes(value)) {
+                return {
+                    ...filters,
+                    make: [...filters.make, value]
+                };
+            }
+            return prevFilters;
+        });
     }
     return (
-        <div className={` tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
+        <div className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
             {
                 MakeDropdownContent.map((value) => (
-                    <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value} >
-                        <input type='checkbox' className={`tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""}`} />
-                        {
-                            filters['make'].includes(value) &&
+                    <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
+                        <div onClick={() => addToFilters(value)}>
+                            <input
+                                type='checkbox'
+                                className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : ""} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity `} />
+                            {
+                                filters['make'].includes(value) &&
 
-                            <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
-                                <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
-                            </div>
-                        }
-                        <label className='tw-pl-3'>{value}</label><br />
+                                <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+                                    <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+                                </div>
+                            }
+                        </div>
+                        <label className='tw-pl-3' >{value}</label><br />
                     </div>
                 ))
             }
