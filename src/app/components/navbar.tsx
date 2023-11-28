@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../public/images/hammershift-logo.svg";
@@ -22,19 +22,61 @@ import RankingStarTop from "../../../public/images/ranking-star-top.svg"
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg"
 import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-photo-two.svg"
 import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-photo-three.svg"
+import { useRouter } from "next/navigation";
 
 
 export interface NavbarProps {
     isLoggedIn: boolean;
 }
 
-type NavbarDropdownMenuProps = null | "My Watchlist" | "My Wagers" | "My Account"
+type NavbarDropdownMenuProps = null | "My Watchlist" | "My Wagers" | "My Account" | "Search"
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
+    const router = useRouter();
     const [menuIsOpen, setMenuIsOpen] = useState(false)
+    const [searchedData, setSearchedData] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [searchBoxDropDown, setSearchBoxDropDown] = useState(false)
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false)
     const [navDropdownMenu, setNavDropdownMenu] = useState<NavbarDropdownMenuProps>(null)
+
+    window.onclick = () => {
+        setSearchBoxDropDown(false);
+    }
+
+    const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+        const data = await response.json()
+        setSearchedData(data)
+        setSearchBoxDropDown(false);
+        router.push('/auction_listing_page')
+    }
+
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchKeyword(e.target.value)
+        const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+        const data = await response.json()
+        console.log(data);
+        
+        if(data.length === 0){
+            setSearchBoxDropDown(false);
+        } else {
+            setSearchBoxDropDown(true);
+        }
+        setSearchedData(data)
+    }
+
+    const handleSearchClick = async (carMake: string, carModel: string) => {
+        router.push('/auction_listing_page');
+        const searchInput = document.getElementById("search-bar-input") as HTMLInputElement;
+        if (searchInput) {
+            searchInput.value = `${carMake} ${carModel}`;
+        }
+        setSearchBoxDropDown(false);
+    }
+
     return (
         <div>
             {isLoggedIn
@@ -53,20 +95,27 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
                         </Link>
                     </div>
-                    <div className="tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12">
-                        <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
-                            <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
-                            <input
-                                className="tw-ml-2 tw-bg-shade-100 tw-w-full "
-                                placeholder="Search make, model, year..."
-                            ></input>
-                        </div>
+                    <div className="tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block">
+                        <form onSubmit={handleSumbit} autoComplete="off" className="tw-w-full tw-flex tw-items-center">
+                            <div className={searchBoxDropDown ? "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t" : "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded"}>
+                                <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+                                    <input
+                                        id="search-bar-input"
+                                        name="search"
+                                        type="text"
+                                        className="tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none"
+                                        placeholder="Search make, model, year..."
+                                        onChange={handleChange}
+                                    ></input>
+                            </div>
+                        </form>
+                        {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
                     </div>
                     {/* Buttons for logged in accounts */}
                     <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
                         <button className="tw-relative" onClick={() => setNavDropdownMenu((prev) => { if (prev === "My Watchlist") return null; else return "My Watchlist" })}>
                             <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
-                            {
+                            {   
                                 navDropdownMenu === "My Watchlist" &&
                                 <MyWatchlistDropdownMenu />
                             }
@@ -530,10 +579,6 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
     )
 }
 
-
-
-
-
 const MyAccountDropdownMenu = () => {
     const account_load = 100;
     return (
@@ -559,3 +604,56 @@ const MyAccountDropdownMenu = () => {
         </div>
     )
 }
+
+const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchClick }) => {
+
+    return (
+        <div className="tw-absolute tw-left-0 tw-right-0 tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]">
+            {searchedData.map((carData) => {
+                return (
+                    <div key={carData.auction_id} onClick={() => onSearchClick(`${carData.make}`, `${carData.model}`)} className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded">{carData.make} {carData.model}</div>
+                )
+            })}
+        </div>
+    )
+}
+
+    interface Image {
+        _id: string;
+        placing: number;
+        src: string;
+    }
+
+    interface SearchDatas {
+        auction_id: string;
+        bids: number;
+        category: string;
+        chassis: string;
+        createdAt: string;
+        deadline: string;
+        description: string[];
+        era: string;
+        images_list: Image[];
+        img: string;
+        listing_details: string[];
+        listing_type: string;
+        location: string;
+        lot_num: string;
+        make: string;
+        model: string;
+        page_url: string;
+        price: string;
+        seller: string;
+        state: string;
+        status: number;
+        updatedAt: string;
+        website: string;
+        year: string;
+        __v: number;
+        _id: string;
+    }
+
+    interface SearchDropDownProps {
+        searchedData: SearchDatas[];
+        onSearchClick: (carMake: string, carModel: string) => void;
+    }
