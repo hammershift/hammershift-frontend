@@ -233,26 +233,54 @@ export async function GET(req: NextRequest) {
     //use "%20" or " " for 2-word queries
     //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
+
+
     const totalCars = await Cars.find({
-      status: { $in: completed },
-      make: { $in: [...make] },
-      era: { $in: [...era] },
-      category: { $in: [...category] },
-      state: { $in: [...location] }
-    })
+      attributes: {
+        $all: [
+          {
+            $elemMatch: {
+              key: "make",
+              value: { $in: [...make] }
+            }
+          },
+          {
+            $elemMatch: {
+              key: "era",
+              value: { $in: [...era] }
+            }
+          },
+          {
+            $elemMatch: {
+              key: "category",
+              value: { $in: [...category] }
+            }
+          },
+          {
+            $elemMatch: {
+              key: "location",
+              value: { $in: [...location] }
+            }
+          },
+        ]
+      }
+    });
 
-    const filteredCars = await Cars.find({
-      status: { $in: completed },
-      make: { $in: [...make] },
-      era: { $in: [...era] },
-      category: { $in: [...category] },
-      state: { $in: [...location] }
-    })
-      .limit(limit)
-      .skip(offset)
-      .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
 
-    return NextResponse.json({ total: totalCars.length, cars: filteredCars });
+
+    // const filteredCars = await Cars.find({
+    //   status: { $in: completed },
+    //   make: { $in: [...make] },
+    //   era: { $in: [...era] },
+    //   category: { $in: [...category] },
+    //   state: { $in: [...location] }
+    // })
+    //   .limit(limit)
+    //   .skip(offset)
+    //   .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
+
+    // return NextResponse.json({ total: totalCars.length, cars: filteredCars });
+    return NextResponse.json({ total: totalCars.length });
 
   } catch (error) {
     console.error(error)
