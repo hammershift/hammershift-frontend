@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,8 +13,7 @@ import Onfido from '../../../../public/images/onfido.svg';
 import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import { useRouter } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
-import PasswordInput from '@/app/components/password_input';
+import { signIn } from 'next-auth/react';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -25,13 +24,25 @@ const CreateAccount = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { data: session } = useSession();
 
-  useEffect(() => {
-    if (session) {
-      console.log('Logged in userID:', session.user.id);
+  // TEST for forgot/reset password
+  const [resetEmail, setResetEmail] = useState('');
+
+  const handleResetPassword = async () => {
+    try {
+      const response = await fetch('/api/forgotPassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: resetEmail }),
+      });
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error('Error during password reset request:', error);
     }
-  }, [session]);
+  };
 
   const handleSignIn = async () => {
     try {
@@ -48,7 +59,6 @@ const CreateAccount = () => {
         setError(result.error);
       } else {
         console.log('Login successful');
-        console.log('Logged in userID:', session?.user.id);
         router.push('/');
       }
     } catch (error) {
@@ -80,7 +90,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-mt-1'>
               {"Don't have an account?"}
-              <Link href={'/create_account'} className='tw-text-[#F2CA16] tw-ml-2'>
+              <Link href={'/create_account'} className='tw-text-[#F2CA16] tw-ml-2 underline'>
                 Create an account here
               </Link>
             </div>
@@ -92,7 +102,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <PasswordInput value={password} onChange={setPassword} />
+              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
           </div>
           <div className='tw-flex tw-justify-between tw-text-sm sm:tw-text-base'>
@@ -108,7 +118,7 @@ const CreateAccount = () => {
               <label>Keep me logged in</label>
             </div>
             <button
-              className='tw-appearance-none tw-text-[#F2CA16]'
+              className='tw-appearance-none tw-text-[#F2CA16] underline'
               onClick={() => {
                 setCreateAccountPage('reset password');
               }}
@@ -148,11 +158,13 @@ const CreateAccount = () => {
           <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Email</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' />
+              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} />
             </div>
           </div>
 
-          <button className='btn-yellow'>RESET</button>
+          <button type='submit' className='btn-yellow' onClick={handleResetPassword}>
+            RESET
+          </button>
 
           <div>
             Or return to

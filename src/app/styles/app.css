@@ -6,6 +6,10 @@ button {
   cursor: pointer;
 }
 
+.underline:hover {
+  text-decoration: underline;
+}
+
 option {
   background-color: #172431;
 }
