@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { getCarsWithFilterProps } from '@/app/lib/data'
+import { getCarsWithFilterProps } from '@/lib/data'
 
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'

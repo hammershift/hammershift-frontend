@@ -3,10 +3,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import Image from 'next/image'
 import { Suspense } from 'react'
-import { getCars } from '@/app/lib/data'
+import { getCars } from '@/lib/data'
 import { GamesCard } from '../../_components/card'
 import MagnifyingGlass from '../../../../public/images/magnifying-glass.svg'
-import { getCarsWithFilter } from '@/app/lib/data'
+import { getCarsWithFilter } from '@/lib/data'
 import FiltersAndSort from '@/app/_components/filter_and_sort'
 
 const filtersInitialState = {

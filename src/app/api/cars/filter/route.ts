@@ -1,5 +1,5 @@
-import connectToDB from "@/app/lib/mongodb";
-import Cars from "@/app/models/car";
+import connectToDB from "@/lib/mongodb";
+import Cars from "@/models/car";
 import { SortOrder } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
