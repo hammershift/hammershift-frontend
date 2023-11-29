@@ -2,6 +2,8 @@ import connectToDB from "@/lib/mongoose";
 import Cars from "@/models/car.model";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   try {
     await connectToDB();

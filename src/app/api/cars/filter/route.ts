@@ -3,6 +3,8 @@ import Cars from "@/models/car.model";
 import { SortOrder } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic'
+
 interface SortQuery {
   createdAt?: number,
   price?: number,
