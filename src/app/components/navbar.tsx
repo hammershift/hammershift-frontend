@@ -251,14 +251,6 @@ interface DropdownMenuProps {
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn, searchedData, handleSubmit, handleChange, onSearchClick, searchBoxDropDown, setSearchBoxDropDown, handleInputClick }) => {
-    const onclck = () => {
-        if(searchedData.length !== 0) {
-            setSearchBoxDropDown(true)
-        }
-    }
-
-    console.log(searchBoxDropDown);
-    
     
     return (
         <div className="slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
@@ -677,7 +669,7 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
 
     return (
         <div id="search-box" className="tw-bg-shade-100 tw-absolute tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]">
-            {searchedData.map((carData) => {
+            { searchedData.map((carData) => {
                 return (
                     <div key={carData.auction_id} onClick={() => onSearchClick(`${carData.make}`, `${carData.model}`)} className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded">{carData.make} {carData.model}</div>
                 )
@@ -723,5 +715,5 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
 
     interface SearchDropDownProps {
         searchedData: SearchDatas[];
-        onSearchClick?: (carMake: string, carModel: string) => void;
+        onSearchClick: (carMake: string, carModel: string) => void;
     }
