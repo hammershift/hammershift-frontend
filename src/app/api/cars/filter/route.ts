@@ -3,6 +3,8 @@ import Cars from "@/app/models/car";
 import { SortOrder } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic'
+
 interface SortQuery {
     createdAt?: number,
     price?: number,
@@ -161,7 +163,7 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        // SEARCH is NOT used in combination with other filters EXCEPT completed filter (completed=true = status: 2 and vice versa)
+        // SEARCH is NOT used in combination with other filters EXCEPT completed filter (completed=true === status: 2 and vice versa)
         //api/cars/filter?search=911 Coupe or api/cars/filter?search=911%20Coupe
         //api/cars/filter?search=911%20Coupe&completed=true
         //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
@@ -231,7 +233,6 @@ export async function GET(req: NextRequest) {
         //use "%20" or " " for 2-word queries
         //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
         //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
-
         const totalCars = await Cars.find({
             status: { $in: completed },
             make: { $in: [...make] },
@@ -254,6 +255,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ total: totalCars.length, cars: filteredCars });
 
     } catch (error) {
+        console.error(error)
         return NextResponse.json({ message: 'Internal server error' })
     }
 }
