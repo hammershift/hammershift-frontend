@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
     const cars = await Cars.find().limit(limit).skip(offset);
     return NextResponse.json(cars);
   } catch (error) {
+    console.error(error)
     return NextResponse.json({ message: "Internal server error" });
   }
 }

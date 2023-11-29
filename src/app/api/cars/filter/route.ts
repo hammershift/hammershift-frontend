@@ -253,6 +253,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ total: totalCars.length, cars: filteredCars });
 
   } catch (error) {
+    console.error(error)
     return NextResponse.json({ message: 'Internal server error' })
   }
 }
