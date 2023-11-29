@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const carSchema = new mongoose.Schema({
   auction_id: String,
@@ -28,12 +28,12 @@ const carSchema = new mongoose.Schema({
 });
 
 carSchema.index({
-  location: 'text',
-  make: 'text',
-  model: 'text',
-  year: 'text',
+  location: "text",
+  make: "text",
+  model: "text",
+  year: "text",
 });
 
-const Cars = mongoose.models.cars || mongoose.model('cars', carSchema);
+const Cars = mongoose.models.cars || mongoose.model("cars", carSchema);
 
 export default Cars;
