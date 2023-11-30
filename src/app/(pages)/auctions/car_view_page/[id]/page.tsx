@@ -13,6 +13,39 @@ import { useRouter } from 'next/router'
 const CarViewPage = async ({ params }: { params: { id: string } }) => {
     const ID = params.id;
     const carDataOne = await getCarData(ID) || carDataTwo;
+    // let year = "", make = "", model = "", current_bid = "", bids_num = 0, deadline = "", price = 0, auction_id = "";
+
+    // try {
+    //     const response = await getCarData(ID) || carDataTwo;
+    //     auction_id = response.auction_id
+    //     if (response.attributes) {
+    //         response.attributes.map((property: { key: string, value: any }) => {
+    //             switch (property.key) {
+    //                 case "price":
+    //                     price = property.value
+    //                     break;
+    //                 case "year":
+    //                     year = property.value
+    //                     break;
+    //                 case "make":
+    //                     make = property.value
+    //                     break;
+    //                 case "model":
+    //                     model = property.value
+    //                     break;
+    //                 case "auction_id":
+    //                     auction_id = property.value
+    //                     break;
+    //                 default:
+    //                     break;
+    //             }
+    //         })
+    //     }
+
+
+    // } catch (error) {
+    //     console.log(error)
+    // }
     const currencyString = new Intl.NumberFormat().format(carDataOne.price)
 
     const date = new Date(carDataOne.deadline);
