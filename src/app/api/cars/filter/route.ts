@@ -243,7 +243,7 @@ export async function GET(req: NextRequest) {
       query.attributes.$all.push({ $elemMatch: { key: "location", value: { $in: location } } });
     }
     if (completed) {
-      query.status = { $in: completed }
+      query.attributes.$all.push({ $elemMatch: { key: "status", value: { $in: completed } } });
     }
     const totalCars = await Cars.find(query);
 

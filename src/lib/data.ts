@@ -32,20 +32,6 @@ export function getCars({ limit }: { limit: Number }) {
         })
 }
 
-export function getCarsCount() {
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars/filter?status=1`, {
-        cache: 'no-store' //dynamic rendering
-    })
-        .then((res) => res.json())
-        .then(data => {
-            return data.length;
-        })
-        .catch((error) => {
-            console.error(error)
-            throw error;
-        })
-}
 
 export interface getCarsWithFilterProps {
     make?: string[],
