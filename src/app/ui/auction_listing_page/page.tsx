@@ -8,6 +8,7 @@ import { GamesCard } from '../../_components/card'
 import MagnifyingGlass from '../../../../public/images/magnifying-glass.svg'
 import { getCarsWithFilter } from '@/lib/data'
 import FiltersAndSort from '@/app/_components/filter_and_sort'
+import { carDataThree } from '@/sample_data'
 
 const filtersInitialState = {
     make: ["All"],
@@ -21,10 +22,10 @@ const filtersInitialState = {
 
 
 
-export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: any, carsCount: number }) => {
+export const AuctionListing = ({ defaultListing = [], carsCount = 0 }: { defaultListing: any, carsCount: number }) => {
     const [filters, setFilters] = useState(filtersInitialState)
     const [loadMore, setLoadMore] = useState(21)
-    const [listing, setListing] = useState(Array());
+    const [listing, setListing] = useState(carDataThree);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0)
 
@@ -71,7 +72,7 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
                         <Suspense fallback={<div>Loading...</div>}>
                             <div className=' tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 '>
                                 {
-                                    listing &&
+                                    listing.length > 0 &&
                                     listing.map((car: any, index) => {
                                         let year, make, model, price, auction_id;
                                         if (car.attributes) {
