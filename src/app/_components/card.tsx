@@ -154,6 +154,7 @@ export default Card
 
 export const GamesCard = (props: any) => {
     const router = useRouter()
+
     const currencyString = new Intl.NumberFormat().format(props.price)
 
     const activity = [
@@ -213,7 +214,7 @@ export const GamesCard = (props: any) => {
         <div className='tw-h-full tw-flex tw-flex-col tw-justify-between'>
             <div>
 
-                <Image src={props.img} width={416} height={219} alt='ferrari' className='tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto' />
+                <Image src={props.image} width={416} height={219} alt={props.make} className='tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto' />
                 <div className='tw-font-bold tw-text-[24px] tw-py-[12px]'>{props.year} {props.make} {props.model}</div>
                 <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>{props.description[0]}</p>
                 <div className='tw-flex tw-mt-2'>

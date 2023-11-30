@@ -205,25 +205,27 @@ export async function GET(req: NextRequest) {
     //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
 
+    let pipeline = [];
+
     if (sort) {
       switch (sort) {
         case "Newly Listed":
-          sort = { createdAt: -1 }
+          pipeline.push({ $sort: { createdAt: -1 } });
           break;
         case "Ending Soon":
-          sort = { deadline: 1 }
+          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "deadline" } }, { $sort: { "attributes.value": 1 } });
           break;
         case "Most Expensive":
-          sort = { price: -1 }
+          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "price" } }, { $sort: { "attributes.value": -1 } });
           break;
         case "Least Expensive":
-          sort = { price: 1 }
+          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "price" } }, { $sort: { "attributes.value": 1 } });
           break;
         case "Most Bids":
-          sort = { bids: -1 }
+          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "bids" } }, { $sort: { "attributes.value": -1 } });
           break;
         case "Least Bids":
-          sort = { bids: 1 }
+          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "bids" } }, { $sort: { "attributes.value": 1 } });
           break;
         //other sorts here
         default:
@@ -254,19 +256,25 @@ export async function GET(req: NextRequest) {
       query.attributes.$all.push({ $elemMatch: { key: "location", value: { $in: location } } });
     }
     if (completed) {
-      query.status = { $in: completed }
+      query.attributes.$all.push({ $elemMatch: { key: "status", value: { $in: completed } } });
     }
+
     const totalCars = await Cars.find(query);
+
 
     const filteredCars = await Cars.find(query)
       .limit(limit)
       .skip(offset)
-      .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
+      .sort(sort)
 
     return NextResponse.json({ total: totalCars.length, cars: filteredCars });
+
+
 
   } catch (error) {
     console.error(error)
     return NextResponse.json({ message: 'Internal server error' })
   }
 }
+
+
