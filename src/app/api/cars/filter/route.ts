@@ -225,8 +225,6 @@ export async function GET(req: NextRequest) {
     //use "%20" or " " for 2-word queries
     //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
-
-
     let query: any = { attributes: { $all: [] } };
 
     if (make !== "All") {
@@ -244,23 +242,17 @@ export async function GET(req: NextRequest) {
     if (location !== "All") {
       query.attributes.$all.push({ $elemMatch: { key: "location", value: { $in: location } } });
     }
-
+    if (completed) {
+      query.status = { $in: completed }
+    }
     const totalCars = await Cars.find(query);
 
+    const filteredCars = await Cars.find(query)
+      .limit(limit)
+      .skip(offset)
+      .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
 
-    // const filteredCars = await Cars.find({
-    //   status: { $in: completed },
-    //   make: { $in: [...make] },
-    //   era: { $in: [...era] },
-    //   category: { $in: [...category] },
-    //   state: { $in: [...location] }
-    // })
-    //   .limit(limit)
-    //   .skip(offset)
-    //   .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
-
-    // return NextResponse.json({ total: totalCars.length, cars: filteredCars });
-    return NextResponse.json({ total: totalCars.length });
+    return NextResponse.json({ total: totalCars.length, cars: filteredCars });
 
   } catch (error) {
     console.error(error)
