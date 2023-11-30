@@ -1,6 +1,7 @@
 
 export function getCarData(ID: string) {
     //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
+    //const URL = "https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
     const URL = process.env.DOMAIN || "http://localhost:3000/"
     return fetch(URL + `api/cars?auction_id=${ID}`, {
         cache: 'no-store' //dynamic rendering
@@ -18,7 +19,7 @@ export function getCarData(ID: string) {
 export function getCars({ limit }: { limit: Number }) {
     //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
     const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars/filter?status=1&limit=${limit}`, {
+    return fetch(URL + `api/cars/filter?limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())

@@ -1,4 +1,4 @@
-import { getCars } from "@/app/lib/data"
+import { getCars } from "@/lib/data"
 
 import { AuctionListing } from '@/app/ui/auction_listing_page/page';
 

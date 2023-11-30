@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useContext } from "react";
-import Image from "next/image";
-import { Suspense } from "react";
-import { getCars } from "@/app/lib/data";
-import { GamesCard } from "../../_components/card";
-import MagnifyingGlass from "../../../../public/images/magnifying-glass.svg";
-import { getCarsWithFilter } from "@/app/lib/data";
-import FiltersAndSort from "@/app/_components/filter_and_sort";
+import React, { useState, useEffect, useContext } from 'react'
+import Image from 'next/image'
+import { Suspense } from 'react'
+import { getCars } from '@/lib/data'
+import { GamesCard } from '../../_components/card'
+import MagnifyingGlass from '../../../../public/images/magnifying-glass.svg'
+import { getCarsWithFilter } from '@/lib/data'
+import FiltersAndSort from '@/app/_components/filter_and_sort'
 
 const filtersInitialState = {
   make: ["All"],
@@ -62,48 +62,44 @@ export const AuctionListing = ({
     });
   }, [filters, loadMore]);
 
-  return (
-    <>
-      <FiltersAndSort filters={filters} setFilters={setFilters} />
-      <div className="tw-pb-16 ">
-        <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
-          <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-            <Suspense fallback={<div>Loading...</div>}>
-              <div className=" tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
-                {listing &&
-                  listing.map((car: any) => (
-                    <div key={car._id}>
-                      <GamesCard
-                        auction_id={car.auction_id}
-                        make={car.make}
-                        year={car.year}
-                        model={car.model}
-                        description={car.description}
-                        img={car.img}
-                        price={car.price}
-                      />
+    return (
+        <>
+            <FiltersAndSort filters={filters} setFilters={setFilters} />
+            <div className='tw-pb-16 '>
+                <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
+                    <div className=' tw-w-full 2xl:tw-w-[1312px] '>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <div className=' tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 '>
+                                {
+                                    listing &&
+                                    listing.map((car: any) => <div key={car._id}>
+                                        <GamesCard
+                                            auction_id={car.auction_id}
+                                            make={car.make}
+                                            year={car.year}
+                                            model={car.model}
+                                            description={car.description}
+                                            img={car.img}
+                                            price={car.price}
+                                        />
+                                    </div>
+                                    )}
+                            </div>
+                        </Suspense>
                     </div>
-                  ))}
-              </div>
-            </Suspense>
-          </div>
-        </section>
-        <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] ">
-          <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4">{`Showing ${listing.length} of ${totalAuctions} auctions`}</div>
-          <button
-            className={`btn-transparent-white tw-w-full tw-text-[18px] ${
-              listing.length >= totalAuctions && "tw-hidden"
-            }`}
-            style={{ paddingTop: "16px", paddingBottom: "16px" }}
-            onClick={clickHandler}
-          >
-            Load more
-          </button>
-        </div>
-      </div>
-    </>
-  );
-};
+                </section>
+                <div className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] '>
+                    <div className='tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4'>{`Showing ${listing ? listing.length : "0"} of ${totalAuctions || "0"} auctions`}</div>
+                    <button className={`btn-transparent-white tw-w-full tw-text-[18px] ${listing?.length >= totalAuctions && "tw-hidden"}`} style={{ paddingTop: "16px", paddingBottom: "16px" }} onClick={clickHandler}>Load more</button>
+
+                </div>
+            </div>
+        </>
+    )
+}
+
+
+
 
 export const FilterDropdownMenu = () => {
   return (

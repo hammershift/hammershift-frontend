@@ -6,7 +6,7 @@ import { auctionDataOne, carDataTwo } from '../../../../../sample_data'
 import { SubscribeSmall } from '../../../../_components/subscribe'
 import Footer from '../../../../_components/footer'
 import { LatestNews } from '../../../../_components/how_hammeshift_works'
-import { getCarData } from '@/app/lib/data'
+import { getCarData } from '@/lib/data'
 import { useRouter } from 'next/router'
 
 

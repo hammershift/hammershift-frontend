@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { getCarsWithFilterProps } from '@/app/lib/data'
+import { getCarsWithFilterProps } from '@/lib/data'
 
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'
@@ -212,7 +212,12 @@ export default FiltersAndSort
 // function to add value to filters. This is used in all 4 dropdowns
 const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
     setFilters(prevFilters => {
-        if (filters[key].includes(value)) {
+        if (value === "All") {
+            return {
+                ...filters,
+                [key]: ["All"]
+            };
+        } else if (filters[key].includes(value)) {
             return {
                 ...filters,
                 [key]: filters[key].filter(item => item !== value)
