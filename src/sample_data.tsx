@@ -7,7 +7,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 },
 {
@@ -16,7 +16,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 },
 {
@@ -25,7 +25,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 },
 {
@@ -34,7 +34,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 }, {
     id: "car5",
@@ -42,7 +42,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 }]
 
