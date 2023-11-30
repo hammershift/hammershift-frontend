@@ -72,7 +72,7 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
                             <div className=' tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 '>
                                 {
                                     listing &&
-                                    listing.map((car: any) => {
+                                    listing.map((car: any, index) => {
                                         let year, make, model, price, auction_id;
                                         if (car.attributes) {
                                             car.attributes.map((property: { key: string, value: number | string }) => {
@@ -98,15 +98,15 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
                                             })
                                         }
 
-                                        return <div key={car._id}>
+                                        return <div key={car._id ? car._id : (index + "gamesCard")}>
                                             <GamesCard
-                                                auction_id={car.auction_id}
-                                                make={make}
-                                                year={year}
-                                                model={model}
-                                                description={car.description}
-                                                image={car.image}
-                                                price={price}
+                                                auction_id={car.auction_id ? car.auction_id : (index + "auctionId")}
+                                                make={make ? make : ""}
+                                                year={year ? year : ""}
+                                                model={model ? model : ""}
+                                                description={car.description ? car.description : [""]}
+                                                image={car.image ? car.image : ""}
+                                                price={price ? price : 0}
                                             />
                                         </div>
                                     }
