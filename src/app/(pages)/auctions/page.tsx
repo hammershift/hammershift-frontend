@@ -1,9 +1,10 @@
 import { getCars } from "@/lib/data"
+import { carDataThree } from "@/sample_data";
 
 import { AuctionListing } from '@/app/ui/auction_listing_page/page';
 
 const AuctionListingPage = async () => {
-    const listCarData = await getCars({ limit: 21 })
+    const listCarData = await getCars({ limit: 21 }) || carDataThree;
 
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>

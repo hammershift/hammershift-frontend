@@ -222,7 +222,7 @@ export const auctionDataOne = {
     prize: "$1,000"
 }
 
-export const carDataThree = {
+export const carDataThree = [{
     "_id": "65687173e2d6d854e455bd48",
     "attributes": [
         {
@@ -365,4 +365,4 @@ export const carDataThree = {
     "createdAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
     "updatedAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
     "__v": 0
-}
+}]
