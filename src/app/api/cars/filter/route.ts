@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic'
 
 interface SortQuery {
   createdAt?: number,
-  price?: number,
-  deadline?: number,
-  bids?: number
+  "sort.price"?: number,
+  "sort.deadline"?: number,
+  "sort.bids"?: number
 }
 
 const categoryFilter = [
@@ -228,19 +228,19 @@ export async function GET(req: NextRequest) {
           sort = { createdAt: -1 }
           break;
         case "Ending Soon":
-          sort = { deadline: 1 }
+          sort = { "sort.deadline": 1 }
           break;
         case "Most Expensive":
-          sort = { price: -1 }
+          sort = { "sort.price": -1 }
           break;
         case "Least Expensive":
-          sort = { price: 1 }
+          sort = { "sort.price": 1 }
           break;
         case "Most Bids":
-          sort = { bids: -1 }
+          sort = { "sort.bids": -1 }
           break;
         case "Least Bids":
-          sort = { bids: 1 }
+          sort = { "sort.bids": 1 }
           break;
         //other sorts here
         default:
@@ -281,7 +281,7 @@ export async function GET(req: NextRequest) {
     })
       .limit(limit)
       .skip(offset)
-    // .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
+      .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
 
     return NextResponse.json({ total: totalCars.length, cars: filteredCars });
 
