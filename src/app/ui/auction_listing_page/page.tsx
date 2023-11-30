@@ -89,8 +89,8 @@ export const AuctionListing = ({ defaultListing, carsCount }: { defaultListing: 
                     </div>
                 </section>
                 <div className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] '>
-                    <div className='tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4'>{`Showing ${listing.length} of ${totalAuctions} auctions`}</div>
-                    <button className={`btn-transparent-white tw-w-full tw-text-[18px] ${listing.length >= totalAuctions && "tw-hidden"}`} style={{ paddingTop: "16px", paddingBottom: "16px" }} onClick={clickHandler}>Load more</button>
+                    <div className='tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4'>{`Showing ${listing ? listing.length : "0"} of ${totalAuctions || "0"} auctions`}</div>
+                    <button className={`btn-transparent-white tw-w-full tw-text-[18px] ${listing?.length >= totalAuctions && "tw-hidden"}`} style={{ paddingTop: "16px", paddingBottom: "16px" }} onClick={clickHandler}>Load more</button>
 
                 </div>
             </div>

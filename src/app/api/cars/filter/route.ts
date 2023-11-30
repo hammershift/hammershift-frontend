@@ -178,27 +178,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(searchedCars);
     }
 
-    if (make === "All") {
-      make = [...makeFilters]
-    } else {
+    if (make !== "All") {
       make = make.split("$")
     }
 
-    if (era === "All") {
-      era = [...eraFilter]
-    } else {
+    if (era !== "All") {
       era = era.split("$")
     }
 
-    if (category === "All") {
-      category = [...categoryFilter]
-    } else {
+    if (category !== "All") {
       category = category.split("$")
     }
 
-    if (location === "All") {
-      location = [...locationFilter]
-    } else {
+    if (location !== "All") {
       location = location.split("$")
     }
 
@@ -235,37 +227,25 @@ export async function GET(req: NextRequest) {
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
 
 
-    const totalCars = await Cars.find({
-      attributes: {
-        $all: [
-          {
-            $elemMatch: {
-              key: "make",
-              value: { $in: [...make] }
-            }
-          },
-          {
-            $elemMatch: {
-              key: "era",
-              value: { $in: [...era] }
-            }
-          },
-          {
-            $elemMatch: {
-              key: "category",
-              value: { $in: [...category] }
-            }
-          },
-          {
-            $elemMatch: {
-              key: "location",
-              value: { $in: [...location] }
-            }
-          },
-        ]
-      }
-    });
+    let query: any = { attributes: { $all: [] } };
 
+    if (make !== "All") {
+      query.attributes.$all.push({ $elemMatch: { key: "make", value: { $in: make } } });
+    }
+
+    if (era !== "All") {
+      query.attributes.$all.push({ $elemMatch: { key: "era", value: { $in: era } } });
+    }
+
+    if (category !== "All") {
+      query.attributes.$all.push({ $elemMatch: { key: "category", value: { $in: category } } });
+    }
+
+    if (location !== "All") {
+      query.attributes.$all.push({ $elemMatch: { key: "location", value: { $in: location } } });
+    }
+
+    const totalCars = await Cars.find(query);
 
 
     // const filteredCars = await Cars.find({
