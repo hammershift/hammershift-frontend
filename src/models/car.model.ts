@@ -43,8 +43,14 @@ const carSchema = new mongoose.Schema(
     },
     page_url: { type: "string" },
     updatedAt: { type: "string", format: "date-time" },
-    website: { type: "string" }
-  }
+    website: { type: "string" },
+    sort: {
+      type: "object",
+      properties: { price: { type: "number" }, bids: { type: "number" }, deadline: { type: "string", format: "date-time" } }
+
+    }
+  },
+
 );
 
 const Cars = mongoose.models.cars || mongoose.model("cars", carSchema);
