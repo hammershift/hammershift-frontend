@@ -19,7 +19,7 @@ export function getCarData(ID: string) {
 export function getCars({ limit }: { limit: Number }) {
     //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
     const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars/filter?limit=${limit}`, {
+    return fetch(URL + `api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -32,20 +32,6 @@ export function getCars({ limit }: { limit: Number }) {
         })
 }
 
-export function getCarsCount() {
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars/filter?status=1`, {
-        cache: 'no-store' //dynamic rendering
-    })
-        .then((res) => res.json())
-        .then(data => {
-            return data.length;
-        })
-        .catch((error) => {
-            console.error(error)
-            throw error;
-        })
-}
 
 export interface getCarsWithFilterProps {
     make?: string[],
