@@ -161,6 +161,9 @@ export async function GET(req: NextRequest) {
       if (completed === 'false') {
         completed = [1];
       }
+      if (completed === 'all') {
+        completed = [1, 2];
+      }
     }
 
     // SEARCH is NOT used in combination with other filters EXCEPT completed filter (completed=true === status: 2 and vice versa)
@@ -193,6 +196,14 @@ export async function GET(req: NextRequest) {
     if (location !== "All") {
       location = location.split("$")
     }
+
+
+
+    //ALL filters can be used in combination with other filters including sort (filters and sort are case sensitive)
+    //use the delimiter "$" when filter mutiple makes, era, category or location
+    //use "%20" or " " for 2-word queries
+    //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
+    //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
 
     if (sort) {
       switch (sort) {
@@ -243,7 +254,7 @@ export async function GET(req: NextRequest) {
       query.attributes.$all.push({ $elemMatch: { key: "location", value: { $in: location } } });
     }
     if (completed) {
-      query.attributes.$all.push({ $elemMatch: { key: "status", value: { $in: completed } } });
+      query.status = { $in: completed }
     }
     const totalCars = await Cars.find(query);
 
