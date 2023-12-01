@@ -1,4 +1,5 @@
-import React, { Suspense } from 'react'
+"use client";
+import React, { Suspense, useEffect, useState } from 'react'
 import Links from '../../../../_components/links'
 import { WatchAndWagerButtons, TitleContainer, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/page'
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection'
@@ -10,45 +11,22 @@ import { getCarData } from '@/lib/data'
 import { useRouter } from 'next/router'
 
 
-const CarViewPage = async ({ params }: { params: { id: string } }) => {
+const CarViewPage = ({ params }: { params: { id: string } }) => {
+    const [carData, setCarData] = useState<any>(carDataTwo);
+
     const ID = params.id;
-    const carDataOne = await getCarData(ID) || carDataTwo;
-    // let year = "", make = "", model = "", current_bid = "", bids_num = 0, deadline = "", price = 0, auction_id = "";
-
-    // try {
-    //     const response = await getCarData(ID) || carDataTwo;
-    //     auction_id = response.auction_id
-    //     if (response.attributes) {
-    //         response.attributes.map((property: { key: string, value: any }) => {
-    //             switch (property.key) {
-    //                 case "price":
-    //                     price = property.value
-    //                     break;
-    //                 case "year":
-    //                     year = property.value
-    //                     break;
-    //                 case "make":
-    //                     make = property.value
-    //                     break;
-    //                 case "model":
-    //                     model = property.value
-    //                     break;
-    //                 case "auction_id":
-    //                     auction_id = property.value
-    //                     break;
-    //                 default:
-    //                     break;
-    //             }
-    //         })
-    //     }
 
 
-    // } catch (error) {
-    //     console.log(error)
-    // }
-    const currencyString = new Intl.NumberFormat().format(carDataOne.price)
+    useEffect(() => {
+        getCarData(ID)
+            .then((data) => {
+                return setCarData(data);
+            })
+    }, [])
 
-    const date = new Date(carDataOne.deadline || "2023-12-01T03:27:01.087+00:00");
+    const currencyString = new Intl.NumberFormat().format(carData.price)
+
+    const date = new Date(carData.deadline || "2023-12-01T03:27:01.087+00:00");
     const formattedDateString = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
         month: 'short',
@@ -70,13 +48,13 @@ const CarViewPage = async ({ params }: { params: { id: string } }) => {
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
                     <Suspense fallback={<p>Loading...</p>}>
                         <TitleContainer
-                            year={carDataOne.year}
-                            make={carDataOne.make}
-                            model={carDataOne.model}
+                            year={carData.year}
+                            make={carData.make}
+                            model={carData.model}
                             current_bid={currencyString}
-                            bids_num={carDataOne.bids}
+                            bids_num={carData.bids}
                             ending_date={formattedDateString}
-                            deadline={carDataOne.deadline}
+                            deadline={carData.deadline}
                             players_num={auctionDataOne.players_num}
                             prize={auctionDataOne.prize}
                         />
@@ -85,10 +63,10 @@ const CarViewPage = async ({ params }: { params: { id: string } }) => {
                         <WatchAndWagerButtons />
                     </div>
                     <Suspense fallback={<p>Loading...</p>}>
-                        <PhotosLayout images_list={carDataOne.images_list} img={carDataOne.image} />
+                        <PhotosLayout images_list={carData.images_list} img={carData.image} />
                     </Suspense>
                     <Suspense fallback={<p>Loading...</p>}>
-                        <ArticleSection images_list={carDataOne.images_list} description={carDataOne.description} />
+                        <ArticleSection images_list={carData.images_list} description={carData.description} />
                     </Suspense>
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WagersSection />
@@ -97,16 +75,16 @@ const CarViewPage = async ({ params }: { params: { id: string } }) => {
                     <Suspense fallback={<p>Loading...</p>}>
                         <div className='tw-block sm:tw-hidden tw-mt-8'>
                             <DetailsSection
-                                website={carDataOne.website}
-                                make={carDataOne.make}
-                                model={carDataOne.model}
-                                seller={carDataOne.seller}
-                                location={carDataOne.location}
+                                website={carData.website}
+                                make={carData.make}
+                                model={carData.model}
+                                seller={carData.seller}
+                                location={carData.location}
                                 mileage="55,400"
-                                listing_type={carDataOne.listing_type}
-                                lot_num={carDataOne.lot_num}
-                                listing_details={carDataOne.listing_details}
-                                images_list={carDataOne.images_list}
+                                listing_type={carData.listing_type}
+                                lot_num={carData.lot_num}
+                                listing_details={carData.listing_details}
+                                images_list={carData.images_list}
                             />
                         </div>
                     </Suspense>
@@ -117,16 +95,16 @@ const CarViewPage = async ({ params }: { params: { id: string } }) => {
                     <WagersSection />
                     <Suspense fallback={<p>Loading...</p>}>
                         <DetailsSection
-                            website={carDataOne.website}
-                            make={carDataOne.make}
-                            model={carDataOne.model}
-                            seller={carDataOne.seller}
-                            location={carDataOne.location}
+                            website={carData.website}
+                            make={carData.make}
+                            model={carData.model}
+                            seller={carData.seller}
+                            location={carData.location}
                             mileage="55,400"
-                            listing_type={carDataOne.listing_type}
-                            lot_num={carDataOne.lot_num}
-                            listing_details={carDataOne.listing_details}
-                            images_list={carDataOne.images_list}
+                            listing_type={carData.listing_type}
+                            lot_num={carData.lot_num}
+                            listing_details={carData.listing_details}
+                            images_list={carData.images_list}
                         />
                     </Suspense>
                 </div>

@@ -1,6 +1,5 @@
 
 export function getCarData(ID: string) {
-    const URL = process.env.DOMAIN || "http://localhost:3000"
     return fetch(`/api/cars?auction_id=${ID}`, {
         cache: 'no-store' //dynamic rendering
     })
@@ -38,9 +37,7 @@ export function getCarData(ID: string) {
 }
 
 export function getCars({ limit }: { limit: Number }) {
-    //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars/filter?completed=false&limit=${limit}`, {
+    return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -48,8 +45,8 @@ export function getCars({ limit }: { limit: Number }) {
             return data;
         })
         .catch((error) => {
-            console.error(error)
-            throw error;
+            return console.error(error)
+
         })
 }
 
@@ -63,7 +60,6 @@ export interface getCarsWithFilterProps {
 }
 
 export function getCarsWithFilter(props: getCarsWithFilterProps) {
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
     const queries = Object.entries(props)
         .map(([key, value]) => {
             if (Array.isArray(value)) {
@@ -76,7 +72,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .join('&');
 
-    return fetch(URL + `api/cars/filter?status=1&` + queries, {
+    return fetch(`/api/cars/filter?` + queries, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())

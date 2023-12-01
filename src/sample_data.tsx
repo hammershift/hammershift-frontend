@@ -203,7 +203,7 @@ export const carDataTwo = {
     make: 'BMW',
     model: '335i Coupe (DEFAULT)',
     page_url: 'https://bringatrailer.com/listing/2007-bmw-335i-coupe-4/',
-    price: '5400',
+    price: 5400,
     seller: 'akpcm',
     state: 'California',
     status: 1,

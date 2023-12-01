@@ -126,7 +126,7 @@ interface TitleContainerProps {
     current_bid: string
     bids_num: number
     ending_date: string
-    deadline: Date
+    deadline: Date | string
     players_num: number
     prize: string
 
