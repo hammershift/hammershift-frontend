@@ -254,7 +254,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (location !== "All") {
-      query.attributes.$all.push({ $elemMatch: { key: "location", value: { $in: location } } });
+      query.attributes.$all.push({ $elemMatch: { key: "state", value: { $in: location } } });
     }
     if (completed) {
       query.attributes.$all.push({ $elemMatch: { key: "status", value: { $in: completed } } });
