@@ -72,8 +72,6 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
             }
             setSearchedData(data.cars)
         }
-        console.log(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
-        
         fetchSearchedData()
 
         }, [searchKeyword]);
