@@ -1,3 +1,23 @@
+/*const getCarData = async (ID: string) => {
+    try {
+        const response = await fetch("api/emails", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // console.log("data: ", data.emails);
+            setEmailList(data.emails);
+        } else {
+            console.error("Failed to fetch email list!");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+};  */
+
+
 
 export function getCarData(ID: string) {
     return fetch(`/api/cars?auction_id=${ID}`, {
@@ -35,9 +55,9 @@ export function getCarData(ID: string) {
             return { message: error };
 
         })
-}
+} 
 
-export function getCars({ limit }: { limit: number }) {
+/*export function getCars({ limit }: { limit: number }) {
     return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
@@ -48,7 +68,29 @@ export function getCars({ limit }: { limit: number }) {
         .catch((error) => {
             return { message: error };
         })
-}
+} */
+export const getCars = async ({ limit }: { limit: number }) => {
+    try {
+        const response = await fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
+        cache: 'no-store' //dynamic rendering
+    });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+            console.error("Failed to fetch cars list!");
+        }
+    } catch (err) {
+        console.error(err);
+    }
+};  
+
+
+
+
+
+
 
 
 export interface getCarsWithFilterProps {
