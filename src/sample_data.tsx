@@ -178,7 +178,7 @@ export const carDataTwo = {
             src: 'https://bringatrailer.com/wp-content/uploads/2023/10/2007_bmw_335i-coupe_IMG_5443-90280-scaled.jpg'
         }
     ],
-    img: 'https://bringatrailer.com/wp-content/uploads/2023/10/1DJ2A4513-88256-scaled.jpg?fit=940%2C627',
+    image: 'https://bringatrailer.com/wp-content/uploads/2023/10/1DJ2A4513-88256-scaled.jpg?fit=940%2C627',
     listing_details: [
         'Chassis: WBAWB73507P033096',
         '41k Miles',

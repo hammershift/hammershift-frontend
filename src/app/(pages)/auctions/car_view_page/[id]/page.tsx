@@ -48,7 +48,7 @@ const CarViewPage = async ({ params }: { params: { id: string } }) => {
     // }
     const currencyString = new Intl.NumberFormat().format(carDataOne.price)
 
-    const date = new Date(carDataOne.deadline);
+    const date = new Date(carDataOne.deadline || "2023-12-01T03:27:01.087+00:00");
     const formattedDateString = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
         month: 'short',
@@ -85,7 +85,7 @@ const CarViewPage = async ({ params }: { params: { id: string } }) => {
                         <WatchAndWagerButtons />
                     </div>
                     <Suspense fallback={<p>Loading...</p>}>
-                        <PhotosLayout images_list={carDataOne.images_list} img={carDataOne.img} />
+                        <PhotosLayout images_list={carDataOne.images_list} img={carDataOne.image} />
                     </Suspense>
                     <Suspense fallback={<p>Loading...</p>}>
                         <ArticleSection images_list={carDataOne.images_list} description={carDataOne.description} />
