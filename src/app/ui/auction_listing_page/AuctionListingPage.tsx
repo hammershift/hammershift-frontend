@@ -19,7 +19,13 @@ const filtersInitialState = {
   sort: "Newly Listed",
 };
 
-export const AuctionListing = () => {
+export const AuctionListing = ({
+  defaultListing = [],
+  carsCount = 0,
+}: {
+  defaultListing: any;
+  carsCount: number;
+}) => {
   const [filters, setFilters] = useState(filtersInitialState);
   const [loadMore, setLoadMore] = useState(21);
   const [listing, setListing] = useState(carDataThree);
@@ -27,17 +33,10 @@ export const AuctionListing = () => {
   const [totalAuctions, setTotalAuctions] = useState(0);
 
   //set initial listing and total auctions
-  // useEffect(() => {
-  //   if (defaultListing) setListing(defaultListing);
-  //   if (carsCount) setTotalAuctions(carsCount);
-  // }, []);
-
-  getCarsWithFilter({ ...filters, limit: loadMore }).then((res) => {
-    setTotalAuctions(res.total);
-    setListing(res.cars);
-  })
-
-
+  useEffect(() => {
+    if (defaultListing) setListing(defaultListing);
+    if (carsCount) setTotalAuctions(carsCount);
+  }, []);
 
 
   //adds 21 to loadMore when button is clicked
