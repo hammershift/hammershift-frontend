@@ -19,7 +19,7 @@ const filtersInitialState = {
   sort: "Newly Listed",
 };
 
-export const AuctionListing = ({
+const AuctionListing = ({
   defaultListing = [],
   carsCount = 0,
 }: {
@@ -158,6 +158,8 @@ export const AuctionListing = ({
     </>
   );
 };
+
+export default AuctionListing;
 
 export const FilterDropdownMenu = () => {
   return (
