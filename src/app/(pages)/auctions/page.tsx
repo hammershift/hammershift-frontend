@@ -3,7 +3,6 @@ import { useState, useEffect, Suspense } from "react";
 import { getCars, getCarsWithFilter } from "@/lib/data"
 import { carDataThree } from "@/sample_data";
 import FiltersAndSort from "@/app/components/filter_and_sort";
-import AuctionListing from '@/app/ui/auction_listing_page/AuctionListingPage';
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { GamesCard } from "@/app/components/card";
 
@@ -22,26 +21,7 @@ const AuctionListingPage = () => {
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
 
-    // useEffect(() => {
-    //     try {
-    //         const fetchData = async () => {
-    //             const res = await getCars({ limit: 21 });
-    //             if (res) {
-    //                 const data = await res.json();
-    //                 setTotalAuctions(data.total);
-    //                 setListing(data.cars);
-    //             } else {
-    //                 console.log("cannot fetch car data");
-    //             }
-    //         }
-    //         fetchData();
 
-    //     } catch (e) {
-    //         console.log({ error: e })
-    //     }
-
-    //    }, []);
-    
     useEffect(() => {
         const fetchData = async () => {
             try {
