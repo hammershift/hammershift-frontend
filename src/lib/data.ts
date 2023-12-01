@@ -37,7 +37,7 @@ export function getCarData(ID: string) {
 }
 
 export function getCars({ limit }: { limit: Number }) {
-    return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
+    return fetch(`https://hammershift-hk3cbfu7k-hammershifts-projects.vercel.app/auctions/api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -59,7 +59,7 @@ export interface getCarsWithFilterProps {
     limit?: number
 }
 
-export function getCarsWithFilter(props: getCarsWithFilterProps) {
+export async function getCarsWithFilter(props: getCarsWithFilterProps) {
     const queries = Object.entries(props)
         .map(([key, value]) => {
             if (Array.isArray(value)) {
@@ -72,7 +72,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .join('&');
 
-    return fetch(`/api/cars/filter?` + queries, {
+    fetch(`/api/cars/filter?` + queries, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -81,6 +81,5 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .catch((error) => {
             return console.error(error)
-
         })
 }
