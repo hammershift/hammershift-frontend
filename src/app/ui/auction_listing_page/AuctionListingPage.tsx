@@ -19,13 +19,7 @@ const filtersInitialState = {
   sort: "Newly Listed",
 };
 
-export const AuctionListing = ({
-  defaultListing = [],
-  carsCount = 0,
-}: {
-  defaultListing: any;
-  carsCount: number;
-}) => {
+export const AuctionListing = () => {
   const [filters, setFilters] = useState(filtersInitialState);
   const [loadMore, setLoadMore] = useState(21);
   const [listing, setListing] = useState(carDataThree);
@@ -33,10 +27,18 @@ export const AuctionListing = ({
   const [totalAuctions, setTotalAuctions] = useState(0);
 
   //set initial listing and total auctions
-  useEffect(() => {
-    if (defaultListing) setListing(defaultListing);
-    if (carsCount) setTotalAuctions(carsCount);
-  }, []);
+  // useEffect(() => {
+  //   if (defaultListing) setListing(defaultListing);
+  //   if (carsCount) setTotalAuctions(carsCount);
+  // }, []);
+
+  getCarsWithFilter({ ...filters, limit: loadMore }).then((res) => {
+    setTotalAuctions(res.total);
+    setListing(res.cars);
+  })
+
+
+
 
   //adds 21 to loadMore when button is clicked
   const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -135,13 +137,11 @@ export const AuctionListing = ({
           </div>
         </section>
         <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] ">
-          <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4">{`Showing ${
-            listing ? listing.length : "0"
-          } of ${totalAuctions || "0"} auctions`}</div>
+          <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4">{`Showing ${listing ? listing.length : "0"
+            } of ${totalAuctions || "0"} auctions`}</div>
           <button
-            className={`btn-transparent-white tw-w-full tw-text-[18px] ${
-              listing?.length >= totalAuctions && "tw-hidden"
-            }`}
+            className={`btn-transparent-white tw-w-full tw-text-[18px] ${listing?.length >= totalAuctions && "tw-hidden"
+              }`}
             style={{ paddingTop: "16px", paddingBottom: "16px" }}
             onClick={clickHandler}
           >
