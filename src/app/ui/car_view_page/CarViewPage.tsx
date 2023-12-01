@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 
 import Image from 'next/image'
-import Card from '../../_components/card'
+import Card from '../../components/card'
 import { useTimer } from '@/app/_context/TimerContext'
 
 import DollarIcon from '../../../../public/images/dollar.svg'

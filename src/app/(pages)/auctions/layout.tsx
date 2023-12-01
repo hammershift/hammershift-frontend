@@ -1,7 +1,7 @@
-import Links from "@/app/_components/links";
-import { SubscribeSmall } from '@/app/_components/subscribe'
-import Footer from '@/app/_components/footer'
-import { LatestNews } from '@/app/_components/how_hammeshift_works'
+import Links from "@/app/components/links";
+import { SubscribeSmall } from '@/app/components/subscribe'
+import Footer from '@/app/components/footer'
+import { LatestNews } from '@/app/components/how_hammeshift_works'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
