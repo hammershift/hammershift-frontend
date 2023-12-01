@@ -1,7 +1,7 @@
 
 export function getCarData(ID: string) {
     const URL = process.env.DOMAIN || "http://localhost:3000"
-    return fetch(`${URL}/api/cars?auction_id=${ID}`, {
+    return fetch(`/api/cars?auction_id=${ID}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -33,8 +33,7 @@ export function getCarData(ID: string) {
             return car;
         })
         .catch((error) => {
-            console.error(error)
-            throw error;
+            return console.error(error);
         })
 }
 
@@ -85,7 +84,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
             return data;
         })
         .catch((error) => {
-            console.error(error)
-            throw error;
+            return console.error(error)
+
         })
 }
