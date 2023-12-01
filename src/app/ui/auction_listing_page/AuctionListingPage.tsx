@@ -8,6 +8,7 @@ import { GamesCard } from "../../_components/card";
 import MagnifyingGlass from "../../../../public/images/magnifying-glass.svg";
 import { getCarsWithFilter } from "@/lib/data";
 import FiltersAndSort from "@/app/_components/filter_and_sort";
+import { carDataThree } from "@/sample_data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 
 const filtersInitialState = {
@@ -19,15 +20,15 @@ const filtersInitialState = {
 };
 
 export const AuctionListing = ({
-  defaultListing,
-  carsCount,
+  defaultListing = [],
+  carsCount = 0,
 }: {
   defaultListing: any;
   carsCount: number;
 }) => {
   const [filters, setFilters] = useState(filtersInitialState);
   const [loadMore, setLoadMore] = useState(21);
-  const [listing, setListing] = useState(Array());
+  const [listing, setListing] = useState(carDataThree);
   const [loading, setLoading] = useState(false);
   const [totalAuctions, setTotalAuctions] = useState(0);
 
@@ -71,17 +72,15 @@ export const AuctionListing = ({
           <div className=" tw-w-full 2xl:tw-w-[1312px] ">
             <Suspense fallback={<div>Loading...</div>}>
               <div className=" tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
-                {listing &&
-                  listing.map((car: any) => {
-                    let year,
-                      make,
-                      model,
-                      price,
-                      deadline = Date(),
-                      auction_id;
+                {listing.length > 0 &&
+                  listing.map((car: any, index) => {
+                    let year, make, model, price, auction_id, deadline: any;
                     if (car.attributes) {
                       car.attributes.map(
-                        (property: { key: string; value: any }) => {
+                        (property: {
+                          key: string;
+                          value: number | string | Date;
+                        }) => {
                           switch (property.key) {
                             case "year":
                               year = property.value;
@@ -107,20 +106,25 @@ export const AuctionListing = ({
                         }
                       );
                     }
-                    console.log("car attributes:", deadline);
+
                     return (
-                      <div key={car._id}>
+                      <div key={car._id ? car._id : index + "gamesCard"}>
                         <TimerProvider deadline={new Date(deadline)}>
-                          {" "}
                           <GamesCard
-                            auction_id={car.auction_id}
-                            make={make}
-                            year={year}
-                            model={model}
-                            description={car.description}
-                            image={car.image}
-                            price={price}
-                            deadline={deadline}
+                            auction_id={
+                              car.auction_id
+                                ? car.auction_id
+                                : index + "auctionId"
+                            }
+                            make={make ? make : ""}
+                            year={year ? year : ""}
+                            model={model ? model : ""}
+                            description={
+                              car.description ? car.description : [""]
+                            }
+                            image={car.image ? car.image : ""}
+                            price={price ? price : 0}
+                            deadline={deadline ? deadline : Date()}
                           />
                         </TimerProvider>
                       </div>

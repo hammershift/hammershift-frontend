@@ -3,7 +3,7 @@ import Cars from "@/models/car.model";
 import { SortOrder } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 interface SortQuery {
   createdAt?: number,
@@ -205,33 +205,34 @@ export async function GET(req: NextRequest) {
     //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
 
-    let pipeline = [];
+
+    let sortObject: any = {};
 
     if (sort) {
       switch (sort) {
         case "Newly Listed":
-          pipeline.push({ $sort: { createdAt: -1 } });
+          sortObject = { createdAt: -1 };
           break;
         case "Ending Soon":
-          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "deadline" } }, { $sort: { "attributes.value": 1 } });
+          sortObject = { deadline: 1 };
           break;
         case "Most Expensive":
-          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "price" } }, { $sort: { "attributes.value": -1 } });
+          sortObject = { price: -1 };
           break;
         case "Least Expensive":
-          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "price" } }, { $sort: { "attributes.value": 1 } });
+          sortObject = { price: 1 };
           break;
         case "Most Bids":
-          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "bids" } }, { $sort: { "attributes.value": -1 } });
+          sortObject = { bids: -1 };
           break;
         case "Least Bids":
-          pipeline.push({ $unwind: "$attributes" }, { $match: { "attributes.key": "bids" } }, { $sort: { "attributes.value": 1 } });
+          sortObject = { bids: 1 };
           break;
-        //other sorts here
         default:
           break;
       }
     }
+
 
     //ALL filters can be used in combination with other filters including sort (filters and sort are case sensitive)
     //use the delimiter "$" when filter mutiple makes, era, category or location
@@ -265,7 +266,7 @@ export async function GET(req: NextRequest) {
     const filteredCars = await Cars.find(query)
       .limit(limit)
       .skip(offset)
-      .sort(sort)
+      .sort(sortObject)
 
     return NextResponse.json({ total: totalCars.length, cars: filteredCars });
 

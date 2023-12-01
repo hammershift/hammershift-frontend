@@ -250,14 +250,14 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
       </header>
       <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto xl:tw-overflow-visible tw-gap-4 sm:tw-gap-8 xl:tw-gap-0 xl:tw-justify-between tw-mt-8">
         {carData.map((item) => (
-          <LiveGamesCard
-            key={item.id}
-            url={item.url}
-            year={item.year}
-            name={item.name}
-            description={item.description}
-            deadline={item.deadline}
-          />
+            <LiveGamesCard
+              key={item.id}
+              url={item.url}
+              year={item.year}
+              name={item.name}
+              description={item.description}
+              deadline={item.deadline}
+            />
         ))}
       </section>
     </div>

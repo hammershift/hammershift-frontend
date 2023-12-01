@@ -1,25 +1,43 @@
 
 export function getCarData(ID: string) {
-    //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
-    //const URL = "https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars?auction_id=${ID}`, {
+    return fetch(`/api/cars?auction_id=${ID}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
         .then(data => {
-            return data;
+            const car = {
+                auction_id: data.auction_id,
+                description: [...data.description],
+                images_list: [...data.images_list],
+                listing_details: [...data.listing_details],
+                image: data.image,
+                page_url: data.page_url,
+                website: data.website,
+                price: data.attributes[0].value,
+                year: data.attributes[1].value,
+                make: data.attributes[2].value,
+                model: data.attributes[3].value,
+                category: data.attributes[4].value,
+                era: data.attributes[5].value,
+                chassis: data.attributes[6].value,
+                seller: data.attributes[7].value,
+                location: data.attributes[8].value,
+                state: data.attributes[9].value,
+                lot_num: data.attributes[10].value,
+                listing_type: data.attributes[11].value,
+                deadline: data.attributes[12].value,
+                bids: data.attributes[13].value,
+                status: data.attributes[14].value
+            }
+            return car;
         })
         .catch((error) => {
-            console.error(error)
-            throw error;
+            return console.error(error);
         })
 }
 
 export function getCars({ limit }: { limit: Number }) {
-    //DOMAIN=https://hammershift-git-feat-create-api-hammershifts-projects.vercel.app/
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
-    return fetch(URL + `api/cars/filter?completed=false&limit=${limit}`, {
+    return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -27,8 +45,8 @@ export function getCars({ limit }: { limit: Number }) {
             return data;
         })
         .catch((error) => {
-            console.error(error)
-            throw error;
+            return console.error(error)
+
         })
 }
 
@@ -42,7 +60,6 @@ export interface getCarsWithFilterProps {
 }
 
 export function getCarsWithFilter(props: getCarsWithFilterProps) {
-    const URL = process.env.DOMAIN || "http://localhost:3000/"
     const queries = Object.entries(props)
         .map(([key, value]) => {
             if (Array.isArray(value)) {
@@ -55,7 +72,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .join('&');
 
-    return fetch(URL + `api/cars/filter?status=1&` + queries, {
+    return fetch(`/api/cars/filter?` + queries, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -63,7 +80,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
             return data;
         })
         .catch((error) => {
-            console.error(error)
-            throw error;
+            return console.error(error)
+
         })
 }

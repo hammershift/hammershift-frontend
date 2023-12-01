@@ -4,6 +4,10 @@ import React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import CreateAccount from '../create_account/page'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 00f3a3c100fa0166d89733f05ab1995c9572b61f
 
 import CarPhoto from '../../../../public/images/wager-car-photo.svg'
 import DollarIcon from '../../../../public/images/dollar.svg'
