@@ -7,139 +7,11 @@ export const dynamic = 'force-dynamic';
 
 interface SortQuery {
   createdAt?: number,
-  price?: number,
-  deadline?: number,
-  bids?: number
+  "sort.price"?: number,
+  "sort.deadline"?: number,
+  "sort.bids"?: number
 }
 
-const categoryFilter = [
-  "Others",
-  "All",
-  "Coupes",
-  "Crossovers",
-  "EVs and Hybrids",
-  "Hatchbacks",
-  "Luxury Cars",
-  "Minivans & Vans",
-  "Pickup Trucks",
-  "SUVs",
-  "Sedans",
-  "Small Cars",
-  "Sports Cars",
-  "Station Wagons",
-]
-
-const eraFilter = [
-  "2020s",
-  "2010s",
-  "2000s",
-  "1990s",
-  "1980s",
-  "1970s",
-  "1960s",
-  "1950s",
-  "1940s",
-  "1930s",
-  "1920s",
-  "1910s",
-  "1900 and older",
-]
-
-const makeFilters = [
-  "Acura",
-  "Audi",
-  "BMW",
-  "Alfa Romeo",
-  "Aston Martin",
-  "Honda",
-  "Jaguar",
-  "Jeep",
-  "Kia",
-  "Lamborghini",
-  "Land Rover",
-  "Lexus",
-  "Chrysler",
-  "Chevrolet",
-  "Cadillac",
-  "Buick",
-  "Bugatti",
-  "Bentley",
-  "Hyundai",
-  "Lincoln",
-  "Lotus",
-  "Lucid",
-  "Maserati",
-  "Mazda",
-  "McLaren",
-  "Genesis",
-  "GMX",
-  "Ford",
-  "Fiat",
-  "Ferrari",
-  "Dodge",
-  "Infiniti",
-  "Mercedes-Benz",
-  "Mini",
-  "Mitsubishi",
-  "Nissan",
-  "Polestar",
-  "Porsche"
-]
-
-const locationFilter = [
-  "Alabama",
-  "Alaska",
-  "Idaho",
-  "Arizona",
-  "Arkansas",
-  "California",
-  "Colorado",
-  "Connecticut",
-  "Delaware",
-  "Florida",
-  "Georia",
-  "Hawaii",
-  "Illinois",
-  "Idaho",
-  "Illinois",
-  "Indiana",
-  "Iowa",
-  "Kansas",
-  "Kentucky",
-  "Louisiana",
-  "Maine",
-  "Maryland",
-  "Massachusetts",
-  "Michigan",
-  "Minnesota",
-  "Mississippi",
-  "Missouri",
-  "Montana",
-  "Nebraska",
-  "Nevada",
-  "New Hampshire",
-  "New Jersey",
-  "New Mexico",
-  "New York",
-  "North Carolina",
-  "North Dakota",
-  "Ohio",
-  "Oklahoma",
-  "Oregon",
-  "Pennsylvania",
-  "Rhode Island",
-  "South Carolina",
-  "South Dakota",
-  "Tennessee",
-  "Texas",
-  "Utah",
-  "Vermont",
-  "Virginia",
-  "Washington",
-  "West Virginia",
-  "Wisconsin",
-  "Wyoming"
-]
 
 export async function GET(req: NextRequest) {
   try {
@@ -172,14 +44,25 @@ export async function GET(req: NextRequest) {
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
     if (searchedKeyword) {
       const searchedCars = await Cars.find({
-        status: { $in: completed },
-        $text: { $search: `"${searchedKeyword}"`, $caseSensitive: false },
+        $and: [
+          { "attributes": { $elemMatch: { "key": "status", "value": { $in: completed } } } },
+          {
+            $or: [
+              { "attributes": { $elemMatch: { "key": "make", "value": { $regex: searchedKeyword, $options: "i" } } } },
+              { "attributes": { $elemMatch: { "key": "model", "value": { $regex: searchedKeyword, $options: "i" } } } },
+              { "attributes": { $elemMatch: { "key": "location", "value": { $regex: searchedKeyword, $options: "i" } } } },
+              { "attributes": { $elemMatch: { "key": "year", "value": { $regex: searchedKeyword, $options: "i" } } } }
+            ]
+          }
+        ]
       })
         .limit(limit)
-        .skip(offset);
+        .skip(offset)
 
       return NextResponse.json(searchedCars);
     }
+
+
 
     if (make !== "All") {
       make = make.split("$")
@@ -206,28 +89,27 @@ export async function GET(req: NextRequest) {
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
 
 
-    let sortObject: any = {};
-
     if (sort) {
       switch (sort) {
         case "Newly Listed":
-          sortObject = { createdAt: -1 };
+          sort = { createdAt: -1 }
           break;
         case "Ending Soon":
-          sortObject = { deadline: 1 };
+          sort = { "sort.deadline": 1 }
           break;
         case "Most Expensive":
-          sortObject = { price: -1 };
+          sort = { "sort.price": -1 }
           break;
         case "Least Expensive":
-          sortObject = { price: 1 };
+          sort = { "sort.price": 1 }
           break;
         case "Most Bids":
-          sortObject = { bids: -1 };
+          sort = { "sort.bids": -1 }
           break;
         case "Least Bids":
-          sortObject = { bids: 1 };
+          sort = { "sort.bids": 1 }
           break;
+        //other sorts here
         default:
           break;
       }
@@ -266,7 +148,7 @@ export async function GET(req: NextRequest) {
     const filteredCars = await Cars.find(query)
       .limit(limit)
       .skip(offset)
-      .sort(sortObject)
+      .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
 
     return NextResponse.json({ total: totalCars.length, cars: filteredCars });
 
