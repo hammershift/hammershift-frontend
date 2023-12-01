@@ -19,6 +19,8 @@ const config: Config = {
           '200': '#F2CA16'  // darker yellow
         },
         shade: {
+          '25': '#253747',
+          '50': '#1a2c3d',
           '100': '#172431'
         }
       },
