@@ -37,7 +37,7 @@ export function getCarData(ID: string) {
 }
 
 export function getCars({ limit }: { limit: Number }) {
-    return fetch(`https://hammershift-hk3cbfu7k-hammershifts-projects.vercel.app/auctions/api/cars/filter?completed=false&limit=${limit}`, {
+    return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
