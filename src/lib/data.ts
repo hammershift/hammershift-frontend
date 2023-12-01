@@ -37,7 +37,7 @@ export function getCarData(ID: string) {
         })
 }
 
-export function getCars({ limit }: { limit: Number }) {
+export function getCars({ limit }: { limit: number }) {
     return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
         cache: 'no-store' //dynamic rendering
     })
