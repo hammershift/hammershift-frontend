@@ -14,6 +14,7 @@ import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.sv
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import PasswordInput from '@/app/components/password_input';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -110,7 +111,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput value={password} onChange={setPassword} />
             </div>
           </div>
           <div className='tw-flex tw-justify-between tw-text-sm sm:tw-text-base'>
