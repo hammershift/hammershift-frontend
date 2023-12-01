@@ -45,8 +45,7 @@ export function getCars({ limit }: { limit: Number }) {
             return data;
         })
         .catch((error) => {
-            return console.error(error)
-
+            return { message: error };
         })
 }
 
@@ -80,7 +79,7 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
             return data;
         })
         .catch((error) => {
-            return console.error(error)
+            return { message: error };
 
         })
 }
