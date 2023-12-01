@@ -32,8 +32,7 @@ export function getCarData(ID: string) {
             return car;
         })
         .catch((error) => {
-            console.error(error)
-            return {message: error}
+            return console.error(error);
         })
 }
 
@@ -59,7 +58,7 @@ export interface getCarsWithFilterProps {
     limit?: number
 }
 
-export async function getCarsWithFilter(props: getCarsWithFilterProps) {
+export function getCarsWithFilter(props: getCarsWithFilterProps) {
     const queries = Object.entries(props)
         .map(([key, value]) => {
             if (Array.isArray(value)) {
@@ -72,7 +71,7 @@ export async function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .join('&');
 
-    fetch(`/api/cars/filter?` + queries, {
+    return fetch(`/api/cars/filter?` + queries, {
         cache: 'no-store' //dynamic rendering
     })
         .then((res) => res.json())
@@ -81,6 +80,5 @@ export async function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .catch((error) => {
             return { message: error };
-
         })
 }
