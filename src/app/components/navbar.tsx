@@ -103,7 +103,6 @@ const Navbar = () => {
   };
 
   const { data: session } = useSession();
-  console.log('Session data:', session);
   const isLoggedIn = !!session;
 
   return (
