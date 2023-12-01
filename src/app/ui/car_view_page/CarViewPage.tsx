@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 
 import Image from 'next/image'
 import Card from '../../components/card'
+import { useTimer } from '@/app/_context/TimerContext'
 
 import DollarIcon from '../../../../public/images/dollar.svg'
 import CalendarIcon from '../../../../public/images/calendar-icon.svg'
@@ -72,7 +73,8 @@ interface TitleContainerProps {
 }
 
 const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize }) => {
-
+const timerValues = useTimer();
+console.log(deadline)
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
             <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{year}  {make} {model}</div>
@@ -107,7 +109,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
                             <div>
                                 <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>02:01:00</span></span>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span></span>
                         </div>
                     </div>
                     <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
