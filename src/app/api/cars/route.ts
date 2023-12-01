@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     }
     // api/cars to get all cars
     const cars = await Cars.find().limit(limit).skip(offset);
-    return NextResponse.json(cars);
+    return NextResponse.json({ total: cars.length, cars: cars });
   } catch (error) {
     console.error(error)
     return NextResponse.json({ message: "Internal server error" });

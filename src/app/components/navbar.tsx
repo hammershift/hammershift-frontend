@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../public/images/hammershift-logo.svg";
@@ -22,19 +22,90 @@ import RankingStarTop from "../../../public/images/ranking-star-top.svg"
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg"
 import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-photo-two.svg"
 import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-photo-three.svg"
+import { useRouter } from "next/navigation";
 
 
 export interface NavbarProps {
     isLoggedIn: boolean;
 }
 
-type NavbarDropdownMenuProps = null | "My Watchlist" | "My Wagers" | "My Account"
+type NavbarDropdownMenuProps = null | "My Watchlist" | "My Wagers" | "My Account" | "Search"
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
+    const router = useRouter();
     const [menuIsOpen, setMenuIsOpen] = useState(false)
+    const [searchedData, setSearchedData] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [searchBoxDropDown, setSearchBoxDropDown] = useState(false)
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false)
     const [navDropdownMenu, setNavDropdownMenu] = useState<NavbarDropdownMenuProps>(null)
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const searchBox = document.getElementById('search-box');
+            const searchBar = document.getElementById('search-bar-input'); 
+    
+            if (searchBox && !searchBox.contains(e.target as Node) && searchBar && !searchBar.contains(e.target as Node)) {
+            setSearchBoxDropDown(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+
+        }, [setSearchBoxDropDown]);
+
+    const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
+        const data = await response.json()
+        
+        
+        setSearchedData(data.cars)
+        setSearchBoxDropDown(false);
+        router.push('/auctions')
+    }
+    
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchKeyword(e.target.value)
+        const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
+        const data = await response.json()
+        
+
+        if(data.length !== 0){
+            setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
+        }
+        setSearchedData(data.cars)
+    }
+
+    const handleInputClick = () => {
+        if(searchedData.length !== 0) {
+            setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
+        }
+    }
+
+    const handleSearchClick = async (carMake: string, carModel: string) => {
+        router.push('/auctions');
+        const searchInput = document.getElementById("search-bar-input") as HTMLInputElement;
+        const dropdownSearchInput = document.getElementById("dropdown-search-bar") as HTMLInputElement;
+        if (searchInput) {
+            searchInput.value = `${carMake} ${carModel}`;
+        }
+        if(dropdownSearchInput) {
+            dropdownSearchInput.value = `${carMake} ${carModel}`;
+        }
+        setSearchBoxDropDown(false);
+        // setMenuIsOpen(false)
+    }
+
     return (
         <div>
             {isLoggedIn
@@ -53,20 +124,28 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">AUCTIONS</div>
                         </Link>
                     </div>
-                    <div className="tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12">
-                        <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded">
-                            <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
-                            <input
-                                className="tw-ml-2 tw-bg-shade-100 tw-w-full "
-                                placeholder="Search make, model, year..."
-                            ></input>
-                        </div>
+                    <div className="tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block">
+                        <form onSubmit={handleSumbit} autoComplete="off" className="tw-w-full tw-flex tw-items-center">
+                            <div className={searchBoxDropDown ? "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t" : "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded"}>
+                                <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
+                                    <input
+                                        id="search-bar-input"
+                                        name="search"
+                                        type="text"
+                                        className="tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none"
+                                        placeholder="Search make, model, year..."
+                                        onClick={handleInputClick}
+                                        onChange={handleChange}
+                                    ></input>
+                            </div>
+                        </form>
+                        {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
                     </div>
                     {/* Buttons for logged in accounts */}
                     <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
                         <button className="tw-relative" onClick={() => setNavDropdownMenu((prev) => { if (prev === "My Watchlist") return null; else return "My Watchlist" })}>
                             <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
-                            {
+                            {   
                                 navDropdownMenu === "My Watchlist" &&
                                 <MyWatchlistDropdownMenu />
                             }
@@ -138,7 +217,16 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
             }
             {
                 menuIsOpen
-                && <DropdownMenu isLoggedIn={isLoggedIn} />
+                && <DropdownMenu 
+                        searchedData={searchedData} 
+                        isLoggedIn={isLoggedIn} 
+                        handleSubmit={handleSumbit} 
+                        handleChange={handleChange} 
+                        onSearchClick={handleSearchClick} 
+                        searchBoxDropDown={searchBoxDropDown}
+                        setSearchBoxDropDown={setSearchBoxDropDown}
+                        handleInputClick={handleInputClick}
+                    />
             }
             {
                 myAccountMenuOpen
@@ -153,17 +241,35 @@ export default Navbar;
 
 interface DropdownMenuProps {
     isLoggedIn: boolean;
+    searchBoxDropDown: boolean;
+    setSearchBoxDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+    searchedData: SearchDatas[];
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSearchClick: (carMake: string, carModel: string) => void;
+    handleInputClick: () => void;
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
+const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn, searchedData, handleSubmit, handleChange, onSearchClick, searchBoxDropDown, setSearchBoxDropDown, handleInputClick }) => {
+    
     return (
-        <div className="slide-in-top tw-fixed tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
-            <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
+        <div className="slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+            <div className="tw-relative">
+            <form autoComplete="off" onSubmit={handleSubmit} className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
                 <Image src={MagnifyingGlass} width={15} height={15} alt="magnifying glass" className="tw-w-auto tw-h-auto" />
                 <input
-                    className="tw-ml-2 tw-bg-shade-100 "
+                    id="dropdown-search-bar"
+                    className="tw-ml-2 tw-bg-shade-100 tw-outline-none"
                     placeholder="Search make, model, year..."
+                    name="search"
+                    type="text"
+                    onChange={handleChange}
+                    onClick={() => {
+                        setSearchBoxDropDown(true)
+                    }}
                 ></input>
+            </form>
+            {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={onSearchClick} />}
             </div>
             <div className="tw-flex tw-pt-4">
                 <Image src={WatchlistIcon} width={24} height={24} alt="watchlist" className="tw-w-[24px] tw-h-[24px]" />
@@ -187,6 +293,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn }) => {
 
 interface MyAccountMenuProps {
     isLoggedIn: boolean;
+    
 }
 
 const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
@@ -530,10 +637,6 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
     )
 }
 
-
-
-
-
 const MyAccountDropdownMenu = () => {
     const account_load = 100;
     return (
@@ -558,4 +661,56 @@ const MyAccountDropdownMenu = () => {
             </div>
         </div>
     )
+}
+
+const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchClick }) => {
+
+    
+    return (
+        <div id="search-box" className="tw-bg-shade-100 tw-absolute tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]">
+            {Array.isArray(searchedData) && searchedData.map((carData) => {
+                return (
+                    <div key={carData.auction_id} onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`)} className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded">{carData.attributes[2].value} {carData.attributes[3].value}</div>
+                )
+            })}
+        </div>
+    )
+}
+
+interface Attribute {
+    key: string;
+    value: string | number;
+    _id: string;
+    }
+
+interface Image {
+    placing: number;
+    src: string;
+}
+
+interface Sort {
+    price: number;
+    bids: number;
+    deadline: string;
+}
+
+interface SearchDatas {
+    _id: string;
+    attributes: Attribute[];
+    auction_id: string;
+    website: string;
+    image: string;
+    page_url: string;
+    description: string[];
+    images_list: Image[];
+    listing_details: string[];
+    sort: Sort;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
+interface SearchDropDownProps {
+    searchedData: SearchDatas[];
+    onSearchClick: (carMake: string, carModel: string) => void;
 }

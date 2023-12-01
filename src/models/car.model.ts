@@ -21,7 +21,6 @@ const carSchema = new mongoose.Schema(
         }
       }
     },
-    createdAt: { type: "string", format: "date-time" },
     description: {
       type: "array",
       items: { type: "string" }
@@ -42,14 +41,14 @@ const carSchema = new mongoose.Schema(
       items: { type: "string" }
     },
     page_url: { type: "string" },
-    updatedAt: { type: "string", format: "date-time" },
     website: { type: "string" },
     sort: {
       type: "object",
       properties: { price: { type: "number" }, bids: { type: "number" }, deadline: { type: "string", format: "date-time" } }
-
     }
-  },
+  },{
+    timestamps: true
+  }
 
 );
 

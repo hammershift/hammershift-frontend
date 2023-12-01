@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
     //api/cars/filter?search=911 Coupe or api/cars/filter?search=911%20Coupe
     //api/cars/filter?search=911%20Coupe&completed=true
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
+
     if (searchedKeyword) {
       const searchedCars = await Cars.find({
         $and: [
@@ -59,7 +60,7 @@ export async function GET(req: NextRequest) {
         .limit(limit)
         .skip(offset)
 
-      return NextResponse.json(searchedCars);
+      return NextResponse.json({total: searchedCars.length, cars: searchedCars});
     }
 
 

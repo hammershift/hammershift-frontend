@@ -81,6 +81,5 @@ export function getCarsWithFilter(props: getCarsWithFilterProps) {
         })
         .catch((error) => {
             return { message: error };
-
         })
 }
