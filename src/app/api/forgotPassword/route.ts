@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
     });
-    const expirationDate = new Date(new Date().getTime() + 5 * 6000);
+    const expirationDate = new Date(new Date().getTime() + 1 * 60000);
 
     // store it in the db
     console.log('Inserting OTP into the database');
