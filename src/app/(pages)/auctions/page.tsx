@@ -14,3 +14,4 @@ const AuctionListingPage = async () => {
 }
 
 export default AuctionListingPage
+

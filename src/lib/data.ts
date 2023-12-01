@@ -19,12 +19,16 @@
 
 
 
-export function getCarData(ID: string) {
-    return fetch(`/api/cars?auction_id=${ID}`, {
-        cache: 'no-store' //dynamic rendering
-    })
-        .then((res) => res.json())
-        .then(data => {
+export const getCarData = async (ID: string) => {
+    try {
+        const response = await fetch(`/api/cars?auction_id=${ID}`, {
+                cache: 'no-store' //dynamic rendering
+            });
+
+
+        if (response.ok) {
+
+            const data = await response.json();
             const car = {
                 auction_id: data.auction_id,
                 description: [...data.description],
@@ -50,25 +54,16 @@ export function getCarData(ID: string) {
                 status: data.attributes[14].value
             }
             return car;
-        })
-        .catch((error) => {
-            return { message: error };
-
-        })
+        }else {
+            console.log("failed to fetch cars")
+        }
+        
+    } catch (err) {
+        console.error(err);
+    }
 } 
 
-/*export function getCars({ limit }: { limit: number }) {
-    return fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
-        cache: 'no-store' //dynamic rendering
-    })
-        .then((res) => res.json())
-        .then(data => {
-            return data;
-        })
-        .catch((error) => {
-            return { message: error };
-        })
-} */
+
 export const getCars = async ({ limit }: { limit: number }) => {
     try {
         const response = await fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
@@ -85,12 +80,6 @@ export const getCars = async ({ limit }: { limit: number }) => {
         console.error(err);
     }
 };  
-
-
-
-
-
-
 
 
 export interface getCarsWithFilterProps {
