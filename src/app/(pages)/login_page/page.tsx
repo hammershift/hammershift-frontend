@@ -38,9 +38,15 @@ const CreateAccount = () => {
         body: JSON.stringify({ email: resetEmail }),
       });
       const data = await response.json();
-      console.log(data.message);
+      if (response.ok) {
+        router.push('/password_reset_flow');
+      } else {
+        setError(data.message);
+        console.log(data.message);
+      }
     } catch (error) {
       console.error('Error during password reset request:', error);
+      setError('An error occurred while processing the password reset request.');
     }
   };
 
