@@ -18,7 +18,7 @@ const Subscribe = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("data: ", data.emails);
+        // console.log("data: ", data.emails);
         setEmailList(data.emails);
       } else {
         console.error("Failed to fetch email list!");

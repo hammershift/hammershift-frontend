@@ -5,33 +5,32 @@ import TitleContainer from '@/app/ui/car_view_page/CarViewPage'
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection'
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data'
 import { getCarData } from '@/lib/data'
+import { TimerProvider } from '@/app/_context/TimerContext';
 
 
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
-    const [carData, setCarData] = useState<any>(null);
+  const [carData, setCarData] = useState<any>(null);
 
-    const ID = params.id;
+  const ID = params.id;
 
+  useEffect(() => {
+    getCarData(ID).then((data) => {
+      return setCarData(data);
+    });
+  }, []);
 
-    useEffect(() => {
-        getCarData(ID)
-            .then((data) => {
-                return setCarData(data);
-            })
-    }, [])
+  const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
-    const currencyString = new Intl.NumberFormat().format(carData?.price || 0)
-
-    const date = new Date(carData?.deadline || "2023-12-01T03:27:01.087+00:00");
-    const formattedDateString = new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-    }).format(date);
+  const date = new Date(carData?.deadline || "2023-12-01T03:27:01.087+00:00");
+  const formattedDateString = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  }).format(date);
 
     return (
         <>
@@ -46,17 +45,18 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     {
                         carData ? (
 
-                            <TitleContainer
-                                year={carData.year}
-                                make={carData.make}
-                                model={carData.model}
-                                current_bid={currencyString}
-                                bids_num={carData.bids}
-                                ending_date={formattedDateString}
-                                deadline={carData.deadline}
-                                players_num={auctionDataOne.players_num}
-                                prize={auctionDataOne.prize}
-                            />
+                            <TimerProvider deadline={carData.deadline}> <TitleContainer
+                            year={carData.year}
+                            make={carData.make}
+                            model={carData.model}
+                            current_bid={currencyString}
+                            bids_num={carData.bids}
+                            ending_date={formattedDateString}
+                            deadline={carData.deadline}
+                            players_num={auctionDataOne.players_num}
+                            prize={auctionDataOne.prize}
+                        /></TimerProvider>
+                           
 
                         ) : null
                     }
