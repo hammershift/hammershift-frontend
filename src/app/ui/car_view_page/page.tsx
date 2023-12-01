@@ -38,8 +38,6 @@ import AvatarFour from '../../../../public/images/avatar-four.svg'
 import Link from 'next/link'
 
 
-
-
 export interface CarDataOneProps {
     price: string,
     year: string,
@@ -59,65 +57,6 @@ export interface CarDataOneProps {
     status: Number
 }
 
-interface AuctionDataOneProps {
-    current_bid: string,
-    bids_num: number,
-    ending_date: string,
-    time_left: string,
-    players_num: number,
-    prize: string
-}
-
-interface CarViewPageProps {
-    carDataOne: CarDataOneProps
-    auctionDataOne: AuctionDataOneProps
-}
-export const initialState = {
-    price: '',
-    year: '',
-    make: 'F',
-    model: '',
-    page_url: '',
-    img: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2956-17001-scaled.jpg",
-    chassis: '',
-    seller: '',
-    location: '',
-    lot_num: '',
-    listing_type: '',
-    auction_id: '',
-    website: '',
-    description: [
-        '',
-        ''
-    ],
-    images_list: [
-        { placing: 1, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2956-17001-scaled.jpg" },
-        { placing: 2, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2945-17027-scaled.jpg" },
-        { placing: 3, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2894-17370-scaled.jpg" },
-        { placing: 4, src: "https://bringatrailer.com/wp-content/uploads/2023/07/5D5A2897-17394-scaled.jpg" },
-        { placing: 5, src: "https://bringatrailer.com/wp-content/uploads/2023/07/1974_bmw_2002-turbo_5D5A5368-18936-scaled.jpg" },
-
-    ],
-    listing_details: [
-        '',
-        '',
-    ]
-}
-
-
-export const WatchAndWagerButtons = () => {
-    const router = useRouter()
-    return (
-        <div className='tw-flex'>
-            <button className='btn-transparent-white tw-flex '>
-                <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                WATCH
-            </button>
-            <button className='btn-yellow tw-ml-2' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
-        </div>
-
-    )
-}
 
 interface TitleContainerProps {
     year: string
@@ -192,6 +131,22 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
 }
 
 export default TitleContainer;
+
+export const WatchAndWagerButtons = () => {
+    const router = useRouter()
+    return (
+        <div className='tw-flex'>
+            <button className='btn-transparent-white tw-flex '>
+                <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                WATCH
+            </button>
+            <button className='btn-yellow tw-ml-2' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
+        </div>
+
+    )
+}
+
+
 
 
 
