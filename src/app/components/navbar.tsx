@@ -59,24 +59,6 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
         }, [setSearchBoxDropDown]);
 
-    useEffect(() => {
-        const fetchSearchedData = async () => {
-            const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
-            const data = await response.json()
-            console.log(data.cars);
-            
-            if(data.length !== 0){
-                setSearchBoxDropDown(true);
-            } else {
-                setSearchBoxDropDown(false);
-            }
-            setSearchedData(data.cars)
-        }
-        fetchSearchedData()
-
-        }, [searchKeyword]);
-
-
     const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
@@ -85,11 +67,21 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
         
         setSearchedData(data.cars)
         setSearchBoxDropDown(false);
-        router.push('/auction_listing_page')
+        router.push('/auctions')
     }
     
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchKeyword(e.target.value)
+        const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+        const data = await response.json()
+        
+
+        if(data.length !== 0){
+            setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
+        }
+        setSearchedData(data.cars)
     }
 
     const handleInputClick = () => {
@@ -101,7 +93,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
     }
 
     const handleSearchClick = async (carMake: string, carModel: string) => {
-        router.push('/auction_listing_page');
+        router.push('/auctions');
         const searchInput = document.getElementById("search-bar-input") as HTMLInputElement;
         const dropdownSearchInput = document.getElementById("dropdown-search-bar") as HTMLInputElement;
         if (searchInput) {
