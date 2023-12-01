@@ -16,6 +16,7 @@ import IDCard from '../../../../public/images/single-neutral-id-card-1.svg';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ICountry, IState, Country, State } from 'country-state-city';
+import PasswordInput from '@/app/components/password_input';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'page one' | 'page two' | 'page three';
@@ -173,7 +174,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={password} onChange={(e) => setPassword(e.target.value)} />
+              <PasswordInput value={password} onChange={setPassword} />
             </div>
             <button className='btn-yellow' onClick={handleAccountCreation}>
               CREATE ACCOUNT

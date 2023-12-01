@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/lib/auth';
-import clientPromise from '@/app/lib/mongodb';
+import { authOptions } from '@/lib/auth';
+import clientPromise from '@/lib/mongodb';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {

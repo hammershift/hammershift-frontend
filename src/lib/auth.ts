@@ -1,5 +1,5 @@
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import clientPromise from '@/app/lib/mongodb';
+import clientPromise from '@/lib/mongodb';
 import bcrypt from 'bcrypt';
 import { User, Credentials } from '@/app/types/userTypes';
 import { NextAuthOptions, getServerSession } from 'next-auth';
