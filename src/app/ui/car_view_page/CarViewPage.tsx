@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 
 import Image from 'next/image'
-import Card from '../../_components/card'
+import Card from '../../components/card'
 
 import DollarIcon from '../../../../public/images/dollar.svg'
 import CalendarIcon from '../../../../public/images/calendar-icon.svg'

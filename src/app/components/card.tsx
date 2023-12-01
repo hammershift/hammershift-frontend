@@ -151,7 +151,6 @@ export default Card
 
 
 
-
 export const GamesCard = (props: any) => {
     const router = useRouter()
 

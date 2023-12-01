@@ -1,13 +1,13 @@
 "use client";
 import React, { Suspense, useEffect, useState } from 'react'
-import Links from '../../../../_components/links'
+import Links from '../../../../components/links'
 import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/CarViewPage'
 import TitleContainer from '@/app/ui/car_view_page/CarViewPage'
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection'
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data'
-import { SubscribeSmall } from '../../../../_components/subscribe'
-import Footer from '../../../../_components/footer'
-import { LatestNews } from '../../../../_components/how_hammeshift_works'
+import { SubscribeSmall } from '../../../../components/subscribe'
+import Footer from '../../../../components/footer'
+import { LatestNews } from '../../../../components/how_hammeshift_works'
 import { getCarData } from '@/lib/data'
 import { useRouter } from 'next/router'
 
