@@ -61,7 +61,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
     const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+        const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
         const data = await response.json()
         
         
@@ -72,7 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
     
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchKeyword(e.target.value)
-        const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+        const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
         const data = await response.json()
         
 
