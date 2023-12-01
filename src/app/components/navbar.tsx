@@ -59,29 +59,39 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
         }, [setSearchBoxDropDown]);
 
+    useEffect(() => {
+        const fetchSearchedData = async () => {
+            const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+            const data = await response.json()
+            console.log(data.cars);
+            
+            if(data.length !== 0){
+                setSearchBoxDropDown(true);
+            } else {
+                setSearchBoxDropDown(false);
+            }
+            setSearchedData(data.cars)
+        }
+        console.log(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
+        
+        fetchSearchedData()
+
+        }, [searchKeyword]);
+
 
     const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
         const data = await response.json()
-        console.log(data);
         
-        setSearchedData(data)
+        
+        setSearchedData(data.cars)
         setSearchBoxDropDown(false);
         router.push('/auction_listing_page')
     }
-
+    
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchKeyword(e.target.value)
-        const response = await fetch(`http://localhost:3000/api/cars/filter?search=${searchKeyword}`);
-        const data = await response.json()
-
-        if(data.length !== 0){
-            setSearchBoxDropDown(true);
-        } else {
-            setSearchBoxDropDown(false);
-        }
-        setSearchedData(data)
     }
 
     const handleInputClick = () => {
@@ -266,8 +276,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ isLoggedIn, searchedData, h
                     onChange={handleChange}
                     onClick={() => {
                         setSearchBoxDropDown(true)
-                        console.log(searchBoxDropDown);
-                        
                     }}
                 ></input>
             </form>
@@ -667,53 +675,52 @@ const MyAccountDropdownMenu = () => {
 
 const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchClick }) => {
 
+    
     return (
         <div id="search-box" className="tw-bg-shade-100 tw-absolute tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]">
-            { searchedData.map((carData) => {
+            {Array.isArray(searchedData) && searchedData.map((carData) => {
                 return (
-                    <div key={carData.auction_id} onClick={() => onSearchClick(`${carData.make}`, `${carData.model}`)} className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded">{carData.make} {carData.model}</div>
+                    <div key={carData.auction_id} onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`)} className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded">{carData.attributes[2].value} {carData.attributes[3].value}</div>
                 )
             })}
         </div>
     )
 }
 
-    interface Image {
-        _id: string;
-        placing: number;
-        src: string;
+interface Attribute {
+    key: string;
+    value: string | number;
+    _id: string;
     }
 
-    interface SearchDatas {
-        auction_id: string;
-        bids: number;
-        category: string;
-        chassis: string;
-        createdAt: string;
-        deadline: string;
-        description: string[];
-        era: string;
-        images_list: Image[];
-        img: string;
-        listing_details: string[];
-        listing_type: string;
-        location: string;
-        lot_num: string;
-        make: string;
-        model: string;
-        page_url: string;
-        price: string;
-        seller: string;
-        state: string;
-        status: number;
-        updatedAt: string;
-        website: string;
-        year: string;
-        __v: number;
-        _id: string;
-    }
+interface Image {
+    placing: number;
+    src: string;
+}
 
-    interface SearchDropDownProps {
-        searchedData: SearchDatas[];
-        onSearchClick: (carMake: string, carModel: string) => void;
-    }
+interface Sort {
+    price: number;
+    bids: number;
+    deadline: string;
+}
+
+interface SearchDatas {
+    _id: string;
+    attributes: Attribute[];
+    auction_id: string;
+    website: string;
+    image: string;
+    page_url: string;
+    description: string[];
+    images_list: Image[];
+    listing_details: string[];
+    sort: Sort;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
+interface SearchDropDownProps {
+    searchedData: SearchDatas[];
+    onSearchClick: (carMake: string, carModel: string) => void;
+}

@@ -12,6 +12,12 @@ const imageSchema = new mongoose.Schema({
   src: { type: String, required: true },
 });
 
+const sortSchema = new mongoose.Schema({
+  price: { type: Number, required: true },
+  bids: { type: Number, required: true },
+  deadline: { type: Date, required: true },
+});
+
 const carSchema = new mongoose.Schema(
   {
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -23,16 +29,10 @@ const carSchema = new mongoose.Schema(
     listing_details: { type: [String], required: true },
     page_url: { type: String, required: true },
     website: { type: String, required: true },
+    sort: sortSchema,
   },
   { timestamps: true }
 );
-
-carSchema.index({
-  location: "text",
-  make: "text",
-  model: "text",
-  year: "text",
-});
 
 const Cars = mongoose.models.cars || mongoose.model("cars", carSchema);
 

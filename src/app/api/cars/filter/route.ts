@@ -167,16 +167,6 @@ export async function GET(req: NextRequest) {
     //api/cars/filter?search=911 Coupe or api/cars/filter?search=911%20Coupe
     //api/cars/filter?search=911%20Coupe&completed=true
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
-    // if (searchedKeyword) {
-    //   const searchedCars = await Cars.find({
-    //     status: { $in: completed },
-    //     $text: { $search: `"${searchedKeyword}"`, $caseSensitive: false },
-    //   })
-    //     .limit(limit)
-    //     .skip(offset);
-
-    //   return NextResponse.json(searchedCars);
-    // }
 
     if (searchedKeyword) {
       const searchedCars = await Cars.find({
@@ -195,7 +185,7 @@ export async function GET(req: NextRequest) {
         .limit(limit)
         .skip(offset)
 
-      return NextResponse.json(searchedCars);
+      return NextResponse.json({total: searchedCars.length, cars: searchedCars});
     }
 
     if (make === "All") {
@@ -253,13 +243,7 @@ export async function GET(req: NextRequest) {
     //use "%20" or " " for 2-word queries
     //for ex. api/cars/filter?make=Porsche$Ferrari&location=New%20York$North%20Carolina&sort=Most%20Bids
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
-    // const totalCars = await Cars.find({
-    //   status: { $in: completed },
-    //   make: { $in: [...make] },
-    //   era: { $in: [...era] },
-    //   category: { $in: [...category] },
-    //   state: { $in: [...location] }
-    // })
+
     const totalCars = await Cars.find({
       $and: [
         { "attributes": { $elemMatch: { "key": "make", "value": { $in: make } } } },
