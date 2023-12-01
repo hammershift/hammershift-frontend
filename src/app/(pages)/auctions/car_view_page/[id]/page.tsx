@@ -1,19 +1,15 @@
 "use client";
 import React, { Suspense, useEffect, useState } from 'react'
-import Links from '../../../../components/links'
 import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/CarViewPage'
 import TitleContainer from '@/app/ui/car_view_page/CarViewPage'
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection'
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data'
-import { SubscribeSmall } from '../../../../components/subscribe'
-import Footer from '../../../../components/footer'
-import { LatestNews } from '../../../../components/how_hammeshift_works'
 import { getCarData } from '@/lib/data'
-import { useRouter } from 'next/router'
+
 
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
-    const [carData, setCarData] = useState<any>(carDataTwo);
+    const [carData, setCarData] = useState<any>(null);
 
     const ID = params.id;
 
@@ -25,9 +21,9 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             })
     }, [])
 
-    const currencyString = new Intl.NumberFormat().format(carData.price)
+    const currencyString = new Intl.NumberFormat().format(carData?.price || 0)
 
-    const date = new Date(carData.deadline || "2023-12-01T03:27:01.087+00:00");
+    const date = new Date(carData?.deadline || "2023-12-01T03:27:01.087+00:00");
     const formattedDateString = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',
         month: 'short',
@@ -47,34 +43,67 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             </div>
             <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
                 <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <TitleContainer
-                            year={carData.year}
-                            make={carData.make}
-                            model={carData.model}
-                            current_bid={currencyString}
-                            bids_num={carData.bids}
-                            ending_date={formattedDateString}
-                            deadline={carData.deadline}
-                            players_num={auctionDataOne.players_num}
-                            prize={auctionDataOne.prize}
-                        />
-                    </Suspense>
+                    {
+                        carData ? (
+
+                            <TitleContainer
+                                year={carData.year}
+                                make={carData.make}
+                                model={carData.model}
+                                current_bid={currencyString}
+                                bids_num={carData.bids}
+                                ending_date={formattedDateString}
+                                deadline={carData.deadline}
+                                players_num={auctionDataOne.players_num}
+                                prize={auctionDataOne.prize}
+                            />
+
+                        ) : null
+                    }
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WatchAndWagerButtons />
                     </div>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <PhotosLayout images_list={carData.images_list} img={carData.image} />
-                    </Suspense>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <ArticleSection images_list={carData.images_list} description={carData.description} />
-                    </Suspense>
+                    {
+                        carData ? (
+                            <>
+                                <PhotosLayout images_list={carData.images_list} img={carData.image} />
+                                <ArticleSection images_list={carData.images_list} description={carData.description} />
+
+                            </>
+
+                        ) : null
+                    }
                     <div className='tw-block sm:tw-hidden tw-mt-8'>
                         <WagersSection />
                     </div>
                     <GuessThePriceInfoSection />
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <div className='tw-block sm:tw-hidden tw-mt-8'>
+
+                    {
+                        carData ? (
+                            <div className='tw-block sm:tw-hidden tw-mt-8'>
+                                <DetailsSection
+                                    website={carData.website}
+                                    make={carData.make}
+                                    model={carData.model}
+                                    seller={carData.seller}
+                                    location={carData.location}
+                                    mileage="55,400"
+                                    listing_type={carData.listing_type}
+                                    lot_num={carData.lot_num}
+                                    listing_details={carData.listing_details}
+                                    images_list={carData.images_list}
+                                />
+                            </div>
+
+                        ) : null
+                    }
+                    <CommentsSection />
+
+                </div>
+                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
+                    <WagersSection />
+                    {
+                        carData ? (
                             <DetailsSection
                                 website={carData.website}
                                 make={carData.make}
@@ -87,27 +116,9 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                                 listing_details={carData.listing_details}
                                 images_list={carData.images_list}
                             />
-                        </div>
-                    </Suspense>
-                    <CommentsSection />
 
-                </div>
-                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
-                    <WagersSection />
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <DetailsSection
-                            website={carData.website}
-                            make={carData.make}
-                            model={carData.model}
-                            seller={carData.seller}
-                            location={carData.location}
-                            mileage="55,400"
-                            listing_type={carData.listing_type}
-                            lot_num={carData.lot_num}
-                            listing_details={carData.listing_details}
-                            images_list={carData.images_list}
-                        />
-                    </Suspense>
+                        ) : null
+                    }
                 </div>
             </div>
             <GamesYouMightLike />
