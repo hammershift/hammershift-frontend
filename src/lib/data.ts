@@ -1,22 +1,3 @@
-/*const getCarData = async (ID: string) => {
-    try {
-        const response = await fetch("api/emails", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            // console.log("data: ", data.emails);
-            setEmailList(data.emails);
-        } else {
-            console.error("Failed to fetch email list!");
-        }
-    } catch (err) {
-        console.error(err);
-    }
-};  */
-
 
 
 export const getCarData = async (ID: string) => {

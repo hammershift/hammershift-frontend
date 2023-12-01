@@ -346,3 +346,151 @@ export const carDataThree = [{
     "updatedAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
     "__v": 0
 }]
+
+
+export const carDataFour = {total: 10,
+    cars: [{
+    "_id": "65687173e2d6d854e455bd48",
+    "attributes": [
+        {
+            "key": "price",
+            "value": 26000,
+            "_id": "65687173e2d6d854e455bd49"
+        },
+        {
+            "key": "year",
+            "value": 1978,
+            "_id": "65687173e2d6d854e455bd4a"
+        },
+        {
+            "key": "make",
+            "value": "Ferrari",
+            "_id": "65687173e2d6d854e455bd4b"
+        },
+        {
+            "key": "model",
+            "value": "308 GTB Project",
+            "_id": "65687173e2d6d854e455bd4c"
+        },
+        {
+            "key": "category",
+            "value": "Projects",
+            "_id": "65687173e2d6d854e455bd4d"
+        },
+        {
+            "key": "era",
+            "value": "1970s",
+            "_id": "65687173e2d6d854e455bd4e"
+        },
+        {
+            "key": "chassis",
+            "value": "F106AB25879",
+            "_id": "65687173e2d6d854e455bd4f"
+        },
+        {
+            "key": "seller",
+            "value": "eddymoreeddy",
+            "_id": "65687173e2d6d854e455bd50"
+        },
+        {
+            "key": "location",
+            "value": "Yuma, Arizona 85367",
+            "_id": "65687173e2d6d854e455bd51"
+        },
+        {
+            "key": "state",
+            "value": "Arizona",
+            "_id": "65687173e2d6d854e455bd52"
+        },
+        {
+            "key": "lot_num",
+            "value": 129240,
+            "_id": "65687173e2d6d854e455bd53"
+        },
+        {
+            "key": "listing_type",
+            "value": "Private Property",
+            "_id": "65687173e2d6d854e455bd54"
+        },
+        {
+            "key": "deadline",
+            "value": "2023-11-30T19:31:00.000Z",
+            "_id": "65687173e2d6d854e455bd55"
+        },
+        {
+            "key": "bids",
+            "value": 12,
+            "_id": "65687173e2d6d854e455bd56"
+        },
+        {
+            "key": "status",
+            "value": 1,
+            "_id": "65687173e2d6d854e455bd57"
+        }
+    ],
+    "auction_id": "64551678",
+    "website": "Bring A Trailer",
+    "image": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_9638-1-10792.jpeg?fit=940%2C626",
+    "page_url": "https://bringatrailer.com/listing/1978-ferrari-308-gtb-9/",
+    "description": [
+        "This 1978 Ferrari 308 GTB is a non-running project that is equipped with a 2.9-liter quad-cam V8 paired with a five-speed manual transaxle. It is finished in Rosso Chiaro over beige leather and features a limited-slip differential, 14″ five-spoke alloy wheels, pop-up headlights, a quad-exit exhaust system, a gated shifter, and electric windows. The seller acquired the car in 2014, and it was parked in 2020 due to a mechanical failure. This 308 GTB is now offered at no reserve in Arizona with a clean Florida title in the seller’s name.",
+        "The 308 GTB was introduced at the 1975 Paris Motor Show and featured Pininfarina-styled bodywork. This example is finished in Rosso Chiaro and is equipped with pop-up headlights, dual side mirrors, louvered rear quarter windows, a vented decklid, and quad exhaust outlets. The seller notes the antenna is bent and the left rear side reflector is missing.",
+        "Silver 14″ five-spoke alloy wheels are mounted with Michelin TRX tires. The car features a fully independent suspension with double wishbones front and rear, and stopping power is provided by ventilated discs at each corner.",
+        "The cockpit features bolstered seats trimmed in beige leather with black accents along with matching door panels. Equipment includes a cassette stereo, electric windows, and a gated shifter with a dogleg gear pattern. The left window is inoperative.",
+        "The three-spoke leather-wrapped steering wheel frames Veglia instrumentation including a 180-mph speedometer and a tachometer with a 7,700-rpm redline as well as an analog clock and gauges for fuel level, water temperature, and oil pressure. The five-digit odometer shows 31k miles, approximately 2,500 of which were added under current ownership.",
+        "The mid-mounted 2.9L quad-cam V8 is equipped with four twin-choke Weber 40DCNF carburetors and was factory rated at 237 horsepower. The car was last running in 2020, when it was parked due to a mechanical issue, which the seller believes to be a broken rod. A belt service was last performed in June 2018 per the seller.",
+        "The car is equipped with a five-speed manual transaxle and a limited-slip differential."
+
+    ],
+    "images_list": [
+        {
+            "placing": 1,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_9678-10893.jpeg"
+        },
+        {
+            "placing": 2,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1348-10849.jpeg"
+        },
+        {
+            "placing": 3,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1314-11024.jpeg"
+        },
+        {
+            "placing": 4,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1325-10961.jpeg"
+        },
+        {
+            "placing": 5,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1460-4-11078.jpeg"
+        },
+        {
+            "placing": 6,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1504-4-11147.jpeg"
+        }
+    ],
+    "listing_details": [
+        "Chassis: F106AB25879",
+        "Non-Running Project",
+        "31k Miles Shown",
+        "2.9-Liter Quad-Cam V8",
+        "Five-Speed Manual Transaxle",
+        "Rosso Chiaro Paint",
+        "Beige Leather Upholstery",
+        "Limited-Slip Differential",
+        "14\" Five-Spoke Alloy Wheels",
+        "Pop-Up Headlights",
+        "Quad-Exit Exhaust System",
+        "Gated Shifter",
+        "Electric Windows"
+
+    ],
+    "sort": {
+        "price": 26000,
+        "bids": 12,
+        "deadline": "2023-11-30T19:31:00.000Z"
+    },
+    "createdAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
+    "updatedAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
+    "__v": 0
+}]
+}
