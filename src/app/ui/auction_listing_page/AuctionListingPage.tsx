@@ -62,6 +62,8 @@ export const AuctionListing = ({
     getCarsWithFilter(filterWithLimit).then((res) => {
       setTotalAuctions(res.total);
       setListing(res.cars);
+    }).catch((err) => {
+      console.error(err);
     });
   }, [filters, loadMore]);
 

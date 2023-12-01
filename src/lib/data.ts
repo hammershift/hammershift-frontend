@@ -32,7 +32,8 @@ export function getCarData(ID: string) {
             return car;
         })
         .catch((error) => {
-            return console.error(error);
+            return { message: error };
+
         })
 }
 
