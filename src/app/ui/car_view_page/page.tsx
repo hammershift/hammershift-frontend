@@ -132,38 +132,7 @@ interface TitleContainerProps {
 
 }
 
-export const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize }) => {
-    const [timeLeft, setTimeLeft] = useState({})
-    function calculateTimeDifference(targetDateISOString: string) {
-        // Parse the target date string into a Date object
-        const targetDate = new Date(targetDateISOString);
-
-        // Get the current date and time
-        const currentDate = new Date();
-
-        // Calculate the time difference in milliseconds
-        const timeDifference = targetDate.getTime() - currentDate.getTime();
-
-        // Calculate the time difference in days, hours, minutes, and seconds
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-        console.log(days, hours, minutes, seconds);
-        // Return an object with the calculated values
-        setTimeLeft({
-            days,
-            hours,
-            minutes,
-            seconds
-        });
-    }
-
-
-    // setInterval(() => {
-    //     calculateTimeDifference(String(deadline));
-    // }, 1000)
+const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize }) => {
 
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
@@ -221,6 +190,10 @@ export const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, mode
         </div>
     )
 }
+
+export default TitleContainer;
+
+
 
 interface PhotosLayoutProps {
     images_list: { placing: number, src: string }[];

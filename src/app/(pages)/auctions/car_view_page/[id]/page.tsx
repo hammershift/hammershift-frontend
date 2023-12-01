@@ -1,7 +1,8 @@
 "use client";
 import React, { Suspense, useEffect, useState } from 'react'
 import Links from '../../../../_components/links'
-import { WatchAndWagerButtons, TitleContainer, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/page'
+import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/page'
+import TitleContainer from '@/app/ui/car_view_page/page'
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection'
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data'
 import { SubscribeSmall } from '../../../../_components/subscribe'
