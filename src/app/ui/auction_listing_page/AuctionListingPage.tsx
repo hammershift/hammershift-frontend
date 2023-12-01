@@ -58,13 +58,18 @@ export const AuctionListing = ({
 
   //if filters are changed, fetch new data
   useEffect(() => {
-    const filterWithLimit = { ...filters, limit: loadMore };
-    getCarsWithFilter(filterWithLimit).then((res) => {
-      setTotalAuctions(res.total);
-      setListing(res.cars);
-    }).catch((err) => {
-      console.error(err);
-    });
+    const fetchData = async () => {
+      try {
+        const filterWithLimit = { ...filters, limit: loadMore };
+        const res = await getCarsWithFilter(filterWithLimit);
+        setTotalAuctions(res.total);
+        setListing(res.cars);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
   }, [filters, loadMore]);
 
   return (
