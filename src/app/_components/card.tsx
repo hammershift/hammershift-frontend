@@ -225,93 +225,126 @@ const Card = () => {
 export default Card;
 
 export const GamesCard = (props: any) => {
-    const router = useRouter()
+  const router = useRouter();
 
-    const currencyString = new Intl.NumberFormat().format(props.price)
+  const currencyString = new Intl.NumberFormat().format(props.price);
 
-    const activity = [
-        {
-            id: "ad1",
-            username: "damientine",
-            avatar: AvatarOne,
-            wager: "$292,000",
-            time: "12m ago"
-        },
-        {
-            id: "ad2",
-            username: "addisonmx",
-            avatar: AvatarTwo,
-            wager: "$29,500",
-            time: "16m ago"
-        }
-    ];
-    const players = [
-        {
-            id: "play1",
-            username: "user1",
-            avatar: AvatarOne
-        },
-        {
-            id: "play2",
-            username: "user2",
-            avatar: AvatarTwo
-        },
-        {
-            id: "play3",
-            username: "user2",
-            avatar: AvatarThree
-        },
-        {
-            id: "play4",
-            username: "user2",
-            avatar: AvatarFour
-        },
-        {
-            id: "player5",
-            username: "user2",
-            avatar: AvatarOne
-        },
-        {
-            id: "play6",
-            username: "user2",
-            avatar: AvatarTwo
-        },
-        {
-            id: "play7",
-            username: "user2",
-            avatar: AvatarThree
-        }
-    ]
-    return (
-        <div className='tw-h-full tw-flex tw-flex-col tw-justify-between'>
-            <div>
+  const activity = [
+    {
+      id: "ad1",
+      username: "damientine",
+      avatar: AvatarOne,
+      wager: "$292,000",
+      time: "12m ago",
+    },
+    {
+      id: "ad2",
+      username: "addisonmx",
+      avatar: AvatarTwo,
+      wager: "$29,500",
+      time: "16m ago",
+    },
+  ];
+  const players = [
+    {
+      id: "play1",
+      username: "user1",
+      avatar: AvatarOne,
+    },
+    {
+      id: "play2",
+      username: "user2",
+      avatar: AvatarTwo,
+    },
+    {
+      id: "play3",
+      username: "user2",
+      avatar: AvatarThree,
+    },
+    {
+      id: "play4",
+      username: "user2",
+      avatar: AvatarFour,
+    },
+    {
+      id: "player5",
+      username: "user2",
+      avatar: AvatarOne,
+    },
+    {
+      id: "play6",
+      username: "user2",
+      avatar: AvatarTwo,
+    },
+    {
+      id: "play7",
+      username: "user2",
+      avatar: AvatarThree,
+    },
+  ];
 
-                <Image src={props.image} width={416} height={219} alt={props.make} className='tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto' />
-                <div className='tw-font-bold tw-text-[24px] tw-py-[12px]'>{props.year} {props.make} {props.model}</div>
-                <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>{props.description[0]}</p>
-                <div className='tw-flex tw-mt-2'>
-                    <Image src={Dollar} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
-                    <div className='tw-px-2 tw-hidden sm:tw-block'>Current Bid:</div>
-                    <div className='tw-text-[#49C742] tw-font-bold'>${currencyString}</div>
+  const timerValues = useTimer();
+
+  return (
+    <TimerProvider deadline={new Date()}>
+      <div className="tw-h-full tw-flex tw-flex-col tw-justify-between">
+        <div>
+          <Image
+            src={props.image}
+            width={416}
+            height={219}
+            alt={props.make}
+            className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto"
+          />
+          <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
+            {props.year} {props.make} {props.model}
+          </div>
+          <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
+            {props.description[0]}
+          </p>
+          <div className="tw-flex tw-mt-2">
+            <Image
+              src={Dollar}
+              width={20}
+              height={20}
+              alt="dollar"
+              className="tw-w-5 tw-h-5"
+            />
+            <div className="tw-px-2 tw-hidden sm:tw-block">Current Bid:</div>
+            <div className="tw-text-[#49C742] tw-font-bold">
+              ${currencyString}
+            </div>
+          </div>
+          <div className="tw-flex">
+            <Image
+              src={HourGlass}
+              width={20}
+              height={20}
+              alt="dollar"
+              className="tw-w-5 tw-h-5"
+            />
+            <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
+            <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+          </div>
+          <div className=" tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]">
+            {activity.map((item) => {
+              return (
+                <div key={item.id} className="tw-flex tw-mb-2">
+                  <Image
+                    src={item.avatar}
+                    width={24}
+                    height={24}
+                    alt="dollar"
+                    className="tw-w-[24px] tw-h-[24px]"
+                  />
+                  <div className="tw-ml-1 tw-flex tw-flex-wrap">
+                    <div className="tw-text-[#42A0FF] tw-mr-2">{`@${item.username}`}</div>
+                    <div>{`wagered ${item.wager}`}</div>
+                    <div className="tw-text-[#DCE0D9] tw-ml-2">{item.time}</div>
+                  </div>
                 </div>
-                <div className='tw-flex'>
-                    <Image src={HourGlass} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5' />
-                    <div className='tw-px-2 tw-hidden sm:tw-block'>Time Left:</div>
-                    <div className='tw-text-[#C2451E] tw-font-bold'>2:16:00</div>
-                </div>
-                <div className=' tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]'>
-                    {activity.map((item) => {
-
-                        return <div key={item.id} className='tw-flex tw-mb-2'>
-                            <Image src={item.avatar} width={24} height={24} alt='dollar' className='tw-w-[24px] tw-h-[24px]' />
-                            <div className='tw-ml-1 tw-flex tw-flex-wrap'>
-                                <div className='tw-text-[#42A0FF] tw-mr-2'>{`@${item.username}`}</div>
-                                <div>{`wagered ${item.wager}`}</div>
-                                <div className='tw-text-[#DCE0D9] tw-ml-2'>{item.time}</div>
-                            </div>
-                        </div>
-                    }
-                    )}
+              );
+            })}
 
             <div className="tw-relative tw-flex tw-items-center">
               {/* avatar images - hidden for screens smaller than sm */}

@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
 import Image from 'next/image'
-import HowHammerShiftWorks from '../../components/how_hammeshift_works'
-import { SubscribeSmall } from '../../components/subscribe'
-import Footer from '../../components/footer'
+import HowHammerShiftWorks from '../../_components/how_hammeshift_works'
+import { SubscribeSmall } from '../../_components/subscribe'
+import Footer from '../../_components/footer'
 
 import AboutImage from '../../../../public/images/about-image.svg'
 import RyanTurri from '../../../../public/images/ryan-turri.svg'
