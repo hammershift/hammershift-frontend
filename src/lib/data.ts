@@ -32,7 +32,8 @@ export function getCarData(ID: string) {
             return car;
         })
         .catch((error) => {
-            return console.error(error);
+            console.error(error)
+            return {message: error}
         })
 }
 
@@ -45,8 +46,8 @@ export function getCars({ limit }: { limit: Number }) {
             return data;
         })
         .catch((error) => {
-            return console.error(error)
-
+            console.error(error)
+            return {message: error}
         })
 }
 
@@ -80,6 +81,7 @@ export async function getCarsWithFilter(props: getCarsWithFilterProps) {
             return data;
         })
         .catch((error) => {
-            return console.error(error)
+            console.error(error)
+            return {message: error}
         })
 }
