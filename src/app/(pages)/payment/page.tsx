@@ -18,6 +18,8 @@ import HelpIcon from '../../../../public/images/payments-logo/help-icon.svg'
 import Check from '../../../../public/images/check.svg'
 
 
+
+
 const Payment = () => {
     const router = useRouter()
     const cardSaved = true

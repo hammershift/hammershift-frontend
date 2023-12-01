@@ -39,6 +39,8 @@ const CreateAccount = () => {
       });
       const data = await response.json();
       if (response.ok) {
+        // store the email in local storage
+        localStorage.setItem('passwordResetEmail', resetEmail);
         router.push('/password_reset_flow');
       } else {
         setError(data.message);
@@ -175,7 +177,7 @@ const CreateAccount = () => {
           <div>
             Or return to
             <button
-              className='tw-appearance-none tw-text-[#F2CA16] tw-ml-2'
+              className='tw-appearance-none tw-text-[#F2CA16] tw-ml-2 underline'
               onClick={() => {
                 setCreateAccountPage('sign in');
               }}

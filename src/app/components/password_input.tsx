@@ -1,5 +1,6 @@
 import React, { useState, FC } from 'react';
 import Image from 'next/image';
+import eyeOn from '../../images/eye-on.svg';
 
 interface PasswordInputProps {
   value: string;

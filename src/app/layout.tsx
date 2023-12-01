@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import './styles/globals.css';
-import './styles/app.css';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import Navbar from './components/navbar';
-import { SessionProvider } from 'next-auth/react';
+import './styles/globals.css'
+import './styles/app.css'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import Navbar from './components/navbar'
+import { SessionProvider } from 'next-auth/react'
 
 const inter = Inter({ subsets: ['latin'] });
 

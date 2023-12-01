@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,11 +13,9 @@ import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.sv
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import Passport from '../../../../public/images/passport.svg';
 import IDCard from '../../../../public/images/single-neutral-id-card-1.svg';
-
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ICountry, IState, Country, State } from 'country-state-city';
-import PasswordInput from '@/app/components/password_input';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'page one' | 'page two' | 'page three';
@@ -44,7 +41,7 @@ const CreateAccount = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // load all countries for the dropdown
+  // for component mounting, set countries
   useEffect(() => {
     setCountries(Country.getAllCountries());
   }, []);
@@ -76,7 +73,6 @@ const CreateAccount = () => {
     }
   };
 
-  // handler for account creation logic
   const handleAccountCreation = async () => {
     const response = await fetch('/api/signup', {
       method: 'POST',
@@ -105,7 +101,6 @@ const CreateAccount = () => {
     }
   };
 
-  // handler for profile submission logic
   const handleProfileSubmission = async () => {
     const profileData = { fullName, username, country: selectedCountry?.name, state: selectedState?.name, aboutMe };
     console.log('Profile Data being sent:', profileData);
@@ -137,7 +132,6 @@ const CreateAccount = () => {
     }
   };
 
-  // handler for skipping the verification of credentials with onfido
   const handleVerifyLater = async () => {
     const userData = { fullName, username, country, state, aboutMe };
     const response = await fetch('/api/userInfo', {
@@ -167,7 +161,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-mt-1'>
               Already a member?
-              <Link href={'/login_page'} className='tw-text-[#F2CA16] tw-ml-2'>
+              <Link href={'/login_page'} className='tw-text-[#F2CA16] tw-ml-2 underline'>
                 Login Here
               </Link>
             </div>
@@ -179,7 +173,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <PasswordInput value={password} onChange={setPassword} />
+              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <button className='btn-yellow' onClick={handleAccountCreation}>
               CREATE ACCOUNT

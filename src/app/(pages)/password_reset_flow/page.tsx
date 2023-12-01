@@ -43,13 +43,16 @@ const PasswordResetFlow = () => {
     }
   };
 
-  // TODO
   const handlePasswordReset = async () => {
-    router.push('/login_page/page.tsx');
+    // Logic to reset password
+    // On success:
+    router.push('/login_page');
+    // On failure:
+    // setError('Error resetting password.');
   };
 
   const getInputStyle = () => {
-    if (otpVerificationSuccess) {
+    if (otp.length === 6) {
       return 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full tw-border-green-500';
     } else if (error) {
       return 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full tw-border-red-500';
@@ -80,14 +83,8 @@ const PasswordResetFlow = () => {
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {resetPage === 'enter otp' && (
         <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-2 tw-pt-6'>
-          <div className='tw-font-bold tw-text-2xl  md:tw-text-4xl'>Verification Code</div>
-          {otpExpired ? (
-            <div className='tw-text-sm tw-mb-2 tw-ml-2 tw-text-red-500'>OTP code has expired.</div>
-          ) : error ? (
-            <p className='tw-text-sm tw-ml-2'>{error}</p>
-          ) : (
-            <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>
-          )}
+          <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Verification Code</div>
+          {!otpExpired && <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -95,8 +92,8 @@ const PasswordResetFlow = () => {
             }}
           >
             <div className='tw-flex tw-flex-col tw-gap-6'>
-              <input className={getInputStyle()} type='text' value={otp} onChange={(e) => setOtp(e.target.value)} placeholder='Enter Code' required disabled={otpExpired} />{' '}
-              {error && <p className='tw-text-sm'>{error}</p>}
+              <input className={getInputStyle()} type='text' value={otp} onChange={(e) => setOtp(e.target.value)} placeholder='Enter Code' required disabled={otpExpired} />
+              {error && <p className='tw-text-sm tw-ml-2 tw-text-red-500'>{error}</p>}
               <button type='submit' className='btn-yellow tw-w-full' disabled={otpExpired}>
                 Verify Code
               </button>
