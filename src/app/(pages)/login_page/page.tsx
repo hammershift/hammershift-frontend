@@ -13,6 +13,7 @@ import Onfido from '../../../../public/images/onfido.svg'
 import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg'
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg'
 
+
 const CreateAccount = () => {
     type createAccountPageProps = "sign in" | "reset password"
     const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>("sign in")

@@ -1,14 +1,9 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter } from 'next/navigation'
-import Links from '../../components/links'
+
 import Image from 'next/image'
 import Card from '../../components/card'
-import { LatestNews } from '../../components/how_hammeshift_works'
-import { carDataOne, auctionDataOne } from '../../../sample_data'
-import { SubscribeSmall } from '../../components/subscribe'
-import Footer from '../../components/footer'
-import Link from 'next/link'
 
 import DollarIcon from '../../../../public/images/dollar.svg'
 import CalendarIcon from '../../../../public/images/calendar-icon.svg'
@@ -16,9 +11,8 @@ import HashtagIcon from '../../../../public/images/hash-02.svg'
 import PlayersIcon from '../../../../public/images/users-01.svg'
 import HourGlassIcon from '../../../../public/images/hour-glass.svg'
 import PrizeIcon from '../../../../public/images/monetization-browser-bag.svg'
-import LiveGamesIcon from '../../../../public/images/currency-dollar-circle.svg'
-import CameraPlus from '../../../../public/images/camera-plus.svg'
 
+import CameraPlus from '../../../../public/images/camera-plus.svg'
 import GifIcon from '../../../../public/images/image-document-gif.svg'
 import BellIcon from '../../../../public/images/bell-02.svg'
 import ThumbsUp from '../../../../public/images/thumbs-up.svg'
@@ -27,7 +21,7 @@ import CornerDownRight from '../../../../public/images/corner-down-right.svg'
 import ThreeDots from '../../../../public/images/dots-vertical.svg'
 import OpenWebLogo from '../../../../public/images/open-web-logo.svg'
 import ArrowDown from '../../../../public/images/arrow-down.svg'
-
+import ArrowUp from '../../../../public/images/chevron-up.svg'
 import DiagonalLines from '../../../../public/images/green-diagonal.svg'
 import TransitionPattern from '../../../../public/images/transition-pattern.svg'
 import BringATrailerLogo from '../../../../public/images/bring-a-trailer-logo.svg'
@@ -35,20 +29,16 @@ import ProfilePhoto from '../../../../public/images/ellipse-415.svg'
 import CarFaxLogo from '../../../../public/images/show-me-carfax.svg'
 import WatchListIcon from '../../../../public/images/watchlist-icon.svg'
 
-import PhotoOne from '../../../../public/images/car-view-page/photoOne.svg'
-import PhotoTwo from '../../../../public/images/car-view-page/photoTwo.svg'
-import PhotoThree from '../../../../public/images/car-view-page/photoThree.svg'
-import PhotoFour from '../../../../public/images/car-view-page/photoFour.svg'
-import PhotoFive from '../../../../public/images/car-view-page/photoOne.svg'
-
 import AvatarOne from '../../../../public/images/avatar-one.svg'
 import AvatarTwo from '../../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../../public/images/avatar-four.svg'
 
 
+import Link from 'next/link'
 
-interface CarDataOneProps {
+
+export interface CarDataOneProps {
     price: string,
     year: string,
     make: string,
@@ -64,111 +54,9 @@ interface CarDataOneProps {
     description: string,
     images_list: { placing: number, src: string }[],
     listing_details: string,
+    status: Number
 }
 
-interface AuctionDataOneProps {
-    current_bid: string,
-    bids_num: number,
-    ending_date: string,
-    time_left: string,
-    players_num: number,
-    prize: string
-}
-
-interface CarViewPageProps {
-    carDataOne: CarDataOneProps
-    auctionDataOne: AuctionDataOneProps
-}
-
-const CarViewPage = () => {
-    return (
-        <div className='tw-flex tw-flex-col tw-items-center'>
-            <Links />
-            <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
-                <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
-                <div className='tw-hidden sm:tw-block'>
-                    <WatchAndWagerButtons />
-                </div>
-            </div>
-            <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
-                <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
-                    <TitleContainer
-                        year={carDataOne.year}
-                        make={carDataOne.make}
-                        model={carDataOne.model}
-                        current_bid={auctionDataOne.current_bid}
-                        bids_num={auctionDataOne.bids_num}
-                        ending_date={auctionDataOne.ending_date}
-                        time_left={auctionDataOne.time_left}
-                        players_num={auctionDataOne.players_num}
-                        prize={auctionDataOne.prize}
-                    />
-                    <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <WatchAndWagerButtons />
-                    </div>
-                    <PhotosLayout images_list={carDataOne.images_list} img={carDataOne.img} />
-                    <ArticleSection images_list={carDataOne.images_list} description={carDataOne.description} />
-                    <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <WagersSection />
-                    </div>
-                    <GuessThePriceInfoSection />
-                    <div className='tw-block sm:tw-hidden tw-mt-8'>
-                        <DetailsSection
-                            website={carDataOne.website}
-                            make={carDataOne.make}
-                            model={carDataOne.model}
-                            seller={carDataOne.seller}
-                            location={carDataOne.location}
-                            mileage="55,400"
-                            listing_type={carDataOne.listing_type}
-                            lot_num={carDataOne.lot_num}
-                            listing_details={carDataOne.listing_details}
-                            images_list={carDataOne.images_list}
-                        />
-                    </div>
-                    <CommentsSection />
-
-                </div>
-                <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
-                    <WagersSection />
-                    <DetailsSection
-                        website={carDataOne.website}
-                        make={carDataOne.make}
-                        model={carDataOne.model}
-                        seller={carDataOne.seller}
-                        location={carDataOne.location}
-                        mileage="55,400"
-                        listing_type={carDataOne.listing_type}
-                        lot_num={carDataOne.lot_num}
-                        listing_details={carDataOne.listing_details}
-                        images_list={carDataOne.images_list}
-                    />
-                </div>
-            </div>
-            <GamesYouMightLike />
-            <LatestNews />
-            <SubscribeSmall />
-            <Footer />
-        </div>
-    )
-}
-
-export default CarViewPage
-
-
-const WatchAndWagerButtons = () => {
-    const router = useRouter()
-    return (
-        <div className='tw-flex'>
-            <button className='btn-transparent-white tw-flex '>
-                <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
-                WATCH
-            </button>
-            <button className='btn-yellow tw-ml-2' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
-        </div>
-
-    )
-}
 
 interface TitleContainerProps {
     year: string
@@ -177,13 +65,14 @@ interface TitleContainerProps {
     current_bid: string
     bids_num: number
     ending_date: string
-    time_left: string
+    deadline: Date | string
     players_num: number
     prize: string
 
 }
 
-const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, time_left, players_num, prize }) => {
+const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize }) => {
+
     return (
         <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
             <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>{year}  {make} {model}</div>
@@ -194,7 +83,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
                             <Image src={DollarIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
                         </div>
                         <div className='tw-opacity-80 tw-flex'>Current Bid:
-                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{current_bid}
+                            <span className='tw-text-[#49C742] tw-font-bold tw-ml-2'>{`$ ${String(current_bid)}`}
                             </span>
                             <span className='tw-block md:tw-hidden tw-ml-2'>{`(${bids_num} bids)`}</span>
                         </div>
@@ -218,7 +107,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
                             <div>
                                 <Image src={HourGlassIcon} width={20} height={20} alt="calendar" className='tw-w-5 tw-h-5  tw-mr-2' />
                             </div>
-                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>{time_left}</span></span>
+                            <span className='tw-opacity-80'>Time Left: <span className='tw-font-bold tw-text-[#C2451E]'>02:01:00</span></span>
                         </div>
                     </div>
                     <div className='bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex'>
@@ -241,11 +130,31 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
     )
 }
 
+export default TitleContainer;
+
+export const WatchAndWagerButtons = () => {
+    const router = useRouter()
+    return (
+        <div className='tw-flex'>
+            <button className='btn-transparent-white tw-flex '>
+                <Image src={WatchListIcon} width={20} height={20} alt="dollar" className='tw-w-5 tw-h-5  tw-mr-2' />
+                WATCH
+            </button>
+            <button className='btn-yellow tw-ml-2' onClick={() => router.push('/wager_page')}>PLACE MY WAGER</button>
+        </div>
+
+    )
+}
+
+
+
+
+
 interface PhotosLayoutProps {
     images_list: { placing: number, src: string }[];
     img: string;
 }
-const PhotosLayout: React.FC<PhotosLayoutProps> = ({ images_list, img }) => {
+export const PhotosLayout: React.FC<PhotosLayoutProps> = ({ images_list, img }) => {
     return (
         <div className=' tw-my-8'>
             <Image src={img} width={832} height={520} alt="car" className='tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto' />
@@ -266,7 +175,7 @@ interface ArticleSectionProps {
     description: string[];
     images_list: { placing: number; src: string }[]
 }
-const ArticleSection: React.FC<ArticleSectionProps> = ({ description, images_list }) => {
+export const ArticleSection: React.FC<ArticleSectionProps> = ({ description, images_list }) => {
     const router = useRouter()
     const [showDetails, setShowDetails] = useState(false);
     return (
@@ -298,21 +207,9 @@ const ArticleSection: React.FC<ArticleSectionProps> = ({ description, images_lis
     )
 }
 
-const GuessThePriceInfoSection = () => {
-    return (
-        <div>
-            <div className='tw-mt-8 lg:tw-mt-16 tw-p-6 tw-bg-[#172431]'>
-                <Image src={LiveGamesIcon} width={68} height={68} alt="car" className='tw-w-[68px] tw-h-[68px]' />
-                <div className='tw-text-2xl tw-font-bold tw-mt-6'>What is Guess the Price</div>
-                <div className='tw-my-4'>Wager on the car auction and guess the final hammer price. Closest player wins the prize. Duis anim adipisicing minim nisi elit quis. Cillum ullamco qui dolore non incididunt incididunt non. Aute adipisicing et esse exercitation sunt irure proident enim eu esse nulla. Est excepteur est non. Adipisicing occaecat minim ex duis excepteur.</div>
-                <div className='tw-text-[#42A0FF]'>View Auctions</div>
-            </div>
-        </div>
-    )
-}
 
 
-const CommentsSection = () => {
+export const CommentsSection = () => {
     return (
         <div className='tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0'>
             <div className='tw-flex tw-justify-between'>
@@ -354,7 +251,7 @@ const CommentsSection = () => {
     )
 }
 
-const CommentsCard = () => {
+export const CommentsCard = () => {
     const commentsData = [{
         id: "com1",
         username: "@johnadams",
@@ -390,7 +287,7 @@ const CommentsCard = () => {
 
 
 
-const WagersSection = () => {
+export const WagersSection = () => {
     const router = useRouter()
     const teamPlayers = [{
         id: "wager1",
@@ -463,7 +360,7 @@ interface DetailsSectionProps {
     images_list: { placing: number; src: string }[];
 }
 
-const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, seller, location, mileage, listing_type, lot_num, listing_details, images_list }) => {
+export const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, seller, location, mileage, listing_type, lot_num, listing_details, images_list }) => {
     const logo = BringATrailerLogo
     const seller_img = ProfilePhoto
     const DetailsData = {
@@ -574,7 +471,7 @@ const DetailsSection: React.FC<DetailsSectionProps> = ({ website, make, model, s
     )
 }
 
-const GamesYouMightLike = () => {
+export const GamesYouMightLike = () => {
     return (
         <div className='section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-8 md:tw-mt-16'>
 
