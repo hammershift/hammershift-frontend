@@ -1,5 +1,5 @@
 import BlackMercedes from '../public/images/black-mercedes.svg'
-import TwoCars from '../public/images/two-cars.svg'
+
 
 export const carData = [{
     id: "car1",
@@ -7,7 +7,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 },
 {
@@ -16,7 +16,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 },
 {
@@ -25,7 +25,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 },
 {
@@ -34,7 +34,7 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 }, {
     id: "car5",
@@ -42,30 +42,10 @@ export const carData = [{
     year: "1969",
     name: "Shelby Mustang",
     description: "GT350",
-    time: "12:17:00"
+    deadline: new Date("2023-12-06T22:21:00.000Z")
 
 }]
 
-export const articleData = [{
-    id: "r1",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: TwoCars
-},
-{
-    id: "r2",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: TwoCars
-},
-{
-    id: "r3",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: TwoCars
-},
-{
-    id: "r4",
-    title: "Quam temere in vitiis, legem sancimus haerentia.",
-    url: TwoCars
-}]
 
 export const carDataOne = {
     price: '$1,402,000',
@@ -126,6 +106,93 @@ export const carDataOne = {
     ]
 }
 
+export const carDataTwo = {
+    _id: '655ee2592dc773f975516962',
+    auction_id: '67232853',
+    __v: 0,
+    bids: 15,
+    category: 'Others',
+    chassis: 'WBAWB73507P033096',
+    createdAt: '2023-11-23T05:25:45.222Z',
+    deadline: '2023-11-24T18:23:00.000Z',
+    description: [
+        'This 2007 BMW 335i coupe has remained registered in California through the selling dealer’s acquisition in 2023 and now has 41k miles. It is powered by a twin-turbocharged 3.0L inline-six paired with a six-speed Steptronic automatic transmission and is finished in Space Gray Metallic over Cream Beige Dakota leather upholstery. Features include a sunroof, adaptive xenon headlights, rear Park Distance Control, 18″ Style 189 alloy wheels, a rear spoiler, a Dinan exhaust system and front strut brace, power-adjustable front seats, iDrive with navigation, a CD stereo, and dual-zone automatic climate control. This is now offered by the selling dealer at no reserve with the owner’s manual, a clean Carfax report, and a clean California title.',
+        'The car is finished in Space Gray Metallic and is equipped with adaptive xenon headlights with washers, fog lights, a sunroof, rear Park Distance Control, bright trim, a rear spoiler, and dual exhaust outlets.',
+        'The 18″ Style 189 alloy wheels are mounted with 225/40 front and 255/35 rear Michelin Pilot Sport 4s tires. Stopping power is provided by ventilated discs at each corner, and the car is equipped with Dynamic Traction Control, Dynamic Stability Control, and a Dinan front strut brace.',
+        'The power-adjustable front seats are upholstered in Cream Beige Dakota leather and are complemented by a color-coordinated lower dash, center console, door panels, and carpets. Wood trim accents the cabin, and interior amenities include iDrive with navigation, cruise control, a CD stereo, and dual-zone automatic climate control.',
+        'The leather-wrapped steering wheel frames a 160-mph speedometer and a tachometer with a 7k-rpm redline as well as gauges for oil temperature and fuel level. The digital odometer indicates 41k miles.',
+        'The twin-turbocharged 3.0-liter N54B30 inline-six was factory rated at 300 horsepower and 300 lb-ft of torque. An oil change was performed in September 2023, at which time the car passed an emissions inspection.',
+        'Power is routed to the rear wheels via a six-speed Steptronic automatic transmission. A Dinan exhaust system has been fitted, and additional photos of the underside are presented in the gallery.',
+        'The Carfax report shows no accidents or other damage and lists history in California. Multiple gaps between entries are present in the report.'
+    ],
+    era: '2000s',
+    images_list: [
+        {
+            _id: '655f432d10c6f01ba6bc8b46',
+            placing: 1,
+            src: 'https://bringatrailer.com/wp-content/uploads/2023/10/11DJ2A4422-88394-scaled.jpg'
+        },
+        {
+            _id: '655f432d10c6f01ba6bc8b47',
+            placing: 2,
+            src: 'https://bringatrailer.com/wp-content/uploads/2023/10/19DJ2A4523-88466-scaled.jpg'
+        },
+        {
+            _id: '655f432d10c6f01ba6bc8b48',
+            placing: 3,
+            src: 'https://bringatrailer.com/wp-content/uploads/2023/10/14DJ2A4528-88421-scaled.jpg'
+        },
+        {
+            _id: '655f432d10c6f01ba6bc8b49',
+            placing: 4,
+            src: 'https://bringatrailer.com/wp-content/uploads/2023/10/10DJ2A4492-88386-scaled.jpg'
+        },
+        {
+            _id: '655f432d10c6f01ba6bc8b4a',
+            placing: 5,
+            src: 'https://bringatrailer.com/wp-content/uploads/2023/10/DJ2A4460-88744-scaled.jpg'
+        },
+        {
+            _id: '655f432d10c6f01ba6bc8b4b',
+            placing: 6,
+            src: 'https://bringatrailer.com/wp-content/uploads/2023/10/2007_bmw_335i-coupe_IMG_5443-90280-scaled.jpg'
+        }
+    ],
+    image: 'https://bringatrailer.com/wp-content/uploads/2023/10/1DJ2A4513-88256-scaled.jpg?fit=940%2C627',
+    listing_details: [
+        'Chassis: WBAWB73507P033096',
+        '41k Miles',
+        'Twin-Turbocharged 3.0L Inline-Six',
+        'Six-Speed Steptronic Automatic Transmission',
+        'Space Gray Metallic Paint',
+        'Cream Beige Dakota Leather Upholstery',
+        '18" Style 189 Alloy Wheels',
+        'Sunroof',
+        'Adaptive Xenon Headlights w/Washers',
+        'Rear Park Distance Control',
+        'Power-Adjustable Front Seats',
+        'iDrive w/Navigation',
+        'Dual-Zone Automatic Climate Control',
+        'Dinan Exhaust System',
+        'Dinan Front Strut Brace',
+        'Clean Carfax Report'
+    ],
+    listing_type: 'Private Property',
+    location: 'Costa Mesa, California 92627',
+    lot_num: '128555',
+    make: 'BMW',
+    model: '335i Coupe (DEFAULT)',
+    page_url: 'https://bringatrailer.com/listing/2007-bmw-335i-coupe-4/',
+    price: 5400,
+    seller: 'akpcm',
+    state: 'California',
+    status: 1,
+    updatedAt: '2023-11-23T05:25:46.766Z',
+    website: 'Bring A Trailer',
+    year: '2007'
+}
+
+
 export const auctionDataOne = {
     current_bid: "$64,000",
     bids_num: 48,
@@ -133,4 +200,297 @@ export const auctionDataOne = {
     time_left: "02:16:00",
     players_num: 4,
     prize: "$1,000"
+}
+
+export const carDataThree = [{
+    "_id": "65687173e2d6d854e455bd48",
+    "attributes": [
+        {
+            "key": "price",
+            "value": 26000,
+            "_id": "65687173e2d6d854e455bd49"
+        },
+        {
+            "key": "year",
+            "value": 1978,
+            "_id": "65687173e2d6d854e455bd4a"
+        },
+        {
+            "key": "make",
+            "value": "Ferrari",
+            "_id": "65687173e2d6d854e455bd4b"
+        },
+        {
+            "key": "model",
+            "value": "308 GTB Project",
+            "_id": "65687173e2d6d854e455bd4c"
+        },
+        {
+            "key": "category",
+            "value": "Projects",
+            "_id": "65687173e2d6d854e455bd4d"
+        },
+        {
+            "key": "era",
+            "value": "1970s",
+            "_id": "65687173e2d6d854e455bd4e"
+        },
+        {
+            "key": "chassis",
+            "value": "F106AB25879",
+            "_id": "65687173e2d6d854e455bd4f"
+        },
+        {
+            "key": "seller",
+            "value": "eddymoreeddy",
+            "_id": "65687173e2d6d854e455bd50"
+        },
+        {
+            "key": "location",
+            "value": "Yuma, Arizona 85367",
+            "_id": "65687173e2d6d854e455bd51"
+        },
+        {
+            "key": "state",
+            "value": "Arizona",
+            "_id": "65687173e2d6d854e455bd52"
+        },
+        {
+            "key": "lot_num",
+            "value": 129240,
+            "_id": "65687173e2d6d854e455bd53"
+        },
+        {
+            "key": "listing_type",
+            "value": "Private Property",
+            "_id": "65687173e2d6d854e455bd54"
+        },
+        {
+            "key": "deadline",
+            "value": "2023-11-30T19:31:00.000Z",
+            "_id": "65687173e2d6d854e455bd55"
+        },
+        {
+            "key": "bids",
+            "value": 12,
+            "_id": "65687173e2d6d854e455bd56"
+        },
+        {
+            "key": "status",
+            "value": 1,
+            "_id": "65687173e2d6d854e455bd57"
+        }
+    ],
+    "auction_id": "64551678",
+    "website": "Bring A Trailer",
+    "image": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_9638-1-10792.jpeg?fit=940%2C626",
+    "page_url": "https://bringatrailer.com/listing/1978-ferrari-308-gtb-9/",
+    "description": [
+        "This 1978 Ferrari 308 GTB is a non-running project that is equipped with a 2.9-liter quad-cam V8 paired with a five-speed manual transaxle. It is finished in Rosso Chiaro over beige leather and features a limited-slip differential, 14″ five-spoke alloy wheels, pop-up headlights, a quad-exit exhaust system, a gated shifter, and electric windows. The seller acquired the car in 2014, and it was parked in 2020 due to a mechanical failure. This 308 GTB is now offered at no reserve in Arizona with a clean Florida title in the seller’s name.",
+        "The 308 GTB was introduced at the 1975 Paris Motor Show and featured Pininfarina-styled bodywork. This example is finished in Rosso Chiaro and is equipped with pop-up headlights, dual side mirrors, louvered rear quarter windows, a vented decklid, and quad exhaust outlets. The seller notes the antenna is bent and the left rear side reflector is missing.",
+        "Silver 14″ five-spoke alloy wheels are mounted with Michelin TRX tires. The car features a fully independent suspension with double wishbones front and rear, and stopping power is provided by ventilated discs at each corner.",
+        "The cockpit features bolstered seats trimmed in beige leather with black accents along with matching door panels. Equipment includes a cassette stereo, electric windows, and a gated shifter with a dogleg gear pattern. The left window is inoperative.",
+        "The three-spoke leather-wrapped steering wheel frames Veglia instrumentation including a 180-mph speedometer and a tachometer with a 7,700-rpm redline as well as an analog clock and gauges for fuel level, water temperature, and oil pressure. The five-digit odometer shows 31k miles, approximately 2,500 of which were added under current ownership.",
+        "The mid-mounted 2.9L quad-cam V8 is equipped with four twin-choke Weber 40DCNF carburetors and was factory rated at 237 horsepower. The car was last running in 2020, when it was parked due to a mechanical issue, which the seller believes to be a broken rod. A belt service was last performed in June 2018 per the seller.",
+        "The car is equipped with a five-speed manual transaxle and a limited-slip differential."
+
+    ],
+    "images_list": [
+        {
+            "placing": 1,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_9678-10893.jpeg"
+        },
+        {
+            "placing": 2,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1348-10849.jpeg"
+        },
+        {
+            "placing": 3,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1314-11024.jpeg"
+        },
+        {
+            "placing": 4,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1325-10961.jpeg"
+        },
+        {
+            "placing": 5,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1460-4-11078.jpeg"
+        },
+        {
+            "placing": 6,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1504-4-11147.jpeg"
+        }
+    ],
+    "listing_details": [
+        "Chassis: F106AB25879",
+        "Non-Running Project",
+        "31k Miles Shown",
+        "2.9-Liter Quad-Cam V8",
+        "Five-Speed Manual Transaxle",
+        "Rosso Chiaro Paint",
+        "Beige Leather Upholstery",
+        "Limited-Slip Differential",
+        "14\" Five-Spoke Alloy Wheels",
+        "Pop-Up Headlights",
+        "Quad-Exit Exhaust System",
+        "Gated Shifter",
+        "Electric Windows"
+
+    ],
+    "sort": {
+        "price": 26000,
+        "bids": 12,
+        "deadline": "2023-11-30T19:31:00.000Z"
+    },
+    "createdAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
+    "updatedAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
+    "__v": 0
+}]
+
+
+export const carDataFour = {total: 10,
+    cars: [{
+    "_id": "65687173e2d6d854e455bd48",
+    "attributes": [
+        {
+            "key": "price",
+            "value": 26000,
+            "_id": "65687173e2d6d854e455bd49"
+        },
+        {
+            "key": "year",
+            "value": 1978,
+            "_id": "65687173e2d6d854e455bd4a"
+        },
+        {
+            "key": "make",
+            "value": "Ferrari",
+            "_id": "65687173e2d6d854e455bd4b"
+        },
+        {
+            "key": "model",
+            "value": "308 GTB Project",
+            "_id": "65687173e2d6d854e455bd4c"
+        },
+        {
+            "key": "category",
+            "value": "Projects",
+            "_id": "65687173e2d6d854e455bd4d"
+        },
+        {
+            "key": "era",
+            "value": "1970s",
+            "_id": "65687173e2d6d854e455bd4e"
+        },
+        {
+            "key": "chassis",
+            "value": "F106AB25879",
+            "_id": "65687173e2d6d854e455bd4f"
+        },
+        {
+            "key": "seller",
+            "value": "eddymoreeddy",
+            "_id": "65687173e2d6d854e455bd50"
+        },
+        {
+            "key": "location",
+            "value": "Yuma, Arizona 85367",
+            "_id": "65687173e2d6d854e455bd51"
+        },
+        {
+            "key": "state",
+            "value": "Arizona",
+            "_id": "65687173e2d6d854e455bd52"
+        },
+        {
+            "key": "lot_num",
+            "value": 129240,
+            "_id": "65687173e2d6d854e455bd53"
+        },
+        {
+            "key": "listing_type",
+            "value": "Private Property",
+            "_id": "65687173e2d6d854e455bd54"
+        },
+        {
+            "key": "deadline",
+            "value": "2023-11-30T19:31:00.000Z",
+            "_id": "65687173e2d6d854e455bd55"
+        },
+        {
+            "key": "bids",
+            "value": 12,
+            "_id": "65687173e2d6d854e455bd56"
+        },
+        {
+            "key": "status",
+            "value": 1,
+            "_id": "65687173e2d6d854e455bd57"
+        }
+    ],
+    "auction_id": "64551678",
+    "website": "Bring A Trailer",
+    "image": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_9638-1-10792.jpeg?fit=940%2C626",
+    "page_url": "https://bringatrailer.com/listing/1978-ferrari-308-gtb-9/",
+    "description": [
+        "This 1978 Ferrari 308 GTB is a non-running project that is equipped with a 2.9-liter quad-cam V8 paired with a five-speed manual transaxle. It is finished in Rosso Chiaro over beige leather and features a limited-slip differential, 14″ five-spoke alloy wheels, pop-up headlights, a quad-exit exhaust system, a gated shifter, and electric windows. The seller acquired the car in 2014, and it was parked in 2020 due to a mechanical failure. This 308 GTB is now offered at no reserve in Arizona with a clean Florida title in the seller’s name.",
+        "The 308 GTB was introduced at the 1975 Paris Motor Show and featured Pininfarina-styled bodywork. This example is finished in Rosso Chiaro and is equipped with pop-up headlights, dual side mirrors, louvered rear quarter windows, a vented decklid, and quad exhaust outlets. The seller notes the antenna is bent and the left rear side reflector is missing.",
+        "Silver 14″ five-spoke alloy wheels are mounted with Michelin TRX tires. The car features a fully independent suspension with double wishbones front and rear, and stopping power is provided by ventilated discs at each corner.",
+        "The cockpit features bolstered seats trimmed in beige leather with black accents along with matching door panels. Equipment includes a cassette stereo, electric windows, and a gated shifter with a dogleg gear pattern. The left window is inoperative.",
+        "The three-spoke leather-wrapped steering wheel frames Veglia instrumentation including a 180-mph speedometer and a tachometer with a 7,700-rpm redline as well as an analog clock and gauges for fuel level, water temperature, and oil pressure. The five-digit odometer shows 31k miles, approximately 2,500 of which were added under current ownership.",
+        "The mid-mounted 2.9L quad-cam V8 is equipped with four twin-choke Weber 40DCNF carburetors and was factory rated at 237 horsepower. The car was last running in 2020, when it was parked due to a mechanical issue, which the seller believes to be a broken rod. A belt service was last performed in June 2018 per the seller.",
+        "The car is equipped with a five-speed manual transaxle and a limited-slip differential."
+
+    ],
+    "images_list": [
+        {
+            "placing": 1,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_9678-10893.jpeg"
+        },
+        {
+            "placing": 2,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1348-10849.jpeg"
+        },
+        {
+            "placing": 3,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1314-11024.jpeg"
+        },
+        {
+            "placing": 4,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1325-10961.jpeg"
+        },
+        {
+            "placing": 5,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1460-4-11078.jpeg"
+        },
+        {
+            "placing": 6,
+            "src": "https://bringatrailer.com/wp-content/uploads/2023/09/1978_ferrari_308-gtb_img_1504-4-11147.jpeg"
+        }
+    ],
+    "listing_details": [
+        "Chassis: F106AB25879",
+        "Non-Running Project",
+        "31k Miles Shown",
+        "2.9-Liter Quad-Cam V8",
+        "Five-Speed Manual Transaxle",
+        "Rosso Chiaro Paint",
+        "Beige Leather Upholstery",
+        "Limited-Slip Differential",
+        "14\" Five-Spoke Alloy Wheels",
+        "Pop-Up Headlights",
+        "Quad-Exit Exhaust System",
+        "Gated Shifter",
+        "Electric Windows"
+
+    ],
+    "sort": {
+        "price": 26000,
+        "bids": 12,
+        "deadline": "2023-11-30T19:31:00.000Z"
+    },
+    "createdAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
+    "updatedAt": "Thu Nov 30 2023 19:26:43 GMT+0800 (Australian Western Standard Time)",
+    "__v": 0
+}]
 }

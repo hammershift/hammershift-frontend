@@ -52,8 +52,8 @@ const AboutPage = () => {
             <div>
                 <HowHammerShiftWorks />
                 <SubscribeSmall />
-                <Footer />
             </div>
+            <Footer />
         </div>
     )
 }

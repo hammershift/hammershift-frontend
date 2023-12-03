@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from 'react'
 import Image from 'next/image'
-import HowHammerShiftWorks from '../../components/how_hammeshift_works'
 import { SubscribeSmall } from '../../components/subscribe'
 import Footer from '../../components/footer'
+import HowHammerShiftWorks from '../../components/how_hammeshift_works'
 
 import Plus from "../../../../public/images/plus-icon.svg"
 import Minus from "../../../../public/images/minus-icon.svg"

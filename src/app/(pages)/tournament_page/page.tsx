@@ -18,6 +18,7 @@ import PlayersIcon from '../../../../public/images/users-01.svg'
 import HourGlassIcon from '../../../../public/images/hour-glass.svg'
 import PrizeIcon from '../../../../public/images/monetization-browser-bag.svg'
 import LiveGamesIcon from '../../../../public/images/currency-dollar-circle.svg'
+
 import CameraPlus from '../../../../public/images/camera-plus.svg'
 import GifIcon from '../../../../public/images/image-document-gif.svg'
 import BellIcon from '../../../../public/images/bell-02.svg'
@@ -26,6 +27,7 @@ import ThumbsDown from '../../../../public/images/thumbs-down.svg'
 import CornerDownRight from '../../../../public/images/corner-down-right.svg'
 import ThreeDots from '../../../../public/images/dots-vertical.svg'
 import OpenWebLogo from '../../../../public/images/open-web-logo.svg'
+
 import ArrowDown from '../../../../public/images/arrow-down.svg'
 import DiagonalLines from '../../../../public/images/green-diagonal.svg'
 import TransitionPattern from '../../../../public/images/transition-pattern.svg'
@@ -48,7 +50,6 @@ import AvatarOne from '../../../../public/images/avatar-one.svg'
 import AvatarTwo from '../../../../public/images/avatar-two.svg'
 import AvatarThree from '../../../../public/images/avatar-three.svg'
 import AvatarFour from '../../../../public/images/avatar-four.svg'
-
 
 const CarViewData = {
     name: "13k-Mile 2011 Mercedes Benz SLS AMG",
