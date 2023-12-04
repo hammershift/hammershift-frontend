@@ -196,7 +196,7 @@ const Navbar = () => {
         <div className=' tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3'>
           <div className='lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between'>
             <div className='tw-pr-4'>
-              <Link href='/homepage'>
+              <Link href='/'>
                 <Image src={Logo} width={176} height={64} alt='logo' className='tw-block tw-w-auto tw-h-auto' />
               </Link>
             </div>
