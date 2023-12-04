@@ -201,7 +201,7 @@ const Navbar = () => {
               </Link>
             </div>
             <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
-            <Link href='/auction_listing_page'>
+            <Link href='/auctions'>
               <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>AUCTIONS</div>
             </Link>
           </div>
