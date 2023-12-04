@@ -6,7 +6,7 @@ import FiltersAndSort from "@/app/components/filter_and_sort";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { GamesCard } from "@/app/components/card";
 
-const filtersInitialState = {
+export const filtersInitialState = {
     make: ["All"],
     category: ["All"],
     era: ["All"],

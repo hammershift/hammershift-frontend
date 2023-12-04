@@ -116,7 +116,7 @@ const Navbar = () => {
                 <Image src={LogoSmall} width={32} height={32} alt='logo' className=' tw-block sm:tw-hidden tw-w-auto tw-h-auto' />
               </Link>
             </div>
-            <Link href={'/discover_page'}>
+            <Link href={'/discover'}>
               <div className='tw-block tw-mx-2 sm:tw-mx-4 '>DISCOVER</div>
             </Link>
             <Link href='/auctions'>
@@ -200,7 +200,9 @@ const Navbar = () => {
                 <Image src={Logo} width={176} height={64} alt='logo' className='tw-block tw-w-auto tw-h-auto' />
               </Link>
             </div>
-            <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
+            <Link href='/discover'>
+              <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
+            </Link>
             <Link href='/auctions'>
               <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>AUCTIONS</div>
             </Link>
