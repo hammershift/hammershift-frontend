@@ -17,9 +17,32 @@ const PasswordResetFlow = () => {
   const [timer, setTimer] = useState(60);
   const [otpExpired, setOtpExpired] = useState(false);
   const [otpVerificationSuccess, setOtpVerificationSuccess] = useState(false);
+  const [otpSuccessMessage, setOtpSuccessMessage] = useState('');
+  const [passwordSuccessMessage, setPasswordSuccessMessage] = useState('');
+  const [passwordMatch, setPasswordMatch] = useState(false);
+  const [isOtpLengthValid, setIsOtpLengthValid] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsOtpLengthValid(otp.length === 6);
+  }, [otp]);
+
+  useEffect(() => {
+    if (newPassword && confirmPassword) {
+      if (newPassword === confirmPassword) {
+        setPasswordMatch(true);
+        setPasswordError('');
+      } else {
+        setPasswordMatch(false);
+        setPasswordError('Passwords do not match');
+      }
+    } else {
+      setPasswordMatch(false);
+      setPasswordError('');
+    }
+  }, [newPassword, confirmPassword]);
 
   useEffect(() => {
     const storedEmail = localStorage.getItem('passwordResetEmail');
@@ -77,10 +100,11 @@ const PasswordResetFlow = () => {
       const data = await response.json();
       if (response.ok) {
         setResetPage('reset password');
+        setOtpSuccessMessage('Verified');
         setError('');
         setOtpVerificationSuccess(true);
       } else {
-        setError('Invalid OTP. Please try again.');
+        setError('Invalid OTP. Please try again');
         setOtpVerificationSuccess(false);
       }
     } catch (error) {
@@ -90,13 +114,15 @@ const PasswordResetFlow = () => {
     }
   };
 
-  const handlePasswordReset = async () => {
+  const handlePasswordReset = async (e: any) => {
+    e.preventDefault();
+
     if (newPassword !== confirmPassword) {
       setPasswordError('Passwords do not match.');
       return;
     }
 
-    // reset the password state if the passwords match
+    // Proceed only if passwords match
     setPasswordError('');
     try {
       const response = await fetch('/api/resetPassword', {
@@ -109,7 +135,10 @@ const PasswordResetFlow = () => {
 
       const data = await response.json();
       if (response.ok) {
-        router.push('/login_page');
+        setPasswordSuccessMessage('Password reset successfully');
+        setTimeout(() => {
+          router.push('/login_page');
+        }, 1000);
       } else {
         setError(data.message);
       }
@@ -144,12 +173,18 @@ const PasswordResetFlow = () => {
   };
 
   const getInputStyle = () => {
+    let baseStyle = 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full';
+    let borderColorStyle = '';
+
     if (otp.length === 6) {
-      return 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full tw-border-green-500';
+      borderColorStyle = 'tw-border-green-500';
     } else if (error) {
-      return 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full tw-border-red-500';
+      borderColorStyle = 'tw-border-red-500';
+    } else {
+      borderColorStyle = '';
     }
-    return 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full tw-border tw-border-white';
+
+    return `${baseStyle} ${borderColorStyle}`;
   };
 
   const formatTime = () => {
@@ -187,18 +222,19 @@ const PasswordResetFlow = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handlePasswordReset();
+              handlePasswordReset(e);
             }}
           >
             <div className='tw-flex tw-flex-col tw-gap-6'>
               <PasswordInput value={newPassword} onChange={setNewPassword} />
               <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
-              {passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
-              <button type='submit' className='btn-yellow tw-w-full tw-mt-4'>
+              {passwordMatch && <p className='tw-text-green-500'>Passwords match!</p>}
+              {!passwordMatch && passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
+              <button type='submit' className='btn-yellow tw-w-full '>
                 Reset Password
               </button>
             </div>
-            {error && <p>{error}</p>}
+            {error && <p className='tw-text-red-500 tw-text-sm'>{error}</p>}
           </form>
         </div>
       )}
