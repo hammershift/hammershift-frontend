@@ -3,21 +3,21 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import CreateAccount from "../create_account/page";
-import CarPhoto from "../../../../public/images/wager-car-photo.svg";
-import DollarIcon from "../../../../public/images/dollar.svg";
-import HashtagIcon from "../../../../public/images/hash-02.svg";
-import CalendarIcon from "../../../../public/images/calendar-icon.svg";
-import HourGlassIcon from "../../../../public/images/hour-glass.svg";
-import MoneyBag from "../../../../public/images/money-bag-green.svg";
-import Players from "../../../../public/images/players-icon-green.svg";
-import CancelIcon from "../../../../public/images/x-icon.svg";
+import CreateAccount from "../(pages)/create_account/page";
+import CarPhoto from "../../../public/images/wager-car-photo.svg";
+import DollarIcon from "../../../public/images/dollar.svg";
+import HashtagIcon from "../../../public/images/hash-02.svg";
+import CalendarIcon from "../../../public/images/calendar-icon.svg";
+import HourGlassIcon from "../../../public/images/hour-glass.svg";
+import MoneyBag from "../../../public/images/money-bag-green.svg";
+import Players from "../../../public/images/players-icon-green.svg";
+import CancelIcon from "../../../public/images/x-icon.svg";
 
-interface WagerPageProps {
+interface WagerModalProps {
     showWagerModal: () => void;
 }
 
-const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
+const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
     const router = useRouter();
 
     // Change to false to see create account
@@ -25,7 +25,7 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
         isregistered: true,
     };
 
-    const WagerPageData = {
+    const WagerModalData = {
         name: "13k-Mile 2011 Mercedes Benz SLS AMG",
         current_bid: "$64,000",
         num_bids: 48,
@@ -61,7 +61,7 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
                         />
                         <div className="md:tw-ml-6 md:tw-mt-0 tw-text-3xl">
                             <div className="tw-font-bold">
-                                {WagerPageData.name}
+                                {WagerModalData.name}
                             </div>
                             <div className="tw-grid tw-gap-2 tw-mt-4">
                                 <div className="tw-grid tw-grids-cols-1 md:tw-grid-cols-2 tw-text-sm tw-gap-2">
@@ -78,9 +78,9 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
                                                 Current Bid:
                                             </span>
                                             <span className="tw-text-[#49C742] tw-font-bold">
-                                                {WagerPageData.current_bid}
+                                                {WagerModalData.current_bid}
                                             </span>
-                                            <span className="md:tw-hidden">{`(${WagerPageData.num_bids} bids)`}</span>
+                                            <span className="md:tw-hidden">{`(${WagerModalData.num_bids} bids)`}</span>
                                         </div>
                                     </div>
                                     <div className="tw-hidden md:tw-flex tw-items-center ">
@@ -96,7 +96,7 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
                                                 Bids:
                                             </span>
                                             <span className=" tw-font-bold tw-ml-2">
-                                                {WagerPageData.num_bids}
+                                                {WagerModalData.num_bids}
                                             </span>
                                         </div>
                                     </div>
@@ -115,7 +115,7 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
                                                 Ending:
                                             </span>
                                             <span className="tw-font-bold tw-ml-2">
-                                                {WagerPageData.ending}
+                                                {WagerModalData.ending}
                                             </span>
                                         </div>
                                     </div>
@@ -132,7 +132,7 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
                                                 Time Left:
                                             </span>
                                             <span className=" tw-font-bold tw-ml-2 tw-text-[#C2451E]">
-                                                {WagerPageData.time_left}
+                                                {WagerModalData.time_left}
                                             </span>
                                         </div>
                                     </div>
@@ -214,4 +214,4 @@ const WagerPage: React.FC<WagerPageProps> = ({ showWagerModal }) => {
     );
 };
 
-export default WagerPage;
+export default WagerModal;
