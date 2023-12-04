@@ -8,7 +8,7 @@ const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
 
 
 
-export const filtersInitialState = {
+const filtersInitialState = {
     make: ["All"],
     category: ["All"],
     era: ["All"],

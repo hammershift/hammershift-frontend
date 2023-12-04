@@ -1,7 +1,15 @@
 "use client"
 import React, {useState} from 'react'
 import FiltersAndSort from '@/app/components/filter_and_sort';
-import { filtersInitialState } from '@/app/(pages)/auctions/page'
+
+
+const filtersInitialState = {
+  make: ["All"],
+  category: ["All"],
+  era: ["All"],
+  location: ["All"],
+  sort: "Newly Listed",
+};
 
 const Discover = () => {
     const [filters, setFilters] = useState(filtersInitialState);
