@@ -88,8 +88,8 @@ const Navbar = () => {
     }
   };
 
-  const handleSearchClick = async (carMake: string, carModel: string) => {
-    router.push('/auctions');
+  const handleSearchClick = async (carMake: string, carModel: string, carID: string) => {
+    router.push(`/auctions/car_view_page/${carID}`);
     const searchInput = document.getElementById('search-bar-input') as HTMLInputElement;
     const dropdownSearchInput = document.getElementById('dropdown-search-bar') as HTMLInputElement;
     if (searchInput) {
@@ -205,11 +205,22 @@ const Navbar = () => {
               <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>AUCTIONS</div>
             </Link>
           </div>
-          <div className='tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12'>
-            <div className='tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded'>
-              <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
-              <input className='tw-ml-2 tw-bg-shade-100 tw-w-full' placeholder='Search make, model, year...'></input>
-            </div>
+          <div className='tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4'>
+            <form onSubmit={handleSumbit} autoComplete='off' className='tw-w-full tw-flex tw-items-center'>
+              <div className={searchBoxDropDown ? 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t' : 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded'}>
+                <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
+                <input
+                  id='search-bar-input'
+                  name='search'
+                  type='text'
+                  className='tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none'
+                  placeholder='Search make, model, year...'
+                  onClick={handleInputClick}
+                  onChange={handleChange}
+                ></input>
+              </div>
+            </form>
+            {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
           </div>
           <div className='tw-flex tw-items-center'>
             <Link href='/create_account'>
@@ -250,7 +261,7 @@ interface DropdownMenuProps {
   searchedData: SearchDatas[];
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearchClick: (carMake: string, carModel: string) => void;
+  onSearchClick: (carMake: string, carModel: string, carID: string) => void;
   handleInputClick: () => void;
 }
 
@@ -664,7 +675,7 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
           return (
             <div
               key={carData.auction_id}
-              onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`)}
+              onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`, `${carData.auction_id}`)}
               className='tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded'
             >
               {carData.attributes[2].value} {carData.attributes[3].value}
@@ -710,5 +721,5 @@ interface SearchDatas {
 
 interface SearchDropDownProps {
   searchedData: SearchDatas[];
-  onSearchClick: (carMake: string, carModel: string) => void;
+  onSearchClick: (carMake: string, carModel: string, carID: string) => void;
 }
