@@ -41,10 +41,6 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
     const [menuOpen, setMenuOpen] = useState(false);
     const [bgColor, setBgColor] = useState({});
 
-    //TODO: To be removed later
-    useEffect(() => {
-        console.log(filters);
-    }, [filters])
 
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>

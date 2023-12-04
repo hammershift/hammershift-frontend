@@ -1,10 +1,12 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { getCars, getCarsWithFilter } from "@/lib/data"
-import { carDataThree } from "@/sample_data";
 import FiltersAndSort from "@/app/components/filter_and_sort";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { GamesCard } from "@/app/components/card";
+const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
+
+
 
 const filtersInitialState = {
     make: ["All"],
@@ -17,20 +19,23 @@ const filtersInitialState = {
 const AuctionListingPage = () => {
     const [filters, setFilters] = useState(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
-    const [listing, setListing] = useState(carDataThree);
+    const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
 
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
                 const res = await getCars({ limit: 21 });
                 if (res) {
                     const data = await res.json();
+                    setLoading(false);
                     setTotalAuctions(data.total);
                     setListing(data.cars);
                 } else {
+                    setLoading(false);
                     console.log("cannot fetch car data");
                 }
             } catch (e) {
@@ -65,8 +70,10 @@ const AuctionListingPage = () => {
             try {
                 const filterWithLimit = { ...filters, limit: loadMore };
                 const res = await getCarsWithFilter(filterWithLimit);
-                setTotalAuctions(res.total);
-                setListing(res.cars);
+                if(res) {
+                    setTotalAuctions(res.total);
+                    setListing(res.cars);
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -81,75 +88,17 @@ const AuctionListingPage = () => {
             <div className="tw-pb-16 ">
                 <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
                     <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-                        <Suspense fallback={<div>Loading...</div>}>
-                            <div className=" tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
-                                {listing.length > 1 &&
-                                    listing.map((car: any, index) => {
-                                        let year, make, model, price, auction_id, deadline: any;
-                                        if (car.attributes) {
-                                            car.attributes.map(
-                                                (property: {
-                                                    key: string;
-                                                    value: number | string | Date;
-                                                }) => {
-                                                    switch (property.key) {
-                                                        case "year":
-                                                            year = property.value;
-                                                            break;
-                                                        case "make":
-                                                            make = property.value;
-                                                            break;
-                                                        case "model":
-                                                            model = property.value;
-                                                            break;
-                                                        case "price":
-                                                            price = property.value;
-                                                            break;
-                                                        case "auction_id":
-                                                            auction_id = property.value;
-                                                            break;
-                                                        case "deadline":
-                                                            deadline = property.value;
-                                                            break;
-                                                        default:
-                                                            break;
-                                                    }
-                                                }
-                                            );
-                                        }
-
-                                        return (
-                                            <div key={car._id ? car._id : index + "gamesCard"}>
-                                                <TimerProvider deadline={new Date(deadline)}>
-                                                    <GamesCard
-                                                        auction_id={
-                                                            car.auction_id
-                                                                ? car.auction_id
-                                                                : index + "auctionId"
-                                                        }
-                                                        make={make ? make : ""}
-                                                        year={year ? year : ""}
-                                                        model={model ? model : ""}
-                                                        description={
-                                                            car.description ? car.description : [""]
-                                                        }
-                                                        image={car.image ? car.image : ""}
-                                                        price={price ? price : 0}
-                                                        deadline={deadline ? deadline : Date()}
-                                                    />
-                                                </TimerProvider>
-                                            </div>
-                                        );
-                                    })}
-                            </div>
-                        </Suspense>
+                        {loading 
+                            ? <AuctionsList listing={listing} />
+                            : <div className="tw-text-center">Loading... </div>}
+                        
                     </div>
                 </section>
                 <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] ">
-                    <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4">{`Showing ${listing ? listing.length : "0"
+                    <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mt-16 tw-mb-4">{`Showing ${listing.length > 0 ? listing?.length : "0"
                         } of ${totalAuctions || "0"} auctions`}</div>
                     <button
-                        className={`btn-transparent-white tw-w-full tw-text-[18px] ${listing?.length >= totalAuctions && "tw-hidden"
+                        className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null) && "tw-hidden"
                             }`}
                         style={{ paddingTop: "16px", paddingBottom: "16px" }}
                         onClick={clickHandler}
