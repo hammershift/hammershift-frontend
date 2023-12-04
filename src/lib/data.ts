@@ -64,11 +64,11 @@ export const getCars = async ({ limit }: { limit: number }) => {
 
 
 export interface getCarsWithFilterProps {
-    make?: string[],
-    category?: string[],
-    era?: string[],
-    location?: string[],
-    limit?: number
+  make?: string[];
+  category?: string[];
+  era?: string[];
+  location?: string[];
+  limit?: number;
 }
 
 export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
