@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 const wagerSchema = new mongoose.Schema(
   {
-    carId: {
+    auctionID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Car',
+      ref: 'Auction',
     },
     priceGuessed: {
       type: Number,
