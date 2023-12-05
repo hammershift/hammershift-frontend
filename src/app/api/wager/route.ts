@@ -14,9 +14,9 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { carId, priceGuessed, wagerAmount, user } = await req.json();
+    const { auctionID, priceGuessed, wagerAmount, user } = await req.json();
 
-    if (!carId || priceGuessed === undefined || wagerAmount === undefined) {
+    if (!auctionID || priceGuessed === undefined || wagerAmount === undefined) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     const newWager = new Wager({
       _id: new mongoose.Types.ObjectId(),
-      carId: carId,
+      auctionID: auctionID,
       priceGuessed: priceGuessed,
       wagerAmount: wagerAmount,
       user: user,
