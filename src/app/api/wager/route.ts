@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     const newWager = new Wager({
       _id: new mongoose.Types.ObjectId(),
-      auctionID: new mongoose.Types.ObjectId(auctionID),
+      auctionID: convertedAuctionID,
       priceGuessed,
       wagerAmount,
       user,
