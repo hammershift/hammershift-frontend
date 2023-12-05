@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CreateAccount from "../(pages)/create_account/page";
@@ -16,6 +16,8 @@ import { useTimer } from "@/app/_context/TimerContext";
 
 interface WagerModalProps {
     showWagerModal: () => void;
+    handleWagerInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleWagerSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     price: string;
     bids: number;
     make: string;
@@ -32,6 +34,8 @@ const WagerModal: React.FC<WagerModalProps> = ({
     model,
     image,
     ending,
+    handleWagerInputChange,
+    handleWagerSubmit,
 }) => {
     const router = useRouter();
     const timerValues = useTimer();
@@ -41,18 +45,14 @@ const WagerModal: React.FC<WagerModalProps> = ({
         isregistered: true,
     };
 
-    const WagerModalData = {
-        name: "13k-Mile 2011 Mercedes Benz SLS AMG",
-        current_bid: "$64,000",
-        num_bids: 48,
-        ending: "Jul 5, 2023, 7:00 pm",
-        time_left: "02:16:00",
-    };
     return (
         <div className="tw-bg-black md:tw-bg-black/90 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-fixed tw-top-0 tw-left-0 tw-z-50">
             {/* Content */}
             {user.isregistered ? (
-                <div className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-auto md:tw-h-[900px] tw-pt-8 tw-flex tw-flex-col tw-gap-6">
+                <form
+                    onSubmit={handleWagerSubmit}
+                    className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-auto md:tw-h-[900px] tw-pt-8 tw-flex tw-flex-col tw-gap-6"
+                >
                     <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-6 tw-px-6">
                         <div className="tw-flex md:tw-hidden tw-items-center tw-justify-between  md:tw-justify-start tw-w-full">
                             <div className="tw-text-2xl sm:tw-text-4xl tw-font-bold">
@@ -96,7 +96,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                             <span className="tw-text-[#49C742] tw-font-bold">
                                                 $ {price}
                                             </span>
-                                            <span className="md:tw-hidden">{`(${WagerModalData.num_bids} bids)`}</span>
+                                            <span className="md:tw-hidden">{`(${bids} bids)`}</span>
                                         </div>
                                     </div>
                                     <div className="tw-hidden md:tw-flex tw-items-center ">
@@ -165,7 +165,13 @@ const WagerModal: React.FC<WagerModalProps> = ({
                             <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
                                 $
                             </div>
-                            <input className="tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded" />
+                            <input
+                                required
+                                name="price-guessed"
+                                type="number"
+                                className="tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded"
+                                onChange={handleWagerInputChange}
+                            />
                         </div>
                     </div>
                     <div className=" tw-flex tw-flex-col tw-gap-3 tw-px-6">
@@ -174,7 +180,13 @@ const WagerModal: React.FC<WagerModalProps> = ({
                             <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
                                 $
                             </div>
-                            <input className="tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded" />
+                            <input
+                                required
+                                name="wager-amount"
+                                type="number"
+                                className="tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded"
+                                onChange={handleWagerInputChange}
+                            />
                         </div>
                     </div>
                     <div className="tw-text-[#49C742] tw-text-lg  tw-py-3 tw-px-4 tw-bg-[#49C74233] tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4 tw-mx-6 tw-px-6 tw-rounded">
@@ -211,17 +223,18 @@ const WagerModal: React.FC<WagerModalProps> = ({
                         <button
                             className="tw-hidden md:tw-block"
                             onClick={showWagerModal}
+                            type="button"
                         >
                             CANCEL
                         </button>
                         <button
                             className="btn-yellow tw-h-[48px] tw-w-full md:tw-w-auto"
-                            onClick={() => router.push("/payment")}
+                            type="submit"
                         >
                             PLACE MY WAGER
                         </button>
                     </div>
-                </div>
+                </form>
             ) : (
                 // To be replace by Link
                 <CreateAccount />

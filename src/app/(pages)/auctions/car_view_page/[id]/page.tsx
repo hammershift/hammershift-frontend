@@ -12,11 +12,13 @@ import {
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
-import { getCarData } from "@/lib/data";
+import { createWager, getCarData } from "@/lib/data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import WagerModal from "@/app/components/wager_modal";
+import { useParams } from "next/navigation";
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
+    const urlPath = useParams();
     const [carData, setCarData] = useState<any>(null);
     const [toggleWagerModal, setToggleWagerModal] = useState(false);
 
@@ -57,6 +59,43 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         setToggleWagerModal(!toggleWagerModal);
     };
 
+    const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({
+        auctionID: urlPath.id,
+    });
+
+    interface WagerInputsI {
+        auctionID: string | string[];
+        priceGuessed?: number;
+        wagerAmount?: number;
+    }
+
+    const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        switch (e.target.name) {
+            case "price-guessed":
+                setWagerInputs({
+                    ...wagerInputs,
+                    priceGuessed: Number(e.target.value),
+                });
+                break;
+            case "wager-amount":
+                setWagerInputs({
+                    ...wagerInputs,
+                    wagerAmount: Number(e.target.value),
+                });
+                break;
+            default:
+                break;
+        }
+    };
+
+    const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        await createWager(wagerInputs);
+        console.log("wager created");
+
+        setToggleWagerModal(false);
+    };
+
     return (
         <div>
             {toggleWagerModal ? (
@@ -69,6 +108,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         bids={carData.bids}
                         ending={formattedDateString}
                         image={carData.image}
+                        handleWagerInputChange={handleWagerInputChange}
+                        handleWagerSubmit={handleWagerSubmit}
                     />
                 </TimerProvider>
             ) : null}

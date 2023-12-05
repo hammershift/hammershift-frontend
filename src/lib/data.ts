@@ -3,8 +3,8 @@
 export const getCarData = async (ID: string) => {
     try {
         const response = await fetch(`/api/cars?auction_id=${ID}`, {
-                cache: 'no-store' //dynamic rendering
-            });
+            cache: 'no-store' //dynamic rendering
+        });
 
 
         if (response.ok) {
@@ -35,21 +35,21 @@ export const getCarData = async (ID: string) => {
                 status: data.attributes[14].value
             }
             return car;
-        }else {
+        } else {
             console.log("failed to fetch cars")
         }
-        
+
     } catch (err) {
         console.error(err);
     }
-} 
+}
 
 
 export const getCars = async ({ limit }: { limit: number }) => {
     try {
         const response = await fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
-        cache: 'no-store' //dynamic rendering
-    });
+            cache: 'no-store' //dynamic rendering
+        });
 
         if (response.ok) {
             const data = await response.json();
@@ -60,15 +60,15 @@ export const getCars = async ({ limit }: { limit: number }) => {
     } catch (err) {
         console.error(err);
     }
-};  
+};
 
 
 export interface getCarsWithFilterProps {
-  make?: string[];
-  category?: string[];
-  era?: string[];
-  location?: string[];
-  limit?: number;
+    make?: string[];
+    category?: string[];
+    era?: string[];
+    location?: string[];
+    limit?: number;
 }
 
 export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
@@ -84,7 +84,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
         })
         .join('&');
 
-   
+
 
     try {
         const response = await fetch(`/api/cars/filter?` + queries, {
@@ -96,28 +96,28 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
             let auctions = {
                 total: list.total,
                 cars: list.cars.map((data: any) => ({
-            auction_id: data.auction_id,
-            description: [...data.description],
-            images_list: [...data.images_list],
-            listing_details: [...data.listing_details],
-            image: data.image,
-            page_url: data.page_url,
-            website: data.website,
-            price: data.attributes[0].value,
-            year: data.attributes[1].value,
-            make: data.attributes[2].value,
-            model: data.attributes[3].value,
-            category: data.attributes[4].value,
-            era: data.attributes[5].value,
-            chassis: data.attributes[6].value,
-            seller: data.attributes[7].value,
-            location: data.attributes[8].value,
-            state: data.attributes[9].value,
-            lot_num: data.attributes[10].value,
-            listing_type: data.attributes[11].value,
-            deadline: data.attributes[12].value,
-            bids: data.attributes[13].value,
-            status: data.attributes[14].value
+                    auction_id: data.auction_id,
+                    description: [...data.description],
+                    images_list: [...data.images_list],
+                    listing_details: [...data.listing_details],
+                    image: data.image,
+                    page_url: data.page_url,
+                    website: data.website,
+                    price: data.attributes[0].value,
+                    year: data.attributes[1].value,
+                    make: data.attributes[2].value,
+                    model: data.attributes[3].value,
+                    category: data.attributes[4].value,
+                    era: data.attributes[5].value,
+                    chassis: data.attributes[6].value,
+                    seller: data.attributes[7].value,
+                    location: data.attributes[8].value,
+                    state: data.attributes[9].value,
+                    lot_num: data.attributes[10].value,
+                    listing_type: data.attributes[11].value,
+                    deadline: data.attributes[12].value,
+                    bids: data.attributes[13].value,
+                    status: data.attributes[14].value
                 }))
             };
 
@@ -130,4 +130,28 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
     } catch (err) {
         console.error(err);
     }
+}
+
+
+export interface CreateWagerProps {
+    auctionID: string | string[];
+    priceGuessed?: number;
+    wagerAmount?: number;
+}
+
+
+export const createWager = async (body: CreateWagerProps) => {
+    const { auctionID, priceGuessed, wagerAmount } = body;
+
+    await fetch('/api/wager', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            auctionID,
+            priceGuessed,
+            wagerAmount
+        }),
+    })
 }
