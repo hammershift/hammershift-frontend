@@ -81,7 +81,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
     prize,
 }) => {
     const timerValues = useTimer();
-    console.log(deadline);
+
     return (
         <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
             <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">

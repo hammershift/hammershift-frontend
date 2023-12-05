@@ -1,5 +1,5 @@
 import connectToDB from "@/lib/mongoose";
-import Cars from "@/models/car.model";
+import Auctions from "@/models/auction.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic'
@@ -13,11 +13,11 @@ export async function GET(req: NextRequest) {
 
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
-      const car = await Cars.findOne({ auction_id: auction_id });
+      const car = await Auctions.findOne({ auction_id: auction_id });
       return NextResponse.json(car);
     }
     // api/cars to get all cars
-    const cars = await Cars.find().limit(limit).skip(offset);
+    const cars = await Auctions.find().limit(limit).skip(offset);
     return NextResponse.json({ total: cars.length, cars: cars });
   } catch (error) {
     console.error(error)

@@ -12,13 +12,29 @@ import HourGlassIcon from "../../../public/images/hour-glass.svg";
 import MoneyBag from "../../../public/images/money-bag-green.svg";
 import Players from "../../../public/images/players-icon-green.svg";
 import CancelIcon from "../../../public/images/x-icon.svg";
+import { useTimer } from "@/app/_context/TimerContext";
 
 interface WagerModalProps {
     showWagerModal: () => void;
+    price: string;
+    bids: number;
+    make: string;
+    model: string;
+    ending: string;
+    image: string;
 }
 
-const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
+const WagerModal: React.FC<WagerModalProps> = ({
+    showWagerModal,
+    price,
+    bids,
+    make,
+    model,
+    image,
+    ending,
+}) => {
     const router = useRouter();
+    const timerValues = useTimer();
 
     // Change to false to see create account
     const user = {
@@ -53,7 +69,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
                             </Link>
                         </div>
                         <Image
-                            src={CarPhoto}
+                            src={image}
                             width={360}
                             height={173}
                             alt="fray car"
@@ -61,7 +77,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
                         />
                         <div className="md:tw-ml-6 md:tw-mt-0 tw-text-3xl">
                             <div className="tw-font-bold">
-                                {WagerModalData.name}
+                                {make} {model}
                             </div>
                             <div className="tw-grid tw-gap-2 tw-mt-4">
                                 <div className="tw-grid tw-grids-cols-1 md:tw-grid-cols-2 tw-text-sm tw-gap-2">
@@ -78,7 +94,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
                                                 Current Bid:
                                             </span>
                                             <span className="tw-text-[#49C742] tw-font-bold">
-                                                {WagerModalData.current_bid}
+                                                $ {price}
                                             </span>
                                             <span className="md:tw-hidden">{`(${WagerModalData.num_bids} bids)`}</span>
                                         </div>
@@ -96,7 +112,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
                                                 Bids:
                                             </span>
                                             <span className=" tw-font-bold tw-ml-2">
-                                                {WagerModalData.num_bids}
+                                                {bids}
                                             </span>
                                         </div>
                                     </div>
@@ -115,7 +131,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
                                                 Ending:
                                             </span>
                                             <span className="tw-font-bold tw-ml-2">
-                                                {WagerModalData.ending}
+                                                {ending}
                                             </span>
                                         </div>
                                     </div>
@@ -132,7 +148,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal }) => {
                                                 Time Left:
                                             </span>
                                             <span className=" tw-font-bold tw-ml-2 tw-text-[#C2451E]">
-                                                {WagerModalData.time_left}
+                                                {`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}
                                             </span>
                                         </div>
                                     </div>

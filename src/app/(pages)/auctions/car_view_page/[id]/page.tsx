@@ -24,6 +24,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
 
     useEffect(() => {
         getCarData(ID).then((data) => {
+            console.log(data);
             return setCarData(data);
         });
     }, []);
@@ -59,7 +60,17 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     return (
         <div>
             {toggleWagerModal ? (
-                <WagerModal showWagerModal={showWagerModal} />
+                <TimerProvider deadline={carData.deadline}>
+                    <WagerModal
+                        showWagerModal={showWagerModal}
+                        make={carData.make}
+                        model={carData.model}
+                        price={currencyString}
+                        bids={carData.bids}
+                        ending={formattedDateString}
+                        image={carData.image}
+                    />
+                </TimerProvider>
             ) : null}
             <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
                 <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
