@@ -1,5 +1,5 @@
 import connectToDB from "@/lib/mongoose";
-import Cars from "@/models/car.model";
+import Auctions from "@/models/auction.model";
 import { SortOrder } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +11,6 @@ interface SortQuery {
   "sort.deadline"?: number,
   "sort.bids"?: number
 }
-
 
 export async function GET(req: NextRequest) {
   try {
@@ -44,7 +43,7 @@ export async function GET(req: NextRequest) {
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
 
     if (searchedKeyword) {
-      const searchedCars = await Cars.find({
+      const searchedCars = await Auctions.find({
         $and: [
           { "attributes": { $elemMatch: { "key": "status", "value": { $in: completed } } } },
           {
@@ -60,7 +59,7 @@ export async function GET(req: NextRequest) {
         .limit(limit)
         .skip(offset)
 
-      return NextResponse.json({total: searchedCars.length, cars: searchedCars});
+      return NextResponse.json({ total: searchedCars.length, cars: searchedCars });
     }
 
 
@@ -143,10 +142,10 @@ export async function GET(req: NextRequest) {
       query.attributes.$all.push({ $elemMatch: { key: "status", value: { $in: completed } } });
     }
 
-    const totalCars = await Cars.find(query);
+    const totalCars = await Auctions.find(query);
 
 
-    const filteredCars = await Cars.find(query)
+    const filteredCars = await Auctions.find(query)
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })

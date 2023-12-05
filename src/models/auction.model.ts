@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const carSchema = new mongoose.Schema(
+const auctionSchema = new mongoose.Schema(
   {
     auction_id: { type: "string" },
     attributes: {
@@ -46,13 +46,13 @@ const carSchema = new mongoose.Schema(
       type: "object",
       properties: { price: { type: "number" }, bids: { type: "number" }, deadline: { type: "string", format: "date-time" } }
     }
-  },{
-    timestamps: true
-  }
+  }, {
+  timestamps: true
+}
 
 );
 
-const Cars = mongoose.models.cars || mongoose.model("cars", carSchema);
+const Auctions = mongoose.models.auctions || mongoose.model("auctions", auctionSchema);
 
-export default Cars;
+export default Auctions;
 
