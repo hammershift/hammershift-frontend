@@ -45,7 +45,7 @@ const AuctionListingPage = () => {
         fetchData();
     }, []);
 
- 
+
 
     //adds 21 to loadMore when button is clicked
     const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -70,7 +70,7 @@ const AuctionListingPage = () => {
             try {
                 const filterWithLimit = { ...filters, limit: loadMore };
                 const res = await getCarsWithFilter(filterWithLimit);
-                if(res) {
+                if (res) {
                     setTotalAuctions(res.total);
                     setListing(res.cars);
                 }
@@ -88,10 +88,10 @@ const AuctionListingPage = () => {
             <div className="tw-pb-16 ">
                 <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
                     <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-                        {loading 
+                        {loading
                             ? <AuctionsList listing={listing} />
                             : <div className="tw-text-center">Loading... </div>}
-                        
+
                     </div>
                 </section>
                 <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] ">
