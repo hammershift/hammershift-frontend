@@ -18,7 +18,7 @@
     "country-state-city": "^3.2.1",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
-    "mongodb": "^6.2.0",
+    "mongodb": "^6.3.0",
     "mongoose": "^8.0.2",
     "next": "13.5.2",
     "next-auth": "^4.24.5",
