@@ -8,7 +8,7 @@ const filtersInitialState = {
   category: ["All"],
   era: ["All"],
   location: ["All"],
-  sort: "Newly Listed",
+  sort: "Newly Listed"
 };
 
 const Discover = () => {
