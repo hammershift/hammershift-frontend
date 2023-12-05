@@ -26,4 +26,6 @@ const wagerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Wager = mongoose.model('Wager', wagerSchema);
+const Wager = mongoose.models.Wager || mongoose.model('Wager', wagerSchema);
+
+export default Wager;
