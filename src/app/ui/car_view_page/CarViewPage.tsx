@@ -185,7 +185,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                 />
                             </div>
                             <span className="tw-opacity-80">
-                                Prize:{" "}
+                                Prize Pool:{" "}
                                 <span className="tw-font-bold ">{prize}</span>
                             </span>
                         </div>
