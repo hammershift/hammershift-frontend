@@ -7,7 +7,6 @@ export const getCarData = async (ID: string) => {
     if (response.ok) {
       const data = await response.json();
       const car = {
-        _id: data._id,
         auction_id: data.auction_id,
         description: [...data.description],
         images_list: [...data.images_list],
@@ -120,25 +119,4 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
   } catch (err) {
     console.error(err);
   }
-};
-
-export interface CreateWagerProps {
-  auctionID?: string;
-  priceGuessed?: number;
-  wagerAmount?: number;
-  user?: {
-    _id: string;
-    fullName: string;
-    username: string;
-  };
-}
-
-export const createWager = async (body: CreateWagerProps) => {
-  await fetch('/api/wager', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ ...body }),
-  });
 };

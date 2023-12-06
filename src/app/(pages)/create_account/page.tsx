@@ -32,9 +32,6 @@ const CreateAccount = () => {
   const [state, setState] = useState('');
   const [aboutMe, setAboutMe] = useState('');
 
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
-  const [passwordValidationMessage, setPasswordValidationMessage] = useState<string>('');
-
   // for country and state selection
   const [countries, setCountries] = useState<ICountry[]>([]);
   const [states, setStates] = useState<IState[]>([]);
@@ -77,23 +74,7 @@ const CreateAccount = () => {
     }
   };
 
-  // TEST IMPLEMENTATION for password validation
-  const handlePasswordChange = (password: string) => {
-    setPassword(password);
-    if (password.length >= 8) {
-      setIsPasswordValid(true);
-      setPasswordValidationMessage('✔');
-    } else {
-      setIsPasswordValid(false);
-      setPasswordValidationMessage('Password must be at least 8 characters long');
-    }
-  };
-
   const handleAccountCreation = async () => {
-    if (!isPasswordValid) {
-      console.error('Invalid password');
-      return;
-    }
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: {
@@ -193,8 +174,7 @@ const CreateAccount = () => {
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <PasswordInput value={password} onChange={handlePasswordChange} />
-              <div className={isPasswordValid ? 'tw-text-sm tw-text-green-500' : 'tw-text-sm tw-text-red-500'}>{passwordValidationMessage}</div>{' '}
+              <PasswordInput value={password} onChange={setPassword} />
             </div>
             <button className='btn-yellow' onClick={handleAccountCreation}>
               CREATE ACCOUNT
