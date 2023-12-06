@@ -121,24 +121,3 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
     console.error(err);
   }
 };
-
-export interface CreateWagerProps {
-  auctionID?: string;
-  priceGuessed?: number;
-  wagerAmount?: number;
-  user?: {
-    _id: string;
-    fullName: string;
-    username: string;
-  };
-}
-
-export const createWager = async (body: CreateWagerProps) => {
-  await fetch('/api/wager', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ ...body }),
-  });
-};

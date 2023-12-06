@@ -4,15 +4,11 @@ import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, Deta
 import TitleContainer from '@/app/ui/car_view_page/CarViewPage';
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection';
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data';
-import { createWager, getCarData } from '@/lib/data';
+import { getCarData } from '@/lib/data';
 import { TimerProvider } from '@/app/_context/TimerContext';
 import WagerModal from '@/app/components/wager_modal';
-import { useParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
-  const urlPath = useParams();
-  const { data: session } = useSession();
   const [carData, setCarData] = useState<any>(null);
   const [toggleWagerModal, setToggleWagerModal] = useState(false);
 
@@ -21,10 +17,9 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     getCarData(ID).then((data) => {
       console.log(data);
-      setCarData(data);
-      setWagerInputs({ ...wagerInputs, auctionID: data?._id });
+      return setCarData(data);
     });
-  }, [ID]);
+  }, []);
 
   const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
@@ -54,53 +49,6 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     setToggleWagerModal(!toggleWagerModal);
   };
 
-  const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({
-    user: {
-      _id: session?.user.id,
-      fullName: session?.user.fullName,
-      username: session?.user.username,
-    },
-  });
-
-  interface WagerInputsI {
-    auctionID?: string;
-    priceGuessed?: number;
-    wagerAmount?: number;
-    user?: {
-      _id: string;
-      fullName: string;
-      username: string;
-    };
-  }
-
-  const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    switch (e.target.name) {
-      case 'price-guessed':
-        setWagerInputs({
-          ...wagerInputs,
-          priceGuessed: Number(e.target.value),
-        });
-        console.log(wagerInputs);
-        break;
-      case 'wager-amount':
-        setWagerInputs({
-          ...wagerInputs,
-          wagerAmount: Number(e.target.value),
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await createWager(wagerInputs);
-    console.log('wager created');
-
-    setToggleWagerModal(false);
-  };
-
   return (
     <div>
       {toggleWagerModal ? (
@@ -113,8 +61,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             bids={carData.bids}
             ending={formattedDateString}
             image={carData.image}
-            handleWagerInputChange={handleWagerInputChange}
-            handleWagerSubmit={handleWagerSubmit}
+            auctionID={carData._id}
           />
         </TimerProvider>
       ) : null}
