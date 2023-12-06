@@ -74,10 +74,10 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         auctionID?: string;
         priceGuessed?: number;
         wagerAmount?: number;
-        user: {
-            _id?: string;
-            fullName?: string;
-            username?: string;
+        user?: {
+            _id: string;
+            fullName: string;
+            username: string;
         };
     }
 
