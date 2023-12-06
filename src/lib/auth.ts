@@ -3,6 +3,7 @@ import clientPromise from '@/lib/mongodb';
 import bcrypt from 'bcrypt';
 import { User, Credentials } from '@/app/types/userTypes';
 import { NextAuthOptions, getServerSession } from 'next-auth';
+import { ObjectId } from 'mongodb';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
@@ -58,18 +59,30 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id.toString();
+        session.user.id = token.id;
         session.user.email = token.email;
-        // will add more field
+        session.user.name = token.fullName;
+        session.user.fullName = token.fullName;
+        session.user.username = token.username;
       }
       return session;
     },
 
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id.toString();
+        token.id = user.id;
         token.email = user.email;
       }
+
+      const client = await clientPromise;
+      const db = client.db();
+      const dbUser = await db.collection('users').findOne({ _id: new ObjectId(token.id) });
+
+      if (dbUser) {
+        token.fullName = dbUser.fullName;
+        token.username = dbUser.username;
+      }
+
       return token;
     },
   },

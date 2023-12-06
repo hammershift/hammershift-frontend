@@ -1,16 +1,13 @@
-
-
 export const getCarData = async (ID: string) => {
     try {
         const response = await fetch(`/api/cars?auction_id=${ID}`, {
-            cache: 'no-store' //dynamic rendering
+            cache: 'no-store', //dynamic rendering
         });
 
-
         if (response.ok) {
-
             const data = await response.json();
             const car = {
+                _id: data._id,
                 auction_id: data.auction_id,
                 description: [...data.description],
                 images_list: [...data.images_list],
@@ -32,36 +29,33 @@ export const getCarData = async (ID: string) => {
                 listing_type: data.attributes[11].value,
                 deadline: data.attributes[12].value,
                 bids: data.attributes[13].value,
-                status: data.attributes[14].value
-            }
+                status: data.attributes[14].value,
+            };
             return car;
         } else {
-            console.log("failed to fetch cars")
-        }
-
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-
-export const getCars = async ({ limit }: { limit: number }) => {
-    try {
-        const response = await fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
-            cache: 'no-store' //dynamic rendering
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data;
-        } else {
-            console.error("Failed to fetch cars list!");
+            console.log('failed to fetch cars');
         }
     } catch (err) {
         console.error(err);
     }
 };
 
+export const getCars = async ({ limit }: { limit: number }) => {
+    try {
+        const response = await fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
+            cache: 'no-store', //dynamic rendering
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+            console.error('Failed to fetch cars list!');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+};
 
 export interface getCarsWithFilterProps {
     make?: string[];
@@ -130,28 +124,4 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
     } catch (err) {
         console.error(err);
     }
-}
-
-
-export interface CreateWagerProps {
-    auctionID: string | string[];
-    priceGuessed?: number;
-    wagerAmount?: number;
-}
-
-
-export const createWager = async (body: CreateWagerProps) => {
-    const { auctionID, priceGuessed, wagerAmount } = body;
-
-    await fetch('/api/wager', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            auctionID,
-            priceGuessed,
-            wagerAmount
-        }),
-    })
 }
