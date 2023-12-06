@@ -16,9 +16,11 @@ import { createWager, getCarData } from "@/lib/data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import WagerModal from "@/app/components/wager_modal";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
     const urlPath = useParams();
+    const { data: session } = useSession();
     const [carData, setCarData] = useState<any>(null);
     const [toggleWagerModal, setToggleWagerModal] = useState(false);
 
@@ -27,9 +29,10 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
         getCarData(ID).then((data) => {
             console.log(data);
-            return setCarData(data);
+            setCarData(data);
+            setWagerInputs({ ...wagerInputs, auctionID: data?._id });
         });
-    }, []);
+    }, [ID]);
 
     const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
@@ -60,13 +63,22 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     };
 
     const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({
-        auctionID: urlPath.id,
+        user: {
+            _id: session?.user.id,
+            fullName: session?.user.fullName,
+            username: session?.user.username,
+        },
     });
 
     interface WagerInputsI {
-        auctionID: string | string[];
+        auctionID?: string;
         priceGuessed?: number;
         wagerAmount?: number;
+        user: {
+            _id?: string;
+            fullName?: string;
+            username?: string;
+        };
     }
 
     const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,6 +88,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     ...wagerInputs,
                     priceGuessed: Number(e.target.value),
                 });
+                console.log(wagerInputs);
                 break;
             case "wager-amount":
                 setWagerInputs({

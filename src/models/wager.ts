@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const wagerSchema = new mongoose.Schema(
   {
     auctionID: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Auction',
     },
     priceGuessed: {
@@ -26,4 +26,6 @@ const wagerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Wager = mongoose.models.wagers || mongoose.model('wagers', wagerSchema);
+const Wager = mongoose.models.wagers || mongoose.model('wagers', wagerSchema);
+
+export default Wager;

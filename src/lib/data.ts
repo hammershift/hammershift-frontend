@@ -115,8 +115,6 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
                 }))
             };
 
-
-
             return auctions;
         } else {
             throw new Error("Failed to fetch cars list!");
@@ -124,4 +122,29 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
     } catch (err) {
         console.error(err);
     }
+
+}
+
+export interface CreateWagerProps {
+    auctionID: string | string[];
+    priceGuessed?: number;
+    wagerAmount?: number;
+    user?: {
+        _id: string;
+        fullName: string;
+        username: string;
+    }
+}
+
+
+export const createWager = async (body: CreateWagerProps) => {
+
+
+    await fetch('/api/wager', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...body }),
+    })
 }
