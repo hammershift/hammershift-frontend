@@ -77,7 +77,7 @@ const CreateAccount = () => {
     }
   };
 
-  // TEST IMPLEMENTATION FOR PASSWORD VALIDATION
+  // TEST IMPLEMENTATION for password validation
   const handlePasswordChange = (password: string) => {
     setPassword(password);
     if (password.length >= 8) {
