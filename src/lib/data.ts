@@ -126,7 +126,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
 }
 
 export interface CreateWagerProps {
-    auctionID: string | string[];
+    auctionID?: string;
     priceGuessed?: number;
     wagerAmount?: number;
     user?: {
