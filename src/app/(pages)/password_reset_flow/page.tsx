@@ -104,7 +104,7 @@ const PasswordResetFlow = () => {
         setError('');
         setOtpVerificationSuccess(true);
       } else {
-        setError('Invalid code. Please try again');
+        setError('Invalid OTP. Please try again');
         setOtpVerificationSuccess(false);
       }
     } catch (error) {
