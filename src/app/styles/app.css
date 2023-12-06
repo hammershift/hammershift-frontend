@@ -2,6 +2,11 @@
   overflow: hidden;
 }
 
+.valid-password {
+  color: green;
+  font-weight: bold;
+}
+
 button {
   cursor: pointer;
 }
