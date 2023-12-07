@@ -67,6 +67,7 @@ interface TitleContainerProps {
     deadline: Date | string;
     players_num: number;
     prize: string;
+    pot: number;
 }
 
 const TitleContainer: React.FC<TitleContainerProps> = ({
@@ -79,6 +80,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
     deadline,
     players_num,
     prize,
+    pot,
 }) => {
     const timerValues = useTimer();
 
@@ -186,7 +188,14 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                             </div>
                             <span className="tw-opacity-80">
                                 Prize:{" "}
-                                <span className="tw-font-bold ">{prize}</span>
+                                <span className="tw-font-bold ">
+                                    $
+                                    {pot
+                                        ? new Intl.NumberFormat().format(
+                                              pot || 0
+                                          )
+                                        : " --"}
+                                </span>
                             </span>
                         </div>
                     </div>

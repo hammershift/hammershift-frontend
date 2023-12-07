@@ -139,7 +139,6 @@ const CreateAccount = () => {
       //   setCreateAccountPage('page three');
       await getSession();
       handleVerifyLater();
-      // await updateSessionAndRedirect();
     } else {
       console.error(data.message);
     }
@@ -177,19 +176,6 @@ const CreateAccount = () => {
       console.error('Failed to update profile:', data.message);
     }
   };
-
-  // const handleVerifyLater = async () => {
-  //   await updateSessionAndRedirect();
-  // };
-
-  // const updateSessionAndRedirect = async () => {
-  //   await getSession();
-  //   router.push('/');
-
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, 500);
-  // };
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>

@@ -4,7 +4,7 @@ import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, Deta
 import TitleContainer from '@/app/ui/car_view_page/CarViewPage';
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection';
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data';
-import { createWager, getCarData } from '@/lib/data';
+import { addPrizePool, createWager, getCarData } from '@/lib/data';
 import { TimerProvider } from '@/app/_context/TimerContext';
 import WagerModal from '@/app/components/wager_modal';
 import { useParams } from 'next/navigation';
@@ -19,12 +19,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const ID = params.id;
 
   useEffect(() => {
-    getCarData(ID).then((data) => {
-      console.log(data);
+    const fetchCarData = async () => {
+      const data = await getCarData(ID);
       setCarData(data);
       setWagerInputs({ ...wagerInputs, auctionID: data?._id });
-    });
-  }, [ID]);
+    };
+
+    fetchCarData();
+  }, [ID, toggleWagerModal]);
 
   const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
@@ -65,7 +67,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   interface WagerInputsI {
     auctionID?: string;
     priceGuessed?: number;
-    wagerAmount?: number;
+    wagerAmount?: number | undefined;
     user?: {
       _id: string;
       fullName: string;
@@ -95,6 +97,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
 
   const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (wagerInputs.wagerAmount) {
+      await addPrizePool(
+        {
+          pot: carData.pot + Math.floor(wagerInputs.wagerAmount * 0.88) || Math.floor(wagerInputs.wagerAmount * 0.88),
+        },
+        urlPath.id
+      );
+    }
     await createWager(wagerInputs);
     console.log('wager created');
 
@@ -133,6 +143,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                 year={carData.year}
                 make={carData.make}
                 model={carData.model}
+                pot={carData.pot}
                 current_bid={currencyString}
                 bids_num={carData.bids}
                 ending_date={formattedDateString}
