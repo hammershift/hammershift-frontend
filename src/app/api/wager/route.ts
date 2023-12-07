@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
     const wagers = await Wager.find();
     return NextResponse.json({ wagers: wagers });
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ message: "Internal server error" });
+    console.error(error);
+    return NextResponse.json({ message: 'Internal server error' });
   }
 }
