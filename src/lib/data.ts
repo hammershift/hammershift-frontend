@@ -143,3 +143,17 @@ export const createWager = async (body: CreateWagerProps) => {
     body: JSON.stringify({ ...body }),
   });
 };
+
+export interface AddPrizePoolProps {
+  pot?: number;
+}
+
+export const addPrizePool = async (pot: AddPrizePoolProps, auction_id: string | string[]) => {
+  await fetch(`/api/cars?auction_id=${auction_id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...pot }),
+  });
+};

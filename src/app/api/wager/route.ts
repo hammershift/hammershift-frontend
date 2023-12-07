@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
     const totalWager = totalWagerAggregation.length > 0 ? totalWagerAggregation[0].totalWager : 0;
 
     console.log('Wager created successfully. Total wager for auction:', totalWager);
+
     return NextResponse.json({ message: 'Wager created successfully' }, { status: 201 });
   } catch (error) {
     console.error('Error in wager creation:', error);
