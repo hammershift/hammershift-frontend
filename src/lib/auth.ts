@@ -71,22 +71,23 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
 
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       console.log('JWT callback - Initial token:', token);
       console.log('JWT callback - User:', user);
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
 
       const client = await clientPromise;
       const db = client.db();
+      const dbUser = await db.collection('users').findOne({ _id: new ObjectId(token.id) });
 
-      if (account?.provider === 'google' && user) {
-        let dbUser = await db.collection('users').findOne({ email: user.email });
+      console.log('JWT callback - Fetched User from DB:', dbUser);
 
-        if (dbUser) {
-          token.fullName = dbUser.fullName;
-          token.username = dbUser.username;
-        } else {
-          token.needsProfileCompletion = true;
-        }
+      if (dbUser) {
+        token.fullName = dbUser.fullName;
+        token.username = dbUser.username;
       }
 
       console.log('JWT callback - Final token:', token);
