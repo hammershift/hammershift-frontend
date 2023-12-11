@@ -72,9 +72,8 @@ const Homepage = () => {
     try {
       const data = await getCarsWithFilter({ limit: 5 });
 
-      // Check if data is defined and has the expected structure
       if (data && "cars" in data) {
-        console.log(data); // Log the data to inspect its structure
+        console.log(data);
         setCarData(data.cars);
       } else {
         console.error("Unexpected data structure:", data);
@@ -266,16 +265,16 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
         </div>
       </header>
       <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto xl:tw-overflow-visible tw-gap-4 sm:tw-gap-8 xl:tw-gap-0 xl:tw-justify-between tw-mt-8">
-        {carData.map((item) => (
+        {carData.map((auction, index) => (
           <LiveGamesCard
-            key={item.id}
-            id={item.id}
-            image={item.image}
-            year={item.year}
-            make={item.make}
-            model={item.model}
-            description={item.description}
-            deadline={item.deadline}
+            key={index}
+            id={auction.id}
+            image={auction.image}
+            year={auction.year}
+            make={auction.make}
+            model={auction.model}
+            description={auction.description}
+            deadline={auction.deadline}
           />
         ))}
       </section>
@@ -330,6 +329,7 @@ const LiveGamesCard: React.FC<CarData> = ({
   ];
 
   const timerValues = useTimer();
+  console.log(make, model, deadline, timerValues);
 
   return (
     <div className="tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center">
