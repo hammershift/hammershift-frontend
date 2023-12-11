@@ -90,23 +90,19 @@ const Homepage = () => {
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center">
       <Carousel />
-      {carData.map((auction, index) => (
-        <TimerProvider key={index} deadline={new Date(auction.deadline)}>
-          <LiveGames carData={carData} />
-          <TeamBattles />
-          <Tournaments />
-          <NewEraWagering />
-          <GamesByMake />
-          <WagerByCatergory />
-          <SkillStrategyAndStakes />
-          <NewGames />
-          <WhatsTrending />
-          <MostExpensiveCars />
-          <MostBids />
-          <HowHammerShiftWorks />
-          <Subscribe />
-        </TimerProvider>
-      ))}
+      <LiveGames carData={carData} />
+      <TeamBattles />
+      <Tournaments />
+      <NewEraWagering />
+      <GamesByMake />
+      <WagerByCatergory />
+      <SkillStrategyAndStakes />
+      <NewGames />
+      <WhatsTrending />
+      <MostExpensiveCars />
+      <MostBids />
+      <HowHammerShiftWorks />
+      <Subscribe />
       <Footer />
     </div>
   );
@@ -266,16 +262,18 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
       </header>
       <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto xl:tw-overflow-visible tw-gap-4 sm:tw-gap-8 xl:tw-gap-0 xl:tw-justify-between tw-mt-8">
         {carData.map((auction, index) => (
-          <LiveGamesCard
-            key={index}
-            id={auction.id}
-            image={auction.image}
-            year={auction.year}
-            make={auction.make}
-            model={auction.model}
-            description={auction.description}
-            deadline={auction.deadline}
-          />
+          <TimerProvider key={auction.id} deadline={auction.deadline}>
+            <LiveGamesCard
+              key={index}
+              id={auction.id}
+              image={auction.image}
+              year={auction.year}
+              make={auction.make}
+              model={auction.model}
+              description={auction.description}
+              deadline={auction.deadline}
+            />
+          </TimerProvider>
         ))}
       </section>
     </div>
@@ -347,8 +345,8 @@ const LiveGamesCard: React.FC<CarData> = ({
       </div>
       <div className="tw-ml-4 sm:tw-ml-0">
         <div className="info tw-my-3 tw-flex tw-flex-col tw-items-start sm:tw-items-center">
-          <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium">
-            {year} {make} {model}
+          <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium tw-line-clamp-2 tw-w-40 tw-text-center">
+            {`${year} ${make} ${model} `}
           </div>
           <div className="tw-flex tw-items-center">
             <Image
