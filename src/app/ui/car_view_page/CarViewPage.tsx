@@ -594,7 +594,11 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                 >
                                     <div className="tw-flex">
                                         <Image
-                                            src={wager.user.image}
+                                            src={
+                                                wager.user.image
+                                                    ? wager.user.image
+                                                    : AvatarOne
+                                            }
                                             width={40}
                                             height={40}
                                             alt="dollar"
