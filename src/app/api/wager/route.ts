@@ -47,6 +47,8 @@ export async function POST(req: NextRequest) {
       user,
     });
 
+    await newWager.save();
+
     const client = await clientPromise;
     const db = client.db();
 
@@ -77,7 +79,7 @@ export async function GET(req: NextRequest) {
     //IMPORTANT use the _id instead of auction_id when fetching wagers
     // api/wager?auction_id=656e95bc8727754b7cb5ec6b to get all wagers with the same auctionID
     if (id) {
-      const auctionWagers = await Wager.find({ auctionID: new ObjectId(id) });
+      const auctionWagers = await Wager.find({ auctionID: new ObjectId(id) }).sort({ createdAt: -1 });
       return NextResponse.json(auctionWagers);
     }
     // api/wager to get all wagers

@@ -38,6 +38,10 @@ import AvatarFour from "../../../../public/images/avatar-four.svg";
 
 import Link from "next/link";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+
 export interface CarDataOneProps {
     price: string;
     year: string;
@@ -510,11 +514,29 @@ export const CommentsCard = () => {
     );
 };
 
+interface WagerI {
+    _id: string;
+    auctionID: string;
+    priceGuessed: number;
+    wagerAmount: number;
+    user: {
+        _id: string;
+        fullName: string;
+        username: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+}
+
 interface WagersSectionProps {
     toggleWagerModal: () => void;
+    players_num: number;
+    wagers: WagerI[];
 }
 
 export const WagersSection: React.FC<WagersSectionProps> = ({
+    players_num,
+    wagers,
     toggleWagerModal,
 }) => {
     const router = useRouter();
@@ -544,6 +566,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
             time: "2 days ago",
         },
     ];
+
     return (
         <div>
             <div className="tw-relative tw-pb-8 sm:tw-pb-0">
@@ -560,17 +583,17 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                             className="tw-w-5 tw-h-5"
                         />
                     </div>
-                    <div className="tw-text-[14px]">10 Players</div>
+                    <div className="tw-text-[14px]">{players_num} Players</div>
                     <div className="tw-relative tw-mt-4">
-                        {teamPlayers.map((player) => {
+                        {wagers.slice(0, 4).map((wager) => {
                             return (
                                 <div
-                                    key={player.id}
+                                    key={wager._id}
                                     className="tw-my-5 tw-flex tw-justify-between"
                                 >
                                     <div className="tw-flex">
                                         <Image
-                                            src={player.avatar}
+                                            src={AvatarOne}
                                             width={40}
                                             height={40}
                                             alt="dollar"
@@ -578,10 +601,12 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
-                                                {player.username}
+                                                {wager.user.username}
                                             </div>
                                             <div className="tw-opacity-50">
-                                                {player.time}
+                                                {dayjs(
+                                                    wager.createdAt
+                                                ).fromNow()}
                                             </div>
                                         </div>
                                     </div>
@@ -589,7 +614,10 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         <span className="tw-hidden xl:tw-inline-block">
                                             Wager:
                                         </span>{" "}
-                                        $152,000
+                                        $
+                                        {new Intl.NumberFormat().format(
+                                            wager.priceGuessed
+                                        )}
                                     </button>
                                 </div>
                             );

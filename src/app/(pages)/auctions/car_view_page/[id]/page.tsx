@@ -191,7 +191,13 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         </>
                     ) : null}
                     <div className="tw-block sm:tw-hidden tw-mt-8">
-                        <WagersSection toggleWagerModal={showWagerModal} />
+                        {wagersData ? (
+                            <WagersSection
+                                toggleWagerModal={showWagerModal}
+                                players_num={playerNum}
+                                wagers={wagersData}
+                            />
+                        ) : null}
                     </div>
                     <GuessThePriceInfoSection />
 
@@ -214,7 +220,13 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     <CommentsSection />
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
-                    <WagersSection toggleWagerModal={showWagerModal} />
+                    {wagersData ? (
+                        <WagersSection
+                            toggleWagerModal={showWagerModal}
+                            players_num={playerNum}
+                            wagers={wagersData}
+                        />
+                    ) : null}
                     {carData ? (
                         <DetailsSection
                             website={carData.website}
