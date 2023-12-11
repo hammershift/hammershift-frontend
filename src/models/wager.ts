@@ -21,6 +21,7 @@ const wagerSchema = new mongoose.Schema(
       },
       fullName: String,
       username: String,
+      image: String,
     },
   },
   { timestamps: true }
