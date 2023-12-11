@@ -9,6 +9,8 @@ import { authOptions } from '@/lib/auth';
 import connectToDB from '@/lib/mongoose';
 import { ObjectId } from 'mongodb';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     const totalWager = totalWagerAggregation.length > 0 ? totalWagerAggregation[0].totalWager : 0;
 
-    console.log('Wager created successfully. Total wager for auction:', totalWager);
+    console.log('Wager created successfully. Total wager for auction:', Math.floor(totalWager * 0.88));
 
     return NextResponse.json({ message: 'Wager created successfully' }, { status: 201 });
   } catch (error) {

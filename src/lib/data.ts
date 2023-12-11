@@ -144,6 +144,12 @@ export const createWager = async (body: CreateWagerProps) => {
   });
 };
 
+export const getWagers = async (id: string) => {
+  const res = await fetch(`/api/wager?id=${id}`);
+  const data = await res.json();
+  return data;
+};
+
 export interface AddPrizePoolProps {
   pot?: number;
 }
