@@ -99,7 +99,10 @@ const CreateAccount = () => {
   // TEST IMPLEMENTATION for password validation
   const handlePasswordChange = (password: string) => {
     setPassword(password);
-    if (password.length >= 8) {
+    if (password.length === 0) {
+      setIsPasswordValid(true);
+      setPasswordValidationMessage('');
+    } else if (password.length >= 8) {
       setIsPasswordValid(true);
       setPasswordValidationMessage('✔');
     } else {
