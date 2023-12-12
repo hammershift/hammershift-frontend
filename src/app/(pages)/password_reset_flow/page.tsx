@@ -14,6 +14,7 @@ const PasswordResetFlow = () => {
   const [passwordError, setPasswordError] = useState('');
   const [timer, setTimer] = useState<number | null>(60);
   const [timerStartTime, setTimerStartTime] = useState<number | null>(null);
+  const [isNewProcess, setIsNewProcess] = useState(true);
 
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
@@ -40,45 +41,70 @@ const PasswordResetFlow = () => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Common error handling function
+  // common error handling function
   const handleCommonError = (error: string) => {
     console.error('Error:', error);
     setError('An error occurred.');
   };
 
   useEffect(() => {
-    const startCountdown = () => {
-      const startTime = Date.now();
-      setTimer(60);
-
+    const startCountdown = (startTime: number) => {
       intervalRef.current = setInterval(() => {
-        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
         const remainingTime = 60 - elapsedTime;
 
         if (remainingTime <= 0) {
           clearInterval(intervalRef.current);
           intervalRef.current = undefined;
-          setTimer(0); // OTP expired
+          setTimer(0);
         } else {
           setTimer(remainingTime);
         }
       }, 1000);
     };
 
-    // start the countdown only if the conditions are met
-    if (resetPage === 'enter otp' && !otpExpired && !otpEntryCompleted && !intervalRef.current) {
-      startCountdown();
-    }
+    const handleNewProcess = () => {
+      const newStartTime = Date.now();
+      const newSessionId = newStartTime.toString();
+      localStorage.setItem('timerStartTime', newSessionId);
+      localStorage.setItem('passwordResetSessionId', newSessionId);
+      setTimerStartTime(newStartTime);
+      startCountdown(newStartTime);
+    };
 
-    // retrieve email from localStorage and handle redirection
+    const handleExistingProcess = (startTime: number) => {
+      const currentTime = Date.now();
+      const timeElapsed = currentTime - startTime;
+
+      if (timeElapsed < 60000) {
+        setTimerStartTime(startTime);
+        startCountdown(startTime);
+      } else {
+        localStorage.removeItem('timerStartTime');
+      }
+    };
+
+    // retrieve the email from localStorage
     const storedEmail = localStorage.getItem('passwordResetEmail');
-    if (storedEmail) {
-      setEmail(storedEmail);
-    } else {
+    if (!storedEmail) {
       router.push('/login_page');
+      return;
+    }
+    setEmail(storedEmail);
+
+    // retrieve the session state (or flag) from localStorage
+    const isNewProcess = localStorage.getItem('isNewPasswordResetProcess') === 'true';
+    localStorage.removeItem('isNewPasswordResetProcess'); // clear the flag for a new process
+
+    const storedStartTime = localStorage.getItem('timerStartTime');
+    if (isNewProcess || !storedStartTime) {
+      handleNewProcess();
+    } else {
+      handleExistingProcess(parseInt(storedStartTime, 10));
     }
 
-    // cleanup function to clear the interval
+    // Cleanup function to clear the interval
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
