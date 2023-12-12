@@ -327,8 +327,6 @@ const LiveGamesCard: React.FC<CarData> = ({
   ];
 
   const timerValues = useTimer();
-  console.log(make, model, deadline, timerValues);
-
   return (
     <div className="tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center">
       <div className="tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-relative">
