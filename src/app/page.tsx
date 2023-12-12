@@ -1,14 +1,14 @@
 "use client";
 import "./styles/app.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "./components/card";
 import HowHammerShiftWorks from "./components/how_hammeshift_works";
 import { TournamentsCard } from "./components/card";
 import Footer from "./components/footer";
 import Subscribe from "./components/subscribe";
-import { carData } from "@/sample_data";
 import Image from "next/image";
 import { TimerProvider, useTimer } from "./_context/TimerContext";
+import { getCars, getCarsWithFilter } from "@/lib/data";
 
 import LiveGamesIcon from "../../public/images/currency-dollar-circle.svg";
 import ArrowRight from "../../public/images/arrow-right.svg";
@@ -51,35 +51,47 @@ import AvatarTwo from "../../public/images/avatar-two.svg";
 import AvatarThree from "../../public/images/avatar-three.svg";
 import AvatarFour from "../../public/images/avatar-four.svg";
 
-interface carDataProps {
+interface CarData {
   id: string;
-  url: string;
+  image: string;
   year: string;
-  name: string;
+  make: string;
+  model: string;
   description: string;
   deadline: Date;
 }
 
 interface LiveGamesProps {
-  carData: carDataProps[];
-}
-
-interface LiveGamesCardProps {
-  url: string;
-  year: string;
-  name: string;
-  description: string;
-  deadline: Date;
+  carData: CarData[];
 }
 
 const Homepage = () => {
+  const [carData, setCarData] = useState<CarData[]>([]);
+
+  const fetchData = async () => {
+    try {
+      const data = await getCarsWithFilter({ limit: 5 });
+
+      if (data && "cars" in data) {
+        console.log(data);
+        setCarData(data.cars);
+      } else {
+        console.error("Unexpected data structure:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center">
       <Carousel />
-      <TimerProvider deadline={new Date(carData[0].deadline)}>
-        <LiveGames carData={carData} />
-        <TeamBattles />
-      </TimerProvider>
+      <LiveGames carData={carData} />
+      <TeamBattles />
       <Tournaments />
       <NewEraWagering />
       <GamesByMake />
@@ -249,26 +261,32 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
         </div>
       </header>
       <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto xl:tw-overflow-visible tw-gap-4 sm:tw-gap-8 xl:tw-gap-0 xl:tw-justify-between tw-mt-8">
-        {carData.map((item) => (
+        {carData.map((auction, index) => (
+          <TimerProvider key={auction.id} deadline={auction.deadline}>
             <LiveGamesCard
-              key={item.id}
-              url={item.url}
-              year={item.year}
-              name={item.name}
-              description={item.description}
-              deadline={item.deadline}
+              key={index}
+              id={auction.id}
+              image={auction.image}
+              year={auction.year}
+              make={auction.make}
+              model={auction.model}
+              description={auction.description}
+              deadline={auction.deadline}
             />
+          </TimerProvider>
         ))}
       </section>
     </div>
   );
 };
 
-const LiveGamesCard: React.FC<LiveGamesCardProps> = ({
-  url,
+const LiveGamesCard: React.FC<CarData> = ({
+  image,
   year,
-  name,
+  make,
+  model,
   description,
+  deadline,
 }) => {
   const playersData = [
     {
@@ -309,7 +327,6 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({
   ];
 
   const timerValues = useTimer();
-
   return (
     <div className="tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center">
       <div className="tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-relative">
@@ -317,7 +334,7 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({
           LIVE
         </div>
         <Image
-          src={url}
+          src={image}
           width={200}
           height={200}
           alt="car"
@@ -326,10 +343,9 @@ const LiveGamesCard: React.FC<LiveGamesCardProps> = ({
       </div>
       <div className="tw-ml-4 sm:tw-ml-0">
         <div className="info tw-my-3 tw-flex tw-flex-col tw-items-start sm:tw-items-center">
-          <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium">
-            {year} {name}
+          <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium tw-line-clamp-2 tw-w-40 tw-text-center">
+            {`${year} ${make} ${model} `}
           </div>
-          <div className="tw-my-1.5 tw-font-medium">{description}</div>
           <div className="tw-flex tw-items-center">
             <Image
               src={HourGlassIcon}
