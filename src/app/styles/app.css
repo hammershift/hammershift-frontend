@@ -1,5 +1,24 @@
+.stop-scrolling {
+  overflow: hidden;
+}
+
+.valid-password {
+  color: green;
+  font-weight: bold;
+}
+
 button {
   cursor: pointer;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .clickable-icon {

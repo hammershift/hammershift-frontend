@@ -84,7 +84,7 @@ const Card = () => {
     const router = useRouter();
     return (
         <div>
-            <Image src={cardData.url} width={416} height={219} alt='ferrari' className='tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px]  tw-object-cover' />
+            <Image src={cardData.url} width={416} height={219} alt='ferrari' className='tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover' />
             <div className='tw-font-bold tw-text-[24px] tw-py-[12px]'>{cardData.year} {cardData.brand} {cardData.descritpion}</div>
             <p className='tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]'>This 1981 Ferrari 512 BB is one of 929 carbureted examples produced between 1976 and 1981, and it was imported to the US in July 1981. The car was registered in Oregon through the late 2000s and was acquired by the selling dealer in 2022, reportedly from its second owner. It has been refinished in silver over black leather</p>
             <div className='tw-flex tw-mt-2'>
@@ -222,7 +222,7 @@ export const GamesCard = (props: any) => {
               width={416}
               height={219}
               alt={props.make}
-              className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px]  tw-object-cover tw-aspect-auto"
+              className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto"
             />
             <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
               {props.year} {props.make} {props.model}

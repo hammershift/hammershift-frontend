@@ -88,8 +88,8 @@ const Navbar = () => {
     }
   };
 
-  const handleSearchClick = async (carMake: string, carModel: string) => {
-    router.push('/auctions');
+  const handleSearchClick = async (carMake: string, carModel: string, carID: string) => {
+    router.push(`/auctions/car_view_page/${carID}`);
     const searchInput = document.getElementById('search-bar-input') as HTMLInputElement;
     const dropdownSearchInput = document.getElementById('dropdown-search-bar') as HTMLInputElement;
     if (searchInput) {
@@ -116,7 +116,7 @@ const Navbar = () => {
                 <Image src={LogoSmall} width={32} height={32} alt='logo' className=' tw-block sm:tw-hidden tw-w-auto tw-h-auto' />
               </Link>
             </div>
-            <Link href={'/discover_page'}>
+            <Link href={'/discover'}>
               <div className='tw-block tw-mx-2 sm:tw-mx-4 '>DISCOVER</div>
             </Link>
             <Link href='/auctions'>
@@ -196,20 +196,33 @@ const Navbar = () => {
         <div className=' tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3'>
           <div className='lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between'>
             <div className='tw-pr-4'>
-              <Link href='/homepage'>
+              <Link href='/'>
                 <Image src={Logo} width={176} height={64} alt='logo' className='tw-block tw-w-auto tw-h-auto' />
               </Link>
             </div>
-            <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
+            <Link href='/discover'>
+              <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
+            </Link>
             <Link href='/auctions'>
               <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>AUCTIONS</div>
             </Link>
           </div>
-          <div className='tw-hidden lg:tw-flex lg:tw-flex-1 lg:tw-items-center xl:tw-max-w-[535px] tw-mx-6 lg:tw-mx-12'>
-            <div className='tw-bg-shade-100 tw-flex tw-p-2 tw-grow tw-rounded'>
-              <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
-              <input className='tw-ml-2 tw-bg-shade-100 tw-w-full' placeholder='Search make, model, year...'></input>
-            </div>
+          <div className='tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4'>
+            <form onSubmit={handleSumbit} autoComplete='off' className='tw-w-full tw-flex tw-items-center'>
+              <div className={searchBoxDropDown ? 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t' : 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded'}>
+                <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
+                <input
+                  id='search-bar-input'
+                  name='search'
+                  type='text'
+                  className='tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none'
+                  placeholder='Search make, model, year...'
+                  onClick={handleInputClick}
+                  onChange={handleChange}
+                ></input>
+              </div>
+            </form>
+            {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
           </div>
           <div className='tw-flex tw-items-center'>
             <Link href='/create_account'>
@@ -250,7 +263,7 @@ interface DropdownMenuProps {
   searchedData: SearchDatas[];
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearchClick: (carMake: string, carModel: string) => void;
+  onSearchClick: (carMake: string, carModel: string, carID: string) => void;
   handleInputClick: () => void;
 }
 
@@ -619,15 +632,18 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
 
 const MyAccountDropdownMenu = () => {
   const account_load = 100;
+  const router = useRouter();
 
   const handleSignOut = async () => {
     try {
-      await signOut();
+      await signOut({ redirect: false });
+      router.push('/');
       console.log('User successfully logged out');
     } catch (error) {
       console.error('Error during sign out:', error);
     }
   };
+
   return (
     <div className='tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black '>
       <div className='tw-px-6 tw-font-bold tw-text-lg'>MY ACCOUNT</div>
@@ -657,14 +673,14 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
   return (
     <div
       id='search-box'
-      className='tw-bg-shade-100 tw-absolute tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]'
+      className='tw-bg-shade-100 tw-absolute tw-top-10 tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]'
     >
       {Array.isArray(searchedData) &&
         searchedData.map((carData) => {
           return (
             <div
               key={carData.auction_id}
-              onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`)}
+              onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`, `${carData.auction_id}`)}
               className='tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded'
             >
               {carData.attributes[2].value} {carData.attributes[3].value}
@@ -710,5 +726,5 @@ interface SearchDatas {
 
 interface SearchDropDownProps {
   searchedData: SearchDatas[];
-  onSearchClick: (carMake: string, carModel: string) => void;
+  onSearchClick: (carMake: string, carModel: string, carID: string) => void;
 }

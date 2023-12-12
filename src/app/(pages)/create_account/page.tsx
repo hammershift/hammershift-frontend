@@ -13,7 +13,7 @@ import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.sv
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import Passport from '../../../../public/images/passport.svg';
 import IDCard from '../../../../public/images/single-neutral-id-card-1.svg';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ICountry, IState, Country, State } from 'country-state-city';
 import PasswordInput from '@/app/components/password_input';
@@ -31,6 +31,9 @@ const CreateAccount = () => {
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
   const [aboutMe, setAboutMe] = useState('');
+
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
+  const [passwordValidationMessage, setPasswordValidationMessage] = useState<string>('');
 
   // for country and state selection
   const [countries, setCountries] = useState<ICountry[]>([]);
@@ -74,7 +77,23 @@ const CreateAccount = () => {
     }
   };
 
+  // TEST IMPLEMENTATION FOR PASSWORD VALIDATION
+  const handlePasswordChange = (password: string) => {
+    setPassword(password);
+    if (password.length >= 8) {
+      setIsPasswordValid(true);
+      setPasswordValidationMessage('✔');
+    } else {
+      setIsPasswordValid(false);
+      setPasswordValidationMessage('Password must be at least 8 characters long');
+    }
+  };
+
   const handleAccountCreation = async () => {
+    if (!isPasswordValid) {
+      console.error('Invalid password');
+      return;
+    }
     const response = await fetch('/api/signup', {
       method: 'POST',
       headers: {
@@ -118,6 +137,7 @@ const CreateAccount = () => {
     if (response.ok) {
       console.log('Profile updated successfully:', data.message);
       //   setCreateAccountPage('page three');
+      await getSession();
       handleVerifyLater();
     } else {
       console.error(data.message);
@@ -145,7 +165,13 @@ const CreateAccount = () => {
 
     const data = await response.json();
     if (response.ok) {
+      console.log('Profile updated successfully:', data.message);
+      await getSession();
       router.push('/');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } else {
       console.error('Failed to update profile:', data.message);
     }
@@ -174,7 +200,8 @@ const CreateAccount = () => {
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
-              <PasswordInput value={password} onChange={setPassword} />
+              <PasswordInput value={password} onChange={handlePasswordChange} />
+              <div className={isPasswordValid ? 'tw-text-sm tw-text-green-500' : 'tw-text-sm tw-text-red-500'}>{passwordValidationMessage}</div>{' '}
             </div>
             <button className='btn-yellow' onClick={handleAccountCreation}>
               CREATE ACCOUNT

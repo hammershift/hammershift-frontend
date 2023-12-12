@@ -3,6 +3,7 @@ import clientPromise from '@/lib/mongodb';
 import bcrypt from 'bcrypt';
 import { User, Credentials } from '@/app/types/userTypes';
 import { NextAuthOptions, getServerSession } from 'next-auth';
+import { ObjectId } from 'mongodb';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
@@ -23,6 +24,7 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 }
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: 'jwt',
@@ -43,7 +45,7 @@ export const authOptions: NextAuthOptions = {
         const db = client.db();
         const user = await db.collection<User>('users').findOne({ email: credentials.email });
 
-        if (!user || !(await bcrypt.compare(credentials.password, user.password))) {
+        if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password))) {
           throw new Error('Invalid credentials');
         }
 
@@ -57,19 +59,41 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
+      console.log('Session callback - Token:', token);
       if (token) {
-        session.user.id = token.id.toString();
+        session.user.id = token.id;
         session.user.email = token.email;
-        // will add more field
+        session.user.name = token.fullName;
+        session.user.fullName = token.fullName;
+        session.user.username = token.username;
+        session.user.image = token.image;
       }
+      console.log('Session callback - Final Session object:', session);
       return session;
     },
 
     async jwt({ token, user }) {
+      console.log('JWT callback - Initial token:', token);
+      console.log('JWT callback - User:', user);
       if (user) {
-        token.id = user.id.toString();
+        token.id = user.id;
         token.email = user.email;
+        token.image = user.image;
       }
+
+      const client = await clientPromise;
+      const db = client.db();
+      const dbUser = await db.collection('users').findOne({ _id: new ObjectId(token.id) });
+
+      console.log('JWT callback - Fetched User from DB:', dbUser);
+
+      if (dbUser) {
+        token.fullName = dbUser.fullName;
+        token.username = dbUser.username;
+        token.image = dbUser.image;
+      }
+
+      console.log('JWT callback - Final token:', token);
       return token;
     },
   },

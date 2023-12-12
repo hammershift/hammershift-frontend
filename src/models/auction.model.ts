@@ -16,6 +16,7 @@ const carSchema = new mongoose.Schema(
   {
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
     auction_id: { type: String, required: true },
+    pot: { type: Number },
     __v: { type: Number, default: 0 },
     attributes: [attributeSchema],
     description: { type: [String], required: true },
@@ -27,13 +28,6 @@ const carSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-carSchema.index({
-  location: "text",
-  make: "text",
-  model: "text",
-  year: "text",
-});
+const Auctions = mongoose.models.auctions || mongoose.model("auctions", carSchema);
 
-const Cars = mongoose.models.cars || mongoose.model("cars", carSchema);
-
-export default Cars;
+export default Auctions;
