@@ -7,6 +7,7 @@ export const getCarData = async (ID: string) => {
     if (response.ok) {
       const data = await response.json();
       const car = {
+        _id: data._id,
         auction_id: data.auction_id,
         description: [...data.description],
         images_list: [...data.images_list],

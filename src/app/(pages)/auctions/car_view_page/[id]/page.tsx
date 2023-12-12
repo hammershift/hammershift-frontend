@@ -6,8 +6,13 @@ import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSe
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data';
 import { addPrizePool, createWager, getCarData, getWagers } from '@/lib/data';
 import { TimerProvider } from '@/app/_context/TimerContext';
+import WagerModal from '@/app/components/wager_modal';
+import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
+  const urlPath = useParams();
+  const { data: session } = useSession();
   const [carData, setCarData] = useState<any>(null);
   const [wagersData, setWagersData] = useState<any>(null);
   const [playerNum, setPlayerNum] = useState(0);
@@ -136,7 +141,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
         <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
         <div className='tw-hidden sm:tw-block'>
-          <WatchAndWagerButtons />
+          <WatchAndWagerButtons toggleWagerModal={showWagerModal} />
         </div>
       </div>
       <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
@@ -159,12 +164,12 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             </TimerProvider>
           ) : null}
           <div className='tw-block sm:tw-hidden tw-mt-8'>
-            <WatchAndWagerButtons />
+            <WatchAndWagerButtons toggleWagerModal={showWagerModal} />
           </div>
           {carData ? (
             <>
               <PhotosLayout images_list={carData.images_list} img={carData.image} />
-              <ArticleSection images_list={carData.images_list} description={carData.description} />
+              <ArticleSection images_list={carData.images_list} description={carData.description} toggleWagerModal={showWagerModal} />
             </>
           ) : null}
           <div className='tw-block sm:tw-hidden tw-mt-8'>{wagersData ? <WagersSection toggleWagerModal={showWagerModal} players_num={playerNum} wagers={wagersData} /> : null}</div>
@@ -207,7 +212,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       <GamesYouMightLike />
-    </>
+    </div>
   );
 };
 
