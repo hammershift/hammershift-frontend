@@ -33,6 +33,9 @@ const CreateAccount = () => {
   const [state, setState] = useState('');
   const [aboutMe, setAboutMe] = useState('');
 
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
+  const [emailValidationMessage, setEmailValidationMessage] = useState<string>('');
+
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
   const [passwordValidationMessage, setPasswordValidationMessage] = useState<string>('');
 
@@ -75,6 +78,21 @@ const CreateAccount = () => {
         setSelectedState(state);
         setState(state.name);
       }
+    }
+  };
+
+  // TEST IMPLEMENTATION for email validation
+  const handleEmailChange = (email: string) => {
+    setEmail(email);
+    if (email.length === 0) {
+      setIsEmailValid(true);
+      setEmailValidationMessage('');
+    } else if (email.includes('@')) {
+      setIsEmailValid(true);
+      setEmailValidationMessage('✔');
+    } else {
+      setIsEmailValid(false);
+      setEmailValidationMessage('Please enter a valid email address');
     }
   };
 
@@ -197,7 +215,8 @@ const CreateAccount = () => {
           <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Email</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => handleEmailChange(e.target.value)} />
+              <div className={isEmailValid ? 'tw-text-sm tw-text-green-500' : 'tw-text-sm tw-text-red-500'}>{emailValidationMessage}</div>
             </div>
             <div className='tw-flex tw-flex-col tw-gap-2'>
               <label>Password</label>
