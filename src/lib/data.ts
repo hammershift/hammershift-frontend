@@ -30,6 +30,7 @@ export const getCarData = async (ID: string) => {
         deadline: data.attributes[12].value,
         bids: data.attributes[13].value,
         status: data.attributes[14].value,
+        pot: data.pot,
       };
       return car;
     } else {
@@ -140,5 +141,25 @@ export const createWager = async (body: CreateWagerProps) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ ...body }),
+  });
+};
+
+export const getWagers = async (id: string) => {
+  const res = await fetch(`/api/wager?id=${id}`);
+  const data = await res.json();
+  return data;
+};
+
+export interface AddPrizePoolProps {
+  pot?: number;
+}
+
+export const addPrizePool = async (pot: AddPrizePoolProps, auction_id: string | string[]) => {
+  await fetch(`/api/cars?auction_id=${auction_id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ...pot }),
   });
 };

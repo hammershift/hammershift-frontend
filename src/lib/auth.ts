@@ -24,6 +24,7 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 }
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: 'jwt',
@@ -44,7 +45,7 @@ export const authOptions: NextAuthOptions = {
         const db = client.db();
         const user = await db.collection<User>('users').findOne({ email: credentials.email });
 
-        if (!user || !(await bcrypt.compare(credentials.password, user.password))) {
+        if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password))) {
           throw new Error('Invalid credentials');
         }
 
@@ -65,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.fullName;
         session.user.fullName = token.fullName;
         session.user.username = token.username;
+        session.user.image = token.image;
       }
       console.log('Session callback - Final Session object:', session);
       return session;
@@ -76,6 +78,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.image = user.image;
       }
 
       const client = await clientPromise;
@@ -87,6 +90,7 @@ export const authOptions: NextAuthOptions = {
       if (dbUser) {
         token.fullName = dbUser.fullName;
         token.username = dbUser.username;
+        token.image = dbUser.image;
       }
 
       console.log('JWT callback - Final token:', token);

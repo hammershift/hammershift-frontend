@@ -13,7 +13,7 @@ import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.sv
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import Passport from '../../../../public/images/passport.svg';
 import IDCard from '../../../../public/images/single-neutral-id-card-1.svg';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ICountry, IState, Country, State } from 'country-state-city';
 import PasswordInput from '@/app/components/password_input';
@@ -137,6 +137,7 @@ const CreateAccount = () => {
     if (response.ok) {
       console.log('Profile updated successfully:', data.message);
       //   setCreateAccountPage('page three');
+      await getSession();
       handleVerifyLater();
     } else {
       console.error(data.message);
@@ -164,7 +165,13 @@ const CreateAccount = () => {
 
     const data = await response.json();
     if (response.ok) {
+      console.log('Profile updated successfully:', data.message);
+      await getSession();
       router.push('/');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } else {
       console.error('Failed to update profile:', data.message);
     }

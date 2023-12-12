@@ -16,6 +16,7 @@
     "autoprefixer": "10.4.16",
     "bcrypt": "^5.1.1",
     "country-state-city": "^3.2.1",
+    "dayjs": "^1.11.10",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
     "mongodb": "^5.9.1",

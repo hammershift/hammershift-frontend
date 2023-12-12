@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -24,9 +25,11 @@ interface WagerModalProps {
   model: string;
   ending: string;
   image: string;
+  players_num: number;
+  prize: number;
 }
 
-const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal, price, bids, make, model, image, ending, handleWagerInputChange, handleWagerSubmit }) => {
+const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal, price, bids, make, model, image, ending, handleWagerInputChange, handleWagerSubmit, players_num, prize }) => {
   const router = useRouter();
   const timerValues = useTimer();
 
@@ -64,7 +67,7 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal, price, bids, ma
                     <Image src={DollarIcon} width={14} height={14} alt='' className='tw-w-[14px] tw-h-[14px]' />
                     <div className='tw-text-sm tw-ml-2 tw-flex tw-flex-row tw-gap-2'>
                       <span className='tw-opacity-80'>Current Bid:</span>
-                      <span className='tw-text-[#49C742] tw-font-bold'>$ {price}</span>
+                      <span className='tw-text-[#49C742] tw-font-bold'>${price}</span>
                       <span className='md:tw-hidden'>{`(${bids} bids)`}</span>
                     </div>
                   </div>
@@ -127,14 +130,14 @@ const WagerModal: React.FC<WagerModalProps> = ({ showWagerModal, price, bids, ma
               <Image src={MoneyBag} width={32} height={32} alt='money bag' className='tw-w-[32px] tw-h-[32px]' />
               <div className=''>
                 <div className='tw-text-xs'>POTENTIAL PRIZE</div>
-                <div className='tw-font-bold'>$1.00</div>
+                <div className='tw-font-bold'>${new Intl.NumberFormat().format(prize)}</div>
               </div>
             </div>
             <div className='tw-flex tw-items-center tw-gap-2'>
               <Image src={Players} width={32} height={32} alt='money bag' className='tw-w-[32px] tw-h-[32px]' />
               <div className=''>
                 <div className='tw-text-xs'>PLAYERS</div>
-                <div className='tw-font-bold'>12</div>
+                <div className='tw-font-bold'>{players_num}</div>
               </div>
             </div>
           </div>
