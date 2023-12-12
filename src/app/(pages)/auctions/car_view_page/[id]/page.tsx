@@ -144,6 +144,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         image={carData.image}
                         handleWagerInputChange={handleWagerInputChange}
                         handleWagerSubmit={handleWagerSubmit}
+                        players_num={playerNum}
+                        prize={carData.pot}
                     />
                 </TimerProvider>
             ) : null}
