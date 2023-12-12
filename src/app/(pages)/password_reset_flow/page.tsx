@@ -12,28 +12,28 @@ const PasswordResetFlow = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [timer, setTimer] = useState<number | null>(61); // Initialize the timer to 60 seconds
-  const [timerStartTime, setTimerStartTime] = useState<number | null>(null); // Track timer start time
+  const [timer, setTimer] = useState<number | null>(60);
+  const [timerStartTime, setTimerStartTime] = useState<number | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
 
-  // Handle password matching
+  // handle password matching
   const passwordMatch = newPassword === confirmPassword && newPassword !== '';
 
-  // Handle timer expiration
+  // handle timer expiration
   const timerExpired = timer === 0;
 
-  // Handle OTP expiration
+  // handle OTP expiration
   const otpExpired = timerExpired && resetPage === 'enter otp';
 
-  // Handle OTP entry completion
+  // handle OTP entry completion
   const otpEntryCompleted = resetPage === 'reset password' || otpExpired;
 
-  // Handle input validation
+  // handle otp/code input validation
   const isOtpLengthValid = otp.length === 6;
 
-  // Format time remaining for display
+  // format time remaining for display
   const formatTime = () => {
     const minutes = Math.floor((timer || 0) / 60);
     const seconds = (timer || 0) % 60;
