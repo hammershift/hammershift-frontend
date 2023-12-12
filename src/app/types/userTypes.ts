@@ -1,7 +1,8 @@
 export interface User {
-  _id: string;
+  _id?: string;
   email: string;
-  password: string;
+  password?: string;
+  image?: string;
 }
 
 export interface Credentials {

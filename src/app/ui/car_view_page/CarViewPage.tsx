@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Card from '../../components/card';
 import { useTimer } from '@/app/_context/TimerContext';
 
+import CancelIcon from '../../../../public/images/x-icon.svg';
 import DollarIcon from '../../../../public/images/dollar.svg';
 import CalendarIcon from '../../../../public/images/calendar-icon.svg';
 import HashtagIcon from '../../../../public/images/hash-02.svg';
@@ -37,6 +38,10 @@ import AvatarFour from '../../../../public/images/avatar-four.svg';
 
 import Link from 'next/link';
 
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
+
 export interface CarDataOneProps {
   price: string;
   year: string;
@@ -66,11 +71,12 @@ interface TitleContainerProps {
   deadline: Date | string;
   players_num: number;
   prize: string;
+  pot: number;
 }
 
-const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize }) => {
+const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, current_bid, bids_num, ending_date, deadline, players_num, prize, pot }) => {
   const timerValues = useTimer();
-  console.log(deadline);
+
   return (
     <div className=' tw-flex tw-flex-col tw-flex-grow tw-w-auto'>
       <div className='title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold'>
@@ -130,7 +136,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
                 <Image src={PrizeIcon} width={20} height={20} alt='calendar' className='tw-w-5 tw-h-5 tw-mr-2' />
               </div>
               <span className='tw-opacity-80'>
-                Prize: <span className='tw-font-bold '>{prize}</span>
+                Prize: <span className='tw-font-bold '>${pot ? new Intl.NumberFormat().format(pot || 0) : ' --'}</span>
               </span>
             </div>
           </div>
@@ -142,15 +148,18 @@ const TitleContainer: React.FC<TitleContainerProps> = ({ year, make, model, curr
 
 export default TitleContainer;
 
-export const WatchAndWagerButtons = () => {
-  const router = useRouter();
+interface WatchAndWagerButtonsProps {
+  toggleWagerModal: () => void;
+}
+
+export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({ toggleWagerModal }) => {
   return (
     <div className='tw-flex'>
       <button className='btn-transparent-white tw-flex '>
         <Image src={WatchListIcon} width={20} height={20} alt='dollar' className='tw-w-5 tw-h-5  tw-mr-2' />
         WATCH
       </button>
-      <button className='btn-yellow tw-ml-2' onClick={() => router.push('/wager_page')}>
+      <button className='btn-yellow tw-ml-2' onClick={toggleWagerModal}>
         PLACE MY WAGER
       </button>
     </div>
@@ -171,7 +180,7 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({ images_list, img }) 
         <Image src={images_list[2].src} width={202} height={120} alt='car' className='tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto' />
         <div className='tw-relative'>
           <Image src={images_list[3].src} width={202} height={120} alt='car' className='tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto' />
-          <div className='tw-absolute tw-flex tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>
+          <div className='tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]'>
             {images_list.length + 1} <span className='tw-hidden md:tw-block tw-ml-1'>photos</span>
             <span className='tw-block md:tw-hidden'>+</span>
           </div>
@@ -184,9 +193,9 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({ images_list, img }) 
 interface ArticleSectionProps {
   description: string[];
   images_list: { placing: number; src: string }[];
+  toggleWagerModal: () => void;
 }
-export const ArticleSection: React.FC<ArticleSectionProps> = ({ description, images_list }) => {
-  const router = useRouter();
+export const ArticleSection: React.FC<ArticleSectionProps> = ({ description, images_list, toggleWagerModal }) => {
   const [showDetails, setShowDetails] = useState(false);
   return (
     <div className='tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full tw-gap-16'>
@@ -205,7 +214,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({ description, ima
             {!showDetails && <Image src={ArrowDown} width={20} height={20} alt='car' className='tw-w-[20px] tw-h-[20px] tw-ml-2 tw-color-white' />}
           </span>
         </button>
-        <button className='btn-yellow' onClick={() => router.push('/wager_page')}>
+        <button className='btn-yellow' onClick={toggleWagerModal}>
           PLACE MY WAGER
         </button>
       </div>
@@ -296,7 +305,28 @@ export const CommentsCard = () => {
   );
 };
 
-export const WagersSection = () => {
+interface WagerI {
+  _id: string;
+  auctionID: string;
+  priceGuessed: number;
+  wagerAmount: number;
+  user: {
+    _id: string;
+    fullName: string;
+    username: string;
+    image: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface WagersSectionProps {
+  toggleWagerModal: () => void;
+  players_num: number;
+  wagers: WagerI[];
+}
+
+export const WagersSection: React.FC<WagersSectionProps> = ({ players_num, wagers, toggleWagerModal }) => {
   const router = useRouter();
   const teamPlayers = [
     {
@@ -324,6 +354,7 @@ export const WagersSection = () => {
       time: '2 days ago',
     },
   ];
+
   return (
     <div>
       <div className='tw-relative tw-pb-8 sm:tw-pb-0'>
@@ -332,26 +363,26 @@ export const WagersSection = () => {
             <div className='tw-font-bold tw-text-[18px]'>WAGERS</div>
             <Image src={ArrowDown} width={20} height={20} alt='arrow down' className='tw-w-5 tw-h-5' />
           </div>
-          <div className='tw-text-[14px]'>10 Players</div>
+          <div className='tw-text-[14px]'>{players_num} Players</div>
           <div className='tw-relative tw-mt-4'>
-            {teamPlayers.map((player) => {
+            {wagers.slice(0, 4).map((wager) => {
               return (
-                <div key={player.id} className='tw-my-5 tw-flex tw-justify-between'>
+                <div key={wager._id} className='tw-my-5 tw-flex tw-justify-between'>
                   <div className='tw-flex'>
-                    <Image src={player.avatar} width={40} height={40} alt='dollar' className='tw-w-[40px] tw-h-[40px] tw-mr-4' />
+                    <Image src={wager.user.image ? wager.user.image : AvatarOne} width={40} height={40} alt='dollar' className='tw-w-[40px] tw-h-[40px] tw-mr-4 tw-rounded-full' />
                     <div className='tw-text-sm '>
-                      <div className='tw-font-bold'>{player.username}</div>
-                      <div className='tw-opacity-50'>{player.time}</div>
+                      <div className='tw-font-bold'>{wager.user.username}</div>
+                      <div className='tw-opacity-50'>{dayjs(wager.createdAt).fromNow()}</div>
                     </div>
                   </div>
                   <button className='tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold'>
-                    <span className='tw-hidden xl:tw-inline-block'>Wager:</span> $152,000
+                    <span className='tw-hidden xl:tw-inline-block'>Wager:</span> ${new Intl.NumberFormat().format(wager.priceGuessed)}
                   </button>
                 </div>
               );
             })}
           </div>
-          <button className='btn-yellow tw-w-full tw-mt-2' onClick={() => router.push('/wager_page')}>
+          <button className='btn-yellow tw-w-full tw-mt-2' onClick={toggleWagerModal}>
             JOIN GAME
           </button>
         </div>

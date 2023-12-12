@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 import getServerSession from 'next-auth/next';
 
+import Wager from '@/models/wager';
 import clientPromise from '@/lib/mongodb';
 import { authOptions } from '@/lib/auth';
-import Wager from '@/models/wager';
 import connectToDB from '@/lib/mongoose';
 import { ObjectId } from 'mongodb';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -45,12 +47,21 @@ export async function POST(req: NextRequest) {
       user,
     });
 
+    await newWager.save();
+
     const client = await clientPromise;
     const db = client.db();
 
-    await db.collection('wagers').insertOne(newWager);
+    // calculate the total wager for the auction
+    const totalWagerAggregation = await db
+      .collection('wagers')
+      .aggregate([{ $match: { auctionID: convertedAuctionID } }, { $group: { _id: '$auctionID', totalWager: { $sum: '$wagerAmount' } } }])
+      .toArray();
 
-    console.log('Wager created successfully');
+    const totalWager = totalWagerAggregation.length > 0 ? totalWagerAggregation[0].totalWager : 0;
+
+    console.log('Wager created successfully. Total wager for auction:', Math.floor(totalWager * 0.88));
+
     return NextResponse.json({ message: 'Wager created successfully' }, { status: 201 });
   } catch (error) {
     console.error('Error in wager creation:', error);
@@ -66,7 +77,7 @@ export async function GET(req: NextRequest) {
     //IMPORTANT use the _id instead of auction_id when fetching wagers
     // api/wager?auction_id=656e95bc8727754b7cb5ec6b to get all wagers with the same auctionID
     if (id) {
-      const auctionWagers = await Wager.find({ auctionID: new ObjectId(id) });
+      const auctionWagers = await Wager.find({ auctionID: new ObjectId(id) }).sort({ createdAt: -1 });
       return NextResponse.json(auctionWagers);
     }
     // api/wager to get all wagers

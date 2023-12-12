@@ -1,58 +1,33 @@
 import mongoose from "mongoose";
 
-const auctionSchema = new mongoose.Schema(
-  {
-    auction_id: { type: "string" },
-    attributes: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          key: { type: "string" },
-          value: {
-            anyOf: [
-              { type: "string" },
-              { type: "integer" },
-              { type: "boolean" },
-              { type: "number" },
-              { type: "null" }
-            ]
-          }
-        }
-      }
-    },
-    description: {
-      type: "array",
-      items: { type: "string" }
-    },
-    image: { type: "string" },
-    images_list: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          placing: { type: "integer" },
-          src: { type: "string" }
-        }
-      }
-    },
-    listing_details: {
-      type: "array",
-      items: { type: "string" }
-    },
-    page_url: { type: "string" },
-    website: { type: "string" },
-    sort: {
-      type: "object",
-      properties: { price: { type: "number" }, bids: { type: "number" }, deadline: { type: "string", format: "date-time" } }
-    }
-  }, {
-  timestamps: true
-}
+const attributeSchema = new mongoose.Schema({
+  key: { type: String, required: true },
+  value: { type: mongoose.Schema.Types.Mixed, required: true },
+  _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+});
 
+const imageSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  placing: { type: Number, required: true },
+  src: { type: String, required: true },
+});
+
+const carSchema = new mongoose.Schema(
+  {
+    _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    auction_id: { type: String, required: true },
+    pot: { type: Number },
+    __v: { type: Number, default: 0 },
+    attributes: [attributeSchema],
+    description: { type: [String], required: true },
+    images_list: [imageSchema],
+    listing_details: { type: [String], required: true },
+    page_url: { type: String, required: true },
+    website: { type: String, required: true },
+  },
+  { timestamps: true }
 );
 
-const Auctions = mongoose.models.auctions || mongoose.model("auctions", auctionSchema);
+const Auctions = mongoose.models.auctions || mongoose.model("auctions", carSchema);
 
 export default Auctions;
-

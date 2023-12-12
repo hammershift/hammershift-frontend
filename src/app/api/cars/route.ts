@@ -24,3 +24,23 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Internal server error" });
   }
 }
+
+
+export async function PUT(req: NextRequest) {
+  try {
+    await connectToDB();
+    const auction_id = req.nextUrl.searchParams.get('auction_id');
+    const edits = await req.json();
+
+    const editedAuction = await Auctions.findOneAndUpdate(
+      { auction_id: auction_id },
+      { $set: edits },
+      { new: true }
+    )
+
+    return NextResponse.json(editedAuction, { status: 202 });
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json({ message: "Internal server error" });
+  }
+}
