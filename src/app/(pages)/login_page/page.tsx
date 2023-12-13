@@ -42,6 +42,7 @@ const CreateAccount = () => {
       if (response.ok) {
         // store the email in local storage
         localStorage.setItem('passwordResetEmail', resetEmail);
+        localStorage.setItem('isNewPasswordResetProcess', 'true'); // set the flag for password reset flow process
         router.push('/password_reset_flow');
       } else {
         setError(data.message);

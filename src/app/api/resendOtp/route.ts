@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const newExpirationDate = new Date(new Date().getTime() + 1 * 60000);
 
     // update the OTP in the db
-    await db.collection('password_reset_tokens').updateOne({ userId: user._id }, { $set: { otp: newOtp, expires: newExpirationDate } }, { upsert: true });
+    await db.collection('password_reset_tokens').updateOne({ userId: user._id }, { $set: { otp: newOtp, expires: newExpirationDate, email: user.email } }, { upsert: true });
 
     // TODO: Send the new OTP via email
 
