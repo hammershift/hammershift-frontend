@@ -15,6 +15,7 @@ import UserImage from '../../../../public/images/user-single-neutral-male--close
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import PasswordInput from '@/app/components/password_input';
+import { BounceLoader } from 'react-spinners';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -24,6 +25,8 @@ const CreateAccount = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   // TEST for forgot/reset password
@@ -56,7 +59,7 @@ const CreateAccount = () => {
 
   const handleSignIn = async () => {
     try {
-      console.log('Attempting to sign in with:', { email });
+      setIsLoading(true);
       const result = await signIn('credentials', {
         redirect: false,
         email: email,
@@ -74,6 +77,8 @@ const CreateAccount = () => {
     } catch (error) {
       console.error('An unexpected error occurred during login:', error);
       setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +96,11 @@ const CreateAccount = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
-      {createAccountPage === 'sign in' && (
+      {isLoading ? (
+        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+          <BounceLoader color='#696969' loading={isLoading} />
+        </div>
+      ) : (
         <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
           <div>
             <div className='tw-flex tw-justify-between md:tw-justify-start'>
