@@ -201,7 +201,7 @@ const Navbar = () => {
                         )}
                     </div>
                     {/* Buttons for logged in accounts */}
-                    <div className=" tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible">
+                    <div className="tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible tw-relative">
                         <button
                             className="tw-relative"
                             onClick={() =>
@@ -218,12 +218,11 @@ const Navbar = () => {
                                 alt="watchlist"
                                 className="tw-w-[24px] tw-h-[24px]"
                             />
-                            {navDropdownMenu === "My Watchlist" && (
-                                <MyWatchlistDropdownMenu />
-                            )}
                         </button>
+                        {navDropdownMenu === "My Watchlist" && (
+                            <MyWatchlistDropdownMenu />
+                        )}
                         <button
-                            className="tw-relative"
                             onClick={() =>
                                 setNavDropdownMenu((prev) => {
                                     if (prev === "My Wagers") return null;
@@ -238,10 +237,10 @@ const Navbar = () => {
                                 alt="wagers"
                                 className="tw-w-[24px] tw-h-[24px]"
                             />
-                            {navDropdownMenu === "My Wagers" && (
-                                <MyWagersDropdownMenu />
-                            )}
                         </button>
+                        {navDropdownMenu === "My Wagers" && (
+                            <MyWagersDropdownMenu />
+                        )}
                         <button
                             className="tw-relative"
                             onClick={() =>
@@ -544,14 +543,21 @@ const MyWatchlistDropdownMenu = () => {
         },
     ];
     return (
-        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
-            <div className="tw-px-6 tw-font-bold tw-text-lg">MY WATCHLIST</div>
-            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full">
-                <div>
-                    <button>ACTIVE</button>
+        <div className="tw-absolute tw-z-10 tw-right-[112px] tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black ">
+            <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
+                <div className="tw-font-bold tw-text-lg tw-text-left">
+                    MY WAGERS
                 </div>
-                <div>
-                    <button>COMPLETED</button>
+                <div className="">
+                    <button
+                        className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+                        autoFocus
+                    >
+                        ACTIVE
+                    </button>
+                    <button className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white">
+                        COMPLETED
+                    </button>
                 </div>
             </div>
             {watchlist.length === 0 ? (
@@ -579,7 +585,6 @@ const MyWatchlistDropdownMenu = () => {
                 <div className="tw-w-full">
                     {watchlist.map((item) => (
                         <div key={item.title}>
-                            <hr className="tw-opacity-10" />
                             <MyWatchlistCard
                                 type={item.type}
                                 title={item.title}
@@ -759,14 +764,21 @@ const MyWagersDropdownMenu = () => {
         },
     ];
     return (
-        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
-            <div className="tw-px-6 tw-font-bold tw-text-lg">MY WAGERS</div>
-            <div className="tw-px-6 tw-grid tw-grid-cols-2 tw-w-full">
-                <div>
-                    <button>ACTIVE</button>
+        <div className="tw-absolute tw-z-10 tw-right-[56px] tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black ">
+            <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
+                <div className="tw-font-bold tw-text-lg tw-text-left">
+                    MY WAGERS
                 </div>
-                <div>
-                    <button>COMPLETED</button>
+                <div className="">
+                    <button
+                        className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+                        autoFocus
+                    >
+                        ACTIVE
+                    </button>
+                    <button className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white">
+                        COMPLETED
+                    </button>
                 </div>
             </div>
             {wagers.length === 0 ? (
@@ -794,7 +806,6 @@ const MyWagersDropdownMenu = () => {
                 <div className="tw-w-full">
                     {wagers.map((item) => (
                         <div key={item.title}>
-                            <hr className="tw-opacity-10" />
                             <MyWagersCard
                                 type={item.type}
                                 title={item.title}
@@ -837,7 +848,10 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
         <div className="tw-px-6 tw-w-full tw-my-4">
             {type === "Single" && (
                 <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
-                    <Link href={"/car_view_page"} className="tw-self-start">
+                    <Link
+                        href={"/car_view_page"}
+                        className="tw-self-start tw-w-[100px]"
+                    >
                         <Image
                             src={img}
                             width={100}
@@ -846,9 +860,9 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             className="tw-w-[100px] tw-h-[100px]"
                         />
                     </Link>
-                    <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
+                    <div className="tw-flex tw-flex-col tw-items-start tw-grow">
                         <Link href={"/car_view_page"} className="tw-self-start">
-                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">
+                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1">
                                 {title}
                             </div>
                         </Link>
@@ -915,7 +929,10 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
             )}
             {type === "Tournament" && (
                 <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
-                    <Link href={"/tournament_page"} className="tw-self-start">
+                    <Link
+                        href={"/tournament_page"}
+                        className="tw-self-start tw-w-[100px]"
+                    >
                         <Image
                             src={img}
                             width={100}
@@ -924,7 +941,7 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             className="tw-w-[100px] tw-h-[100px] tw-self-start"
                         />
                     </Link>
-                    <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
+                    <div className="tw-flex tw-flex-col tw-items-start tw-grow">
                         <Link
                             href={"/tournament_page"}
                             className="tw-self-start"
@@ -985,15 +1002,18 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
 const MyAccountDropdownMenu = () => {
     const account_load = 100;
+    const router = useRouter();
 
     const handleSignOut = async () => {
         try {
-            await signOut();
+            await signOut({ redirect: false });
+            router.push("/");
             console.log("User successfully logged out");
         } catch (error) {
             console.error("Error during sign out:", error);
         }
     };
+
     return (
         <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
             <div className="tw-px-6 tw-font-bold tw-text-lg">MY ACCOUNT</div>

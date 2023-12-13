@@ -206,7 +206,10 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     POTENTIAL PRIZE
                                 </div>
                                 <div className="tw-font-bold">
-                                    ${new Intl.NumberFormat().format(prize)}
+                                    $
+                                    {prize
+                                        ? new Intl.NumberFormat().format(prize)
+                                        : " --"}
                                 </div>
                             </div>
                         </div>
