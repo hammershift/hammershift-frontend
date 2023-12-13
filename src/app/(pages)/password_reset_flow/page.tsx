@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PasswordInput from '@/app/components/password_input';
+import { BounceLoader } from 'react-spinners';
 
 const PasswordResetFlow = () => {
   const [resetPage, setResetPage] = useState<'enter otp' | 'reset password'>('enter otp');
@@ -14,7 +15,7 @@ const PasswordResetFlow = () => {
   const [passwordError, setPasswordError] = useState('');
   const [timer, setTimer] = useState<number | null>(60);
   const [timerStartTime, setTimerStartTime] = useState<number | null>(null);
-  const [isNewProcess, setIsNewProcess] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
@@ -124,6 +125,7 @@ const PasswordResetFlow = () => {
 
   const handleOtpVerification = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch('/api/verifyOtpCode', {
         method: 'POST',
         headers: {
@@ -141,6 +143,8 @@ const PasswordResetFlow = () => {
       }
     } catch (error: any) {
       handleCommonError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -153,6 +157,7 @@ const PasswordResetFlow = () => {
     }
 
     try {
+      setIsLoading(true);
       const response = await fetch('/api/resetPassword', {
         method: 'POST',
         headers: {
@@ -171,6 +176,8 @@ const PasswordResetFlow = () => {
       }
     } catch (error: any) {
       handleCommonError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -212,38 +219,53 @@ const PasswordResetFlow = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
-      {resetPage === 'enter otp' && (
-        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-2 tw-pt-6'>
-          <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Verification Code</div>
-          {!otpExpired && <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>}
-          <form onSubmit={handleAction}>
-            <div className='tw-flex tw-flex-col tw-gap-6'>
-              <input className={getInputStyle()} type='text' value={otp} onChange={(e) => setOtp(e.target.value)} placeholder='Enter Code' required disabled={otpExpired} />
-              {error && <p className='tw-text-sm tw-ml-2 tw-text-red-500'>{error}</p>}
-              <button type='submit' className='btn-yellow tw-w-full'>
-                {otpExpired ? 'Resend Code' : 'Verify Code'}
-              </button>
-            </div>
-          </form>
+      {isLoading ? (
+        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+          <BounceLoader color='#696969' loading={isLoading} />
         </div>
-      )}
+      ) : (
+        <>
+          {resetPage === 'enter otp' && (
+            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-2 tw-pt-6'>
+              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Verification Code</div>
+              {!otpExpired && <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>}
+              <form onSubmit={handleAction}>
+                <div className='tw-flex tw-flex-col tw-gap-6'>
+                  <input
+                    className={getInputStyle()}
+                    type='text'
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder='Enter Code'
+                    required
+                    disabled={otpExpired || isLoading}
+                  />
+                  {error && <p className='tw-text-sm tw-ml-2 tw-text-red-500'>{error}</p>}
+                  <button type='submit' className='btn-yellow tw-w-full' disabled={isLoading}>
+                    {isLoading ? <BounceLoader size={20} color='#ffffff' /> : otpExpired ? 'Resend Code' : 'Verify Code'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
 
-      {resetPage === 'reset password' && (
-        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
-          <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
-          <form onSubmit={handlePasswordReset}>
-            <div className='tw-flex tw-flex-col tw-gap-6'>
-              <PasswordInput value={newPassword} onChange={setNewPassword} />
-              <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
-              {passwordMatch && <p className='tw-text-green-500 tw-text-sm'>Passwords match!</p>}
-              {!passwordMatch && passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
-              <button type='submit' className='btn-yellow tw-w-full'>
-                Reset Password
-              </button>
+          {resetPage === 'reset password' && (
+            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
+              <form onSubmit={handlePasswordReset}>
+                <div className='tw-flex tw-flex-col tw-gap-6'>
+                  <PasswordInput value={newPassword} onChange={setNewPassword} />
+                  <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
+                  {passwordMatch && <p className='tw-text-green-500 tw-text-sm'>Passwords match!</p>}
+                  {!passwordMatch && passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
+                  <button type='submit' className='btn-yellow tw-w-full' disabled={isLoading}>
+                    {isLoading ? <BounceLoader size={20} color='#ffffff' /> : 'Reset Password'}
+                  </button>
+                </div>
+              </form>
             </div>
-            {error && <p className='tw-text-red-500 tw-text-sm tw-mt-2'>{error}</p>}
-          </form>
-        </div>
+          )}
+        </>
       )}
     </div>
   );
