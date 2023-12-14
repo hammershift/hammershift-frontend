@@ -109,6 +109,7 @@ const Navbar = () => {
 
   return (
     <div>
+      {/* Loading */}
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center'>
           <BounceLoader color='#696969' loading={isLoading} />
@@ -660,6 +661,7 @@ const MyAccountDropdownMenu = () => {
   return (
     <div className='tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black '>
       <div className='tw-px-6 tw-font-bold tw-text-lg'>MY ACCOUNT</div>
+      {/* Loading */}
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
           <BounceLoader color='#696969' loading={isLoading} />

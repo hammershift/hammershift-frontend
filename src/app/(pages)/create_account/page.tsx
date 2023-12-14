@@ -18,6 +18,7 @@ import { signIn, useSession, getSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ICountry, IState, Country, State } from 'country-state-city';
 import PasswordInput from '@/app/components/password_input';
+
 import { BounceLoader } from 'react-spinners';
 
 const CreateAccount = () => {
@@ -125,31 +126,41 @@ const CreateAccount = () => {
       console.error('Invalid password');
       return;
     }
-    const response = await fetch('/api/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Registration successful:', data.message);
-      const signInResponse = await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (signInResponse?.error) {
-        console.error('Sign-in failed:', signInResponse.error);
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Registration successful:', data.message);
+        const signInResponse = await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (signInResponse?.error) {
+          console.error('Sign-in failed:', signInResponse.error);
+        } else {
+          setCreateAccountPage('page two');
+        }
       } else {
-        setCreateAccountPage('page two');
+        console.error('Registration failed:', data.message);
       }
-    } else {
-      console.error('Registration failed:', data.message);
+    } catch (error) {
+      console.error('Error during account creation:', error);
     }
+
+    setIsLoading(false);
   };
 
   // PROFILE SUBMISSION
@@ -181,25 +192,33 @@ const CreateAccount = () => {
       return; // Stop further processing if validation fails
     }
     const profileData = { fullName, username, country: selectedCountry?.name, state: selectedState?.name, aboutMe };
-    console.log('Profile Data being sent:', profileData);
 
-    const response = await fetch('/api/userInfo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(profileData),
-    });
+    setIsLoading(true);
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Profile updated successfully:', data.message);
-      //   setCreateAccountPage('page three');
-      await getSession();
-      handleVerifyLater();
-    } else {
-      console.error(data.message);
+    try {
+      const response = await fetch('/api/userInfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Profile updated successfully:', data.message);
+        // setCreateAccountPage('page three');
+        await getSession();
+        handleVerifyLater();
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error('Error during profile submission:', error);
     }
+
+    setIsLoading(false);
   };
 
   // GOOGLE SIGNIN
@@ -251,30 +270,35 @@ const CreateAccount = () => {
     setIsLoading(true);
 
     const userData = { fullName, username, country, state, aboutMe };
-    const response = await fetch('/api/userInfo', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
+    try {
+      const response = await fetch('/api/userInfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log('Profile updated successfully:', data.message);
-      await getSession();
-      router.push('/');
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Profile updated successfully:', data.message);
+        await getSession();
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
-    } else {
-      console.error('Failed to update profile:', data.message);
+        setIsLoading(false);
+        router.push('/');
+      } else {
+        console.error('Failed to update profile:', data.message);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Error during profile update:', error);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+      {/* Loading */}
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
           <BounceLoader color='#696969' loading={isLoading} />
