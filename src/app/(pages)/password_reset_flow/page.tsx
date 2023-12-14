@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import PasswordInput from '@/app/components/password_input';
-import { BounceLoader } from 'react-spinners';
 
 const PasswordResetFlow = () => {
   const [resetPage, setResetPage] = useState<'enter otp' | 'reset password'>('enter otp');
@@ -15,7 +14,6 @@ const PasswordResetFlow = () => {
   const [passwordError, setPasswordError] = useState('');
   const [timer, setTimer] = useState<number | null>(60);
   const [timerStartTime, setTimerStartTime] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const router = useRouter();
@@ -42,70 +40,45 @@ const PasswordResetFlow = () => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // common error handling function
+  // Common error handling function
   const handleCommonError = (error: string) => {
     console.error('Error:', error);
     setError('An error occurred.');
   };
 
   useEffect(() => {
-    const startCountdown = (startTime: number) => {
+    const startCountdown = () => {
+      const startTime = Date.now();
+      setTimer(60);
+
       intervalRef.current = setInterval(() => {
-        const currentTime = Date.now();
-        const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
         const remainingTime = 60 - elapsedTime;
 
         if (remainingTime <= 0) {
           clearInterval(intervalRef.current);
           intervalRef.current = undefined;
-          setTimer(0);
+          setTimer(0); // OTP expired
         } else {
           setTimer(remainingTime);
         }
       }, 1000);
     };
 
-    const handleNewProcess = () => {
-      const newStartTime = Date.now();
-      const newSessionId = newStartTime.toString();
-      localStorage.setItem('timerStartTime', newSessionId);
-      localStorage.setItem('passwordResetSessionId', newSessionId);
-      setTimerStartTime(newStartTime);
-      startCountdown(newStartTime);
-    };
+    // start the countdown only if the conditions are met
+    if (resetPage === 'enter otp' && !otpExpired && !otpEntryCompleted && !intervalRef.current) {
+      startCountdown();
+    }
 
-    const handleExistingProcess = (startTime: number) => {
-      const currentTime = Date.now();
-      const timeElapsed = currentTime - startTime;
-
-      if (timeElapsed < 60000) {
-        setTimerStartTime(startTime);
-        startCountdown(startTime);
-      } else {
-        localStorage.removeItem('timerStartTime');
-      }
-    };
-
-    // retrieve the email from localStorage
+    // retrieve email from localStorage and handle redirection
     const storedEmail = localStorage.getItem('passwordResetEmail');
-    if (!storedEmail) {
-      router.push('/login_page');
-      return;
-    }
-    setEmail(storedEmail);
-
-    // retrieve the session state (or flag) from localStorage
-    const isNewProcess = localStorage.getItem('isNewPasswordResetProcess') === 'true';
-    localStorage.removeItem('isNewPasswordResetProcess'); // clear the flag for a new process
-
-    const storedStartTime = localStorage.getItem('timerStartTime');
-    if (isNewProcess || !storedStartTime) {
-      handleNewProcess();
+    if (storedEmail) {
+      setEmail(storedEmail);
     } else {
-      handleExistingProcess(parseInt(storedStartTime, 10));
+      router.push('/login_page');
     }
 
-    // Cleanup function to clear the interval
+    // cleanup function to clear the interval
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -125,7 +98,6 @@ const PasswordResetFlow = () => {
 
   const handleOtpVerification = async () => {
     try {
-      setIsLoading(true);
       const response = await fetch('/api/verifyOtpCode', {
         method: 'POST',
         headers: {
@@ -143,8 +115,6 @@ const PasswordResetFlow = () => {
       }
     } catch (error: any) {
       handleCommonError(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -157,7 +127,6 @@ const PasswordResetFlow = () => {
     }
 
     try {
-      setIsLoading(true);
       const response = await fetch('/api/resetPassword', {
         method: 'POST',
         headers: {
@@ -176,8 +145,6 @@ const PasswordResetFlow = () => {
       }
     } catch (error: any) {
       handleCommonError(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -219,53 +186,38 @@ const PasswordResetFlow = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
-      {isLoading ? (
-        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
-          <BounceLoader color='#696969' loading={isLoading} />
+      {resetPage === 'enter otp' && (
+        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-2 tw-pt-6'>
+          <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Verification Code</div>
+          {!otpExpired && <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>}
+          <form onSubmit={handleAction}>
+            <div className='tw-flex tw-flex-col tw-gap-6'>
+              <input className={getInputStyle()} type='text' value={otp} onChange={(e) => setOtp(e.target.value)} placeholder='Enter Code' required disabled={otpExpired} />
+              {error && <p className='tw-text-sm tw-ml-2 tw-text-red-500'>{error}</p>}
+              <button type='submit' className='btn-yellow tw-w-full'>
+                {otpExpired ? 'Resend Code' : 'Verify Code'}
+              </button>
+            </div>
+          </form>
         </div>
-      ) : (
-        <>
-          {resetPage === 'enter otp' && (
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-2 tw-pt-6'>
-              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Verification Code</div>
-              {!otpExpired && <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>}
-              <form onSubmit={handleAction}>
-                <div className='tw-flex tw-flex-col tw-gap-6'>
-                  <input
-                    className={getInputStyle()}
-                    type='text'
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    placeholder='Enter Code'
-                    required
-                    disabled={otpExpired || isLoading}
-                  />
-                  {error && <p className='tw-text-sm tw-ml-2 tw-text-red-500'>{error}</p>}
-                  <button type='submit' className='btn-yellow tw-w-full' disabled={isLoading}>
-                    {isLoading ? <BounceLoader size={20} color='#ffffff' /> : otpExpired ? 'Resend Code' : 'Verify Code'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
+      )}
 
-          {resetPage === 'reset password' && (
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
-              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
-              <form onSubmit={handlePasswordReset}>
-                <div className='tw-flex tw-flex-col tw-gap-6'>
-                  <PasswordInput value={newPassword} onChange={setNewPassword} />
-                  <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
-                  {passwordMatch && <p className='tw-text-green-500 tw-text-sm'>Passwords match!</p>}
-                  {!passwordMatch && passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
-                  <button type='submit' className='btn-yellow tw-w-full' disabled={isLoading}>
-                    {isLoading ? <BounceLoader size={20} color='#ffffff' /> : 'Reset Password'}
-                  </button>
-                </div>
-              </form>
+      {resetPage === 'reset password' && (
+        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+          <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
+          <form onSubmit={handlePasswordReset}>
+            <div className='tw-flex tw-flex-col tw-gap-6'>
+              <PasswordInput value={newPassword} onChange={setNewPassword} />
+              <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
+              {passwordMatch && <p className='tw-text-green-500 tw-text-sm'>Passwords match!</p>}
+              {!passwordMatch && passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
+              <button type='submit' className='btn-yellow tw-w-full'>
+                Reset Password
+              </button>
             </div>
-          )}
-        </>
+            {error && <p className='tw-text-red-500 tw-text-sm tw-mt-2'>{error}</p>}
+          </form>
+        </div>
       )}
     </div>
   );
