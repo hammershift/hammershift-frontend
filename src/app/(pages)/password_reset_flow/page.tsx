@@ -219,6 +219,7 @@ const PasswordResetFlow = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+      {/* Loading */}
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
           <BounceLoader color='#696969' loading={isLoading} />
