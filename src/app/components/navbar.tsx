@@ -1037,9 +1037,12 @@ const MyAccountDropdownMenu = () => {
                 </div>
             )}
             <div className="tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full">
-                <button className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full">
+                <Link
+                    href="/profile"
+                    className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full"
+                >
                     Profile
-                </button>
+                </Link>
                 <button className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full">
                     Settings
                 </button>
