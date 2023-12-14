@@ -651,7 +651,6 @@ const MyAccountDropdownMenu = () => {
       router.push('/');
       console.log('User successfully logged out');
       setIsLoading(false);
-      window.location.reload();
     } catch (error) {
       console.error('Error during sign out:', error);
       setIsLoading(false);
