@@ -24,6 +24,7 @@ import MyWagerPhotoTwo from '../../../public/images/my-wagers-navbar/my-wager-ph
 import MyWagerPhotoThree from '../../../public/images/my-wagers-navbar/my-wager-photo-three.svg';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { BounceLoader } from 'react-spinners';
 
 // export interface NavbarProps {
 //     isLoggedIn: boolean;
@@ -39,6 +40,7 @@ const Navbar = () => {
   const [searchBoxDropDown, setSearchBoxDropDown] = useState(false);
   const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
   const [navDropdownMenu, setNavDropdownMenu] = useState<NavbarDropdownMenuProps>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -107,150 +109,158 @@ const Navbar = () => {
 
   return (
     <div>
-      {isLoggedIn ? (
-        <div className=' tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3'>
-          <div className='lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between'>
-            <div className='tw-pr-4'>
-              <Link href='/'>
-                <Image src={Logo} width={176} height={64} alt='logo' className='tw-hidden sm:tw-block tw-w-auto tw-h-auto' />
-                <Image src={LogoSmall} width={32} height={32} alt='logo' className=' tw-block sm:tw-hidden tw-w-auto tw-h-auto' />
-              </Link>
-            </div>
-            <Link href={'/discover'}>
-              <div className='tw-block tw-mx-2 sm:tw-mx-4 '>DISCOVER</div>
-            </Link>
-            <Link href='/auctions'>
-              <div className='tw-block tw-mx-2 sm:tw-mx-4 '>AUCTIONS</div>
-            </Link>
-          </div>
-          <div className='tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block'>
-            <form onSubmit={handleSumbit} autoComplete='off' className='tw-w-full tw-flex tw-items-center'>
-              <div className={searchBoxDropDown ? 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t' : 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded'}>
-                <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
-                <input
-                  id='search-bar-input'
-                  name='search'
-                  type='text'
-                  className='tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none'
-                  placeholder='Search make, model, year...'
-                  onClick={handleInputClick}
-                  onChange={handleChange}
-                ></input>
-              </div>
-            </form>
-            {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
-          </div>
-          {/* Buttons for logged in accounts */}
-          <div className=' tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible'>
-            <button
-              className='tw-relative'
-              onClick={() =>
-                setNavDropdownMenu((prev) => {
-                  if (prev === 'My Watchlist') return null;
-                  else return 'My Watchlist';
-                })
-              }
-            >
-              <Image src={WatchlistIcon} width={24} height={24} alt='watchlist' className='tw-w-[24px] tw-h-[24px]' />
-              {navDropdownMenu === 'My Watchlist' && <MyWatchlistDropdownMenu />}
-            </button>
-            <button
-              className='tw-relative'
-              onClick={() =>
-                setNavDropdownMenu((prev) => {
-                  if (prev === 'My Wagers') return null;
-                  else return 'My Wagers';
-                })
-              }
-            >
-              <Image src={WagersIcon} width={24} height={24} alt='wagers' className='tw-w-[24px] tw-h-[24px]' />
-              {navDropdownMenu === 'My Wagers' && <MyWagersDropdownMenu />}
-            </button>
-            <button
-              className='tw-relative'
-              onClick={() =>
-                setNavDropdownMenu((prev) => {
-                  if (prev === 'My Account') return null;
-                  else return 'My Account';
-                })
-              }
-            >
-              <Image src={AccountIcon} width={24} height={24} alt='account' className='tw-w-[24px] tw-h-[24px]' />
-              {navDropdownMenu === 'My Account' && <MyAccountDropdownMenu />}
-            </button>
-          </div>
-          <div className='sm:tw-hidden'>
-            <button onClick={() => setMyAccountMenuOpen((prev) => !prev)} className='tw-mr-4'>
-              <Image src={AccountIcon} width={24} height={24} alt='account' className='tw-w-[24px] tw-h-[24px]' />
-            </button>
-            <button onClick={() => setMenuIsOpen((prev) => !prev)}>
-              {menuIsOpen ? (
-                <Image src={CancelIcon} width={24} height={24} alt='menu' className=' tw-w-auto tw-h-auto' />
-              ) : (
-                <Image src={HamburgerMenu} width={24} height={24} alt='menu' className=' tw-w-auto tw-h-auto' />
-              )}
-            </button>
-          </div>
+      {isLoading ? (
+        <div className='tw-flex tw-justify-center tw-items-center'>
+          <BounceLoader color='#696969' loading={isLoading} />
         </div>
       ) : (
-        <div className=' tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3'>
-          <div className='lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between'>
-            <div className='tw-pr-4'>
-              <Link href='/'>
-                <Image src={Logo} width={176} height={64} alt='logo' className='tw-block tw-w-auto tw-h-auto' />
-              </Link>
-            </div>
-            <Link href='/discover'>
-              <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
-            </Link>
-            <Link href='/auctions'>
-              <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>AUCTIONS</div>
-            </Link>
-          </div>
-          <div className='tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4'>
-            <form onSubmit={handleSumbit} autoComplete='off' className='tw-w-full tw-flex tw-items-center'>
-              <div className={searchBoxDropDown ? 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t' : 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded'}>
-                <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
-                <input
-                  id='search-bar-input'
-                  name='search'
-                  type='text'
-                  className='tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none'
-                  placeholder='Search make, model, year...'
-                  onClick={handleInputClick}
-                  onChange={handleChange}
-                ></input>
+        <div>
+          {isLoggedIn ? (
+            <div className=' tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3'>
+              <div className='lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between'>
+                <div className='tw-pr-4'>
+                  <Link href='/'>
+                    <Image src={Logo} width={176} height={64} alt='logo' className='tw-hidden sm:tw-block tw-w-auto tw-h-auto' />
+                    <Image src={LogoSmall} width={32} height={32} alt='logo' className=' tw-block sm:tw-hidden tw-w-auto tw-h-auto' />
+                  </Link>
+                </div>
+                <Link href={'/discover'}>
+                  <div className='tw-block tw-mx-2 sm:tw-mx-4 '>DISCOVER</div>
+                </Link>
+                <Link href='/auctions'>
+                  <div className='tw-block tw-mx-2 sm:tw-mx-4 '>AUCTIONS</div>
+                </Link>
               </div>
-            </form>
-            {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
-          </div>
-          <div className='tw-flex tw-items-center'>
-            <Link href='/create_account'>
-              <button className='btn-white  hover:tw-bg-gold-200 tw-hidden md:tw-block '>CREATE ACCOUNT</button>
-            </Link>
-            <button onClick={() => setMenuIsOpen((prev) => !prev)}>
-              {menuIsOpen ? (
-                <Image src={CancelIcon} width={24} height={24} alt='menu' className='md:tw-hidden tw-w-auto tw-h-auto' />
-              ) : (
-                <Image src={HamburgerMenu} width={24} height={24} alt='menu' className='md:tw-hidden tw-w-auto tw-h-auto' />
-              )}
-            </button>
-          </div>
+              <div className='tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block'>
+                <form onSubmit={handleSumbit} autoComplete='off' className='tw-w-full tw-flex tw-items-center'>
+                  <div className={searchBoxDropDown ? 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t' : 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded'}>
+                    <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
+                    <input
+                      id='search-bar-input'
+                      name='search'
+                      type='text'
+                      className='tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none'
+                      placeholder='Search make, model, year...'
+                      onClick={handleInputClick}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </form>
+                {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
+              </div>
+              {/* Buttons for logged in accounts */}
+              <div className=' tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible'>
+                <button
+                  className='tw-relative'
+                  onClick={() =>
+                    setNavDropdownMenu((prev) => {
+                      if (prev === 'My Watchlist') return null;
+                      else return 'My Watchlist';
+                    })
+                  }
+                >
+                  <Image src={WatchlistIcon} width={24} height={24} alt='watchlist' className='tw-w-[24px] tw-h-[24px]' />
+                  {navDropdownMenu === 'My Watchlist' && <MyWatchlistDropdownMenu />}
+                </button>
+                <button
+                  className='tw-relative'
+                  onClick={() =>
+                    setNavDropdownMenu((prev) => {
+                      if (prev === 'My Wagers') return null;
+                      else return 'My Wagers';
+                    })
+                  }
+                >
+                  <Image src={WagersIcon} width={24} height={24} alt='wagers' className='tw-w-[24px] tw-h-[24px]' />
+                  {navDropdownMenu === 'My Wagers' && <MyWagersDropdownMenu />}
+                </button>
+                <button
+                  className='tw-relative'
+                  onClick={() =>
+                    setNavDropdownMenu((prev) => {
+                      if (prev === 'My Account') return null;
+                      else return 'My Account';
+                    })
+                  }
+                >
+                  <Image src={AccountIcon} width={24} height={24} alt='account' className='tw-w-[24px] tw-h-[24px]' />
+                  {navDropdownMenu === 'My Account' && <MyAccountDropdownMenu />}
+                </button>
+              </div>
+              <div className='sm:tw-hidden'>
+                <button onClick={() => setMyAccountMenuOpen((prev) => !prev)} className='tw-mr-4'>
+                  <Image src={AccountIcon} width={24} height={24} alt='account' className='tw-w-[24px] tw-h-[24px]' />
+                </button>
+                <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                  {menuIsOpen ? (
+                    <Image src={CancelIcon} width={24} height={24} alt='menu' className=' tw-w-auto tw-h-auto' />
+                  ) : (
+                    <Image src={HamburgerMenu} width={24} height={24} alt='menu' className=' tw-w-auto tw-h-auto' />
+                  )}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className=' tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3'>
+              <div className='lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between'>
+                <div className='tw-pr-4'>
+                  <Link href='/'>
+                    <Image src={Logo} width={176} height={64} alt='logo' className='tw-block tw-w-auto tw-h-auto' />
+                  </Link>
+                </div>
+                <Link href='/discover'>
+                  <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>DISCOVER</div>
+                </Link>
+                <Link href='/auctions'>
+                  <div className='tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 '>AUCTIONS</div>
+                </Link>
+              </div>
+              <div className='tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4'>
+                <form onSubmit={handleSumbit} autoComplete='off' className='tw-w-full tw-flex tw-items-center'>
+                  <div className={searchBoxDropDown ? 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t' : 'tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded'}>
+                    <Image src={MagnifyingGlass} width={15} height={15} alt='magnifying glass' className='tw-w-auto tw-h-auto' />
+                    <input
+                      id='search-bar-input'
+                      name='search'
+                      type='text'
+                      className='tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none'
+                      placeholder='Search make, model, year...'
+                      onClick={handleInputClick}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </form>
+                {searchBoxDropDown && <SearchDropDown searchedData={searchedData} onSearchClick={handleSearchClick} />}
+              </div>
+              <div className='tw-flex tw-items-center'>
+                <Link href='/create_account'>
+                  <button className='btn-white  hover:tw-bg-gold-200 tw-hidden md:tw-block '>CREATE ACCOUNT</button>
+                </Link>
+                <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                  {menuIsOpen ? (
+                    <Image src={CancelIcon} width={24} height={24} alt='menu' className='md:tw-hidden tw-w-auto tw-h-auto' />
+                  ) : (
+                    <Image src={HamburgerMenu} width={24} height={24} alt='menu' className='md:tw-hidden tw-w-auto tw-h-auto' />
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+          {menuIsOpen && (
+            <DropdownMenu
+              searchedData={searchedData}
+              isLoggedIn={isLoggedIn}
+              handleSubmit={handleSumbit}
+              handleChange={handleChange}
+              onSearchClick={handleSearchClick}
+              searchBoxDropDown={searchBoxDropDown}
+              setSearchBoxDropDown={setSearchBoxDropDown}
+              handleInputClick={handleInputClick}
+            />
+          )}
+          {myAccountMenuOpen && <MyAccountMenu isLoggedIn={isLoggedIn} />}
         </div>
       )}
-      {menuIsOpen && (
-        <DropdownMenu
-          searchedData={searchedData}
-          isLoggedIn={isLoggedIn}
-          handleSubmit={handleSumbit}
-          handleChange={handleChange}
-          onSearchClick={handleSearchClick}
-          searchBoxDropDown={searchBoxDropDown}
-          setSearchBoxDropDown={setSearchBoxDropDown}
-          handleInputClick={handleInputClick}
-        />
-      )}
-      {myAccountMenuOpen && <MyAccountMenu isLoggedIn={isLoggedIn} />}
     </div>
   );
 };
@@ -359,14 +369,14 @@ const MyWatchlistDropdownMenu = () => {
     },
   ];
   return (
-    <div className='tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black '>
-      <div className='tw-px-6 tw-font-bold tw-text-lg'>MY WATCHLIST</div>
-      <div className='tw-px-6 tw-grid tw-grid-cols-2 tw-w-full'>
-        <div>
-          <button>ACTIVE</button>
-        </div>
-        <div>
-          <button>COMPLETED</button>
+    <div className='tw-absolute tw-z-10 tw-right-[112px] tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black '>
+      <div className='tw-px-6 tw-flex tw-flex-col tw-gap-4'>
+        <div className='tw-font-bold tw-text-lg tw-text-left'>MY WAGERS</div>
+        <div className=''>
+          <button className='tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white' autoFocus>
+            ACTIVE
+          </button>
+          <button className='tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white'>COMPLETED</button>
         </div>
       </div>
       {watchlist.length === 0 ? (
@@ -382,7 +392,6 @@ const MyWatchlistDropdownMenu = () => {
         <div className='tw-w-full'>
           {watchlist.map((item) => (
             <div key={item.title}>
-              <hr className='tw-opacity-10' />
               <MyWatchlistCard
                 type={item.type}
                 title={item.title}
@@ -508,14 +517,14 @@ const MyWagersDropdownMenu = () => {
     },
   ];
   return (
-    <div className='tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black '>
-      <div className='tw-px-6 tw-font-bold tw-text-lg'>MY WAGERS</div>
-      <div className='tw-px-6 tw-grid tw-grid-cols-2 tw-w-full'>
-        <div>
-          <button>ACTIVE</button>
-        </div>
-        <div>
-          <button>COMPLETED</button>
+    <div className='tw-absolute tw-z-10 tw-right-[56px] tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black '>
+      <div className='tw-px-6 tw-flex tw-flex-col tw-gap-4'>
+        <div className='tw-font-bold tw-text-lg tw-text-left'>MY WAGERS</div>
+        <div className=''>
+          <button className='tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white' autoFocus>
+            ACTIVE
+          </button>
+          <button className='tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white'>COMPLETED</button>
         </div>
       </div>
       {wagers.length === 0 ? (
@@ -531,7 +540,6 @@ const MyWagersDropdownMenu = () => {
         <div className='tw-w-full'>
           {wagers.map((item) => (
             <div key={item.title}>
-              <hr className='tw-opacity-10' />
               <MyWagersCard
                 type={item.type}
                 title={item.title}
@@ -565,12 +573,12 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
     <div className='tw-px-6 tw-w-full tw-my-4'>
       {type === 'Single' && (
         <div className=' tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6'>
-          <Link href={'/car_view_page'} className='tw-self-start'>
+          <Link href={'/car_view_page'} className='tw-self-start tw-w-[100px]'>
             <Image src={img} width={100} height={100} alt='wallet icon' className='tw-w-[100px] tw-h-[100px]' />
           </Link>
-          <div className='tw-w-full tw-flex tw-flex-col tw-items-start tw-grow'>
+          <div className='tw-flex tw-flex-col tw-items-start tw-grow'>
             <Link href={'/car_view_page'} className='tw-self-start'>
-              <div className='tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left'>{title}</div>
+              <div className='tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1'>{title}</div>
             </Link>
             <div className='tw-w-full tw-mt-1'>
               <div className='tw-flex tw-items-center tw-gap-2 tw-w-full'>
@@ -599,10 +607,10 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
       )}
       {type === 'Tournament' && (
         <div className=' tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6'>
-          <Link href={'/tournament_page'} className='tw-self-start'>
+          <Link href={'/tournament_page'} className='tw-self-start tw-w-[100px]'>
             <Image src={img} width={100} height={100} alt='wallet icon' className='tw-w-[100px] tw-h-[100px] tw-self-start' />
           </Link>
-          <div className='tw-w-full tw-flex tw-flex-col tw-items-start tw-grow'>
+          <div className='tw-flex tw-flex-col tw-items-start tw-grow'>
             <Link href={'/tournament_page'} className='tw-self-start'>
               <div className='tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left'>{title}</div>
             </Link>
@@ -633,38 +641,53 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({ type, title, img, my_wager,
 const MyAccountDropdownMenu = () => {
   const account_load = 100;
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignOut = async () => {
     try {
+      setIsLoading(true);
       await signOut({ redirect: false });
       router.push('/');
       console.log('User successfully logged out');
+      setIsLoading(false);
+      window.location.reload();
     } catch (error) {
       console.error('Error during sign out:', error);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className='tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black '>
       <div className='tw-px-6 tw-font-bold tw-text-lg'>MY ACCOUNT</div>
-      {account_load && (
-        <div className='tw-px-6 tw-w-full'>
-          <div className='tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6'>
-            <Image src={Wallet} width={32} height={32} alt='wallet icon' className='tw-w-8 tw-h-8' />
-            <div className='tw-flex tw-flex-col tw-items-start tw-grow'>
-              <span className='tw-font-bold tw-text-xl tw-py-1'>${account_load}.00</span>
-              <span className='tw-text-[#49C742]'>Withdraw</span>
-            </div>
-          </div>
+      {isLoading ? (
+        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+          <BounceLoader color='#696969' loading={isLoading} />
         </div>
+      ) : (
+        <>
+          {account_load && (
+            <div className='tw-px-6 tw-w-full'>
+              <div className='tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6'>
+                <Image src={Wallet} width={32} height={32} alt='wallet icon' className='tw-w-8 tw-h-8' />
+                <div className='tw-flex tw-flex-col tw-items-start tw-grow'>
+                  <span className='tw-font-bold tw-text-xl tw-py-1'>${account_load}.00</span>
+                  <span className='tw-text-[#49C742]'>Withdraw</span>
+                </div>
+              </div>
+            </div>
+          )}
+          <div className='tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full'>
+            <Link href='/profile' className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>
+              Profile
+            </Link>
+            <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Settings</button>
+            <button onClick={handleSignOut} className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>
+              Logout
+            </button>
+          </div>
+        </>
       )}
-      <div className='tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full'>
-        <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Profile</button>
-        <button className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>Settings</button>
-        <button onClick={handleSignOut} className='tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full'>
-          Logout
-        </button>
-      </div>
     </div>
   );
 };
