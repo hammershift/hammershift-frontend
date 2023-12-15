@@ -150,6 +150,12 @@ export const getWagers = async (id: string) => {
   return data;
 };
 
+export const getOneUserWager = async (auction_id: string, user_id: string) => {
+  const res = await fetch(`/api/wager?id=${auction_id}&user_id=${user_id}`);
+  const data = await res.json();
+  return data
+}
+
 export interface AddPrizePoolProps {
   pot?: number;
 }

@@ -73,12 +73,26 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     const id = req.nextUrl.searchParams.get('id');
+    const user = req.nextUrl.searchParams.get('user_id');
+
+    if (id && user) {
+      const wager = await Wager.find({
+        'auctionID': new ObjectId(id),
+        'user._id': new ObjectId(user),
+      });
+      return NextResponse.json(wager);
+    }
 
     //IMPORTANT use the _id instead of auction_id when fetching wagers
     // api/wager?auction_id=656e95bc8727754b7cb5ec6b to get all wagers with the same auctionID
     if (id) {
       const auctionWagers = await Wager.find({ auctionID: new ObjectId(id) }).sort({ createdAt: -1 });
       return NextResponse.json(auctionWagers);
+    }
+
+    if (user) {
+      const userWagers = await Wager.find({ "user._id": new ObjectId(user) });
+      return NextResponse.json(userWagers);
     }
     // api/wager to get all wagers
     const wagers = await Wager.find();
