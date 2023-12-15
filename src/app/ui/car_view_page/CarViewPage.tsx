@@ -567,32 +567,6 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
 }) => {
     const { data: session } = useSession();
     const router = useRouter();
-    const teamPlayers = [
-        {
-            id: "wager1",
-            username: "Username",
-            avatar: AvatarOne,
-            time: "2 hours ago",
-        },
-        {
-            id: "wager2",
-            username: "Username",
-            avatar: AvatarTwo,
-            time: "3 hours ago",
-        },
-        {
-            id: "wager3",
-            username: "Username",
-            avatar: AvatarThree,
-            time: "2 days ago",
-        },
-        {
-            id: "wager4",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-    ];
 
     return (
         <div>
@@ -613,8 +587,6 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                     <div className="tw-text-[14px]">{players_num} Players</div>
                     <div className="tw-relative tw-mt-4">
                         {wagers.slice(0, 4).map((wager) => {
-                            console.log(`sessionID: ${session?.user.id}`);
-                            console.log(`wagerID: ${wager.user._id}`);
                             return (
                                 <div
                                     key={wager._id}

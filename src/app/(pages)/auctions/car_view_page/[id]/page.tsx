@@ -26,7 +26,7 @@ import { useSession } from "next-auth/react";
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
     const urlPath = useParams();
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [carData, setCarData] = useState<any>(null);
     const [wagersData, setWagersData] = useState<any>(null);
     const [playerNum, setPlayerNum] = useState(0);
@@ -40,21 +40,23 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             const data = await getCarData(ID);
             setCarData(data);
             setWagerInputs({ ...wagerInputs, auctionID: data?._id });
+            if (session) {
+                const userWager = await getOneUserWager(
+                    data?._id,
+                    session?.user.id
+                );
+                userWager.length === 0
+                    ? setAlreadyWagered(false)
+                    : setAlreadyWagered(true);
+                console.log(session?.user.id);
+            }
             const wagers = await getWagers(data?._id);
             setWagersData(wagers);
             setPlayerNum(wagers.length);
-            const userWager = await getOneUserWager(
-                data?._id,
-                session?.user.id
-            );
-            userWager.length === 0
-                ? setAlreadyWagered(false)
-                : setAlreadyWagered(true);
-            console.log(session?.user.id);
         };
 
         fetchCarData();
-    }, [ID, toggleWagerModal]);
+    }, [ID, toggleWagerModal, session]);
 
     const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
@@ -84,25 +86,12 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         setToggleWagerModal(!toggleWagerModal);
     };
 
-    const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({
-        user: {
-            _id: session?.user.id,
-            fullName: session?.user.fullName,
-            username: session?.user.username,
-            image: session?.user.image,
-        },
-    });
+    const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({});
 
     interface WagerInputsI {
         auctionID?: string;
         priceGuessed?: number;
         wagerAmount?: number | undefined;
-        user?: {
-            _id: string;
-            fullName: string;
-            username: string;
-            image: string;
-        };
     }
 
     const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +101,6 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     ...wagerInputs,
                     priceGuessed: Number(e.target.value),
                 });
-                console.log(wagerInputs);
                 break;
             case "wager-amount":
                 setWagerInputs({
@@ -125,7 +113,10 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         }
     };
 
-    const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleWagerSubmit = async (
+        e: React.FormEvent<HTMLFormElement>,
+        sessionData: any
+    ) => {
         e.preventDefault();
         if (wagerInputs.wagerAmount) {
             await addPrizePool(
@@ -138,7 +129,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                 urlPath.id
             );
         }
-        await createWager(wagerInputs);
+        console.log({ ...wagerInputs, ...sessionData });
+        await createWager({ ...wagerInputs, ...sessionData });
         console.log("wager created");
 
         setToggleWagerModal(false);
