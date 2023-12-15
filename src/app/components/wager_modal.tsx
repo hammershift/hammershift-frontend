@@ -14,6 +14,7 @@ import MoneyBag from "../../../public/images/money-bag-green.svg";
 import Players from "../../../public/images/players-icon-green.svg";
 import CancelIcon from "../../../public/images/x-icon.svg";
 import { useTimer } from "@/app/_context/TimerContext";
+import { useSession } from "next-auth/react";
 
 interface WagerModalProps {
     showWagerModal: () => void;
@@ -44,6 +45,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
 }) => {
     const router = useRouter();
     const timerValues = useTimer();
+    const { data: session } = useSession();
 
     // Change to false to see create account
     const user = {

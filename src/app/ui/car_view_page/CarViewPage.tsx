@@ -41,6 +41,7 @@ import Link from "next/link";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useSession } from "next-auth/react";
 dayjs.extend(relativeTime);
 
 export interface CarDataOneProps {
@@ -564,6 +565,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
     toggleWagerModal,
     alreadyWagered,
 }) => {
+    const { data: session } = useSession();
     const router = useRouter();
     const teamPlayers = [
         {
@@ -611,6 +613,8 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                     <div className="tw-text-[14px]">{players_num} Players</div>
                     <div className="tw-relative tw-mt-4">
                         {wagers.slice(0, 4).map((wager) => {
+                            console.log(`sessionID: ${session?.user.id}`);
+                            console.log(`wagerID: ${wager.user._id}`);
                             return (
                                 <div
                                     key={wager._id}
@@ -630,7 +634,10 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
-                                                {wager.user.username}
+                                                {session?.user.id ===
+                                                wager.user._id
+                                                    ? "You"
+                                                    : wager.user.username}
                                             </div>
                                             <div className="tw-opacity-50">
                                                 {dayjs(
@@ -639,7 +646,13 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                             </div>
                                         </div>
                                     </div>
-                                    <button className="tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold">
+                                    <button
+                                        className={
+                                            session?.user.id === wager.user._id
+                                                ? "tw-bg-[#156cc3] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
+                                                : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
+                                        }
+                                    >
                                         <span className="tw-hidden xl:tw-inline-block">
                                             Wager:
                                         </span>{" "}
