@@ -121,6 +121,14 @@ export async function GET(req: NextRequest) {
       ])
       .toArray();
 
+    try {
+      const result = await db.collection('user_wagers').insertMany(userWagers);
+      console.log(`Saved ${result.insertedCount} user wagers to the database`);
+    } catch (error) {
+      console.error('Error saving user wagers to the database:', error);
+      // Handle the error as needed
+    }
+
     return NextResponse.json({ wagers: userWagers }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user wagers:', error);
