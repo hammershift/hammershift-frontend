@@ -20,8 +20,6 @@ import { BounceLoader } from 'react-spinners';
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
   const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>('sign in');
-
-  // TEST IMPLEMENTATION
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
@@ -29,7 +27,7 @@ const CreateAccount = () => {
 
   const router = useRouter();
 
-  // TEST for forgot/reset password
+  // Forgot/Reset Password
   const [resetEmail, setResetEmail] = useState('');
 
   const handleResetPassword = async () => {
@@ -43,8 +41,7 @@ const CreateAccount = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        // store the email in local storage
-        localStorage.setItem('passwordResetEmail', resetEmail);
+        localStorage.setItem('passwordResetEmail', resetEmail); // store the email in local storage
         localStorage.setItem('isNewPasswordResetProcess', 'true'); // set the flag for password reset flow process
         router.push('/password_reset_flow');
       } else {
@@ -96,6 +93,7 @@ const CreateAccount = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+      {/* Loading */}
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
           <BounceLoader color='#696969' loading={isLoading} />

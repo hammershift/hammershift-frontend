@@ -49,6 +49,11 @@ const CreateAccount = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isFullNameValid, setIsFullNameValid] = useState(true);
+  const [isUsernameValid, setIsUsernameValid] = useState(true);
+  const [isCountryValid, setIsCountryValid] = useState(true);
+  const [isStateValid, setIsStateValid] = useState(true);
+
   // session and routing
   const { data: session } = useSession();
   const router = useRouter();
@@ -65,7 +70,7 @@ const CreateAccount = () => {
     }
   }, [session]);
 
-  // TEST IMPLEMENTATION FOR COUNTRY AND STATE
+  // COUNTRY AND STATE
   const handleCountrySelect = (countryCode: string) => {
     const country = Country.getCountryByCode(countryCode);
     if (country) {
@@ -85,7 +90,7 @@ const CreateAccount = () => {
     }
   };
 
-  // TEST IMPLEMENTATION for email validation
+  // EMAIL VALIDATION
   const handleEmailChange = (email: string) => {
     setEmail(email);
     if (email.length === 0) {
@@ -100,7 +105,7 @@ const CreateAccount = () => {
     }
   };
 
-  // TEST IMPLEMENTATION for password validation
+  // PASSWORD VALIDATION
   const handlePasswordChange = (password: string) => {
     setPassword(password);
     if (password.length === 0) {
@@ -115,6 +120,7 @@ const CreateAccount = () => {
     }
   };
 
+  // ACCOUNT CREATION
   const handleAccountCreation = async () => {
     if (!isPasswordValid) {
       console.error('Invalid password');
@@ -157,7 +163,34 @@ const CreateAccount = () => {
     setIsLoading(false);
   };
 
+  // PROFILE SUBMISSION
   const handleProfileSubmission = async () => {
+    let isValid = true;
+
+    if (!fullName) {
+      setIsFullNameValid(false);
+      isValid = false;
+    }
+
+    if (!username) {
+      setIsUsernameValid(false);
+      isValid = false;
+    }
+
+    if (!selectedCountry?.name) {
+      setIsCountryValid(false);
+      isValid = false;
+    }
+
+    if (!selectedState?.name) {
+      setIsStateValid(false);
+      isValid = false;
+    }
+
+    if (!isValid) {
+      setIsLoading(false);
+      return; // Stop further processing if validation fails
+    }
     const profileData = { fullName, username, country: selectedCountry?.name, state: selectedState?.name, aboutMe };
 
     setIsLoading(true);
@@ -188,7 +221,7 @@ const CreateAccount = () => {
     setIsLoading(false);
   };
 
-  // for Google signin
+  // GOOGLE SIGNIN
   const handleGoogleSignIn = async (provider: string) => {
     try {
       await signIn(provider, { callbackUrl: window.location.href });
@@ -197,7 +230,43 @@ const CreateAccount = () => {
     }
   };
 
+  // VERIFY LATER
   const handleVerifyLater = async () => {
+    let isValid = true;
+
+    if (!fullName) {
+      setIsFullNameValid(false);
+      isValid = false;
+    } else {
+      setIsFullNameValid(true);
+    }
+
+    if (!username) {
+      setIsUsernameValid(false);
+      isValid = false;
+    } else {
+      setIsUsernameValid(true);
+    }
+
+    if (!selectedCountry?.name) {
+      setIsCountryValid(false);
+      isValid = false;
+    } else {
+      setIsCountryValid(true);
+    }
+
+    if (!selectedState?.name) {
+      setIsStateValid(false);
+      isValid = false;
+    } else {
+      setIsStateValid(true);
+    }
+
+    if (!isValid) {
+      setIsLoading(false);
+      return; // Stop further processing if validation fails
+    }
+
     setIsLoading(true);
 
     const userData = { fullName, username, country, state, aboutMe };
@@ -229,6 +298,7 @@ const CreateAccount = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+      {/* Loading */}
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
           <BounceLoader color='#696969' loading={isLoading} />
@@ -286,25 +356,58 @@ const CreateAccount = () => {
             <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
               <div className='tw-font-bold tw-text-4xl sm:tw-text-[44px]'>Setup your profile</div>
               <div className='tw-flex tw-flex-col tw-gap-5'>
+                {/* Profile picture and Full name */}
                 <div className='tw-flex tw-flex-col sm:tw-flex-row tw-gap-6'>
                   <div className='tw-bg-[#F2CA16] tw-rounded-full tw-w-[120px] tw-h-[120px] tw-flex tw-justify-center tw-items-center'>
                     <Image src={UserImage} width={52} height={52} alt='user profile' className='tw-w-[52px] tw-h-[52px]' />
                   </div>
+
+                  {/* Full Name */}
                   <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
                     <label>Full Name *</label>
-                    <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='full name' value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                    <input
+                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                      placeholder='full name'
+                      value={fullName}
+                      onChange={(e) => {
+                        setFullName(e.target.value);
+                        setIsFullNameValid(true);
+                      }}
+                    />
+                    {!isFullNameValid && !fullName && <div className='tw-text-sm tw-text-red-500'>✕ Full Name is required</div>}
+                    {isFullNameValid && fullName && <div className='tw-text-green-500'>✓</div>}
                   </div>
                 </div>
+
+                {/* Username */}
                 <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
                   <label>Username *</label>
-                  <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={username} onChange={(e) => setUsername(e.target.value)} />
+                  <input
+                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    value={username}
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      setIsUsernameValid(true);
+                    }}
+                  />
+                  {!isUsernameValid && !username && <div className='tw-text-sm tw-text-red-500'>✕ Username is required</div>}
+                  {isUsernameValid && username && <div className='tw-text-green-500'>✓</div>}
                   <div className='tw-text-sm tw-opacity-40'>At least x characters with no special symbols</div>
                 </div>
+
+                {/* Country and State */}
                 <div className='tw-grid tw-grid-cols-2 tw-gap-5'>
-                  <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
-                    {/* TEST IMPLEMENTATION */}
+                  {/* Country */}
+                  <div className='tw-flex tw-flex-col tw-gap-2 tw-grow'>
                     <label>Country *</label>
-                    <select className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' onChange={(e) => handleCountrySelect(e.target.value)} value={selectedCountry?.isoCode || ''}>
+                    <select
+                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                      value={selectedCountry?.isoCode || ''}
+                      onChange={(e) => {
+                        handleCountrySelect(e.target.value);
+                        setIsCountryValid(true);
+                      }}
+                    >
                       <option value=''>Select Country</option>
                       {countries.map((country) => (
                         <option key={country.isoCode} value={country.isoCode}>
@@ -312,27 +415,36 @@ const CreateAccount = () => {
                         </option>
                       ))}
                     </select>
-                    {/* <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={country} onChange={(e) => setCountry(e.target.value)} /> */}
+                    {!isCountryValid && <div className='tw-text-red-500'>✕ Country is required</div>}
+                    {isCountryValid && selectedCountry && <div className='tw-text-green-500'>✓</div>}
                   </div>
-                  <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
-                    {/* TEST IMPLEMENTATION */}
+
+                  {/* State */}
+                  <div className='tw-flex tw-flex-col tw-gap-2 tw-grow'>
                     <label>State *</label>
                     <select
                       className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                      onChange={(e) => handleStateSelect(e.target.value)}
                       value={selectedState?.isoCode || ''}
+                      onChange={(e) => {
+                        handleStateSelect(e.target.value);
+                        setIsStateValid(true);
+                      }}
                       disabled={!selectedCountry}
                     >
                       <option value=''>Select State</option>
-                      {states.map((state) => (
-                        <option key={state.isoCode} value={state.isoCode}>
-                          {state.name}
-                        </option>
-                      ))}
+                      {selectedCountry &&
+                        states.map((state) => (
+                          <option key={state.isoCode} value={state.isoCode}>
+                            {state.name}
+                          </option>
+                        ))}
                     </select>
-                    {/* <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={state} onChange={(e) => setState(e.target.value)} /> */}
+                    {!isStateValid && <div className='tw-text-red-500'>✕ State is required</div>}
+                    {isStateValid && selectedState && <div className='tw-text-green-500'>✓</div>}
                   </div>
                 </div>
+
+                {/* About Me */}
                 <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
                   <label>About Me</label>
                   <textarea
@@ -343,6 +455,7 @@ const CreateAccount = () => {
                     onChange={(e) => setAboutMe(e.target.value)}
                   />
                 </div>
+
                 <div className='tw-flex tw-flex-col tw-gap-2'>
                   <button className='btn-yellow' onClick={handleProfileSubmission}>
                     Proceed to Account Verification
