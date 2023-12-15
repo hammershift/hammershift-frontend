@@ -543,10 +543,10 @@ const MyWatchlistDropdownMenu = () => {
         },
     ];
     return (
-        <div className="tw-absolute tw-z-10 tw-right-[112px] tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black ">
+        <div className="tw-absolute tw-z-10 tw-right-[112px] tw-top-10 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black ">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
-                    MY WAGERS
+                    MY WATCHLIST
                 </div>
                 <div className="">
                     <button
@@ -764,7 +764,7 @@ const MyWagersDropdownMenu = () => {
         },
     ];
     return (
-        <div className="tw-absolute tw-z-10 tw-right-[56px] tw-top-8 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black ">
+        <div className="tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black ">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WAGERS

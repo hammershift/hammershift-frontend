@@ -153,6 +153,9 @@ option {
   filter: brightness(0) saturate(100%) invert(94%) sepia(16%) saturate(6020%) hue-rotate(351deg) brightness(101%) contrast(90%);
 }
 
+.black-check-filter {
+  filter: brightness(0) saturate(100%) invert(6%) sepia(10%) saturate(3039%) hue-rotate(169deg) brightness(97%) contrast(93%);
+}
 /**
  * ----------------------------------------
  //* animation slide-in-top
