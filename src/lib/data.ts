@@ -169,3 +169,10 @@ export const addPrizePool = async (pot: AddPrizePoolProps, auction_id: string | 
     body: JSON.stringify({ ...pot }),
   });
 };
+
+export const getMyWagers = async () => {
+  const res = await fetch("/api/myWagers");
+  const data = await res.json();
+
+  return data;
+}
