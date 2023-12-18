@@ -1,5 +1,7 @@
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
+import Auctions from '@/models/auction.model';
+import Watchlist from '@/models/watchlist';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,34 +12,45 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  try {
-    const { auctionID, action } = await req.json();
-    const client = await clientPromise;
-    const db = client.db();
-    let convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
+  const { auctionID, action } = await req.json();
+  const convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
+  const userID = new mongoose.Types.ObjectId(session.user.id);
 
+  if (action !== 'add' && action !== 'remove') {
+    console.log('Invalid action');
+    return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
+  }
+
+  try {
     if (action === 'add') {
-      const existingItem = await db.collection('watchlist').findOne({ auctionID: convertedAuctionID, userID: new mongoose.Types.ObjectId(session.user.id) });
-      if (!existingItem) {
-        await db.collection('watchlist').insertOne({
-          auctionID: convertedAuctionID,
-          userID: new mongoose.Types.ObjectId(session.user.id),
-          createdAt: new Date(),
-        });
-        console.log('Added to watchlist successfully');
-        return NextResponse.json({ message: 'Added to watchlist successfully' }, { status: 201 });
-      } else {
-        console.log('Item already in watchlist');
-        return NextResponse.json({ message: 'Item already in watchlist' }, { status: 200 });
+      // check if the auction is expired or not found (TEST IMPLEMENTATION)
+      const auction = await Auctions.findOne({
+        _id: convertedAuctionID,
+        attributes: { $elemMatch: { key: 'status', value: { $ne: 2 } } },
+      });
+
+      if (!auction) {
+        await Watchlist.deleteOne({ auctionID: convertedAuctionID, userID });
+        console.log('Auction not found or is expired, removed from Watchlist if it was there');
+        return NextResponse.json({ message: 'Auction not found or is expired, removed from Watchlist if it was there' }, { status: 404 });
       }
-    } else if (action === 'remove') {
-      await db.collection('watchlist').deleteOne({ auctionID: convertedAuctionID, userID: new mongoose.Types.ObjectId(session.user.id) });
-      console.log('Removed from watchlist successfully');
-      return NextResponse.json({ message: 'Removed from watchlist successfully' }, { status: 200 });
-    } else {
-      console.log('Invalid action');
-      return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
+
+      // check if the auction item is already in the watchlist
+      const existingAuctionItem = await Watchlist.findOne({ auctionID: convertedAuctionID, userID });
+      if (existingAuctionItem) {
+        console.log('Auction already in Watchlist');
+        return NextResponse.json({ message: 'Auction already in Watchlist' }, { status: 200 });
+      }
+
+      await Watchlist.create({ auctionID: convertedAuctionID, userID });
+      console.log('Added to Watchlist successfully');
+      return NextResponse.json({ message: 'Added to Watchlist successfully' }, { status: 201 });
     }
+
+    // if action is 'remove'
+    await Watchlist.deleteOne({ auctionID: convertedAuctionID, userID });
+    console.log('Removed from Watchlist successfully');
+    return NextResponse.json({ message: 'Removed from Watchlist successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error in watchlist operation:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
@@ -46,19 +59,23 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
+  console.log('Session:', session);
   if (!session) {
     console.log('Unauthorized: No session found');
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
+
+  const userID = new mongoose.Types.ObjectId(session.user.id);
+  console.log('Using userID for query:', userID);
 
   try {
     const client = await clientPromise;
     const db = client.db();
 
     const userWatchlist = await db
-      .collection('watchlist')
+      .collection('watchlists')
       .aggregate([
-        { $match: { userID: new mongoose.Types.ObjectId(session.user.id) } },
+        { $match: { userID: userID } },
         {
           $lookup: {
             from: 'auctions',

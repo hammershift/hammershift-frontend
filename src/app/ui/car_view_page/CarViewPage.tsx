@@ -157,6 +157,7 @@ interface WatchAndWagerButtonsProps {
   alreadyWagered: boolean;
   auctionID: string;
 }
+
 export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({ auctionID, toggleWagerModal, alreadyWagered }) => {
   const [isWatching, setIsWatching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -219,7 +220,7 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({ auct
     <div>
       {isLoading ? (
         <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
-          <BounceLoader color='#696969' loading={isLoading} />
+          <BounceLoader color='#696969' loading={isLoading} size={30} />
         </div>
       ) : (
         <div>
