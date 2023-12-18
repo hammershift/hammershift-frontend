@@ -25,7 +25,7 @@ import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { getMyWagers } from "@/lib/data";
-import { TimerProvider } from "../_context/TimerContext";
+import { TimerProvider, useTimer } from "../_context/TimerContext";
 
 // export interface NavbarProps {
 //     isLoggedIn: boolean;
@@ -732,7 +732,15 @@ const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 
 interface MyWagersDropdownMenuProps {
     _id: string;
-    auctionID: string;
+    auctionObjectId: string;
+    auctionIdentifierId: string;
+    auctionPot: number;
+    auctionImage: string;
+    auctionYear: string;
+    auctionMake: string;
+    auctionModel: string;
+    auctionPrice: number;
+    auctionDeadline: Date;
     priceGuessed: number;
     wagerAmount: number;
     user: {
@@ -742,28 +750,6 @@ interface MyWagersDropdownMenuProps {
         image: string;
     };
     createdAt: string;
-    auctionPot: number;
-    auctionImage: string;
-    auctionYear: {
-        key: string;
-        value: string;
-        _id: string;
-    };
-    auctionMake: {
-        key: string;
-        value: string;
-        _id: string;
-    };
-    auctionModel: {
-        key: string;
-        value: string;
-        _id: string;
-    };
-    auctionDeadline: {
-        key: string;
-        value: Date;
-        _id: string;
-    };
 }
 const MyWagersDropdownMenu: React.FC<{
     myWagers: MyWagersDropdownMenuProps[];
@@ -847,15 +833,13 @@ const MyWagersDropdownMenu: React.FC<{
                 <div className="tw-w-full">
                     {myWagers.map((wager) => (
                         <div key={wager._id}>
-                            <TimerProvider
-                                deadline={wager.auctionDeadline.value}
-                            >
+                            <TimerProvider deadline={wager.auctionDeadline}>
                                 <MyWagersCard
-                                    title={`${wager.auctionYear.value} ${wager.auctionMake.value} ${wager.auctionModel.value}`}
+                                    title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
                                     img={wager.auctionImage}
                                     my_wager={wager.priceGuessed}
-                                    current_bid={100000}
-                                    time_left={wager.auctionDeadline.value}
+                                    current_bid={wager.auctionPrice}
+                                    time_left={wager.auctionDeadline}
                                     potential_prize={wager.auctionPot}
                                 />
                             </TimerProvider>
@@ -883,6 +867,8 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
     time_left,
     potential_prize,
 }) => {
+    const { days, hours, minutes, seconds } = useTimer();
+
     return (
         <div className="tw-px-6 tw-w-full tw-py-4 tw-border-b-[1px] tw-border-[#253747]">
             <div className=" tw-w-full tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
@@ -898,7 +884,7 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         className="tw-w-[100px] tw-h-[100px] tw-object-cover tw-rounded-[4px]"
                     />
                 </Link>
-                <div className="tw-flex tw-flex-col tw-items-start tw-grow">
+                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-max-w-[323px]">
                     <Link href={"/car_view_page"} className="tw-self-start">
                         <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
@@ -940,7 +926,7 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 className="tw-w-[14px] tw-h-[14px]"
                             />
                             <span className="tw-opacity-80">Time Left:</span>
-                            <span className="">{time_left}</span>
+                            <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                         </div>
                     </div>
                     <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded">
