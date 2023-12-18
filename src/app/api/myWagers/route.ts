@@ -31,14 +31,18 @@ export async function GET(req: NextRequest) {
 
       return {
         _id: wager._id,
-        auctionID: auctionDetails._id,
-        auctionIdentifier: auctionDetails.auction_id,
+        auctionObjectId: auctionDetails._id,
+        auctionIdentifierId: auctionDetails.auction_id,
+        auctionPot: auctionDetails.pot,
+        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
+        auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
+        auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
+        auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
+        auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
+        auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
         priceGuessed: wager.priceGuessed,
         wagerAmount: wager.wagerAmount,
         user: wager.user,
-        auctionPot: auctionDetails.pot,
-        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
-        auctionPrice: priceAttribute ? priceAttribute.value : null,
         createdAt: wager.createdAt,
       };
     });
