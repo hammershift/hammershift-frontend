@@ -1,35 +1,10 @@
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
+import Auctions from '@/models/auction.model';
+import Wager from '@/models/wager';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
-
-// export async function GET(req: NextRequest) {
-//   const session = await getServerSession(authOptions);
-//   if (!session || !session.user) {
-//     console.log('Unauthorized: No session found');
-//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-//   }
-
-//   console.log('User ID from session:', session.user.id);
-
-//   try {
-//     const client = await clientPromise;
-//     const db = client.db();
-
-//     const userIdFromSession = session.user.id;
-//     const userWagers = await db
-//       .collection('wagers')
-//       .find({ 'user._id': new ObjectId(userIdFromSession) })
-//       .sort({ createdAt: -1 })
-//       .toArray();
-
-//     return NextResponse.json({ wagers: userWagers }, { status: 200 });
-//   } catch (error) {
-//     console.error('Error fetching user wagers:', error);
-//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-//   }
-// }
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -38,98 +13,37 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const userID = new mongoose.Types.ObjectId(session.user.id);
+
   try {
-    const client = await clientPromise;
-    const db = client.db();
+    const userWagers = await Wager.find({ 'user._id': userID })
+      .populate({
+        path: 'auctionID',
+        model: Auctions,
+        select: 'pot images_list attributes auction_id',
+      })
+      .sort({ createdAt: -1 })
+      .exec();
 
-    const userWagers = await db
-      .collection('wagers')
-      .aggregate([
-        { $match: { 'user._id': new mongoose.Types.ObjectId(session.user.id) } }, // match wagers by user ID
-        {
-          $lookup: {
-            from: 'auctions',
-            localField: 'auctionID',
-            foreignField: '_id',
-            as: 'auctionDetails',
-          },
-        },
-        { $unwind: '$auctionDetails' },
-        {
-          $project: {
-            _id: 1,
-            auctionID: 1,
-            priceGuessed: 1,
-            wagerAmount: 1,
-            user: 1,
-            auctionPot: '$auctionDetails.pot',
-            auctionImage: { $arrayElemAt: ['$auctionDetails.images_list.src', 0] },
-            auctionYear: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'year'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionMake: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'make'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionModel: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'model'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionDeadline: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'deadline'] },
-                  },
-                },
-                0,
-              ],
-            },
-            // will add more necessary field
-            createdAt: 1,
-          },
-        },
+    const wagerDetails = userWagers.map((wager) => {
+      const auctionDetails = wager.auctionID;
+      const priceAttribute = auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price');
 
-        { $sort: { createdAt: -1 } }, // sort by the creation date of the wager
-      ])
-      .toArray();
+      return {
+        _id: wager._id,
+        auctionID: auctionDetails._id,
+        auctionIdentifier: auctionDetails.auction_id,
+        priceGuessed: wager.priceGuessed,
+        wagerAmount: wager.wagerAmount,
+        user: wager.user,
+        auctionPot: auctionDetails.pot,
+        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
+        auctionPrice: priceAttribute ? priceAttribute.value : null,
+        createdAt: wager.createdAt,
+      };
+    });
 
-    try {
-      const result = await db.collection('user_wagers').insertMany(userWagers);
-      console.log(`Saved ${result.insertedCount} user wagers to the database`);
-    } catch (error) {
-      console.error('Error saving user wagers to the database:', error);
-      // Handle the error as needed
-    }
-
-    return NextResponse.json({ wagers: userWagers }, { status: 200 });
+    return NextResponse.json({ wagers: wagerDetails }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user wagers:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

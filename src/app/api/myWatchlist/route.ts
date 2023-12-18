@@ -1,5 +1,7 @@
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
+import Auctions from '@/models/auction.model';
+import Watchlist from '@/models/watchlist';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,34 +12,45 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  try {
-    const { auctionID, action } = await req.json();
-    const client = await clientPromise;
-    const db = client.db();
-    let convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
+  const { auctionID, action } = await req.json();
+  const convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
+  const userID = new mongoose.Types.ObjectId(session.user.id);
 
+  if (action !== 'add' && action !== 'remove') {
+    console.log('Invalid action');
+    return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
+  }
+
+  try {
     if (action === 'add') {
-      const existingItem = await db.collection('watchlist').findOne({ auctionID: convertedAuctionID, userID: new mongoose.Types.ObjectId(session.user.id) });
-      if (!existingItem) {
-        await db.collection('watchlist').insertOne({
-          auctionID: convertedAuctionID,
-          userID: new mongoose.Types.ObjectId(session.user.id),
-          createdAt: new Date(),
-        });
-        console.log('Added to watchlist successfully');
-        return NextResponse.json({ message: 'Added to watchlist successfully' }, { status: 201 });
-      } else {
-        console.log('Item already in watchlist');
-        return NextResponse.json({ message: 'Item already in watchlist' }, { status: 200 });
+      // check if the auction is expired or not found (TEST IMPLEMENTATION)
+      const auction = await Auctions.findOne({
+        _id: convertedAuctionID,
+        attributes: { $elemMatch: { key: 'status', value: { $ne: 2 } } },
+      });
+
+      if (!auction) {
+        await Watchlist.deleteOne({ auctionID: convertedAuctionID, userID });
+        console.log('Auction not found or is expired, removed from Watchlist if it was there');
+        return NextResponse.json({ message: 'Auction not found or is expired, removed from Watchlist if it was there' }, { status: 404 });
       }
-    } else if (action === 'remove') {
-      await db.collection('watchlist').deleteOne({ auctionID: convertedAuctionID, userID: new mongoose.Types.ObjectId(session.user.id) });
-      console.log('Removed from watchlist successfully');
-      return NextResponse.json({ message: 'Removed from watchlist successfully' }, { status: 200 });
-    } else {
-      console.log('Invalid action');
-      return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
+
+      // check if the auction item is already in the watchlist
+      const existingAuctionItem = await Watchlist.findOne({ auctionID: convertedAuctionID, userID });
+      if (existingAuctionItem) {
+        console.log('Auction already in Watchlist');
+        return NextResponse.json({ message: 'Auction already in Watchlist' }, { status: 200 });
+      }
+
+      await Watchlist.create({ auctionID: convertedAuctionID, userID });
+      console.log('Added to Watchlist successfully');
+      return NextResponse.json({ message: 'Added to Watchlist successfully' }, { status: 201 });
     }
+
+    // if action is 'remove'
+    await Watchlist.deleteOne({ auctionID: convertedAuctionID, userID });
+    console.log('Removed from Watchlist successfully');
+    return NextResponse.json({ message: 'Removed from Watchlist successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error in watchlist operation:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
@@ -51,85 +64,37 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const userID = new mongoose.Types.ObjectId(session.user.id);
+
   try {
-    const client = await clientPromise;
-    const db = client.db();
+    const userWatchlist = await Watchlist.find({ userID: userID })
+      .populate({
+        path: 'auctionID',
+        model: Auctions,
+        select: 'pot images_list attributes auction_id',
+      })
+      .sort({ createdAt: -1 })
+      .exec();
 
-    const userWatchlist = await db
-      .collection('watchlist')
-      .aggregate([
-        { $match: { userID: new mongoose.Types.ObjectId(session.user.id) } },
-        {
-          $lookup: {
-            from: 'auctions',
-            localField: 'auctionID',
-            foreignField: '_id',
-            as: 'auctionDetails',
-          },
-        },
-        { $unwind: '$auctionDetails' },
-        {
-          $project: {
-            _id: 1,
-            auctionID: 1,
-            auctionPot: '$auctionDetails.pot',
-            auctionImage: { $arrayElemAt: ['$auctionDetails.images_list.src', 0] },
-            auctionYear: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'year'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionMake: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'make'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionModel: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'model'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionDeadline: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'deadline'] },
-                  },
-                },
-                0,
-              ],
-            },
-            createdAt: 1,
-          },
-        },
-        { $sort: { createdAt: -1 } },
-      ])
-      .toArray();
+    const watchlistDetails = userWatchlist.map((item) => {
+      const auctionDetails = item.auctionID;
 
-    return NextResponse.json({ watchlist: userWatchlist }, { status: 200 });
+      return {
+        _id: item._id,
+        auctionObjectId: auctionDetails._id,
+        auctionIdentifierId: auctionDetails.auction_id,
+        auctionPot: auctionDetails.pot,
+        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
+        auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
+        auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
+        auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
+        auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
+        auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
+        createdAt: item.createdAt,
+      };
+    });
+
+    return NextResponse.json({ watchlist: watchlistDetails }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user watchlist:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
