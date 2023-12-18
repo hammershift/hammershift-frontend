@@ -14,12 +14,39 @@ const filtersInitialState = {
     sort: 'Newly Listed',
 };
 
-const AuctionListingPage = () => {
+const AuctionsWithFilter = ({ params }: { params: any }) => {
     const [filters, setFilters] = useState(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
+
+    const { slug } = params;
+
+    useEffect(() => {
+        const decodeSlug = (slugString: string) => {
+            // Decode the URL-encoded string
+            const decodedString: string = decodeURIComponent(slugString);
+            // Parse the decoded string into an object
+            const parsedFilters: { [key: string]: string[] } = {};
+            decodedString.split('&').forEach((pair) => {
+                const [key, value] = pair.split('=');
+                parsedFilters[key] = [value];
+            });
+
+            // Create the filters object
+            const filtersList: { make?: string[]; category?: string[] } = {
+                make: parsedFilters['make'],
+                category: parsedFilters['category']
+            };
+            // Print the result
+            console.log("Filters:", filtersList);
+            // setFilters(filtersList);
+        }
+        decodeSlug(slug);
+    }, [slug]);
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,5 +133,5 @@ const AuctionListingPage = () => {
     );
 };
 
-export default AuctionListingPage;
+export default AuctionsWithFilter;
 
