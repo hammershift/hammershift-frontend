@@ -46,6 +46,7 @@ export async function GET(req: NextRequest) {
       const searchedCars = await Auctions.find({
         $and: [
           { "attributes": { $elemMatch: { "key": "status", "value": { $in: completed } } } },
+          { "isActive": true },
           {
             $or: [
               { "attributes": { $elemMatch: { "key": "make", "value": { $regex: searchedKeyword, $options: "i" } } } },
@@ -145,7 +146,7 @@ export async function GET(req: NextRequest) {
     const totalCars = await Auctions.find(query);
 
 
-    const filteredCars = await Auctions.find(query)
+    const filteredCars = await Auctions.find({ $and: [query, { isActive: true }] })
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any; }; })
