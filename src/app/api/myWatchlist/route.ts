@@ -59,94 +59,42 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  console.log('Session:', session);
   if (!session) {
     console.log('Unauthorized: No session found');
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   const userID = new mongoose.Types.ObjectId(session.user.id);
-  console.log('Using userID for query:', userID);
 
   try {
-    const client = await clientPromise;
-    const db = client.db();
+    const userWatchlist = await Watchlist.find({ userID: userID })
+      .populate({
+        path: 'auctionID',
+        model: Auctions,
+        select: 'pot images_list attributes auction_id',
+      })
+      .sort({ createdAt: -1 })
+      .exec();
 
-    const userWatchlist = await db
-      .collection('watchlists')
-      .aggregate([
-        { $match: { userID: userID } },
-        {
-          $lookup: {
-            from: 'auctions',
-            localField: 'auctionID',
-            foreignField: '_id',
-            as: 'auctionDetails',
-          },
-        },
-        { $unwind: '$auctionDetails' },
-        {
-          $project: {
-            _id: 1,
-            auctionID: 1,
-            auctionPot: '$auctionDetails.pot',
-            auctionImage: { $arrayElemAt: ['$auctionDetails.images_list.src', 0] },
-            auctionYear: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'year'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionMake: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'make'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionModel: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'model'] },
-                  },
-                },
-                0,
-              ],
-            },
-            auctionDeadline: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$auctionDetails.attributes',
-                    as: 'attribute',
-                    cond: { $eq: ['$$attribute.key', 'deadline'] },
-                  },
-                },
-                0,
-              ],
-            },
-            createdAt: 1,
-          },
-        },
-        { $sort: { createdAt: -1 } },
-      ])
-      .toArray();
+    const watchlistDetails = userWatchlist.map((item) => {
+      const auctionDetails = item.auctionID;
 
-    return NextResponse.json({ watchlist: userWatchlist }, { status: 200 });
+      return {
+        _id: item._id,
+        auctionObjectId: auctionDetails._id,
+        auctionIdentifierId: auctionDetails.auction_id,
+        auctionPot: auctionDetails.pot,
+        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
+        auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
+        auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
+        auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
+        auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
+        auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
+        createdAt: item.createdAt,
+      };
+    });
+
+    return NextResponse.json({ watchlist: watchlistDetails }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user watchlist:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
