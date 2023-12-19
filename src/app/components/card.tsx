@@ -209,7 +209,7 @@ const Card: React.FC<any> = ({
         </div>
         <button
           className="btn-yellow-thin tw-w-full sm:tw-w-auto"
-          onClick={() => router.push(`/auctions/car_view_page/67232853`)}
+          onClick={() => router.push(`/auctions/car_view_page/${auction_id}`)}
         >
           Play Game
         </button>
