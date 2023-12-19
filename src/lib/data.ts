@@ -185,7 +185,7 @@ export const addPrizePool = async (
 };
 
 export const sortByNewGames = async () => {
-  const res = await fetch("api/cars/filter?sort=Newly%20Listed&&limit=3");
+  const res = await fetch("/api/cars/filter?sort=Newly%20Listed&&limit=3");
   const data = await res.json();
   let auctions = {
     total: data.total,
@@ -218,7 +218,7 @@ export const sortByNewGames = async () => {
 };
 
 export const sortByMostExpensive = async () => {
-  const res = await fetch("api/cars/filter?sort=Most%20Expensive&&limit=3");
+  const res = await fetch("/api/cars/filter?sort=Most%20Expensive&&limit=3");
   const data = await res.json();
   let auctions = {
     total: data.total,
@@ -251,7 +251,7 @@ export const sortByMostExpensive = async () => {
 };
 
 export const sortByMostBids = async () => {
-  const res = await fetch("api/cars/filter?sort=Most%20Bids&&limit=3");
+  const res = await fetch("/api/cars/filter?sort=Most%20Bids&&limit=3");
   const data = await res.json();
   let auctions = {
     total: data.total,
@@ -284,7 +284,7 @@ export const sortByMostBids = async () => {
 };
 
 export const sortByTrending = async () => {
-  const res = await fetch("api/cars/filter?sort=Ending%20Soon&&limit=3");
+  const res = await fetch("/api/cars/filter?sort=Ending%20Soon&&limit=3");
   const data = await res.json();
   let auctions = {
     total: data.total,
@@ -315,4 +315,3 @@ export const sortByTrending = async () => {
   };
   return auctions;
 };
-

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import Card from "../../components/card";
-import { useTimer } from "@/app/_context/TimerContext";
+import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 
 import CancelIcon from "../../../../public/images/x-icon.svg";
 import DollarIcon from "../../../../public/images/dollar.svg";
@@ -42,6 +42,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
+import { sortByMostExpensive, sortByNewGames } from "@/lib/data";
 dayjs.extend(relativeTime);
 
 export interface CarDataOneProps {
@@ -209,6 +210,115 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
             </div>
         </div>
     );
+    return (
+        <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
+            <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
+                {year} {make} {model}
+            </div>
+            <div className="info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4">
+                <div className="info-left-marker tw-w-[300px]">
+                    <div className="tw-flex">
+                        <div>
+                            <Image
+                                src={DollarIcon}
+                                width={20}
+                                height={20}
+                                alt="dollar"
+                                className="tw-w-5 tw-h-5  tw-mr-2"
+                            />
+                        </div>
+                        <div className="tw-opacity-80 tw-flex">
+                            Current Bid:
+                            <span className="tw-text-[#49C742] tw-font-bold tw-ml-2">{`$ ${String(
+                                current_bid
+                            )}`}</span>
+                            <span className="tw-block md:tw-hidden tw-ml-2">{`(${bids_num} bids)`}</span>
+                        </div>
+                    </div>
+                    <div className="tw-flex tw-mt-0 md:tw-mt-1">
+                        <div>
+                            <Image
+                                src={CalendarIcon}
+                                width={20}
+                                height={20}
+                                alt="calendar"
+                                className="tw-w-5 tw-h-5  tw-mr-2"
+                            />
+                        </div>
+                        <span className="tw-opacity-80">
+                            Ending: <span className="tw-font-bold">{ending_date}</span>
+                        </span>
+                    </div>
+                </div>
+                <div className="right-section-marker">
+                    <div className="top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between">
+                        <div className="tw-w-[160px] tw-hidden md:tw-flex">
+                            <div>
+                                <Image
+                                    src={HashtagIcon}
+                                    width={20}
+                                    height={20}
+                                    alt="calendar"
+                                    className="tw-w-5 tw-h-5  tw-mr-2"
+                                />
+                            </div>
+                            <span className="tw-opacity-80">
+                                Bids: <span className="tw-font-bold">{bids_num}</span>
+                            </span>
+                        </div>
+                        <div className="tw-flex">
+                            <div>
+                                <Image
+                                    src={HourGlassIcon}
+                                    width={20}
+                                    height={20}
+                                    alt="calendar"
+                                    className="tw-w-5 tw-h-5  tw-mr-2"
+                                />
+                            </div>
+                            <span className="tw-opacity-80">
+                                Time Left:{" "}
+                                <span className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
+                        <div className="tw-flex  tw-w-[160px]">
+                            <div>
+                                <Image
+                                    src={PlayersIcon}
+                                    width={20}
+                                    height={20}
+                                    alt="calendar"
+                                    className="tw-w-5 tw-h-5  tw-mr-2"
+                                />
+                            </div>
+                            <span className="tw-opacity-80">
+                                Players: <span className="tw-font-bold ">{players_num}</span>
+                            </span>
+                        </div>
+                        <div className="tw-flex">
+                            <div>
+                                <Image
+                                    src={PrizeIcon}
+                                    width={20}
+                                    height={20}
+                                    alt="calendar"
+                                    className="tw-w-5 tw-h-5 tw-mr-2"
+                                />
+                            </div>
+                            <span className="tw-opacity-80">
+                                Prize:{" "}
+                                <span className="tw-font-bold ">
+                                    ${pot ? new Intl.NumberFormat().format(pot || 0) : " --"}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default TitleContainer;
@@ -305,9 +415,7 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
                     />
                     <div className="tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
                         {images_list.length + 1}{" "}
-                        <span className="tw-hidden md:tw-block tw-ml-1">
-                            photos
-                        </span>
+                        <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
                         <span className="tw-block md:tw-hidden">+</span>
                     </div>
                 </div>
@@ -394,12 +502,8 @@ export const CommentsSection = () => {
                         alt="Bell"
                         className="tw-w-4 tw-h-4"
                     />
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Log in
-                    </div>
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Sign Up
-                    </div>
+                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">Log in</div>
+                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">Sign Up</div>
                 </div>
             </div>
             <div className="tw-flex tw-my-3">
@@ -482,12 +586,8 @@ export const CommentsCard = () => {
                 <div className="tw-flex tw-justify-between">
                     <div>
                         <span className="tw-font-bold">Jane Doe</span>
-                        <span className="tw-text-[#F2CA16] tw-ml-2">
-                            Seller
-                        </span>
-                        <span className="tw-opacity-50 tw-ml-2">
-                            14 hours ago
-                        </span>
+                        <span className="tw-text-[#F2CA16] tw-ml-2">Seller</span>
+                        <span className="tw-opacity-50 tw-ml-2">14 hours ago</span>
                     </div>
                     <Image
                         src={ThreeDots}
@@ -498,9 +598,7 @@ export const CommentsCard = () => {
                     />
                 </div>
                 <div className=" tw-my-3 tw-h-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-                    <span className="tw-text-[#42A0FF]">
-                        {commentsData[0].username}
-                    </span>
+                    <span className="tw-text-[#42A0FF]">{commentsData[0].username}</span>
                     {commentsData[0].text}
                 </div>
                 <div className="tw-flex tw-opacity-50">
@@ -586,7 +684,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                     </div>
                     <div className="tw-text-[14px]">{players_num} Players</div>
                     <div className="tw-relative tw-mt-4">
-                        {Array.isArray(wagers) && wagers.slice(0, 4).map((wager) => {
+                        {wagers.slice(0, 4).map((wager) => {
                             return (
                                 <div
                                     key={wager._id}
@@ -751,9 +849,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
                 <hr className="tw-border-white tw-opacity-5" />
                 <div className="tw-flex tw-justify-between tw-py-2">
                     <div className="tw-opacity-50">Make</div>
-                    <div className="tw-underline tw-underline-offset-4">
-                        {make}
-                    </div>
+                    <div className="tw-underline tw-underline-offset-4">{make}</div>
                 </div>
                 <hr className="tw-border-white tw-opacity-5" />
                 <div className="tw-flex tw-justify-between tw-py-2">
@@ -825,6 +921,20 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
 };
 
 export const GamesYouMightLike = () => {
+    const [gamesYouMightLike, setGamesYouMightLike] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const gamesYouMightLikeData = await sortByMostExpensive();
+                setGamesYouMightLike(gamesYouMightLikeData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className="section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-8 md:tw-mt-16">
             <header className="tw-max-w-[1312px]">
@@ -848,16 +958,22 @@ export const GamesYouMightLike = () => {
             <section className="tw-overflow-hidden">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {gamesYouMightLike.map((auction: any, index: any) => (
+                            <TimerProvider key={index} deadline={auction.deadline}>
+                                <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                    <Card
+                                        image={auction.image}
+                                        year={auction.year}
+                                        make={auction.make}
+                                        model={auction.model}
+                                        description={auction.description}
+                                        deadline={auction.deadline}
+                                        auction_id={auction.auction_id}
+                                        price={auction.price}
+                                    />
+                                </div>
+                            </TimerProvider>
+                        ))}
                     </div>
                 </div>
             </section>
