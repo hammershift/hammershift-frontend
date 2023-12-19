@@ -7,6 +7,7 @@ import { GamesCard } from '@/app/components/card';
 import { useParams } from 'next/navigation';
 const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
 import { useRouter } from 'next/navigation';
+import { set } from 'mongoose';
 
 const filtersInitialState = {
     make: ['All'],
@@ -16,41 +17,79 @@ const filtersInitialState = {
     sort: 'Newly Listed',
 };
 
+type Filter = {
+    make?: string | string[];
+    category?: string | string[];
+    location?: string | string[];
+    era?: string | string[];
+    sort?: string;
+    limit?: number;
+};
+
 const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }) => {
-    const [filters, setFilters] = useState(filtersInitialState);
+    const [filters, setFilters] = useState<Filter>({});
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
-
     const router = useRouter();
 
     console.log(searchParams);
 
-
+    const fetchData = async (filter: any) => {
+        setLoading(true);
+        try {
+            const filterWithLimit: Filter = { ...filter, limit: loadMore };
+            const res = await getCarsWithFilter(filterWithLimit);
+            if (res) {
+                setLoading(false);
+                setTotalAuctions(res.total);
+                setListing(res.cars);
+            } else {
+                setLoading(false);
+                console.log('cannot fetch car data');
+            }
+        } catch (e) {
+            console.log({ error: e });
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const res = await getCars({ limit: 21 });
-                if (res) {
-
-                    setLoading(false);
-                    setTotalAuctions(res.total);
-                    setListing(res.cars);
-                } else {
-                    setLoading(false);
-                    console.log('cannot fetch car data');
-                }
-            } catch (e) {
-                console.log({ error: e });
-            }
-        };
-        if (!searchParams) {
-            fetchData();
+        if (searchParams) {
+            fetchData(searchParams);
+            setFilters({ ...filters, ...searchParams });
+        } else {
+            fetchData(filtersInitialState)
+            setFilters(filtersInitialState);
         }
-    }, []);
+    }, [])
+
+    useEffect(() => {
+        console.log("filters", filters);
+    }, [filters])
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         setLoading(true);
+    //         try {
+    //             const res = await getCars({ limit: 21 });
+    //             if (res) {
+
+    //                 setLoading(false);
+    //                 setTotalAuctions(res.total);
+    //                 setListing(res.cars);
+    //             } else {
+    //                 setLoading(false);
+    //                 console.log('cannot fetch car data');
+    //             }
+    //         } catch (e) {
+    //             console.log({ error: e });
+    //         }
+    //     };
+    //     if (!searchParams) {
+    //         fetchData();
+    //     }
+    // }, []);
 
     //adds 21 to loadMore when button is clicked
     const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -94,9 +133,8 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
                 <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                     <div className=' tw-w-full 2xl:tw-w-[1312px] '>
                         {
-                            !loading
-                                ? <AuctionsList listing={listing} />
-                                : <div className='tw-text-center'>Loading... </div>
+                            listing.length > 0
+                            && <AuctionsList listing={listing} />
                         }
                     </div>
                 </section>

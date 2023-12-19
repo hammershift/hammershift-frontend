@@ -208,8 +208,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
 export default FiltersAndSort
 
 // function to add value to filters. This is used in all 4 dropdowns
-const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>, router: any) => {
-
+const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
     setFilters(prevFilters => {
         if (value === "All") {
             return {
@@ -234,62 +233,7 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
             };
         }
     });
-
-    const queries = Object.entries(filters)
-        .map(([key, value]) => {
-            if (Array.isArray(value)) {
-                // Handle array values, for example, joining them with commas
-                return `${key}=${value
-                    .map((item) => encodeURIComponent(item))
-                    .join("$")}`;
-            } else {
-                // Handle single values
-                return `${key}=${encodeURIComponent(value as string)}`;
-            }
-        })
-        .join("&");
-    console.log("Filter Queries:", queries);
-
-    router.push("/auctions/" + queries)
-
-
 }
-
-// const handleFiltersClick = () => {
-//     const filtersList: any = {
-//         "make": [
-//             "All", "BMW"
-//         ],
-//         "category": [
-//             "Sedans", "Pickup Trucks"
-//         ],
-//         "era": [
-//             "All"
-//         ],
-//         "location": [
-//             "All"
-//         ],
-//         "sort": "Newly Listed"
-//     }
-
-//     const queries = Object.entries(filtersList)
-//         .map(([key, value]) => {
-//             if (Array.isArray(value)) {
-//                 // Handle array values, for example, joining them with commas
-//                 return `${key}=${value
-//                     .map((item) => encodeURIComponent(item))
-//                     .join("$")}`;
-//             } else {
-//                 // Handle single values
-//                 return `${key}=${encodeURIComponent(value as string)}`;
-//             }
-//         })
-//         .join("&");
-//     console.log(queries);
-
-// }
-// handleFiltersClick();
-
 
 
 
@@ -327,19 +271,22 @@ interface FiltersContentProps {
 }
 const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
 
-    const router = useRouter();
+
 
     return (
         <div className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
             {
                 MakeDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "make", filters, setFilters, router)}>
+                        <div onClick={() => addToFilters(value, "make", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${(Array.isArray(filters['make']) ? filters['make'].includes(value) : filters['make'] === value)
+                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                    : "tw-bg-white/5 tw-border-white/10"
+                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity `} />
                             {
-                                filters['make'].includes(value) &&
+                                (Array.isArray(filters['make']) ? filters['make'].includes(value) : filters['make'] === value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
@@ -373,19 +320,22 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 
 
 const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-    const router = useRouter();
+
 
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 CategoryDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "category", filters, setFilters, router)}>
+                        <div onClick={() => addToFilters(value, "category", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${filters['category'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${(Array.isArray(filters['category']) ? filters['category'].includes(value) : filters['category'] === value)
+                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                    : "tw-bg-white/5 tw-border-white/10"
+                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                filters['category'].includes(value) &&
+                                (Array.isArray(filters['category']) ? filters['category'].includes(value) : filters['category'] === value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
@@ -417,19 +367,22 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =>
 
 
 const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-    const router = useRouter();
+
 
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 EraDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "era", filters, setFilters, router)}>
+                        <div onClick={() => addToFilters(value, "era", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${filters['era'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${(Array.isArray(filters['era']) ? filters['era'].includes(value) : filters['era'] === value)
+                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                    : "tw-bg-white/5 tw-border-white/10"
+                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                filters['era'].includes(value) &&
+                                (Array.isArray(filters['era']) ? filters['era'].includes(value) : filters['era'] === value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
@@ -457,19 +410,22 @@ const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 }
 
 const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-    const router = useRouter();
+
 
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 LocationDropdownContent.map((value) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "location", filters, setFilters, router)}>
+                        <div onClick={() => addToFilters(value, "location", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${filters['location'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${(Array.isArray(filters['location']) ? filters['location'].includes(value) : filters['location'] === value)
+                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                    : "tw-bg-white/5 tw-border-white/10"
+                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                filters['location'].includes(value) &&
+                                (Array.isArray(filters['location']) ? filters['location'].includes(value) : filters['location'] === value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
