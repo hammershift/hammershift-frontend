@@ -8,7 +8,14 @@ import Footer from "./components/footer";
 import Subscribe from "./components/subscribe";
 import Image from "next/image";
 import { TimerProvider, useTimer } from "./_context/TimerContext";
-import { getCars, getCarsWithFilter } from "@/lib/data";
+import {
+    getCars,
+    getCarsWithFilter,
+    sortByMostBids,
+    sortByMostExpensive,
+    sortByNewGames,
+    sortByTrending,
+} from "@/lib/data";
 
 import LiveGamesIcon from "../../public/images/currency-dollar-circle.svg";
 import ArrowRight from "../../public/images/arrow-right.svg";
@@ -67,25 +74,35 @@ interface LiveGamesProps {
     carData: CarData[];
 }
 
+interface MostBids {
+    id: string;
+    image: string;
+    year: string;
+    make: string;
+    model: string;
+    description: string;
+    deadline: Date;
+    auction_id: string;
+    price: number;
+}
+
 const Homepage = () => {
     const [carData, setCarData] = useState<CarData[]>([]);
 
-    const fetchData = async () => {
-        try {
-            const data = await getCarsWithFilter({ limit: 5 });
-
-            if (data && "cars" in data) {
-                console.log(data);
-                setCarData(data.cars);
-            } else {
-                console.error("Unexpected data structure:", data);
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
-
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getCarsWithFilter({ limit: 5 });
+
+                if (data && "cars" in data) {
+                    setCarData(data.cars);
+                } else {
+                    console.error("Unexpected data structure:", data);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
         fetchData();
     }, []);
 
@@ -211,9 +228,7 @@ const SlideOne = () => {
     return (
         <div className="tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between tw-h-[280px] tw-w-full sm:tw-items-center tw-overflow-hidden">
             <div className="tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-4 lg:tw-py-8 tw-px-6 sm:tw-px-8 tw-z-[1]">
-                <div className="tw-text-xs tw-text-[#F2CA16] tw-pb-2">
-                    NEW PLAYERS
-                </div>
+                <div className="tw-text-xs tw-text-[#F2CA16] tw-pb-2">NEW PLAYERS</div>
                 <div className="tw-font-euro tw-text-[32px] tw-w-[280px] md:tw-w-4/6 md:tw-text-[40px] tw-leading-none">
                     100 WELCOME <br />
                     CREDITS
@@ -275,10 +290,7 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
             </header>
             <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto xl:tw-overflow-visible tw-gap-4 sm:tw-gap-8 xl:tw-gap-0 xl:tw-justify-between tw-mt-8">
                 {carData.map((auction, index) => (
-                    <TimerProvider
-                        key={auction.auction_id}
-                        deadline={auction.deadline}
-                    >
+                    <TimerProvider key={auction.auction_id} deadline={auction.deadline}>
                         <LiveGamesCard
                             id={auction.id}
                             image={auction.image}
@@ -502,17 +514,12 @@ const TeamBattles = () => {
                                 alt="dollar"
                                 className="tw-w-[52px] tw-h-[52px] "
                             />
-                            <div className="tw-font-bold tw-text-[18px]">
-                                Team A
-                            </div>
+                            <div className="tw-font-bold tw-text-[18px]">Team A</div>
                             <div className="tw-text-[14px]">11 Players</div>
                             <div className="tw-relative tw-mt-4">
                                 {teamPlayers.map((player) => {
                                     return (
-                                        <div
-                                            key={player.id}
-                                            className="tw-mb-4 tw-flex"
-                                        >
+                                        <div key={player.id} className="tw-mb-4 tw-flex">
                                             <Image
                                                 src={player.avatar}
                                                 width={40}
@@ -521,9 +528,7 @@ const TeamBattles = () => {
                                                 className="tw-w-[40px] tw-h-[40px] tw-mr-4"
                                             />
                                             <div className="tw-text-sm ">
-                                                <div className="tw-font-bold">
-                                                    {player.amount}
-                                                </div>
+                                                <div className="tw-font-bold">{player.amount}</div>
                                                 <div>{player.username}</div>
                                             </div>
                                         </div>
@@ -557,17 +562,12 @@ const TeamBattles = () => {
                                 alt="dollar"
                                 className="tw-w-[52px] tw-h-[52px] "
                             />
-                            <div className="tw-font-bold tw-text-[18px]">
-                                Team B
-                            </div>
+                            <div className="tw-font-bold tw-text-[18px]">Team B</div>
                             <div className="tw-text-[14px]">10 Players</div>
                             <div className="tw-relative tw-mt-4">
                                 {teamPlayers.map((player) => {
                                     return (
-                                        <div
-                                            key={player.id}
-                                            className="tw-mb-4 tw-flex"
-                                        >
+                                        <div key={player.id} className="tw-mb-4 tw-flex">
                                             <Image
                                                 src={player.avatar}
                                                 width={40}
@@ -576,9 +576,7 @@ const TeamBattles = () => {
                                                 className="tw-w-[40px] tw-h-[40px] tw-mr-4"
                                             />
                                             <div className="tw-text-sm ">
-                                                <div className="tw-font-bold">
-                                                    {player.amount}
-                                                </div>
+                                                <div className="tw-font-bold">{player.amount}</div>
                                                 <div>{player.username}</div>
                                             </div>
                                         </div>
@@ -671,17 +669,15 @@ const NewEraWagering = () => {
                 </div>
                 <div>
                     <p className="tw-mt-8 lg:tw-mt-0">
-                        Excepteur sint obcaecat cupiditat non proident culpa. At
-                        nos hinc posthac, sitientis piros Afros. Cum sociis
-                        natoque penatibus et magnis dis parturient. Quam diu
-                        etiam furor iste tuus nos eludet?
+                        Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc
+                        posthac, sitientis piros Afros. Cum sociis natoque penatibus et
+                        magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?
                         <br />
                         <br />
-                        Quam temere in vitiis, legem sancimus haerentia.
-                        Phasellus laoreet lorem vel dolor tempus vehicula. Qui
-                        ipsorum lingua Celtae, nostra Galli appellantur.
-                        Curabitur blandit tempus ardua ridiculus sed magna. Tu
-                        quoque, Brute, fili mi, nihil timor populi, nihil! Donec
+                        Quam temere in vitiis, legem sancimus haerentia. Phasellus laoreet
+                        lorem vel dolor tempus vehicula. Qui ipsorum lingua Celtae, nostra
+                        Galli appellantur. Curabitur blandit tempus ardua ridiculus sed
+                        magna. Tu quoque, Brute, fili mi, nihil timor populi, nihil! Donec
                         sed odio operae, eu vulputate felis rhoncus.
                     </p>
                     <div className="tw-mt-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-start">
@@ -706,8 +702,8 @@ const NewEraWagering = () => {
                         Guess the Price
                     </h1>
                     <p>
-                        Wager on the car auction and guess the final hammer
-                        price. Closest player wins the prize.
+                        Wager on the car auction and guess the final hammer price. Closest
+                        player wins the prize.
                     </p>
                     <button className="btn-yellow tw-mt-4">View games</button>
                 </div>
@@ -719,12 +715,10 @@ const NewEraWagering = () => {
                         alt="dollar"
                         className="tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px]"
                     />
-                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">
-                        Team Battles
-                    </h1>
+                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">Team Battles</h1>
                     <p>
-                        Pick between teams betting on the same car. Player in
-                        the team with the closest wager wins the prize.
+                        Pick between teams betting on the same car. Player in the team with
+                        the closest wager wins the prize.
                     </p>
                     <button className="btn-yellow  tw-mt-4">Pick a team</button>
                 </div>
@@ -736,16 +730,12 @@ const NewEraWagering = () => {
                         alt="dollar"
                         className="tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px]"
                     />
-                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">
-                        Tournaments
-                    </h1>
+                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">Tournaments</h1>
                     <p>
-                        Get more points the closer you are to the hammer price
-                        of a curated set of car auctions.
+                        Get more points the closer you are to the hammer price of a curated
+                        set of car auctions.
                     </p>
-                    <button className="btn-yellow tw-mt-4">
-                        Buy-in for $100
-                    </button>
+                    <button className="btn-yellow tw-mt-4">Buy-in for $100</button>
                 </div>
             </div>
         </div>
@@ -998,18 +988,16 @@ const SkillStrategyAndStakes = () => {
 
                 <section>
                     <p className="tw-max-w-[752px] tw-my-12">
-                        The excitement of sports betting meets the thrill of car
-                        auctions. Car enthusiasts, put your skills to the test
-                        by predicting the outcomes of car auctions with
-                        unmatched precision. Combine knowledge, strategy, and a
-                        keen eye for value as the gavel drops and the bidding
-                        wars ignite. Join the action by placing wagers on the
-                        final price the vehicles will go for, which vehicles
-                        will command the highest bids, achieve record-breaking
-                        prices, or even which ones will surprise the crowd with
-                        unexpected deals. Sharpen your instincts, analyze market
-                        trends, and immerse yourself in the world of rare
-                        classics, luxury exotics, and iconic muscle cars.
+                        The excitement of sports betting meets the thrill of car auctions.
+                        Car enthusiasts, put your skills to the test by predicting the
+                        outcomes of car auctions with unmatched precision. Combine
+                        knowledge, strategy, and a keen eye for value as the gavel drops and
+                        the bidding wars ignite. Join the action by placing wagers on the
+                        final price the vehicles will go for, which vehicles will command
+                        the highest bids, achieve record-breaking prices, or even which ones
+                        will surprise the crowd with unexpected deals. Sharpen your
+                        instincts, analyze market trends, and immerse yourself in the world
+                        of rare classics, luxury exotics, and iconic muscle cars.
                     </p>
                     <button className="btn-yellow tw-w-full sm:tw-w-auto">
                         Join and get 100 credits
@@ -1021,6 +1009,21 @@ const SkillStrategyAndStakes = () => {
 };
 
 const NewGames = () => {
+    const [newlyListed, setNewlyListed] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const newGamesData = await sortByNewGames();
+                setNewlyListed(newGamesData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const timerValues = useTimer();
     return (
         <div className="section-container tw-py-8 sm:tw-py-12">
             <header className="tw-max-w-[1312px]">
@@ -1044,16 +1047,34 @@ const NewGames = () => {
             <section className="tw-overflow-x-auto tw-w-full">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {newlyListed.map((auctions, index) => {
+                            const {
+                                image,
+                                year,
+                                make,
+                                model,
+                                description,
+                                deadline,
+                                auction_id,
+                                price,
+                            } = auctions;
+                            return (
+                                <TimerProvider key={index} deadline={deadline}>
+                                    <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                        <Card
+                                            image={image}
+                                            year={year}
+                                            make={make}
+                                            model={model}
+                                            description={description}
+                                            deadline={deadline}
+                                            auction_id={auction_id}
+                                            price={price}
+                                        />
+                                    </div>
+                                </TimerProvider>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -1062,6 +1083,19 @@ const NewGames = () => {
 };
 
 const WhatsTrending = () => {
+    const [trending, setTrending] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const trendingCarsData = await sortByTrending();
+                setTrending(trendingCarsData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
     return (
         <div className="section-container tw-py-8 sm:tw-py-12">
             <header className="tw-max-w-[1312px]">
@@ -1083,16 +1117,34 @@ const WhatsTrending = () => {
             <section className="tw-overflow-x-auto tw-w-full">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {trending.map((auctions, index) => {
+                            const {
+                                image,
+                                year,
+                                make,
+                                model,
+                                description,
+                                deadline,
+                                auction_id,
+                                price,
+                            } = auctions;
+                            return (
+                                <TimerProvider key={index} deadline={deadline}>
+                                    <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                        <Card
+                                            image={image}
+                                            year={year}
+                                            make={make}
+                                            model={model}
+                                            description={description}
+                                            deadline={deadline}
+                                            auction_id={auction_id}
+                                            price={price}
+                                        />
+                                    </div>
+                                </TimerProvider>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -1101,6 +1153,19 @@ const WhatsTrending = () => {
 };
 
 const MostExpensiveCars = () => {
+    const [mostExpensive, setMostExpensive] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const mostExpensiveData = await sortByMostExpensive();
+                setMostExpensive(mostExpensiveData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
     return (
         <div className="section-container tw-py-8 sm:tw-py-12">
             <header className="tw-max-w-[1312px]">
@@ -1124,16 +1189,34 @@ const MostExpensiveCars = () => {
             <section className="tw-overflow-x-auto tw-w-full">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {mostExpensive.map((auctions, index) => {
+                            const {
+                                image,
+                                year,
+                                make,
+                                model,
+                                description,
+                                deadline,
+                                auction_id,
+                                price,
+                            } = auctions;
+                            return (
+                                <TimerProvider key={index} deadline={deadline}>
+                                    <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                        <Card
+                                            image={image}
+                                            year={year}
+                                            make={make}
+                                            model={model}
+                                            description={description}
+                                            deadline={deadline}
+                                            auction_id={auction_id}
+                                            price={price}
+                                        />
+                                    </div>
+                                </TimerProvider>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -1142,6 +1225,20 @@ const MostExpensiveCars = () => {
 };
 
 const MostBids = () => {
+    const [mostBids, setMostBids] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const mostBidsData = await sortByMostBids();
+                setMostBids(mostBidsData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className="section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16">
             <header className="tw-max-w-[1312px]">
@@ -1165,16 +1262,34 @@ const MostBids = () => {
             <section className="tw-overflow-x-auto tw-w-full">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {mostBids.map((auctions, index) => {
+                            const {
+                                image,
+                                year,
+                                make,
+                                model,
+                                description,
+                                deadline,
+                                auction_id,
+                                price,
+                            } = auctions;
+                            return (
+                                <TimerProvider key={index} deadline={deadline}>
+                                    <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                        <Card
+                                            image={image}
+                                            year={year}
+                                            make={make}
+                                            model={model}
+                                            description={description}
+                                            deadline={deadline}
+                                            auction_id={auction_id}
+                                            price={price}
+                                        />
+                                    </div>
+                                </TimerProvider>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
