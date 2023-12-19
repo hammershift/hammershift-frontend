@@ -829,7 +829,7 @@ const WagerByCatergory = () => {
                 </header>
                 <section>
                     <div className="first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
-                        <Link href={"/auctions/category=Sedans"}>
+                        <Link href={"/auctions?category=Sedans"}>
                             <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
                                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
                                     <div className="tw-text-[30px] tw-font-bold tw-x-auto">
@@ -855,7 +855,7 @@ const WagerByCatergory = () => {
                                 </div>
                             </div>
                         </Link>
-                        <Link href={"/auctions/category=SUVs"}>
+                        <Link href={"/auctions?category=SUVs"}>
                             <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
                                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
                                     <div className="tw-text-[30px] tw-font-bold tw-x-auto">
@@ -884,7 +884,7 @@ const WagerByCatergory = () => {
                     </div>
 
                     <div className="second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6">
-                        <Link href={"/auctions/category=EVs%20and%20Hybrids"}>
+                        <Link href={"/auctions?category=EVs%20and%20Hybrids"}>
                             <div className="tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
                                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
                                     <div className="tw-text-[30px] tw-font-bold tw-x-auto">
@@ -910,7 +910,7 @@ const WagerByCatergory = () => {
                                 </div>
                             </div>
                         </Link>
-                        <Link href={"/auctions/category=Luxury%20Cars"}>
+                        <Link href={"/auctions?category=Luxury%20Cars"}>
                             <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
                                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
                                     <div className="tw-text-[30px] tw-font-bold tw-x-auto">
@@ -936,7 +936,7 @@ const WagerByCatergory = () => {
                                 </div>
                             </div>
                         </Link>
-                        <Link href={"/auctions/category=Pickup%20Trucks"}>
+                        <Link href={"/auctions?category=Pickup%20Trucks"}>
                             <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
                                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
                                     <div className="tw-text-[30px] tw-font-bold tw-x-auto">

@@ -4,7 +4,9 @@ import { getCars, getCarsWithFilter } from '@/lib/data';
 import FiltersAndSort from '@/app/components/filter_and_sort';
 import { TimerProvider } from '@/app/_context/TimerContext';
 import { GamesCard } from '@/app/components/card';
+import { useParams } from 'next/navigation';
 const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
+import { useRouter } from 'next/navigation';
 
 const filtersInitialState = {
     make: ['All'],
@@ -14,12 +16,18 @@ const filtersInitialState = {
     sort: 'Newly Listed',
 };
 
-const AuctionListingPage = () => {
+const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }) => {
     const [filters, setFilters] = useState(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
+
+    const router = useRouter();
+
+    console.log(searchParams);
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,10 +35,10 @@ const AuctionListingPage = () => {
             try {
                 const res = await getCars({ limit: 21 });
                 if (res) {
-                    const data = await res.json();
+
                     setLoading(false);
-                    setTotalAuctions(data.total);
-                    setListing(data.cars);
+                    setTotalAuctions(res.total);
+                    setListing(res.cars);
                 } else {
                     setLoading(false);
                     console.log('cannot fetch car data');
@@ -39,7 +47,9 @@ const AuctionListingPage = () => {
                 console.log({ error: e });
             }
         };
-        fetchData();
+        if (!searchParams) {
+            fetchData();
+        }
     }, []);
 
     //adds 21 to loadMore when button is clicked
@@ -84,7 +94,7 @@ const AuctionListingPage = () => {
                 <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                     <div className=' tw-w-full 2xl:tw-w-[1312px] '>
                         {
-                            loading
+                            !loading
                                 ? <AuctionsList listing={listing} />
                                 : <div className='tw-text-center'>Loading... </div>
                         }
