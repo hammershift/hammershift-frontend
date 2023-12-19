@@ -198,8 +198,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                     $
                                     {pot
                                         ? new Intl.NumberFormat().format(
-                                              pot || 0
-                                          )
+                                            pot || 0
+                                        )
                                         : " --"}
                                 </span>
                             </span>
@@ -586,7 +586,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                     </div>
                     <div className="tw-text-[14px]">{players_num} Players</div>
                     <div className="tw-relative tw-mt-4">
-                        {wagers.slice(0, 4).map((wager) => {
+                        {Array.isArray(wagers) && wagers.slice(0, 4).map((wager) => {
                             return (
                                 <div
                                     key={wager._id}
@@ -607,7 +607,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
                                                 {session?.user.id ===
-                                                wager.user._id
+                                                    wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
