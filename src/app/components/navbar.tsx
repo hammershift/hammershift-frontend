@@ -138,6 +138,10 @@ const Navbar = () => {
         // setMenuIsOpen(false)
     };
 
+    const closeMenu = () => {
+        setMenuIsOpen(false);
+    };
+
     const { data: session } = useSession();
     const isLoggedIn = !!session;
 
@@ -423,6 +427,7 @@ export default Navbar;
 interface DropdownMenuProps {
     isLoggedIn: boolean;
     searchBoxDropDown: boolean;
+    closeMenu: () => void;
     setSearchBoxDropDown: React.Dispatch<React.SetStateAction<boolean>>;
     searchedData: SearchDatas[];
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -440,14 +445,17 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     searchBoxDropDown,
     setSearchBoxDropDown,
     handleInputClick,
+    closeMenu,
 }) => {
+    const router = useRouter();
+
     return (
         <div className="slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
             <div className="tw-relative">
                 <form
                     autoComplete="off"
                     onSubmit={handleSubmit}
-                    className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8"
+                    className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8 tw-mb-2"
                 >
                     <Image
                         src={MagnifyingGlass}
@@ -475,29 +483,56 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     />
                 )}
             </div>
-            <div className="tw-flex tw-pt-4">
-                <Image
-                    src={WatchlistIcon}
-                    width={24}
-                    height={24}
-                    alt="watchlist"
-                    className="tw-w-[24px] tw-h-[24px]"
-                />
-                <div className="tw-ml-4">MY WATCHLIST</div>
-            </div>
-            <div className="tw-flex tw-pt-4">
-                <Image
-                    src={WagersIcon}
-                    width={24}
-                    height={24}
-                    alt="watchlist"
-                    className="tw-w-[24px] tw-h-[24px]"
-                />
-                <div className="tw-ml-4">MY WAGERS</div>
-            </div>
+            {!isLoggedIn ? (
+                <>
+                    <Link
+                        href="/discover"
+                        onClick={closeMenu}
+                        className="tw-flex tw-py-2"
+                    >
+                        <div>DISCOVER</div>
+                    </Link>
+                    <Link
+                        href="/auctions"
+                        onClick={closeMenu}
+                        className="tw-flex tw-py-2"
+                    >
+                        <div>AUCTIONS</div>
+                    </Link>
+                </>
+            ) : (
+                <>
+                    <div className="tw-flex tw-pt-4">
+                        <Image
+                            src={WatchlistIcon}
+                            width={24}
+                            height={24}
+                            alt="watchlist"
+                            className="tw-w-[24px] tw-h-[24px]"
+                        />
+                        <div className="tw-ml-4">MY WATCHLIST</div>
+                    </div>
+                    <div className="tw-flex tw-pt-4">
+                        <Image
+                            src={WagersIcon}
+                            width={24}
+                            height={24}
+                            alt="watchlist"
+                            className="tw-w-[24px] tw-h-[24px]"
+                        />
+                        <div className="tw-ml-4">MY WAGERS</div>
+                    </div>
+                </>
+            )}
             <div className="tw-mt-4">
                 {!isLoggedIn && (
-                    <button className="btn-white tw-w-full">
+                    <button
+                        onClick={() => {
+                            router.push("/create_account");
+                            closeMenu();
+                        }}
+                        className="btn-white tw-w-full"
+                    >
                         CREATE ACCOUNT
                     </button>
                 )}
