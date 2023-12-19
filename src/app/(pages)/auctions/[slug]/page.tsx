@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import { getCars, getCarsWithFilter } from '@/lib/data';
 import FiltersAndSort from '@/app/components/filter_and_sort';
 import { TimerProvider } from '@/app/_context/TimerContext';
@@ -13,13 +13,21 @@ const filtersInitialState = {
     location: ['All'],
     sort: 'Newly Listed',
 };
+export type filtersType = {
+    make: string[];
+    category: string[];
+    era: string[];
+    location: string[];
+    sort: string;
+}
 
 const AuctionsWithFilter = ({ params }: { params: any }) => {
-    const [filters, setFilters] = useState(filtersInitialState);
+    const [filters, setFilters] = useState<filtersType>(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
+
 
     const { slug } = params;
 
@@ -35,39 +43,34 @@ const AuctionsWithFilter = ({ params }: { params: any }) => {
             });
 
             // Create the filters object
-            const filtersList: { make?: string[]; category?: string[] } = {
-                make: parsedFilters['make'],
-                category: parsedFilters['category']
-            };
+            const filtersList: { make?: string[]; category?: string[] } = {};
+
+            if (parsedFilters['make']) {
+                filtersList.make = parsedFilters['make'];
+            }
+
+            if (parsedFilters['category']) {
+                filtersList.category = parsedFilters['category'];
+            }
+
+            if (parsedFilters['era']) {
+                filtersList.category = parsedFilters['era'];
+            }
+
+            if (parsedFilters['location']) {
+                filtersList.category = parsedFilters['location'];
+            }
+
+            if (parsedFilters['sort']) {
+                filtersList.category = parsedFilters['sort'];
+            }
             // Print the result
-            console.log("Filters:", filtersList);
-            // setFilters(filtersList);
+            console.log("Filters List:", filtersList);
+            setFilters(prevFilters => ({ ...prevFilters, ...filtersList }));
         }
         decodeSlug(slug);
-    }, [slug]);
-
-
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const res = await getCars({ limit: 21 });
-                if (res) {
-                    const data = await res.json();
-                    setLoading(false);
-                    setTotalAuctions(data.total);
-                    setListing(data.cars);
-                } else {
-                    setLoading(false);
-                    console.log('cannot fetch car data');
-                }
-            } catch (e) {
-                console.log({ error: e });
-            }
-        };
-        fetchData();
     }, []);
+
 
     //adds 21 to loadMore when button is clicked
     const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -95,23 +98,34 @@ const AuctionsWithFilter = ({ params }: { params: any }) => {
                 if (res) {
                     setTotalAuctions(res.total);
                     setListing(res.cars);
+                    setLoading(false);
+                    console.log(filters);
                 }
             } catch (err) {
+                setLoading(false);
                 console.error(err);
             }
         };
-
-        fetchData();
+        if (filters !== filtersInitialState) {
+            fetchData();
+        }
     }, [filters, loadMore]);
+
+
+
+    useEffect(() => {
+        console.log('filters:', filters);
+        console.log('listing:', listing);
+    }, [filters, listing]);
 
     return (
         <div className='tw-flex tw-flex-col tw-items-center'>
-            <FiltersAndSort filters={filters} setFilters={setFilters} />
+            <FiltersAndSort filters={filters || filtersInitialState} setFilters={setFilters} />
             <div className='tw-pb-16 '>
                 <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                     <div className=' tw-w-full 2xl:tw-w-[1312px] '>
                         {
-                            loading
+                            !loading
                                 ? <AuctionsList listing={listing} />
                                 : <div className='tw-text-center'>Loading... </div>
                         }
