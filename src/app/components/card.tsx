@@ -157,9 +157,8 @@ const Card: React.FC<any> = ({
                     <div
                       key={item.id}
                       style={{
-                        transform: `translate(${
-                          -10 + -10 * cardData.players.slice(1, 5).indexOf(item)
-                        }px ,0)`,
+                        transform: `translate(${-10 + -10 * cardData.players.slice(1, 5).indexOf(item)
+                          }px ,0)`,
                       }}
                     >
                       <Image
@@ -175,9 +174,8 @@ const Card: React.FC<any> = ({
                 })}
               </div>
             </div>
-            <div className="tw-ml-1 tw--translate-x-8 sm:tw-block tw-hidden">{`and ${
-              cardData.players.length - 5
-            } more players to join`}</div>
+            <div className="tw-ml-1 tw--translate-x-8 sm:tw-block tw-hidden">{`and ${cardData.players.length - 5
+              } more players to join`}</div>
             {/* avatar images - hidden for screens bigger than sm */}
             <div className="tw-flex tw-w-auto sm:tw-hidden tw-block">
               <div className="tw-flex">
@@ -186,9 +184,8 @@ const Card: React.FC<any> = ({
                     <div
                       key={item.id}
                       style={{
-                        transform: `translate(${
-                          -10 + -10 * cardData.players.slice(1, 5).indexOf(item)
-                        }px ,0)`,
+                        transform: `translate(${-10 + -10 * cardData.players.slice(1, 5).indexOf(item)
+                          }px ,0)`,
                       }}
                     >
                       <Image
@@ -209,12 +206,12 @@ const Card: React.FC<any> = ({
         </div>
         <button
           className="btn-yellow-thin tw-w-full sm:tw-w-auto"
-          onClick={() => router.push(`/auctions/car_view_page/67232853`)}
+          onClick={() => router.push(`/auctions/car_view_page/${auction_id}`)}
         >
           Play Game
         </button>
       </div>
-    </TimerProvider>
+    </TimerProvider >
   );
 };
 
@@ -359,9 +356,8 @@ export const GamesCard = (props: any) => {
                       <div
                         key={item.id}
                         style={{
-                          transform: `translate(${
-                            -10 + -10 * players.slice(1, 5).indexOf(item)
-                          }px ,0)`,
+                          transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)
+                            }px ,0)`,
                         }}
                       >
                         <Image
@@ -377,9 +373,8 @@ export const GamesCard = (props: any) => {
                   })}
                 </div>
               </div>
-              <div className="tw-ml-1 tw--translate-x-8 xl:tw-block tw-hidden">{`and ${
-                players.length - 5
-              } more players to join`}</div>
+              <div className="tw-ml-1 tw--translate-x-8 xl:tw-block tw-hidden">{`and ${players.length - 5
+                } more players to join`}</div>
               {/* avatar images - hidden for screens bigger than sm */}
               <div className="tw-flex tw-w-auto xl:tw-hidden tw-block">
                 <div className="tw-flex">
@@ -388,9 +383,8 @@ export const GamesCard = (props: any) => {
                       <div
                         key={item.id}
                         style={{
-                          transform: `translate(${
-                            -10 + -10 * players.slice(1, 5).indexOf(item)
-                          }px ,0)`,
+                          transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)
+                            }px ,0)`,
                         }}
                       >
                         <Image
