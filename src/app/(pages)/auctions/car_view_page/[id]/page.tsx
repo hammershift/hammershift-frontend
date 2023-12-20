@@ -101,28 +101,15 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     wagerAmount?: number | undefined;
   }
 
-  //   const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     switch (e.target.name) {
-  //       case 'price-guessed':
-  //         setWagerInputs({
-  //           ...wagerInputs,
-  //           priceGuessed: Number(e.target.value),
-  //         });
-  //         break;
-  //       case 'wager-amount':
-  //         setWagerInputs({
-  //           ...wagerInputs,
-  //           wagerAmount: Number(e.target.value),
-  //         });
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   };
-
   const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     switch (e.target.name) {
+      case 'price-guessed':
+        setWagerInputs({
+          ...wagerInputs,
+          priceGuessed: value,
+        });
+        break;
       case 'wager-amount':
         if (value <= 0) {
           // check for positive numbers
@@ -142,53 +129,18 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
           wagerAmount: value,
         });
         break;
+      default:
+        break;
     }
   };
-
-  //   const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>, sessionData: any) => {
-  //     e.preventDefault();
-  //     if (wagerInputs.wagerAmount) {
-  //       try {
-  //         // update Prize Pool
-  //         await addPrizePool({ pot: carData.pot + Math.floor(wagerInputs.wagerAmount * 0.88) }, urlPath.id);
-
-  //         // create Wager
-  //         const wagerResponse = await createWager({ ...wagerInputs, user: sessionData.user });
-  //         if (wagerResponse.ok) {
-  //           // deduct the wager amount from the wallet
-  //           const walletResponse = await fetch('/api/wallet', {
-  //             method: 'POST',
-  //             headers: { 'Content-Type': 'application/json' },
-  //             body: JSON.stringify({ wagerAmount: wagerInputs.wagerAmount }),
-  //           });
-
-  //           if (walletResponse.ok) {
-  //             // fetch updated wallet balance and update UI
-  //             const updatedWallet = await walletResponse.json();
-  //             console.log('Updated wallet balance:', updatedWallet.newBalance);
-  //           } else {
-  //             console.error('Failed to update wallet balance');
-  //           }
-  //         } else {
-  //           console.error('Failed to place wager');
-  //         }
-  //       } catch (error) {
-  //         console.error('Error in wager placement or wallet update:', error);
-  //       }
-  //     }
-
-  //     setToggleWagerModal(false);
-  //   };
 
   const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>, sessionData: any) => {
     e.preventDefault();
 
     // ensure wagerAmount is defined and is a number greater than zero
     const wagerAmount = wagerInputs.wagerAmount ?? 0;
-
-    // check if the defined wager amount is more than the wallet balance
     if (wagerAmount > walletBalance) {
-      console.log('Insufficient funds. Please top-up your wallet.');
+      console.log('Insufficient funds. Please top-up your wallet.'); // check if the defined wager amount is more than the wallet balance
       return;
     }
 
@@ -209,16 +161,13 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       });
 
       const walletData = await walletResponse.json();
-
-      // if the wallet update was not successful, log the error and stop
       if (!walletResponse.ok) {
-        console.error('Failed to update wallet balance:', walletData);
+        console.error('Failed to update wallet balance:', walletData); // if the wallet update was not successful, log the error and stop
         return;
       }
 
       // the wallet has been successfully updated, place the wager
       const wagerResponse = await createWager({ ...wagerInputs, wagerAmount, user: sessionData.user });
-
       if (!wagerResponse.ok) {
         console.error('Failed to place wager');
         return;

@@ -6,32 +6,53 @@ import { ObjectId } from 'mongodb';
 
 // export async function POST(req: NextRequest) {
 //   const session = await getServerSession(authOptions);
-//   console.log('Session:', session);
 //   if (!session) {
 //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
 //   }
 
-//   // extract additional profile information from the request body
 //   const { fullName, username, country, state, aboutMe } = await req.json();
 
-//   // validation
 //   if (!fullName || !username || !country || !state) {
 //     return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
 //   }
 
-//   // update or create the user's profile in the MongoDB database
 //   try {
 //     const client = await clientPromise;
 //     const db = client.db();
+//     const userId = new ObjectId(session.user.id);
 
-//     const result = await db.collection('users').updateOne({ email: session.user.email }, { $set: { fullName, username, country, state, aboutMe } }, { upsert: true });
-//     console.log('Database operation result:', result);
+//     // update the user's profile information
+//     await db.collection('users').updateOne(
+//       { _id: userId },
+//       {
+//         $set: { fullName, username, country, state, aboutMe },
+//       },
+//       { upsert: true }
+//     );
 
-//     if (result.upsertedCount > 0) {
-//       return NextResponse.json({ message: 'Profile created successfully' }, { status: 201 });
+//     let walletBalance: number;
+
+//     // ensure the user has a wallet balance
+//     const existingWallet = await db.collection('wallet').findOne({ userId });
+//     if (existingWallet) {
+//       walletBalance = existingWallet.balance;
 //     } else {
-//       return NextResponse.json({ message: 'Profile updated successfully' }, { status: 200 });
+//       // If the wallet does not exist, create one with a default balance
+//       const insertResult = await db.collection('wallet').insertOne({
+//         userId,
+//         balance: 100, // Default wallet balance
+//       });
+//       // Use the inserted ID and balance for the response
+//       walletBalance = 100; // default balance
 //     }
+
+//     return NextResponse.json(
+//       {
+//         message: 'Profile and Wallet updated successfully',
+//         walletBalance,
+//       },
+//       { status: 200 }
+//     );
 //   } catch (error) {
 //     console.error('Error during profile creation/update:', error);
 //     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
@@ -56,40 +77,29 @@ export async function POST(req: NextRequest) {
     const userId = new ObjectId(session.user.id);
 
     // update the user's profile information
-    await db.collection('users').updateOne(
+    const updatedUser = await db.collection('users').findOneAndUpdate(
       { _id: userId },
       {
         $set: { fullName, username, country, state, aboutMe },
       },
-      { upsert: true }
+      {
+        upsert: true,
+        returnDocument: 'after',
+      }
     );
 
-    let walletBalance: number;
+    // check if the wallet balance exists, if not, initialize it
+    const walletBalance = updatedUser.value?.balance ?? 100;
 
-    // Ensure the user has a wallet balance
-    const existingWallet = await db.collection('wallet').findOne({ userId });
-    if (existingWallet) {
-      walletBalance = existingWallet.balance;
-    } else {
-      // If the wallet does not exist, create one with a default balance
-      const insertResult = await db.collection('wallet').insertOne({
-        userId,
-        balance: 100, // Default wallet balance
-      });
-      // Use the inserted ID and balance for the response
-      walletBalance = 100; // Since we just created it with this balance
-    }
-
-    // Respond with a success message and include the wallet balance
     return NextResponse.json(
       {
-        message: 'Profile and Wallet updated successfully',
-        walletBalance, // Now walletBalance is correctly referenced
+        message: 'Profile updated successfully',
+        walletBalance,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error during profile creation/update:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error('Error during profile update:', error);
+    return NextResponse.json({ message: 'Server error during profile update' }, { status: 500 });
   }
 }
