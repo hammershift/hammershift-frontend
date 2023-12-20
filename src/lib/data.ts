@@ -173,6 +173,11 @@ export const addPrizePool = async (pot: AddPrizePoolProps, auction_id: string | 
 export const getMyWagers = async () => {
   const res = await fetch("/api/myWagers");
   const data = await res.json();
+  return data;
+}
 
+export const getMyWatchlist = async () => {
+  const res = await fetch("/api/myWatchlist");
+  const data = await res.json();
   return data;
 }
