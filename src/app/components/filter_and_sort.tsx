@@ -25,7 +25,7 @@ export type filtersProps = {
     sort: string
 }
 
-interface FiltersAndSortProps {
+export interface FiltersAndSortProps {
     filters: filtersProps;
     setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
