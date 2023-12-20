@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import Card from "../../components/card";
-import { useTimer } from "@/app/_context/TimerContext";
+import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 
 import CancelIcon from "../../../../public/images/x-icon.svg";
 import DollarIcon from "../../../../public/images/dollar.svg";
@@ -43,6 +43,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
+import { sortByMostExpensive, sortByNewGames } from "@/lib/data";
 import { BounceLoader } from "react-spinners";
 dayjs.extend(relativeTime);
 
@@ -905,6 +906,20 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
 };
 
 export const GamesYouMightLike = () => {
+    const [gamesYouMightLike, setGamesYouMightLike] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const gamesYouMightLikeData = await sortByMostExpensive();
+                setGamesYouMightLike(gamesYouMightLikeData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className="section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-8 md:tw-mt-16">
             <header className="tw-max-w-[1312px]">
@@ -928,16 +943,25 @@ export const GamesYouMightLike = () => {
             <section className="tw-overflow-hidden">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {gamesYouMightLike.map((auction: any, index: any) => (
+                            <TimerProvider
+                                key={index}
+                                deadline={auction.deadline}
+                            >
+                                <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                    <Card
+                                        image={auction.image}
+                                        year={auction.year}
+                                        make={auction.make}
+                                        model={auction.model}
+                                        description={auction.description}
+                                        deadline={auction.deadline}
+                                        auction_id={auction.auction_id}
+                                        price={auction.price}
+                                    />
+                                </div>
+                            </TimerProvider>
+                        ))}
                     </div>
                 </div>
             </section>

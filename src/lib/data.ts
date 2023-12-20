@@ -1,7 +1,7 @@
 export const getCarData = async (ID: string) => {
   try {
     const response = await fetch(`/api/cars?auction_id=${ID}`, {
-      cache: 'no-store', //dynamic rendering
+      cache: "no-store", //dynamic rendering
     });
 
     if (response.ok) {
@@ -34,24 +34,33 @@ export const getCarData = async (ID: string) => {
       };
       return car;
     } else {
-      console.log('failed to fetch cars');
+      console.log("failed to fetch cars");
     }
   } catch (err) {
     console.error(err);
   }
 };
 
-export const getCars = async ({ limit }: { limit: number }) => {
+export const getCars = async ({
+  limit,
+  mostBids = false,
+}: {
+  limit: number;
+  mostBids?: boolean;
+}) => {
   try {
-    const response = await fetch(`/api/cars/filter?completed=false&limit=${limit}`, {
-      cache: 'no-store', //dynamic rendering
-    });
+    const response = await fetch(
+      `/api/cars/filter?completed=false&limit=${limit}&mostBids=${mostBids}`,
+      {
+        cache: "no-store", //dynamic rendering
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();
       return data;
     } else {
-      console.error('Failed to fetch cars list!');
+      console.error("Failed to fetch cars list!");
     }
   } catch (err) {
     console.error(err);
@@ -71,17 +80,19 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
     .map(([key, value]) => {
       if (Array.isArray(value)) {
         // Handle array values, for example, joining them with commas
-        return `${key}=${value.map((item) => encodeURIComponent(item)).join('$')}`;
+        return `${key}=${value
+          .map((item) => encodeURIComponent(item))
+          .join("$")}`;
       } else {
         // Handle single values
         return `${key}=${encodeURIComponent(value)}`;
       }
     })
-    .join('&');
+    .join("&");
 
   try {
     const response = await fetch(`/api/cars/filter?` + queries, {
-      cache: 'no-store', //dynamic rendering
+      cache: "no-store", //dynamic rendering
     });
 
     if (response.ok) {
@@ -116,7 +127,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
 
       return auctions;
     } else {
-      throw new Error('Failed to fetch cars list!');
+      throw new Error("Failed to fetch cars list!");
     }
   } catch (err) {
     console.error(err);
@@ -135,10 +146,10 @@ export interface CreateWagerProps {
 }
 
 export const createWager = async (body: CreateWagerProps) => {
-  await fetch('/api/wager', {
-    method: 'POST',
+  await fetch("/api/wager", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ ...body }),
   });
@@ -153,21 +164,288 @@ export const getWagers = async (id: string) => {
 export const getOneUserWager = async (auction_id: string, user_id: string) => {
   const res = await fetch(`/api/wager?id=${auction_id}&user_id=${user_id}`);
   const data = await res.json();
-  return data
-}
+  return data;
+};
 
 export interface AddPrizePoolProps {
   pot?: number;
 }
 
-export const addPrizePool = async (pot: AddPrizePoolProps, auction_id: string | string[]) => {
+export const addPrizePool = async (
+  pot: AddPrizePoolProps,
+  auction_id: string | string[]
+) => {
   await fetch(`/api/cars?auction_id=${auction_id}`, {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ ...pot }),
   });
+};
+
+export const sortByNewGames = async () => {
+  const res = await fetch("/api/cars/filter?sort=Newly%20Listed&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByMostExpensive = async () => {
+  const res = await fetch("/api/cars/filter?sort=Most%20Expensive&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByMostBids = async () => {
+  const res = await fetch("/api/cars/filter?sort=Most%20Bids&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByTrending = async () => {
+  const res = await fetch("/api/cars/filter?sort=Ending%20Soon&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByNewGames = async () => {
+  const res = await fetch("/api/cars/filter?sort=Newly%20Listed&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByMostExpensive = async () => {
+  const res = await fetch("/api/cars/filter?sort=Most%20Expensive&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByMostBids = async () => {
+  const res = await fetch("/api/cars/filter?sort=Most%20Bids&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
+};
+
+export const sortByTrending = async () => {
+  const res = await fetch("/api/cars/filter?sort=Ending%20Soon&&limit=3");
+  const data = await res.json();
+  let auctions = {
+    total: data.total,
+    cars: data.cars.map((data: any) => ({
+      auction_id: data.auction_id,
+      description: [...data.description],
+      images_list: [...data.images_list],
+      listing_details: [...data.listing_details],
+      image: data.image,
+      page_url: data.page_url,
+      website: data.website,
+      price: data.attributes[0].value,
+      year: data.attributes[1].value,
+      make: data.attributes[2].value,
+      model: data.attributes[3].value,
+      category: data.attributes[4].value,
+      era: data.attributes[5].value,
+      chassis: data.attributes[6].value,
+      seller: data.attributes[7].value,
+      location: data.attributes[8].value,
+      state: data.attributes[9].value,
+      lot_num: data.attributes[10].value,
+      listing_type: data.attributes[11].value,
+      deadline: data.attributes[12].value,
+      bids: data.attributes[13].value,
+      status: data.attributes[14].value,
+    })),
+  };
+  return auctions;
 };
 
 export const getMyWagers = async () => {
