@@ -15,18 +15,19 @@ import UserImage from '../../../../public/images/user-single-neutral-male--close
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import PasswordInput from '@/app/components/password_input';
+import { BounceLoader } from 'react-spinners';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
   const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>('sign in');
-
-  // TEST IMPLEMENTATION
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
-  // TEST for forgot/reset password
+  // Forgot/Reset Password
   const [resetEmail, setResetEmail] = useState('');
 
   const handleResetPassword = async () => {
@@ -40,8 +41,8 @@ const CreateAccount = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        // store the email in local storage
-        localStorage.setItem('passwordResetEmail', resetEmail);
+        localStorage.setItem('passwordResetEmail', resetEmail); // store the email in local storage
+        localStorage.setItem('isNewPasswordResetProcess', 'true'); // set the flag for password reset flow process
         router.push('/password_reset_flow');
       } else {
         setError(data.message);
@@ -55,7 +56,7 @@ const CreateAccount = () => {
 
   const handleSignIn = async () => {
     try {
-      console.log('Attempting to sign in with:', { email });
+      setIsLoading(true);
       const result = await signIn('credentials', {
         redirect: false,
         email: email,
@@ -73,6 +74,8 @@ const CreateAccount = () => {
     } catch (error) {
       console.error('An unexpected error occurred during login:', error);
       setError('An unexpected error occurred');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,7 +93,12 @@ const CreateAccount = () => {
 
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
-      {createAccountPage === 'sign in' && (
+      {/* Loading */}
+      {isLoading ? (
+        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+          <BounceLoader color='#696969' loading={isLoading} />
+        </div>
+      ) : (
         <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
           <div>
             <div className='tw-flex tw-justify-between md:tw-justify-start'>
@@ -143,13 +151,15 @@ const CreateAccount = () => {
             <div onClick={() => handleGoogleSignIn('google')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+            <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-cursor-auto tw-opacity-30 tw-disabled'>
               <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+            <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
+            tw-cursor-auto tw-opacity-30 tw-disabled'>
               <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+            <div className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
+            tw-cursor-auto tw-opacity-30 tw-disabled'>
               <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
             </div>
           </div>

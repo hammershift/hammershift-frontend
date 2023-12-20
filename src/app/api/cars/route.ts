@@ -13,11 +13,11 @@ export async function GET(req: NextRequest) {
 
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
-      const car = await Auctions.findOne({ auction_id: auction_id });
+      const car = await Auctions.findOne({ $and: [{ auction_id: auction_id }, { isActive: true }] });
       return NextResponse.json(car);
     }
     // api/cars to get all cars
-    const cars = await Auctions.find().limit(limit).skip(offset);
+    const cars = await Auctions.find({ isActive: true }).limit(limit).skip(offset);
     return NextResponse.json({ total: cars.length, cars: cars });
   } catch (error) {
     console.error(error)
@@ -32,8 +32,8 @@ export async function PUT(req: NextRequest) {
     const auction_id = req.nextUrl.searchParams.get('auction_id');
     const edits = await req.json();
 
-    const editedAuction = await Auctions.findOneAndUpdate(
-      { auction_id: auction_id },
+    const editedAuction = await Auctions.findOneAndUpdate({ $and: [{ auction_id: auction_id }, { isActive: true }] }
+      ,
       { $set: edits },
       { new: true }
     )
