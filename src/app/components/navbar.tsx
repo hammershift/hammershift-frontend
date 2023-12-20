@@ -44,8 +44,10 @@ const Navbar = () => {
     const [menuIsOpen, setMenuIsOpen] = useState(false);
     const [searchedData, setSearchedData] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState("");
-    const [myWagers, setMyWagers] = useState([]);
     const [searchBoxDropDown, setSearchBoxDropDown] = useState(false);
+    const [dropWatchlist, setDropWatchlist] = useState(false);
+    const [dropMyWagers, setDropMyWagers] = useState(false);
+    const [dropMyAccount, setDropMyAccount] = useState(false);
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
     const [navDropdownMenu, setNavDropdownMenu] =
         useState<NavbarDropdownMenuProps>(null);
@@ -55,6 +57,24 @@ const Navbar = () => {
             const searchBox = document.getElementById("search-box");
             const searchBar = document.getElementById("search-bar-input");
 
+            const watchlistButton = document.getElementById("watchlist-button");
+            const watchlistActiveButton = document.getElementById(
+                "active-watchlist-button"
+            );
+            const watchlistCompletedButton = document.getElementById(
+                "completed-watchlist-button"
+            );
+
+            const myWagersButton = document.getElementById("mywagers-button");
+            const myWagersActiveButton = document.getElementById(
+                "active-mywagers-button"
+            );
+            const myWagersCompletedButton = document.getElementById(
+                "completed-mywagers-button"
+            );
+
+            const myAccountButton = document.getElementById("myaccount-button");
+
             if (
                 searchBox &&
                 !searchBox.contains(e.target as Node) &&
@@ -63,6 +83,35 @@ const Navbar = () => {
             ) {
                 setSearchBoxDropDown(false);
             }
+
+            if (
+                watchlistButton &&
+                !watchlistButton.contains(e.target as Node) &&
+                watchlistActiveButton &&
+                !watchlistActiveButton.contains(e.target as Node) &&
+                watchlistCompletedButton &&
+                !watchlistCompletedButton.contains(e.target as Node)
+            ) {
+                setDropWatchlist(false);
+            }
+
+            if (
+                myWagersButton &&
+                !myWagersButton.contains(e.target as Node) &&
+                myWagersActiveButton &&
+                !myWagersActiveButton.contains(e.target as Node) &&
+                myWagersCompletedButton &&
+                !myWagersCompletedButton.contains(e.target as Node)
+            ) {
+                setDropMyWagers(false);
+            }
+
+            if (
+                myAccountButton &&
+                !myAccountButton.contains(e.target as Node)
+            ) {
+                setDropMyAccount(false);
+            }
         };
 
         document.addEventListener("click", handleClickOutside);
@@ -70,7 +119,12 @@ const Navbar = () => {
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
-    }, [setSearchBoxDropDown]);
+    }, [
+        setSearchBoxDropDown,
+        setDropWatchlist,
+        setDropMyWagers,
+        setDropMyAccount,
+    ]);
 
     const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -211,13 +265,9 @@ const Navbar = () => {
                     {/* Buttons for logged in accounts */}
                     <div className="tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible tw-relative">
                         <button
+                            id="watchlist-button"
                             className="tw-relative"
-                            onClick={() =>
-                                setNavDropdownMenu((prev) => {
-                                    if (prev === "My Watchlist") return null;
-                                    else return "My Watchlist";
-                                })
-                            }
+                            onClick={() => setDropWatchlist((prev) => !prev)}
                         >
                             <Image
                                 src={WatchlistIcon}
@@ -227,16 +277,10 @@ const Navbar = () => {
                                 className="tw-w-[24px] tw-h-[24px]"
                             />
                         </button>
-                        {navDropdownMenu === "My Watchlist" && (
-                            <MyWatchlistDropdownMenu />
-                        )}
+                        {dropWatchlist && <MyWatchlistDropdownMenu />}
                         <button
-                            onClick={() =>
-                                setNavDropdownMenu((prev) => {
-                                    if (prev === "My Wagers") return null;
-                                    else return "My Wagers";
-                                })
-                            }
+                            id="mywagers-button"
+                            onClick={() => setDropMyWagers((prev) => !prev)}
                         >
                             <Image
                                 src={WagersIcon}
@@ -246,17 +290,11 @@ const Navbar = () => {
                                 className="tw-w-[24px] tw-h-[24px]"
                             />
                         </button>
-                        {navDropdownMenu === "My Wagers" && (
-                            <MyWagersDropdownMenu />
-                        )}
+                        {dropMyWagers && <MyWagersDropdownMenu />}
                         <button
+                            id="myaccount-button"
                             className="tw-relative"
-                            onClick={() =>
-                                setNavDropdownMenu((prev) => {
-                                    if (prev === "My Account") return null;
-                                    else return "My Account";
-                                })
-                            }
+                            onClick={() => setDropMyAccount((prev) => !prev)}
                         >
                             <Image
                                 src={AccountIcon}
@@ -265,9 +303,7 @@ const Navbar = () => {
                                 alt="account"
                                 className="tw-w-[24px] tw-h-[24px]"
                             />
-                            {navDropdownMenu === "My Account" && (
-                                <MyAccountDropdownMenu />
-                            )}
+                            {dropMyAccount && <MyAccountDropdownMenu />}
                         </button>
                     </div>
                     <div className="sm:tw-hidden">
@@ -587,6 +623,7 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
                 <div className="tw-flex">
                     <button
+                        id="active-watchlist-button"
                         onClick={() => setActiveOrCompleted("active")}
                         className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white tw-flex tw-justify-center tw-items-center tw-gap-2"
                         autoFocus
@@ -599,6 +636,7 @@ const MyWatchlistDropdownMenu = () => {
                         )}
                     </button>
                     <button
+                        id="completed-watchlist-button"
                         onClick={() => setActiveOrCompleted("completed")}
                         className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
                     >
@@ -831,6 +869,7 @@ const MyWagersDropdownMenu = () => {
                 </div>
                 <div className="tw-flex">
                     <button
+                        id="active-mywagers-button"
                         onClick={() => setActiveOrCompleted("active")}
                         className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white tw-flex tw-justify-center tw-items-center tw-gap-2"
                         autoFocus
@@ -843,6 +882,7 @@ const MyWagersDropdownMenu = () => {
                         )}
                     </button>
                     <button
+                        id="completed-mywagers-button"
                         onClick={() => setActiveOrCompleted("completed")}
                         className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
                     >
