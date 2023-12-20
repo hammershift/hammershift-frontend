@@ -1,5 +1,7 @@
-import React from "react";
+'use client';
+import React, { useEffect } from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 import AvatarOne from "../../../../public/images/avatar-one.svg";
 import WagerPhotoOne from "../../../../public/images/my-wagers-navbar/my-wager-photo-one.svg";
@@ -10,10 +12,18 @@ import TwitterIcon from "../../../../public/images/social-icons/twitter-icon.svg
 import IDIcon from "../../../../public/images/single-neutral-id-card-3.svg";
 import TransitionPattern from "../../../../public/images/transition-pattern.svg";
 
-interface Props {}
+interface Props { }
 
 function Profile(props: Props) {
-    const {} = props;
+    const [name, setName] = React.useState("User")
+    const { } = props;
+    const { data } = useSession();
+
+    useEffect(() => {
+        if (data) setName(data?.user.name);
+        console.log(data);
+        console.log(data?.user.name);
+    }, [name, data])
 
     return (
         <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
@@ -32,7 +42,7 @@ function Profile(props: Props) {
                         />
                         <div className="tw-mt-6 sm:tw-mt-0">
                             <div className="tw-text-4xl tw-font-bold">
-                                Ralph Edwards
+                                {name}
                             </div>
                             <div className="tw-text-lg tw-text-[#d1d5d8]">
                                 Joined September 2023
@@ -44,7 +54,7 @@ function Profile(props: Props) {
                             </div>
                         </div>
                     </div>
-                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px]">
+                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px] tw-disabled tw-cursor-auto tw-opacity-30">
                         Edit Profile
                     </button>
                 </div>

@@ -457,7 +457,7 @@ const CreateAccount = () => {
                 </div>
 
                 <div className='tw-flex tw-flex-col tw-gap-2'>
-                  <button className='btn-yellow' onClick={handleProfileSubmission}>
+                  <button className='btn-yellow tw-opacity-30 tw-cursor-auto' onClick={handleProfileSubmission}>
                     Proceed to Account Verification
                   </button>
                   <button className='btn-transparent-yellow' onClick={handleVerifyLater}>
