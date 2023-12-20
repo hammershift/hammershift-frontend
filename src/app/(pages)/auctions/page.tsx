@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import { getCars, getCarsWithFilter } from '@/lib/data';
 import FiltersAndSort from '@/app/components/filter_and_sort';
 import { TimerProvider } from '@/app/_context/TimerContext';
@@ -7,7 +7,6 @@ import { GamesCard } from '@/app/components/card';
 import { useParams } from 'next/navigation';
 const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
 import { useRouter } from 'next/navigation';
-import { set } from 'mongoose';
 
 const filtersInitialState = {
     make: ['All'],
@@ -28,18 +27,42 @@ type Filter = {
 
 const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }) => {
     const [filters, setFilters] = useState<Filter>({});
-    const [loadMore, setLoadMore] = useState(21);
+    const [loadMore, setLoadMore] = useState(6); // return to 21
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
+    const countRef = useRef(0);
 
-    console.log(searchParams);
+    //adds 21 to loadMore when button is clicked
+    const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
+        if (!loading) {
+            if (listing.length > totalAuctions - 21) {
+                setLoadMore((prev) => totalAuctions);
+            } else {
+                setLoadMore((prev) => prev + 21);
+            }
+        }
+    };
 
     const fetchData = async (filter: any) => {
         setLoading(true);
+        let query = {}
+
+        if (searchParams) {
+            filter && Object.keys(filter).forEach((key) => {
+                if (filter[key] !== 'All') {
+                    query[key] = [filter[key]]
+                }
+            })
+        }
+
+        setFilters(query);
+        console.log("filters", filters)
         try {
-            const filterWithLimit: Filter = { ...filter, limit: loadMore };
+            const filterWithLimit: Filter = { ...query, limit: loadMore };
+            console.log("filter with limit", filterWithLimit);
             const res = await getCarsWithFilter(filterWithLimit);
             if (res) {
                 setLoading(false);
@@ -57,51 +80,14 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     useEffect(() => {
         if (searchParams) {
             fetchData(searchParams);
-            setFilters({ ...filters, ...searchParams });
         } else {
             fetchData(filtersInitialState)
             setFilters(filtersInitialState);
         }
     }, [])
 
-    useEffect(() => {
-        console.log("filters", filters);
-    }, [filters])
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const res = await getCars({ limit: 21 });
-    //             if (res) {
 
-    //                 setLoading(false);
-    //                 setTotalAuctions(res.total);
-    //                 setListing(res.cars);
-    //             } else {
-    //                 setLoading(false);
-    //                 console.log('cannot fetch car data');
-    //             }
-    //         } catch (e) {
-    //             console.log({ error: e });
-    //         }
-    //     };
-    //     if (!searchParams) {
-    //         fetchData();
-    //     }
-    // }, []);
-
-    //adds 21 to loadMore when button is clicked
-    const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-        if (!loading) {
-            if (listing.length > totalAuctions - 21) {
-                setLoadMore((prev) => totalAuctions);
-            } else {
-                setLoadMore((prev) => prev + 21);
-            }
-        }
-    };
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
@@ -113,6 +99,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
         const fetchData = async () => {
             try {
                 const filterWithLimit = { ...filters, limit: loadMore };
+                console.log("filter with limit 2:", filterWithLimit);
                 const res = await getCarsWithFilter(filterWithLimit);
                 if (res) {
                     setTotalAuctions(res.total);
@@ -122,8 +109,9 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
                 console.error(err);
             }
         };
-
-        fetchData();
+        if (countRef.current > 0) {
+            fetchData();
+        }
     }, [filters, loadMore]);
 
     return (
