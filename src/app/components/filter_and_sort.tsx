@@ -32,7 +32,11 @@ export interface FiltersAndSortProps {
 
 type DropdownMenuProps = null | "Make" | "Era" | "Category" | "Location" | "Sort";
 
-const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) => {
+
+
+
+
+const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any }) => {
 
 
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
@@ -208,7 +212,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
 export default FiltersAndSort
 
 // function to add value to filters. This is used in all 4 dropdowns
-const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
+const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: any, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
     setFilters(prevFilters => {
         if (value === "All") {
             return {
@@ -218,7 +222,7 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
         } else if (filters[key].includes(value)) {
             return {
                 ...filters,
-                [key]: filters[key].filter(item => item !== value)
+                [key]: filters[key].filter((item: any) => item !== value)
             };
         } else {
             let newFilters = [...filters[key]];
