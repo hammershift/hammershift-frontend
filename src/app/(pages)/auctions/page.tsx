@@ -55,24 +55,24 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     }
 
     useEffect(() => {
-        if (searchParams) {
-            let query: any = { ...filters };
-            const filtersFromSearchParams = async (filter: any) => {
-                filter && Object.keys(filter).forEach((key) => {
-                    if (filter[key] !== 'All') {
-                        query[key] = [filter[key]];
-                    }
-                });
-                // console.log("query:", query);
-                setFilters(query);
-            };
-            filtersFromSearchParams(searchParams);
-            fetchData(query);
-        } else {
-            fetchData(filters);
-        }
 
-    }, []);
+        let query: any = { ...filters };
+        console.log("sp:", searchParams)
+
+        const filtersFromSearchParams = async (filter: any) => {
+            filter && Object.keys(filter).forEach((key) => {
+                if (filter[key] !== 'All') {
+                    query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+                }
+            });
+            console.log("query:", query);
+            setFilters(query);
+        };
+        filtersFromSearchParams(searchParams);
+        fetchData(query);
+
+
+    }, [searchParams]);
 
     useEffect(() => {
         if (renderCount.current > 1) {
@@ -82,10 +82,10 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     }, [filters, loadMore]);
 
 
-    // console log to check filters
-    // useEffect(() => {
-    //     console.log("filters:", filters);
-    // }, [filters]);
+    //console log to check filters
+    useEffect(() => {
+        console.log("filters:", filters);
+    }, [filters, searchParams]);
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {

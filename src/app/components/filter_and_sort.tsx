@@ -231,33 +231,85 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
 export default FiltersAndSort
 
 // function to add value to filters. This is used in all 4 dropdowns
-const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
+const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>, router: any) => {
+
+    // setFilters(prevFilters => {
+    //     if (value === "All") {
+    //         return {
+    //             ...filters,
+    //             [key]: ["All"]
+    //         };
+    //     } else if (filters[key].includes(value)) {
+    //         return {
+    //             ...filters,
+    //             [key]: filters[key].filter(item => item !== value)
+    //         };
+    //     } else {
+    //         let newFilters = [...filters[key]];
+    //         const allIndex = newFilters.indexOf("All");
+    //         if (allIndex > -1) {
+    //             newFilters.splice(allIndex, 1);
+    //         }
+    //         newFilters.push(value);
+    //         return {
+    //             ...filters,
+    //             [key]: newFilters
+    //         };
+    //     }
+    // });
+
+    let newFilters = { ...filters };
+    let queryArray: any = [];
 
 
-    setFilters(prevFilters => {
-        if (value === "All") {
-            return {
-                ...filters,
-                [key]: ["All"]
-            };
-        } else if (filters[key].includes(value)) {
-            return {
-                ...filters,
-                [key]: filters[key].filter(item => item !== value)
-            };
+    if (value === "All") {
+        newFilters[key] = ["All"];
+    } else {
+        // If the filter already exists, remove it. Otherwise, add it.
+        if (newFilters[key].includes(value)) {
+            newFilters[key] = newFilters[key].filter(item => item !== value);
         } else {
-            let newFilters = [...filters[key]];
-            const allIndex = newFilters.indexOf("All");
+            // If "All" is in the array, remove it
+            const allIndex = newFilters[key].indexOf("All");
             if (allIndex > -1) {
-                newFilters.splice(allIndex, 1);
+                newFilters[key].splice(allIndex, 1);
             }
-            newFilters.push(value);
-            return {
-                ...filters,
-                [key]: newFilters
-            };
+            newFilters[key].push(value);
         }
-    });
+    }
+
+    console.log("new filter:", newFilters)
+
+    if (newFilters['make'][0] !== "All") {
+        newFilters['make'].map((item) => {
+            queryArray.push(`make=${item.split(" ").join("%20")}`)
+        })
+    }
+
+    if (newFilters['category'][0] !== "All") {
+        newFilters['category'].map((item) => {
+            queryArray.push(`category=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (newFilters['era'][0] !== "All") {
+        newFilters['era'].map((item) => {
+            queryArray.push(`era=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (newFilters['location'][0] !== "All") {
+        newFilters['location'].map((item) => {
+            queryArray.push(`location=${encodeURIComponent(item)}`)
+        })
+    }
+
+    const queryString = queryArray.join("&");
+
+    console.log("query string:", queryString);
+
+    router.push("/auctions?" + queryString)
+
 }
 
 
@@ -297,13 +349,14 @@ interface FiltersContentProps {
     makeFilters?: string[] | null;
 }
 const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+    const router = useRouter();
 
     return (
         <div className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
             {
                 MakeDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "make", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "make", filters, setFilters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -344,12 +397,13 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 
 
 const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+    const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 CategoryDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "category", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "category", filters, setFilters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['category'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -387,12 +441,13 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =>
 
 
 const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+    const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 EraDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "era", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "era", filters, setFilters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['era'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -426,12 +481,13 @@ const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 }
 
 const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+    const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 LocationDropdownContent.map((value) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "location", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "location", filters, setFilters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['location'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
