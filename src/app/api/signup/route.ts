@@ -57,10 +57,11 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create a new user with a balance field
+    // create a new user with a balance field
     await db.collection('users').insertOne({
       email,
       password: hashedPassword,
+      isActive: true,
       balance: 100, // initial wallet balance
     });
 

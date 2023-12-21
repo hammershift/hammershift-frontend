@@ -19,7 +19,7 @@ const transactionSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  balanceChange: {
+  type: {
     type: String,
     required: true,
     enum: ['+', '-'],
