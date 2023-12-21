@@ -63,7 +63,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
                         query[key] = [filter[key]];
                     }
                 });
-                console.log("query:", query);
+                // console.log("query:", query);
                 setFilters(query);
             };
             filtersFromSearchParams(searchParams);
@@ -83,9 +83,9 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
 
 
     // console log to check filters
-    useEffect(() => {
-        console.log("filters:", filters);
-    }, [filters]);
+    // useEffect(() => {
+    //     console.log("filters:", filters);
+    // }, [filters]);
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {

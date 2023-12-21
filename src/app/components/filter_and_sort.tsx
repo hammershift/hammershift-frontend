@@ -5,6 +5,7 @@ import { getCarsWithFilterProps } from '@/lib/data'
 import { useRouter } from 'next/navigation'
 import { NextRouter } from 'next/router';
 
+
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'
 import ListIcon from '../../../public/images/list.svg'
@@ -211,6 +212,8 @@ export default FiltersAndSort
 
 // function to add value to filters. This is used in all 4 dropdowns
 const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
+
+
     setFilters(prevFilters => {
         if (value === "All") {
             return {
@@ -247,6 +250,7 @@ export interface FiltersDropdownProps {
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
 
 const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+
     return (
 
         <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg"
