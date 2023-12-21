@@ -33,50 +33,60 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
+    const renderCount = useRef(0);
 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const filterWithLimit: any = { ...filters, limit: loadMore };
-                const res = await getCarsWithFilter(filterWithLimit);
-                if (res) {
-                    setListing(res?.cars);
-                    setTotalAuctions(res?.total)
-                    setLoading(false);
-                    return
-                }
-                setLoading(false);
-            } catch (error) {
-                console.log(error)
-                setLoading(false);
-            }
-        }
-        fetchData()
-    }, [loadMore, filters])
-
-
-    const fetchData = async (filter: any) => {
+    // main fetch function
+    const fetchData = async (filterObject: any) => {
         setLoading(true);
-        let query: any = {}
-
-        if (searchParams) {
-            filter && Object.keys(filter).forEach((key) => {
-                if (filter[key] !== 'All') {
-                    query[key] = [filter[key]]
-                }
-            })
+        try {
+            const filterWithLimit: any = { ...filterObject, limit: loadMore };
+            const res = await getCarsWithFilter(filterWithLimit);
+            if (res) {
+                setListing(res?.cars);
+                setTotalAuctions(res?.total)
+                setLoading(false);
+                return
+            }
+            setLoading(false);
+        } catch (error) {
+            console.log(error)
+            setLoading(false);
         }
-        console.log("query:", query)
-        setFilters(query);
-    };
+    }
 
     useEffect(() => {
-        fetchData(searchParams);
+        if (searchParams) {
+            let query: any = {}
+            const filtersFromSearchParams = async (filter: any) => {
+                filter && Object.keys(filter).forEach((key) => {
+                    if (filter[key] !== 'All') {
+                        query[key] = [filter[key]]
+                    }
+                })
+                console.log("query:", query)
+                setFilters(query);
+            };
+            filtersFromSearchParams(searchParams);
+            fetchData(query)
+
+        } else {
+            fetchData(filters);
+        }
+
     }, []);
 
+    useEffect(() => {
+        if (renderCount.current > 1) {
+            fetchData(filters);
+        }
+        renderCount.current += 1;
+    }, [filters, loadMore]);
 
+
+    // console log to check filters
+    useEffect(() => {
+        console.log("filters:", filters);
+    }, [filters]);
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
@@ -103,7 +113,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
             {
                 loading && listing.length === 0
                     ? <Loader />
-                    : <div className='tw-pb-32 '>
+                    : <div className='tw-pb-16 '>
                         <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                             <div className=' tw-w-full 2xl:tw-w-[1312px] '>
                                 {
