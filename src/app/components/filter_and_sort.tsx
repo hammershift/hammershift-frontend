@@ -266,8 +266,12 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
         newFilters[key] = ["All"];
     } else {
         // If the filter already exists, remove it. Otherwise, add it.
-        if (newFilters[key].includes(value)) {
-            newFilters[key] = newFilters[key].filter(item => item !== value);
+        if (filters[key].includes(value)) {
+            if (filters[key].length === 1) {
+                newFilters[key] = ["All"];
+            } else {
+                newFilters[key] = newFilters[key].filter(item => item !== value);
+            }
         } else {
             // If "All" is in the array, remove it
             const allIndex = newFilters[key].indexOf("All");
@@ -280,25 +284,25 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
 
     console.log("new filter:", newFilters)
 
-    if (newFilters['make'][0] !== "All") {
+    if (!newFilters['make'].includes("All")) {
         newFilters['make'].map((item) => {
             queryArray.push(`make=${item.split(" ").join("%20")}`)
         })
     }
 
-    if (newFilters['category'][0] !== "All") {
+    if (!newFilters['category'].includes("All")) {
         newFilters['category'].map((item) => {
             queryArray.push(`category=${encodeURIComponent(item)}`)
         })
     }
 
-    if (newFilters['era'][0] !== "All") {
+    if (!newFilters['era'].includes("All")) {
         newFilters['era'].map((item) => {
             queryArray.push(`era=${encodeURIComponent(item)}`)
         })
     }
 
-    if (newFilters['location'][0] !== "All") {
+    if (!newFilters['location'].includes("All")) {
         newFilters['location'].map((item) => {
             queryArray.push(`location=${encodeURIComponent(item)}`)
         })

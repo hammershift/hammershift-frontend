@@ -56,19 +56,23 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
 
     useEffect(() => {
 
-        let query: any = { ...filters };
+        let query: any = { ...filtersInitialState };
         console.log("sp:", searchParams)
 
         const filtersFromSearchParams = async (filter: any) => {
-            filter && Object.keys(filter).forEach((key) => {
-                if (filter[key] !== 'All') {
-                    query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
-                }
+            Object.keys(searchParams).forEach((key) => {
+                query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
             });
             console.log("query:", query);
             setFilters(query);
         };
-        filtersFromSearchParams(searchParams);
+
+        if (Object.keys(searchParams).length !== 0) {
+            filtersFromSearchParams(searchParams);
+
+        } else {
+            setFilters(filtersInitialState);
+        }
         fetchData(query);
 
 
