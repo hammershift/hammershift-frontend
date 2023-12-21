@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { getCarsWithFilterProps } from '@/lib/data'
+import { getCarsWithFilter, getCarsWithFilterProps } from '@/lib/data'
 import { useRouter } from 'next/navigation'
 import { NextRouter } from 'next/router';
 
@@ -48,11 +48,31 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
     const [menuOpen, setMenuOpen] = useState(false);
     const [bgColor, setBgColor] = useState({});
 
+    const [totalAuctions, setTotalAuctions] = useState(0);
+
+    // get the total auctions
+    const fetchData = async () => {
+        try {
+            const res = await getCarsWithFilter({ limit: 1 });
+            if (res) {
+                setTotalAuctions(res?.total)
+                return
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+
 
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='left-container-marker tw-flex tw-items-center'>
-                <div>Live Games <span className='tw-opacity-50'> 100</span></div>
+                <div>Live Games <span className='tw-opacity-50'> {totalAuctions}</span></div>
                 <div className='tw-hidden xl:tw-flex'>
                     {/* Filter Dropdown for regular screens*/}
                     {/* Dropdown for Make filter*/}
