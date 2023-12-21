@@ -107,8 +107,6 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
 
             </div>
             <div className='right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex'>
-                <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
-                <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
                 {/* Dropdown for Sort*/}
                 <div className="tw-relative tw-text-left tw-mx-2">
                     <div>
