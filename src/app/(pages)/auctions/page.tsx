@@ -112,16 +112,24 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
             {
                 loading && listing.length === 0
                     ? <Loader />
-                    : <div className='tw-pb-16 '>
-                        <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
-                            <div className=' tw-w-full 2xl:tw-w-[1312px] '>
-                                {
-                                    listing
-                                    && <AuctionsList listing={listing} />
-                                }
-                            </div>
-                        </section>
-                    </div>
+                    : <>{listing.length > 0
+                        ? <div className='tw-pb-16 '>
+                            <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
+                                <div className=' tw-w-full 2xl:tw-w-[1312px] '>
+                                    {
+                                        listing
+                                        && <AuctionsList listing={listing} />
+                                    }
+                                </div>
+                            </section>
+                        </div>
+                        : <div className='tw-p-16'>
+                            No Cars of that Category...
+                        </div>
+
+                    }
+                    </>
+
             }
             {
                 loading && listing.length > 0
