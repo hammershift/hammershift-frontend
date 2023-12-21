@@ -210,7 +210,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
 export default FiltersAndSort
 
 // function to add value to filters. This is used in all 4 dropdowns
-const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: any, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
+const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
     setFilters(prevFilters => {
         if (value === "All") {
             return {
@@ -220,7 +220,7 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
         } else if (filters[key].includes(value)) {
             return {
                 ...filters,
-                [key]: filters[key].filter((item: any) => item !== value)
+                [key]: filters[key].filter(item => item !== value)
             };
         } else {
             let newFilters = [...filters[key]];
@@ -270,10 +270,9 @@ interface FiltersContentProps {
     columns?: number;
     filters: filtersProps;
     setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
+    makeFilters?: string[] | null;
 }
 const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-
-
 
     return (
         <div className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
@@ -283,12 +282,9 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilte
                         <div onClick={() => addToFilters(value, "make", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${(Array.isArray(filters['make']) ? filters['make'].includes(value) : filters['make'] === value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity `} />
+                                className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                (Array.isArray(filters['make']) ? filters['make'].includes(value) : filters['make'] === value) &&
+                                filters['make'].includes(value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
@@ -309,6 +305,8 @@ const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids
 
 const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
 
+
+
     return (
         <>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
@@ -322,8 +320,6 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 
 
 const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-
-
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
@@ -332,12 +328,9 @@ const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
                         <div onClick={() => addToFilters(value, "category", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${(Array.isArray(filters['category']) ? filters['category'].includes(value) : filters['category'] === value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${filters['category'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                (Array.isArray(filters['category']) ? filters['category'].includes(value) : filters['category'] === value) &&
+                                filters['category'].includes(value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
@@ -357,6 +350,7 @@ const EraDropdownContent = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", 
 
 const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
 
+
     return (
 
         <div>
@@ -369,8 +363,6 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =>
 
 
 const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-
-
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
@@ -379,12 +371,9 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilter
                         <div onClick={() => addToFilters(value, "era", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${(Array.isArray(filters['era']) ? filters['era'].includes(value) : filters['era'] === value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${filters['era'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                (Array.isArray(filters['era']) ? filters['era'].includes(value) : filters['era'] === value) &&
+                                filters['era'].includes(value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
@@ -402,6 +391,7 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilter
 const LocationDropdownContent = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
 
 const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+
     return (
         <div>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
@@ -412,8 +402,6 @@ const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 }
 
 const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
-
-
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
@@ -422,12 +410,9 @@ const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
                         <div onClick={() => addToFilters(value, "location", filters, setFilters)}>
                             <input
                                 type='checkbox'
-                                className={` ${(Array.isArray(filters['location']) ? filters['location'].includes(value) : filters['location'] === value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
+                                className={` ${filters['location'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
                             {
-                                (Array.isArray(filters['location']) ? filters['location'].includes(value) : filters['location'] === value) &&
+                                filters['location'].includes(value) &&
 
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
                                     <Image src={CheckIcon} width={10} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
