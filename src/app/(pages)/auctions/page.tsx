@@ -124,7 +124,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
                             </section>
                         </div>
                         : <div className='tw-p-16'>
-                            No Cars of that Category...
+                            No Cars with those requirements...
                         </div>
 
                     }
