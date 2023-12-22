@@ -92,9 +92,9 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
 
 
     //console log to check filters
-    // useEffect(() => {
-    //     console.log("listing:", listing);
-    // }, [filters]);
+    useEffect(() => {
+        console.log("listing:", listing);
+    }, [filters]);
 
 
 
