@@ -312,6 +312,7 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
 
     console.log("query string:", queryString);
 
+    // setFilters(newFilters);
     router.push("/auctions?" + queryString)
 
 }

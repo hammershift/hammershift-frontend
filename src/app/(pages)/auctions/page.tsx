@@ -55,41 +55,71 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     }
 
     useEffect(() => {
+        console.log("search params:", searchParams);
+    }, [filters, searchParams]);
 
-        let query: any = { ...filtersInitialState };
-        console.log("sp:", searchParams)
+    // useEffect(() => {
 
-        const filtersFromSearchParams = async (filter: any) => {
+    //     let query: any = { ...filtersInitialState };
+    //     console.log("sp:", searchParams)
+
+    //     const filtersFromSearchParams = async (filter: any) => {
+    //         Object.keys(searchParams).forEach((key) => {
+    //             query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+    //         });
+    //         console.log("query:", query);
+    //         setFilters(query);
+    //     };
+
+    //     if (Object.keys(searchParams).length !== 0) {
+    //         filtersFromSearchParams(searchParams);
+
+    //     } else {
+    //         setFilters(filtersInitialState);
+    //     }
+    //     fetchData(query);
+    // }, [searchParams, router]);
+
+
+
+    // function to set seachParams to filters
+    const createFilterObject = () => {
+        const query: any = JSON.parse(JSON.stringify(filtersInitialState));
+        console.log(query)
+
+        const filtersFromSearchParams = (filter: any) => {
             Object.keys(searchParams).forEach((key) => {
                 query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
             });
-            console.log("query:", query);
-            setFilters(query);
         };
 
-        if (Object.keys(searchParams).length !== 0) {
-            filtersFromSearchParams(searchParams);
+        filtersFromSearchParams(searchParams);
+        setFilters(query);
 
-        } else {
-            setFilters(filtersInitialState);
-        }
-        fetchData(query);
+    }
 
-
+    // calls createFilterObject when searchParams are changed
+    useEffect(() => {
+        createFilterObject();
     }, [searchParams]);
 
+
+    // calls fetchData when filters are changed
     useEffect(() => {
         if (renderCount.current > 1) {
             fetchData(filters);
         }
         renderCount.current += 1;
+
     }, [filters, loadMore]);
 
 
     //console log to check filters
     useEffect(() => {
-        console.log("filters:", filters);
-    }, [filters, searchParams]);
+        console.log("listing:", listing);
+    }, [filters]);
+
+
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
@@ -116,7 +146,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
             {
                 loading && listing.length === 0
                     ? <Loader />
-                    : <>{listing.length > 0
+                    : <>{listing.length != 0
                         ? <div className='tw-pb-16 '>
                             <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                                 <div className=' tw-w-full 2xl:tw-w-[1312px] '>

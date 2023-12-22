@@ -5,7 +5,7 @@ import { GamesCard } from "@/app/components/card";
 const AuctionsList = ({ listing }: { listing: any }) => {
   return (
     <div className=" tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
-      {listing.length > 1 &&
+      {listing.length != 0 &&
         listing.map((car: any, index: number) => {
           return (
             <div key={car._id ? car._id : index + "gamesCard"}>
