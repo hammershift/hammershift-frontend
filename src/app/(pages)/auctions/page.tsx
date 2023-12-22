@@ -8,6 +8,7 @@ import { useParams } from 'next/navigation';
 const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
 import { useRouter } from 'next/navigation';
 import { MoonLoader } from 'react-spinners';
+import { useSearchParams } from 'next/navigation'
 
 const filtersInitialState = {
     make: ['All'],
@@ -26,6 +27,8 @@ type Filter = {
     limit?: number;
 };
 
+export const dynamic = 'force-dynamic';
+
 const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }) => {
     const [filters, setFilters] = useState<Filter>(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
@@ -34,6 +37,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
     const renderCount = useRef(0);
+    const searchParamsObj = useSearchParams()
 
     // main fetch function
     const fetchData = async (filterObject: any) => {
