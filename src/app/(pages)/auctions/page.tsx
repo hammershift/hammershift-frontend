@@ -84,6 +84,12 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
         renderCount.current += 1;
     }, [filters, loadMore]);
 
+    useEffect(() => {
+        if (Object.keys(searchParams).length === 0) {
+            fetchData(filters);
+        }
+    }, []);
+
 
     //console log to check filters
     // useEffect(() => {
