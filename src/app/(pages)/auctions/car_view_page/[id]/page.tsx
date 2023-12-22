@@ -189,6 +189,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     ) : null}
                     <div className="tw-block sm:tw-hidden tw-mt-8">
                         <WatchAndWagerButtons
+                            auctionID={carData?._id}
                             alreadyWagered={alreadyWagered}
                             toggleWagerModal={showWagerModal}
                         />

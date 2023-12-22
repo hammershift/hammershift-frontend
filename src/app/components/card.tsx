@@ -441,9 +441,26 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                             )}
                                     </div>
                                 </div>
-                                <div className="xl:tw-block tw-hidden tw-text-sm">{`and ${
-                                    auctionWagers.length - 2
-                                } more players to join`}</div>
+                                {auctionWagers.length < 5 && (
+                                    <div
+                                        className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[${String(
+                                            (auctionWagers.length - 3) * 10
+                                        )}px]`}
+                                    >
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more players to join`}
+                                    </div>
+                                )}
+                                {auctionWagers.length >= 5 && (
+                                    <div
+                                        className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
+                                    >
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more players to join`}
+                                    </div>
+                                )}
                             </div>
                             {/* avatar images - hidden for screens bigger than sm */}
                             <div className="tw-flex tw-w-auto xl:tw-hidden">
@@ -496,7 +513,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                         })}
                                 </div>
                             </div>
-                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden">{`${
+                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
                                 auctionWagers.length - 2
                             } players`}</div>
                         </div>
