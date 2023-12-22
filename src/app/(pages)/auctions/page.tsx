@@ -64,7 +64,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
         const query: any = JSON.parse(JSON.stringify(filtersInitialState));
 
         const filtersFromSearchParams = (filter: any) => {
-            Object.keys(searchParams).forEach((key) => {
+            Object.keys(filter).forEach((key) => {
                 query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
             });
             setFilters(query);
