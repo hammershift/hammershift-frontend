@@ -29,7 +29,7 @@ type Filter = {
 
 export const dynamic = 'force-dynamic';
 
-const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }) => {
+const AuctionListingPage = () => {
     const [filters, setFilters] = useState<Filter>(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
@@ -111,7 +111,7 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     }, [filters, loadMore]);
 
     useEffect(() => {
-        if (Object.keys(searchParams).length === 0) {
+        if (Object.keys(searchParamsObj).length === 0) {
             fetchData(filters);
         }
     }, []);
