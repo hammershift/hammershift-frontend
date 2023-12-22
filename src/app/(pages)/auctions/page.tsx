@@ -72,7 +72,6 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
 
     // calls createFilterObject when searchParams are changed
     useEffect(() => {
-        setLoading(true);
         createFilterObject();
     }, [searchParams]);
 
