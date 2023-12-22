@@ -63,10 +63,10 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
             Object.keys(searchParams).forEach((key) => {
                 query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
             });
+            setFilters(query);
         };
 
         filtersFromSearchParams(searchParams);
-        setFilters(query);
 
     }
 
