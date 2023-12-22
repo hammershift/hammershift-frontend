@@ -27,7 +27,7 @@ type Filter = {
     limit?: number;
 };
 
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 const AuctionListingPage = () => {
     const [filters, setFilters] = useState<Filter>(filtersInitialState);
