@@ -84,7 +84,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                             </button>
                         </div>
                         {dropdownMenuRegular === "Make" &&
-                            <MakeDropdown filters={filters} setFilters={setFilters} />
+                            <MakeDropdown filters={filters} />
                         }
                     </div>
                     {/* Dropdown for Category filter*/}
@@ -96,7 +96,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                             </button>
                         </div>
                         {dropdownMenuRegular === "Category" &&
-                            <CategoryDropdown filters={filters} setFilters={setFilters} />
+                            <CategoryDropdown filters={filters} />
                         }
                     </div>
                     {/* Dropdown for Era filter*/}
@@ -108,7 +108,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                             </button>
                         </div>
                         {dropdownMenuRegular === "Era" &&
-                            <EraDropdown filters={filters} setFilters={setFilters} />
+                            <EraDropdown filters={filters} />
 
                         }
                     </div>
@@ -121,7 +121,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                             </button>
                         </div>
                         {dropdownMenuRegular === "Location" &&
-                            <LocationDropdown filters={filters} setFilters={setFilters} />
+                            <LocationDropdown filters={filters} />
                         }
                     </div>
                 </div>
@@ -175,7 +175,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                         </button>
                         {dropdownMenuSmall === "Make" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
-                                <MakeContent columns={1} filters={filters} setFilters={setFilters} />
+                                <MakeContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for CATEGORY */}
@@ -185,7 +185,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                         </button>
                         {dropdownMenuSmall === "Category" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
-                                <CategoryContent columns={1} filters={filters} setFilters={setFilters} />
+                                <CategoryContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for ERA */}
@@ -195,7 +195,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                         </button>
                         {dropdownMenuSmall === "Era" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
-                                <EraContent columns={1} filters={filters} setFilters={setFilters} />
+                                <EraContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for LOCATION */}
@@ -205,7 +205,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                         </button>
                         {dropdownMenuSmall === "Location" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto" >
-                                <LocationContent columns={1} filters={filters} setFilters={setFilters} />
+                                <LocationContent columns={1} filters={filters} />
                             </div>
                         }
                     </div>
@@ -292,12 +292,11 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
 
 export interface FiltersDropdownProps {
     filters: filtersProps;
-    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
 
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
 
-const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 
     return (
 
@@ -309,7 +308,7 @@ const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =
                     <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
                 </div>
                 <div className='tw-mt-2 tw-h-[280px] tw-overflow-y-auto'>
-                    <MakeContent columns={3} filters={filters} setFilters={setFilters} />
+                    <MakeContent columns={3} filters={filters} />
                 </div>
             </div>
         </div>
@@ -321,10 +320,9 @@ const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =
 interface FiltersContentProps {
     columns?: number;
     filters: filtersProps;
-    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
     makeFilters?: string[] | null;
 }
-const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
     const router = useRouter();
 
     return (
@@ -356,14 +354,14 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilte
 
 const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans", "Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
 
-const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 
 
 
     return (
         <>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                <CategoryContent columns={2} filters={filters} setFilters={setFilters} />
+                <CategoryContent columns={2} filters={filters} />
             </div>
         </>
 
@@ -372,7 +370,7 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 }
 
 
-const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
     const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
@@ -402,21 +400,21 @@ const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
 
 const EraDropdownContent = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
 
-const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 
 
     return (
 
         <div>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                <EraContent columns={2} filters={filters} setFilters={setFilters} />
+                <EraContent columns={2} filters={filters} />
             </div>
         </div>
     )
 }
 
 
-const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const EraContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
     const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
@@ -445,18 +443,18 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilter
 
 const LocationDropdownContent = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
 
-const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 
     return (
         <div>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
-                <LocationContent columns={2} filters={filters} setFilters={setFilters} />
+                <LocationContent columns={2} filters={filters} />
             </div>
         </div>
     )
 }
 
-const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
     const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
@@ -485,8 +483,14 @@ const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
 
 
 
+type ExtendedFilterContentProps = FiltersContentProps & {
+    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
+}
+type ExtendedFilterDropdownProps = FiltersDropdownProps & {
+    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
+}
 
-const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const SortDropdown: React.FC<ExtendedFilterDropdownProps> = ({ filters, setFilters }) => {
 
     return (
         <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
@@ -498,7 +502,7 @@ const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =
     )
 }
 
-const SortContent: React.FC<FiltersContentProps> = ({ filters, setFilters }) => {
+const SortContent: React.FC<ExtendedFilterContentProps> = ({ filters, setFilters }) => {
     const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
 
     const addSort = (value: string) => {
