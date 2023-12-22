@@ -39,8 +39,6 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
     const renderCount = useRef(0);
     const searchParamsObj = useSearchParams()
 
-    console.log("searchParamsObj", searchParamsObj.getAll('make'))
-
     // main fetch function
     const fetchData = async (filterObject: any) => {
         setLoading(true);
@@ -78,8 +76,8 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
         if (searchParamsObj.getAll('make').length > 0) {
             newQuery = { ...newQuery, make: searchParamsObj.getAll('make') }
         }
-        if (searchParamsObj.getAll('categories').length > 0) {
-            newQuery = { ...newQuery, categories: searchParamsObj.getAll('categories') }
+        if (searchParamsObj.getAll('category').length > 0) {
+            newQuery = { ...newQuery, category: searchParamsObj.getAll('category') }
         }
         if (searchParamsObj.getAll('location').length > 0) {
             newQuery = { ...newQuery, location: searchParamsObj.getAll('location') }
@@ -87,6 +85,8 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
         if (searchParamsObj.getAll('era').length > 0) {
             newQuery = { ...newQuery, era: searchParamsObj.getAll('era') }
         }
+
+        console.log(newQuery)
 
 
         filtersFromSearchParams(newQuery);
