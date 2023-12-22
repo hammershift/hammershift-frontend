@@ -72,24 +72,27 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
 
         };
 
-        let newQuery = {};
-        if (searchParamsObj.getAll('make').length > 0) {
-            newQuery = { ...newQuery, make: searchParamsObj.getAll('make') }
-        }
-        if (searchParamsObj.getAll('category').length > 0) {
-            newQuery = { ...newQuery, category: searchParamsObj.getAll('category') }
-        }
-        if (searchParamsObj.getAll('location').length > 0) {
-            newQuery = { ...newQuery, location: searchParamsObj.getAll('location') }
-        }
-        if (searchParamsObj.getAll('era').length > 0) {
-            newQuery = { ...newQuery, era: searchParamsObj.getAll('era') }
+        const getSearchParams = () => {
+            let newQuery = {};
+            if (searchParamsObj.getAll('make').length > 0) {
+                newQuery = { ...newQuery, make: searchParamsObj.getAll('make') }
+            }
+            if (searchParamsObj.getAll('category').length > 0) {
+                newQuery = { ...newQuery, category: searchParamsObj.getAll('category') }
+            }
+            if (searchParamsObj.getAll('location').length > 0) {
+                newQuery = { ...newQuery, location: searchParamsObj.getAll('location') }
+            }
+            if (searchParamsObj.getAll('era').length > 0) {
+                newQuery = { ...newQuery, era: searchParamsObj.getAll('era') }
+            }
+
+            console.log("new Query:", newQuery)
+            filtersFromSearchParams(newQuery);
+
         }
 
-        console.log(newQuery)
-
-
-        filtersFromSearchParams(newQuery);
+        getSearchParams();
 
     }
 
