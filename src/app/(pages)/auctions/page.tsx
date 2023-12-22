@@ -64,6 +64,8 @@ const AuctionListingPage = ({ searchParams }: { searchParams: { make: string } }
                 query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
             });
             setFilters(query);
+            console.log("query from cfo:", query)
+
         };
 
         filtersFromSearchParams(searchParams);
