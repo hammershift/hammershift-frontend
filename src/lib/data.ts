@@ -89,6 +89,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
       let auctions = {
         total: list.total,
         cars: list.cars.map((data: any) => ({
+          _id: data._id,
           auction_id: data.auction_id,
           description: [...data.description],
           images_list: [...data.images_list],
@@ -183,11 +184,12 @@ export const addPrizePool = async (pot: AddPrizePoolProps, auction_id: string | 
 };
 
 export const sortByNewGames = async () => {
-  const res = await fetch('api/cars/filter?sort=Newly%20Listed&&limit=3');
+  const res = await fetch('/api/cars/filter?sort=Newly%20Listed&&limit=3');
   const data = await res.json();
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -216,11 +218,12 @@ export const sortByNewGames = async () => {
 };
 
 export const sortByMostExpensive = async () => {
-  const res = await fetch('api/cars/filter?sort=Most%20Expensive&&limit=3');
+  const res = await fetch('/api/cars/filter?sort=Most%20Expensive&&limit=3');
   const data = await res.json();
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -249,11 +252,12 @@ export const sortByMostExpensive = async () => {
 };
 
 export const sortByMostBids = async () => {
-  const res = await fetch('api/cars/filter?sort=Most%20Bids&&limit=3');
+  const res = await fetch('/api/cars/filter?sort=Most%20Bids&&limit=3');
   const data = await res.json();
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -282,11 +286,12 @@ export const sortByMostBids = async () => {
 };
 
 export const sortByTrending = async () => {
-  const res = await fetch('api/cars/filter?sort=Ending%20Soon&&limit=3');
+  const res = await fetch('/api/cars/filter?sort=Ending%20Soon&&limit=3');
   const data = await res.json();
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -312,4 +317,16 @@ export const sortByTrending = async () => {
     })),
   };
   return auctions;
+};
+
+export const getMyWagers = async () => {
+  const res = await fetch('/api/myWagers');
+  const data = await res.json();
+  return data;
+};
+
+export const getMyWatchlist = async () => {
+  const res = await fetch('/api/myWatchlist');
+  const data = await res.json();
+  return data;
 };

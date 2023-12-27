@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import Card from "../../components/card";
-import { useTimer } from "@/app/_context/TimerContext";
+import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 
 import CancelIcon from "../../../../public/images/x-icon.svg";
 import DollarIcon from "../../../../public/images/dollar.svg";
@@ -14,6 +14,7 @@ import PlayersIcon from "../../../../public/images/users-01.svg";
 import HourGlassIcon from "../../../../public/images/hour-glass.svg";
 import PrizeIcon from "../../../../public/images/monetization-browser-bag.svg";
 import CheckIcon from "../../../../public/images/check-black.svg";
+import CheckIconGreen from "../../../../public/images/check-green.svg";
 
 import CameraPlus from "../../../../public/images/camera-plus.svg";
 import GifIcon from "../../../../public/images/image-document-gif.svg";
@@ -42,6 +43,8 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
+import { sortByMostExpensive, sortByNewGames } from "@/lib/data";
+import { BounceLoader } from "react-spinners";
 dayjs.extend(relativeTime);
 
 export interface CarDataOneProps {
@@ -216,42 +219,120 @@ export default TitleContainer;
 interface WatchAndWagerButtonsProps {
     toggleWagerModal: () => void;
     alreadyWagered: boolean;
+    auctionID: string;
 }
 
 export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
+    auctionID,
     toggleWagerModal,
     alreadyWagered,
 }) => {
+    const [isWatching, setIsWatching] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        const storedWatchStatus = localStorage.getItem(
+            `watchStatus_${auctionID}`
+        );
+        if (storedWatchStatus) {
+            setIsWatching(true);
+        }
+    }, [auctionID]);
+
+    const updateWatchlist = async (add: boolean) => {
+        setIsLoading(true);
+
+        try {
+            const response = await fetch("/api/myWatchlist", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    auctionID,
+                    action: add ? "add" : "remove",
+                }),
+            });
+
+            const data = await response.json();
+            console.log(data.message);
+            setIsLoading(false);
+            return data.message;
+        } catch (error) {
+            console.error("Error while updating watchlist:", error);
+            setIsLoading(false);
+            return null;
+        }
+    };
+
+    const handleWatchClick = async () => {
+        if (!session) {
+            router.push("/create_account");
+            return;
+        }
+
+        const newWatchStatus = !isWatching;
+        setIsWatching(newWatchStatus);
+
+        if (newWatchStatus) {
+            const message = await updateWatchlist(true);
+            if (message) {
+                localStorage.setItem(`watchStatus_${auctionID}`, "watched");
+            }
+        } else {
+            const message = await updateWatchlist(false);
+            if (message) {
+                localStorage.removeItem(`watchStatus_${auctionID}`);
+            }
+        }
+    };
+
     return (
-        <div className="tw-flex tw-gap-4">
-            <button className="btn-transparent-white tw-flex tw-items-center">
-                <Image
-                    src={WatchListIcon}
-                    width={20}
-                    height={20}
-                    alt="dollar"
-                    className="tw-w-5 tw-h-5  tw-mr-2"
-                />
-                WATCH
-            </button>
-            {alreadyWagered ? (
-                <button
-                    type="button"
-                    disabled
-                    className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
-                >
-                    WAGERED{" "}
-                    <Image
-                        src={CheckIcon}
-                        alt=""
-                        className="tw-border-2 tw-border-[#0f1923] tw-rounded-full tw-p-[1.5px] tw-w-5 tw-h-5 black-check-filter"
-                    />
-                </button>
-            ) : (
-                <button className="btn-yellow" onClick={toggleWagerModal}>
-                    PLACE MY WAGER
-                </button>
-            )}
+        <div>
+            <div>
+                <div className="tw-flex tw-gap-4">
+                    <button
+                        className={`btn-transparent-white tw-flex tw-items-center tw-transition-all`}
+                        onClick={handleWatchClick}
+                    >
+                        <Image
+                            src={WatchListIcon}
+                            width={20}
+                            height={20}
+                            alt={isWatching ? "Checked" : "Watch"}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
+                                isWatching
+                                    ? "scale-animation is-watching"
+                                    : "scale-animation"
+                            }`}
+                        />
+                        {isWatching ? "WATCHING" : "WATCH"}
+                    </button>
+                    {alreadyWagered ? (
+                        <button
+                            type="button"
+                            disabled
+                            className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+                        >
+                            WAGERED{" "}
+                            <Image
+                                src={CheckIcon}
+                                alt=""
+                                className="tw-border-2 tw-border-[#0f1923] tw-rounded-full tw-p-[1.5px] tw-w-5 tw-h-5 black-check-filter"
+                            />
+                        </button>
+                    ) : (
+                        <button
+                            className="btn-yellow"
+                            onClick={toggleWagerModal}
+                        >
+                            PLACE MY WAGER
+                        </button>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
@@ -825,6 +906,20 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
 };
 
 export const GamesYouMightLike = () => {
+    const [gamesYouMightLike, setGamesYouMightLike] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const gamesYouMightLikeData = await sortByMostExpensive();
+                setGamesYouMightLike(gamesYouMightLikeData.cars);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
     return (
         <div className="section-container tw-py-8 sm:tw-py-12 tw-mb-8 sm:tw-mb-16 tw-mt-8 md:tw-mt-16">
             <header className="tw-max-w-[1312px]">
@@ -848,16 +943,26 @@ export const GamesYouMightLike = () => {
             <section className="tw-overflow-hidden">
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-                        {/* to be replaced by array.map */}
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
-                        <div className="tw-w-[200px] sm:tw-w-[416px]">
-                            <Card />
-                        </div>
+                        {gamesYouMightLike.map((auction: any, index: any) => (
+                            <TimerProvider
+                                key={index}
+                                deadline={auction.deadline}
+                            >
+                                <div className="tw-w-[200px] sm:tw-w-[416px]">
+                                    <Card
+                                        object_id={auction._id}
+                                        image={auction.image}
+                                        year={auction.year}
+                                        make={auction.make}
+                                        model={auction.model}
+                                        description={auction.description}
+                                        deadline={auction.deadline}
+                                        auction_id={auction.auction_id}
+                                        price={auction.price}
+                                    />
+                                </div>
+                            </TimerProvider>
+                        ))}
                     </div>
                 </div>
             </section>

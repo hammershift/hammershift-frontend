@@ -4,10 +4,10 @@ import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, Deta
 import TitleContainer from '@/app/ui/car_view_page/CarViewPage';
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection';
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data';
-import { addPrizePool, createWager, getCarData, getOneUserWager, getWagers } from '@/lib/data';
+import { addPrizePool, createWager, getCarData, getOneUserWager, getWagers, sortByNewGames } from '@/lib/data';
 import { TimerProvider } from '@/app/_context/TimerContext';
 import WagerModal from '@/app/components/wager_modal';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
@@ -198,14 +198,13 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             handleWagerSubmit={handleWagerSubmit}
             players_num={playerNum}
             prize={carData.pot}
-            walletBalance={walletBalance} // TEST IMPLEMENTATION
           />
         </TimerProvider>
       ) : null}
       <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
         <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
         <div className='tw-hidden sm:tw-block'>
-          <WatchAndWagerButtons alreadyWagered={alreadyWagered} toggleWagerModal={showWagerModal} />
+          <WatchAndWagerButtons auctionID={carData?._id} alreadyWagered={alreadyWagered} toggleWagerModal={showWagerModal} />
         </div>
       </div>
       <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
@@ -228,7 +227,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             </TimerProvider>
           ) : null}
           <div className='tw-block sm:tw-hidden tw-mt-8'>
-            <WatchAndWagerButtons alreadyWagered={alreadyWagered} toggleWagerModal={showWagerModal} />
+            <WatchAndWagerButtons auctionID={carData?._id} alreadyWagered={alreadyWagered} toggleWagerModal={showWagerModal} />
           </div>
           {carData ? (
             <>

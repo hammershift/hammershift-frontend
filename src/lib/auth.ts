@@ -24,6 +24,7 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 }
 
 export const authOptions: NextAuthOptions = {
+  // debug: true,
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: 'jwt',

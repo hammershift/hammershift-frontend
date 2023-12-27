@@ -40,7 +40,7 @@ const carSchema = new mongoose.Schema(
     listing_details: { type: [String], required: true },
     page_url: { type: String, required: true },
     website: { type: String, required: true },
-    winner: winnerSchema,
+    winner: [winnerSchema],
   },
   { timestamps: true }
 );
