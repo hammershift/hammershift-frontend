@@ -22,7 +22,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
   const [wagerErrorMessage, setWagerErrorMessage] = useState(''); // TEST IMPLEMENTATION
 
-  const router = useRouter();
+  // const router = useRouter();
 
   const ID = params.id;
 
@@ -198,6 +198,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             handleWagerSubmit={handleWagerSubmit}
             players_num={playerNum}
             prize={carData.pot}
+            walletBalance={walletBalance}
           />
         </TimerProvider>
       ) : null}
