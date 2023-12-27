@@ -100,6 +100,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
       let auctions = {
         total: list.total,
         cars: list.cars.map((data: any) => ({
+          _id: data._id,
           auction_id: data.auction_id,
           description: [...data.description],
           images_list: [...data.images_list],
@@ -190,6 +191,7 @@ export const sortByNewGames = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -223,6 +225,7 @@ export const sortByMostExpensive = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -256,6 +259,7 @@ export const sortByMostBids = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -289,6 +293,7 @@ export const sortByTrending = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -315,3 +320,15 @@ export const sortByTrending = async () => {
   };
   return auctions;
 };
+
+export const getMyWagers = async () => {
+  const res = await fetch("/api/myWagers");
+  const data = await res.json();
+  return data;
+}
+
+export const getMyWatchlist = async () => {
+  const res = await fetch("/api/myWatchlist");
+  const data = await res.json();
+  return data;
+}

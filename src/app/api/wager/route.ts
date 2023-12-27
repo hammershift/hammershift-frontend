@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
 
     if (id && user) {
       const wager = await Wager.find({
-        'auctionID': new ObjectId(id),
+        auctionID: new ObjectId(id),
         'user._id': new ObjectId(user),
       });
       return NextResponse.json(wager);
@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (user) {
-      const userWagers = await Wager.find({ "user._id": new ObjectId(user) });
+      const userWagers = await Wager.find({ 'user._id': new ObjectId(user) });
       return NextResponse.json(userWagers);
     }
     // api/wager to get all wagers

@@ -2,6 +2,22 @@
   overflow: hidden;
 }
 
+.btn-transparent-white {
+  transition: border-color 0.3s ease;
+}
+
+.btn-transparent-white.tw-border-green-500 {
+  border-color: #22c55e;
+}
+
+.scale-animation {
+  transition: transform 0.3s ease;
+}
+
+.scale-animation.is-watching {
+  transform: scale(1.2);
+}
+
 .valid-password {
   color: green;
   font-weight: bold;
@@ -17,7 +33,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
