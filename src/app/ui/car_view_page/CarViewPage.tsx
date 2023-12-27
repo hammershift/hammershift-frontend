@@ -950,6 +950,7 @@ export const GamesYouMightLike = () => {
                             >
                                 <div className="tw-w-[200px] sm:tw-w-[416px]">
                                     <Card
+                                        object_id={auction._id}
                                         image={auction.image}
                                         year={auction.year}
                                         make={auction.make}

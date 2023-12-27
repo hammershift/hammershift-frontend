@@ -191,6 +191,7 @@ export const sortByNewGames = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -224,6 +225,7 @@ export const sortByMostExpensive = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -257,6 +259,7 @@ export const sortByMostBids = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
@@ -290,6 +293,7 @@ export const sortByTrending = async () => {
   let auctions = {
     total: data.total,
     cars: data.cars.map((data: any) => ({
+      _id: data._id,
       auction_id: data.auction_id,
       description: [...data.description],
       images_list: [...data.images_list],
