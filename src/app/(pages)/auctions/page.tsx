@@ -149,7 +149,7 @@ const AuctionListingPage = () => {
             {
                 loading && listing.length === 0
                     ? <Loader />
-                    : <>{(listing.length != 0 && filters != filtersInitialState && !loading)
+                    : <>{(listing.length != 0 && filters != filtersInitialState)
                         ? <div className='tw-pb-16 '>
                             <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
                                 <div className=' tw-w-full 2xl:tw-w-[1312px] '>
