@@ -25,27 +25,33 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .exec();
 
-    const wagerDetails = userWagers.map((wager) => {
-      const auctionDetails = wager.auctionID;
-      const priceAttribute = auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price');
+    const wagerDetails = userWagers
+      .map((wager) => {
+        if (!wager.auctionID) {
+          console.error(`Missing auction details for wager with ID: ${wager._id}`);
+          return null;
+        }
 
-      return {
-        _id: wager._id,
-        auctionObjectId: auctionDetails._id,
-        auctionIdentifierId: auctionDetails.auction_id,
-        auctionPot: auctionDetails.pot,
-        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
-        auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
-        auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
-        auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
-        auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
-        auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
-        priceGuessed: wager.priceGuessed,
-        wagerAmount: wager.wagerAmount,
-        user: wager.user,
-        createdAt: wager.createdAt,
-      };
-    });
+        const auctionDetails = wager.auctionID;
+
+        return {
+          _id: wager._id.toString(),
+          auctionObjectId: auctionDetails._id,
+          auctionIdentifierId: auctionDetails.auction_id,
+          auctionPot: auctionDetails.pot,
+          auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
+          auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
+          auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
+          auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
+          auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
+          auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
+          priceGuessed: wager.priceGuessed,
+          wagerAmount: wager.wagerAmount,
+          user: wager.user,
+          createdAt: wager.createdAt,
+        };
+      })
+      .filter((detail) => detail !== null);
 
     return NextResponse.json({ wagers: wagerDetails }, { status: 200 });
   } catch (error) {

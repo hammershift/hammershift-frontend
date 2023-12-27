@@ -76,23 +76,30 @@ export async function GET(req: NextRequest) {
       .sort({ createdAt: -1 })
       .exec();
 
-    const watchlistDetails = userWatchlist.map((item) => {
-      const auctionDetails = item.auctionID;
+    const watchlistDetails = userWatchlist
+      .map((item) => {
+        if (!item.auctionID) {
+          console.error(`Missing auction details for watchlist item with ID: ${item._id}`);
+          return null;
+        }
 
-      return {
-        _id: item._id,
-        auctionObjectId: auctionDetails._id,
-        auctionIdentifierId: auctionDetails.auction_id,
-        auctionPot: auctionDetails.pot,
-        auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
-        auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
-        auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
-        auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
-        auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
-        auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
-        createdAt: item.createdAt,
-      };
-    });
+        const auctionDetails = item.auctionID;
+
+        return {
+          _id: item._id.toString(),
+          auctionObjectId: auctionDetails._id,
+          auctionIdentifierId: auctionDetails.auction_id,
+          auctionPot: auctionDetails.pot,
+          auctionImage: auctionDetails.images_list.length > 0 ? auctionDetails.images_list[0].src : null,
+          auctionYear: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'year')?.value,
+          auctionMake: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'make')?.value,
+          auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
+          auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
+          auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
+          createdAt: item.createdAt,
+        };
+      })
+      .filter((detail) => detail !== null);
 
     return NextResponse.json({ watchlist: watchlistDetails }, { status: 200 });
   } catch (error) {

@@ -3,6 +3,8 @@ export interface User {
   email: string;
   password?: string;
   image?: string;
+  isActive: boolean;
+  balance: number;
 }
 
 export interface Credentials {

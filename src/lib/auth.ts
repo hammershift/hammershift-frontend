@@ -71,7 +71,6 @@ export const authOptions: NextAuthOptions = {
       console.log('Session callback - Final Session object:', session);
       return session;
     },
-
     async jwt({ token, user }) {
       console.log('JWT callback - Initial token:', token);
       console.log('JWT callback - User:', user);
@@ -91,6 +90,13 @@ export const authOptions: NextAuthOptions = {
         token.fullName = dbUser.fullName;
         token.username = dbUser.username;
         token.image = dbUser.image;
+        if (dbUser.isActive === undefined) {
+          dbUser.isActive = true;
+          dbUser.balance = 100;
+          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: dbUser });
+        }
+        token.isActive = dbUser.isActive;
+        token.balance = dbUser.balance;
       }
 
       console.log('JWT callback - Final token:', token);
