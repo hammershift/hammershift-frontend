@@ -198,7 +198,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             handleWagerSubmit={handleWagerSubmit}
             players_num={playerNum}
             prize={carData.pot}
-            walletBalance={walletBalance}
+            // walletBalance={walletBalance}
           />
         </TimerProvider>
       ) : null}
