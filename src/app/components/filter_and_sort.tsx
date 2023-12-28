@@ -512,7 +512,7 @@ const addSortToFilters = (value: string, filters: filtersProps, router: any) => 
         })
     }
 
-    queryArray.push(`sort=${value}`)
+    queryArray.push(`sort=${value.split(" ").join("%20")}`)
 
     const queryString = queryArray.join("&");
     router.push("/auctions?" + queryString)
