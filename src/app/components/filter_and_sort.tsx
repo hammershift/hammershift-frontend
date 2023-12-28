@@ -45,8 +45,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
     const [dropdownMenuRegular, setDropdownMenuRegular] = useState<DropdownMenuProps>(null);
 
     const [dropdownMenuSmall, setDropdownMenuSmall] = useState<DropdownMenuProps>(null)
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
+
 
     const [totalAuctions, setTotalAuctions] = useState(0);
 
@@ -78,8 +77,8 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                     {/* Dropdown for Make filter*/}
                     <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Make" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Make") return null; else return "Make" })}>
-                                Make
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Make" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Make") return null; else return "Make" })}>
+                                {filters.make[0] == "All" ? "Make" : ("Make: " + filters.make.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
@@ -90,8 +89,8 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                     {/* Dropdown for Category filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2" >
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Category" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Category") return null; else return "Category" })}>
-                                Category
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Category" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Category") return null; else return "Category" })}>
+                                {filters.category[0] == "All" ? "Category" : ("Category: " + filters.category.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
@@ -102,8 +101,8 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                     {/* Dropdown for Era filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2" >
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Era" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Era") return null; else return "Era" })}>
-                                Era
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Era" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Era") return null; else return "Era" })}>
+                                {filters.era[0] == "All" ? "Era" : ("Era: " + filters.era.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
@@ -115,8 +114,8 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                     {/* Dropdown for Location filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2" >
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Location" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Location") return null; else return "Location" })}>
-                                Location
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Location" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Location") return null; else return "Location" })}>
+                                {filters.location[0] == "All" ? "Location" : ("Location: " + filters.location.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
@@ -131,8 +130,8 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                 {/* Dropdown for Sort*/}
                 <div className="tw-relative tw-text-left tw-mx-2">
                     <div>
-                        <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
-                            Sort by:
+                        <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
+                            {filters.category[0] == "Newly Listed" ? "Sort by:" : ("Sort by: " + filters.sort)}
                             <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                         </button>
                     </div>

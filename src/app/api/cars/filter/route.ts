@@ -53,6 +53,7 @@ export async function GET(req: NextRequest) {
               $elemMatch: { key: "status", value: { $in: completed } },
             },
           },
+          { isActive: true },
           {
             $or: [
               {
@@ -186,7 +187,9 @@ export async function GET(req: NextRequest) {
 
     const totalCars = await Auctions.find(query);
 
-    const filteredCars = await Auctions.find(query)
+    const filteredCars = await Auctions.find({
+      $and: [query, { isActive: true }]
+    })
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any } });
