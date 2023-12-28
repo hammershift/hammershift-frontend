@@ -14,6 +14,7 @@ import PlayersIcon from "../../../../public/images/users-01.svg";
 import HourGlassIcon from "../../../../public/images/hour-glass.svg";
 import PrizeIcon from "../../../../public/images/monetization-browser-bag.svg";
 import CheckIcon from "../../../../public/images/check-black.svg";
+import CheckIconGreen from "../../../../public/images/check-green.svg";
 
 import CameraPlus from "../../../../public/images/camera-plus.svg";
 import GifIcon from "../../../../public/images/image-document-gif.svg";
@@ -43,6 +44,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
 import { sortByMostExpensive, sortByNewGames } from "@/lib/data";
+import { BounceLoader } from "react-spinners";
 dayjs.extend(relativeTime);
 
 export interface CarDataOneProps {
@@ -91,125 +93,6 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
 }) => {
     const timerValues = useTimer();
 
-    return (
-        <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
-            <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-                {year} {make} {model}
-            </div>
-            <div className="info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4">
-                <div className="info-left-marker tw-w-[300px]">
-                    <div className="tw-flex">
-                        <div>
-                            <Image
-                                src={DollarIcon}
-                                width={20}
-                                height={20}
-                                alt="dollar"
-                                className="tw-w-5 tw-h-5  tw-mr-2"
-                            />
-                        </div>
-                        <div className="tw-opacity-80 tw-flex">
-                            Current Bid:
-                            <span className="tw-text-[#49C742] tw-font-bold tw-ml-2">{`$ ${String(
-                                current_bid
-                            )}`}</span>
-                            <span className="tw-block md:tw-hidden tw-ml-2">{`(${bids_num} bids)`}</span>
-                        </div>
-                    </div>
-                    <div className="tw-flex tw-mt-0 md:tw-mt-1">
-                        <div>
-                            <Image
-                                src={CalendarIcon}
-                                width={20}
-                                height={20}
-                                alt="calendar"
-                                className="tw-w-5 tw-h-5  tw-mr-2"
-                            />
-                        </div>
-                        <span className="tw-opacity-80">
-                            Ending:{" "}
-                            <span className="tw-font-bold">{ending_date}</span>
-                        </span>
-                    </div>
-                </div>
-                <div className="right-section-marker">
-                    <div className="top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between">
-                        <div className="tw-w-[160px] tw-hidden md:tw-flex">
-                            <div>
-                                <Image
-                                    src={HashtagIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5  tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Bids:{" "}
-                                <span className="tw-font-bold">{bids_num}</span>
-                            </span>
-                        </div>
-                        <div className="tw-flex">
-                            <div>
-                                <Image
-                                    src={HourGlassIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5  tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Time Left:{" "}
-                                <span className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div className="bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
-                        <div className="tw-flex  tw-w-[160px]">
-                            <div>
-                                <Image
-                                    src={PlayersIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5  tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Players:{" "}
-                                <span className="tw-font-bold ">
-                                    {players_num}
-                                </span>
-                            </span>
-                        </div>
-                        <div className="tw-flex">
-                            <div>
-                                <Image
-                                    src={PrizeIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5 tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Prize:{" "}
-                                <span className="tw-font-bold ">
-                                    $
-                                    {pot
-                                        ? new Intl.NumberFormat().format(
-                                            pot || 0
-                                        )
-                                        : " --"}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
     return (
         <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
             <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
@@ -326,42 +209,120 @@ export default TitleContainer;
 interface WatchAndWagerButtonsProps {
     toggleWagerModal: () => void;
     alreadyWagered: boolean;
+    auctionID: string;
 }
 
 export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
+    auctionID,
     toggleWagerModal,
     alreadyWagered,
 }) => {
+
+    const [isWatching, setIsWatching] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        const storedWatchStatus = localStorage.getItem(
+            `watchStatus_${auctionID}`
+        );
+        if (storedWatchStatus) {
+            setIsWatching(true);
+        }
+    }, [auctionID]);
+
+    const updateWatchlist = async (add: boolean) => {
+        setIsLoading(true);
+
+        try {
+            const response = await fetch("/api/myWatchlist", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    auctionID,
+                    action: add ? "add" : "remove",
+                }),
+            });
+
+            const data = await response.json();
+            console.log(data.message);
+            setIsLoading(false);
+            return data.message;
+        } catch (error) {
+            console.error("Error while updating watchlist:", error);
+            setIsLoading(false);
+            return null;
+        }
+    };
+
+    const handleWatchClick = async () => {
+        if (!session) {
+            router.push("/create_account");
+            return;
+        }
+
+        const newWatchStatus = !isWatching;
+        setIsWatching(newWatchStatus);
+
+        if (newWatchStatus) {
+            const message = await updateWatchlist(true);
+            if (message) {
+                localStorage.setItem(`watchStatus_${auctionID}`, "watched");
+            }
+        } else {
+            const message = await updateWatchlist(false);
+            if (message) {
+                localStorage.removeItem(`watchStatus_${auctionID}`);
+            }
+        }
+    };
+
     return (
-        <div className="tw-flex tw-gap-4">
-            <button className="btn-transparent-white tw-flex tw-items-center">
-                <Image
-                    src={WatchListIcon}
-                    width={20}
-                    height={20}
-                    alt="dollar"
-                    className="tw-w-5 tw-h-5  tw-mr-2"
-                />
-                WATCH
-            </button>
-            {alreadyWagered ? (
-                <button
-                    type="button"
-                    disabled
-                    className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
-                >
-                    WAGERED{" "}
-                    <Image
-                        src={CheckIcon}
-                        alt=""
-                        className="tw-border-2 tw-border-[#0f1923] tw-rounded-full tw-p-[1.5px] tw-w-5 tw-h-5 black-check-filter"
-                    />
-                </button>
-            ) : (
-                <button className="btn-yellow" onClick={toggleWagerModal}>
-                    PLACE MY WAGER
-                </button>
-            )}
+        <div>
+            <div>
+                <div className="tw-flex tw-gap-4">
+                    <button
+                        className={`btn-transparent-white tw-flex tw-items-center tw-transition-all`}
+                        onClick={handleWatchClick}
+                    >
+                        <Image
+                            src={WatchListIcon}
+                            width={20}
+                            height={20}
+                            alt={isWatching ? "Checked" : "Watch"}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
+                                ? "scale-animation is-watching"
+                                : "scale-animation"
+                                }`}
+                        />
+                        {isWatching ? "WATCHING" : "WATCH"}
+                    </button>
+                    {alreadyWagered ? (
+                        <button
+                            type="button"
+                            disabled
+                            className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+                        >
+                            WAGERED{" "}
+                            <Image
+                                src={CheckIcon}
+                                alt=""
+                                className="tw-border-2 tw-border-[#0f1923] tw-rounded-full tw-p-[1.5px] tw-w-5 tw-h-5 black-check-filter"
+                            />
+                        </button>
+                    ) : (
+                        <button
+                            className="btn-yellow"
+                            onClick={toggleWagerModal}
+                        >
+                            PLACE MY WAGER
+                        </button>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
@@ -671,9 +632,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
             <div className="tw-relative tw-pb-8 sm:tw-pb-0">
                 <div className="tw-px-5 tw-w-full tw-h-auto tw-pt-8">
                     <div className="tw-flex tw-justify-between">
-                        <div className="tw-font-bold tw-text-[18px]">
-                            WAGERS
-                        </div>
+                        <div className="tw-font-bold tw-text-[18px]">WAGERS</div>
                         <Image
                             src={ArrowDown}
                             width={20}
@@ -692,11 +651,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                 >
                                     <div className="tw-flex">
                                         <Image
-                                            src={
-                                                wager.user.image
-                                                    ? wager.user.image
-                                                    : AvatarOne
-                                            }
+                                            src={wager.user.image ? wager.user.image : AvatarOne}
                                             width={40}
                                             height={40}
                                             alt="dollar"
@@ -704,15 +659,12 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
-                                                {session?.user.id ===
-                                                    wager.user._id
+                                                {session?.user.id === wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
                                             <div className="tw-opacity-50">
-                                                {dayjs(
-                                                    wager.createdAt
-                                                ).fromNow()}
+                                                {dayjs(wager.createdAt).fromNow()}
                                             </div>
                                         </div>
                                     </div>
@@ -723,13 +675,8 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                                 : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
                                         }
                                     >
-                                        <span className="tw-hidden xl:tw-inline-block">
-                                            Wager:
-                                        </span>{" "}
-                                        $
-                                        {new Intl.NumberFormat().format(
-                                            wager.priceGuessed
-                                        )}
+                                        <span className="tw-hidden xl:tw-inline-block">Wager:</span>{" "}
+                                        ${new Intl.NumberFormat().format(wager.priceGuessed)}
                                     </button>
                                 </div>
                             );

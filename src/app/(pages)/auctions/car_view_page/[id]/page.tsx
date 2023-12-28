@@ -1,29 +1,14 @@
-"use client";
-import React, { Suspense, useEffect, useState } from "react";
-import {
-  WatchAndWagerButtons,
-  PhotosLayout,
-  ArticleSection,
-  WagersSection,
-  DetailsSection,
-  CommentsSection,
-  GamesYouMightLike,
-} from "@/app/ui/car_view_page/CarViewPage";
-import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
-import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
-import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
-import {
-  addPrizePool,
-  createWager,
-  getCarData,
-  getOneUserWager,
-  getWagers,
-  sortByNewGames,
-} from "@/lib/data";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import WagerModal from "@/app/components/wager_modal";
-import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+'use client';
+import React, { Suspense, useEffect, useState } from 'react';
+import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/CarViewPage';
+import TitleContainer from '@/app/ui/car_view_page/CarViewPage';
+import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection';
+import { auctionDataOne, carDataTwo } from '../../../../../sample_data';
+import { addPrizePool, createWager, getCarData, getOneUserWager, getWagers, sortByNewGames } from '@/lib/data';
+import { TimerProvider } from '@/app/_context/TimerContext';
+import WagerModal from '@/app/components/wager_modal';
+import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
@@ -33,8 +18,34 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const [playerNum, setPlayerNum] = useState(0);
   const [toggleWagerModal, setToggleWagerModal] = useState(false);
   const [alreadyWagered, setAlreadyWagered] = useState(false);
+  const [walletBalance, setWalletBalance] = useState(0);
+  const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
+  const [wagerErrorMessage, setWagerErrorMessage] = useState(''); // TEST IMPLEMENTATION
+
+  // const router = useRouter();
 
   const ID = params.id;
+
+  // TEST IMPLEMENTATION
+  useEffect(() => {
+    const fetchWalletBalance = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch(`/api/wallet?userId=${session.user.id}`);
+          const data = await response.json();
+          if (response.ok) {
+            setWalletBalance(data.balance);
+          } else {
+            console.error('Failed to fetch wallet balance:', data.message);
+          }
+        } catch (error) {
+          console.error('Error fetching wallet balance:', error);
+        }
+      }
+    };
+
+    fetchWalletBalance();
+  }, [session]);
 
   useEffect(() => {
     const fetchCarData = async () => {
@@ -43,9 +54,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       setWagerInputs({ ...wagerInputs, auctionID: data?._id });
       if (session) {
         const userWager = await getOneUserWager(data?._id, session?.user.id);
-        userWager.length === 0
-          ? setAlreadyWagered(false)
-          : setAlreadyWagered(true);
+        userWager.length === 0 ? setAlreadyWagered(false) : setAlreadyWagered(true);
         console.log(session?.user.id);
       }
       const wagers = await getWagers(data?._id);
@@ -58,25 +67,25 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
 
   const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
-  const date = new Date(carData?.deadline || "2023-12-01T03:27:01.087+00:00");
-  const formattedDateString = new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
+  const date = new Date(carData?.deadline || '2023-12-01T03:27:01.087+00:00');
+  const formattedDateString = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
     hour12: true,
   }).format(date);
 
   useEffect(() => {
     if (toggleWagerModal) {
-      document.body.classList.add("stop-scrolling");
+      document.body.classList.add('stop-scrolling');
     } else {
-      document.body.classList.remove("stop-scrolling");
+      document.body.classList.remove('stop-scrolling');
     }
 
     return () => {
-      document.body.classList.remove("body-no-scroll");
+      document.body.classList.remove('body-no-scroll');
     };
   }, [toggleWagerModal]);
 
@@ -93,17 +102,31 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   }
 
   const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
     switch (e.target.name) {
-      case "price-guessed":
+      case 'price-guessed':
         setWagerInputs({
           ...wagerInputs,
-          priceGuessed: Number(e.target.value),
+          priceGuessed: value,
         });
         break;
-      case "wager-amount":
+      case 'wager-amount':
+        if (value <= 0) {
+          // check for positive numbers
+          setIsWagerValid(false);
+          setWagerErrorMessage('Please enter a valid wager amount.');
+        } else if (value > walletBalance) {
+          // check if the user has enough funds
+          setIsWagerValid(false);
+          setWagerErrorMessage('Insufficient funds. Please top-up your wallet.');
+        } else {
+          // if the input is valid and the user has enough funds
+          setIsWagerValid(true);
+          setWagerErrorMessage('');
+        }
         setWagerInputs({
           ...wagerInputs,
-          wagerAmount: Number(e.target.value),
+          wagerAmount: value,
         });
         break;
       default:
@@ -111,26 +134,52 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const handleWagerSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    sessionData: any
-  ) => {
+  const handleWagerSubmit = async (e: React.FormEvent<HTMLFormElement>, sessionData: any) => {
     e.preventDefault();
-    if (wagerInputs.wagerAmount) {
+
+    // ensure wagerAmount is defined and is a number greater than zero
+    const wagerAmount = wagerInputs.wagerAmount ?? 0;
+    if (wagerAmount > walletBalance) {
+      console.log('Insufficient funds. Please top-up your wallet.'); // check if the defined wager amount is more than the wallet balance
+      return;
+    }
+
+    try {
+      // update the prize pool
       await addPrizePool(
         {
-          pot:
-            carData.pot + Math.floor(wagerInputs.wagerAmount * 0.88) ||
-            Math.floor(wagerInputs.wagerAmount * 0.88),
+          pot: carData.pot + Math.floor(wagerAmount * 0.88) || Math.floor(wagerAmount * 0.88),
         },
         urlPath.id
       );
-    }
-    console.log({ ...wagerInputs, ...sessionData });
-    await createWager({ ...wagerInputs, ...sessionData });
-    console.log("wager created");
 
-    setToggleWagerModal(false);
+      // deduct the wagerAmount from the wallet
+      const walletResponse = await fetch('/api/wallet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wagerAmount: wagerAmount }),
+      });
+
+      const walletData = await walletResponse.json();
+      if (!walletResponse.ok) {
+        console.error('Failed to update wallet balance:', walletData); // if the wallet update was not successful, log the error and stop
+        return;
+      }
+
+      // the wallet has been successfully updated, place the wager
+      const wagerResponse = await createWager({ ...wagerInputs, wagerAmount, user: sessionData.user });
+      if (!wagerResponse.ok) {
+        console.error('Failed to place wager');
+        return;
+      }
+
+      // wallet update and wager placement were both successful
+      console.log('Wager placed successfully. Wallet updated:', walletData);
+      setWalletBalance(walletData.newBalance);
+      setToggleWagerModal(false);
+    } catch (error) {
+      console.error('Error in wager placement or wallet update:', error);
+    }
   };
 
   return (
@@ -149,25 +198,21 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             handleWagerSubmit={handleWagerSubmit}
             players_num={playerNum}
             prize={carData.pot}
+            walletBalance={walletBalance}
           />
         </TimerProvider>
       ) : null}
-      <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
-        <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
-          GUESS THE PRICE
-        </div>
-        <div className="tw-hidden sm:tw-block">
-          <WatchAndWagerButtons
-            alreadyWagered={alreadyWagered}
-            toggleWagerModal={showWagerModal}
-          />
+      <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
+        <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>GUESS THE PRICE</div>
+        <div className='tw-hidden sm:tw-block'>
+          <WatchAndWagerButtons auctionID={carData?._id} alreadyWagered={alreadyWagered} toggleWagerModal={showWagerModal} />
         </div>
       </div>
-      <div className="section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
-        <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
+      <div className='section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
+        <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
           {carData ? (
             <TimerProvider deadline={carData.deadline}>
-              {" "}
+              {' '}
               <TitleContainer
                 year={carData.year}
                 make={carData.make}
@@ -182,47 +227,29 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
               />
             </TimerProvider>
           ) : null}
-          <div className="tw-block sm:tw-hidden tw-mt-8">
-            <WatchAndWagerButtons
-              alreadyWagered={alreadyWagered}
-              toggleWagerModal={showWagerModal}
-            />
+          <div className='tw-block sm:tw-hidden tw-mt-8'>
+            <WatchAndWagerButtons auctionID={carData?._id} alreadyWagered={alreadyWagered} toggleWagerModal={showWagerModal} />
           </div>
           {carData ? (
             <>
-              <PhotosLayout
-                images_list={carData.images_list}
-                img={carData.image}
-              />
-              <ArticleSection
-                images_list={carData.images_list}
-                description={carData.description}
-                toggleWagerModal={showWagerModal}
-                alreadyWagered={alreadyWagered}
-              />
+              <PhotosLayout images_list={carData.images_list} img={carData.image} />
+              <ArticleSection images_list={carData.images_list} description={carData.description} toggleWagerModal={showWagerModal} alreadyWagered={alreadyWagered} />
             </>
           ) : null}
-          <div className="tw-block sm:tw-hidden tw-mt-8">
-            {wagersData ? (
-              <WagersSection
-                toggleWagerModal={showWagerModal}
-                players_num={playerNum}
-                wagers={wagersData}
-                alreadyWagered={alreadyWagered}
-              />
-            ) : null}
+          <div className='tw-block sm:tw-hidden tw-mt-8'>
+            {wagersData ? <WagersSection toggleWagerModal={showWagerModal} players_num={playerNum} wagers={wagersData} alreadyWagered={alreadyWagered} /> : null}
           </div>
           <GuessThePriceInfoSection />
 
           {carData ? (
-            <div className="tw-block sm:tw-hidden tw-mt-8">
+            <div className='tw-block sm:tw-hidden tw-mt-8'>
               <DetailsSection
                 website={carData.website}
                 make={carData.make}
                 model={carData.model}
                 seller={carData.seller}
                 location={carData.location}
-                mileage="55,400"
+                mileage='55,400'
                 listing_type={carData.listing_type}
                 lot_num={carData.lot_num}
                 listing_details={carData.listing_details}
@@ -232,15 +259,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
           ) : null}
           <CommentsSection />
         </div>
-        <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
-          {wagersData ? (
-            <WagersSection
-              toggleWagerModal={showWagerModal}
-              players_num={playerNum}
-              wagers={wagersData}
-              alreadyWagered={alreadyWagered}
-            />
-          ) : null}
+        <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
+          {wagersData ? <WagersSection toggleWagerModal={showWagerModal} players_num={playerNum} wagers={wagersData} alreadyWagered={alreadyWagered} /> : null}
           {carData ? (
             <DetailsSection
               website={carData.website}
@@ -248,7 +268,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
               model={carData.model}
               seller={carData.seller}
               location={carData.location}
-              mileage="55,400"
+              mileage='55,400'
               listing_type={carData.listing_type}
               lot_num={carData.lot_num}
               listing_details={carData.listing_details}

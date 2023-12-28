@@ -53,7 +53,7 @@ const AuctionListingPage = () => {
             }
             setLoading(false);
         } catch (error) {
-            console.log(error)
+            console.error(error)
             setLoading(false);
         }
     }
@@ -68,7 +68,6 @@ const AuctionListingPage = () => {
                 query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
             });
             setFilters(query);
-            console.log("query from cfo:", query)
 
         };
 
@@ -87,7 +86,6 @@ const AuctionListingPage = () => {
                 newQuery = { ...newQuery, era: searchParamsObj.getAll('era') }
             }
 
-            console.log("new Query:", newQuery)
             filtersFromSearchParams(newQuery);
 
         }
@@ -118,9 +116,9 @@ const AuctionListingPage = () => {
 
 
     //console log to check filters
-    useEffect(() => {
-        console.log("filters:", filters);
-    }, [filters]);
+    // useEffect(() => {
+    //     console.log("filters:", filters);
+    // }, [filters]);
 
 
 
