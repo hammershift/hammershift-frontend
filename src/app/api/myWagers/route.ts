@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
           auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
           auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
           auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
+          auctionStatus: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'status')?.value,
           priceGuessed: wager.priceGuessed,
           wagerAmount: wager.wagerAmount,
           user: wager.user,

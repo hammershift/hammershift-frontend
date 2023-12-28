@@ -688,6 +688,7 @@ interface MyWagersCardProps {
   potential_prize: number;
   id: string;
 }
+
 const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager, current_bid, time_left, potential_prize, id }) => {
   const { days, hours, minutes, seconds } = useTimer();
 
