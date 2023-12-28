@@ -198,20 +198,12 @@ const Carousel = () => {
                         {sliderButtonsData.map((slide) => {
                             return (
                                 <li key={slide.id}>
-                                    <button
-                                        onClick={() =>
-                                            setSlidertransform(slide.transform)
-                                        }
-                                    >
+                                    <button onClick={() => setSlidertransform(slide.transform)}>
                                         <div
                                             className="tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full"
                                             style={{
-                                                opacity: `${
-                                                    sliderTransform ===
-                                                    slide.transform
-                                                        ? "100%"
-                                                        : "20%"
-                                                }`,
+                                                opacity: `${sliderTransform === slide.transform ? "100%" : "20%"
+                                                    }`,
                                             }}
                                         ></div>
                                     </button>
@@ -229,9 +221,7 @@ const SlideOne = () => {
     return (
         <div className="tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between tw-h-[280px] tw-w-full sm:tw-items-center tw-overflow-hidden">
             <div className="tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-4 lg:tw-py-8 tw-px-6 sm:tw-px-8 tw-z-[1]">
-                <div className="tw-text-xs tw-text-[#F2CA16] tw-pb-2">
-                    NEW PLAYERS
-                </div>
+                <div className="tw-text-xs tw-text-[#F2CA16] tw-pb-2">NEW PLAYERS</div>
                 <div className="tw-font-euro tw-text-[32px] tw-w-[280px] md:tw-w-4/6 md:tw-text-[40px] tw-leading-none">
                     100 WELCOME <br />
                     CREDITS
@@ -293,10 +283,7 @@ const LiveGames: React.FC<LiveGamesProps> = ({ carData }) => {
             </header>
             <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto xl:tw-overflow-visible tw-gap-4 sm:tw-gap-8 xl:tw-gap-0 xl:tw-justify-between tw-mt-8">
                 {carData.map((auction, index) => (
-                    <TimerProvider
-                        key={auction.auction_id}
-                        deadline={auction.deadline}
-                    >
+                    <TimerProvider key={auction.auction_id} deadline={auction.deadline}>
                         <LiveGamesCard
                             id={auction.id}
                             image={auction.image}
@@ -399,13 +386,8 @@ const LiveGamesCard: React.FC<CarData> = ({
                                     <div
                                         key={item.id}
                                         style={{
-                                            transform: `translate(${
-                                                -10 +
-                                                -10 *
-                                                    playersData
-                                                        .slice(0, 5)
-                                                        .indexOf(item)
-                                            }px ,0)`,
+                                            transform: `translate(${-10 + -10 * playersData.slice(0, 5).indexOf(item)
+                                                }px ,0)`,
                                         }}
                                     >
                                         <Image
@@ -521,17 +503,12 @@ const TeamBattles = () => {
                                 alt="dollar"
                                 className="tw-w-[52px] tw-h-[52px] "
                             />
-                            <div className="tw-font-bold tw-text-[18px]">
-                                Team A
-                            </div>
+                            <div className="tw-font-bold tw-text-[18px]">Team A</div>
                             <div className="tw-text-[14px]">11 Players</div>
                             <div className="tw-relative tw-mt-4">
                                 {teamPlayers.map((player) => {
                                     return (
-                                        <div
-                                            key={player.id}
-                                            className="tw-mb-4 tw-flex"
-                                        >
+                                        <div key={player.id} className="tw-mb-4 tw-flex">
                                             <Image
                                                 src={player.avatar}
                                                 width={40}
@@ -540,9 +517,7 @@ const TeamBattles = () => {
                                                 className="tw-w-[40px] tw-h-[40px] tw-mr-4"
                                             />
                                             <div className="tw-text-sm ">
-                                                <div className="tw-font-bold">
-                                                    {player.amount}
-                                                </div>
+                                                <div className="tw-font-bold">{player.amount}</div>
                                                 <div>{player.username}</div>
                                             </div>
                                         </div>
@@ -576,17 +551,12 @@ const TeamBattles = () => {
                                 alt="dollar"
                                 className="tw-w-[52px] tw-h-[52px] "
                             />
-                            <div className="tw-font-bold tw-text-[18px]">
-                                Team B
-                            </div>
+                            <div className="tw-font-bold tw-text-[18px]">Team B</div>
                             <div className="tw-text-[14px]">10 Players</div>
                             <div className="tw-relative tw-mt-4">
                                 {teamPlayers.map((player) => {
                                     return (
-                                        <div
-                                            key={player.id}
-                                            className="tw-mb-4 tw-flex"
-                                        >
+                                        <div key={player.id} className="tw-mb-4 tw-flex">
                                             <Image
                                                 src={player.avatar}
                                                 width={40}
@@ -595,9 +565,7 @@ const TeamBattles = () => {
                                                 className="tw-w-[40px] tw-h-[40px] tw-mr-4"
                                             />
                                             <div className="tw-text-sm ">
-                                                <div className="tw-font-bold">
-                                                    {player.amount}
-                                                </div>
+                                                <div className="tw-font-bold">{player.amount}</div>
                                                 <div>{player.username}</div>
                                             </div>
                                         </div>
@@ -690,17 +658,15 @@ const NewEraWagering = () => {
                 </div>
                 <div>
                     <p className="tw-mt-8 lg:tw-mt-0">
-                        Excepteur sint obcaecat cupiditat non proident culpa. At
-                        nos hinc posthac, sitientis piros Afros. Cum sociis
-                        natoque penatibus et magnis dis parturient. Quam diu
-                        etiam furor iste tuus nos eludet?
+                        Excepteur sint obcaecat cupiditat non proident culpa. At nos hinc
+                        posthac, sitientis piros Afros. Cum sociis natoque penatibus et
+                        magnis dis parturient. Quam diu etiam furor iste tuus nos eludet?
                         <br />
                         <br />
-                        Quam temere in vitiis, legem sancimus haerentia.
-                        Phasellus laoreet lorem vel dolor tempus vehicula. Qui
-                        ipsorum lingua Celtae, nostra Galli appellantur.
-                        Curabitur blandit tempus ardua ridiculus sed magna. Tu
-                        quoque, Brute, fili mi, nihil timor populi, nihil! Donec
+                        Quam temere in vitiis, legem sancimus haerentia. Phasellus laoreet
+                        lorem vel dolor tempus vehicula. Qui ipsorum lingua Celtae, nostra
+                        Galli appellantur. Curabitur blandit tempus ardua ridiculus sed
+                        magna. Tu quoque, Brute, fili mi, nihil timor populi, nihil! Donec
                         sed odio operae, eu vulputate felis rhoncus.
                     </p>
                     <div className="tw-mt-6 tw-flex tw-flex-col sm:tw-flex-row tw-justify-start">
@@ -725,8 +691,8 @@ const NewEraWagering = () => {
                         Guess the Price
                     </h1>
                     <p>
-                        Wager on the car auction and guess the final hammer
-                        price. Closest player wins the prize.
+                        Wager on the car auction and guess the final hammer price. Closest
+                        player wins the prize.
                     </p>
                     <button className="btn-yellow tw-mt-4">View games</button>
                 </div>
@@ -738,12 +704,10 @@ const NewEraWagering = () => {
                         alt="dollar"
                         className="tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px]"
                     />
-                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">
-                        Team Battles
-                    </h1>
+                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">Team Battles</h1>
                     <p>
-                        Pick between teams betting on the same car. Player in
-                        the team with the closest wager wins the prize.
+                        Pick between teams betting on the same car. Player in the team with
+                        the closest wager wins the prize.
                     </p>
                     <button className="btn-yellow  tw-mt-4">Pick a team</button>
                 </div>
@@ -755,16 +719,12 @@ const NewEraWagering = () => {
                         alt="dollar"
                         className="tw-block tw-mx-auto tw-w-[68px] tw-h-[68px] tw-shadow-lg tw-rounded-[16px]"
                     />
-                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">
-                        Tournaments
-                    </h1>
+                    <h1 className="tw-font-bold tw-text-[24px] tw-mt-3">Tournaments</h1>
                     <p>
-                        Get more points the closer you are to the hammer price
-                        of a curated set of car auctions.
+                        Get more points the closer you are to the hammer price of a curated
+                        set of car auctions.
                     </p>
-                    <button className="btn-yellow tw-mt-4">
-                        Buy-in for $100
-                    </button>
+                    <button className="btn-yellow tw-mt-4">Buy-in for $100</button>
                 </div>
             </div>
         </div>
@@ -858,129 +818,135 @@ const WagerByCatergory = () => {
                 </header>
                 <section>
                     <div className="first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
-                        <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
-                            <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
-                                <div className="tw-text-[30px] tw-font-bold tw-x-auto">
-                                    Sedans
+                        <Link href="/auctions?category=Sedans">
+                            <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+                                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
+                                    <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+                                        Sedans
+                                    </div>
+                                    <div className="tw-my-4 ">
+                                        Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
+                                        iudicium purus sit amet fermentum.
+                                    </div>
+                                    <div className="tw-font-bold tw-text-[#F2CA16]">
+                                        Explore Sedans
+                                    </div>
                                 </div>
-                                <div className="tw-my-4 ">
-                                    Unam incolunt Belgae, aliam Aquitani,
-                                    tertiam. Cras mattis iudicium purus sit amet
-                                    fermentum.
-                                </div>
-                                <div className="tw-font-bold tw-text-[#F2CA16]">
-                                    Explore Sedans
-                                </div>
-                            </div>
-                            <div className="tw-relative">
-                                <Image
-                                    src={WhiteCar}
-                                    width={511}
-                                    height={255}
-                                    alt="white car"
-                                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
-                                />
-                            </div>
-                        </div>
-                        <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
-                            <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
-                                <div className="tw-text-[30px] tw-font-bold tw-x-auto">
-                                    SUVs
-                                </div>
-                                <div className="tw-my-4">
-                                    Unam incolunt Belgae, aliam Aquitani,
-                                    tertiam. Cras mattis iudicium purus sit amet
-                                    fermentum.
-                                </div>
-                                <div className="tw-font-bold tw-text-[#F2CA16]">
-                                    Explore SUVs
+                                <div className="tw-relative">
+                                    <Image
+                                        src={WhiteCar}
+                                        width={511}
+                                        height={255}
+                                        alt="white car"
+                                        className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                                    />
                                 </div>
                             </div>
-                            <div className="tw-relative">
-                                <Image
-                                    src={SilverSUV}
-                                    width={511}
-                                    height={255}
-                                    alt="silver suv"
-                                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
-                                />
+                        </Link>
+                        <Link href="/auctions?category=SUVs">
+                            <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+                                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
+                                    <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+                                        SUVs
+                                    </div>
+                                    <div className="tw-my-4">
+                                        Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
+                                        iudicium purus sit amet fermentum.
+                                    </div>
+                                    <div className="tw-font-bold tw-text-[#F2CA16]">
+                                        Explore SUVs
+                                    </div>
+                                </div>
+                                <div className="tw-relative">
+                                    <Image
+                                        src={SilverSUV}
+                                        width={511}
+                                        height={255}
+                                        alt="silver suv"
+                                        className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6">
-                        <div className="tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
-                            <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
-                                <div className="tw-text-[30px] tw-font-bold tw-x-auto">
-                                    EVs & Hybrids
+                        <Link href="/auctions?category=EVs%20and%20Hybrids">
+                            <div className="tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+                                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
+                                    <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+                                        EVs & Hybrids
+                                    </div>
+                                    <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
+                                        Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
+                                        iudicium purus sit amet fermentum.
+                                    </div>
+                                    <div className="tw-font-bold tw-text-[#F2CA16]">
+                                        Explore EVs & Hybrids
+                                    </div>
                                 </div>
-                                <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
-                                    Unam incolunt Belgae, aliam Aquitani,
-                                    tertiam. Cras mattis iudicium purus sit amet
-                                    fermentum.
-                                </div>
-                                <div className="tw-font-bold tw-text-[#F2CA16]">
-                                    Explore EVs & Hybrids
-                                </div>
-                            </div>
-                            <div className="tw-relative">
-                                <Image
-                                    src={RedCar}
-                                    width={511}
-                                    height={255}
-                                    alt="red sportscar"
-                                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
-                                />
-                            </div>
-                        </div>
-                        <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
-                            <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
-                                <div className="tw-text-[30px] tw-font-bold tw-x-auto">
-                                    Luxury
-                                </div>
-                                <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
-                                    Unam incolunt Belgae, aliam Aquitani,
-                                    tertiam. Cras mattis iudicium purus sit amet
-                                    fermentum.
-                                </div>
-                                <div className="tw-font-bold tw-text-[#F2CA16]">
-                                    Explore Luxury
+                                <div className="tw-relative">
+                                    <Image
+                                        src={RedCar}
+                                        width={511}
+                                        height={255}
+                                        alt="red sportscar"
+                                        className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                                    />
                                 </div>
                             </div>
-                            <div className="tw-relative">
-                                <Image
-                                    src={YellowSportsCar}
-                                    width={511}
-                                    height={255}
-                                    alt="yellow sportcar"
-                                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
-                                />
-                            </div>
-                        </div>
-                        <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
-                            <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
-                                <div className="tw-text-[30px] tw-font-bold tw-x-auto">
-                                    Pickup Trucks
+                        </Link>
+                        <Link href="/auctions?category=Luxury%20Cars">
+                            <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+                                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
+                                    <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+                                        Luxury
+                                    </div>
+                                    <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
+                                        Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
+                                        iudicium purus sit amet fermentum.
+                                    </div>
+                                    <div className="tw-font-bold tw-text-[#F2CA16]">
+                                        Explore Luxury
+                                    </div>
                                 </div>
-                                <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
-                                    Unam incolunt Belgae, aliam Aquitani,
-                                    tertiam. Cras mattis iudicium purus sit amet
-                                    fermentum.
-                                </div>
-                                <div className="tw-font-bold tw-text-[#F2CA16]">
-                                    Explore Pickup Trucks
+                                <div className="tw-relative">
+                                    <Image
+                                        src={YellowSportsCar}
+                                        width={511}
+                                        height={255}
+                                        alt="yellow sportcar"
+                                        className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                                    />
                                 </div>
                             </div>
-                            <div className="tw-relative">
-                                <Image
-                                    src={SilverPickup}
-                                    width={511}
-                                    height={255}
-                                    alt="silver pickup"
-                                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
-                                />
+                        </Link>
+                        <Link href="/auctions?category=Pickup%20Trucks">
+                            <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+                                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
+                                    <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+                                        Pickup Trucks
+                                    </div>
+                                    <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
+                                        Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
+                                        iudicium purus sit amet fermentum.
+                                    </div>
+                                    <div className="tw-font-bold tw-text-[#F2CA16]">
+                                        Explore Pickup Trucks
+                                    </div>
+                                </div>
+                                <div className="tw-relative">
+                                    <Image
+                                        src={SilverPickup}
+                                        width={511}
+                                        height={255}
+                                        alt="silver pickup"
+                                        className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        </Link>
+
                     </div>
                 </section>
             </div>
@@ -1007,18 +973,16 @@ const SkillStrategyAndStakes = () => {
 
                 <section>
                     <p className="tw-max-w-[752px] tw-my-12">
-                        The excitement of sports betting meets the thrill of car
-                        auctions. Car enthusiasts, put your skills to the test
-                        by predicting the outcomes of car auctions with
-                        unmatched precision. Combine knowledge, strategy, and a
-                        keen eye for value as the gavel drops and the bidding
-                        wars ignite. Join the action by placing wagers on the
-                        final price the vehicles will go for, which vehicles
-                        will command the highest bids, achieve record-breaking
-                        prices, or even which ones will surprise the crowd with
-                        unexpected deals. Sharpen your instincts, analyze market
-                        trends, and immerse yourself in the world of rare
-                        classics, luxury exotics, and iconic muscle cars.
+                        The excitement of sports betting meets the thrill of car auctions.
+                        Car enthusiasts, put your skills to the test by predicting the
+                        outcomes of car auctions with unmatched precision. Combine
+                        knowledge, strategy, and a keen eye for value as the gavel drops and
+                        the bidding wars ignite. Join the action by placing wagers on the
+                        final price the vehicles will go for, which vehicles will command
+                        the highest bids, achieve record-breaking prices, or even which ones
+                        will surprise the crowd with unexpected deals. Sharpen your
+                        instincts, analyze market trends, and immerse yourself in the world
+                        of rare classics, luxury exotics, and iconic muscle cars.
                     </p>
                     <button className="btn-yellow tw-w-full sm:tw-w-auto">
                         Join and get 100 credits
@@ -1078,13 +1042,11 @@ const NewGames = () => {
                                 deadline,
                                 auction_id,
                                 price,
-                                _id,
                             } = auctions;
                             return (
                                 <TimerProvider key={index} deadline={deadline}>
                                     <div className="tw-w-[200px] sm:tw-w-[416px]">
                                         <Card
-                                            object_id={_id}
                                             image={image}
                                             year={year}
                                             make={make}
@@ -1150,13 +1112,11 @@ const WhatsTrending = () => {
                                 deadline,
                                 auction_id,
                                 price,
-                                _id,
                             } = auctions;
                             return (
                                 <TimerProvider key={index} deadline={deadline}>
                                     <div className="tw-w-[200px] sm:tw-w-[416px]">
                                         <Card
-                                            object_id={_id}
                                             image={image}
                                             year={year}
                                             make={make}
@@ -1224,13 +1184,11 @@ const MostExpensiveCars = () => {
                                 deadline,
                                 auction_id,
                                 price,
-                                _id,
                             } = auctions;
                             return (
                                 <TimerProvider key={index} deadline={deadline}>
                                     <div className="tw-w-[200px] sm:tw-w-[416px]">
                                         <Card
-                                            object_id={_id}
                                             image={image}
                                             year={year}
                                             make={make}
@@ -1299,13 +1257,11 @@ const MostBids = () => {
                                 deadline,
                                 auction_id,
                                 price,
-                                _id,
                             } = auctions;
                             return (
                                 <TimerProvider key={index} deadline={deadline}>
                                     <div className="tw-w-[200px] sm:tw-w-[416px]">
                                         <Card
-                                            object_id={_id}
                                             image={image}
                                             year={year}
                                             make={make}

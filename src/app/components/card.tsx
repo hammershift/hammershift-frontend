@@ -183,11 +183,10 @@ export const CardWagersSection = ({ objectID }: any) => {
             {auctionWagers.length !== 0 && (
                 <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
                     <div
-                        className={`tw-flex tw-flex-col tw-gap-2 ${
-                            auctionWagers.length >= 3 && "tw-mb-3"
-                        }`}
+                        className={`tw-flex tw-flex-col tw-gap-2 ${auctionWagers.length >= 3 && "tw-mb-3"
+                            }`}
                     >
-                        {auctionWagers.slice(0, 2).map((wager: any) => {
+                        {Array.isArray(auctionWagers) && auctionWagers.slice(0, 2).map((wager: any) => {
                             return (
                                 <div
                                     key={wager._id}
@@ -226,7 +225,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                                         src={
                                             (auctionWagers[2] as any).user.image
                                                 ? (auctionWagers[2] as any).user
-                                                      .image
+                                                    .image
                                                 : AvatarTwo
                                         }
                                         width={32}
@@ -246,10 +245,9 @@ export const CardWagersSection = ({ objectID }: any) => {
                                                         <div
                                                             key={wager._id}
                                                             style={{
-                                                                transform: `translate(${
-                                                                    -10 *
+                                                                transform: `translate(${-10 *
                                                                     (index + 1)
-                                                                }px, 0)`,
+                                                                    }px, 0)`,
                                                                 zIndex: 1,
                                                             }}
                                                         >
@@ -258,8 +256,8 @@ export const CardWagersSection = ({ objectID }: any) => {
                                                                     wager.user
                                                                         .image
                                                                         ? wager
-                                                                              .user
-                                                                              .image
+                                                                            .user
+                                                                            .image
                                                                         : AvatarThree
                                                                 }
                                                                 width={32}
@@ -280,36 +278,32 @@ export const CardWagersSection = ({ objectID }: any) => {
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[10px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 == 3 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[20px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 == 4 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[30px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 >= 5 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                             </div>
@@ -319,7 +313,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                                     src={
                                         (auctionWagers[2] as any).user.image
                                             ? (auctionWagers[2] as any).user
-                                                  .image
+                                                .image
                                             : AvatarTwo
                                     }
                                     width={32}
@@ -338,9 +332,8 @@ export const CardWagersSection = ({ objectID }: any) => {
                                                 <div
                                                     key={wager._id}
                                                     style={{
-                                                        transform: `translate(${
-                                                            -10 * (index + 1)
-                                                        }px, 0)`,
+                                                        transform: `translate(${-10 * (index + 1)
+                                                            }px, 0)`,
                                                         zIndex: 2,
                                                     }}
                                                 >
@@ -348,7 +341,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                                                         src={
                                                             wager.user.image
                                                                 ? wager.user
-                                                                      .image
+                                                                    .image
                                                                 : AvatarThree
                                                         }
                                                         width={32}
@@ -364,9 +357,8 @@ export const CardWagersSection = ({ objectID }: any) => {
                                         })}
                                 </div>
                             </div>
-                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
-                                auctionWagers.length - 2
-                            } players`}</div>
+                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${auctionWagers.length - 2
+                                } players`}</div>
                         </div>
                     )}
                 </div>
@@ -474,9 +466,8 @@ export const GameCardWagersSection = ({ objectID }: any) => {
             {auctionWagers.length !== 0 && (
                 <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
                     <div
-                        className={`tw-flex tw-flex-col tw-gap-2 ${
-                            auctionWagers.length >= 3 && "tw-mb-3"
-                        }`}
+                        className={`tw-flex tw-flex-col tw-gap-2 ${auctionWagers.length >= 3 && "tw-mb-3"
+                            }`}
                     >
                         {auctionWagers.slice(0, 2).map((wager: any) => {
                             return (
@@ -520,7 +511,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                         src={
                                             (auctionWagers[2] as any).user.image
                                                 ? (auctionWagers[2] as any).user
-                                                      .image
+                                                    .image
                                                 : AvatarTwo
                                         }
                                         width={32}
@@ -540,10 +531,9 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                         <div
                                                             key={wager._id}
                                                             style={{
-                                                                transform: `translate(${
-                                                                    -10 *
+                                                                transform: `translate(${-10 *
                                                                     (index + 1)
-                                                                }px, 0)`,
+                                                                    }px, 0)`,
                                                                 zIndex: 1,
                                                             }}
                                                         >
@@ -552,8 +542,8 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                                     wager.user
                                                                         .image
                                                                         ? wager
-                                                                              .user
-                                                                              .image
+                                                                            .user
+                                                                            .image
                                                                         : AvatarThree
                                                                 }
                                                                 width={32}
@@ -574,36 +564,32 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[10px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 == 3 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[20px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 == 4 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[30px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 >= 5 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
                                     >
-                                        {`and ${
-                                            auctionWagers.length - 2
-                                        } more players to join`}
+                                        {`and ${auctionWagers.length - 2
+                                            } more players to join`}
                                     </div>
                                 )}
                             </div>
@@ -613,7 +599,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                     src={
                                         (auctionWagers[2] as any).user.image
                                             ? (auctionWagers[2] as any).user
-                                                  .image
+                                                .image
                                             : AvatarTwo
                                     }
                                     width={32}
@@ -632,9 +618,8 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                 <div
                                                     key={wager._id}
                                                     style={{
-                                                        transform: `translate(${
-                                                            -10 * (index + 1)
-                                                        }px, 0)`,
+                                                        transform: `translate(${-10 * (index + 1)
+                                                            }px, 0)`,
                                                         zIndex: 2,
                                                     }}
                                                 >
@@ -642,7 +627,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                         src={
                                                             wager.user.image
                                                                 ? wager.user
-                                                                      .image
+                                                                    .image
                                                                 : AvatarThree
                                                         }
                                                         width={32}
@@ -658,9 +643,8 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                         })}
                                 </div>
                             </div>
-                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
-                                auctionWagers.length - 2
-                            } players`}</div>
+                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${auctionWagers.length - 2
+                                } players`}</div>
                         </div>
                     )}
                 </div>

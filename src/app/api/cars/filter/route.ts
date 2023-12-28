@@ -188,7 +188,7 @@ export async function GET(req: NextRequest) {
     const totalCars = await Auctions.find(query);
 
     const filteredCars = await Auctions.find({
-      $and: [query, { isActive: true }],
+      $and: [query, { isActive: true }]
     })
       .limit(limit)
       .skip(offset)
