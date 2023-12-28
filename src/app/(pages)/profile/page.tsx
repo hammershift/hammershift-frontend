@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
@@ -11,19 +11,78 @@ import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import TwitterIcon from "../../../../public/images/social-icons/twitter-icon.svg";
 import IDIcon from "../../../../public/images/single-neutral-id-card-3.svg";
 import TransitionPattern from "../../../../public/images/transition-pattern.svg";
+import { getMyWagers, getMyWatchlist } from "@/lib/data";
+import { TimerProvider } from "@/app/_context/TimerContext";
+import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
+import { useRouter } from "next/navigation";
 
 interface Props { }
 
 function Profile(props: Props) {
     const [name, setName] = React.useState("User")
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeWagers, setActiveWagers] = useState([]);
+    const [completedWagers, setCompletedWagers] = useState([]);
+    const [activeWatchlist, setActiveWatchlist] = useState([]);
+    const [completedWatchlist, setCompletedWatchlist] = useState([]);
     const { } = props;
     const { data } = useSession();
+    const router = useRouter();
 
     useEffect(() => {
         if (data) setName(data?.user.name);
         console.log(data);
         console.log(data?.user.name);
     }, [name, data])
+
+    // fetch wagers
+    useEffect(() => {
+        const fetchWagers = async () => {
+            const data = await getMyWagers();
+            console.log(data);
+            const currentDate = new Date();
+
+            if (!data.wagers || data.wagers.length !== 0) {
+                const completed = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
+
+                setActiveWagers(active);
+                setCompletedWagers(completed);
+            }
+            setIsLoading(false);
+        };
+        fetchWagers();
+    }, []);
+
+    // fetch watchlist
+    useEffect(() => {
+        const fetchWatchlist = async () => {
+            const data = await getMyWatchlist();
+            const currentDate = new Date();
+
+            if (!data.watchlist || data.watchlist.length !== 0) {
+                const completed = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
+
+                setActiveWatchlist(active);
+                setCompletedWatchlist(completed);
+            }
+            setIsLoading(false);
+        };
+        fetchWatchlist();
+    }, []);
 
     return (
         <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
@@ -168,13 +227,44 @@ function Profile(props: Props) {
                     <div className="tw-text-lg tw-font-bold tw-text-[#f2ca16] tw-leading-7">
                         WAGERS
                     </div>
-                    <UserWagerList />
+                    <div>
+                        {activeWagers.map((wager: any) => (
+                            <div key={wager._id}>
+                                <TimerProvider deadline={wager.auctionDeadline}>
+                                    <MyWagersCard
+                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                        img={wager.auctionImage}
+                                        my_wager={wager.priceGuessed}
+                                        current_bid={wager.auctionPrice}
+                                        time_left={wager.auctionDeadline}
+                                        potential_prize={wager.auctionPot}
+                                        id={wager.auctionIdentifierId}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        ))}
+                    </div>
+                    {/* <UserWagerList /> */}
                 </div>
                 <div className="tw-flex tw-flex-col tw-gap-4 tw-p-6 tw-bg-[#172431] tw-mt-8 tw-rounded">
                     <div className="tw-text-lg tw-font-bold tw-text-[#f2ca16] tw-leading-7">
                         WATCHLIST
                     </div>
-                    <UserWatchList />
+                    <div>
+                        {activeWatchlist.map((watchlist: any) => (
+                            <div key={watchlist._id}>
+                                <TimerProvider deadline={watchlist.auctionDeadline}>
+                                    <MyWatchlistCard
+                                        title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                        img={watchlist.auctionImage}
+                                        current_bid={watchlist.auctionPrice}
+                                        time_left={watchlist.auctionDeadline}
+                                        id={watchlist.auctionIdentifierId}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

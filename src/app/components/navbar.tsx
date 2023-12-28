@@ -495,7 +495,8 @@ interface MyWatchlistCardProps {
   time_left: Date;
   id: string;
 }
-const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ title, img, current_bid, time_left, id }) => {
+
+export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ title, img, current_bid, time_left, id }) => {
   const { days, hours, minutes, seconds } = useTimer();
 
   return (
@@ -688,7 +689,7 @@ interface MyWagersCardProps {
   potential_prize: number;
   id: string;
 }
-const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager, current_bid, time_left, potential_prize, id }) => {
+export const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager, current_bid, time_left, potential_prize, id }) => {
   const { days, hours, minutes, seconds } = useTimer();
 
   return (
