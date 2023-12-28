@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(car);
     }
     // api/cars to get all cars
-    const cars = await Auctions.find({ isActive: true }).limit(limit).skip(offset);
+    const cars = await Auctions.find({ $and: [{ isActive: true }] }).limit(limit).skip(offset);
     return NextResponse.json({ total: cars.length, cars: cars });
   } catch (error) {
     console.error(error)
