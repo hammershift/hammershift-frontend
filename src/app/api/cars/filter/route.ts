@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const searchedKeyword = req.nextUrl.searchParams.get("search");
-    let completed = req.nextUrl.searchParams.get("completed") || [1, 2];
+    let completed = req.nextUrl.searchParams.get("completed") || [1];
     let era: string | string[] = req.nextUrl.searchParams.get("era") || "All";
     let category: string | string[] =
       req.nextUrl.searchParams.get("category") || "All";
@@ -188,7 +188,7 @@ export async function GET(req: NextRequest) {
     const totalCars = await Auctions.find(query);
 
     const filteredCars = await Auctions.find({
-      $and: [query, { isActive: true }],
+      $and: [query, { isActive: true }]
     })
       .limit(limit)
       .skip(offset)
