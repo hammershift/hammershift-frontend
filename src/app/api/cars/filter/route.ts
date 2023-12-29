@@ -198,9 +198,6 @@ export async function GET(req: NextRequest) {
             deadline: "$deadline.value",
           },
         },
-        {
-          $limit: 9,
-        },
       ]);
 
       return NextResponse.json({
