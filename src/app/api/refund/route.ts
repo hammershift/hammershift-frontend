@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
       await db.collection('users').updateOne({ _id: user._id }, { $set: { balance: updatedBalance } });
 
+      // create a transaction to record the refund
       const refundTransaction = new Transaction({
         userID: user._id,
         wagerID: wager._id,
