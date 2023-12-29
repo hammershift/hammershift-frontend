@@ -99,6 +99,21 @@ const Navbar = () => {
     };
   }, [setSearchBoxDropDown, setDropWatchlist, setDropMyWagers, setDropMyAccount]);
 
+  useEffect(() => {
+    const fetchSearchedAuctions = async () => {
+      const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
+      const data = await response.json();
+      setSearchedData(data.cars);
+    };
+
+    if (searchKeyword.length) {
+      fetchSearchedAuctions();
+      setSearchBoxDropDown(true);
+    } else {
+      setSearchBoxDropDown(false);
+    }
+  }, [searchKeyword]);
+
   const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
@@ -111,15 +126,17 @@ const Navbar = () => {
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
-    const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
-    const data = await response.json();
+    // const response = await fetch(
+    //     `/api/cars/filter?search=${searchKeyword}`
+    // );
+    // const data = await response.json();
 
-    if (data.length !== 0) {
-      setSearchBoxDropDown(true);
-    } else {
-      setSearchBoxDropDown(false);
-    }
-    setSearchedData(data.cars);
+    // if (data.length !== 0) {
+    //     setSearchBoxDropDown(true);
+    // } else {
+    //     setSearchBoxDropDown(false);
+    // }
+    // setSearchedData(data.cars);
   };
 
   const handleInputClick = () => {
@@ -688,7 +705,6 @@ interface MyWagersCardProps {
   potential_prize: number;
   id: string;
 }
-
 const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager, current_bid, time_left, potential_prize, id }) => {
   const { days, hours, minutes, seconds } = useTimer();
 
@@ -875,14 +891,15 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
       className='tw-bg-shade-100 tw-absolute tw-top-10 tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]'
     >
       {Array.isArray(searchedData) &&
+        searchedData &&
         searchedData.map((carData) => {
           return (
             <div
               key={carData.auction_id}
-              onClick={() => onSearchClick(`${carData.attributes[2].value}`, `${carData.attributes[3].value}`, `${carData.auction_id}`)}
+              onClick={() => onSearchClick(`${carData.make}`, `${carData.model}`, `${carData.auction_id}`)}
               className='tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded'
             >
-              {carData.attributes[2].value} {carData.attributes[3].value}
+              {carData.make} {carData.model}
             </div>
           );
         })}
@@ -890,37 +907,14 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({ searchedData, onSearchC
   );
 };
 
-interface Attribute {
-  key: string;
-  value: string | number;
-  _id: string;
-}
-
-interface Image {
-  placing: number;
-  src: string;
-}
-
-interface Sort {
+interface SearchDatas {
+  auction_id: string;
+  make: string;
+  model: string;
+  year: string;
   price: number;
   bids: number;
   deadline: string;
-}
-
-interface SearchDatas {
-  _id: string;
-  attributes: Attribute[];
-  auction_id: string;
-  website: string;
-  image: string;
-  page_url: string;
-  description: string[];
-  images_list: Image[];
-  listing_details: string[];
-  sort: Sort;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
 }
 
 interface SearchDropDownProps {
