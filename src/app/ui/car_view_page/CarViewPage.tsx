@@ -129,8 +129,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                             />
                         </div>
                         <span className="tw-opacity-80">
-                            Ending:{" "}
-                            <span className="tw-font-bold">{ending_date}</span>
+                            Ending: <span className="tw-font-bold">{ending_date}</span>
                         </span>
                     </div>
                 </div>
@@ -147,8 +146,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                 />
                             </div>
                             <span className="tw-opacity-80">
-                                Bids:{" "}
-                                <span className="tw-font-bold">{bids_num}</span>
+                                Bids: <span className="tw-font-bold">{bids_num}</span>
                             </span>
                         </div>
                         <div className="tw-flex">
@@ -179,10 +177,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                 />
                             </div>
                             <span className="tw-opacity-80">
-                                Players:{" "}
-                                <span className="tw-font-bold ">
-                                    {players_num}
-                                </span>
+                                Players: <span className="tw-font-bold ">{players_num}</span>
                             </span>
                         </div>
                         <div className="tw-flex">
@@ -198,12 +193,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                             <span className="tw-opacity-80">
                                 Prize:{" "}
                                 <span className="tw-font-bold ">
-                                    $
-                                    {pot
-                                        ? new Intl.NumberFormat().format(
-                                              pot || 0
-                                          )
-                                        : " --"}
+                                    ${pot ? new Intl.NumberFormat().format(pot || 0) : " --"}
                                 </span>
                             </span>
                         </div>
@@ -227,6 +217,7 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
     toggleWagerModal,
     alreadyWagered,
 }) => {
+
     const [isWatching, setIsWatching] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const { data: session } = useSession();
@@ -302,11 +293,10 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             width={20}
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
-                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
-                                isWatching
-                                    ? "scale-animation is-watching"
-                                    : "scale-animation"
-                            }`}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
+                                ? "scale-animation is-watching"
+                                : "scale-animation"
+                                }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
@@ -386,9 +376,7 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
                     />
                     <div className="tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
                         {images_list.length + 1}{" "}
-                        <span className="tw-hidden md:tw-block tw-ml-1">
-                            photos
-                        </span>
+                        <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
                         <span className="tw-block md:tw-hidden">+</span>
                     </div>
                 </div>
@@ -475,12 +463,8 @@ export const CommentsSection = () => {
                         alt="Bell"
                         className="tw-w-4 tw-h-4"
                     />
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Log in
-                    </div>
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Sign Up
-                    </div>
+                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">Log in</div>
+                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">Sign Up</div>
                 </div>
             </div>
             <div className="tw-flex tw-my-3">
@@ -563,12 +547,8 @@ export const CommentsCard = () => {
                 <div className="tw-flex tw-justify-between">
                     <div>
                         <span className="tw-font-bold">Jane Doe</span>
-                        <span className="tw-text-[#F2CA16] tw-ml-2">
-                            Seller
-                        </span>
-                        <span className="tw-opacity-50 tw-ml-2">
-                            14 hours ago
-                        </span>
+                        <span className="tw-text-[#F2CA16] tw-ml-2">Seller</span>
+                        <span className="tw-opacity-50 tw-ml-2">14 hours ago</span>
                     </div>
                     <Image
                         src={ThreeDots}
@@ -579,9 +559,7 @@ export const CommentsCard = () => {
                     />
                 </div>
                 <div className=" tw-my-3 tw-h-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-                    <span className="tw-text-[#42A0FF]">
-                        {commentsData[0].username}
-                    </span>
+                    <span className="tw-text-[#42A0FF]">{commentsData[0].username}</span>
                     {commentsData[0].text}
                 </div>
                 <div className="tw-flex tw-opacity-50">
@@ -654,9 +632,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
             <div className="tw-relative tw-pb-8 sm:tw-pb-0">
                 <div className="tw-px-5 tw-w-full tw-h-auto tw-pt-8">
                     <div className="tw-flex tw-justify-between">
-                        <div className="tw-font-bold tw-text-[18px]">
-                            WAGERS
-                        </div>
+                        <div className="tw-font-bold tw-text-[18px]">WAGERS</div>
                         <Image
                             src={ArrowDown}
                             width={20}
@@ -675,11 +651,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                 >
                                     <div className="tw-flex">
                                         <Image
-                                            src={
-                                                wager.user.image
-                                                    ? wager.user.image
-                                                    : AvatarOne
-                                            }
+                                            src={wager.user.image ? wager.user.image : AvatarOne}
                                             width={40}
                                             height={40}
                                             alt="dollar"
@@ -687,15 +659,12 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
-                                                {session?.user.id ===
-                                                wager.user._id
+                                                {session?.user.id === wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
                                             <div className="tw-opacity-50">
-                                                {dayjs(
-                                                    wager.createdAt
-                                                ).fromNow()}
+                                                {dayjs(wager.createdAt).fromNow()}
                                             </div>
                                         </div>
                                     </div>
@@ -706,13 +675,8 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                                 : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
                                         }
                                     >
-                                        <span className="tw-hidden xl:tw-inline-block">
-                                            Wager:
-                                        </span>{" "}
-                                        $
-                                        {new Intl.NumberFormat().format(
-                                            wager.priceGuessed
-                                        )}
+                                        <span className="tw-hidden xl:tw-inline-block">Wager:</span>{" "}
+                                        ${new Intl.NumberFormat().format(wager.priceGuessed)}
                                     </button>
                                 </div>
                             );
@@ -832,9 +796,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
                 <hr className="tw-border-white tw-opacity-5" />
                 <div className="tw-flex tw-justify-between tw-py-2">
                     <div className="tw-opacity-50">Make</div>
-                    <div className="tw-underline tw-underline-offset-4">
-                        {make}
-                    </div>
+                    <div className="tw-underline tw-underline-offset-4">{make}</div>
                 </div>
                 <hr className="tw-border-white tw-opacity-5" />
                 <div className="tw-flex tw-justify-between tw-py-2">
@@ -944,13 +906,9 @@ export const GamesYouMightLike = () => {
                 <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
                     <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
                         {gamesYouMightLike.map((auction: any, index: any) => (
-                            <TimerProvider
-                                key={index}
-                                deadline={auction.deadline}
-                            >
+                            <TimerProvider key={index} deadline={auction.deadline}>
                                 <div className="tw-w-[200px] sm:tw-w-[416px]">
                                     <Card
-                                        object_id={auction._id}
                                         image={auction.image}
                                         year={auction.year}
                                         make={auction.make}

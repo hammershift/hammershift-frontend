@@ -33,7 +33,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -162,15 +162,29 @@ option {
 }
 
 .black-filter {
-  filter: brightness(0) saturate(100%) invert(5%) sepia(33%) saturate(1274%) hue-rotate(171deg) brightness(96%) contrast(91%);
+  filter: brightness(0) saturate(100%) invert(5%) sepia(33%) saturate(1274%)
+    hue-rotate(171deg) brightness(96%) contrast(91%);
 }
 
 .yellow-filter {
-  filter: brightness(0) saturate(100%) invert(94%) sepia(16%) saturate(6020%) hue-rotate(351deg) brightness(101%) contrast(90%);
+  filter: brightness(0) saturate(100%) invert(94%) sepia(16%) saturate(6020%)
+    hue-rotate(351deg) brightness(101%) contrast(90%);
 }
 
 .black-check-filter {
-  filter: brightness(0) saturate(100%) invert(6%) sepia(10%) saturate(3039%) hue-rotate(169deg) brightness(97%) contrast(93%);
+  filter: brightness(0) saturate(100%) invert(6%) sepia(10%) saturate(3039%)
+    hue-rotate(169deg) brightness(97%) contrast(93%);
+}
+.clip-path {
+  clip-path: polygon(
+    50% 0%,
+    54% 17%,
+    100% 17%,
+    100% 100%,
+    0 100%,
+    0 17%,
+    46% 17%
+  );
 }
 /**
  * ----------------------------------------
@@ -276,6 +290,7 @@ svg {
     width: 1440px;
   }
 }
+
 /* 
 SECTION-CONTAINER
 tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
