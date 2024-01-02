@@ -1078,7 +1078,11 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 className="tw-w-[14px] tw-h-[14px]"
                             />
                             <span className="tw-opacity-80">Time Left:</span>
-                            <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                            {Number(days) < 1 ? (
+                                <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                            ) : (
+                                <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                            )}
                         </div>
                     </div>
                     <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded">

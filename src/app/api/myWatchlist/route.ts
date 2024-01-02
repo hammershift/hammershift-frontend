@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
         model: Auctions,
         select: 'pot images_list attributes auction_id',
       })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .exec();
 
     const watchlistDetails = userWatchlist
