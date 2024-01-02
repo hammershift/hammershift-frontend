@@ -1,96 +1,303 @@
 "use client";
+
 import "./styles/app.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import Card from "./components/card";
-import HowHammerShiftWorks from "./components/how_hammeshift_works";
-import { TournamentsCard } from "./components/card";
-import Footer from "./components/footer";
-import Subscribe from "./components/subscribe";
-import Image from "next/image";
-import { TimerProvider, useTimer } from "./_context/TimerContext";
-import {
-  getCars,
-  getCarsWithFilter,
-  sortByMostBids,
-  sortByMostExpensive,
-  sortByNewGames,
-  sortByTrending,
-} from "@/lib/data";
+import { PropagateLoader } from "react-spinners";
 
-import LiveGamesIcon from "../../public/images/currency-dollar-circle.svg";
-
-import TeamBattlesIcon from "../../public/images/team-battles-icon.svg";
-import TournamentsIcon from "../../public/images/award-trophy-star-1.svg";
-import HourGlassIcon from "../../public/images/hour-glass.svg";
-import PlayersIcon from "../../public/images/players.svg";
-import GamesByMakeIcon from "../../public/images/green-diagonal.svg";
-import Avatar from "../../public/images/avatar.svg";
-import TrophyIconGreen from "../../public/images/trophy-icon-green.svg";
-import TrophyIconBlue from "../../public/images/trophy-icon-blue.svg";
-
-import MagnifyingGlass from "../../public/images/magnifying-glass.svg";
-import WatchlistIcon from "../../public/images/watchlist-icon.svg";
-import ArrowRight from "../../public/images/arrow-right.svg";
-import ArrowLeft from "../../public/images/arrow-left.svg";
-
-import TeslaLogo from "../../public/images/brand-logos/tesla-logo.svg";
-import BMWLogo from "../../public/images/brand-logos/bmw-logo.svg";
-import AudiLogo from "../../public/images/brand-logos/audi-logo.svg";
-import DodgeLogo from "../../public/images/brand-logos/dodge-logo.svg";
-import HondaLogo from "../../public/images/brand-logos/honda-logo.svg";
-import JeepLogo from "../../public/images/brand-logos/jeep-logo.svg";
-import NissanLogo from "../../public/images/brand-logos/nissan-logo.svg";
-import SubaruLogo from "../../public/images/brand-logos/subaru-logo.svg";
-import ToyotaLogo from "../../public/images/brand-logos/toyota-logo.svg";
-import FordLogo from "../../public/images/brand-logos/ford-logo.svg";
-
-import TransitionPattern from "../../public/images/transition-pattern.svg";
-
-import YellowSportsCar from "../../public/images/wager-by-category/yellow-sportscar.svg";
-import WhiteCar from "../../public/images/wager-by-category/white-car.svg";
-import RedCar from "../../public/images/wager-by-category/red-car.svg";
-
-import SilverPickup from "../../public/images/wager-by-category/silver-pickup.svg";
-import SilverSUV from "../../public/images/wager-by-category/silver-suv.svg";
-import BlackMercedes from "../../public/images/black-mercedes.svg";
-
-import AvatarOne from "../../public/images/avatar-one.svg";
-import AvatarTwo from "../../public/images/avatar-two.svg";
-import AvatarThree from "../../public/images/avatar-three.svg";
-import AvatarFour from "../../public/images/avatar-four.svg";
-import Link from "next/link";
-import Carousel from "./components/carousel";
-import TeamBattles from "./components/team_battles";
-import Tournaments from "./components/tournaments";
-import NewEraWagering from "./components/new_era_wagering";
-import GamesByMake from "./components/games_by_make";
-import WagerByCategory from "./components/wager_by_category";
-import SkillStrategyAndStakes from "./components/skills_strategy_and_stakes";
-import NewGames from "./components/new_games";
-import WhatsTrending from "./components/whats_trending";
-import MostExpensiveCars from "./components/most_expensive_cars";
-import MostBids from "./components/most_bids";
-import LiveGames from "./components/live_games";
+const DynamicCarousel = dynamic(() => import("@/app/components/carousel"), {
+  loading: () => (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <PropagateLoader color="#f9e700" />
+    </div>
+  ),
+});
+const DynamicLiveGames = dynamic(() => import("@/app/components/live_games"), {
+  loading: () => (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <PropagateLoader color="#f9e700" />
+    </div>
+  ),
+});
+const DynamicTeamBattles = dynamic(
+  () => import("@/app/components/team_battles"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicTournaments = dynamic(
+  () => import("@/app/components/tournaments"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicNewEraWagering = dynamic(
+  () => import("@/app/components/new_era_wagering"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicGamesByMake = dynamic(
+  () => import("@/app/components/games_by_make"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicWagerByCategory = dynamic(
+  () => import("@/app/components/wager_by_category"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicSkillStrategyAndStakes = dynamic(
+  () => import("@/app/components/skills_strategy_and_stakes"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicNewGames = dynamic(() => import("@/app/components/new_games"), {
+  loading: () => (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <PropagateLoader color="#f9e700" />
+    </div>
+  ),
+});
+const DynamicWhatsTrending = dynamic(
+  () => import("@/app/components/whats_trending"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicMostExpensiveCars = dynamic(
+  () => import("@/app/components/most_expensive_cars"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicMostBids = dynamic(() => import("@/app/components/most_bids"), {
+  loading: () => (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <PropagateLoader color="#f9e700" />
+    </div>
+  ),
+});
+const DynamicHowHammerShiftWorks = dynamic(
+  () => import("@/app/components/how_hammeshift_works"),
+  {
+    loading: () => (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+        <PropagateLoader color="#f9e700" />
+      </div>
+    ),
+  }
+);
+const DynamicSubscribe = dynamic(() => import("@/app/components/subscribe"), {
+  loading: () => (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <PropagateLoader color="#f9e700" />
+    </div>
+  ),
+});
+const DynamicFooter = dynamic(() => import("@/app/components/footer"), {
+  loading: () => (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <PropagateLoader color="#f9e700" />
+    </div>
+  ),
+});
 
 const Homepage = () => {
+  const [displaySections, setDisplaySections] = useState({
+    teamBattles: false,
+    tournaments: false,
+    newEraWagering: false,
+    gamesByMake: false,
+    wagerByCategory: false,
+    skillStrategyAndStakes: false,
+    newGames: false,
+    whatsTrending: false,
+    mostExpensiveCars: false,
+    mostBids: false,
+    howHammershiftWorks: false,
+    subscribe: false,
+  });
+
+  const teamBattlesRef = useRef<HTMLDivElement | null>(null);
+  const tournamentsRef = useRef<HTMLDivElement | null>(null);
+  const newEraWageringRef = useRef<HTMLDivElement | null>(null);
+  const gamesByMakeRef = useRef<HTMLDivElement | null>(null);
+  const wagerByCategoryRef = useRef<HTMLDivElement | null>(null);
+  const skillsStrategyAndStakesRef = useRef<HTMLDivElement | null>(null);
+  const newGamesRef = useRef<HTMLDivElement | null>(null);
+  const whatsTrendingRef = useRef<HTMLDivElement | null>(null);
+  const mostExpensiveCarsRef = useRef<HTMLDivElement | null>(null);
+  const mostBidsRef = useRef<HTMLDivElement | null>(null);
+  const howHammershiftWorksRef = useRef<HTMLDivElement | null>(null);
+  const subscribeRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id;
+          setDisplaySections((prev) => ({ ...prev, [sectionId]: true }));
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+
+    if (teamBattlesRef.current) {
+      observer.observe(teamBattlesRef.current);
+    }
+    if (tournamentsRef.current) {
+      observer.observe(tournamentsRef.current);
+    }
+    if (newEraWageringRef.current) {
+      observer.observe(newEraWageringRef.current);
+    }
+    if (gamesByMakeRef.current) {
+      observer.observe(gamesByMakeRef.current);
+    }
+    if (wagerByCategoryRef.current) {
+      observer.observe(wagerByCategoryRef.current);
+    }
+    if (skillsStrategyAndStakesRef.current) {
+      observer.observe(skillsStrategyAndStakesRef.current);
+    }
+    if (newGamesRef.current) {
+      observer.observe(newGamesRef.current);
+    }
+    if (whatsTrendingRef.current) {
+      observer.observe(whatsTrendingRef.current);
+    }
+    if (mostExpensiveCarsRef.current) {
+      observer.observe(mostExpensiveCarsRef.current);
+    }
+    if (mostBidsRef.current) {
+      observer.observe(mostBidsRef.current);
+    }
+    if (howHammershiftWorksRef.current) {
+      observer.observe(howHammershiftWorksRef.current);
+    }
+    if (subscribeRef.current) {
+      observer.observe(subscribeRef.current);
+    }
+
+    return () => {
+      if (teamBattlesRef.current) {
+        observer.unobserve(teamBattlesRef.current);
+      }
+      if (tournamentsRef.current) {
+        observer.unobserve(tournamentsRef.current);
+      }
+      if (newEraWageringRef.current) {
+        observer.unobserve(newEraWageringRef.current);
+      }
+      if (gamesByMakeRef.current) {
+        observer.unobserve(gamesByMakeRef.current);
+      }
+      if (wagerByCategoryRef.current) {
+        observer.unobserve(wagerByCategoryRef.current);
+      }
+      if (skillsStrategyAndStakesRef.current) {
+        observer.unobserve(skillsStrategyAndStakesRef.current);
+      }
+      if (newGamesRef.current) {
+        observer.unobserve(newGamesRef.current);
+      }
+      if (whatsTrendingRef.current) {
+        observer.unobserve(whatsTrendingRef.current);
+      }
+      if (mostExpensiveCarsRef.current) {
+        observer.unobserve(mostExpensiveCarsRef.current);
+      }
+      if (mostBidsRef.current) {
+        observer.unobserve(mostBidsRef.current);
+      }
+      if (howHammershiftWorksRef.current) {
+        observer.unobserve(howHammershiftWorksRef.current);
+      }
+      if (subscribeRef.current) {
+        observer.unobserve(subscribeRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center">
-      <Carousel />
-      <LiveGames />
-      <TeamBattles />
-      <Tournaments />
-      <NewEraWagering />
-      <GamesByMake />
-      <WagerByCategory />
-      <SkillStrategyAndStakes />
-      <NewGames />
-      <WhatsTrending />
-      <MostExpensiveCars />
-      <MostBids />
-      <HowHammerShiftWorks />
-      <Subscribe />
-      <Footer />
+      <DynamicCarousel />
+      <DynamicLiveGames />
+      <div id="teamBattles" ref={teamBattlesRef}>
+        {displaySections.teamBattles && <DynamicTeamBattles />}
+      </div>
+      <div id="tournaments" ref={tournamentsRef}>
+        {displaySections.tournaments && <DynamicTournaments />}
+      </div>
+      <div id="newEraWagering" ref={newEraWageringRef}>
+        {displaySections.newEraWagering && <DynamicNewEraWagering />}
+      </div>
+      <div id="gamesByMake" ref={gamesByMakeRef}>
+        {displaySections.gamesByMake && <DynamicGamesByMake />}
+      </div>
+      <div id="wagerByCategory" ref={wagerByCategoryRef}>
+        {displaySections.wagerByCategory && <DynamicWagerByCategory />}
+      </div>
+      <div id="skillStrategyAndStakes" ref={wagerByCategoryRef}>
+        {displaySections.skillStrategyAndStakes && (
+          <DynamicSkillStrategyAndStakes />
+        )}
+      </div>
+      <div id="newGames" ref={newGamesRef}>
+        {displaySections.skillStrategyAndStakes && <DynamicNewGames />}
+      </div>
+      <div id="whatsTrending" ref={whatsTrendingRef}>
+        {displaySections.whatsTrending && <DynamicWhatsTrending />}
+      </div>
+      <div id="mostExpensiveCars" ref={mostExpensiveCarsRef}>
+        {displaySections.mostExpensiveCars && <DynamicMostExpensiveCars />}
+      </div>
+      <div id="mostBids" ref={mostBidsRef}>
+        {displaySections.mostBids && <DynamicMostBids />}
+      </div>
+      <div id="howHammershiftWorks" ref={howHammershiftWorksRef}>
+        {displaySections.howHammershiftWorks && <DynamicHowHammerShiftWorks />}
+      </div>
+      <div id="subscribe" ref={subscribeRef}>
+        {displaySections.subscribe && <DynamicSubscribe />}
+      </div>
+      <DynamicFooter />
     </div>
   );
 };
