@@ -4,8 +4,11 @@ import "./styles/app.css";
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { PropagateLoader } from "react-spinners";
+import useIntersectionObserver from "./api/intersectionObserver/intersectionObserver";
 
+//Dynamic Imports
 const DynamicCarousel = dynamic(() => import("@/app/components/carousel"), {
+  ssr: false,
   loading: () => (
     <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
       <PropagateLoader color="#f9e700" />
@@ -13,15 +16,18 @@ const DynamicCarousel = dynamic(() => import("@/app/components/carousel"), {
   ),
 });
 const DynamicLiveGames = dynamic(() => import("@/app/components/live_games"), {
+  ssr: false,
   loading: () => (
     <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
       <PropagateLoader color="#f9e700" />
     </div>
   ),
 });
+
 const DynamicTeamBattles = dynamic(
   () => import("@/app/components/team_battles"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -32,6 +38,7 @@ const DynamicTeamBattles = dynamic(
 const DynamicTournaments = dynamic(
   () => import("@/app/components/tournaments"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -42,6 +49,7 @@ const DynamicTournaments = dynamic(
 const DynamicNewEraWagering = dynamic(
   () => import("@/app/components/new_era_wagering"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -52,6 +60,7 @@ const DynamicNewEraWagering = dynamic(
 const DynamicGamesByMake = dynamic(
   () => import("@/app/components/games_by_make"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -62,6 +71,7 @@ const DynamicGamesByMake = dynamic(
 const DynamicWagerByCategory = dynamic(
   () => import("@/app/components/wager_by_category"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -72,6 +82,7 @@ const DynamicWagerByCategory = dynamic(
 const DynamicSkillStrategyAndStakes = dynamic(
   () => import("@/app/components/skills_strategy_and_stakes"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -80,6 +91,7 @@ const DynamicSkillStrategyAndStakes = dynamic(
   }
 );
 const DynamicNewGames = dynamic(() => import("@/app/components/new_games"), {
+  ssr: false,
   loading: () => (
     <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
       <PropagateLoader color="#f9e700" />
@@ -89,6 +101,7 @@ const DynamicNewGames = dynamic(() => import("@/app/components/new_games"), {
 const DynamicWhatsTrending = dynamic(
   () => import("@/app/components/whats_trending"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -99,6 +112,7 @@ const DynamicWhatsTrending = dynamic(
 const DynamicMostExpensiveCars = dynamic(
   () => import("@/app/components/most_expensive_cars"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -107,6 +121,7 @@ const DynamicMostExpensiveCars = dynamic(
   }
 );
 const DynamicMostBids = dynamic(() => import("@/app/components/most_bids"), {
+  ssr: false,
   loading: () => (
     <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
       <PropagateLoader color="#f9e700" />
@@ -116,6 +131,7 @@ const DynamicMostBids = dynamic(() => import("@/app/components/most_bids"), {
 const DynamicHowHammerShiftWorks = dynamic(
   () => import("@/app/components/how_hammeshift_works"),
   {
+    ssr: false,
     loading: () => (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
         <PropagateLoader color="#f9e700" />
@@ -124,6 +140,7 @@ const DynamicHowHammerShiftWorks = dynamic(
   }
 );
 const DynamicSubscribe = dynamic(() => import("@/app/components/subscribe"), {
+  ssr: false,
   loading: () => (
     <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
       <PropagateLoader color="#f9e700" />
@@ -131,6 +148,7 @@ const DynamicSubscribe = dynamic(() => import("@/app/components/subscribe"), {
   ),
 });
 const DynamicFooter = dynamic(() => import("@/app/components/footer"), {
+  ssr: false,
   loading: () => (
     <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
       <PropagateLoader color="#f9e700" />
@@ -139,164 +157,72 @@ const DynamicFooter = dynamic(() => import("@/app/components/footer"), {
 });
 
 const Homepage = () => {
-  const [displaySections, setDisplaySections] = useState({
-    teamBattles: false,
-    tournaments: false,
-    newEraWagering: false,
-    gamesByMake: false,
-    wagerByCategory: false,
-    skillStrategyAndStakes: false,
-    newGames: false,
-    whatsTrending: false,
-    mostExpensiveCars: false,
-    mostBids: false,
-    howHammershiftWorks: false,
-    subscribe: false,
-  });
-
+  const liveGamesRef = useRef<HTMLDivElement | null>(null);
+  const isLiveGamesVisible = useIntersectionObserver(liveGamesRef);
   const teamBattlesRef = useRef<HTMLDivElement | null>(null);
+  const isTeamBattlesVisible = useIntersectionObserver(teamBattlesRef);
   const tournamentsRef = useRef<HTMLDivElement | null>(null);
+  const isTournamentsVisible = useIntersectionObserver(tournamentsRef);
   const newEraWageringRef = useRef<HTMLDivElement | null>(null);
+  const isNewEraWageringVisible = useIntersectionObserver(newEraWageringRef);
   const gamesByMakeRef = useRef<HTMLDivElement | null>(null);
+  const isGamesByMakeVisible = useIntersectionObserver(gamesByMakeRef);
   const wagerByCategoryRef = useRef<HTMLDivElement | null>(null);
+  const isWagerByCategory = useIntersectionObserver(wagerByCategoryRef);
   const skillsStrategyAndStakesRef = useRef<HTMLDivElement | null>(null);
+  const isSkillsStrategyAndStakesVisible = useIntersectionObserver(
+    skillsStrategyAndStakesRef
+  );
   const newGamesRef = useRef<HTMLDivElement | null>(null);
+  const isNewGamesVisible = useIntersectionObserver(newGamesRef);
   const whatsTrendingRef = useRef<HTMLDivElement | null>(null);
+  const isWhatsTrendingRef = useIntersectionObserver(whatsTrendingRef);
   const mostExpensiveCarsRef = useRef<HTMLDivElement | null>(null);
+  const isMostExpensiveCarsVisible =
+    useIntersectionObserver(mostExpensiveCarsRef);
   const mostBidsRef = useRef<HTMLDivElement | null>(null);
+  const isMostBidsVisible = useIntersectionObserver(mostBidsRef);
   const howHammershiftWorksRef = useRef<HTMLDivElement | null>(null);
+  const isHowHammershiftWorksVisible = useIntersectionObserver(
+    howHammershiftWorksRef
+  );
   const subscribeRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          setDisplaySections((prev) => ({ ...prev, [sectionId]: true }));
-          observer.unobserve(entry.target);
-        }
-      });
-    });
-
-    if (teamBattlesRef.current) {
-      observer.observe(teamBattlesRef.current);
-    }
-    if (tournamentsRef.current) {
-      observer.observe(tournamentsRef.current);
-    }
-    if (newEraWageringRef.current) {
-      observer.observe(newEraWageringRef.current);
-    }
-    if (gamesByMakeRef.current) {
-      observer.observe(gamesByMakeRef.current);
-    }
-    if (wagerByCategoryRef.current) {
-      observer.observe(wagerByCategoryRef.current);
-    }
-    if (skillsStrategyAndStakesRef.current) {
-      observer.observe(skillsStrategyAndStakesRef.current);
-    }
-    if (newGamesRef.current) {
-      observer.observe(newGamesRef.current);
-    }
-    if (whatsTrendingRef.current) {
-      observer.observe(whatsTrendingRef.current);
-    }
-    if (mostExpensiveCarsRef.current) {
-      observer.observe(mostExpensiveCarsRef.current);
-    }
-    if (mostBidsRef.current) {
-      observer.observe(mostBidsRef.current);
-    }
-    if (howHammershiftWorksRef.current) {
-      observer.observe(howHammershiftWorksRef.current);
-    }
-    if (subscribeRef.current) {
-      observer.observe(subscribeRef.current);
-    }
-
-    return () => {
-      if (teamBattlesRef.current) {
-        observer.unobserve(teamBattlesRef.current);
-      }
-      if (tournamentsRef.current) {
-        observer.unobserve(tournamentsRef.current);
-      }
-      if (newEraWageringRef.current) {
-        observer.unobserve(newEraWageringRef.current);
-      }
-      if (gamesByMakeRef.current) {
-        observer.unobserve(gamesByMakeRef.current);
-      }
-      if (wagerByCategoryRef.current) {
-        observer.unobserve(wagerByCategoryRef.current);
-      }
-      if (skillsStrategyAndStakesRef.current) {
-        observer.unobserve(skillsStrategyAndStakesRef.current);
-      }
-      if (newGamesRef.current) {
-        observer.unobserve(newGamesRef.current);
-      }
-      if (whatsTrendingRef.current) {
-        observer.unobserve(whatsTrendingRef.current);
-      }
-      if (mostExpensiveCarsRef.current) {
-        observer.unobserve(mostExpensiveCarsRef.current);
-      }
-      if (mostBidsRef.current) {
-        observer.unobserve(mostBidsRef.current);
-      }
-      if (howHammershiftWorksRef.current) {
-        observer.unobserve(howHammershiftWorksRef.current);
-      }
-      if (subscribeRef.current) {
-        observer.unobserve(subscribeRef.current);
-      }
-    };
-  }, []);
+  const isSubscribeVisible = useIntersectionObserver(subscribeRef);
 
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center">
       <DynamicCarousel />
-      <DynamicLiveGames />
-      <div id="teamBattles" ref={teamBattlesRef}>
-        {displaySections.teamBattles && <DynamicTeamBattles />}
+      <div ref={liveGamesRef}>{isLiveGamesVisible && <DynamicLiveGames />}</div>
+      <div ref={teamBattlesRef}>
+        {isTeamBattlesVisible && <DynamicTeamBattles />}
       </div>
-      <div id="tournaments" ref={tournamentsRef}>
-        {displaySections.tournaments && <DynamicTournaments />}
+      <div ref={tournamentsRef}>
+        {isTournamentsVisible && <DynamicTournaments />}
       </div>
-      <div id="newEraWagering" ref={newEraWageringRef}>
-        {displaySections.newEraWagering && <DynamicNewEraWagering />}
+      <div ref={newEraWageringRef}>
+        {isNewEraWageringVisible && <DynamicNewEraWagering />}
       </div>
-      <div id="gamesByMake" ref={gamesByMakeRef}>
-        {displaySections.gamesByMake && <DynamicGamesByMake />}
+      <div ref={gamesByMakeRef}>
+        {isGamesByMakeVisible && <DynamicGamesByMake />}
       </div>
-      <div id="wagerByCategory" ref={wagerByCategoryRef}>
-        {displaySections.wagerByCategory && <DynamicWagerByCategory />}
+      <div ref={wagerByCategoryRef}>
+        {isWagerByCategory && <DynamicWagerByCategory />}
       </div>
-      <div id="skillStrategyAndStakes" ref={wagerByCategoryRef}>
-        {displaySections.skillStrategyAndStakes && (
-          <DynamicSkillStrategyAndStakes />
-        )}
+      <div ref={skillsStrategyAndStakesRef}>
+        {isSkillsStrategyAndStakesVisible && <DynamicSkillStrategyAndStakes />}
       </div>
-      <div id="newGames" ref={newGamesRef}>
-        {displaySections.skillStrategyAndStakes && <DynamicNewGames />}
+      <div ref={newGamesRef}>{isNewGamesVisible && <DynamicNewGames />}</div>
+      <div ref={whatsTrendingRef}>
+        {isWhatsTrendingRef && <DynamicWhatsTrending />}
       </div>
-      <div id="whatsTrending" ref={whatsTrendingRef}>
-        {displaySections.whatsTrending && <DynamicWhatsTrending />}
+      <div ref={mostExpensiveCarsRef}>
+        {isMostExpensiveCarsVisible && <DynamicMostExpensiveCars />}
       </div>
-      <div id="mostExpensiveCars" ref={mostExpensiveCarsRef}>
-        {displaySections.mostExpensiveCars && <DynamicMostExpensiveCars />}
+      <div ref={mostBidsRef}>{isMostBidsVisible && <DynamicMostBids />}</div>
+      <div ref={howHammershiftWorksRef}>
+        {isHowHammershiftWorksVisible && <DynamicHowHammerShiftWorks />}
       </div>
-      <div id="mostBids" ref={mostBidsRef}>
-        {displaySections.mostBids && <DynamicMostBids />}
-      </div>
-      <div id="howHammershiftWorks" ref={howHammershiftWorksRef}>
-        {displaySections.howHammershiftWorks && <DynamicHowHammerShiftWorks />}
-      </div>
-      <div id="subscribe" ref={subscribeRef}>
-        {displaySections.subscribe && <DynamicSubscribe />}
-      </div>
+      <div ref={subscribeRef}>{isSubscribeVisible && <DynamicSubscribe />}</div>
       <DynamicFooter />
     </div>
   );
