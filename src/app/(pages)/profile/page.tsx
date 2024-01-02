@@ -263,6 +263,8 @@ function Profile(props: Props) {
                                             current_bid={watchlist.auctionPrice}
                                             time_left={watchlist.auctionDeadline}
                                             id={watchlist.auctionIdentifierId}
+                                            isActive={true}
+
                                         />
                                     </TimerProvider>
                                 </div>
