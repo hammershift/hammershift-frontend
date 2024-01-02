@@ -19,62 +19,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { ClipLoader, SyncLoader } from "react-spinners";
 import { useSession } from "next-auth/react";
 
-const cardData = {
-    activity: [
-        {
-            id: "a1",
-            username: "damientine",
-            avatar: AvatarOne,
-            wager: "$292,000",
-            time: "12m ago",
-        },
-        {
-            id: "a2",
-            username: "addisonmx",
-            avatar: AvatarTwo,
-            wager: "$29,500",
-            time: "16m ago",
-        },
-    ],
-    players: [
-        {
-            id: "player1",
-            username: "user1",
-            avatar: AvatarOne,
-        },
-        {
-            id: "player2",
-            username: "user2",
-            avatar: AvatarTwo,
-        },
-        {
-            id: "player3",
-            username: "user2",
-            avatar: AvatarThree,
-        },
-        {
-            id: "player4",
-            username: "user2",
-            avatar: AvatarFour,
-        },
-        {
-            id: "player5",
-            username: "user2",
-            avatar: AvatarOne,
-        },
-        {
-            id: "player6",
-            username: "user2",
-            avatar: AvatarTwo,
-        },
-        {
-            id: "player7",
-            username: "user2",
-            avatar: AvatarThree,
-        },
-    ],
-};
-
 const Card: React.FC<any> = ({
     image,
     year,
@@ -153,220 +97,6 @@ const Card: React.FC<any> = ({
 
 export default Card;
 
-export const CardWagersSection = ({ objectID }: any) => {
-    dayjs.extend(relativeTime);
-    const [auctionWagers, setAuctionWagers] = useState([]);
-
-    useEffect(() => {
-        const fetchWagers = async () => {
-            const wagers = await getWagers(objectID);
-            setAuctionWagers(wagers);
-        };
-
-        fetchWagers();
-    }, []);
-
-    return (
-        <>
-            {auctionWagers.length === 0 && (
-                <div className="tw-bg-[#172431] tw-p-4 tw-flex tw-gap-2 tw-rounded-[4px] tw-mt-4">
-                    <Image
-                        src={AvatarFour}
-                        width={24}
-                        height={24}
-                        alt="dollar"
-                        className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
-                    />
-                    <div>Be the first to wager a price</div>
-                </div>
-            )}
-            {auctionWagers.length !== 0 && (
-                <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
-                    <div
-                        className={`tw-flex tw-flex-col tw-gap-2 ${auctionWagers.length >= 3 && "tw-mb-3"
-                            }`}
-                    >
-                        {Array.isArray(auctionWagers) && auctionWagers.slice(0, 2).map((wager: any) => {
-                            return (
-                                <div
-                                    key={wager._id}
-                                    className="tw-flex tw-gap-2"
-                                >
-                                    <Image
-                                        src={
-                                            wager.user?.image
-                                                ? wager.user.image
-                                                : AvatarTwo
-                                        }
-                                        width={24}
-                                        height={24}
-                                        alt="dollar"
-                                        className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
-                                    />
-                                    <div className="tw-flex tw-text-sm tw-gap-1 tw-items-center">
-                                        <div className="tw-text-[#42A0FF]">{`@${wager.user.username}`}</div>
-                                        <div>{`wagered $${new Intl.NumberFormat().format(
-                                            wager.priceGuessed
-                                        )}`}</div>
-                                        <div className="tw-text-[#DCE0D9]">
-                                            {dayjs(wager.createdAt).fromNow()}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    {auctionWagers.length >= 3 && (
-                        <div className="tw-relative tw-flex tw-items-center">
-                            {/* avatar images - hidden for screens smaller than sm */}
-                            <div className="tw-flex tw-items-center tw-gap-2">
-                                <div className=" tw-w-auto tw-hidden xl:tw-flex">
-                                    <Image
-                                        src={
-                                            (auctionWagers[2] as any).user.image
-                                                ? (auctionWagers[2] as any).user
-                                                    .image
-                                                : AvatarTwo
-                                        }
-                                        width={32}
-                                        height={32}
-                                        alt="avatar"
-                                        className="tw-w-8 tw-h-8 tw-rounded-full"
-                                        style={{
-                                            border: "1px solid black",
-                                        }}
-                                    />
-                                    <div className="tw-flex">
-                                        {auctionWagers
-                                            .slice(3, 8)
-                                            .map(
-                                                (wager: any, index: number) => {
-                                                    return (
-                                                        <div
-                                                            key={wager._id}
-                                                            style={{
-                                                                transform: `translate(${-10 *
-                                                                    (index + 1)
-                                                                    }px, 0)`,
-                                                                zIndex: 1,
-                                                            }}
-                                                        >
-                                                            <Image
-                                                                src={
-                                                                    wager.user
-                                                                        .image
-                                                                        ? wager
-                                                                            .user
-                                                                            .image
-                                                                        : AvatarThree
-                                                                }
-                                                                width={32}
-                                                                height={32}
-                                                                alt="avatar"
-                                                                className="tw-w-8 tw-h-8 tw-rounded-full"
-                                                                style={{
-                                                                    border: "1px solid black",
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    );
-                                                }
-                                            )}
-                                    </div>
-                                </div>
-                                {auctionWagers.length - 2 == 2 && (
-                                    <div
-                                        className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[10px]`}
-                                    >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
-                                    </div>
-                                )}
-                                {auctionWagers.length - 2 == 3 && (
-                                    <div
-                                        className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[20px]`}
-                                    >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
-                                    </div>
-                                )}
-                                {auctionWagers.length - 2 == 4 && (
-                                    <div
-                                        className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[30px]`}
-                                    >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
-                                    </div>
-                                )}
-                                {auctionWagers.length - 2 >= 5 && (
-                                    <div
-                                        className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
-                                    >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
-                                    </div>
-                                )}
-                            </div>
-                            {/* avatar images - hidden for screens bigger than sm */}
-                            <div className="tw-flex tw-w-auto xl:tw-hidden">
-                                <Image
-                                    src={
-                                        (auctionWagers[2] as any).user.image
-                                            ? (auctionWagers[2] as any).user
-                                                .image
-                                            : AvatarTwo
-                                    }
-                                    width={32}
-                                    height={32}
-                                    alt="avatar"
-                                    className="tw-w-8 tw-h-8 tw-rounded-full"
-                                    style={{
-                                        border: "1px solid black",
-                                    }}
-                                />
-                                <div className="tw-flex">
-                                    {auctionWagers
-                                        .slice(3, 8)
-                                        .map((wager: any, index: number) => {
-                                            return (
-                                                <div
-                                                    key={wager._id}
-                                                    style={{
-                                                        transform: `translate(${-10 * (index + 1)
-                                                            }px, 0)`,
-                                                        zIndex: 2,
-                                                    }}
-                                                >
-                                                    <Image
-                                                        src={
-                                                            wager.user.image
-                                                                ? wager.user
-                                                                    .image
-                                                                : AvatarThree
-                                                        }
-                                                        width={32}
-                                                        height={32}
-                                                        alt="avatar"
-                                                        className="tw-w-8 tw-h-8 tw-rounded-full"
-                                                        style={{
-                                                            border: "1px solid black",
-                                                        }}
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-                                </div>
-                            </div>
-                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${auctionWagers.length - 2
-                                } players`}</div>
-                        </div>
-                    )}
-                </div>
-            )}
-        </>
-    );
-};
-
 export const GamesCard = (props: any) => {
     const router = useRouter();
     const timerValues = useTimer();
@@ -418,7 +148,7 @@ export const GamesCard = (props: any) => {
                         </div>
                         <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
                     </div>
-                    <GameCardWagersSection objectID={props.object_id} />
+                    <CardWagersSection objectID={props.object_id} />
                 </div>
                 <div>
                     <button
@@ -437,7 +167,7 @@ export const GamesCard = (props: any) => {
     );
 };
 
-export const GameCardWagersSection = ({ objectID }: any) => {
+export const CardWagersSection = ({ objectID }: any) => {
     dayjs.extend(relativeTime);
     const [auctionWagers, setAuctionWagers] = useState([]);
 
@@ -446,6 +176,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
             const wagers = await getWagers(objectID);
             setAuctionWagers(wagers);
         };
+
         fetchWagers();
     }, []);
 
@@ -466,21 +197,19 @@ export const GameCardWagersSection = ({ objectID }: any) => {
             {auctionWagers.length !== 0 && (
                 <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
                     <div
-                        className={`tw-flex tw-flex-col tw-gap-2 ${auctionWagers.length >= 3 && "tw-mb-3"
-                            }`}
+                        className={`tw-flex tw-flex-col tw-gap-2 ${
+                            auctionWagers.length >= 3 && "tw-mb-3"
+                        }`}
                     >
                         {auctionWagers.slice(0, 2).map((wager: any) => {
                             return (
                                 <div
-                                    key={wager._id}
+                                    key={wager.auctionObjectId}
                                     className="tw-flex tw-gap-2"
                                 >
                                     <Image
-                                        onClick={() =>
-                                            console.log(auctionWagers)
-                                        }
                                         src={
-                                            wager.user.image
+                                            wager.user?.image
                                                 ? wager.user.image
                                                 : AvatarTwo
                                         }
@@ -511,7 +240,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                         src={
                                             (auctionWagers[2] as any).user.image
                                                 ? (auctionWagers[2] as any).user
-                                                    .image
+                                                      .image
                                                 : AvatarTwo
                                         }
                                         width={32}
@@ -531,9 +260,10 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                         <div
                                                             key={wager._id}
                                                             style={{
-                                                                transform: `translate(${-10 *
+                                                                transform: `translate(${
+                                                                    -10 *
                                                                     (index + 1)
-                                                                    }px, 0)`,
+                                                                }px, 0)`,
                                                                 zIndex: 1,
                                                             }}
                                                         >
@@ -542,8 +272,8 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                                     wager.user
                                                                         .image
                                                                         ? wager
-                                                                            .user
-                                                                            .image
+                                                                              .user
+                                                                              .image
                                                                         : AvatarThree
                                                                 }
                                                                 width={32}
@@ -560,36 +290,49 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                             )}
                                     </div>
                                 </div>
+                                {auctionWagers.length - 2 == 1 && (
+                                    <div
+                                        className={`xl:tw-block tw-hidden tw-text-sm`}
+                                    >
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more player to join`}
+                                    </div>
+                                )}
                                 {auctionWagers.length - 2 == 2 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[10px]`}
                                     >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 == 3 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[20px]`}
                                     >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 == 4 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[30px]`}
                                     >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more players to join`}
                                     </div>
                                 )}
                                 {auctionWagers.length - 2 >= 5 && (
                                     <div
                                         className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
                                     >
-                                        {`and ${auctionWagers.length - 2
-                                            } more players to join`}
+                                        {`and ${
+                                            auctionWagers.length - 2
+                                        } more players to join`}
                                     </div>
                                 )}
                             </div>
@@ -599,7 +342,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                     src={
                                         (auctionWagers[2] as any).user.image
                                             ? (auctionWagers[2] as any).user
-                                                .image
+                                                  .image
                                             : AvatarTwo
                                     }
                                     width={32}
@@ -618,8 +361,9 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                 <div
                                                     key={wager._id}
                                                     style={{
-                                                        transform: `translate(${-10 * (index + 1)
-                                                            }px, 0)`,
+                                                        transform: `translate(${
+                                                            -10 * (index + 1)
+                                                        }px, 0)`,
                                                         zIndex: 2,
                                                     }}
                                                 >
@@ -627,7 +371,7 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                                         src={
                                                             wager.user.image
                                                                 ? wager.user
-                                                                    .image
+                                                                      .image
                                                                 : AvatarThree
                                                         }
                                                         width={32}
@@ -643,8 +387,9 @@ export const GameCardWagersSection = ({ objectID }: any) => {
                                         })}
                                 </div>
                             </div>
-                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${auctionWagers.length - 2
-                                } players`}</div>
+                            <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
+                                auctionWagers.length - 2
+                            } players`}</div>
                         </div>
                     )}
                 </div>
@@ -737,10 +482,12 @@ export const TournamentsCard = () => {
                 </div>
                 <div>
                     <button
-                        className="btn-yellow tw-w-full"
+                        className="tw-bg-slate-600 tw-rounded-md tw-h-10 tw-w-full"
                         onClick={() => router.push("/tournament_page")}
+                        disabled
                     >
-                        View Results
+                        {/* View Results */}
+                        Coming Soon
                     </button>
                 </div>
             </div>

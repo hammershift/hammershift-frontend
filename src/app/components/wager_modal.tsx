@@ -37,7 +37,7 @@ interface WagerModalProps {
   image: string;
   players_num: number;
   prize: number;
-  walletBalance: number; // TEST IMPLEMENTATION
+  // walletBalance: number; // TEST IMPLEMENTATION
 }
 
 const WagerModal: React.FC<WagerModalProps> = ({
@@ -52,7 +52,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
   handleWagerSubmit,
   players_num,
   prize,
-  walletBalance, // TEST IMPLEMENTATION
+  // walletBalance, // TEST IMPLEMENTATION
 }) => {
   const router = useRouter();
   const timerValues = useTimer();
