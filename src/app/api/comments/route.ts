@@ -44,3 +44,40 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: 'Server error in posting comment' }, { status: 500 });
     }
 }
+
+
+// get comments for auction
+export async function GET(req: NextRequest) {
+    // const session = await getServerSession(authOptions);
+    // if (!session) {
+    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    // }
+
+    const { auctionID } = await req.json();
+
+    if (!auctionID) {
+        return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+    }
+
+    try {
+        const client = await clientPromise;
+        const db = client.db();
+
+        // get comment for auction
+        const comments = await db.collection('comments').find({ auctionID }).toArray();
+
+        if (!comments) {
+            return NextResponse.json({ message: 'No comments found' }, { status: 400 });
+        }
+        return NextResponse.json(
+            {
+                total: comments.length,
+                comments: comments
+            },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error('Error in fetching comments', error);
+        return NextResponse.json({ message: 'Server error, cannot get comments' }, { status: 500 });
+    }
+}
