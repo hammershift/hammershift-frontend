@@ -45,62 +45,6 @@ export async function GET(req: NextRequest) {
     //api/cars/filter?search=911%20Coupe&completed=true
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
 
-    // if (searchedKeyword) {
-    //   const searchedCars = await Auctions.find({
-    //     $and: [
-    //       {
-    //         attributes: {
-    //           $elemMatch: { key: "status", value: { $in: completed } },
-    //         },
-    //       },
-    //       { isActive: true },
-    //       {
-    //         $or: [
-    //           {
-    //             attributes: {
-    //               $elemMatch: {
-    //                 key: "make",
-    //                 value: { $regex: searchedKeyword, $options: "i" },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             attributes: {
-    //               $elemMatch: {
-    //                 key: "model",
-    //                 value: { $regex: searchedKeyword, $options: "i" },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             attributes: {
-    //               $elemMatch: {
-    //                 key: "location",
-    //                 value: { $regex: searchedKeyword, $options: "i" },
-    //               },
-    //             },
-    //           },
-    //           {
-    //             attributes: {
-    //               $elemMatch: {
-    //                 key: "year",
-    //                 value: { $regex: searchedKeyword, $options: "i" },
-    //               },
-    //             },
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //   })
-    //     .limit(limit)
-    //     .skip(offset);
-
-    //   return NextResponse.json({
-    //     total: searchedCars.length,
-    //     cars: searchedCars,
-    //   });
-    // }
-
     if (searchedKeyword) {
       const searchedCars = await Auctions.aggregate([
         {
@@ -205,7 +149,6 @@ export async function GET(req: NextRequest) {
         cars: searchedCars,
       });
     }
-
 
     if (make !== "All") {
       make = make.split("$");
