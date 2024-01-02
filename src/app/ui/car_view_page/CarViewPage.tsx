@@ -220,12 +220,14 @@ interface WatchAndWagerButtonsProps {
     toggleWagerModal: () => void;
     alreadyWagered: boolean;
     auctionID: string;
+    auctionEnded: boolean;
 }
 
 export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
     auctionID,
     toggleWagerModal,
     alreadyWagered,
+    auctionEnded,
 }) => {
     const [isWatching, setIsWatching] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -310,7 +312,14 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
-                    {alreadyWagered ? (
+                    {auctionEnded ? (
+                        <button
+                            disabled
+                            className="btn-yellow hover:tw-bg-[#f2ca16]"
+                        >
+                            ENDED 🏆
+                        </button>
+                    ) : alreadyWagered ? (
                         <button
                             type="button"
                             disabled

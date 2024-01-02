@@ -33,6 +33,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [playerNum, setPlayerNum] = useState(0);
     const [toggleWagerModal, setToggleWagerModal] = useState(false);
     const [alreadyWagered, setAlreadyWagered] = useState(false);
+    const [auctionEnded, setAuctionEnded] = useState(false);
     const [walletBalance, setWalletBalance] = useState(0);
     const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
     const [wagerErrorMessage, setWagerErrorMessage] = useState(""); // TEST IMPLEMENTATION
@@ -70,18 +71,24 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
         const fetchCarData = async () => {
             const data = await getCarData(ID);
+            const currentDate = new Date();
+            const auctionDeadline = new Date(data?.deadline);
+
             setCarData(data);
             setWagerInputs({ ...wagerInputs, auctionID: data?._id });
+
             if (session) {
                 const userWager = await getOneUserWager(
                     data?._id,
                     session?.user.id
                 );
-                userWager.length === 0
+                !userWager.length
                     ? setAlreadyWagered(false)
                     : setAlreadyWagered(true);
-                console.log(session?.user.id);
             }
+
+            setAuctionEnded(auctionDeadline < currentDate);
+
             const wagers = await getWagers(data?._id);
             setWagersData(wagers);
             setPlayerNum(wagers.length);
@@ -250,6 +257,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         auctionID={carData?._id}
                         alreadyWagered={alreadyWagered}
                         toggleWagerModal={showWagerModal}
+                        auctionEnded={auctionEnded}
                     />
                 </div>
             </div>
@@ -291,6 +299,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             auctionID={carData?._id}
                             alreadyWagered={alreadyWagered}
                             toggleWagerModal={showWagerModal}
+                            auctionEnded={auctionEnded}
                         />
                     </div>
                     <div className="tw-block sm:tw-hidden tw-mt-8">

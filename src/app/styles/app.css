@@ -91,7 +91,7 @@ option {
   cursor: pointer;
 }
 .btn-yellow {
-  padding: 0.625rem 0.75rem;
+  padding: 0.625rem 0.875rem;
   color: black;
   background-color: #f2ca16;
   border-radius: 0.25rem;
@@ -185,6 +185,10 @@ option {
     0 17%,
     46% 17%
   );
+}
+
+.remove-last-border:last-child {
+  border: none;
 }
 /**
  * ----------------------------------------
