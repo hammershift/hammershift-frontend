@@ -16,6 +16,8 @@ const LiveGamesCard: React.FC<any> = ({
   year,
   make,
   model,
+  description,
+  deadline,
   auction_id,
 }) => {
   const playersData = [
