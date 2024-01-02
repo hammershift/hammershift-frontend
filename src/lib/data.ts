@@ -380,8 +380,15 @@ export const getCarsWithURLString = async ({ urlString, limit }: { urlString: st
   }
 };
 
-export const getUserInfo = async (auction_id: string, user_id: string) => {
-  const res = await fetch(`/api/wager?id=${auction_id}&user_id=${user_id}`);
-  const data = await res.json();
-  return data;
+export const getUserInfo = async (id: string) => {
+  try {
+    const res = await fetch(`/api/userInfo?id=${id}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
 };

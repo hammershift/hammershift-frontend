@@ -12,11 +12,12 @@ import TransitionPattern from "../../../../public/images/transition-pattern.svg"
 import Twitter from "../../../../public/images/twitter-social.svg";
 import Globe from "../../../../public/images/earth11.svg";
 import Pin from "../../../../public/images/pin1.svg";
-import { getMyWagers, getMyWatchlist } from "@/lib/data";
+import { getMyWagers, getMyWatchlist, getUserInfo } from "@/lib/data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
+import { set } from "mongoose";
 
 interface Props { }
 
@@ -31,6 +32,7 @@ function Profile(props: Props) {
     const [activeWatchlist, setActiveWatchlist] = useState([]);
     const [completedWatchlist, setCompletedWatchlist] = useState([]);
     const [isActiveWager, setIsActiveWager] = useState(true);
+    const [userInfo, setUserInfo] = useState<any | null>(null);
     const { } = props;
     const { data } = useSession();
     const router = useRouter();
@@ -71,14 +73,13 @@ function Profile(props: Props) {
         fetchWagers();
     }, []);
 
+    // logs active and completed wagers for checking
+    // useEffect(() => {
+    //     console.log("active:", activeWagers, "completed:", completedWagers)
+    // }, [activeWagers, completedWagers])
 
+    //calculates total wagers and watchlist
     useEffect(() => {
-        console.log("active:", activeWagers, "completed:", completedWagers)
-    }, [activeWagers, completedWagers])
-
-
-    useEffect(() => {
-
         setTotalWagersAndWatchlist(activeWagers.length + completedWagers.length + activeWatchlist.length + completedWatchlist.length);
     }, [activeWagers, completedWagers, activeWatchlist, completedWatchlist])
 
@@ -107,6 +108,20 @@ function Profile(props: Props) {
         fetchWatchlist();
     }, []);
 
+
+
+    //fetch user data
+    useEffect(() => {
+        const fetchUser = async () => {
+            const res = await getUserInfo(data?.user.id)
+            console.log("userData:", res);
+            setUserInfo(res.user);
+        };
+        if (data) {
+            fetchUser();
+        }
+    }, [data]);
+
     return (
         <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
             <div className="tw-max-w-[862px]">
@@ -127,7 +142,7 @@ function Profile(props: Props) {
                                 {name}
                             </div>
                             <div className="tw-text-lg tw-text-[#d1d5d8]">
-                                Joined September 2023
+                                {"Joined September 2023 (default)"}
                             </div>
                             <div className="tw-flex tw-text-base tw-gap-6 tw-text-[#487f4b]">
                                 <div>@{username}</div>
@@ -165,24 +180,20 @@ function Profile(props: Props) {
                         ABOUT
                     </div>
                     <div className="tw-leading-7">
-                        Enim consequat est in id eiusmod ut sit eu tempor est
-                        amet id. Pariatur cupidatat id magna incididunt tempor
-                        aliqua esse laborum tempor cillum commodo aliquip non.
-                        Duis non cupidatat duis tempor dolore adipisicing
-                        ullamco aute magna ullamco.
+                        {userInfo && userInfo.aboutMe ? userInfo.aboutMe : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud."}
                     </div>
                     <div className="tw-flex tw-gap-6 tw-text-lg tw-font-light tw-leading-7">
                         <div className="tw-flex tw-items-center tw-gap-2">
                             <Image src={Pin} width={24} height={24} alt="pin" className="tw-h-6 tw-h-6" />
-                            <div>NY</div>
+                            <div>{userInfo ? `${userInfo.state}, ${userInfo.country}` : "--"}</div>
                         </div>
                         <div className="tw-flex tw-items-center tw-gap-2">
-                            <Image src={Twitter} width={24} height={24} alt="twitter" className="tw-h-6 tw-h-6" />
-                            <div>Twitter</div>
+                            <Image src={Twitter} width={24} height={24} alt="twitter" className="tw-h-6 tw-h-6 tw-opacity-20" />
+                            <div className="tw-opacity-20">Twitter</div>
                         </div>
                         <div className="tw-flex tw-items-center tw-gap-2">
-                            <Image src={Globe} width={24} height={24} alt="globe" className="tw-h-6 tw-h-6" />
-                            <div>Website</div>
+                            <Image src={Globe} width={24} height={24} alt="globe" className="tw-h-6 tw-h-6 tw-opacity-20" />
+                            <div className="tw-opacity-20">Website</div>
                         </div>
                     </div>
                 </div>
