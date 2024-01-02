@@ -677,6 +677,7 @@ const MyWatchlistDropdownMenu = () => {
                                     current_bid={watchlist.auctionPrice}
                                     time_left={watchlist.auctionDeadline}
                                     id={watchlist.auctionIdentifierId}
+                                    isActive={true}
                                 />
                             </TimerProvider>
                         </div>
@@ -686,15 +687,18 @@ const MyWatchlistDropdownMenu = () => {
             {activeOrCompleted === "completed" &&
                 completedWatchlist.length !== 0 && (
                     <div className="tw-w-full">
-                        {completedWatchlist.map((wager: any) => (
-                            <div key={wager._id}>
-                                <TimerProvider deadline={wager.auctionDeadline}>
+                        {completedWatchlist.map((watchlist: any) => (
+                            <div key={watchlist._id}>
+                                <TimerProvider
+                                    deadline={watchlist.auctionDeadline}
+                                >
                                     <MyWatchlistCard
-                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                                        img={wager.auctionImage}
-                                        current_bid={wager.auctionPrice}
-                                        time_left={wager.auctionDeadline}
-                                        id={wager.auctionIdentifierId}
+                                        title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                        img={watchlist.auctionImage}
+                                        current_bid={watchlist.auctionPrice}
+                                        id={watchlist.auctionIdentifierId}
+                                        time_left={watchlist.auctionDeadline}
+                                        isActive={false}
                                     />
                                 </TimerProvider>
                             </div>
@@ -742,8 +746,9 @@ interface MyWatchlistCardProps {
     title: string;
     img: string;
     current_bid: number;
-    time_left: Date;
+    time_left?: Date;
     id: string;
+    isActive: boolean;
 }
 const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     title,
@@ -751,6 +756,7 @@ const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     current_bid,
     time_left,
     id,
+    isActive,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
 
@@ -792,17 +798,21 @@ const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                                 ${new Intl.NumberFormat().format(current_bid)}
                             </span>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
-                            <Image
-                                src={Hourglass}
-                                width={14}
-                                height={14}
-                                alt="wallet icon"
-                                className="tw-w-[14px] tw-h-[14px]"
-                            />
-                            <span className="tw-opacity-80">Time Left:</span>
-                            <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                        </div>
+                        {isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Time Left:
+                                </span>
+                                <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
