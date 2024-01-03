@@ -95,22 +95,22 @@ const Homepage = () => {
       if (window.scrollY >= 2000) {
         setIsGamesByMakeVisible(true);
       }
-      if (window.scrollY >= 2300) {
+      if (window.scrollY >= 2400) {
         setIsWagerByCategoryVisible(true);
       }
-      if (window.scrollY >= 2600) {
+      if (window.scrollY >= 2800) {
         setIsSkillsStrategyAndStakesVisible(true);
       }
-      if (window.scrollY >= 3000) {
+      if (window.scrollY >= 3200) {
         setIsNewGamesVisible(true);
         setIsWhatsTrendingVisible(true);
         setIsMostBidsVisible(true);
         setIsMostExpensiveCarsVisible(true);
       }
-      if (window.scrollY >= 3300) {
+      if (window.scrollY >= 3600) {
         setIsHowHammerShiftWorksVisible(true);
       }
-      if (window.scrollY >= 3600) {
+      if (window.scrollY >= 4000) {
         setIsSubscribeVisible(true);
       }
     };
