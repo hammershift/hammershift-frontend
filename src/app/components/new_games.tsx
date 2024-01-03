@@ -7,10 +7,11 @@ import { sortByNewGames } from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
 
 import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
-import { MoonLoader } from "react-spinners";
+import { BarLoader, MoonLoader } from "react-spinners";
 
 const NewGames = () => {
   const [newlyListed, setNewlyListed] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const DynamicCards = dynamic(() => import("./card"), {
     ssr: false,
@@ -21,7 +22,11 @@ const NewGames = () => {
     const fetchData = async () => {
       try {
         const newGamesData = await sortByNewGames();
-        setNewlyListed(newGamesData.cars);
+        setIsLoading(true);
+        if (newGamesData && "cars" in newGamesData) {
+          setNewlyListed(newGamesData.cars);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -48,43 +53,48 @@ const NewGames = () => {
           <div className="tw-text-[#49C742]">See All</div>
         </div>
       </header>
-
-      <section className="tw-overflow-x-auto tw-w-full">
-        <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
-          <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
-            {newlyListed.map((auctions, index) => {
-              const {
-                image,
-                year,
-                make,
-                model,
-                description,
-                deadline,
-                auction_id,
-                price,
-                _id,
-              } = auctions;
-              return (
-                <TimerProvider key={index} deadline={deadline}>
-                  <div className="tw-w-[300px] sm:tw-w-[416px]">
-                    <DynamicCards
-                      image={image}
-                      year={year}
-                      make={make}
-                      model={model}
-                      description={description}
-                      deadline={deadline}
-                      auction_id={auction_id}
-                      price={price}
-                      object_id={_id}
-                    />
-                  </div>
-                </TimerProvider>
-              );
-            })}
-          </div>
+      {isLoading ? (
+        <div className="tw-flex tw-items-center tw-justify-center tw-mt-10">
+          <BarLoader color="#ffe500" height={7} width={700} />
         </div>
-      </section>
+      ) : (
+        <section className="tw-overflow-x-auto tw-w-full">
+          <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
+            <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
+              {newlyListed.map((auctions, index) => {
+                const {
+                  image,
+                  year,
+                  make,
+                  model,
+                  description,
+                  deadline,
+                  auction_id,
+                  price,
+                  _id,
+                } = auctions;
+                return (
+                  <TimerProvider key={index} deadline={deadline}>
+                    <div className="tw-w-[300px] sm:tw-w-[416px]">
+                      <DynamicCards
+                        image={image}
+                        year={year}
+                        make={make}
+                        model={model}
+                        description={description}
+                        deadline={deadline}
+                        auction_id={auction_id}
+                        price={price}
+                        object_id={_id}
+                      />
+                    </div>
+                  </TimerProvider>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

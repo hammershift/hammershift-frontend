@@ -1,28 +1,34 @@
-"use client";
+// import { useEffect, useState, useRef } from "react";
 
-import { useEffect, useState } from "react";
+// const useIntersectionObserver = (ref: any, threshold = 0.5) => {
+//   const [isIntersecting, setIntersecting] = useState(false);
+//   const observerRef = useRef<IntersectionObserver | null>(null);
 
-const useIntersectionObserver = (ref: any) => {
-  const [isIntersecting, setIntersecting] = useState(false);
+//   useEffect(() => {
+//     observerRef.current = new IntersectionObserver((entries) => {
+//       entries.forEach(
+//         (entry) => {
+//           setIntersecting(entry.isIntersecting);
+//           if (entry.isIntersecting) {
+//             observerRef.current && observerRef.current.unobserve(ref.current);
+//           }
+//         },
+//         { threshold }
+//       );
+//     });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIntersecting(entry.isIntersecting);
-      if (entry.isIntersecting) {
-        observer.unobserve(ref.current);
-      }
-    });
+//     if (ref.current) {
+//       observerRef.current && observerRef.current.observe(ref.current);
+//     }
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+//     return () => {
+//       if (ref.current) {
+//         observerRef.current && observerRef.current.unobserve(ref.current);
+//       }
+//     };
+//   }, [ref, threshold]);
 
-    return () => {
-      observer.unobserve(ref.current);
-    };
-  }, [ref]);
+//   return isIntersecting;
+// };
 
-  return isIntersecting;
-};
-
-export default useIntersectionObserver;
+// export default useIntersectionObserver;

@@ -4,225 +4,171 @@ import "./styles/app.css";
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { PropagateLoader } from "react-spinners";
-import useIntersectionObserver from "./api/intersectionObserver/intersectionObserver";
+// import useIntersectionObserver from "./api/intersectionObserver/intersectionObserver";
+
+const withDynamicImport = (componentPath: string, options = {}) => {
+  const DynamicComponent = dynamic(
+    () => import(`@/app/components/${componentPath}`),
+    {
+      ...options,
+      ssr: false,
+      loading: () => (
+        <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+          <PropagateLoader color="#f9e700" />
+        </div>
+      ),
+    }
+  );
+  return DynamicComponent;
+};
 
 //Dynamic Imports
-const DynamicCarousel = dynamic(() => import("@/app/components/carousel"), {
-  ssr: false,
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
-const DynamicLiveGames = dynamic(() => import("@/app/components/live_games"), {
-  ssr: false,
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
-
-const DynamicTeamBattles = dynamic(
-  () => import("@/app/components/team_battles"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
+const DynamicCarousel = withDynamicImport("carousel");
+const DynamicLiveGames = withDynamicImport("live_games");
+const DynamicTeamBattles = withDynamicImport("team_battles");
+const DynamicTournaments = withDynamicImport("tournaments");
+const DynamicNewEraWagering = withDynamicImport("new_era_wagering");
+const DynamicGamesByMake = withDynamicImport("games_by_make");
+const DynamicWagerByCategory = withDynamicImport("wager_by_category");
+const DynamicSkillStrategyAndStakes = withDynamicImport(
+  "skills_strategy_and_stakes"
 );
-const DynamicTournaments = dynamic(
-  () => import("@/app/components/tournaments"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicNewEraWagering = dynamic(
-  () => import("@/app/components/new_era_wagering"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicGamesByMake = dynamic(
-  () => import("@/app/components/games_by_make"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicWagerByCategory = dynamic(
-  () => import("@/app/components/wager_by_category"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicSkillStrategyAndStakes = dynamic(
-  () => import("@/app/components/skills_strategy_and_stakes"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicNewGames = dynamic(() => import("@/app/components/new_games"), {
-  ssr: false,
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
-const DynamicWhatsTrending = dynamic(
-  () => import("@/app/components/whats_trending"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicMostExpensiveCars = dynamic(
-  () => import("@/app/components/most_expensive_cars"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicMostBids = dynamic(() => import("@/app/components/most_bids"), {
-  ssr: false,
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
-const DynamicHowHammerShiftWorks = dynamic(
-  () => import("@/app/components/how_hammeshift_works"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-        <PropagateLoader color="#f9e700" />
-      </div>
-    ),
-  }
-);
-const DynamicSubscribe = dynamic(() => import("@/app/components/subscribe"), {
-  ssr: false,
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
-const DynamicFooter = dynamic(() => import("@/app/components/footer"), {
-  ssr: false,
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
+const DynamicNewGames = withDynamicImport("new_games");
+const DynamicWhatsTrending = withDynamicImport("whats_trending");
+const DynamicMostExpensiveCars = withDynamicImport("most_expensive_cars");
+const DynamicMostBids = withDynamicImport("most_bids");
+const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works");
+const DynamicSubscribe = withDynamicImport("subscribe");
+const DynamicFooter = withDynamicImport("footer");
 
 const Homepage = () => {
+  // References
   const liveGamesRef = useRef<HTMLDivElement | null>(null);
-  const isLiveGamesVisible = useIntersectionObserver(liveGamesRef);
   const teamBattlesRef = useRef<HTMLDivElement | null>(null);
-  const isTeamBattlesVisible = useIntersectionObserver(teamBattlesRef);
   const tournamentsRef = useRef<HTMLDivElement | null>(null);
-  const isTournamentsVisible = useIntersectionObserver(tournamentsRef);
   const newEraWageringRef = useRef<HTMLDivElement | null>(null);
-  const isNewEraWageringVisible = useIntersectionObserver(newEraWageringRef);
   const gamesByMakeRef = useRef<HTMLDivElement | null>(null);
-  const isGamesByMakeVisible = useIntersectionObserver(gamesByMakeRef);
   const wagerByCategoryRef = useRef<HTMLDivElement | null>(null);
-  const isWagerByCategory = useIntersectionObserver(wagerByCategoryRef);
   const skillsStrategyAndStakesRef = useRef<HTMLDivElement | null>(null);
-  const isSkillsStrategyAndStakesVisible = useIntersectionObserver(
-    skillsStrategyAndStakesRef
-  );
   const newGamesRef = useRef<HTMLDivElement | null>(null);
-  const isNewGamesVisible = useIntersectionObserver(newGamesRef);
   const whatsTrendingRef = useRef<HTMLDivElement | null>(null);
-  const isWhatsTrendingRef = useIntersectionObserver(whatsTrendingRef);
   const mostExpensiveCarsRef = useRef<HTMLDivElement | null>(null);
-  const isMostExpensiveCarsVisible =
-    useIntersectionObserver(mostExpensiveCarsRef);
   const mostBidsRef = useRef<HTMLDivElement | null>(null);
-  const isMostBidsVisible = useIntersectionObserver(mostBidsRef);
   const howHammershiftWorksRef = useRef<HTMLDivElement | null>(null);
-  const isHowHammershiftWorksVisible = useIntersectionObserver(
-    howHammershiftWorksRef
-  );
   const subscribeRef = useRef<HTMLDivElement | null>(null);
-  const isSubscribeVisible = useIntersectionObserver(subscribeRef);
+
+  //Component Visibility State
+  const [isLiveGamesVisible, setIsLiveGamesVisible] = useState(true);
+  console.log(isLiveGamesVisible);
+  const [isTeamBattlesVisible, setIsTeamBattlesVisible] = useState(false);
+  const [isTournamentsVisible, setIsTournamentsVisible] = useState(false);
+  const [isNewEraWageringVisible, setIsNewEraWageringVisible] = useState(false);
+  const [isGamesByMakeVisible, setIsGamesByMakeVisible] = useState(false);
+  const [isWagerByCategoryVisible, setIsWagerByCategoryVisible] =
+    useState(false);
+  const [
+    isSkillsStrategyAndStakesVisible,
+    setIsSkillsStrategyAndStakesVisible,
+  ] = useState(false);
+  const [isNewGamesVisible, setIsNewGamesVisible] = useState(false);
+  const [isWhatsTrendingRef, setIsWhatsTrendingVisible] = useState(false);
+  const [isMostExpensiveCarsVisible, setIsMostExpensiveCarsVisible] =
+    useState(false);
+  const [isMostBidsVisible, setIsMostBidsVisible] = useState(false);
+  const [isHowHammershiftWorksVisible, setIsHowHammerShiftWorksVisible] =
+    useState(false);
+  const [isSubscribeVisible, setIsSubscribeVisible] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY >= 250) {
+        setIsLiveGamesVisible(true);
+      }
+      if (window.scrollY >= 500) {
+        setIsTeamBattlesVisible(true);
+      }
+      if (window.scrollY >= 1000) {
+        setIsTournamentsVisible(true);
+      }
+      if (window.scrollY >= 1500) {
+        setIsNewEraWageringVisible(true);
+      }
+      if (window.scrollY >= 2500) {
+        setIsGamesByMakeVisible(true);
+      }
+      if (window.scrollY >= 3000) {
+        setIsWagerByCategoryVisible(true);
+      }
+      if (window.scrollY >= 4000) {
+        setIsSkillsStrategyAndStakesVisible(true);
+      }
+      if (window.scrollY >= 4800) {
+        setIsNewGamesVisible(true);
+      }
+      if (window.scrollY >= 5400) {
+        setIsNewGamesVisible(true);
+        setIsWhatsTrendingVisible(true);
+        setIsMostBidsVisible(true);
+        setIsMostExpensiveCarsVisible(true);
+      }
+      if (window.scrollY >= 5500) {
+        setIsHowHammerShiftWorksVisible(true);
+      }
+      if (window.scrollY >= 5600) {
+        setIsSubscribeVisible(true);
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center">
       <DynamicCarousel />
-      <div ref={liveGamesRef}>{isLiveGamesVisible && <DynamicLiveGames />}</div>
+      <div ref={liveGamesRef}>
+        {isLiveGamesVisible ? <DynamicLiveGames /> : null}
+      </div>
       <div ref={teamBattlesRef}>
-        {isTeamBattlesVisible && <DynamicTeamBattles />}
+        {isTeamBattlesVisible ? <DynamicTeamBattles /> : null}
       </div>
       <div ref={tournamentsRef}>
-        {isTournamentsVisible && <DynamicTournaments />}
+        {isTournamentsVisible ? <DynamicTournaments /> : null}
       </div>
       <div ref={newEraWageringRef}>
-        {isNewEraWageringVisible && <DynamicNewEraWagering />}
+        {isNewEraWageringVisible ? <DynamicNewEraWagering /> : null}
       </div>
       <div ref={gamesByMakeRef}>
-        {isGamesByMakeVisible && <DynamicGamesByMake />}
+        {isGamesByMakeVisible ? <DynamicGamesByMake /> : null}
       </div>
       <div ref={wagerByCategoryRef}>
-        {isWagerByCategory && <DynamicWagerByCategory />}
+        {isWagerByCategoryVisible ? <DynamicWagerByCategory /> : null}
       </div>
       <div ref={skillsStrategyAndStakesRef}>
-        {isSkillsStrategyAndStakesVisible && <DynamicSkillStrategyAndStakes />}
+        {isSkillsStrategyAndStakesVisible ? (
+          <DynamicSkillStrategyAndStakes />
+        ) : null}
       </div>
-      <div ref={newGamesRef}>{isNewGamesVisible && <DynamicNewGames />}</div>
+      <div ref={newGamesRef}>
+        {isNewGamesVisible ? <DynamicNewGames /> : null}
+      </div>
       <div ref={whatsTrendingRef}>
-        {isWhatsTrendingRef && <DynamicWhatsTrending />}
+        {isWhatsTrendingRef ? <DynamicWhatsTrending /> : null}
       </div>
       <div ref={mostExpensiveCarsRef}>
-        {isMostExpensiveCarsVisible && <DynamicMostExpensiveCars />}
+        {isMostExpensiveCarsVisible ? <DynamicMostExpensiveCars /> : null}
       </div>
-      <div ref={mostBidsRef}>{isMostBidsVisible && <DynamicMostBids />}</div>
+      <div ref={mostBidsRef}>
+        {isMostBidsVisible ? <DynamicMostBids /> : null}
+      </div>
       <div ref={howHammershiftWorksRef}>
-        {isHowHammershiftWorksVisible && <DynamicHowHammerShiftWorks />}
+        {isHowHammershiftWorksVisible ? <DynamicHowHammerShiftWorks /> : null}
       </div>
-      <div ref={subscribeRef}>{isSubscribeVisible && <DynamicSubscribe />}</div>
+      <div ref={subscribeRef}>
+        {isSubscribeVisible ? <DynamicSubscribe /> : null}
+      </div>
       <DynamicFooter />
     </div>
   );
