@@ -157,17 +157,6 @@ const Navbar = () => {
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchKeyword(e.target.value);
-        // const response = await fetch(
-        //     `/api/cars/filter?search=${searchKeyword}`
-        // );
-        // const data = await response.json();
-
-        // if (data.length !== 0) {
-        //     setSearchBoxDropDown(true);
-        // } else {
-        //     setSearchBoxDropDown(false);
-        // }
-        // setSearchedData(data.cars);
     };
 
     const handleInputClick = () => {
@@ -725,7 +714,7 @@ const MyWatchlistDropdownMenu = () => {
                             </div>
                         </div>
                         <button
-                            onClick={() => router.push("/discover")}
+                            onClick={() => router.push("/auctions")}
                             className="btn-transparent-white"
                         >
                             DISCOVER AUCTIONS
@@ -780,11 +769,11 @@ const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                         href={`/auctions/car_view_page/${id}`}
                         className="tw-self-start"
                     >
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold tw-text-lg tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
-                    <div className="tw-w-full tw-mt-1">
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
                         <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                             <Image
                                 src={Dollar}
@@ -935,6 +924,9 @@ const MyWagersDropdownMenu = () => {
                                     time_left={wager.auctionDeadline}
                                     potential_prize={wager.auctionPot}
                                     id={wager.auctionIdentifierId}
+                                    isActive={true}
+                                    status={wager.auctionStatus}
+                                    wagerAmount={wager.wagerAmount}
                                 />
                             </TimerProvider>
                         </div>
@@ -955,6 +947,9 @@ const MyWagersDropdownMenu = () => {
                                         time_left={wager.auctionDeadline}
                                         potential_prize={wager.auctionPot}
                                         id={wager.auctionIdentifierId}
+                                        isActive={false}
+                                        status={wager.auctionStatus}
+                                        wagerAmount={wager.wagerAmount}
                                     />
                                 </TimerProvider>
                             </div>
@@ -972,8 +967,8 @@ const MyWagersDropdownMenu = () => {
                             alt="watchlist icon"
                             className="tw-w-[80px] tw-h-[80px]"
                         />
-                        <div className="tw-">
-                            <div className="tw-font-bold tw-text-xl">
+                        <div className="">
+                            <div className="tw-font-bold tw-text-xl tw-text-center">
                                 No active wagers
                             </div>
                             <div className="tw-opacity-70">
@@ -981,7 +976,7 @@ const MyWagersDropdownMenu = () => {
                             </div>
                         </div>
                         <button
-                            onClick={() => router.push("/discover")}
+                            onClick={() => router.push("/auctions")}
                             className="btn-transparent-white"
                         >
                             DISCOVER AUCTIONS
@@ -1006,6 +1001,9 @@ interface MyWagersCardProps {
     time_left: Date;
     potential_prize: number;
     id: string;
+    isActive: boolean;
+    status: number;
+    wagerAmount: number;
 }
 const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
@@ -1015,11 +1013,14 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
     time_left,
     potential_prize,
     id,
+    isActive,
+    status,
+    wagerAmount,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
 
     return (
-        <div className="tw-px-6 tw-w-full tw-py-4 tw-border-b-[1px] tw-border-[#253747]">
+        <div className="tw-px-6 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
             <div className=" tw-w-full tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
@@ -1038,11 +1039,11 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         href={`/auctions/car_view_page/${id}`}
                         className="tw-self-start"
                     >
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold tw-text-lg tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
-                    <div className="tw-w-full tw-mt-1">
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
                         <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                             <Image
                                 src={WalletSmall}
@@ -1069,37 +1070,57 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 ${new Intl.NumberFormat().format(current_bid)}
                             </span>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                        {isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Time Left:
+                                </span>
+                                {Number(days) < 1 ? (
+                                    <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {isActive && (
+                        <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded tw-text-sm">
                             <Image
-                                src={Hourglass}
-                                width={14}
-                                height={14}
-                                alt="wallet icon"
-                                className="tw-w-[14px] tw-h-[14px]"
+                                src={MoneyBagGreen}
+                                width={20}
+                                height={20}
+                                alt="money bag"
+                                className="tw-w-[20px] tw-h-[20px]"
                             />
-                            <span className="tw-opacity-80">Time Left:</span>
-                            {Number(days) < 1 ? (
-                                <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                            ) : (
-                                <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                            )}
+                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
+                                POTENTIAL PRIZE
+                            </div>
+                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
+                                $
+                                {new Intl.NumberFormat().format(
+                                    potential_prize
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded">
-                        <Image
-                            src={MoneyBagGreen}
-                            width={20}
-                            height={20}
-                            alt="money bag"
-                            className="tw-w-[20px] tw-h-[20px]"
-                        />
-                        <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
-                            POTENTIAL PRIZE
+                    )}
+                    {status === 3 && (
+                        <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#4b2330] tw-rounded tw-text-sm">
+                            <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                                ❌ AUCTION CANCELLED
+                            </div>
+                            <button className="tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm">
+                                CLAIM $
+                                {new Intl.NumberFormat().format(wagerAmount)}{" "}
+                            </button>
                         </div>
-                        <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
-                            ${new Intl.NumberFormat().format(potential_prize)}
-                        </div>
-                    </div>
+                    )}
                 </div>
             </div>
             {/* {type === "Tournament" && (
