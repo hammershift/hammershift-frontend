@@ -379,3 +379,17 @@ export const getCarsWithURLString = async ({ urlString, limit }: { urlString: st
     console.error(err);
   }
 };
+
+export const refundWager = async (auctionObjectId: string) => {
+  try {
+    await fetch("/api/refund", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ auctionID: auctionObjectId })
+    })
+    console.log("refunded successfully");
+
+  } catch (error) {
+    console.error("refunding error");
+  }
+};

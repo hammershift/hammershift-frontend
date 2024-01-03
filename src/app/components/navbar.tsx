@@ -106,6 +106,18 @@ const Navbar = () => {
                 setDropMyWagers(false);
             }
 
+            const claimRefundButtons = document.getElementsByClassName(
+                "claim-button"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isClaimButtonClicked = Array.from(claimRefundButtons).some(
+                (button) => button.contains(e.target as Node)
+            );
+
+            if (isClaimButtonClicked) {
+                setDropMyWagers(true);
+            }
+
             if (
                 myAccountButton &&
                 !myAccountButton.contains(e.target as Node)
@@ -927,6 +939,7 @@ const MyWagersDropdownMenu = () => {
                                     isActive={true}
                                     status={wager.auctionStatus}
                                     wagerAmount={wager.wagerAmount}
+                                    objectID={wager.auctionObjectId}
                                 />
                             </TimerProvider>
                         </div>
@@ -950,6 +963,7 @@ const MyWagersDropdownMenu = () => {
                                         isActive={false}
                                         status={wager.auctionStatus}
                                         wagerAmount={wager.wagerAmount}
+                                        objectID={wager.auctionObjectId}
                                     />
                                 </TimerProvider>
                             </div>
@@ -1004,6 +1018,7 @@ interface MyWagersCardProps {
     isActive: boolean;
     status: number;
     wagerAmount: number;
+    objectID: string;
 }
 const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
@@ -1016,6 +1031,7 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
     isActive,
     status,
     wagerAmount,
+    objectID,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
 
@@ -1115,7 +1131,10 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
                                 ❌ AUCTION CANCELLED
                             </div>
-                            <button className="tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm">
+                            <button
+                                onClick={() => handleRefund(objectID)}
+                                className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                            >
                                 CLAIM $
                                 {new Intl.NumberFormat().format(wagerAmount)}{" "}
                             </button>
