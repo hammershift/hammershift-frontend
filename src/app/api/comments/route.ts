@@ -46,15 +46,17 @@ export async function POST(req: NextRequest) {
 }
 
 
-// get comments for auction
+// get comments for auction URL: /api/comments?id=69113724
 export async function GET(req: NextRequest) {
     // const session = await getServerSession(authOptions);
     // if (!session) {
     //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
     // }
 
-    const { auctionID } = await req.json();
+    // get if from url
+    const auctionID = await req.nextUrl.searchParams.get("id");
 
+    // check if id is present, otherwise return error
     if (!auctionID) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
