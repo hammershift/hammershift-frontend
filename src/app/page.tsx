@@ -104,14 +104,11 @@ const Homepage = () => {
       }
       if (window.scrollY >= 4800) {
         setIsNewGamesVisible(true);
-      }
-      if (window.scrollY >= 5400) {
-        setIsNewGamesVisible(true);
         setIsWhatsTrendingVisible(true);
         setIsMostBidsVisible(true);
         setIsMostExpensiveCarsVisible(true);
       }
-      if (window.scrollY >= 5500) {
+      if (window.scrollY >= 5400) {
         setIsHowHammerShiftWorksVisible(true);
       }
       if (window.scrollY >= 5600) {
