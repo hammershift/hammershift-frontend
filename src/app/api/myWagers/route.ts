@@ -33,6 +33,13 @@ export async function GET(req: NextRequest) {
         }
 
         const auctionDetails = wager.auctionID;
+        const auctionStatus = auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'status')?.value;
+
+        // add a refunded field only for auctions with status 3
+        let refunded = false;
+        if (auctionStatus === 3) {
+          refunded = wager.refunded || false;
+        }
 
         return {
           _id: wager._id.toString(),
@@ -45,7 +52,8 @@ export async function GET(req: NextRequest) {
           auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
           auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
           auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
-          auctionStatus: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'status')?.value,
+          auctionStatus,
+          refunded,
           priceGuessed: wager.priceGuessed,
           wagerAmount: wager.wagerAmount,
           user: wager.user,
