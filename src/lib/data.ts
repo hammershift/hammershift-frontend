@@ -392,3 +392,17 @@ export const getUserInfo = async (id: string) => {
     throw error;
   }
 };
+
+// fetches comments
+export const getComments = async (id: string) => {
+  try {
+    const res = await fetch(`/api/comments?id=${id}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};

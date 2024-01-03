@@ -27,12 +27,18 @@ const commentSchema = new mongoose.Schema({
         }
 
     },
+    likes: {
+        type: Array
+    },
+    dislikes: {
+        type: Array
+    },
     createdAt: {
         type: Date,
         default: Date.now,
     },
 });
 
-const Comment = mongoose.models.Comment || mongoose.model('Comment', commentSchema);
+const Comments = mongoose.models.Comment || mongoose.model('Comments', commentSchema);
 
-export default Comment;
+export default Comments;

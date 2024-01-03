@@ -4,6 +4,7 @@ import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 
+
 export async function POST(req: NextRequest) {
     // const session = await getServerSession(authOptions);
     // if (!session) {
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(
             {
-                comment: "comment posted"
+                message: "comment posted"
             },
             { status: 200 }
         );
@@ -46,12 +47,46 @@ export async function POST(req: NextRequest) {
 }
 
 
-// get comments for auction URL: /api/comments?id=69113724
+
+interface SortQuery {
+    createdAt?: number;
+    "likes"?: number;
+    "sort"?: string;
+}
+
+// get comments for auction URL: /api/comments?id=69113724&offset=0&limit=2&sort=Newest
 export async function GET(req: NextRequest) {
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    // }
+    const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
+    const limit = Number(req.nextUrl.searchParams.get("limit"));
+    let sort: string | SortQuery =
+        req.nextUrl.searchParams.get("sort") || "Newest";
+
+    //check for athorization
+    const session = await getServerSession(authOptions);
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
+
+    if (sort) {
+        switch (sort) {
+            case "Newest":
+                sort = { createdAt: -1 };
+                break;
+            case "Oldest":
+                sort = { createdAt: 1 };
+                break;
+            case "Best":
+                sort = { likes: 1 };
+                break;
+            //other sorts here
+            default:
+                break;
+        }
+    }
+
+
+
+
 
     // get if from url
     const auctionID = await req.nextUrl.searchParams.get("id");
@@ -66,15 +101,19 @@ export async function GET(req: NextRequest) {
         const db = client.db();
 
         // get comment for auction
-        const comments = await db.collection('comments').find({ auctionID }).toArray();
+        const response = await db.collection('comments').find({ auctionID: auctionID })
+            .limit(limit)
+            .skip(offset)
+            .sort(sort as any);
 
-        if (!comments) {
+        if (!response) {
             return NextResponse.json({ message: 'No comments found' }, { status: 400 });
         }
+        const comments = await response.toArray();
+
         return NextResponse.json(
             {
-                total: comments.length,
-                comments: comments
+                comments
             },
             { status: 200 }
         );
