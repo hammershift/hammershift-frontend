@@ -23,6 +23,10 @@ const wagerSchema = new mongoose.Schema(
       username: String,
       image: String,
     },
+    refunded: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
