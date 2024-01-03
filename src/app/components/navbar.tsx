@@ -24,9 +24,9 @@ import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-ph
 import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-photo-three.svg";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { getMyWagers, getMyWatchlist } from "@/lib/data";
+import { getMyWagers, getMyWatchlist, refundWager } from "@/lib/data";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
-import { BounceLoader } from "react-spinners";
+import { BeatLoader, BounceLoader } from "react-spinners";
 
 // export interface NavbarProps {
 //     isLoggedIn: boolean;
@@ -1035,6 +1035,10 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
 
+    const handleRefund = async (id: string) => {
+        await refundWager(id);
+    };
+
     return (
         <div className="tw-px-6 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
             <div className=" tw-w-full tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
@@ -1217,13 +1221,14 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
 const MyAccountDropdownMenu = () => {
     const [walletBalance, setWalletBalance] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
     const { data: session } = useSession();
-    //   const account_load = 100;
     const router = useRouter();
 
     useEffect(() => {
         const fetchWalletBalance = async () => {
             if (session) {
+                setIsLoading(true);
                 try {
                     const res = await fetch("/api/wallet", {
                         method: "GET",
@@ -1243,6 +1248,8 @@ const MyAccountDropdownMenu = () => {
                     }
                 } catch (error) {
                     console.error("Error fetching wallet balance:", error);
+                } finally {
+                    setIsLoading(false);
                 }
             }
         };
@@ -1261,9 +1268,13 @@ const MyAccountDropdownMenu = () => {
     };
 
     return (
-        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
+        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-font-bold tw-text-lg">MY ACCOUNT</div>
-            {walletBalance !== null && (
+            {isLoading ? (
+                <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
+                    <BeatLoader color="#696969" size={10} />
+                </div>
+            ) : typeof walletBalance === "number" ? (
                 <div className="tw-px-6 tw-w-full">
                     <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
                         <Image
@@ -1275,12 +1286,15 @@ const MyAccountDropdownMenu = () => {
                         />
                         <div className="tw-flex tw-flex-col tw-items-start tw-grow">
                             <span className="tw-font-bold tw-text-xl tw-py-1">
-                                {" "}
                                 ${walletBalance.toFixed(2)}
                             </span>
                             <span className="tw-text-[#49C742]">Withdraw</span>
                         </div>
                     </div>
+                </div>
+            ) : (
+                <div className="tw-px-6 tw-w-full">
+                    Error fetching wallet balance
                 </div>
             )}
             <div className="tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full">
