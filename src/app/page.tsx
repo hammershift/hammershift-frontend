@@ -59,7 +59,6 @@ const Homepage = () => {
 
   //Component Visibility State
   const [isLiveGamesVisible, setIsLiveGamesVisible] = useState(true);
-  console.log(isLiveGamesVisible);
   const [isTeamBattlesVisible, setIsTeamBattlesVisible] = useState(false);
   const [isTournamentsVisible, setIsTournamentsVisible] = useState(false);
   const [isNewEraWageringVisible, setIsNewEraWageringVisible] = useState(false);
@@ -84,34 +83,34 @@ const Homepage = () => {
       if (window.scrollY >= 250) {
         setIsLiveGamesVisible(true);
       }
-      if (window.scrollY >= 500) {
+      if (window.scrollY >= 400) {
         setIsTeamBattlesVisible(true);
       }
-      if (window.scrollY >= 1000) {
+      if (window.scrollY >= 800) {
         setIsTournamentsVisible(true);
       }
-      if (window.scrollY >= 1500) {
+      if (window.scrollY >= 1200) {
         setIsNewEraWageringVisible(true);
       }
-      if (window.scrollY >= 2500) {
+      if (window.scrollY >= 1800) {
         setIsGamesByMakeVisible(true);
       }
-      if (window.scrollY >= 3000) {
+      if (window.scrollY >= 2200) {
         setIsWagerByCategoryVisible(true);
       }
-      if (window.scrollY >= 4000) {
+      if (window.scrollY >= 2500) {
         setIsSkillsStrategyAndStakesVisible(true);
       }
-      if (window.scrollY >= 4800) {
+      if (window.scrollY >= 2900) {
         setIsNewGamesVisible(true);
         setIsWhatsTrendingVisible(true);
         setIsMostBidsVisible(true);
         setIsMostExpensiveCarsVisible(true);
       }
-      if (window.scrollY >= 5400) {
+      if (window.scrollY >= 3200) {
         setIsHowHammerShiftWorksVisible(true);
       }
-      if (window.scrollY >= 5600) {
+      if (window.scrollY >= 3500) {
         setIsSubscribeVisible(true);
       }
     };
