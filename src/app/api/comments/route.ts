@@ -65,11 +65,6 @@ export async function GET(req: NextRequest) {
     let sort: string | SortQuery =
         req.nextUrl.searchParams.get("sort") || "Newest";
 
-    //check for athorization
-    const session = await getServerSession(authOptions);
-    if (!session) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    }
 
     if (sort) {
         switch (sort) {

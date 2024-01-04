@@ -403,7 +403,7 @@ export const getComments = async (id: string) => {
     }
   } catch (error) {
     console.error('Error:', error);
-    throw error;
+    return { message: "cannot get comments" };
   }
 };
 

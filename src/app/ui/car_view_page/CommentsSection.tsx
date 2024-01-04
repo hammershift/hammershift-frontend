@@ -14,6 +14,7 @@ import CornerDownRight from "../../../../public/images/corner-down-right.svg";
 import { createComment } from "@/lib/data";
 import { set } from "mongoose";
 import { BeatLoader } from "react-spinners";
+import Link from "next/link";
 
 export const CommentsSection = ({ comments, id, loading }: { comments: any, id: string, loading: boolean }) => {
     const [commentsList, setCommentsList] = useState([]);
@@ -21,8 +22,8 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
     const [comment, setComment] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const session = useSession();
+
     useEffect(() => {
-        console.log("comment section", comments);
         if (comments) {
             setCommentsList(comments.comments);
         }
@@ -67,21 +68,25 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
                     {`(${Array.isArray(commentsList) && commentsList.length > 0 ? commentsList.length : 0})`}
                 </div>
                 {
-                    !session &&
+                    session.status == "unauthenticated" &&
                     <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                        <Image
+                        {/* <Image
                             src={BellIcon}
                             width={16}
                             height={16}
                             alt="Bell"
                             className="tw-w-4 tw-h-4"
-                        />
-                        <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                            Log in
-                        </div>
-                        <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                            Sign Up
-                        </div>
+                        /> */}
+                        <Link href="/login_page">
+                            <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
+                                Log in
+                            </div>
+                        </Link>
+                        <Link href="/create_account">
+                            <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
+                                Sign Up
+                            </div>
+                        </Link>
                     </div>
                 }
             </div>
@@ -109,7 +114,7 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
                     /> */}
                 </div>
                 <button
-                    className="btn-white tw-ml-2"
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
                     onClick={handlePostComment}>Comment</button>
             </div>
             <div className="tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
