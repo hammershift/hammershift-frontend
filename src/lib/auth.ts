@@ -23,8 +23,14 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
   return { clientId, clientSecret };
 }
 
+const emailExistsInDatabase = async (email: string): Promise<boolean> => {
+  const client = await clientPromise;
+  const db = client.db();
+  const user = await db.collection<User>('users').findOne({ email: email });
+  return !!user;
+};
+
 export const authOptions: NextAuthOptions = {
-  // debug: true,
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: 'jwt',
@@ -59,7 +65,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
-      console.log('Session callback - Token:', token);
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
@@ -68,12 +73,9 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.username;
         session.user.image = token.image;
       }
-      console.log('Session callback - Final Session object:', session);
       return session;
     },
     async jwt({ token, user }) {
-      console.log('JWT callback - Initial token:', token);
-
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -111,8 +113,26 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      console.log('JWT callback - Final token:', token);
       return token;
+    },
+    signIn: async ({ user, account }) => {
+      if (account?.provider !== 'google') {
+        return true;
+      }
+
+      if (typeof user.email !== 'string') {
+        console.error('Email from Google sign-in is not valid.');
+        return false;
+      }
+
+      // check if the email exists in the database
+      const exists = await emailExistsInDatabase(user.email);
+      if (exists) {
+        console.error(`User already exists with email: ${user.email}`);
+        return false;
+      }
+
+      return true;
     },
   },
 };

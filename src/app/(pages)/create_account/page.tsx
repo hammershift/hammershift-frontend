@@ -272,17 +272,37 @@ const CreateAccount = () => {
   };
 
   // GOOGLE SIGNIN
+  // const handleGoogleSignIn = async (provider: string) => {
+  //   try {
+  //     await signIn(provider, { callbackUrl: window.location.href });
+  //   } catch (error) {
+  //     console.error(`Error during ${provider} sign in:`, error);
+  //   }
+  // };
+
+  const [signInError, setSignInError] = useState('');
+
   const handleGoogleSignIn = async (provider: string) => {
+    setIsLoading(true);
     try {
-      await signIn(provider, { callbackUrl: window.location.href });
+      const result = await signIn(provider, { redirect: false });
+      if (result?.error) {
+        // Log the error and set the error message state
+        console.error(`Error during ${provider} sign in:`, result.error);
+        setSignInError('An account with this email already exists. Please sign in using your existing account.');
+        setCreateAccountPage('page one'); // Redirect user to 'page one'
+      } else {
+        setCreateAccountPage('page two'); // Continue to 'page two'
+      }
     } catch (error) {
       console.error(`Error during ${provider} sign in:`, error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // VERIFY LATER
   const handleVerifyLater = async () => {
-    // Indicate that all fields have been touched and should show validation
     setTouchedFields({
       email: true,
       password: true,
@@ -292,7 +312,6 @@ const CreateAccount = () => {
       state: true,
     });
 
-    // Calculate new validity based on current userDetails
     const newValidity = {
       isEmailValid: validateEmail(userDetails.email),
       isPasswordValid: validatePassword(userDetails.password),
@@ -302,10 +321,8 @@ const CreateAccount = () => {
       isStateValid: isStateSelected(userDetails.state),
     };
 
-    // Update the validity state
     setValidity(newValidity);
 
-    // Use the newValidity object directly to check if the form is valid
     if (
       !newValidity.isEmailValid ||
       !newValidity.isPasswordValid ||
