@@ -1148,40 +1148,63 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         </div>
                     )}
                     {status === 3 && (
-                        <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#4b2330] tw-rounded tw-text-sm">
-                            <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
-                                ❌ AUCTION CANCELLED
-                            </div>
-                            {refunded ? (
-                                <button
-                                    disabled
-                                    className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
-                                >
-                                    REFUNDED
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={() =>
-                                        handleRefund(objectID, wagerID)
-                                    }
-                                    className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
-                                >
-                                    {loading && (
-                                        <div className="tw-px-[14px]">
-                                            <BeatLoader size={8} />
-                                        </div>
+                        <>
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full tw-text-sm">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Wager Amount:
+                                </span>
+                                <span className="tw-text-[#49C742] tw-font-bold">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        wagerAmount
                                     )}
-                                    <span
-                                        className={`${loading && "tw-hidden"}`}
+                                </span>
+                            </div>
+                            <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#4b2330] tw-rounded tw-text-sm">
+                                <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                                    ❌ UNSUCCESSFUL AUCTION
+                                </div>
+                                {refunded ? (
+                                    <button
+                                        disabled
+                                        className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
                                     >
-                                        CLAIM $
+                                        REFUNDED
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() =>
+                                            handleRefund(objectID, wagerID)
+                                        }
+                                        className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                                    >
+                                        {loading && (
+                                            <div className="tw-px-[14px]">
+                                                <BeatLoader size={8} />
+                                            </div>
+                                        )}
+                                        <span
+                                            className={`${
+                                                loading && "tw-hidden"
+                                            }`}
+                                        >
+                                            REFUND
+                                            {/* CLAIM $
                                         {new Intl.NumberFormat().format(
                                             wagerAmount
-                                        )}{" "}
-                                    </span>
-                                </button>
-                            )}
-                        </div>
+                                        )}{" "} */}
+                                        </span>
+                                    </button>
+                                )}
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
