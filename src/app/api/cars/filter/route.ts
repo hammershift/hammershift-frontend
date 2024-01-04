@@ -1,3 +1,4 @@
+import clientPromise from "@/lib/mongodb";
 import connectToDB from "@/lib/mongoose";
 import Auctions from "@/models/auction.model";
 import { SortOrder } from "mongoose";
@@ -14,11 +15,13 @@ interface SortQuery {
 
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
+    const client = await clientPromise;
+    const db = client.db();
+    // await connectToDB();
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const searchedKeyword = req.nextUrl.searchParams.get("search");
-    let completed = req.nextUrl.searchParams.get("completed") || [1, 2];
+    let completed = req.nextUrl.searchParams.get("completed") || [1];
     let era: string | string[] = req.nextUrl.searchParams.get("era") || "All";
     let category: string | string[] =
       req.nextUrl.searchParams.get("category") || "All";
@@ -46,54 +49,103 @@ export async function GET(req: NextRequest) {
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
 
     if (searchedKeyword) {
-      const searchedCars = await Auctions.find({
-        $and: [
-          {
-            attributes: {
-              $elemMatch: { key: "status", value: { $in: completed } },
+      const searchedCars = await Auctions.aggregate([
+        {
+          $search: {
+            index: "auctionSearchAutocomplete",
+            text: {
+              query: searchedKeyword,
+              path: "attributes.value",
+              fuzzy: {
+                prefixLength: 3,
+              },
             },
           },
-          { isActive: true },
-          {
-            $or: [
-              {
-                attributes: {
-                  $elemMatch: {
-                    key: "make",
-                    value: { $regex: searchedKeyword, $options: "i" },
+        },
+        {
+          $project: {
+            _id: 0,
+            auction_id: 1,
+            make: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$attributes",
+                    cond: { $eq: ["$$this.key", "make"] },
                   },
                 },
-              },
-              {
-                attributes: {
-                  $elemMatch: {
-                    key: "model",
-                    value: { $regex: searchedKeyword, $options: "i" },
+                0,
+              ],
+            },
+            model: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$attributes",
+                    cond: { $eq: ["$$this.key", "model"] },
                   },
                 },
-              },
-              {
-                attributes: {
-                  $elemMatch: {
-                    key: "location",
-                    value: { $regex: searchedKeyword, $options: "i" },
+                0,
+              ],
+            },
+            year: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$attributes",
+                    cond: { $eq: ["$$this.key", "year"] },
                   },
                 },
-              },
-              {
-                attributes: {
-                  $elemMatch: {
-                    key: "year",
-                    value: { $regex: searchedKeyword, $options: "i" },
+                0,
+              ],
+            },
+            price: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$attributes",
+                    cond: { $eq: ["$$this.key", "price"] },
                   },
                 },
-              },
-            ],
+                0,
+              ],
+            },
+            bids: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$attributes",
+                    cond: { $eq: ["$$this.key", "bids"] },
+                  },
+                },
+                0,
+              ],
+            },
+            deadline: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$attributes",
+                    cond: { $eq: ["$$this.key", "deadline"] },
+                  },
+                },
+                0,
+              ],
+            },
           },
-        ],
-      })
-        .limit(limit)
-        .skip(offset);
+        },
+        {
+          $project: {
+            auction_id: 1,
+            make: "$make.value",
+            model: "$model.value",
+            year: "$year.value",
+            price: "$price.value",
+            bids: "$bids.value",
+            deadline: "$deadline.value",
+          },
+        },
+      ]);
 
       return NextResponse.json({
         total: searchedCars.length,
@@ -185,16 +237,20 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const totalCars = await Auctions.find(query);
 
-    const filteredCars = await Auctions.find({
-      $and: [query, { isActive: true }],
+    const totalCars = await db.collection('auctions').count(query);
+
+    const filteredCars = await db.collection('auctions').find({
+      $and: [query, { isActive: true }]
     })
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any } });
 
-    return NextResponse.json({ total: totalCars.length, cars: filteredCars });
+    const arrayCars = await filteredCars.toArray();
+
+    console.log(filteredCars)
+    return NextResponse.json({ total: totalCars, cars: arrayCars });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" });

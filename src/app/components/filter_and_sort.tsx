@@ -1,7 +1,10 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { getCarsWithFilterProps } from '@/lib/data'
+import { getCarsWithFilter, getCarsWithFilterProps } from '@/lib/data'
+import { useRouter } from 'next/navigation'
+import { NextRouter } from 'next/router';
+
 
 import CheckIcon from '../../../public/images/check-black.svg'
 import GridIcon from '../../../public/images/grid-01.svg'
@@ -23,14 +26,18 @@ export type filtersProps = {
     sort: string
 }
 
-interface FiltersAndSortProps {
+export interface FiltersAndSortProps {
     filters: filtersProps;
     setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
 
 type DropdownMenuProps = null | "Make" | "Era" | "Category" | "Location" | "Sort";
 
-const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) => {
+
+
+
+
+const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any }) => {
 
 
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
@@ -38,81 +45,98 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
     const [dropdownMenuRegular, setDropdownMenuRegular] = useState<DropdownMenuProps>(null);
 
     const [dropdownMenuSmall, setDropdownMenuSmall] = useState<DropdownMenuProps>(null)
-    const [menuOpen, setMenuOpen] = useState(false);
-    const [bgColor, setBgColor] = useState({});
+
+
+    const [totalAuctions, setTotalAuctions] = useState(0);
+
+    // get the total auctions
+    const fetchData = async () => {
+        try {
+            const res = await getCarsWithFilter({ limit: 1 });
+            if (res) {
+                setTotalAuctions(res?.total)
+                return
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
 
 
     return (
         <div className='tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]'>
             <div className='left-container-marker tw-flex tw-items-center'>
-                <div>Live Games <span className='tw-opacity-50'> 100</span></div>
+                <div>Live Games <span className='tw-opacity-50'> {totalAuctions}</span></div>
                 <div className='tw-hidden xl:tw-flex'>
                     {/* Filter Dropdown for regular screens*/}
                     {/* Dropdown for Make filter*/}
                     <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Make" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Make") return null; else return "Make" })}>
-                                Make
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Make" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Make") return null; else return "Make" })}>
+                                {filters.make[0] == "All" ? "Make" : ("Make: " + filters.make.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
                         {dropdownMenuRegular === "Make" &&
-                            <MakeDropdown filters={filters} setFilters={setFilters} />
+                            <MakeDropdown filters={filters} />
                         }
                     </div>
                     {/* Dropdown for Category filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2" >
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Category" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Category") return null; else return "Category" })}>
-                                Category
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Category" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Category") return null; else return "Category" })}>
+                                {filters.category[0] == "All" ? "Category" : ("Category: " + filters.category.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
                         {dropdownMenuRegular === "Category" &&
-                            <CategoryDropdown filters={filters} setFilters={setFilters} />
+                            <CategoryDropdown filters={filters} />
                         }
                     </div>
                     {/* Dropdown for Era filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2" >
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Era" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Era") return null; else return "Era" })}>
-                                Era
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Era" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Era") return null; else return "Era" })}>
+                                {filters.era[0] == "All" ? "Era" : ("Era: " + filters.era.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
                         {dropdownMenuRegular === "Era" &&
-                            <EraDropdown filters={filters} setFilters={setFilters} />
+                            <EraDropdown filters={filters} />
 
                         }
                     </div>
                     {/* Dropdown for Location filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2" >
                         <div>
-                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Location" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Location") return null; else return "Location" })}>
-                                Location
+                            <button type="button" className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Location" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Location") return null; else return "Location" })}>
+                                {filters.location[0] == "All" ? "Location" : ("Location: " + filters.location.join(", "))}
                                 <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                             </button>
                         </div>
                         {dropdownMenuRegular === "Location" &&
-                            <LocationDropdown filters={filters} setFilters={setFilters} />
+                            <LocationDropdown filters={filters} />
                         }
                     </div>
                 </div>
 
             </div>
             <div className='right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex'>
-                <Image src={GridIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px]' />
-                <Image src={ListIcon} width={24} height={24} alt="gift icon" className='tw-w-[24px] tw-h-[24px] tw-mx-6' />
                 {/* Dropdown for Sort*/}
                 <div className="tw-relative tw-text-left tw-mx-2">
                     <div>
-                        <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D]" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
-                            Sort by:
+                        <button type="button" className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate" style={dropdownMenuRegular === "Sort" ? { backgroundColor: "#1A2C3D" } : {}} onClick={() => setDropdownMenuRegular((prev) => { if (prev === "Sort") return null; else return "Sort" })}>
+                            {filters.category[0] == "Newly Listed" ? "Sort by:" : ("Sort by: " + filters.sort)}
                             <Image src={DropdownArrow} width={12} height={12} alt='dropdown arrow' className='tw-w-[12px] tw-h-[12px]' />
                         </button>
                     </div>
                     {dropdownMenuRegular === "Sort" &&
-                        <SortDropdown filters={filters} setFilters={setFilters} />
+                        <SortDropdown filters={filters} />
                     }
                 </div>
             </div>
@@ -150,7 +174,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                         </button>
                         {dropdownMenuSmall === "Make" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto"  >
-                                <MakeContent columns={1} filters={filters} setFilters={setFilters} />
+                                <MakeContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for CATEGORY */}
@@ -160,7 +184,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                         </button>
                         {dropdownMenuSmall === "Category" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
-                                <CategoryContent columns={1} filters={filters} setFilters={setFilters} />
+                                <CategoryContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for ERA */}
@@ -170,7 +194,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                         </button>
                         {dropdownMenuSmall === "Era" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto" >
-                                <EraContent columns={1} filters={filters} setFilters={setFilters} />
+                                <EraContent columns={1} filters={filters} />
                             </div>
                         }
                         {/* Dropdown for LOCATION */}
@@ -180,7 +204,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                         </button>
                         {dropdownMenuSmall === "Location" &&
                             <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto" >
-                                <LocationContent columns={1} filters={filters} setFilters={setFilters} />
+                                <LocationContent columns={1} filters={filters} />
                             </div>
                         }
                     </div>
@@ -197,7 +221,7 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
                             <Image src={CancelIcon} width={24} height={24} alt="magnifying glass" className="tw-w-6 tw-h-6" />
                         </button>
                     </div>
-                    <SortContent filters={filters} setFilters={setFilters} />
+                    <SortContent filters={filters} />
                 </div>
             }
         </div>
@@ -206,45 +230,75 @@ const FiltersAndSort: React.FC<FiltersAndSortProps> = ({ filters, setFilters }) 
 export default FiltersAndSort
 
 // function to add value to filters. This is used in all 4 dropdowns
-const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, setFilters: React.Dispatch<React.SetStateAction<filtersProps>>) => {
-    setFilters(prevFilters => {
-        if (value === "All") {
-            return {
-                ...filters,
-                [key]: ["All"]
-            };
-        } else if (filters[key].includes(value)) {
-            return {
-                ...filters,
-                [key]: filters[key].filter(item => item !== value)
-            };
-        } else {
-            let newFilters = [...filters[key]];
-            const allIndex = newFilters.indexOf("All");
-            if (allIndex > -1) {
-                newFilters.splice(allIndex, 1);
+const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'location', filters: filtersProps, router: any) => {
+
+
+    let newFilters = { ...filters };
+    let queryArray: any = [];
+
+
+    if (value === "All") {
+        newFilters[key] = ["All"];
+    } else {
+        // If the filter already exists, remove it. Otherwise, add it.
+        if (filters[key].includes(value)) {
+            if (filters[key].length === 1) {
+                newFilters[key] = ["All"];
+            } else {
+                newFilters[key] = newFilters[key].filter(item => item !== value);
             }
-            newFilters.push(value);
-            return {
-                ...filters,
-                [key]: newFilters
-            };
+        } else {
+            // If "All" is in the array, remove it
+            const allIndex = newFilters[key].indexOf("All");
+            if (allIndex > -1) {
+                newFilters[key].splice(allIndex, 1);
+            }
+            newFilters[key].push(value);
         }
-    });
+    }
+
+
+    if (!newFilters['make'].includes("All")) {
+        newFilters['make'].map((item) => {
+            queryArray.push(`make=${item.split(" ").join("%20")}`)
+        })
+    }
+
+    if (!newFilters['category'].includes("All")) {
+        newFilters['category'].map((item) => {
+            queryArray.push(`category=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (!newFilters['era'].includes("All")) {
+        newFilters['era'].map((item) => {
+            queryArray.push(`era=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (!newFilters['location'].includes("All")) {
+        newFilters['location'].map((item) => {
+            queryArray.push(`location=${encodeURIComponent(item)}`)
+        })
+    }
+
+    queryArray.push(`sort=${encodeURIComponent(newFilters['sort'])}`)
+
+    const queryString = queryArray.join("&");
+    router.push("/auctions?" + queryString)
+
 }
-
-
 
 
 
 export interface FiltersDropdownProps {
     filters: filtersProps;
-    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
 }
 
 const MakeDropdownContent = ["All", "Acura", "Audi", "BMW", "Alfa Romeo", "Aston Martin", "Honda", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover", "Lexus", "Chrysler", "Chevrolet", "Cadillac", "Buick", "Bugatti", "Bentley", "Hyundai", "Lincoln", "Lotus", "Lucid", "Maserati", "Mazda", "McLaren", "Genesis", "GMX", "Ford", "Fiat", "Ferrari", "Dodge", "Infiniti", "Mercedes-Benz", "Mini", "Mitsubishi", "Nissan", "Polestar", "Porsche"]
 
-const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
+
     return (
 
         <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg"
@@ -255,7 +309,7 @@ const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =
                     <input className='tw-bg-transparent tw-w-full' placeholder='Search' />
                 </div>
                 <div className='tw-mt-2 tw-h-[280px] tw-overflow-y-auto'>
-                    <MakeContent columns={3} filters={filters} setFilters={setFilters} />
+                    <MakeContent columns={3} filters={filters} />
                 </div>
             </div>
         </div>
@@ -267,16 +321,17 @@ const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) =
 interface FiltersContentProps {
     columns?: number;
     filters: filtersProps;
-    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
+    makeFilters?: string[] | null;
 }
-const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
+    const router = useRouter();
 
     return (
         <div className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13}`} >
             {
                 MakeDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "make", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "make", filters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['make'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -300,12 +355,14 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilte
 
 const CategoryDropdownContent = ["All", "Coupes", "Crossovers", "EVs and Hybrids", "Hatchbacks", "Luxury Cars", "Minivans & Vans", "Pickup Trucks", "SUVs", "Sedans", "Small Cars", "Sports Cars", "Station Wagons"];
 
-const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
+
+
 
     return (
         <>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                <CategoryContent columns={2} filters={filters} setFilters={setFilters} />
+                <CategoryContent columns={2} filters={filters} />
             </div>
         </>
 
@@ -314,13 +371,14 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters 
 }
 
 
-const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
+    const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 CategoryDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "category", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "category", filters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['category'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -343,26 +401,28 @@ const CategoryContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
 
 const EraDropdownContent = ["All", "2020s", "2010s", "2000s", "1990s", "1980s", "1970s", "1960s", "1950s", "1940s", "1930s", "1920s", "1910s", "1900 and older"];
 
-const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
+
 
     return (
 
         <div>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " role="menu" aria-labelledby="menu-button" tabIndex={-1}>
-                <EraContent columns={2} filters={filters} setFilters={setFilters} />
+                <EraContent columns={2} filters={filters} />
             </div>
         </div>
     )
 }
 
 
-const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const EraContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
+    const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 EraDropdownContent.map((value) => (
                     <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "era", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "era", filters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['era'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -384,23 +444,25 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilter
 
 const LocationDropdownContent = ["All", "Alabama", "Alaska", "Idaho", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georia", "Hawaii", "Illinois"];
 
-const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
+
     return (
         <div>
             <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg " >
-                <LocationContent columns={2} filters={filters} setFilters={setFilters} />
+                <LocationContent columns={2} filters={filters} />
             </div>
         </div>
     )
 }
 
-const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setFilters }) => {
+const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
+    const router = useRouter();
     return (
         <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
             {
                 LocationDropdownContent.map((value) => {
                     return <div className='tw-flex tw-relative tw-items-center tw-p-2' key={value}>
-                        <div onClick={() => addToFilters(value, "location", filters, setFilters)}>
+                        <div onClick={() => addToFilters(value, "location", filters, router)}>
                             <input
                                 type='checkbox'
                                 className={` ${filters['location'].includes(value) ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]" : "tw-bg-white/5 tw-border-white/10"} tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `} />
@@ -421,36 +483,70 @@ const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters, setF
 }
 
 
+const addSortToFilters = (value: string, filters: filtersProps, router: any) => {
 
 
-const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters, setFilters }) => {
+    let newFilters = { ...filters };
+    let queryArray: any = [];
+
+
+    if (!newFilters['make'].includes("All")) {
+        newFilters['make'].map((item) => {
+            queryArray.push(`make=${item.split(" ").join("%20")}`)
+        })
+    }
+
+    if (!newFilters['category'].includes("All")) {
+        newFilters['category'].map((item) => {
+            queryArray.push(`category=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (!newFilters['era'].includes("All")) {
+        newFilters['era'].map((item) => {
+            queryArray.push(`era=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (!newFilters['location'].includes("All")) {
+        newFilters['location'].map((item) => {
+            queryArray.push(`location=${encodeURIComponent(item)}`)
+        })
+    }
+
+    queryArray.push(`sort=${encodeURIComponent(value)}`)
+
+    const queryString = queryArray.join("&");
+    router.push("/auctions?" + queryString)
+
+}
+
+
+
+
+
+const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 
     return (
         <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
             <div className='tw-p-4'>
-                <SortContent filters={filters} setFilters={setFilters} />
+                <SortContent filters={filters} />
             </div>
 
         </div>
     )
 }
 
-const SortContent: React.FC<FiltersContentProps> = ({ filters, setFilters }) => {
-    const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
-
-    const addSort = (value: string) => {
-        setFilters({
-            ...filters,
-            ['sort']: value
-        });
-    }
+const SortContent: React.FC<FiltersContentProps> = ({ filters }) => {
+    const route = useRouter();
+    const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending Soon"];
 
     return (
         <>
             {
                 SortList.map((value) => {
                     return <div className={`${filters['sort'] === value ? "tw-bg-white/10" : ""} hover:tw-bg-white/5 tw-rounded tw-p-2 `} key={value}>
-                        <button onClick={() => addSort(value)}>{value}</button>
+                        <button onClick={() => addSortToFilters(value, filters, route)}>{value}</button>
                     </div>
                 })
             }

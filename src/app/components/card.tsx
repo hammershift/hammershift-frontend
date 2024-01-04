@@ -1,6 +1,7 @@
 "use client";
+
 import "../styles/app.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,62 +14,11 @@ import AvatarFour from "../../../public/images/avatar-four.svg";
 import BlackMercedes from "../../../public/images/black-mercedes.svg";
 import CarTournamnetsListOne from "../../../public/images/tournaments-list/tournaments-list-car-1.svg";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
-
-const cardData = {
-  activity: [
-    {
-      id: "a1",
-      username: "damientine",
-      avatar: AvatarOne,
-      wager: "$292,000",
-      time: "12m ago",
-    },
-    {
-      id: "a2",
-      username: "addisonmx",
-      avatar: AvatarTwo,
-      wager: "$29,500",
-      time: "16m ago",
-    },
-  ],
-  players: [
-    {
-      id: "player1",
-      username: "user1",
-      avatar: AvatarOne,
-    },
-    {
-      id: "player2",
-      username: "user2",
-      avatar: AvatarTwo,
-    },
-    {
-      id: "player3",
-      username: "user2",
-      avatar: AvatarThree,
-    },
-    {
-      id: "player4",
-      username: "user2",
-      avatar: AvatarFour,
-    },
-    {
-      id: "player5",
-      username: "user2",
-      avatar: AvatarOne,
-    },
-    {
-      id: "player6",
-      username: "user2",
-      avatar: AvatarTwo,
-    },
-    {
-      id: "player7",
-      username: "user2",
-      avatar: AvatarThree,
-    },
-  ],
-};
+import { getWagers } from "@/lib/data";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { ClipLoader, SyncLoader } from "react-spinners";
+import { useSession } from "next-auth/react";
 
 const Card: React.FC<any> = ({
   image,
@@ -79,139 +29,64 @@ const Card: React.FC<any> = ({
   deadline,
   auction_id,
   price,
+  object_id,
 }) => {
   const router = useRouter();
   const timerValues = useTimer();
   return (
     <TimerProvider deadline={new Date(deadline)}>
-      <div>
-        <Image
-          src={image}
-          width={416}
-          height={219}
-          alt="ferrari"
-          className="tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover"
-        />
-        <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
-          {year} {make} {model}
-        </div>
-        <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
-          {description}
-        </p>
-        <div className="tw-flex tw-mt-2">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-h-[654px]">
+        <div>
           <Image
-            src={Dollar}
-            width={20}
-            height={20}
-            alt="dollar"
-            className="tw-w-5 tw-h-5"
+            onClick={() => console.log(object_id)}
+            src={image}
+            width={416}
+            height={219}
+            alt="ferrari"
+            className="tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover"
           />
-          <div className="tw-px-2 tw-hidden sm:tw-block">Current Bid:</div>
-          <div className="tw-text-[#49C742] tw-font-bold">${price}</div>
-        </div>
-        <div className="tw-flex">
-          <Image
-            src={HourGlass}
-            width={20}
-            height={20}
-            alt="dollar"
-            className="tw-w-5 tw-h-5"
-          />
-          <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
-          <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
-        </div>
-        <div className=" tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]">
-          {cardData.activity.map((item) => {
-            return (
-              <div key={item.id} className="tw-flex tw-mb-2">
-                <Image
-                  src={item.avatar}
-                  width={24}
-                  height={24}
-                  alt="dollar"
-                  className="tw-w-[24px] tw-h-[24px]"
-                />
-                <div className="tw-ml-1 tw-flex tw-flex-wrap">
-                  <div className="tw-text-[#42A0FF] tw-mr-2">{`@${item.username}`}</div>
-                  <div>{`wagered ${item.wager}`}</div>
-                  <div className="tw-text-[#DCE0D9] tw-ml-2">{item.time}</div>
-                </div>
-              </div>
-            );
-          })}
-
-          <div className="tw-relative tw-flex tw-items-center">
-            {/* avatar images - hidden for screens smaller than sm */}
-            <div className=" tw-w-auto tw-hidden sm:tw-flex">
-              <Image
-                src={cardData.players[0].avatar}
-                width={32}
-                height={32}
-                alt="avatar"
-                className="tw-w-8 tw-h-8 tw-rounded-full"
-                style={{ border: "1px solid black" }}
-              />
-              <div className="tw-flex">
-                {cardData.players.slice(1, 5).map((item) => {
-                  return (
-                    <div
-                      key={item.id}
-                      style={{
-                        transform: `translate(${-10 + -10 * cardData.players.slice(1, 5).indexOf(item)
-                          }px ,0)`,
-                      }}
-                    >
-                      <Image
-                        src={item.avatar}
-                        width={32}
-                        height={32}
-                        alt="avatar"
-                        className="tw-w-8 tw-h-8 tw-rounded-full"
-                        style={{ border: "1px solid black" }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="tw-ml-1 tw--translate-x-8 sm:tw-block tw-hidden">{`and ${cardData.players.length - 5
-              } more players to join`}</div>
-            {/* avatar images - hidden for screens bigger than sm */}
-            <div className="tw-flex tw-w-auto sm:tw-hidden tw-block">
-              <div className="tw-flex">
-                {cardData.players.slice(0, 2).map((item) => {
-                  return (
-                    <div
-                      key={item.id}
-                      style={{
-                        transform: `translate(${-10 + -10 * cardData.players.slice(1, 5).indexOf(item)
-                          }px ,0)`,
-                      }}
-                    >
-                      <Image
-                        src={item.avatar}
-                        width={32}
-                        height={32}
-                        alt="avatar"
-                        className="tw-w-8 tw-h-8 tw-rounded-full"
-                        style={{ border: "1px solid black" }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="tw-ml-1 tw--translate-x-1 tw-block sm:tw-hidden">{`${cardData.players.length} players`}</div>
+          <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
+            {year} {make} {model}
           </div>
+          <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
+            {description}
+          </p>
+          <div className="tw-flex tw-mt-3">
+            <Image
+              src={Dollar}
+              width={20}
+              height={20}
+              alt="dollar"
+              className="tw-w-5 tw-h-5"
+            />
+            <div className="tw-px-2 tw-hidden sm:tw-block">Current Bid:</div>
+            <div className="tw-text-[#49C742] tw-font-bold">
+              ${new Intl.NumberFormat().format(price)}
+            </div>
+          </div>
+          <div className="tw-flex">
+            <Image
+              src={HourGlass}
+              width={20}
+              height={20}
+              alt="dollar"
+              className="tw-w-5 tw-h-5"
+            />
+            <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
+            <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+          </div>
+          <CardWagersSection objectID={object_id} />
         </div>
-        <button
-          className="btn-yellow-thin tw-w-full sm:tw-w-auto"
-          onClick={() => router.push(`/auctions/car_view_page/${auction_id}`)}
-        >
-          Play Game
-        </button>
+        <div>
+          <button
+            className="btn-yellow-thin tw-w-full sm:tw-w-auto"
+            onClick={() => router.push(`/auctions/car_view_page/${auction_id}`)}
+          >
+            Play Game
+          </button>
+        </div>
       </div>
-    </TimerProvider >
+    </TimerProvider>
   );
 };
 
@@ -219,68 +94,13 @@ export default Card;
 
 export const GamesCard = (props: any) => {
   const router = useRouter();
+  const timerValues = useTimer();
 
   const currencyString = new Intl.NumberFormat().format(props.price);
 
-  const activity = [
-    {
-      id: "ad1",
-      username: "damientine",
-      avatar: AvatarOne,
-      wager: "$292,000",
-      time: "12m ago",
-    },
-    {
-      id: "ad2",
-      username: "addisonmx",
-      avatar: AvatarTwo,
-      wager: "$29,500",
-      time: "16m ago",
-    },
-  ];
-  const players = [
-    {
-      id: "play1",
-      username: "user1",
-      avatar: AvatarOne,
-    },
-    {
-      id: "play2",
-      username: "user2",
-      avatar: AvatarTwo,
-    },
-    {
-      id: "play3",
-      username: "user2",
-      avatar: AvatarThree,
-    },
-    {
-      id: "play4",
-      username: "user2",
-      avatar: AvatarFour,
-    },
-    {
-      id: "player5",
-      username: "user2",
-      avatar: AvatarOne,
-    },
-    {
-      id: "play6",
-      username: "user2",
-      avatar: AvatarTwo,
-    },
-    {
-      id: "play7",
-      username: "user2",
-      avatar: AvatarThree,
-    },
-  ];
-
-  const timerValues = useTimer();
-
   return (
     <TimerProvider deadline={new Date()}>
-      <div className="tw-h-full tw-flex tw-flex-col tw-justify-between">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-h-[654px]">
         <div>
           <Image
             src={props.image}
@@ -292,10 +112,10 @@ export const GamesCard = (props: any) => {
           <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
             {props.year} {props.make} {props.model}
           </div>
-          <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-text-ellipsis tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
+          <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
             {props.description[0]}
           </p>
-          <div className="tw-flex tw-mt-2">
+          <div className="tw-flex tw-mt-3">
             <Image
               src={Dollar}
               width={20}
@@ -319,90 +139,7 @@ export const GamesCard = (props: any) => {
             <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
             <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
           </div>
-          <div className=" tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px]">
-            {activity.map((item) => {
-              return (
-                <div key={item.id} className="tw-flex tw-mb-2">
-                  <Image
-                    src={item.avatar}
-                    width={24}
-                    height={24}
-                    alt="dollar"
-                    className="tw-w-[24px] tw-h-[24px]"
-                  />
-                  <div className="tw-ml-1 tw-flex tw-flex-wrap">
-                    <div className="tw-text-[#42A0FF] tw-mr-2">{`@${item.username}`}</div>
-                    <div>{`wagered ${item.wager}`}</div>
-                    <div className="tw-text-[#DCE0D9] tw-ml-2">{item.time}</div>
-                  </div>
-                </div>
-              );
-            })}
-
-            <div className="tw-relative tw-flex tw-items-center">
-              {/* avatar images - hidden for screens smaller than sm */}
-              <div className=" tw-w-auto tw-hidden xl:tw-flex">
-                <Image
-                  src={players[0].avatar}
-                  width={32}
-                  height={32}
-                  alt="avatar"
-                  className="tw-w-8 tw-h-8 tw-rounded-full"
-                  style={{ border: "1px solid black" }}
-                />
-                <div className="tw-flex">
-                  {players.slice(1, 5).map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        style={{
-                          transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)
-                            }px ,0)`,
-                        }}
-                      >
-                        <Image
-                          src={item.avatar}
-                          width={32}
-                          height={32}
-                          alt="avatar"
-                          className="tw-w-8 tw-h-8 tw-rounded-full"
-                          style={{ border: "1px solid black" }}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="tw-ml-1 tw--translate-x-8 xl:tw-block tw-hidden">{`and ${players.length - 5
-                } more players to join`}</div>
-              {/* avatar images - hidden for screens bigger than sm */}
-              <div className="tw-flex tw-w-auto xl:tw-hidden tw-block">
-                <div className="tw-flex">
-                  {players.slice(0, 2).map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        style={{
-                          transform: `translate(${-10 + -10 * players.slice(1, 5).indexOf(item)
-                            }px ,0)`,
-                        }}
-                      >
-                        <Image
-                          src={item.avatar}
-                          width={32}
-                          height={32}
-                          alt="avatar"
-                          className="tw-w-8 tw-h-8 tw-rounded-full"
-                          style={{ border: "1px solid black" }}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden">{`${players.length} players`}</div>
-            </div>
-          </div>
+          <CardWagersSection objectID={props.object_id} />
         </div>
         <div>
           <button
@@ -416,6 +153,203 @@ export const GamesCard = (props: any) => {
         </div>
       </div>
     </TimerProvider>
+  );
+};
+
+export const CardWagersSection = ({ objectID }: any) => {
+  dayjs.extend(relativeTime);
+  const [auctionWagers, setAuctionWagers] = useState([]);
+
+  useEffect(() => {
+    const fetchWagers = async () => {
+      const wagers = await getWagers(objectID);
+      setAuctionWagers(wagers);
+    };
+
+    fetchWagers();
+  }, []);
+
+  return (
+    <>
+      {auctionWagers.length === 0 && (
+        <div className="tw-bg-[#172431] tw-p-4 tw-flex tw-gap-2 tw-rounded-[4px] tw-mt-4">
+          <Image
+            src={AvatarFour}
+            width={24}
+            height={24}
+            alt="dollar"
+            className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
+          />
+          <div>Be the first to wager a price</div>
+        </div>
+      )}
+      {auctionWagers.length !== 0 && (
+        <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
+          <div
+            className={`tw-flex tw-flex-col tw-gap-2 ${
+              auctionWagers.length >= 3 && "tw-mb-3"
+            }`}
+          >
+            {auctionWagers.slice(0, 2).map((wager: any) => {
+              return (
+                <div key={wager.auctionObjectId} className="tw-flex tw-gap-2">
+                  <Image
+                    src={wager.user?.image ? wager.user.image : AvatarTwo}
+                    width={24}
+                    height={24}
+                    alt="dollar"
+                    className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
+                  />
+                  <div className="tw-flex tw-text-sm tw-gap-1 tw-items-center">
+                    <div className="tw-text-[#42A0FF]">{`@${wager.user.username}`}</div>
+                    <div>{`wagered $${new Intl.NumberFormat().format(
+                      wager.priceGuessed
+                    )}`}</div>
+                    <div className="tw-text-[#DCE0D9]">
+                      {dayjs(wager.createdAt).fromNow()}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {auctionWagers.length >= 3 && (
+            <div className="tw-relative tw-flex tw-items-center">
+              {/* avatar images - hidden for screens smaller than sm */}
+              <div className="tw-flex tw-items-center tw-gap-2">
+                <div className=" tw-w-auto tw-hidden xl:tw-flex">
+                  <Image
+                    src={
+                      (auctionWagers[2] as any).user.image
+                        ? (auctionWagers[2] as any).user.image
+                        : AvatarTwo
+                    }
+                    width={32}
+                    height={32}
+                    alt="avatar"
+                    className="tw-w-8 tw-h-8 tw-rounded-full"
+                    style={{
+                      border: "1px solid black",
+                    }}
+                  />
+                  <div className="tw-flex">
+                    {auctionWagers
+                      .slice(3, 8)
+                      .map((wager: any, index: number) => {
+                        return (
+                          <div
+                            key={wager._id}
+                            style={{
+                              transform: `translate(${-10 * (index + 1)}px, 0)`,
+                              zIndex: 1,
+                            }}
+                          >
+                            <Image
+                              src={
+                                wager.user.image
+                                  ? wager.user.image
+                                  : AvatarThree
+                              }
+                              width={32}
+                              height={32}
+                              alt="avatar"
+                              className="tw-w-8 tw-h-8 tw-rounded-full"
+                              style={{
+                                border: "1px solid black",
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+                {auctionWagers.length - 2 == 1 && (
+                  <div className={`xl:tw-block tw-hidden tw-text-sm`}>
+                    {`and ${auctionWagers.length - 2} more player to join`}
+                  </div>
+                )}
+                {auctionWagers.length - 2 == 2 && (
+                  <div
+                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[10px]`}
+                  >
+                    {`and ${auctionWagers.length - 2} more players to join`}
+                  </div>
+                )}
+                {auctionWagers.length - 2 == 3 && (
+                  <div
+                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[20px]`}
+                  >
+                    {`and ${auctionWagers.length - 2} more players to join`}
+                  </div>
+                )}
+                {auctionWagers.length - 2 == 4 && (
+                  <div
+                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[30px]`}
+                  >
+                    {`and ${auctionWagers.length - 2} more players to join`}
+                  </div>
+                )}
+                {auctionWagers.length - 2 >= 5 && (
+                  <div
+                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
+                  >
+                    {`and ${auctionWagers.length - 2} more players to join`}
+                  </div>
+                )}
+              </div>
+              {/* avatar images - hidden for screens bigger than sm */}
+              <div className="tw-flex tw-w-auto xl:tw-hidden">
+                <Image
+                  src={
+                    (auctionWagers[2] as any).user.image
+                      ? (auctionWagers[2] as any).user.image
+                      : AvatarTwo
+                  }
+                  width={32}
+                  height={32}
+                  alt="avatar"
+                  className="tw-w-8 tw-h-8 tw-rounded-full"
+                  style={{
+                    border: "1px solid black",
+                  }}
+                />
+                <div className="tw-flex">
+                  {auctionWagers
+                    .slice(3, 8)
+                    .map((wager: any, index: number) => {
+                      return (
+                        <div
+                          key={wager._id}
+                          style={{
+                            transform: `translate(${-10 * (index + 1)}px, 0)`,
+                            zIndex: 2,
+                          }}
+                        >
+                          <Image
+                            src={
+                              wager.user.image ? wager.user.image : AvatarThree
+                            }
+                            width={32}
+                            height={32}
+                            alt="avatar"
+                            className="tw-w-8 tw-h-8 tw-rounded-full"
+                            style={{
+                              border: "1px solid black",
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+              <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
+                auctionWagers.length - 2
+              } players`}</div>
+            </div>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 
@@ -501,10 +435,12 @@ export const TournamentsCard = () => {
         </div>
         <div>
           <button
-            className="btn-yellow tw-w-full"
+            className="tw-bg-slate-600 tw-rounded-md tw-h-10 tw-w-full"
             onClick={() => router.push("/tournament_page")}
+            disabled
           >
-            View Results
+            {/* View Results */}
+            Coming Soon
           </button>
         </div>
       </div>

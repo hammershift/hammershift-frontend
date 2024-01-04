@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 :root {
-    background: #0f1923;
-    color: white;
-    box-sizing: border-box;
+  background: #0f1923;
+  color: white;
+  box-sizing: border-box;
 }
 
 @font-face {
-    src: url("../../../public/fonts/eurostarblackextended.ttf");
-    font-family: "euro-star-black-extended";
+  src: url("../../../public/fonts/eurostarblackextended.ttf");
+  font-family: "euro-star-black-extended";
 }
 
 /* :root {
