@@ -136,7 +136,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                         </button>
                     </div>
                     {dropdownMenuRegular === "Sort" &&
-                        <SortDropdown filters={filters} setFilters={setFilters} />
+                        <SortDropdown filters={filters} />
                     }
                 </div>
             </div>
@@ -221,7 +221,7 @@ const FiltersAndSort = ({ filters, setFilters }: { filters: any, setFilters: any
                             <Image src={CancelIcon} width={24} height={24} alt="magnifying glass" className="tw-w-6 tw-h-6" />
                         </button>
                     </div>
-                    <SortContent filters={filters} setFilters={setFilters} />
+                    <SortContent filters={filters} />
                 </div>
             }
         </div>
@@ -281,6 +281,8 @@ const addToFilters = (value: string, key: 'make' | 'category' | 'era' | 'locatio
             queryArray.push(`location=${encodeURIComponent(item)}`)
         })
     }
+
+    queryArray.push(`sort=${encodeURIComponent(newFilters['sort'])}`)
 
     const queryString = queryArray.join("&");
     router.push("/auctions?" + queryString)
@@ -481,42 +483,70 @@ const LocationContent: React.FC<FiltersContentProps> = ({ columns, filters }) =>
 }
 
 
+const addSortToFilters = (value: string, filters: filtersProps, router: any) => {
 
-type ExtendedFilterContentProps = FiltersContentProps & {
-    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
-}
-type ExtendedFilterDropdownProps = FiltersDropdownProps & {
-    setFilters: React.Dispatch<React.SetStateAction<filtersProps>>;
+
+    let newFilters = { ...filters };
+    let queryArray: any = [];
+
+
+    if (!newFilters['make'].includes("All")) {
+        newFilters['make'].map((item) => {
+            queryArray.push(`make=${item.split(" ").join("%20")}`)
+        })
+    }
+
+    if (!newFilters['category'].includes("All")) {
+        newFilters['category'].map((item) => {
+            queryArray.push(`category=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (!newFilters['era'].includes("All")) {
+        newFilters['era'].map((item) => {
+            queryArray.push(`era=${encodeURIComponent(item)}`)
+        })
+    }
+
+    if (!newFilters['location'].includes("All")) {
+        newFilters['location'].map((item) => {
+            queryArray.push(`location=${encodeURIComponent(item)}`)
+        })
+    }
+
+    queryArray.push(`sort=${encodeURIComponent(value)}`)
+
+    const queryString = queryArray.join("&");
+    router.push("/auctions?" + queryString)
+
 }
 
-const SortDropdown: React.FC<ExtendedFilterDropdownProps> = ({ filters, setFilters }) => {
+
+
+
+
+const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 
     return (
         <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
             <div className='tw-p-4'>
-                <SortContent filters={filters} setFilters={setFilters} />
+                <SortContent filters={filters} />
             </div>
 
         </div>
     )
 }
 
-const SortContent: React.FC<ExtendedFilterContentProps> = ({ filters, setFilters }) => {
-    const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending soon"];
-
-    const addSort = (value: string) => {
-        setFilters({
-            ...filters,
-            ['sort']: value
-        });
-    }
+const SortContent: React.FC<FiltersContentProps> = ({ filters }) => {
+    const route = useRouter();
+    const SortList = ["Top Performers", "Newly Listed", "Most Expensive", "Least Expensive", "Most Bids", "Least Bids", "Ending Soon"];
 
     return (
         <>
             {
                 SortList.map((value) => {
                     return <div className={`${filters['sort'] === value ? "tw-bg-white/10" : ""} hover:tw-bg-white/5 tw-rounded tw-p-2 `} key={value}>
-                        <button onClick={() => addSort(value)}>{value}</button>
+                        <button onClick={() => addSortToFilters(value, filters, route)}>{value}</button>
                     </div>
                 })
             }

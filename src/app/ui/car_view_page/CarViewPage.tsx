@@ -18,12 +18,8 @@ import CheckIconGreen from "../../../../public/images/check-green.svg";
 
 import CameraPlus from "../../../../public/images/camera-plus.svg";
 import GifIcon from "../../../../public/images/image-document-gif.svg";
-import BellIcon from "../../../../public/images/bell-02.svg";
-import ThumbsUp from "../../../../public/images/thumbs-up.svg";
-import ThumbsDown from "../../../../public/images/thumbs-down.svg";
-import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import ThreeDots from "../../../../public/images/dots-vertical.svg";
-import OpenWebLogo from "../../../../public/images/open-web-logo.svg";
+
+
 import ArrowDown from "../../../../public/images/arrow-down.svg";
 import ArrowUp from "../../../../public/images/chevron-up.svg";
 import DiagonalLines from "../../../../public/images/green-diagonal.svg";
@@ -201,8 +197,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                     $
                                     {pot
                                         ? new Intl.NumberFormat().format(
-                                              pot || 0
-                                          )
+                                            pot || 0
+                                        )
                                         : " --"}
                                 </span>
                             </span>
@@ -302,11 +298,10 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             width={20}
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
-                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
-                                isWatching
-                                    ? "scale-animation is-watching"
-                                    : "scale-animation"
-                            }`}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
+                                ? "scale-animation is-watching"
+                                : "scale-animation"
+                                }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
@@ -459,164 +454,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
     );
 };
 
-export const CommentsSection = () => {
-    return (
-        <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
-            <div className="tw-flex tw-justify-between">
-                <div className="tw-text-xl md:tw-text-3xl">
-                    <span className="tw-font-bold">Comments</span>
-                    {`(16)`}
-                </div>
-                <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                    <Image
-                        src={BellIcon}
-                        width={16}
-                        height={16}
-                        alt="Bell"
-                        className="tw-w-4 tw-h-4"
-                    />
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Log in
-                    </div>
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Sign Up
-                    </div>
-                </div>
-            </div>
-            <div className="tw-flex tw-my-3">
-                <div className="tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
-                    <input
-                        placeholder="Add a comment"
-                        className="tw-bg-[#172431] tw-w-full"
-                    />
-                    <Image
-                        src={CameraPlus}
-                        width={20}
-                        height={20}
-                        alt="camera plus"
-                        className="tw-w-5 tw-h-5"
-                    />
-                    <Image
-                        src={GifIcon}
-                        width={20}
-                        height={20}
-                        alt="gif"
-                        className="tw-w-5 tw-h-5 tw-ml-2"
-                    />
-                </div>
-                <button className="btn-white tw-ml-2">Comment</button>
-            </div>
-            <div className="tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                Sort by
-                <span className="tw-font-bold tw-ml-2">Best</span>
-                <Image
-                    src={ArrowDown}
-                    width={14}
-                    height={14}
-                    alt="arrow down"
-                    className="tw-w-[14px] tw-h-[14px] tw-ml-2"
-                />
-            </div>
-            <section>
-                <div>
-                    {/* To be replaced by map */}
-                    <CommentsCard />
-                    <CommentsCard />
-                    <CommentsCard />
-                </div>
-                <button className="btn-transparent-white tw-w-full tw-mt-8 tw-text-sm">
-                    Load 12 more comments
-                </button>
-                <div className="tw-flex tw-items-center tw-mt-8">
-                    <span>Powered by</span>
-                    <Image
-                        src={OpenWebLogo}
-                        width={97}
-                        height={28}
-                        alt="camera plus"
-                        className="tw-w-[97px] tw-h-[28px] tw-ml-2"
-                    />
-                </div>
-            </section>
-        </div>
-    );
-};
 
-export const CommentsCard = () => {
-    const commentsData = [
-        {
-            id: "com1",
-            username: "@johnadams",
-            text: " Nihil hic munitissimus habendi senatus locus, nihil horum? Qui ipsorum lingua Celtae, nostra Galli appellantur. Ambitioni dedisse scripsisse iudicaretur. Paullum deliquit, ponderibus modulisque suis ratio utitur.Nihil hic munitissimus habendi senatus locus, nihil horum? Praeterea iter est quasdam res quas ex communi.Cum sociis natoque penatibus et magnis dis parturient.Contra legem facit qui id facit quod lex prohibet.Ambitioni dedisse scripsisse iudicaretur.Quid securi etiam tamquam eu fugiat nulla pariatur.Quam diu etiam furor iste tuus nos eludet? Tu quoque, Brute, fili mi, nihil timor populi, nihil! Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae.Unam incolunt Belgae, aliam Aquitani, tertiam.Excepteur sint obcaecat cupiditat non proident culpa.Petierunt uti sibi concilium totius Galliae in diem certam indicere.Phasellus laoreet lorem vel dolor tempus vehicula.Quis aute iure reprehenderit in voluptate velit esse.Quo usque tandem abutere, Catilina, patientia nostra? Prima luce, cum quibus mons aliud consensu ab eo.",
-        },
-    ];
-    return (
-        <div className="tw-flex tw-mt-8 tw-text-[14px]">
-            <Image
-                src={AvatarOne}
-                width={40}
-                height={40}
-                alt="camera plus"
-                className="tw-w-10 tw-h-10 tw-ml-2"
-            />
-            <div className="tw-ml-4">
-                <div className="tw-flex tw-justify-between">
-                    <div>
-                        <span className="tw-font-bold">Jane Doe</span>
-                        <span className="tw-text-[#F2CA16] tw-ml-2">
-                            Seller
-                        </span>
-                        <span className="tw-opacity-50 tw-ml-2">
-                            14 hours ago
-                        </span>
-                    </div>
-                    <Image
-                        src={ThreeDots}
-                        width={16}
-                        height={16}
-                        alt="thumbs up"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                </div>
-                <div className=" tw-my-3 tw-h-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-                    <span className="tw-text-[#42A0FF]">
-                        {commentsData[0].username}
-                    </span>
-                    {commentsData[0].text}
-                </div>
-                <div className="tw-flex tw-opacity-50">
-                    Reply
-                    <span className="tw-ml-4">·</span>
-                    <Image
-                        src={ThumbsUp}
-                        width={16}
-                        height={16}
-                        alt="thumbs up"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                    <Image
-                        src={ThumbsDown}
-                        width={16}
-                        height={16}
-                        alt="thumbs down"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                </div>
-
-                <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">
-                    <Image
-                        src={CornerDownRight}
-                        width={16}
-                        height={16}
-                        alt="camera plus"
-                        className="tw-w-4 tw-h-4 tw-mr-2 "
-                    />
-                    1 Replay
-                </div>
-            </div>
-        </div>
-    );
-};
 
 interface WagerI {
     _id: string;
@@ -688,7 +526,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
                                                 {session?.user.id ===
-                                                wager.user._id
+                                                    wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
