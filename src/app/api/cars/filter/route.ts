@@ -234,16 +234,16 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const totalCars = await Auctions.find(query);
+    const totalCars = await Auctions.count(query);
 
     const filteredCars = await Auctions.find({
-      $and: [query, { isActive: true }]
+      $and: [query, { isActive: true }],
     })
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any } });
 
-    return NextResponse.json({ total: totalCars.length, cars: filteredCars });
+    return NextResponse.json({ total: totalCars, cars: filteredCars });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" });
