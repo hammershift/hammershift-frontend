@@ -32,6 +32,8 @@ export async function POST(req: NextRequest) {
                 userId,
                 username: session.user.username,
             },
+            likes: [],
+            dislikes: [],
             createdAt: new Date(),
         });
 
@@ -84,10 +86,7 @@ export async function GET(req: NextRequest) {
     }
 
 
-
-
-
-    // get if from url
+    // get id from url
     const auctionID = await req.nextUrl.searchParams.get("id");
 
     // check if id is present, otherwise return error
@@ -119,5 +118,51 @@ export async function GET(req: NextRequest) {
     } catch (error) {
         console.error('Error in fetching comments', error);
         return NextResponse.json({ message: 'Server error, cannot get comments' }, { status: 500 });
+    }
+}
+
+//add likes and dislikes
+export async function PUT(req: NextRequest) {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
+
+    const { comment, auctionID } = await req.json();
+
+    if (!comment || !auctionID) {
+        return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+    }
+
+    try {
+        const client = await clientPromise;
+        const db = client.db();
+        const userId = new ObjectId(session.user.id);
+        // const userId = new ObjectId("65824ed1db2ea85500c815d9");
+
+        // create comment for auction
+        const commentData = await db.collection('comments').insertOne({
+            comment,
+            auctionID,
+            user: {
+                userId,
+                username: session.user.username,
+            },
+            createdAt: new Date(),
+        });
+
+        if (!commentData) {
+            return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
+        }
+        return NextResponse.json(
+            {
+                message: "comment posted"
+            },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error('Error in creating comment', error);
+        return NextResponse.json({ message: 'Server error in posting comment' }, { status: 500 });
     }
 }
