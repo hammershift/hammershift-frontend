@@ -12,11 +12,14 @@ import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
 import { createComment } from "@/lib/data";
+import { set } from "mongoose";
+import { BeatLoader } from "react-spinners";
 
-export const CommentsSection = ({ comments, id }: { comments: any, id: string }) => {
+export const CommentsSection = ({ comments, id, loading }: { comments: any, id: string, loading: boolean }) => {
     const [commentsList, setCommentsList] = useState([]);
     const [commentsDisplayed, setCommentsDisplayed] = useState(3);
     const [comment, setComment] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const session = useSession();
     useEffect(() => {
         console.log("comment section", comments);
@@ -24,6 +27,11 @@ export const CommentsSection = ({ comments, id }: { comments: any, id: string })
             setCommentsList(comments.comments);
         }
     }, [comments]);
+
+    useEffect(() => {
+        setIsLoading(loading);
+    }, [loading]);
+
 
     const handleLoadComments = () => {
         if (commentsDisplayed < commentsList.length) {
@@ -116,17 +124,21 @@ export const CommentsSection = ({ comments, id }: { comments: any, id: string })
                 />
             </div>
             <section>
-                {Array.isArray(commentsList) && commentsList.length > 0
-                    ? commentsList.slice(0, commentsDisplayed).map((item: any, index: any) => (
-                        <div key={item._id}>
-                            <CommentsCard comment={item.comment} username={item.user.username} createdAt={item.createdAt} />
-                        </div>
-                    ))
-                    :
-                    <div className="tw-w-full tw-h-12 tw-flex tw-justify-center tw-items-center">
-                        No Comments Yet
+                {isLoading
+                    ? <div className="tw-flex tw-w-full tw-justify-center tw-h-12 tw-items-center">
+                        <BeatLoader color='#f2ca16' />
                     </div>
-                }
+                    : (Array.isArray(commentsList) && commentsList.length > 0
+                        ? commentsList.slice(0, commentsDisplayed).map((item: any, index: any) => (
+                            <div key={item._id}>
+                                <CommentsCard comment={item.comment} username={item.user.username} createdAt={item.createdAt} />
+                            </div>
+                        ))
+                        :
+                        <div className="tw-w-full tw-h-12 tw-flex tw-justify-center tw-items-center">
+                            No Comments Yet
+                        </div>
+                    )}
                 {commentsDisplayed < commentsList.length &&
                     <button
                         className="btn-transparent-white tw-w-full tw-mt-8 tw-text-sm"
