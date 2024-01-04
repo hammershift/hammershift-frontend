@@ -277,7 +277,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
               />
             </div>
           ) : null}
-          <CommentsSection comments={comments} />
+          <CommentsSection comments={comments} id={ID} />
         </div>
         <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
           {wagersData ? <WagersSection toggleWagerModal={showWagerModal} players_num={playerNum} wagers={wagersData} alreadyWagered={alreadyWagered} /> : null}

@@ -11,10 +11,12 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
+import { createComment } from "@/lib/data";
 
-export const CommentsSection = ({ comments }: { comments: any }) => {
+export const CommentsSection = ({ comments, id }: { comments: any, id: string }) => {
     const [commentsList, setCommentsList] = useState([]);
     const [commentsDisplayed, setCommentsDisplayed] = useState(3);
+    const [comment, setComment] = useState("");
     const session = useSession();
     useEffect(() => {
         console.log("comment section", comments);
@@ -28,6 +30,26 @@ export const CommentsSection = ({ comments }: { comments: any }) => {
             setCommentsDisplayed(prevCount => Math.min(prevCount + 3, commentsList.length));
         }
     }
+
+    const handlePostComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        try {
+            const response = await createComment(id, comment)
+
+            if (response) {
+                console.log("comment has been posted");
+                setComment("");
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error("error posting comment:", error);
+        }
+
+    }
+
+    useEffect(() => {
+        console.log("comment", comment);
+    }, [comment]);
 
     return (
         <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
@@ -60,6 +82,8 @@ export const CommentsSection = ({ comments }: { comments: any }) => {
                     <input
                         placeholder="Add a comment"
                         className="tw-bg-[#172431] tw-w-full"
+                        name="comment"
+                        onChange={(e) => setComment(e.target.value)}
                     />
                     {/* <Image
                         src={CameraPlus}
@@ -76,7 +100,9 @@ export const CommentsSection = ({ comments }: { comments: any }) => {
                         className="tw-w-5 tw-h-5 tw-ml-2"
                     /> */}
                 </div>
-                <button className="btn-white tw-ml-2">Comment</button>
+                <button
+                    className="btn-white tw-ml-2"
+                    onClick={handlePostComment}>Comment</button>
             </div>
             <div className="tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
                 Sort by
@@ -189,7 +215,7 @@ export const CommentsCard = ({ comment, username, createdAt }: { comment: string
                     />
                 </div>
 
-                <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">
+                {/* <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">
                     <Image
                         src={CornerDownRight}
                         width={16}
@@ -198,7 +224,7 @@ export const CommentsCard = ({ comment, username, createdAt }: { comment: string
                         className="tw-w-4 tw-h-4 tw-mr-2 "
                     />
                     1 Replay
-                </div>
+                </div> */}
             </div>
         </div>
     );

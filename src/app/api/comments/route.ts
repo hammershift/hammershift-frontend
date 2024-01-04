@@ -4,12 +4,13 @@ import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 
-
+// create comment for auction URL: /api/comments
 export async function POST(req: NextRequest) {
-    // const session = await getServerSession(authOptions);
-    // if (!session) {
-    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    // }
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
 
     const { comment, auctionID } = await req.json();
 
@@ -20,8 +21,8 @@ export async function POST(req: NextRequest) {
     try {
         const client = await clientPromise;
         const db = client.db();
-        // const userId = new ObjectId(session.user.id);
-        const userId = new ObjectId("65824ed1db2ea85500c815d9");
+        const userId = new ObjectId(session.user.id);
+        // const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
         // create comment for auction
         const commentData = await db.collection('comments').insertOne({
@@ -29,11 +30,14 @@ export async function POST(req: NextRequest) {
             auctionID,
             user: {
                 userId,
-                username: "test",
+                username: session.user.username,
             },
             createdAt: new Date(),
         });
 
+        if (!commentData) {
+            return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
+        }
         return NextResponse.json(
             {
                 message: "comment posted"
