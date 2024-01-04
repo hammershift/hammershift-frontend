@@ -121,7 +121,10 @@ export async function GET(req: NextRequest) {
     }
 }
 
-//add likes and dislikes
+
+
+
+//add likes and dislikes and edit comment URL: /api/comments
 export async function PUT(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
@@ -129,9 +132,9 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
     }
 
-    const { comment, auctionID } = await req.json();
+    const { commentID, key } = await req.json();
 
-    if (!comment || !auctionID) {
+    if (!commentID || !key) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -141,28 +144,43 @@ export async function PUT(req: NextRequest) {
         const userId = new ObjectId(session.user.id);
         // const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
-        // create comment for auction
-        const commentData = await db.collection('comments').insertOne({
-            comment,
-            auctionID,
-            user: {
-                userId,
-                username: session.user.username,
-            },
-            createdAt: new Date(),
-        });
+        let updateOperation;
+
+        switch (key) {
+            case "likes":
+                updateOperation = { $addToSet: { likes: userId } };
+                break;
+            case "dislikes":
+                updateOperation = { $addToSet: { dislikes: userId } };
+                break;
+            case "removeLikes":
+                updateOperation = { $pull: { likes: userId } };
+                break;
+            case "removeDislikes":
+                updateOperation = { $pull: { dislikes: userId } };
+                break;
+            default:
+                throw new Error(`Invalid key: ${key}`);
+        }
+
+        const commentData = await db.collection('comments').updateOne(
+            { _id: new ObjectId(commentID) },
+            updateOperation
+        );
+
 
         if (!commentData) {
-            return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
+            console.error("update comment failed")
+            return NextResponse.json({ message: 'Cannot edit comment' }, { status: 400 });
         }
         return NextResponse.json(
             {
-                message: "comment posted"
+                message: "comment edited"
             },
             { status: 200 }
         );
     } catch (error) {
-        console.error('Error in creating comment', error);
+        console.error('Error in editing comment', error);
         return NextResponse.json({ message: 'Server error in posting comment' }, { status: 500 });
     }
 }

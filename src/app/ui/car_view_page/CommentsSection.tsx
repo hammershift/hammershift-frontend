@@ -11,10 +11,12 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment } from "@/lib/data";
-import { set } from "mongoose";
+import { createComment, dislikeComment, likeComment } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
+import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
+import BlueThumbsDown from "../../../../public/images/blue-thumbs-down.png";
+
 
 export const CommentsSection = ({ comments, id, loading }: { comments: any, id: string, loading: boolean }) => {
     const [commentsList, setCommentsList] = useState([]);
@@ -22,6 +24,7 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
     const [comment, setComment] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const session = useSession();
+
 
     useEffect(() => {
         if (comments) {
@@ -42,18 +45,22 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
 
     const handlePostComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        try {
-            const response = await createComment(id, comment)
+        if (comment == "") {
+            console.log("comment is empty")
+            return;
+        } else {
+            try {
+                const response = await createComment(id, comment)
 
-            if (response) {
-                console.log("comment has been posted");
-                setComment("");
-                window.location.reload();
+                if (response) {
+                    console.log("comment has been posted");
+                    setComment("");
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error("error posting comment:", error);
             }
-        } catch (error) {
-            console.error("error posting comment:", error);
         }
-
     }
 
     useEffect(() => {
@@ -136,7 +143,14 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
                     : (Array.isArray(commentsList) && commentsList.length > 0
                         ? commentsList.slice(0, commentsDisplayed).map((item: any, index: any) => (
                             <div key={item._id}>
-                                <CommentsCard comment={item.comment} username={item.user.username} createdAt={item.createdAt} />
+                                <CommentsCard
+                                    comment={item.comment}
+                                    username={item.user.username}
+                                    createdAt={item.createdAt}
+                                    likes={item.likes || []}
+                                    dislikes={item.dislikes || []}
+                                    commentID={item._id}
+                                    userID={session.data?.user.id} />
                             </div>
                         ))
                         :
@@ -166,7 +180,26 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
     );
 };
 
-export const CommentsCard = ({ comment, username, createdAt }: { comment: string, username: string, createdAt: string }) => {
+
+
+export const CommentsCard = ({
+    comment,
+    username,
+    createdAt,
+    likes,
+    dislikes,
+    commentID,
+    userID
+}: {
+    comment: string,
+    username: string,
+    createdAt: string,
+    likes: string[],
+    dislikes: string[],
+    commentID: string,
+    userID: string
+}) => {
+
     const timeSince = (dateString: string) => {
         const date = new Date(dateString);
         const now = new Date();
@@ -182,6 +215,34 @@ export const CommentsCard = ({ comment, username, createdAt }: { comment: string
         return `${diffInHours} hour(s) ago`;
     };
 
+
+    const handleLiking = async (e: any) => {
+        e.preventDefault();
+        try {
+            const response = await likeComment(commentID, userID, likes);
+
+            if (response) {
+                console.log("comment has been liked");
+                window.location.reload();
+            }
+        } catch (error) {
+
+        }
+    }
+
+    const handleDisliking = async (e: any) => {
+        e.preventDefault();
+        try {
+            const response = await dislikeComment(commentID, userID, dislikes);
+
+            if (response) {
+                console.log("comment has been liked");
+                window.location.reload();
+            }
+        } catch (error) {
+
+        }
+    }
     return (
         <div className="tw-flex tw-mt-8 tw-text-[14px]">
             <Image
@@ -213,23 +274,45 @@ export const CommentsCard = ({ comment, username, createdAt }: { comment: string
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
                     {comment}
                 </div>
-                <div className="tw-flex tw-opacity-50">
+                <div className="tw-flex tw-opacity-50 tw-items-center">
                     Reply
                     <span className="tw-ml-4">·</span>
-                    <Image
-                        src={ThumbsUp}
-                        width={16}
-                        height={16}
-                        alt="thumbs up"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                    <Image
-                        src={ThumbsDown}
-                        width={16}
-                        height={16}
-                        alt="thumbs down"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
+                    <div className="tw-flex tw-items-center" onClick={handleLiking}>
+                        {likes.includes(userID)
+                            ? <div className="tw-ml-4">
+                                <Image src={BlueThumbUp} alt="thumbs up" width={16} height={16} className="tw-w-4 tw-h-4" />
+                            </div>
+                            : <div >
+                                <Image
+                                    src={ThumbsUp}
+                                    width={16}
+                                    height={16}
+                                    alt="thumbs up"
+                                    className="tw-w-4 tw-h-4 tw-ml-4"
+                                />
+                            </div>}
+                        {likes.length > 0 && <div className="tw-ml-1">{likes.length}</div>}
+                        <div></div>
+                    </div>
+                    <div className="tw-flex tw-items-center" onClick={handleDisliking}>
+                        {dislikes.includes(userID)
+                            ? <div className="tw-ml-4">
+                                <Image src={BlueThumbsDown} alt="thumbs down" width={16} height={16} className="tw-w-4 tw-h-4" />
+                            </div>
+                            : <div >
+                                <Image
+                                    src={ThumbsDown}
+                                    width={16}
+                                    height={16}
+                                    alt="thumbs down"
+                                    className="tw-w-4 tw-h-4 tw-ml-4"
+                                />
+                            </div>}
+                        {dislikes.length > 0 && <div className="tw-ml-1">{dislikes.length}</div>}
+                        <div></div>
+                    </div>
+
+
                 </div>
 
                 {/* <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">

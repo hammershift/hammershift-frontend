@@ -426,3 +426,91 @@ export const createComment = async (auctionID: string, comment: string) => {
     throw error;
   }
 };
+
+// like comment
+export const likeComment = async (commentID: string, userID: string, likes: string[]) => {
+  if (!likes.includes(userID)) {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "likes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  } else {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "removeLikes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+  }
+};
+
+// dislike comment
+export const dislikeComment = async (commentID: string, userID: string, dislikes: string[]) => {
+
+  if (!dislikes.includes(userID)) {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "dislikes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  } else {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "removeDislikes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+};
