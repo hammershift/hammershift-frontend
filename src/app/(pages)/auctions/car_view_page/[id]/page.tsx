@@ -1,14 +1,16 @@
 'use client';
 import React, { Suspense, useEffect, useState } from 'react';
-import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, DetailsSection, CommentsSection, GamesYouMightLike } from '@/app/ui/car_view_page/CarViewPage';
+import { WatchAndWagerButtons, PhotosLayout, ArticleSection, WagersSection, DetailsSection, GamesYouMightLike } from '@/app/ui/car_view_page/CarViewPage';
+import { CommentsSection } from '@/app/ui/car_view_page/CommentsSection';
 import TitleContainer from '@/app/ui/car_view_page/CarViewPage';
 import GuessThePriceInfoSection from '@/app/ui/car_view_page/GuessThePriceInfoSection';
 import { auctionDataOne, carDataTwo } from '../../../../../sample_data';
-import { addPrizePool, createWager, getCarData, getOneUserWager, getWagers, sortByNewGames } from '@/lib/data';
+import { addPrizePool, createWager, getCarData, getComments, getOneUserWager, getWagers, sortByNewGames } from '@/lib/data';
 import { TimerProvider } from '@/app/_context/TimerContext';
 import WagerModal from '@/app/components/wager_modal';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { set } from 'mongoose';
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
@@ -21,6 +23,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
   const [wagerErrorMessage, setWagerErrorMessage] = useState(''); // TEST IMPLEMENTATION
+  const [comments, setComments] = useState<any | null>(null);
+  const [loadingComments, setLoadingComments] = useState(false);
 
   // const router = useRouter();
 
@@ -182,6 +186,25 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  //fetch comments 
+  useEffect(() => {
+    const fetchComments = async () => {
+      setLoadingComments(true);
+      try {
+        const response = await getComments(ID);
+        if (response) {
+          console.log(response);
+          setComments(response);
+          setLoadingComments(false);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+      setLoadingComments(false);
+    };
+    fetchComments();
+  }, [])
+
   return (
     <div>
       {toggleWagerModal ? (
@@ -198,7 +221,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             handleWagerSubmit={handleWagerSubmit}
             players_num={playerNum}
             prize={carData.pot}
-            // walletBalance={walletBalance}
+          // walletBalance={walletBalance}
           />
         </TimerProvider>
       ) : null}
@@ -257,7 +280,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
               />
             </div>
           ) : null}
-          <CommentsSection />
+          <CommentsSection comments={comments} id={ID} loading={loadingComments} />
         </div>
         <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
           {wagersData ? <WagersSection toggleWagerModal={showWagerModal} players_num={playerNum} wagers={wagersData} alreadyWagered={alreadyWagered} /> : null}

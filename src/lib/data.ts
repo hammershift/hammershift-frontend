@@ -114,7 +114,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
           status: data.attributes[14].value,
         })),
       };
-
+      console.log(auctions)
       return auctions;
     } else {
       throw new Error('Failed to fetch cars list!');
@@ -377,5 +377,52 @@ export const getCarsWithURLString = async ({ urlString, limit }: { urlString: st
     }
   } catch (err) {
     console.error(err);
+  }
+};
+
+export const getUserInfo = async (id: string) => {
+  try {
+    const res = await fetch(`/api/userInfo?id=${id}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+// fetches comments
+export const getComments = async (id: string) => {
+  try {
+    const res = await fetch(`/api/comments?id=${id}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return { message: "cannot get comments" };
+  }
+};
+
+// creates comment
+export const createComment = async (auctionID: string, comment: string) => {
+  try {
+    const res = await fetch('/api/comments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ auctionID, comment }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
   }
 };
