@@ -940,6 +940,8 @@ const MyWagersDropdownMenu = () => {
                                     status={wager.auctionStatus}
                                     wagerAmount={wager.wagerAmount}
                                     objectID={wager.auctionObjectId}
+                                    wagerID={wager._id}
+                                    isRefunded={wager.refunded}
                                 />
                             </TimerProvider>
                         </div>
@@ -964,6 +966,8 @@ const MyWagersDropdownMenu = () => {
                                         status={wager.auctionStatus}
                                         wagerAmount={wager.wagerAmount}
                                         objectID={wager.auctionObjectId}
+                                        wagerID={wager._id}
+                                        isRefunded={wager.refunded}
                                     />
                                 </TimerProvider>
                             </div>
@@ -1019,6 +1023,8 @@ interface MyWagersCardProps {
     status: number;
     wagerAmount: number;
     objectID: string;
+    wagerID: string;
+    isRefunded: boolean;
 }
 const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
@@ -1032,11 +1038,22 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
     status,
     wagerAmount,
     objectID,
+    wagerID,
+    isRefunded,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
+    const [refunded, setRefunded] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const handleRefund = async (id: string) => {
-        await refundWager(id);
+    useEffect(() => {
+        setRefunded(isRefunded);
+    }, []);
+
+    const handleRefund = async (auctionObjectID: string, wagerID: string) => {
+        setLoading(true);
+        await refundWager(auctionObjectID, wagerID);
+        setRefunded(true);
+        setLoading(false);
     };
 
     return (
@@ -1135,13 +1152,35 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
                                 ❌ AUCTION CANCELLED
                             </div>
-                            <button
-                                onClick={() => handleRefund(objectID)}
-                                className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
-                            >
-                                CLAIM $
-                                {new Intl.NumberFormat().format(wagerAmount)}{" "}
-                            </button>
+                            {refunded ? (
+                                <button
+                                    disabled
+                                    className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                                >
+                                    REFUNDED
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() =>
+                                        handleRefund(objectID, wagerID)
+                                    }
+                                    className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                                >
+                                    {loading && (
+                                        <div className="tw-px-[14px]">
+                                            <BeatLoader size={8} />
+                                        </div>
+                                    )}
+                                    <span
+                                        className={`${loading && "tw-hidden"}`}
+                                    >
+                                        CLAIM $
+                                        {new Intl.NumberFormat().format(
+                                            wagerAmount
+                                        )}{" "}
+                                    </span>
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>

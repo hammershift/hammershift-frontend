@@ -102,3 +102,24 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Internal server error' });
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    await connectToDB();
+    const id = req.nextUrl.searchParams.get('id');
+    const edits = await req.json();
+
+    if (id) {
+      const editedWager = await Wager.findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }] }
+        ,
+        { $set: edits },
+        { new: true }
+      )
+      return NextResponse.json(editedWager, { status: 202 });
+    }
+
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json({ message: "Internal server error" });
+  }
+}
