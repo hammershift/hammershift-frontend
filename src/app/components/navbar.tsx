@@ -751,7 +751,7 @@ interface MyWatchlistCardProps {
     id: string;
     isActive: boolean;
 }
-const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
+export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     title,
     img,
     current_bid,

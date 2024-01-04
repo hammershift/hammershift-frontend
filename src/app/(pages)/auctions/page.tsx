@@ -65,7 +65,11 @@ const AuctionListingPage = () => {
 
         const filtersFromSearchParams = (filter: any) => {
             Object.keys(filter).forEach((key) => {
-                query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+                if (key == "sort") {
+                    query[key] = filter[key];
+                } else {
+                    query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+                }
             });
             setFilters(query);
 
@@ -84,6 +88,9 @@ const AuctionListingPage = () => {
             }
             if (searchParamsObj.getAll('era').length > 0) {
                 newQuery = { ...newQuery, era: searchParamsObj.getAll('era') }
+            }
+            if (searchParamsObj.getAll('sort').length > 0) {
+                newQuery = { ...newQuery, sort: searchParamsObj.get('sort') }
             }
 
             filtersFromSearchParams(newQuery);
@@ -116,9 +123,9 @@ const AuctionListingPage = () => {
 
 
     //console log to check filters
-    // useEffect(() => {
-    //     console.log("filters:", filters);
-    // }, [filters]);
+    useEffect(() => {
+        console.log("filters:", filters);
+    }, [filters]);
 
 
 
