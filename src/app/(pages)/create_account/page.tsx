@@ -386,11 +386,11 @@ const CreateAccount = () => {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     onBlur={() => checkUserExistence('email', userDetails.email)}
                   />
-                  {!uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500'>Email is already in use</div>}
-                  <div className={touchedFields.email && !validity.isEmailValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
-                    {touchedFields.email && (validity.isEmailValid ? '✔' : '✕ Invalid Email')}
-                  </div>
+                  {touchedFields.email && !uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500'>✕ Email is already in use</div>}
+                  {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}
+                  {touchedFields.email && !validity.isEmailValid && <div className='tw-text-sm tw-text-red-500'>✕ Invalid Email</div>}
                 </div>
+
                 <div className='tw-flex tw-flex-col tw-gap-2'>
                   <label htmlFor='password'>Password</label>
                   <PasswordInput value={userDetails.password} onChange={(value) => handleInputChange('password', value)} />
