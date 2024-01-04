@@ -6,9 +6,9 @@ import {
     ArticleSection,
     WagersSection,
     DetailsSection,
-    CommentsSection,
     GamesYouMightLike,
 } from "@/app/ui/car_view_page/CarViewPage";
+import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
@@ -16,6 +16,7 @@ import {
     addPrizePool,
     createWager,
     getCarData,
+    getComments,
     getOneUserWager,
     getWagers,
     sortByNewGames,
@@ -24,6 +25,7 @@ import { TimerProvider } from "@/app/_context/TimerContext";
 import WagerModal from "@/app/components/wager_modal";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { set } from "mongoose";
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
     const urlPath = useParams();
@@ -37,6 +39,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [walletBalance, setWalletBalance] = useState(0);
     const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
     const [wagerErrorMessage, setWagerErrorMessage] = useState(""); // TEST IMPLEMENTATION
+    const [comments, setComments] = useState<any | null>(null);
+    const [loadingComments, setLoadingComments] = useState(false);
 
     // const router = useRouter();
 
@@ -280,6 +284,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             />
                         </TimerProvider>
                     ) : null}
+                    <div className="tw-block sm:tw-hidden tw-mt-8">
+                        <WatchAndWagerButtons
+                            auctionID={carData?._id}
+                            alreadyWagered={alreadyWagered}
+                            toggleWagerModal={showWagerModal}
+                            auctionEnded={auctionEnded}
+                        />
+                    </div>
                     {carData ? (
                         <>
                             <PhotosLayout
@@ -295,14 +307,6 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         </>
                     ) : null}
                     <div className="tw-block sm:tw-hidden tw-mt-8">
-                        <WatchAndWagerButtons
-                            auctionID={carData?._id}
-                            alreadyWagered={alreadyWagered}
-                            toggleWagerModal={showWagerModal}
-                            auctionEnded={auctionEnded}
-                        />
-                    </div>
-                    <div className="tw-block sm:tw-hidden tw-mt-8">
                         {wagersData ? (
                             <WagersSection
                                 toggleWagerModal={showWagerModal}
@@ -312,6 +316,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             />
                         ) : null}
                     </div>
+                    <GuessThePriceInfoSection />
+
                     {carData ? (
                         <div className="tw-block sm:tw-hidden tw-mt-8">
                             <DetailsSection
@@ -328,10 +334,13 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             />
                         </div>
                     ) : null}
-                    <GuessThePriceInfoSection />
-                    <CommentsSection />
+                    <CommentsSection
+                        comments={comments}
+                        id={ID}
+                        loading={loadingComments}
+                    />
                 </div>
-                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col tw-gap-8">
+                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
                     {wagersData ? (
                         <WagersSection
                             toggleWagerModal={showWagerModal}

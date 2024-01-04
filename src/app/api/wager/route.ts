@@ -103,23 +103,31 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse<any>> {
   try {
     await connectToDB();
     const id = req.nextUrl.searchParams.get('id');
-    const edits = await req.json();
 
-    if (id) {
-      const editedWager = await Wager.findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }] }
-        ,
-        { $set: edits },
-        { new: true }
-      )
+    if (!id) {
+      return NextResponse.json({ message: "Invalid request: 'id' parameter is missing" }, { status: 400 });
+    }
+
+    const edits = await req.json();
+    const editedWager = await Wager.findOneAndUpdate(
+      { $and: [{ _id: new ObjectId(id) }] },
+      { $set: edits },
+      { new: true }
+    );
+
+    if (editedWager) {
       return NextResponse.json(editedWager, { status: 202 });
+    } else {
+      return NextResponse.json({ message: "Wager not found" }, { status: 404 });
     }
 
   } catch (error) {
-    console.error(error)
-    return NextResponse.json({ message: "Internal server error" });
+    console.error(error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
+

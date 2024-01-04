@@ -32,7 +32,7 @@ const Carousel = () => {
     { id: "slide5", transform: -80 },
   ];
   return (
-    <div className=" section-container tw-relative tw-pt-8 md:tw-pt-16 tw-h-[344px] tw-overflow-hidden">
+    <div className="section-container tw-relative tw-pt-8 md:tw-pt-16 tw-h-[344px] tw-overflow-hidden">
       <div className="carousel-container tw-relative tw-w-full tw-h-[280px] tw-overflow-hidden">
         <div
           className="slider-container tw-transition tw-duration-[2000ms] tw-flex tw-h-[280px]"

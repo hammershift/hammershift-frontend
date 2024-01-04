@@ -1,3 +1,4 @@
+import clientPromise from "@/lib/mongodb";
 import connectToDB from "@/lib/mongoose";
 import Auctions from "@/models/auction.model";
 import { SortOrder } from "mongoose";
@@ -14,7 +15,9 @@ interface SortQuery {
 
 export async function GET(req: NextRequest) {
   try {
-    await connectToDB();
+    const client = await clientPromise;
+    const db = client.db();
+    // await connectToDB();
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const searchedKeyword = req.nextUrl.searchParams.get("search");
@@ -234,16 +237,20 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const totalCars = await Auctions.find(query);
 
-    const filteredCars = await Auctions.find({
+    const totalCars = await db.collection('auctions').count(query);
+
+    const filteredCars = await db.collection('auctions').find({
       $and: [query, { isActive: true }]
     })
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any } });
 
-    return NextResponse.json({ total: totalCars.length, cars: filteredCars });
+    const arrayCars = await filteredCars.toArray();
+
+    console.log(filteredCars)
+    return NextResponse.json({ total: totalCars, cars: arrayCars });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" });
