@@ -261,6 +261,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         auctionID={carData?._id}
                         alreadyWagered={alreadyWagered}
                         toggleWagerModal={showWagerModal}
+                        auctionEnded={auctionEnded}
                     />
                 </div>
             </div>
@@ -288,6 +289,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             auctionID={carData?._id}
                             alreadyWagered={alreadyWagered}
                             toggleWagerModal={showWagerModal}
+                            auctionEnded={auctionEnded}
                         />
                     </div>
                     {carData ? (

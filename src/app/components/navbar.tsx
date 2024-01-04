@@ -1026,7 +1026,7 @@ interface MyWagersCardProps {
     wagerID: string;
     isRefunded: boolean;
 }
-const MyWagersCard: React.FC<MyWagersCardProps> = ({
+export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
     img,
     my_wager,
@@ -1160,7 +1160,7 @@ const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 <span className="tw-opacity-80">
                                     Wager Amount:
                                 </span>
-                                <span className="tw-text-[#49C742] tw-font-bold">
+                                <span className="tw-text-[#f92f60] tw-font-bold">
                                     $
                                     {new Intl.NumberFormat().format(
                                         wagerAmount
