@@ -27,6 +27,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const session = useSession();
     const dropdownRef = useRef<any | null>(null);
+    const [reload, setReload] = useState(0);
 
     //fetch comments 
     useEffect(() => {
@@ -47,7 +48,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
         if (auctionID) {
             fetchComments();
         }
-    }, [sort])
+    }, [sort, reload])
 
     // sets displayed comments to 3 when sort is changed
     useEffect(() => {
@@ -209,7 +210,8 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                                     likes={item.likes || []}
                                     dislikes={item.dislikes || []}
                                     commentID={item._id}
-                                    userID={session.data?.user.id} />
+                                    userID={session.data?.user.id}
+                                    setReload={setReload} />
                             </div>
                         ))
                         :
@@ -248,7 +250,8 @@ export const CommentsCard = ({
     likes,
     dislikes,
     commentID,
-    userID
+    userID,
+    setReload
 }: {
     comment: string,
     username: string,
@@ -256,7 +259,8 @@ export const CommentsCard = ({
     likes: string[],
     dislikes: string[],
     commentID: string,
-    userID: string
+    userID: string,
+    setReload: any
 }) => {
 
     const timeSince = (dateString: string) => {
@@ -283,7 +287,7 @@ export const CommentsCard = ({
 
                 if (response) {
                     console.log("comment has been liked");
-                    window.location.reload();
+                    setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
 
@@ -302,7 +306,7 @@ export const CommentsCard = ({
 
                 if (response) {
                     console.log("comment has been liked");
-                    window.location.reload();
+                    setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
 

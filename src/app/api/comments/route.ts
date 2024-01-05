@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
                 sort = { createdAt: 1 };
                 break;
             case "Best":
-                sort = { likes: 1 };
+                sort = { likes: -1 };
                 break;
             //other sorts here
             default:
