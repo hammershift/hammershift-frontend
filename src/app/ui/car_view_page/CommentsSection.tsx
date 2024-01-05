@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -11,30 +11,48 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment, dislikeComment, likeComment } from "@/lib/data";
+import { createComment, dislikeComment, getComments, likeComment } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
 import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
 import BlueThumbsDown from "../../../../public/images/blue-thumbs-down.png";
 
 
-export const CommentsSection = ({ comments, id, loading }: { comments: any, id: string, loading: boolean }) => {
+export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
+    const [sort, setSort] = useState("Best"); // "Newest", "Oldest", "Best"
     const [commentsList, setCommentsList] = useState([]);
     const [commentsDisplayed, setCommentsDisplayed] = useState(3);
     const [comment, setComment] = useState("");
+    const [sortDropdown, setSortDropdown] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const session = useSession();
+    const dropdownRef = useRef<any | null>(null);
 
-
+    //fetch comments 
     useEffect(() => {
-        if (comments) {
-            setCommentsList(comments.comments);
+        const fetchComments = async () => {
+            setSortDropdown(false);
+            setIsLoading(true);
+            try {
+                const response = await getComments(auctionID, sort);
+                if (response) {
+                    setCommentsList(response.comments);
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            setIsLoading(false);
+        };
+        if (auctionID) {
+            fetchComments();
         }
-    }, [comments]);
+    }, [sort])
 
+    // sets displayed comments to 3 when sort is changed
     useEffect(() => {
-        setIsLoading(loading);
-    }, [loading]);
+        setCommentsDisplayed(3);
+    }, [sort])
 
 
     const handleLoadComments = () => {
@@ -49,23 +67,42 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
             console.log("comment is empty")
             return;
         } else {
-            try {
-                const response = await createComment(id, comment)
+            if (session.data?.user.id) {
+                try {
+                    const response = await createComment(auctionID, comment)
 
-                if (response) {
-                    console.log("comment has been posted");
-                    setComment("");
-                    window.location.reload();
+                    if (response) {
+                        console.log("comment has been posted");
+                        setComment("");
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error("error posting comment:", error);
                 }
-            } catch (error) {
-                console.error("error posting comment:", error);
+            } else {
+                console.log("You cannot post a comment. Please log in first")
+
             }
         }
     }
 
+    // check for comment changes
+    // useEffect(() => {
+    //     console.log("comment", comment);
+    // }, [comment]);
+
     useEffect(() => {
-        console.log("comment", comment);
-    }, [comment]);
+        function handleClickOutside(event: any) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setSortDropdown(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     return (
         <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
@@ -124,16 +161,38 @@ export const CommentsSection = ({ comments, id, loading }: { comments: any, id: 
                     className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
                     onClick={handlePostComment}>Comment</button>
             </div>
-            <div className="tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                Sort by
-                <span className="tw-font-bold tw-ml-2">Newest</span>
-                <Image
-                    src={ArrowDown}
-                    width={14}
-                    height={14}
-                    alt="arrow down"
-                    className="tw-w-[14px] tw-h-[14px] tw-ml-2"
-                />
+            <div className=" tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
+                <div >Sort by</div>
+                <div className="tw-font-bold tw-ml-2 tw-cursor-pointer" onClick={e => setSortDropdown((prev) => !prev)}>{sort}</div>
+                <div className="tw-relative">
+                    <button onClick={e => setSortDropdown((prev) => !prev)}>
+                        <Image
+                            src={ArrowDown}
+                            width={14}
+                            height={14}
+                            alt="arrow down"
+                            className="tw-w-[14px] tw-h-[14px] tw-ml-2"
+                        />
+                    </button>
+                    {sortDropdown &&
+                        <div
+                            ref={dropdownRef}
+                            className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-py-2 tw-px-2 tw-bg-[#172431] tw-z-10">
+                            <div
+                                onClick={e => setSort("Newest")}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Newest" ? "tw-bg-white/10" : ""}`}
+                            >Newest</div>
+                            <div
+                                onClick={e => setSort("Oldest")}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Oldest" ? "tw-bg-white/10" : ""}`}
+                            >Oldest</div>
+                            <div
+                                onClick={e => setSort("Best")}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Best" ? "tw-bg-white/10" : ""}`}
+                            >Best</div>
+                        </div>
+                    }
+                </div>
             </div>
             <section>
                 {isLoading
@@ -230,7 +289,7 @@ export const CommentsCard = ({
 
             }
         } else {
-            console.log("You are not logged in")
+            console.log("Cannot like comment. Please log in first")
         }
     }
 
@@ -249,7 +308,7 @@ export const CommentsCard = ({
 
             }
         } else {
-            console.log("You are not logged in")
+            console.log("Cannot dislike comment. Please log in first")
         }
     }
 

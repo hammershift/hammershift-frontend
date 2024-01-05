@@ -23,8 +23,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
   const [wagerErrorMessage, setWagerErrorMessage] = useState(''); // TEST IMPLEMENTATION
-  const [comments, setComments] = useState<any | null>(null);
-  const [loadingComments, setLoadingComments] = useState(false);
+
 
   // const router = useRouter();
 
@@ -186,24 +185,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  //fetch comments 
-  useEffect(() => {
-    const fetchComments = async () => {
-      setLoadingComments(true);
-      try {
-        const response = await getComments(ID);
-        if (response) {
-          console.log(response);
-          setComments(response);
-          setLoadingComments(false);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-      setLoadingComments(false);
-    };
-    fetchComments();
-  }, [])
+
 
   return (
     <div>
@@ -280,7 +262,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
               />
             </div>
           ) : null}
-          <CommentsSection comments={comments} id={ID} loading={loadingComments} />
+          <CommentsSection auctionID={ID} />
         </div>
         <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block'>
           {wagersData ? <WagersSection toggleWagerModal={showWagerModal} players_num={playerNum} wagers={wagersData} alreadyWagered={alreadyWagered} /> : null}

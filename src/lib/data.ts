@@ -394,9 +394,9 @@ export const getUserInfo = async (id: string) => {
 };
 
 // fetches comments
-export const getComments = async (id: string) => {
+export const getComments = async (id: string, sort: string) => {
   try {
-    const res = await fetch(`/api/comments?id=${id}`);
+    const res = await fetch(`/api/comments?id=${id}&sort=${sort}`);
     if (res.ok) {
       const data = await res.json();
       return data;
