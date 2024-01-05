@@ -15,7 +15,20 @@ const LiveGames = () => {
 
   const DynamicLiveGamesCard = dynamic(
     () => import("@/app/components/live_games_card"),
-    { ssr: false, loading: () => <MoonLoader color="#ffe500" /> }
+    {
+      ssr: false,
+      loading: () => (
+        <div className="tw-flex tw-mt-8 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col">
+            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+        </div>
+      ),
+    }
   );
 
   useEffect(() => {
@@ -122,7 +135,7 @@ const LiveGames = () => {
             } = auctions;
             return (
               <TimerProvider key={index} deadline={deadline}>
-                <div className="tw-w-[200px] sm:tw-w-[416px]">
+                <div className="md:tw-w-[200px] sm:tw-w-[416px]">
                   <DynamicLiveGamesCard
                     object_id={_id}
                     image={image}

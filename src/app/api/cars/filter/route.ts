@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db();
-    // await connectToDB();
+    await connectToDB();
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const searchedKeyword = req.nextUrl.searchParams.get("search");
@@ -238,7 +238,7 @@ export async function GET(req: NextRequest) {
     }
 
 
-    const totalCars = await db.collection('auctions').count(query);
+    const totalCars = await db.collection('auctions').countDocuments(query);
 
     const filteredCars = await db.collection('auctions').find({
       $and: [query, { isActive: true }]

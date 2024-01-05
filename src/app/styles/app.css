@@ -207,6 +207,14 @@ option {
   scrollbar-width: none;
 }
 
+.drop-down-custom-height {
+  height: calc(100vh - 56px);
+}
+
+.watchlist-custom-height {
+  max-height: calc(100vh - 296px);
+}
+
 /**
  * ----------------------------------------
  //* animation slide-in-top
