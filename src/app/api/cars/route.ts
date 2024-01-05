@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
 
     const carsArray = await cars.toArray();
 
-    return NextResponse.json({ total: carsArray.length, carsArray: cars });
+    return NextResponse.json({ total: carsArray.length, cars: carsArray });
   } catch (error) {
     console.error(error)
     return NextResponse.json({ message: "Internal server error" });

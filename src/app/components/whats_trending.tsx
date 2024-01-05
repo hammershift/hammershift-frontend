@@ -5,6 +5,7 @@ import { sortByTrending } from "@/lib/data";
 
 import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
 import { TimerProvider } from "../_context/TimerContext";
+import Link from "next/link";
 
 const WhatsTrending = () => {
   const [trending, setTrending] = useState([]);
@@ -80,7 +81,9 @@ const WhatsTrending = () => {
             />
             <div className="tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4">{`What\'s Trending`}</div>
           </div>
-          <div className="tw-text-[#49C742]">See All</div>
+          <Link href="/auctions?sort=Most+Bids" className="tw-cursor-pointer">
+            <div className="tw-text-[#49C742]">See All</div>
+          </Link>
         </div>
       </header>
       {isLoading ? (

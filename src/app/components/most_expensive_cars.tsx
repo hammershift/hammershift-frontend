@@ -7,6 +7,7 @@ import { sortByMostExpensive } from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
 
 import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
+import Link from "next/link";
 
 const MostExpensiveCars = () => {
   const [mostExpensive, setMostExpensive] = useState([]);
@@ -85,7 +86,9 @@ const MostExpensiveCars = () => {
               Most Expensive Cars
             </div>
           </div>
-          <div className="tw-text-[#49C742]">See All</div>
+          <Link href="/auctions?sort=Most+Expensive" className="tw-cursor-pointer">
+            <div className="tw-text-[#49C742]">See All</div>
+          </Link>
         </div>
       </header>
       {isLoading ? (
