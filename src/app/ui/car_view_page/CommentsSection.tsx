@@ -138,6 +138,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
             <div className="tw-flex tw-my-3">
                 <div className="tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
                     <input
+                        type="text" value={comment}
                         placeholder="Add a comment"
                         className="tw-bg-[#172431] tw-w-full"
                         name="comment"
