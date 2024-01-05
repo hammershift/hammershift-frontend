@@ -230,7 +230,7 @@ const Navbar = () => {
                 <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
                     <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
-                            <Link href="/">
+                            <Link onClick={() => closeMenu()} href="/">
                                 <Image
                                     src={Logo}
                                     width={176}
@@ -247,12 +247,12 @@ const Navbar = () => {
                                 />
                             </Link>
                         </div>
-                        <Link href={"/discover"}>
+                        <Link onClick={() => closeMenu()} href={"/discover"}>
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">
                                 DISCOVER
                             </div>
                         </Link>
-                        <Link href="/auctions">
+                        <Link onClick={() => closeMenu()} href="/auctions">
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">
                                 AUCTIONS
                             </div>
@@ -849,17 +849,17 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                 <Link
                     href={`/auctions/car_view_page/${id}`}
                     onClick={() => closeMenu && closeMenu()}
-                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[75px] tw-h-[75px]"
+                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[50px] tw-h-[50px]"
                 >
                     <Image
                         src={img}
                         width={100}
                         height={100}
                         alt="wallet icon"
-                        className="sm:tw-w-[100px] tw-w-[75px] tw-h-[75px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
+                        className="sm:tw-w-[100px] tw-w-[50px] tw-h-[50px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
                     />
                 </Link>
-                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px]">
+                <div className="tw-flex tw-flex-col tw-items-start sm:tw-max-w-[323px] tw-max-w-[230px]">
                     <Link
                         href={`/auctions/car_view_page/${id}`}
                         className="tw-self-start"
@@ -1148,17 +1148,17 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                 <Link
                     href={`/auctions/car_view_page/${id}`}
                     onClick={() => closeMenu && closeMenu()}
-                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[75px] tw-h-[75px]"
+                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[50px] tw-h-[50px] sm:tw-pt-0 tw-pt-2"
                 >
                     <Image
                         src={img}
                         width={100}
                         height={100}
                         alt="wallet icon"
-                        className="sm:tw-w-[100px] tw-w-[75px] tw-h-[75px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
+                        className="sm:tw-w-[100px] tw-w-[50px] tw-h-[50px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
                     />
                 </Link>
-                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px]">
+                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px] tw-max-w-[230px]">
                     <Link
                         href={`/auctions/car_view_page/${id}`}
                         onClick={() => closeMenu && closeMenu()}
@@ -1216,7 +1216,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         )}
                     </div>
                     {isActive && (
-                        <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded tw-text-sm">
+                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs tw-gap-2">
                             <Image
                                 src={MoneyBagGreen}
                                 width={20}
@@ -1255,9 +1255,12 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                     )}
                                 </span>
                             </div>
-                            <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#4b2330] tw-rounded tw-text-sm">
+                            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
                                 <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
-                                    ❌ UNSUCCESSFUL AUCTION
+                                    ❌ UNSUCCESSFUL{" "}
+                                    <span className="tw-hidden sm:tw-inline-block">
+                                        AUCTION
+                                    </span>
                                 </div>
                                 {refunded ? (
                                     <button
