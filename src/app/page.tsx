@@ -4,6 +4,7 @@ import "./styles/app.css";
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { PropagateLoader } from "react-spinners";
+import { isNonNullExpression } from "typescript";
 // import useIntersectionObserver from "./api/intersectionObserver/intersectionObserver";
 
 const withDynamicImport = (componentPath: string, options = {}) => {
@@ -35,15 +36,54 @@ const DynamicCarousel = withDynamicImport("carousel", {
 });
 const DynamicLiveGames = withDynamicImport("live_games", {
   loading: () => (
-    <div className="section-container tw-h-60 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
-      <div className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
-          <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-items-center">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex">
+            <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
         </div>
-        <div className="tw-flex">
-          <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-flex tw-mt-8 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col">
+            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col">
+            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col">
+            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col">
+            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col">
+            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -99,7 +139,7 @@ const DynamicNewEraWagering = withDynamicImport("new_era_wagering", {
   loading: () => (
     <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
-        <div className="tw-flex">
+        <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-flex-col tw-m-10">
             <div className="tw-m-5 tw-w-80 tw-h-20 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
             <div className="tw-m-5 tw-w-96 tw-h-20 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
@@ -108,8 +148,8 @@ const DynamicNewEraWagering = withDynamicImport("new_era_wagering", {
             <div className="tw-m-5 tw-w-96 tw-h-20 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
             <div className="tw-m-5 tw-w-96 tw-h-28 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
             <div className="tw-m-5 tw-flex tw-justify-between">
-              <div className="tw-w-[200px] sm:tw-w-[416px] tw-bg-gray-200 tw-rounded-lg tw-animate-pulse"></div>
-              <div className="tw-w-[200px] sm:tw-w-[416px] tw-bg-gray-200 tw-rounded-lg tw-animate-pulse"></div>
+              <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+              <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
             </div>
           </div>
         </div>
@@ -124,15 +164,56 @@ const DynamicNewEraWagering = withDynamicImport("new_era_wagering", {
 });
 const DynamicGamesByMake = withDynamicImport("games_by_make", {
   loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
+    <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-my-10">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-80 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex">
+            <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+        </div>
+        <div className="tw-flex">
+          <div className="tw-w-1/5 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mx-10 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mx-10 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+        <div className="tw-flex">
+          <div className="tw-w-1/5 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mx-10 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mx-10 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/5 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+      </div>
     </div>
   ),
 });
 const DynamicWagerByCategory = withDynamicImport("wager_by_category", {
   loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
+    <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-my-10">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-80 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+        </div>
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-w-2/3 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-2/3 tw-mx-10 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+        <div className="tw-flex tw-justify-evenly tw-mt-5">
+          <div className="tw-w-1/3 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/3 tw-mx-10 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-1/3 tw-mb-5 tw-h-52 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+      </div>
     </div>
   ),
 });
@@ -141,14 +222,52 @@ const DynamicSkillStrategyAndStakes = withDynamicImport(
 );
 const DynamicNewGames = withDynamicImport("new_games", {
   loading: () => (
-    <div className="section-container tw-h-60 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
-      <div className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
-          <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-items-center">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex">
+            <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
         </div>
-        <div className="tw-flex">
-          <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-flex tw-mt-8 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -156,14 +275,52 @@ const DynamicNewGames = withDynamicImport("new_games", {
 });
 const DynamicWhatsTrending = withDynamicImport("whats_trending", {
   loading: () => (
-    <div className="section-container tw-h-60 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
-      <div className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
-          <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-items-center">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex">
+            <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
         </div>
-        <div className="tw-flex">
-          <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-flex tw-mt-8 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -171,30 +328,146 @@ const DynamicWhatsTrending = withDynamicImport("whats_trending", {
 });
 const DynamicMostExpensiveCars = withDynamicImport("most_expensive_cars", {
   loading: () => (
-    <div className="section-container tw-h-60 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
-      <div className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
-          <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-items-center">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex">
+            <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
         </div>
-        <div className="tw-flex">
-          <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-flex tw-mt-8 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
         </div>
       </div>
     </div>
   ),
 });
-const DynamicMostBids = withDynamicImport("most_bids");
+const DynamicMostBids = withDynamicImport("most_bids", {
+  loading: () => (
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-flex tw-justify-between">
+          <div className="tw-flex tw-items-center">
+            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex">
+            <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-w-8 tw-h-8 tw-ml-4 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+        </div>
+        <div className="tw-flex tw-mt-8 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-flex-col tw-m-2">
+            <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700"></div>
+            <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ),
+});
 const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works", {
   loading: () => (
-    <div className="section-container tw-h-60 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
-      <div className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
-          <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col">
+        <div className="tw-mr-5 tw-w-1/2 tw-my-10 tw-mb-16 tw-h-24 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-flex tw-my-10">
+          <div className="tw-flex tw-w-1/2 tw-justify-evenly">
+            <div className="tw-flex tw-flex-col tw-w-1/4 tw-justify-evenly">
+              <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+              <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            </div>
+            <div className="tw-mr-5 tw-w-20 tw-my-1 tw-h-20 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
+          <div className="tw-flex tw-w-1/2 tw-justify-evenly">
+            <div className="tw-flex tw-flex-col tw-w-1/4 tw-justify-evenly">
+              <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+              <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            </div>
+            <div className="tw-mr-5 tw-w-20 tw-my-1 tw-h-20 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          </div>
         </div>
-        <div className="tw-flex">
-          <div className="tw-w-8 tw-h-8 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+      </div>
+      <div className="tw-flex">
+        <div className="tw-flex tw-w-1/2 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col tw-w-1/4 tw-justify-evenly">
+            <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-mr-5 tw-w-20 tw-my-1 tw-h-20 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+        <div className="tw-flex tw-w-1/2 tw-justify-evenly">
+          <div className="tw-flex tw-flex-col tw-w-1/4 tw-justify-evenly">
+            <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-mr-5 tw-w-full tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          </div>
+          <div className="tw-mr-5 tw-w-20 tw-my-1 tw-h-20 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
         </div>
       </div>
     </div>
@@ -202,18 +475,22 @@ const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works", {
 });
 const DynamicSubscribe = withDynamicImport("subscribe", {
   loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
+    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-flex-col tw-justify-evenly">
+        <div className="tw-mr-5 tw-w-1/2 tw-my-10 tw-mb-16 tw-h-32 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-mr-5 tw-w-1/2 tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-mr-5 tw-w-1/2 tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-mr-5 tw-w-1/2 tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-mr-5 tw-w-1/2 tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+        <div className="tw-flex">
+          <div className="tw-mr-5 tw-mt-10 tw-w-2/6 tw-h-16 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-mr-5 tw-mt-10 tw-w-1/6 tw-h-16 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+      </div>
     </div>
   ),
 });
-const DynamicFooter = withDynamicImport("footer", {
-  loading: () => (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <PropagateLoader color="#f9e700" />
-    </div>
-  ),
-});
+const DynamicFooter = withDynamicImport("footer");
 
 const Homepage = () => {
   // References
