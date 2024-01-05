@@ -284,58 +284,72 @@ const CreateAccount = () => {
 
   useEffect(() => {
     const emailExistsParam = new URLSearchParams(window.location.search).get('emailExists');
-    console.log(`emailExistsParam on page load:`, emailExistsParam);
     if (emailExistsParam === 'true') {
       setEmailExistsError(true);
     }
   }, []);
 
+  const handleGoogleSignIn = async (provider: string) => {
+    console.log(`Starting the sign-in process with provider: ${provider}`);
+    setIsLoading(true);
+
+    try {
+      console.log(`Calling signIn for provider: ${provider}`);
+      const result = await signIn(provider, { redirect: false });
+      console.log(`Result from signIn:`, result);
+
+      if (result?.error) {
+        console.error(`Error during sign-in with ${provider}:`, result.error);
+        return; // Stop further execution and log the error
+      }
+
+      console.log(`Getting session after sign-in with ${provider}`);
+      const session = await getSession();
+      console.log(`Session data:`, session);
+
+      if (session?.user?.email) {
+        console.log(`Checking if email ${session.user.email} exists in the database`);
+        const emailExists = await checkEmailDatabase('email', session.user.email);
+        console.log(`Email existence check result:`, emailExists);
+
+        if (emailExists) {
+          console.log(`Email ${session.user.email} exists. Redirecting to the login page.`);
+          setEmailExistsError(true);
+          router.push('/login_page');
+        } else {
+          console.log(`Email ${session.user.email} does not exist. Proceeding to set user details.`);
+          setUserDetails({ ...userDetails, email: session.user.email });
+          setCreateAccountPage('page two');
+        }
+      } else {
+        console.log('Session does not contain user email. This should not happen with Google sign-in.');
+      }
+    } catch (error) {
+      console.error(`Exception during sign-in with ${provider}:`, error);
+    } finally {
+      setIsLoading(false);
+      console.log(`Sign-in process with ${provider} has completed.`);
+    }
+  };
+
   const checkEmailDatabase = async (field: 'email' | 'username', value: string): Promise<boolean> => {
     try {
       const response = await fetch('/api/checkUserExistence', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ [field]: value }),
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        console.error('Network response was not ok', response.statusText);
+        return false;
       }
 
       const data: UserExistenceResponse = await response.json();
-      console.log(`Response from checkUserExistence API:`, data);
       return field === 'email' ? data.emailExists : data.usernameExists;
     } catch (error) {
       console.error('Error during user existence check:', error);
       return false;
-    }
-  };
-
-  const handleGoogleSignIn = async (provider: string) => {
-    setIsLoading(true);
-    try {
-      const result = await signIn(provider, { redirect: false });
-      if (result?.error) {
-        console.error(`Error during ${provider} sign in:`, result.error);
-      } else {
-        const session = await getSession();
-        if (session?.user?.email) {
-          const emailExists = await checkEmailDatabase('email', session.user.email);
-          if (emailExists) {
-            setEmailExistsError(true);
-            router.push('/login_page');
-          } else {
-            setUserDetails({ ...userDetails, email: session.user.email });
-            setCreateAccountPage('page two');
-          }
-        }
-      }
-    } catch (error) {
-      console.error(`Error during ${provider} sign in:`, error);
-    } finally {
-      setIsLoading(false);
     }
   };
 

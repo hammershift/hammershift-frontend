@@ -1,16 +1,16 @@
-import clientPromise from "@/lib/mongodb";
-import connectToDB from "@/lib/mongoose";
-import Auctions from "@/models/auction.model";
-import { SortOrder } from "mongoose";
-import { NextRequest, NextResponse } from "next/server";
+import clientPromise from '@/lib/mongodb';
+import connectToDB from '@/lib/mongoose';
+import Auctions from '@/models/auction.model';
+import { SortOrder } from 'mongoose';
+import { NextRequest, NextResponse } from 'next/server';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 interface SortQuery {
   createdAt?: number;
-  "sort.price"?: number;
-  "sort.deadline"?: number;
-  "sort.bids"?: number;
+  'sort.price'?: number;
+  'sort.deadline'?: number;
+  'sort.bids'?: number;
 }
 
 export async function GET(req: NextRequest) {
@@ -18,27 +18,24 @@ export async function GET(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
     await connectToDB();
-    const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
-    const limit = Number(req.nextUrl.searchParams.get("limit"));
-    const searchedKeyword = req.nextUrl.searchParams.get("search");
-    let completed = req.nextUrl.searchParams.get("completed") || [1];
-    let era: string | string[] = req.nextUrl.searchParams.get("era") || "All";
-    let category: string | string[] =
-      req.nextUrl.searchParams.get("category") || "All";
-    let make: string | string[] = req.nextUrl.searchParams.get("make") || "All";
-    let location: string | string[] =
-      req.nextUrl.searchParams.get("location") || "All";
-    let sort: string | SortQuery =
-      req.nextUrl.searchParams.get("sort") || "Newly Listed";
+    const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
+    const limit = Number(req.nextUrl.searchParams.get('limit'));
+    const searchedKeyword = req.nextUrl.searchParams.get('search');
+    let completed = req.nextUrl.searchParams.get('completed') || [1];
+    let era: string | string[] = req.nextUrl.searchParams.get('era') || 'All';
+    let category: string | string[] = req.nextUrl.searchParams.get('category') || 'All';
+    let make: string | string[] = req.nextUrl.searchParams.get('make') || 'All';
+    let location: string | string[] = req.nextUrl.searchParams.get('location') || 'All';
+    let sort: string | SortQuery = req.nextUrl.searchParams.get('sort') || 'Newly Listed';
 
     if (completed) {
-      if (completed === "true") {
+      if (completed === 'true') {
         completed = [2];
       }
-      if (completed === "false") {
+      if (completed === 'false') {
         completed = [1];
       }
-      if (completed === "all") {
+      if (completed === 'all') {
         completed = [1, 2];
       }
     }
@@ -52,10 +49,10 @@ export async function GET(req: NextRequest) {
       const searchedCars = await Auctions.aggregate([
         {
           $search: {
-            index: "auctionSearchAutocomplete",
+            index: 'auctionSearchAutocomplete',
             text: {
               query: searchedKeyword,
-              path: "attributes.value",
+              path: 'attributes.value',
               fuzzy: {
                 prefixLength: 3,
               },
@@ -70,8 +67,8 @@ export async function GET(req: NextRequest) {
               $arrayElemAt: [
                 {
                   $filter: {
-                    input: "$attributes",
-                    cond: { $eq: ["$$this.key", "make"] },
+                    input: '$attributes',
+                    cond: { $eq: ['$$this.key', 'make'] },
                   },
                 },
                 0,
@@ -81,8 +78,8 @@ export async function GET(req: NextRequest) {
               $arrayElemAt: [
                 {
                   $filter: {
-                    input: "$attributes",
-                    cond: { $eq: ["$$this.key", "model"] },
+                    input: '$attributes',
+                    cond: { $eq: ['$$this.key', 'model'] },
                   },
                 },
                 0,
@@ -92,8 +89,8 @@ export async function GET(req: NextRequest) {
               $arrayElemAt: [
                 {
                   $filter: {
-                    input: "$attributes",
-                    cond: { $eq: ["$$this.key", "year"] },
+                    input: '$attributes',
+                    cond: { $eq: ['$$this.key', 'year'] },
                   },
                 },
                 0,
@@ -103,8 +100,8 @@ export async function GET(req: NextRequest) {
               $arrayElemAt: [
                 {
                   $filter: {
-                    input: "$attributes",
-                    cond: { $eq: ["$$this.key", "price"] },
+                    input: '$attributes',
+                    cond: { $eq: ['$$this.key', 'price'] },
                   },
                 },
                 0,
@@ -114,8 +111,8 @@ export async function GET(req: NextRequest) {
               $arrayElemAt: [
                 {
                   $filter: {
-                    input: "$attributes",
-                    cond: { $eq: ["$$this.key", "bids"] },
+                    input: '$attributes',
+                    cond: { $eq: ['$$this.key', 'bids'] },
                   },
                 },
                 0,
@@ -125,8 +122,8 @@ export async function GET(req: NextRequest) {
               $arrayElemAt: [
                 {
                   $filter: {
-                    input: "$attributes",
-                    cond: { $eq: ["$$this.key", "deadline"] },
+                    input: '$attributes',
+                    cond: { $eq: ['$$this.key', 'deadline'] },
                   },
                 },
                 0,
@@ -137,12 +134,12 @@ export async function GET(req: NextRequest) {
         {
           $project: {
             auction_id: 1,
-            make: "$make.value",
-            model: "$model.value",
-            year: "$year.value",
-            price: "$price.value",
-            bids: "$bids.value",
-            deadline: "$deadline.value",
+            make: '$make.value',
+            model: '$model.value',
+            year: '$year.value',
+            price: '$price.value',
+            bids: '$bids.value',
+            deadline: '$deadline.value',
           },
         },
       ]);
@@ -153,20 +150,20 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    if (make !== "All") {
-      make = make.split("$");
+    if (make !== 'All') {
+      make = make.split('$');
     }
 
-    if (era !== "All") {
-      era = era.split("$");
+    if (era !== 'All') {
+      era = era.split('$');
     }
 
-    if (category !== "All") {
-      category = category.split("$");
+    if (category !== 'All') {
+      category = category.split('$');
     }
 
-    if (location !== "All") {
-      location = location.split("$");
+    if (location !== 'All') {
+      location = location.split('$');
     }
 
     //ALL filters can be used in combination with other filters including sort (filters and sort are case sensitive)
@@ -177,23 +174,23 @@ export async function GET(req: NextRequest) {
 
     if (sort) {
       switch (sort) {
-        case "Newly Listed":
+        case 'Newly Listed':
           sort = { createdAt: -1 };
           break;
-        case "Ending Soon":
-          sort = { "sort.deadline": 1 };
+        case 'Ending Soon':
+          sort = { 'sort.deadline': 1 };
           break;
-        case "Most Expensive":
-          sort = { "sort.price": -1 };
+        case 'Most Expensive':
+          sort = { 'sort.price': -1 };
           break;
-        case "Least Expensive":
-          sort = { "sort.price": 1 };
+        case 'Least Expensive':
+          sort = { 'sort.price': 1 };
           break;
-        case "Most Bids":
-          sort = { "sort.bids": -1 };
+        case 'Most Bids':
+          sort = { 'sort.bids': -1 };
           break;
-        case "Least Bids":
-          sort = { "sort.bids": 1 };
+        case 'Least Bids':
+          sort = { 'sort.bids': 1 };
           break;
         //other sorts here
         default:
@@ -208,51 +205,51 @@ export async function GET(req: NextRequest) {
     //if you don't add a sort query, it automatically defaults to sorting by Newly Listed for now
     let query: any = { attributes: { $all: [] } };
 
-    if (make !== "All") {
+    if (make !== 'All') {
       query.attributes.$all.push({
-        $elemMatch: { key: "make", value: { $in: make } },
+        $elemMatch: { key: 'make', value: { $in: make } },
       });
     }
 
-    if (era !== "All") {
+    if (era !== 'All') {
       query.attributes.$all.push({
-        $elemMatch: { key: "era", value: { $in: era } },
+        $elemMatch: { key: 'era', value: { $in: era } },
       });
     }
 
-    if (category !== "All") {
+    if (category !== 'All') {
       query.attributes.$all.push({
-        $elemMatch: { key: "category", value: { $in: category } },
+        $elemMatch: { key: 'category', value: { $in: category } },
       });
     }
 
-    if (location !== "All") {
+    if (location !== 'All') {
       query.attributes.$all.push({
-        $elemMatch: { key: "state", value: { $in: location } },
+        $elemMatch: { key: 'state', value: { $in: location } },
       });
     }
     if (completed) {
       query.attributes.$all.push({
-        $elemMatch: { key: "status", value: { $in: completed } },
+        $elemMatch: { key: 'status', value: { $in: completed } },
       });
     }
 
-
     const totalCars = await db.collection('auctions').count(query);
 
-    const filteredCars = await db.collection('auctions').find({
-      $and: [query, { isActive: true }]
-    })
+    const filteredCars = await db
+      .collection('auctions')
+      .find({
+        $and: [query, { isActive: true }],
+      })
       .limit(limit)
       .skip(offset)
       .sort(sort as { [key: string]: SortOrder | { $meta: any } });
 
     const arrayCars = await filteredCars.toArray();
 
-    console.log(filteredCars)
     return NextResponse.json({ total: totalCars, cars: arrayCars });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Internal server error" });
+    return NextResponse.json({ message: 'Internal server error' });
   }
 }
