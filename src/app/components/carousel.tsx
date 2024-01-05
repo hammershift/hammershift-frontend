@@ -7,6 +7,7 @@ import YellowSportsCarFull from "../../../public/images/yellow-sportscar-full.sv
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
 import DiagonalLinesCarousel from "../../../public/images/diagonal-lines-carousel.svg";
+import Link from "next/link";
 
 const Carousel = () => {
   const [sliderTransform, setSlidertransform] = useState(0);
@@ -32,7 +33,7 @@ const Carousel = () => {
     { id: "slide5", transform: -80 },
   ];
   return (
-    <div className=" section-container tw-relative tw-pt-8 md:tw-pt-16 tw-h-[344px] tw-overflow-hidden">
+    <div className="section-container tw-relative tw-pt-8 md:tw-pt-16 tw-h-[344px] tw-overflow-hidden">
       <div className="carousel-container tw-relative tw-w-full tw-h-[280px] tw-overflow-hidden">
         <div
           className="slider-container tw-transition tw-duration-[2000ms] tw-flex tw-h-[280px]"
@@ -109,9 +110,11 @@ const SlideOne = () => {
           100 WELCOME <br />
           CREDITS
         </div>
-        <button className="btn-yellow tw-mt-4 sm:tw-mt-6">
-          SIGN UP & WAGER
-        </button>
+        <Link href={"/create_account"}>
+          <button className="btn-yellow tw-mt-4 sm:tw-mt-6">
+            SIGN UP & WAGER
+          </button>
+        </Link>
       </div>
       <Image
         src={YellowSportsCarFull}

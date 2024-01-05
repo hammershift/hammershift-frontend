@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
         model: Auctions,
         select: 'pot images_list attributes auction_id',
       })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .exec();
 
     const watchlistDetails = userWatchlist
@@ -96,6 +96,7 @@ export async function GET(req: NextRequest) {
           auctionModel: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'model')?.value,
           auctionPrice: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'price')?.value,
           auctionDeadline: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'deadline')?.value,
+          auctionStatus: auctionDetails.attributes.find((attr: { key: string }) => attr.key === 'status')?.value,
           createdAt: item.createdAt,
         };
       })
