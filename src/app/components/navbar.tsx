@@ -199,7 +199,7 @@ const Navbar = () => {
             dropdownSearchInput.value = `${carMake} ${carModel}`;
         }
         setSearchBoxDropDown(false);
-        // setMenuIsOpen(false)
+        setMenuIsOpen(false);
     };
 
     const closeMenu = () => {
@@ -210,8 +210,13 @@ const Navbar = () => {
         const searchInput = document.getElementById(
             "search-bar-input"
         ) as HTMLInputElement;
+        const dropDownSearchInput = document.getElementById(
+            "dropdown-search-bar"
+        ) as HTMLInputElement;
 
         searchInput.value = "";
+        dropDownSearchInput.value = "";
+
         setShowClearSearchButton(false);
         setSearchedData([]);
     };
@@ -360,7 +365,20 @@ const Navbar = () => {
                                 className="tw-w-[24px] tw-h-[24px]"
                             />
                         </button>
-                        <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                        <button
+                            onClick={() => {
+                                setMenuIsOpen((prev) => !prev);
+                                if (!menuIsOpen) {
+                                    document.body.classList.add(
+                                        "stop-scrolling"
+                                    );
+                                } else {
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
+                                }
+                            }}
+                        >
                             {menuIsOpen ? (
                                 <Image
                                     src={CancelIcon}
@@ -435,6 +453,16 @@ const Navbar = () => {
                                     onClick={handleInputClick}
                                     onChange={handleChange}
                                 ></input>
+                                {showClearSearchButton && (
+                                    <Image
+                                        src={CloseIcon}
+                                        width={25}
+                                        height={25}
+                                        alt="magnifying glass"
+                                        className="tw-w-[] tw-h-auto tw-cursor-pointer"
+                                        onClick={clearSearchInputs}
+                                    />
+                                )}
                             </div>
                         </form>
                         {searchBoxDropDown && (
@@ -483,6 +511,8 @@ const Navbar = () => {
                     setSearchBoxDropDown={setSearchBoxDropDown}
                     handleInputClick={handleInputClick}
                     closeMenu={closeMenu}
+                    showClearSearchButton={showClearSearchButton}
+                    clearSearchInputs={clearSearchInputs}
                 />
             )}
             {myAccountMenuOpen && <MyAccountMenu isLoggedIn={isLoggedIn} />}
@@ -501,6 +531,8 @@ interface DropdownMenuProps {
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSearchClick: (carMake: string, carModel: string, carID: string) => void;
     handleInputClick: () => void;
+    showClearSearchButton: boolean;
+    clearSearchInputs: () => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -513,35 +545,50 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     setSearchBoxDropDown,
     handleInputClick,
     closeMenu,
+    showClearSearchButton,
+    clearSearchInputs,
 }) => {
     const router = useRouter();
+    const [dropWatchlistOrWagers, setDropWatchlistOrWagers] = useState("");
 
     return (
-        <div className="slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-h-full tw-z-50">
+        <div className="drop-down-custom-height slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-z-50">
             <div className="tw-relative">
                 <form
                     autoComplete="off"
                     onSubmit={handleSubmit}
-                    className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8 tw-mb-2"
+                    className="tw-bg-shade-100 tw-flex tw-justify-between tw-p-2 tw-rounded tw-my-4"
                 >
-                    <Image
-                        src={MagnifyingGlass}
-                        width={15}
-                        height={15}
-                        alt="magnifying glass"
-                        className="tw-w-auto tw-h-auto"
-                    />
-                    <input
-                        id="dropdown-search-bar"
-                        className="tw-ml-2 tw-bg-shade-100 tw-outline-none"
-                        placeholder="Search make, model, year..."
-                        name="search"
-                        type="text"
-                        onChange={handleChange}
-                        onClick={() => {
-                            setSearchBoxDropDown(true);
-                        }}
-                    ></input>
+                    <div className="tw-flex tw-w-full">
+                        <Image
+                            src={MagnifyingGlass}
+                            width={15}
+                            height={15}
+                            alt="magnifying glass"
+                            className="tw-w-auto tw-h-auto"
+                        />
+                        <input
+                            id="dropdown-search-bar"
+                            className="tw-ml-2 tw-bg-shade-100 tw-outline-none tw-w-full"
+                            placeholder="Search make, model, year..."
+                            name="search"
+                            type="text"
+                            onChange={handleChange}
+                            onClick={() => {
+                                setSearchBoxDropDown(true);
+                            }}
+                        ></input>
+                    </div>
+                    {showClearSearchButton && (
+                        <Image
+                            src={CloseIcon}
+                            width={20}
+                            height={20}
+                            alt="magnifying glass"
+                            className="tw-h-auto tw-cursor-pointer"
+                            onClick={clearSearchInputs}
+                        />
+                    )}
                 </form>
                 {searchBoxDropDown && (
                     <SearchDropDown
@@ -569,7 +616,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 </>
             ) : (
                 <>
-                    <div className="tw-flex tw-pt-4">
+                    <button
+                        onClick={() => setDropWatchlistOrWagers("watchlist")}
+                        className="tw-flex tw-py-2 tw-w-full"
+                    >
                         <Image
                             src={WatchlistIcon}
                             width={24}
@@ -578,8 +628,14 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                             className="tw-w-[24px] tw-h-[24px]"
                         />
                         <div className="tw-ml-4">MY WATCHLIST</div>
-                    </div>
-                    <div className="tw-flex tw-pt-4">
+                    </button>
+                    {dropWatchlistOrWagers === "watchlist" ? (
+                        <MobileMyWatchlist closeMenu={closeMenu} />
+                    ) : null}
+                    <button
+                        onClick={() => setDropWatchlistOrWagers("wagers")}
+                        className="tw-flex tw-py-2 tw-w-full"
+                    >
                         <Image
                             src={WagersIcon}
                             width={24}
@@ -588,7 +644,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                             className="tw-w-[24px] tw-h-[24px]"
                         />
                         <div className="tw-ml-4">MY WAGERS</div>
-                    </div>
+                    </button>
+                    {dropWatchlistOrWagers === "wagers" ? (
+                        <MobileMyWagers closeMenu={closeMenu} />
+                    ) : null}
                 </>
             )}
             <div className="tw-mt-4">
@@ -771,6 +830,7 @@ interface MyWatchlistCardProps {
     time_left?: Date;
     id: string;
     isActive: boolean;
+    closeMenu?: () => void;
 }
 export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     title,
@@ -779,30 +839,33 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     time_left,
     id,
     isActive,
+    closeMenu,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
 
     return (
-        <div className="tw-px-6 tw-w-full tw-py-4 tw-border-b-[1px] tw-border-[#253747]">
-            <div className=" tw-w-full tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
+        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
+            <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
-                    className="tw-self-start tw-w-[100px]"
+                    onClick={() => closeMenu && closeMenu()}
+                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[75px] tw-h-[75px]"
                 >
                     <Image
                         src={img}
                         width={100}
                         height={100}
                         alt="wallet icon"
-                        className="tw-w-[100px] tw-h-[100px] tw-object-cover tw-rounded-[4px]"
+                        className="sm:tw-w-[100px] tw-w-[75px] tw-h-[75px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
                     />
                 </Link>
-                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-max-w-[323px]">
+                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px]">
                     <Link
                         href={`/auctions/car_view_page/${id}`}
                         className="tw-self-start"
+                        onClick={() => closeMenu && closeMenu()}
                     >
-                        <div className="tw-w-full tw-font-bold tw-text-lg tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
@@ -1046,6 +1109,7 @@ interface MyWagersCardProps {
     objectID: string;
     wagerID: string;
     isRefunded: boolean;
+    closeMenu?: () => void;
 }
 export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
@@ -1061,6 +1125,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     objectID,
     wagerID,
     isRefunded,
+    closeMenu,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
     const [refunded, setRefunded] = useState(false);
@@ -1078,31 +1143,33 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     };
 
     return (
-        <div className="tw-px-6 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
-            <div className=" tw-w-full tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
+        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
+            <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
-                    className="tw-self-start tw-w-[100px]"
+                    onClick={() => closeMenu && closeMenu()}
+                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[75px] tw-h-[75px]"
                 >
                     <Image
                         src={img}
                         width={100}
                         height={100}
                         alt="wallet icon"
-                        className="tw-w-[100px] tw-h-[100px] tw-object-cover tw-rounded-[4px]"
+                        className="sm:tw-w-[100px] tw-w-[75px] tw-h-[75px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
                     />
                 </Link>
-                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-max-w-[323px]">
+                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px]">
                     <Link
                         href={`/auctions/car_view_page/${id}`}
+                        onClick={() => closeMenu && closeMenu()}
                         className="tw-self-start"
                     >
-                        <div className="tw-w-full tw-font-bold tw-text-lg tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
                     <div className="tw-w-full tw-mt-1 tw-text-sm">
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                        <div className="tw-flex tw-items-center tw-gap-2">
                             <Image
                                 src={WalletSmall}
                                 width={14}
@@ -1115,7 +1182,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 ${new Intl.NumberFormat().format(my_wager)}
                             </span>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                        <div className="tw-flex tw-items-center tw-gap-2">
                             <Image
                                 src={Dollar}
                                 width={14}
@@ -1129,7 +1196,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             </span>
                         </div>
                         {isActive && (
-                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                            <div className="tw-flex tw-items-center tw-gap-2">
                                 <Image
                                     src={Hourglass}
                                     width={14}
@@ -1447,3 +1514,307 @@ interface SearchDropDownProps {
     searchedData: SearchDatas[];
     onSearchClick: (carMake: string, carModel: string, carID: string) => void;
 }
+
+interface MobileMyWatchlistProps {
+    closeMenu: () => void;
+}
+
+const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
+    const router = useRouter();
+    const [activeOrCompleted, setActiveOrCompleted] = useState("active");
+    const [activeWatchlist, setActiveWatchlist] = useState([]);
+    const [completedWatchlist, setCompletedWatchlist] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchWatchlist = async () => {
+            const data = await getMyWatchlist();
+            const currentDate = new Date();
+
+            if (!data.watchlist || data.watchlist.length !== 0) {
+                const completed = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
+
+                setActiveWatchlist(active);
+                setCompletedWatchlist(completed);
+            }
+            setIsLoading(false);
+        };
+        fetchWatchlist();
+    }, []);
+
+    return (
+        <div>
+            <div className="tw-flex">
+                <button
+                    autoFocus
+                    onClick={() => setActiveOrCompleted("active")}
+                    className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+                >
+                    ACTIVE
+                    {!isLoading && (
+                        <span className="tw-ml-1 tw-px-1 tw-text-xs tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+                            {activeWatchlist.length}
+                        </span>
+                    )}
+                </button>
+                <button
+                    onClick={() => setActiveOrCompleted("completed")}
+                    className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+                >
+                    COMPLETED
+                </button>
+            </div>
+            <div className="tw-mb-4 watchlist-custom-height tw-overflow-y-auto">
+                {isLoading && (
+                    <div className="tw-pb-[50px] tw-pt-[74px] tw-flex tw-justify-center">
+                        <BounceLoader color="#696969" loading={true} />
+                    </div>
+                )}
+                {activeOrCompleted === "active" &&
+                    activeWatchlist.length !== 0 && (
+                        <div className="tw-w-full">
+                            {activeWatchlist.map((watchlist: any) => (
+                                <div key={watchlist._id}>
+                                    <TimerProvider
+                                        deadline={watchlist.auctionDeadline}
+                                    >
+                                        <MyWatchlistCard
+                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                            img={watchlist.auctionImage}
+                                            current_bid={watchlist.auctionPrice}
+                                            time_left={
+                                                watchlist.auctionDeadline
+                                            }
+                                            id={watchlist.auctionIdentifierId}
+                                            isActive={true}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                {activeOrCompleted === "completed" &&
+                    completedWatchlist.length !== 0 && (
+                        <div className="tw-w-full">
+                            {completedWatchlist.map((watchlist: any) => (
+                                <div key={watchlist._id}>
+                                    <TimerProvider
+                                        deadline={watchlist.auctionDeadline}
+                                    >
+                                        <MyWatchlistCard
+                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                            img={watchlist.auctionImage}
+                                            current_bid={watchlist.auctionPrice}
+                                            id={watchlist.auctionIdentifierId}
+                                            time_left={
+                                                watchlist.auctionDeadline
+                                            }
+                                            isActive={false}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                {isLoading === false &&
+                    activeOrCompleted === "active" &&
+                    activeWatchlist.length === 0 && (
+                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                            <Image
+                                src={MoneyBag}
+                                width={80}
+                                height={80}
+                                alt="watchlist icon"
+                                className="tw-w-[80px] tw-h-[80px]"
+                            />
+                            <div className="">
+                                <div className="tw-font-bold tw-text-xl tw-text-center">
+                                    No active wagers
+                                </div>
+                                <div className="tw-opacity-70">
+                                    Quam temere in vitiis, legem sancimus
+                                    haerentia
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => router.push("/auctions")}
+                                className="btn-transparent-white"
+                            >
+                                DISCOVER AUCTIONS
+                            </button>
+                        </div>
+                    )}
+                {activeOrCompleted === "completed" &&
+                    completedWatchlist.length === 0 && (
+                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                            No watchlist in completed
+                        </div>
+                    )}
+            </div>
+        </div>
+    );
+};
+
+const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
+    const router = useRouter();
+    const [activeOrCompleted, setActiveOrCompleted] = useState("active");
+    const [activeWagers, setActiveWagers] = useState([]);
+    const [completedWagers, setCompletedWagers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchWagers = async () => {
+            const data = await getMyWagers();
+            const currentDate = new Date();
+
+            if (!data.wagers || data.wagers.length !== 0) {
+                const completed = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
+
+                setActiveWagers(active);
+                setCompletedWagers(completed);
+            }
+            setIsLoading(false);
+        };
+        fetchWagers();
+    }, []);
+
+    return (
+        <div>
+            <div className="tw-flex">
+                <button
+                    autoFocus
+                    onClick={() => setActiveOrCompleted("active")}
+                    className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+                >
+                    ACTIVE
+                    {!isLoading && (
+                        <span className="tw-ml-1 tw-px-1 tw-text-xs tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+                            {activeWagers.length}
+                        </span>
+                    )}
+                </button>
+                <button
+                    onClick={() => setActiveOrCompleted("completed")}
+                    className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+                >
+                    COMPLETED
+                </button>
+            </div>
+            <div className="tw-mb-4 watchlist-custom-height tw-overflow-y-auto">
+                {isLoading && (
+                    <div className="tw-pb-[50px] tw-pt-[74px] tw-flex tw-justify-center">
+                        <BounceLoader color="#696969" loading={true} />
+                    </div>
+                )}
+                {activeOrCompleted === "active" &&
+                    activeWagers.length !== 0 && (
+                        <div className="tw-w-full">
+                            {activeWagers.map((wager: any) => (
+                                <div key={wager._id}>
+                                    <TimerProvider
+                                        deadline={wager.auctionDeadline}
+                                    >
+                                        <MyWagersCard
+                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                            img={wager.auctionImage}
+                                            my_wager={wager.priceGuessed}
+                                            current_bid={wager.auctionPrice}
+                                            time_left={wager.auctionDeadline}
+                                            potential_prize={wager.auctionPot}
+                                            id={wager.auctionIdentifierId}
+                                            isActive={true}
+                                            status={wager.auctionStatus}
+                                            wagerAmount={wager.wagerAmount}
+                                            objectID={wager.auctionObjectId}
+                                            wagerID={wager._id}
+                                            isRefunded={wager.refunded}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                {activeOrCompleted === "completed" &&
+                    completedWagers.length !== 0 && (
+                        <div className="tw-w-full">
+                            {completedWagers.map((wager: any) => (
+                                <div key={wager._id}>
+                                    <TimerProvider
+                                        deadline={wager.auctionDeadline}
+                                    >
+                                        <MyWagersCard
+                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                            img={wager.auctionImage}
+                                            my_wager={wager.priceGuessed}
+                                            current_bid={wager.auctionPrice}
+                                            time_left={wager.auctionDeadline}
+                                            potential_prize={wager.auctionPot}
+                                            id={wager.auctionIdentifierId}
+                                            isActive={false}
+                                            status={wager.auctionStatus}
+                                            wagerAmount={wager.wagerAmount}
+                                            objectID={wager.auctionObjectId}
+                                            wagerID={wager._id}
+                                            isRefunded={wager.refunded}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                {isLoading === false &&
+                    activeOrCompleted === "active" &&
+                    activeWagers.length === 0 && (
+                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                            <Image
+                                src={MoneyBag}
+                                width={80}
+                                height={80}
+                                alt="watchlist icon"
+                                className="tw-w-[80px] tw-h-[80px]"
+                            />
+                            <div className="">
+                                <div className="tw-font-bold tw-text-xl tw-text-center">
+                                    No active wagers
+                                </div>
+                                <div className="tw-opacity-70">
+                                    Quam temere in vitiis, legem sancimus
+                                    haerentia
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => router.push("/auctions")}
+                                className="btn-transparent-white"
+                            >
+                                DISCOVER AUCTIONS
+                            </button>
+                        </div>
+                    )}
+                {activeOrCompleted === "completed" &&
+                    completedWagers.length === 0 && (
+                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                            No wagers in completed
+                        </div>
+                    )}
+            </div>
+        </div>
+    );
+};
