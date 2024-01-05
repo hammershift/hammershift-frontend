@@ -19,7 +19,6 @@ import CheckIconGreen from "../../../../public/images/check-green.svg";
 import CameraPlus from "../../../../public/images/camera-plus.svg";
 import GifIcon from "../../../../public/images/image-document-gif.svg";
 
-
 import ArrowDown from "../../../../public/images/arrow-down.svg";
 import ArrowUp from "../../../../public/images/chevron-up.svg";
 import DiagonalLines from "../../../../public/images/green-diagonal.svg";
@@ -197,8 +196,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                     $
                                     {pot
                                         ? new Intl.NumberFormat().format(
-                                            pot || 0
-                                        )
+                                              pot || 0
+                                          )
                                         : " --"}
                                 </span>
                             </span>
@@ -216,12 +215,14 @@ interface WatchAndWagerButtonsProps {
     toggleWagerModal: () => void;
     alreadyWagered: boolean;
     auctionID: string;
+    auctionEnded: boolean;
 }
 
 export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
     auctionID,
     toggleWagerModal,
     alreadyWagered,
+    auctionEnded,
 }) => {
     const [isWatching, setIsWatching] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -298,14 +299,22 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             width={20}
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
-                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
-                                ? "scale-animation is-watching"
-                                : "scale-animation"
-                                }`}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
+                                isWatching
+                                    ? "scale-animation is-watching"
+                                    : "scale-animation"
+                            }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
-                    {alreadyWagered ? (
+                    {auctionEnded ? (
+                        <button
+                            disabled
+                            className="btn-yellow hover:tw-bg-[#f2ca16]"
+                        >
+                            ENDED 🏆
+                        </button>
+                    ) : alreadyWagered ? (
                         <button
                             type="button"
                             disabled
@@ -397,12 +406,14 @@ interface ArticleSectionProps {
     images_list: { placing: number; src: string }[];
     toggleWagerModal: () => void;
     alreadyWagered: boolean;
+    auctionEnded: boolean;
 }
 export const ArticleSection: React.FC<ArticleSectionProps> = ({
     description,
     images_list,
     toggleWagerModal,
     alreadyWagered,
+    auctionEnded,
 }) => {
     const [showDetails, setShowDetails] = useState(false);
     return (
@@ -444,7 +455,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
                         )}
                     </span>
                 </button>
-                {alreadyWagered ? null : (
+                {alreadyWagered || auctionEnded ? null : (
                     <button className="btn-yellow" onClick={toggleWagerModal}>
                         PLACE MY WAGER
                     </button>
@@ -453,8 +464,6 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
         </div>
     );
 };
-
-
 
 interface WagerI {
     _id: string;
@@ -476,6 +485,7 @@ interface WagersSectionProps {
     players_num: number;
     wagers: WagerI[];
     alreadyWagered: boolean;
+    auctionEnded: boolean;
 }
 
 export const WagersSection: React.FC<WagersSectionProps> = ({
@@ -483,50 +493,55 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
     wagers,
     toggleWagerModal,
     alreadyWagered,
+    auctionEnded,
 }) => {
     const { data: session } = useSession();
     const router = useRouter();
 
     return (
         <div>
-            <div className="tw-relative tw-pb-8 sm:tw-pb-0">
-                <div className="tw-px-5 tw-w-full tw-h-auto tw-pt-8">
-                    <div className="tw-flex tw-justify-between">
-                        <div className="tw-font-bold tw-text-[18px]">
-                            WAGERS
+            <div className="tw-relative sm:tw-pb-0">
+                <div className="tw-w-full tw-h-auto tw-p-6">
+                    <div className="tw-mb-6">
+                        <div className="tw-flex tw-justify-between">
+                            <div className="tw-font-bold tw-text-[18px]">
+                                WAGERS
+                            </div>
+                            <Image
+                                src={ArrowDown}
+                                width={20}
+                                height={20}
+                                alt="arrow down"
+                                className="tw-w-5 tw-h-5"
+                            />
                         </div>
-                        <Image
-                            src={ArrowDown}
-                            width={20}
-                            height={20}
-                            alt="arrow down"
-                            className="tw-w-5 tw-h-5"
-                        />
+                        <div className="tw-text-[14px]">
+                            {players_num} Players
+                        </div>
                     </div>
-                    <div className="tw-text-[14px]">{players_num} Players</div>
-                    <div className="tw-relative tw-mt-4">
+                    <div className="tw-relative">
                         {wagers.slice(0, 4).map((wager) => {
                             return (
                                 <div
                                     key={wager._id}
-                                    className="tw-my-5 tw-flex tw-justify-between"
+                                    className="tw-flex tw-justify-between tw-items-center tw-py-2"
                                 >
-                                    <div className="tw-flex">
+                                    <div className="tw-flex tw-gap-4 tw-items-center">
                                         <Image
                                             src={
                                                 wager.user.image
                                                     ? wager.user.image
                                                     : AvatarOne
                                             }
-                                            width={40}
-                                            height={40}
+                                            width={44}
+                                            height={44}
                                             alt="dollar"
-                                            className="tw-w-[40px] tw-h-[40px] tw-mr-4 tw-rounded-full"
+                                            className="tw-w-[44px] tw-h-[44px] tw-rounded-full"
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
                                                 {session?.user.id ===
-                                                    wager.user._id
+                                                wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
@@ -556,9 +571,9 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                             );
                         })}
                     </div>
-                    {alreadyWagered ? null : (
+                    {alreadyWagered || auctionEnded ? null : (
                         <button
-                            className="btn-yellow tw-w-full tw-mt-2"
+                            className="btn-yellow tw-w-full tw-mt-6"
                             onClick={toggleWagerModal}
                         >
                             JOIN GAME
@@ -566,13 +581,13 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                     )}
                 </div>
                 {/* Background and button*/}
-                <div className="tw-absolute tw-top-0 tw-h-[416px] tw-z-[-1] tw-w-full">
+                <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
                     <Image
                         src={TransitionPattern}
                         width={288}
                         height={356}
                         alt="pattern"
-                        className="tw-w-full tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover"
+                        className="tw-w-full tw-h-4/5 tw-rounded-lg tw-mr-1 tw-object-cover"
                     />
                     <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]"></div>
                 </div>
@@ -608,40 +623,9 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
 }) => {
     const logo = BringATrailerLogo;
     const seller_img = ProfilePhoto;
-    const DetailsData = {
-        auction: { name: "Bring a Trailer", logo: BringATrailerLogo },
-        make: "Mercedes Benz",
-        model: "E55 AMG",
-        seller: { name: "John Adams", image: ProfilePhoto },
-        location: "San Diego, CA, 92121",
-        mileage: "55,400",
-        listing_type: "Private Property",
-        lot_num: "112459",
-        listing_details: [
-            "Chassis: WDDRJ7HA0BA000819",
-            "13k Miles",
-            "6.2 - Liter V8",
-            "Seven - Speed Dual - Clutch Automatic Transaxle",
-            "Limited - Slip Differential",
-            "Iridium Silver Metallic Paint",
-            "Charcoal Exclusive Leather Upholstery",
-            '19" & 20" Seven - Spoke Alloy Wheels',
-            "Gullwing Doors",
-            "Speed - Activated Aerofoil",
-            "Bi - Xenon Headlights",
-            "Parktronic",
-            "Heated Power - Adjustable Seats",
-            "Keyless - Go",
-            "COMAND Infortainment",
-            "Carbon - Fiber Interior Trim",
-            "Radar Detector",
-            "Bang & Olufsen Sound System",
-            "Dual - Zone Automatic Climate Control",
-            "Clean Carfax Report",
-        ],
-    };
+
     return (
-        <div className="tw-mt-8 lg:tw-mt-16 tw-bg-[#172431] tw-p-6">
+        <div className=" tw-bg-[#172431] tw-p-6 tw-rounded-lg">
             <div className="tw-flex tw-justify-between tw-py-2">
                 <div className="tw-font-bold tw-text-[18px]">DETAILS</div>
                 <Image

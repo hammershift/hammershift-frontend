@@ -91,7 +91,7 @@ option {
   cursor: pointer;
 }
 .btn-yellow {
-  padding: 0.625rem 0.75rem;
+  padding: 0.625rem 0.875rem;
   color: black;
   background-color: #f2ca16;
   border-radius: 0.25rem;
@@ -186,6 +186,27 @@ option {
     46% 17%
   );
 }
+
+#search-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+#search-box::-webkit-scrollbar-thumb {
+  background: #314150;
+  border-radius: 8px;
+}
+
+.my-wagers-menu::-webkit-scrollbar,
+.watchlist-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.my-wagers-menu,
+.watchlist-menu {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /**
  * ----------------------------------------
  //* animation slide-in-top
