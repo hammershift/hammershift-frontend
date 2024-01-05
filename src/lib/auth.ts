@@ -116,22 +116,11 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     signIn: async ({ user, account }) => {
-      if (account?.provider !== 'google') {
-        return true;
+      if (account?.provider === 'google') {
+        if (typeof user.email === 'string' && (await emailExistsInDatabase(user.email))) {
+          return `/create_account?emailExists=true`;
+        }
       }
-
-      if (typeof user.email !== 'string') {
-        console.error('Email from Google sign-in is not valid.');
-        return false;
-      }
-
-      // check if the email exists in the database
-      const exists = await emailExistsInDatabase(user.email);
-      if (exists) {
-        console.error(`User already exists with email: ${user.email}`);
-        return false;
-      }
-
       return true;
     },
   },

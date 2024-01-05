@@ -84,6 +84,7 @@ const CreateAccount = () => {
   const [states, setStates] = useState<IState[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<ICountry | null>(null);
   const [selectedState, setSelectedState] = useState<IState | null>(null);
+  const [emailExistsError, setEmailExistsError] = useState(false);
   const [uniqueFields, setUniqueFields] = useState<UniqueFieldsState>({
     isEmailUnique: true,
     isUsernameUnique: true,
@@ -113,6 +114,7 @@ const CreateAccount = () => {
 
     switch (field) {
       case 'email':
+        setEmailExistsError(false);
         setValidity({ ...validity, isEmailValid: validateEmail(value) });
         if (validateEmail(value)) {
           checkUserExistence('email', value);
@@ -280,19 +282,55 @@ const CreateAccount = () => {
   //   }
   // };
 
-  const [signInError, setSignInError] = useState('');
+  useEffect(() => {
+    const emailExistsParam = new URLSearchParams(window.location.search).get('emailExists');
+    console.log(`emailExistsParam on page load:`, emailExistsParam);
+    if (emailExistsParam === 'true') {
+      setEmailExistsError(true);
+    }
+  }, []);
+
+  const checkEmailDatabase = async (field: 'email' | 'username', value: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/checkUserExistence', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ [field]: value }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data: UserExistenceResponse = await response.json();
+      console.log(`Response from checkUserExistence API:`, data);
+      return field === 'email' ? data.emailExists : data.usernameExists;
+    } catch (error) {
+      console.error('Error during user existence check:', error);
+      return false;
+    }
+  };
 
   const handleGoogleSignIn = async (provider: string) => {
     setIsLoading(true);
     try {
       const result = await signIn(provider, { redirect: false });
       if (result?.error) {
-        // Log the error and set the error message state
         console.error(`Error during ${provider} sign in:`, result.error);
-        setSignInError('An account with this email already exists. Please sign in using your existing account.');
-        setCreateAccountPage('page one'); // Redirect user to 'page one'
       } else {
-        setCreateAccountPage('page two'); // Continue to 'page two'
+        const session = await getSession();
+        if (session?.user?.email) {
+          const emailExists = await checkEmailDatabase('email', session.user.email);
+          if (emailExists) {
+            setEmailExistsError(true);
+            router.push('/login_page');
+          } else {
+            setUserDetails({ ...userDetails, email: session.user.email });
+            setCreateAccountPage('page two');
+          }
+        }
       }
     } catch (error) {
       console.error(`Error during ${provider} sign in:`, error);
@@ -367,7 +405,7 @@ const CreateAccount = () => {
       setIsLoading(false);
     }
   };
-
+  console.log('Email Exists Error:', emailExistsError);
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {/* Loading */}
@@ -406,6 +444,7 @@ const CreateAccount = () => {
                   {touchedFields.email && !uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500'>✕ Email is already in use</div>}
                   {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}
                   {touchedFields.email && !validity.isEmailValid && <div className='tw-text-sm tw-text-red-500'>✕ Invalid Email</div>}
+                  {emailExistsError && <div className='tw-text-sm tw-text-red-500'>✕ An account with this email already exists</div>}{' '}
                 </div>
 
                 <div className='tw-flex tw-flex-col tw-gap-2'>
