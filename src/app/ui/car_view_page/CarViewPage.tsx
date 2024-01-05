@@ -19,7 +19,6 @@ import CheckIconGreen from "../../../../public/images/check-green.svg";
 import CameraPlus from "../../../../public/images/camera-plus.svg";
 import GifIcon from "../../../../public/images/image-document-gif.svg";
 
-
 import ArrowDown from "../../../../public/images/arrow-down.svg";
 import ArrowUp from "../../../../public/images/chevron-up.svg";
 import DiagonalLines from "../../../../public/images/green-diagonal.svg";
@@ -197,8 +196,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                     $
                                     {pot
                                         ? new Intl.NumberFormat().format(
-                                            pot || 0
-                                        )
+                                              pot || 0
+                                          )
                                         : " --"}
                                 </span>
                             </span>
@@ -300,10 +299,11 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             width={20}
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
-                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
-                                ? "scale-animation is-watching"
-                                : "scale-animation"
-                                }`}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
+                                isWatching
+                                    ? "scale-animation is-watching"
+                                    : "scale-animation"
+                            }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
@@ -406,12 +406,14 @@ interface ArticleSectionProps {
     images_list: { placing: number; src: string }[];
     toggleWagerModal: () => void;
     alreadyWagered: boolean;
+    auctionEnded: boolean;
 }
 export const ArticleSection: React.FC<ArticleSectionProps> = ({
     description,
     images_list,
     toggleWagerModal,
     alreadyWagered,
+    auctionEnded,
 }) => {
     const [showDetails, setShowDetails] = useState(false);
     return (
@@ -453,7 +455,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
                         )}
                     </span>
                 </button>
-                {alreadyWagered ? null : (
+                {alreadyWagered || auctionEnded ? null : (
                     <button className="btn-yellow" onClick={toggleWagerModal}>
                         PLACE MY WAGER
                     </button>
@@ -462,8 +464,6 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
         </div>
     );
 };
-
-
 
 interface WagerI {
     _id: string;
@@ -485,6 +485,7 @@ interface WagersSectionProps {
     players_num: number;
     wagers: WagerI[];
     alreadyWagered: boolean;
+    auctionEnded: boolean;
 }
 
 export const WagersSection: React.FC<WagersSectionProps> = ({
@@ -492,6 +493,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
     wagers,
     toggleWagerModal,
     alreadyWagered,
+    auctionEnded,
 }) => {
     const { data: session } = useSession();
     const router = useRouter();
@@ -539,7 +541,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
                                                 {session?.user.id ===
-                                                    wager.user._id
+                                                wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
@@ -569,7 +571,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                             );
                         })}
                     </div>
-                    {alreadyWagered ? null : (
+                    {alreadyWagered || auctionEnded ? null : (
                         <button
                             className="btn-yellow tw-w-full tw-mt-6"
                             onClick={toggleWagerModal}
