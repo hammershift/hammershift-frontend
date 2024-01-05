@@ -218,31 +218,42 @@ export const CommentsCard = ({
 
     const handleLiking = async (e: any) => {
         e.preventDefault();
-        try {
-            const response = await likeComment(commentID, userID, likes);
+        if (userID) {
+            try {
+                const response = await likeComment(commentID, userID, likes);
 
-            if (response) {
-                console.log("comment has been liked");
-                window.location.reload();
+                if (response) {
+                    console.log("comment has been liked");
+                    window.location.reload();
+                }
+            } catch (error) {
+
             }
-        } catch (error) {
-
+        } else {
+            console.log("You are not logged in")
         }
     }
+
 
     const handleDisliking = async (e: any) => {
         e.preventDefault();
-        try {
-            const response = await dislikeComment(commentID, userID, dislikes);
+        if (userID) {
+            try {
+                const response = await dislikeComment(commentID, userID, dislikes);
 
-            if (response) {
-                console.log("comment has been liked");
-                window.location.reload();
+                if (response) {
+                    console.log("comment has been liked");
+                    window.location.reload();
+                }
+            } catch (error) {
+
             }
-        } catch (error) {
-
+        } else {
+            console.log("You are not logged in")
         }
     }
+
+
     return (
         <div className="tw-flex tw-mt-8 tw-text-[14px]">
             <Image
@@ -277,6 +288,7 @@ export const CommentsCard = ({
                 <div className="tw-flex tw-opacity-50 tw-items-center">
                     Reply
                     <span className="tw-ml-4">·</span>
+
                     <div className="tw-flex tw-items-center" onClick={handleLiking}>
                         {likes.includes(userID)
                             ? <div className="tw-ml-4">
