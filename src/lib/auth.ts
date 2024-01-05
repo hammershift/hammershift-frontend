@@ -73,7 +73,7 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       console.log('JWT callback - Initial token:', token);
-      console.log('JWT callback - User:', user);
+
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -90,13 +90,25 @@ export const authOptions: NextAuthOptions = {
         token.fullName = dbUser.fullName;
         token.username = dbUser.username;
         token.image = dbUser.image;
+        token.isActive = dbUser.isActive;
+        token.balance = dbUser.balance;
+
+        // check if the user doesn't have a createdAt field and set it
+        if (!dbUser.createdAt) {
+          const createdAt = new Date();
+          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { createdAt } });
+
+          token.createdAt = createdAt;
+        } else {
+          token.createdAt = dbUser.createdAt;
+        }
+
+        // Update isActive and balance if undefined
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
           dbUser.balance = 100;
-          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: dbUser });
+          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { isActive: true, balance: 100 } });
         }
-        token.isActive = dbUser.isActive;
-        token.balance = dbUser.balance;
       }
 
       console.log('JWT callback - Final token:', token);
