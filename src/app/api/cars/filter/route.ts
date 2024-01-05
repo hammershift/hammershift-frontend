@@ -238,7 +238,7 @@ export async function GET(req: NextRequest) {
     }
 
 
-    const totalCars = await db.collection('auctions').count(query);
+    const totalCars = await db.collection('auctions').countDocuments(query);
 
     const filteredCars = await db.collection('auctions').find({
       $and: [query, { isActive: true }]
