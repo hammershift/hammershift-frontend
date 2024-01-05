@@ -184,3 +184,43 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({ message: 'Server error in posting comment' }, { status: 500 });
     }
 }
+
+
+// Delete comment URL: /api/comments
+export async function DELETE(req: NextRequest) {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
+
+    const { commentID } = await req.json();
+
+    if (!commentID) {
+        return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+    }
+
+    try {
+        const client = await clientPromise;
+        const db = client.db();
+        // const userId = new ObjectId(session.user.id);
+
+        const commentData = await db.collection('comments').deleteOne(
+            { _id: new ObjectId(commentID) }
+        );
+
+        if (!commentData.deletedCount) {
+            console.error("delete comment failed")
+            return NextResponse.json({ message: 'Cannot delete comment' }, { status: 400 });
+        }
+        return NextResponse.json(
+            {
+                message: "comment deleted"
+            },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error('Error in deleting comment', error);
+        return NextResponse.json({ message: 'Server error in deleting comment' }, { status: 500 });
+    }
+}

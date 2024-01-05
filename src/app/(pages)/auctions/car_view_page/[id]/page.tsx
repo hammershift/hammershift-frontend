@@ -58,7 +58,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       if (session) {
         const userWager = await getOneUserWager(data?._id, session?.user.id);
         userWager.length === 0 ? setAlreadyWagered(false) : setAlreadyWagered(true);
-        console.log(session?.user.id);
+        // console.log(session?.user.id);
       }
       const wagers = await getWagers(data?._id);
       setWagersData(wagers);

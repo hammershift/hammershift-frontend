@@ -11,7 +11,7 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment, dislikeComment, getComments, likeComment } from "@/lib/data";
+import { createComment, deleteComment, dislikeComment, getComments, likeComment } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
 import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
@@ -75,7 +75,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     if (response) {
                         console.log("comment has been posted");
                         setComment("");
-                        window.location.reload();
+                        setReload((prev: number) => prev + 1);
                     }
                 } catch (error) {
                     console.error("error posting comment:", error);
@@ -211,7 +211,8 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                                     dislikes={item.dislikes || []}
                                     commentID={item._id}
                                     userID={session.data?.user.id}
-                                    setReload={setReload} />
+                                    setReload={setReload}
+                                    commenterUserID={item.user.userId} />
                             </div>
                         ))
                         :
@@ -251,7 +252,8 @@ export const CommentsCard = ({
     dislikes,
     commentID,
     userID,
-    setReload
+    setReload,
+    commenterUserID
 }: {
     comment: string,
     username: string,
@@ -260,8 +262,24 @@ export const CommentsCard = ({
     dislikes: string[],
     commentID: string,
     userID: string,
-    setReload: any
+    setReload: any,
+    commenterUserID: string
 }) => {
+    const dropdownRef = useRef<any | null>(null);
+    const [dropdown, setDropdown] = useState(false);
+
+    useEffect(() => {
+        function handleClickOutside(event: any) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdown(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const timeSince = (dateString: string) => {
         const date = new Date(dateString);
@@ -281,7 +299,7 @@ export const CommentsCard = ({
 
     const handleLiking = async (e: any) => {
         e.preventDefault();
-        if (userID) {
+        if (userID == commenterUserID) {
             try {
                 const response = await likeComment(commentID, userID, likes);
 
@@ -290,7 +308,7 @@ export const CommentsCard = ({
                     setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
-
+                console.error("error in liking comment:", error)
             }
         } else {
             console.log("Cannot like comment. Please log in first")
@@ -314,6 +332,25 @@ export const CommentsCard = ({
         } else {
             console.log("Cannot dislike comment. Please log in first")
         }
+
+    }
+    const handleDeleteComment = async () => {
+        if (userID) {
+            try {
+                const response = await deleteComment(commentID, userID, commenterUserID);
+
+                if (response) {
+                    console.log("comment has been deleted");
+                    setReload((prev: number) => prev + 1);
+                } else {
+                    console.log("comment has not been deleted. Incorrect user");
+                }
+            } catch (error) {
+                console.error("error in deleting comment:", error)
+            }
+        } else {
+            console.log("Cannot delete comment. Please login first")
+        }
     }
 
 
@@ -327,7 +364,7 @@ export const CommentsCard = ({
                 className="tw-w-10 tw-h-10 tw-ml-2"
             />
             <div className="tw-ml-4">
-                <div className="tw-flex tw-justify-between">
+                <div className="tw-relative tw-flex tw-justify-between">
                     <div>
                         <span className="tw-font-bold">{username}</span>
                         <span className="tw-text-[#F2CA16] tw-ml-2">
@@ -337,13 +374,23 @@ export const CommentsCard = ({
                             {timeSince(createdAt)}
                         </span>
                     </div>
-                    <Image
-                        src={ThreeDots}
-                        width={16}
-                        height={16}
-                        alt="thumbs up"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
+                    <div onClick={e => setDropdown(true)}>
+                        <Image
+                            src={ThreeDots}
+                            width={16}
+                            height={16}
+                            alt="dots"
+                            className="tw-w-4 tw-h-4 tw-ml-4"
+                        />
+                    </div>
+                    {dropdown && <div
+                        ref={dropdownRef}
+                        className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-bg-[#172431] tw-z-10">
+                        <div
+                            onClick={handleDeleteComment}
+                            className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center`}
+                        >Delete</div>
+                    </div>}
                 </div>
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
                     {comment}
