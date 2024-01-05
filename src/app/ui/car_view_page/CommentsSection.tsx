@@ -225,7 +225,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     <button
                         className="btn-transparent-white tw-w-full tw-mt-8 tw-text-sm"
                         onClick={handleLoadComments}>
-                        {`Load ${Math.min(commentsList.length - commentsDisplayed, 3)} more comments`}
+                        {`Load ${Math.min(commentsList.length - commentsDisplayed, 3)} more comment(s)`}
                     </button>
                 }
                 <div className="tw-flex tw-items-center tw-mt-8">
@@ -375,7 +375,7 @@ export const CommentsCard = ({
                             {timeSince(createdAt)}
                         </span>
                     </div>
-                    <div onClick={e => setDropdown(true)}>
+                    <div onClick={e => setDropdown((prev) => !prev)}>
                         <Image
                             src={ThreeDots}
                             width={16}
