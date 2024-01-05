@@ -187,9 +187,26 @@ option {
   );
 }
 
-.remove-last-border:last-child {
-  border: none;
+#search-box::-webkit-scrollbar {
+  width: 8px;
 }
+
+#search-box::-webkit-scrollbar-thumb {
+  background: #314150; 
+  border-radius: 8px;
+}
+
+.my-wagers-menu::-webkit-scrollbar,
+.watchlist-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.my-wagers-menu,
+.watchlist-menu {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /**
  * ----------------------------------------
  //* animation slide-in-top

@@ -303,6 +303,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                                 description={carData.description}
                                 toggleWagerModal={showWagerModal}
                                 alreadyWagered={alreadyWagered}
+                                auctionEnded={auctionEnded}
                             />
                         </>
                     ) : null}
@@ -313,11 +314,10 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                                 players_num={playerNum}
                                 wagers={wagersData}
                                 alreadyWagered={alreadyWagered}
+                                auctionEnded={auctionEnded}
                             />
                         ) : null}
                     </div>
-                    <GuessThePriceInfoSection />
-
                     {carData ? (
                         <div className="tw-block sm:tw-hidden tw-mt-8">
                             <DetailsSection
@@ -334,19 +334,21 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             />
                         </div>
                     ) : null}
+                    <GuessThePriceInfoSection />
                     <CommentsSection
                         comments={comments}
                         id={ID}
                         loading={loadingComments}
                     />
                 </div>
-                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
+                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
                     {wagersData ? (
                         <WagersSection
                             toggleWagerModal={showWagerModal}
                             players_num={playerNum}
                             wagers={wagersData}
                             alreadyWagered={alreadyWagered}
+                            auctionEnded={auctionEnded}
                         />
                     ) : null}
                     {carData ? (

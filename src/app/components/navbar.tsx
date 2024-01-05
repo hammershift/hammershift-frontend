@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "../../../public/images/hammershift-logo.svg";
 import LogoSmall from "../../../public/images/logo-small.svg";
 import MagnifyingGlass from "../../../public/images/magnifying-glass.svg";
+import CloseIcon from "../../../public/images/close-icon.svg";
 import WagersIcon from "../../../public/images/dollar-coin.svg";
 import WatchlistIcon from "../../../public/images/watchlist-icon.svg";
 import AccountIcon from "../../../public/images/account-icon.svg";
@@ -49,8 +50,7 @@ const Navbar = () => {
     const [dropMyWagers, setDropMyWagers] = useState(false);
     const [dropMyAccount, setDropMyAccount] = useState(false);
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
-    const [navDropdownMenu, setNavDropdownMenu] =
-        useState<NavbarDropdownMenuProps>(null);
+    const [showClearSearchButton, setShowClearSearchButton] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -169,6 +169,7 @@ const Navbar = () => {
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchKeyword(e.target.value);
+        setShowClearSearchButton(true);
     };
 
     const handleInputClick = () => {
@@ -203,6 +204,16 @@ const Navbar = () => {
 
     const closeMenu = () => {
         setMenuIsOpen(false);
+    };
+
+    const clearSearchInputs = () => {
+        const searchInput = document.getElementById(
+            "search-bar-input"
+        ) as HTMLInputElement;
+
+        searchInput.value = "";
+        setShowClearSearchButton(false);
+        setSearchedData([]);
     };
 
     const { data: session } = useSession();
@@ -251,8 +262,8 @@ const Navbar = () => {
                             <div
                                 className={
                                     searchBoxDropDown
-                                        ? "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t"
-                                        : "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded"
+                                        ? "tw-bg-shade-50 tw-flex tw-py-2 tw-px-3 tw-grow tw-rounded-t"
+                                        : "tw-bg-shade-50 tw-flex tw-py-2 tw-px-3 tw-grow tw-rounded"
                                 }
                             >
                                 <Image
@@ -271,6 +282,16 @@ const Navbar = () => {
                                     onClick={handleInputClick}
                                     onChange={handleChange}
                                 ></input>
+                                {showClearSearchButton && (
+                                    <Image
+                                        src={CloseIcon}
+                                        width={25}
+                                        height={25}
+                                        alt="magnifying glass"
+                                        className="tw-w-[] tw-h-auto tw-cursor-pointer"
+                                        onClick={clearSearchInputs}
+                                    />
+                                )}
                             </div>
                         </form>
                         {searchBoxDropDown && (
@@ -634,7 +655,7 @@ const MyWatchlistDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="tw-absolute tw-z-10 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="watchlist-menu tw-absolute tw-z-10 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WATCHLIST
@@ -890,7 +911,7 @@ const MyWagersDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="my-wagers-menu tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WAGERS
