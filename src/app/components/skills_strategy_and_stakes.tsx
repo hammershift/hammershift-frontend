@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 
 import TransitionPattern from "../../../public/images/transition-pattern.svg";
+import Link from "next/link";
 
 const SkillStrategyAndStakes = () => {
   return (
@@ -35,9 +36,12 @@ const SkillStrategyAndStakes = () => {
             instincts, analyze market trends, and immerse yourself in the world
             of rare classics, luxury exotics, and iconic muscle cars.
           </p>
-          <button className="btn-yellow tw-w-full sm:tw-w-auto">
+          <Link
+            href="/create_account"
+            className="btn-yellow tw-w-full sm:tw-w-auto"
+          >
             Join and get 100 credits
-          </button>
+          </Link>
         </section>
       </div>
     </div>
