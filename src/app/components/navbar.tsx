@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "../../../public/images/hammershift-logo.svg";
 import LogoSmall from "../../../public/images/logo-small.svg";
 import MagnifyingGlass from "../../../public/images/magnifying-glass.svg";
+import CloseIcon from "../../../public/images/close-icon.svg";
 import WagersIcon from "../../../public/images/dollar-coin.svg";
 import WatchlistIcon from "../../../public/images/watchlist-icon.svg";
 import AccountIcon from "../../../public/images/account-icon.svg";
@@ -24,9 +25,9 @@ import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-ph
 import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-photo-three.svg";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { getMyWagers, getMyWatchlist } from "@/lib/data";
+import { getMyWagers, getMyWatchlist, refundWager } from "@/lib/data";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
-import { BounceLoader } from "react-spinners";
+import { BeatLoader, BounceLoader } from "react-spinners";
 
 // export interface NavbarProps {
 //     isLoggedIn: boolean;
@@ -49,8 +50,7 @@ const Navbar = () => {
     const [dropMyWagers, setDropMyWagers] = useState(false);
     const [dropMyAccount, setDropMyAccount] = useState(false);
     const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
-    const [navDropdownMenu, setNavDropdownMenu] =
-        useState<NavbarDropdownMenuProps>(null);
+    const [showClearSearchButton, setShowClearSearchButton] = useState(false);
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -106,6 +106,18 @@ const Navbar = () => {
                 setDropMyWagers(false);
             }
 
+            const claimRefundButtons = document.getElementsByClassName(
+                "claim-button"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isClaimButtonClicked = Array.from(claimRefundButtons).some(
+                (button) => button.contains(e.target as Node)
+            );
+
+            if (isClaimButtonClicked) {
+                setDropMyWagers(true);
+            }
+
             if (
                 myAccountButton &&
                 !myAccountButton.contains(e.target as Node)
@@ -157,17 +169,7 @@ const Navbar = () => {
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchKeyword(e.target.value);
-        // const response = await fetch(
-        //     `/api/cars/filter?search=${searchKeyword}`
-        // );
-        // const data = await response.json();
-
-        // if (data.length !== 0) {
-        //     setSearchBoxDropDown(true);
-        // } else {
-        //     setSearchBoxDropDown(false);
-        // }
-        // setSearchedData(data.cars);
+        setShowClearSearchButton(true);
     };
 
     const handleInputClick = () => {
@@ -202,6 +204,16 @@ const Navbar = () => {
 
     const closeMenu = () => {
         setMenuIsOpen(false);
+    };
+
+    const clearSearchInputs = () => {
+        const searchInput = document.getElementById(
+            "search-bar-input"
+        ) as HTMLInputElement;
+
+        searchInput.value = "";
+        setShowClearSearchButton(false);
+        setSearchedData([]);
     };
 
     const { data: session } = useSession();
@@ -250,8 +262,8 @@ const Navbar = () => {
                             <div
                                 className={
                                     searchBoxDropDown
-                                        ? "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t"
-                                        : "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded"
+                                        ? "tw-bg-shade-50 tw-flex tw-py-2 tw-px-3 tw-grow tw-rounded-t"
+                                        : "tw-bg-shade-50 tw-flex tw-py-2 tw-px-3 tw-grow tw-rounded"
                                 }
                             >
                                 <Image
@@ -270,6 +282,16 @@ const Navbar = () => {
                                     onClick={handleInputClick}
                                     onChange={handleChange}
                                 ></input>
+                                {showClearSearchButton && (
+                                    <Image
+                                        src={CloseIcon}
+                                        width={25}
+                                        height={25}
+                                        alt="magnifying glass"
+                                        className="tw-w-[] tw-h-auto tw-cursor-pointer"
+                                        onClick={clearSearchInputs}
+                                    />
+                                )}
                             </div>
                         </form>
                         {searchBoxDropDown && (
@@ -633,7 +655,7 @@ const MyWatchlistDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="tw-absolute tw-z-10 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="watchlist-menu tw-absolute tw-z-10 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WATCHLIST
@@ -725,7 +747,7 @@ const MyWatchlistDropdownMenu = () => {
                             </div>
                         </div>
                         <button
-                            onClick={() => router.push("/discover")}
+                            onClick={() => router.push("/auctions")}
                             className="btn-transparent-white"
                         >
                             DISCOVER AUCTIONS
@@ -750,7 +772,14 @@ interface MyWatchlistCardProps {
     id: string;
     isActive: boolean;
 }
-export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ title, img, current_bid, time_left, id, isActive }) => {
+export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
+    title,
+    img,
+    current_bid,
+    time_left,
+    id,
+    isActive,
+}) => {
     const { days, hours, minutes, seconds } = useTimer();
 
     return (
@@ -773,11 +802,11 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({ title, img, cu
                         href={`/auctions/car_view_page/${id}`}
                         className="tw-self-start"
                     >
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold tw-text-lg tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
-                    <div className="tw-w-full tw-mt-1">
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
                         <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                             <Image
                                 src={Dollar}
@@ -882,7 +911,7 @@ const MyWagersDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="my-wagers-menu tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WAGERS
@@ -928,6 +957,12 @@ const MyWagersDropdownMenu = () => {
                                     time_left={wager.auctionDeadline}
                                     potential_prize={wager.auctionPot}
                                     id={wager.auctionIdentifierId}
+                                    isActive={true}
+                                    status={wager.auctionStatus}
+                                    wagerAmount={wager.wagerAmount}
+                                    objectID={wager.auctionObjectId}
+                                    wagerID={wager._id}
+                                    isRefunded={wager.refunded}
                                 />
                             </TimerProvider>
                         </div>
@@ -948,6 +983,12 @@ const MyWagersDropdownMenu = () => {
                                         time_left={wager.auctionDeadline}
                                         potential_prize={wager.auctionPot}
                                         id={wager.auctionIdentifierId}
+                                        isActive={false}
+                                        status={wager.auctionStatus}
+                                        wagerAmount={wager.wagerAmount}
+                                        objectID={wager.auctionObjectId}
+                                        wagerID={wager._id}
+                                        isRefunded={wager.refunded}
                                     />
                                 </TimerProvider>
                             </div>
@@ -965,8 +1006,8 @@ const MyWagersDropdownMenu = () => {
                             alt="watchlist icon"
                             className="tw-w-[80px] tw-h-[80px]"
                         />
-                        <div className="tw-">
-                            <div className="tw-font-bold tw-text-xl">
+                        <div className="">
+                            <div className="tw-font-bold tw-text-xl tw-text-center">
                                 No active wagers
                             </div>
                             <div className="tw-opacity-70">
@@ -974,7 +1015,7 @@ const MyWagersDropdownMenu = () => {
                             </div>
                         </div>
                         <button
-                            onClick={() => router.push("/discover")}
+                            onClick={() => router.push("/auctions")}
                             className="btn-transparent-white"
                         >
                             DISCOVER AUCTIONS
@@ -999,12 +1040,45 @@ interface MyWagersCardProps {
     time_left: Date;
     potential_prize: number;
     id: string;
+    isActive: boolean;
+    status: number;
+    wagerAmount: number;
+    objectID: string;
+    wagerID: string;
+    isRefunded: boolean;
 }
-export const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager, current_bid, time_left, potential_prize, id }) => {
+export const MyWagersCard: React.FC<MyWagersCardProps> = ({
+    title,
+    img,
+    my_wager,
+    current_bid,
+    time_left,
+    potential_prize,
+    id,
+    isActive,
+    status,
+    wagerAmount,
+    objectID,
+    wagerID,
+    isRefunded,
+}) => {
     const { days, hours, minutes, seconds } = useTimer();
+    const [refunded, setRefunded] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setRefunded(isRefunded);
+    }, []);
+
+    const handleRefund = async (auctionObjectID: string, wagerID: string) => {
+        setLoading(true);
+        await refundWager(auctionObjectID, wagerID);
+        setRefunded(true);
+        setLoading(false);
+    };
 
     return (
-        <div className="tw-px-6 tw-w-full tw-py-4 tw-border-b-[1px] tw-border-[#253747]">
+        <div className="tw-px-6 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
             <div className=" tw-w-full tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
@@ -1023,11 +1097,11 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager
                         href={`/auctions/car_view_page/${id}`}
                         className="tw-self-start"
                     >
-                        <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold tw-text-lg tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
-                    <div className="tw-w-full tw-mt-1">
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
                         <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                             <Image
                                 src={WalletSmall}
@@ -1054,33 +1128,105 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager
                                 ${new Intl.NumberFormat().format(current_bid)}
                             </span>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                        {isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Time Left:
+                                </span>
+                                {Number(days) < 1 ? (
+                                    <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {isActive && (
+                        <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded tw-text-sm">
                             <Image
-                                src={Hourglass}
-                                width={14}
-                                height={14}
-                                alt="wallet icon"
-                                className="tw-w-[14px] tw-h-[14px]"
+                                src={MoneyBagGreen}
+                                width={20}
+                                height={20}
+                                alt="money bag"
+                                className="tw-w-[20px] tw-h-[20px]"
                             />
-                            <span className="tw-opacity-80">Time Left:</span>
-                            <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
+                                POTENTIAL PRIZE
+                            </div>
+                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
+                                $
+                                {new Intl.NumberFormat().format(
+                                    potential_prize
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded">
-                        <Image
-                            src={MoneyBagGreen}
-                            width={20}
-                            height={20}
-                            alt="money bag"
-                            className="tw-w-[20px] tw-h-[20px]"
-                        />
-                        <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
-                            POTENTIAL PRIZE
-                        </div>
-                        <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
-                            ${new Intl.NumberFormat().format(potential_prize)}
-                        </div>
-                    </div>
+                    )}
+                    {status === 3 && (
+                        <>
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full tw-text-sm">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Wager Amount:
+                                </span>
+                                <span className="tw-text-[#f92f60] tw-font-bold">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        wagerAmount
+                                    )}
+                                </span>
+                            </div>
+                            <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#4b2330] tw-rounded tw-text-sm">
+                                <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                                    ❌ UNSUCCESSFUL AUCTION
+                                </div>
+                                {refunded ? (
+                                    <button
+                                        disabled
+                                        className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                                    >
+                                        REFUNDED
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() =>
+                                            handleRefund(objectID, wagerID)
+                                        }
+                                        className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                                    >
+                                        {loading && (
+                                            <div className="tw-px-[14px]">
+                                                <BeatLoader size={8} />
+                                            </div>
+                                        )}
+                                        <span
+                                            className={`${
+                                                loading && "tw-hidden"
+                                            }`}
+                                        >
+                                            REFUND
+                                            {/* CLAIM $
+                                        {new Intl.NumberFormat().format(
+                                            wagerAmount
+                                        )}{" "} */}
+                                        </span>
+                                    </button>
+                                )}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
             {/* {type === "Tournament" && (
@@ -1158,13 +1304,14 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({ title, img, my_wager
 
 const MyAccountDropdownMenu = () => {
     const [walletBalance, setWalletBalance] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
     const { data: session } = useSession();
-    //   const account_load = 100;
     const router = useRouter();
 
     useEffect(() => {
         const fetchWalletBalance = async () => {
             if (session) {
+                setIsLoading(true);
                 try {
                     const res = await fetch("/api/wallet", {
                         method: "GET",
@@ -1184,6 +1331,8 @@ const MyAccountDropdownMenu = () => {
                     }
                 } catch (error) {
                     console.error("Error fetching wallet balance:", error);
+                } finally {
+                    setIsLoading(false);
                 }
             }
         };
@@ -1202,9 +1351,13 @@ const MyAccountDropdownMenu = () => {
     };
 
     return (
-        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black ">
+        <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-font-bold tw-text-lg">MY ACCOUNT</div>
-            {walletBalance !== null && (
+            {isLoading ? (
+                <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
+                    <BeatLoader color="#696969" size={10} />
+                </div>
+            ) : typeof walletBalance === "number" ? (
                 <div className="tw-px-6 tw-w-full">
                     <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
                         <Image
@@ -1216,12 +1369,15 @@ const MyAccountDropdownMenu = () => {
                         />
                         <div className="tw-flex tw-flex-col tw-items-start tw-grow">
                             <span className="tw-font-bold tw-text-xl tw-py-1">
-                                {" "}
                                 ${walletBalance.toFixed(2)}
                             </span>
                             <span className="tw-text-[#49C742]">Withdraw</span>
                         </div>
                     </div>
+                </div>
+            ) : (
+                <div className="tw-px-6 tw-w-full">
+                    Error fetching wallet balance
                 </div>
             )}
             <div className="tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full">

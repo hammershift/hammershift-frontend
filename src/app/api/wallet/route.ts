@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
       transactionType: 'wager',
       amount: wagerAmount,
       type: '-',
+      transactionDate: new Date(),
       // might add wagerID?
     });
 

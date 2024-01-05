@@ -380,6 +380,29 @@ export const getCarsWithURLString = async ({ urlString, limit }: { urlString: st
   }
 };
 
+export const refundWager = async (auctionObjectId: string, wagerID: string) => {
+  try {
+    await fetch("/api/refund", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ auctionID: auctionObjectId })
+    })
+
+    await fetch(`/api/wager?id=${wagerID}`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refunded: true }),
+    })
+
+    console.log("refunded successfully");
+
+  } catch (error) {
+    console.error("refunding error");
+  }
+};
+
 export const getUserInfo = async (id: string) => {
   try {
     const res = await fetch(`/api/userInfo?id=${id}`);
