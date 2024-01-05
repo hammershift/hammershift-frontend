@@ -77,7 +77,7 @@ const LiveGamesCard: React.FC<any> = ({
         />
       </div>
       <div className="tw-ml-4 sm:tw-ml-0">
-        <div className="info tw-my-3 tw-flex tw-flex-col tw-items-start sm:tw-items-center">
+        <div className="info tw-my-3 tw-flex tw-flex-col tw-items-start tw-items-center tw-justify-center">
           <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium tw-line-clamp-2 tw-w-40 tw-text-center">{`${year} ${make} ${model} `}</div>
           <div className="tw-flex tw-items-center">
             <Image
@@ -90,15 +90,14 @@ const LiveGamesCard: React.FC<any> = ({
             <div>{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
           </div>
           <div className="avatars-container tw-mt-2 sm:tw-mt-4 tw-flex sm:tw-justify-center tw-w-full">
-            <div className="tw-flex sm:tw-translate-x-[20%]">
+            <div className="tw-flex tw-translate-x-[20%]">
               {playersData.slice(0, 5).map((item) => {
                 return (
                   <div
                     key={item.id}
                     style={{
-                      transform: `translate(${
-                        -10 + -10 * playersData.slice(0, 5).indexOf(item)
-                      }px ,0)`,
+                      transform: `translate(${-10 + -10 * playersData.slice(0, 5).indexOf(item)
+                        }px ,0)`,
                     }}
                   >
                     <Image

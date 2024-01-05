@@ -7,6 +7,7 @@ import { sortByNewGames } from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
 
 import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
+import Link from "next/link";
 
 const NewGames = () => {
   const [newlyListed, setNewlyListed] = useState([]);
@@ -85,7 +86,9 @@ const NewGames = () => {
               New Games
             </div>
           </div>
-          <div className="tw-text-[#49C742]">See All</div>
+          <Link href="/auctions?sort=Newly+Listed" className="tw-cursor-pointer">
+            <div className="tw-text-[#49C742]">See All</div>
+          </Link>
         </div>
       </header>
       {isLoading ? (

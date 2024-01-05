@@ -122,7 +122,7 @@ const LiveGames = () => {
             } = auctions;
             return (
               <TimerProvider key={index} deadline={deadline}>
-                <div className="tw-w-[200px] sm:tw-w-[416px]">
+                <div className="md:tw-w-[200px] sm:tw-w-[416px]">
                   <DynamicLiveGamesCard
                     object_id={_id}
                     image={image}

@@ -417,9 +417,9 @@ export const getUserInfo = async (id: string) => {
 };
 
 // fetches comments
-export const getComments = async (id: string) => {
+export const getComments = async (id: string, sort: string) => {
   try {
-    const res = await fetch(`/api/comments?id=${id}`);
+    const res = await fetch(`/api/comments?id=${id}&sort=${sort}`);
     if (res.ok) {
       const data = await res.json();
       return data;
@@ -447,5 +447,118 @@ export const createComment = async (auctionID: string, comment: string) => {
   } catch (error) {
     console.error('Error:', error);
     throw error;
+  }
+};
+
+// deletes comment
+export const deleteComment = async (commentID: string, userID: string, commenterUserID: string) => {
+  if (userID == commenterUserID) {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentID }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  } else {
+    console.log("deleter not comment owner")
+
+  }
+};
+
+// like comment
+export const likeComment = async (commentID: string, userID: string, likes: string[]) => {
+  if (!likes.includes(userID)) {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "likes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  } else {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "removeLikes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+  }
+};
+
+// dislike comment
+export const dislikeComment = async (commentID: string, userID: string, dislikes: string[]) => {
+  console.log(commentID)
+  if (!dislikes.includes(userID)) {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "dislikes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  } else {
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          key: "removeDislikes",
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 };
