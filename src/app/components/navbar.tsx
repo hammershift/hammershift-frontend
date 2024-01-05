@@ -228,7 +228,7 @@ const Navbar = () => {
         <div>
             {isLoggedIn ? (
                 <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
-                    <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
+                    <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link onClick={() => closeMenu()} href="/">
                                 <Image
@@ -247,11 +247,11 @@ const Navbar = () => {
                                 />
                             </Link>
                         </div>
-                        <Link onClick={() => closeMenu()} href={"/discover"}>
+                        {/* <Link onClick={() => closeMenu()} href={"/discover"}>
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">
                                 DISCOVER
                             </div>
-                        </Link>
+                        </Link> */}
                         <Link onClick={() => closeMenu()} href="/auctions">
                             <div className="tw-block tw-mx-2 sm:tw-mx-4 ">
                                 AUCTIONS
@@ -401,7 +401,7 @@ const Navbar = () => {
                 </div>
             ) : (
                 <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
-                    <div className="lg:tw-w-[411px] tw-flex tw-items-center tw-justify-between">
+                    <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link href="/">
                                 <Image
@@ -413,11 +413,11 @@ const Navbar = () => {
                                 />
                             </Link>
                         </div>
-                        <Link href="/discover">
+                        {/* <Link href="/discover">
                             <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">
                                 DISCOVER
                             </div>
-                        </Link>
+                        </Link> */}
                         <Link href="/auctions">
                             <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">
                                 AUCTIONS
@@ -599,13 +599,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
             </div>
             {!isLoggedIn ? (
                 <>
-                    <Link
+                    {/* <Link
                         href="/discover"
                         onClick={closeMenu}
                         className="tw-flex tw-py-2"
                     >
                         <div>DISCOVER</div>
-                    </Link>
+                    </Link> */}
                     <Link
                         href="/auctions"
                         onClick={closeMenu}
@@ -1282,9 +1282,8 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                             </div>
                                         )}
                                         <span
-                                            className={`${
-                                                loading && "tw-hidden"
-                                            }`}
+                                            className={`${loading && "tw-hidden"
+                                                }`}
                                         >
                                             REFUND
                                             {/* CLAIM $
