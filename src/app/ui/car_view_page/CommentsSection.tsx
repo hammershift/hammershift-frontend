@@ -28,6 +28,8 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
     const session = useSession();
     const dropdownRef = useRef<any | null>(null);
     const [reload, setReload] = useState(0);
+    const [commentAlert, setCommentAlert] = useState(false);
+    const [inputAlert, setInputAlert] = useState(false);
 
     //fetch comments 
     useEffect(() => {
@@ -62,9 +64,12 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
         }
     }
 
+    // handle submit comment
     const handlePostComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (comment == "") {
+            setInputAlert(true);
+            handleAlertTimer();
             console.log("comment is empty")
             return;
         } else {
@@ -82,10 +87,18 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                 }
             } else {
                 console.log("You cannot post a comment. Please log in first")
-
+                setCommentAlert(true);
+                handleAlertTimer();
             }
         }
     }
+
+    const handleAlertTimer = () => {
+        setTimeout(() => {
+            setCommentAlert(false);
+            setInputAlert(false);
+        }, 2000);
+    };
 
     // check for comment changes
     // useEffect(() => {
@@ -104,6 +117,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
 
     return (
         <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
@@ -136,7 +150,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                 }
             </div>
             <div className="tw-flex tw-my-3">
-                <div className="tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
+                <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
                     <input
                         type="text" value={comment}
                         placeholder="Add a comment"
@@ -144,6 +158,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                         name="comment"
                         onChange={(e) => setComment(e.target.value)}
                     />
+
                     {/* <Image
                         src={CameraPlus}
                         width={20}
@@ -163,6 +178,8 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
                     onClick={handlePostComment}>Comment</button>
             </div>
+            {commentAlert && <AlertMessage message="Please login before commenting" />}
+            {inputAlert && <AlertMessage message="Input is empty" />}
             <div className=" tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
                 <div >Sort by</div>
                 <div className="tw-font-bold tw-ml-2 tw-cursor-pointer" onClick={e => setSortDropdown((prev) => !prev)}>{sort}</div>
@@ -268,6 +285,8 @@ export const CommentsCard = ({
 }) => {
     const dropdownRef = useRef<any | null>(null);
     const [dropdown, setDropdown] = useState(false);
+    const [deleteAlert, setDeleteAlert] = useState(false);
+    const [likeDislikeAlert, setLikeDislikeAlert] = useState(false);
 
     useEffect(() => {
         function handleClickOutside(event: any) {
@@ -300,7 +319,7 @@ export const CommentsCard = ({
 
     const handleLiking = async (e: any) => {
         e.preventDefault();
-        if (userID == commenterUserID) {
+        if (userID) {
             try {
                 const response = await likeComment(commentID, userID, likes);
 
@@ -311,9 +330,14 @@ export const CommentsCard = ({
             } catch (error) {
                 console.error("error in liking comment:", error)
             }
+
         } else {
+            setLikeDislikeAlert(true);
+            handleAlertTimer();
             console.log("Cannot like comment. Please log in first")
+            return;
         }
+
     }
 
 
@@ -328,9 +352,11 @@ export const CommentsCard = ({
                     setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
-
+                console.error("error in disliking comment:", error)
             }
         } else {
+            setLikeDislikeAlert(true);
+            handleAlertTimer();
             console.log("Cannot dislike comment. Please log in first")
         }
 
@@ -350,9 +376,21 @@ export const CommentsCard = ({
                 console.error("error in deleting comment:", error)
             }
         } else {
+            setDropdown(false);
+            setDeleteAlert(true);
+            handleAlertTimer();
             console.log("Cannot delete comment. Please login first")
         }
     }
+
+    const handleAlertTimer = () => {
+        setTimeout(() => {
+            setDeleteAlert(false);
+            setLikeDislikeAlert(false);
+        }, 2000);
+    };
+
+
 
 
     return (
@@ -392,6 +430,7 @@ export const CommentsCard = ({
                             className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center`}
                         >Delete</div>
                     </div>}
+                    {deleteAlert && <AlertMessage message="Please login before deleting" />}
                 </div>
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
                     {comment}
@@ -435,8 +474,8 @@ export const CommentsCard = ({
                         <div></div>
                     </div>
 
-
                 </div>
+                {likeDislikeAlert && <AlertMessage message="Please login before liking or disliking" />}
 
                 {/* <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">
                     <Image
@@ -452,3 +491,13 @@ export const CommentsCard = ({
         </div>
     );
 };
+
+
+const AlertMessage = ({ message }: { message: string }) => {
+
+    return (
+        <div className="tw-flex tw-justify-center tw-items-center tw-text-sm tw-text-black tw-bg-[#F2CA16] tw-py-2 tw-px-4 tw-rounded">
+            {message}
+        </div>
+    );
+}
