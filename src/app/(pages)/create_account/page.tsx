@@ -94,9 +94,17 @@ const CreateAccount = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // useEffect(() => {
+  //   setCountries(Country.getAllCountries());
+  //   if (session) {
+  //     setCreateAccountPage('page two');
+  //   }
+  // }, [session]);
+
   useEffect(() => {
     setCountries(Country.getAllCountries());
-    if (session) {
+    if (session && !emailExistsError) {
+      // Check if emailExistsError is false before proceeding
       setCreateAccountPage('page two');
     }
   }, [session]);
@@ -187,6 +195,48 @@ const CreateAccount = () => {
   };
 
   // ACCOUNT CREATION
+  // const handleAccountCreation = async () => {
+  //   if (!validity.isEmailValid || !validity.isPasswordValid) {
+  //     console.error('Invalid email or password');
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     const response = await fetch('/api/signup', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ email: userDetails.email, password: userDetails.password }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       console.log('Registration successful:', data.message);
+  //       const signInResponse = await signIn('credentials', {
+  //         redirect: false,
+  //         email: userDetails.email,
+  //         password: userDetails.password,
+  //       });
+
+  //       if (signInResponse?.error) {
+  //         console.error('Sign-in failed:', signInResponse.error);
+  //       } else {
+  //         setCreateAccountPage('page two');
+  //       }
+  //     } else {
+  //       console.error('Registration failed:', data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during account creation:', error);
+  //   }
+
+  //   setIsLoading(false);
+  // };
+
   const handleAccountCreation = async () => {
     if (!validity.isEmailValid || !validity.isPasswordValid) {
       console.error('Invalid email or password');
@@ -216,7 +266,7 @@ const CreateAccount = () => {
 
         if (signInResponse?.error) {
           console.error('Sign-in failed:', signInResponse.error);
-        } else {
+        } else if (!emailExistsError) {
           setCreateAccountPage('page two');
         }
       } else {
@@ -274,83 +324,52 @@ const CreateAccount = () => {
   };
 
   // GOOGLE SIGNIN
-  // const handleGoogleSignIn = async (provider: string) => {
-  //   try {
-  //     await signIn(provider, { callbackUrl: window.location.href });
-  //   } catch (error) {
-  //     console.error(`Error during ${provider} sign in:`, error);
-  //   }
-  // };
-
   useEffect(() => {
     const emailExistsParam = new URLSearchParams(window.location.search).get('emailExists');
     if (emailExistsParam === 'true') {
       setEmailExistsError(true);
+      setIsLoading(false);
     }
   }, []);
 
-  const handleGoogleSignIn = async (provider: string) => {
-    console.log(`Starting the sign-in process with provider: ${provider}`);
+  const handleGoogleSignIn = async (provider: string, isCreatingAccount = false) => {
     setIsLoading(true);
 
     try {
-      console.log(`Calling signIn for provider: ${provider}`);
-      const result = await signIn(provider, { redirect: false });
-      console.log(`Result from signIn:`, result);
+      const result = await signIn(provider, {
+        redirect: false,
+        callbackUrl: isCreatingAccount ? `/create_account?emailExists=true` : `${window.location.origin}`,
+      });
 
       if (result?.error) {
-        console.error(`Error during sign-in with ${provider}:`, result.error);
-        return; // Stop further execution and log the error
+        if (result.error === 'EmailExistsError') {
+          setEmailExistsError(true);
+        }
+        setIsLoading(false);
+        return;
       }
 
-      console.log(`Getting session after sign-in with ${provider}`);
       const session = await getSession();
-      console.log(`Session data:`, session);
+      if (!session?.user?.email) {
+        setIsLoading(false);
+        return;
+      }
 
-      if (session?.user?.email) {
-        console.log(`Checking if email ${session.user.email} exists in the database`);
-        const emailExists = await checkEmailDatabase('email', session.user.email);
-        console.log(`Email existence check result:`, emailExists);
-
-        if (emailExists) {
-          console.log(`Email ${session.user.email} exists. Redirecting to the login page.`);
-          setEmailExistsError(true);
-          router.push('/login_page');
-        } else {
-          console.log(`Email ${session.user.email} does not exist. Proceeding to set user details.`);
-          setUserDetails({ ...userDetails, email: session.user.email });
-          setCreateAccountPage('page two');
-        }
+      if (isCreatingAccount && !emailExistsError) {
+        setCreateAccountPage('page two');
+        router.push('/create_account');
       } else {
-        console.log('Session does not contain user email. This should not happen with Google sign-in.');
+        router.push('/');
       }
     } catch (error) {
       console.error(`Exception during sign-in with ${provider}:`, error);
     } finally {
       setIsLoading(false);
-      console.log(`Sign-in process with ${provider} has completed.`);
     }
   };
 
-  const checkEmailDatabase = async (field: 'email' | 'username', value: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/checkUserExistence', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ [field]: value }),
-      });
-
-      if (!response.ok) {
-        console.error('Network response was not ok', response.statusText);
-        return false;
-      }
-
-      const data: UserExistenceResponse = await response.json();
-      return field === 'email' ? data.emailExists : data.usernameExists;
-    } catch (error) {
-      console.error('Error during user existence check:', error);
-      return false;
-    }
+  const onGoogleSignInClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    handleGoogleSignIn('google', true);
   };
 
   // VERIFY LATER
@@ -473,7 +492,7 @@ const CreateAccount = () => {
                 </button>
               </div>
               <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 clickable-icon'>
-                <div onClick={() => handleGoogleSignIn('google')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+                <div onClick={onGoogleSignInClick} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
                   <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
                 </div>
                 <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>

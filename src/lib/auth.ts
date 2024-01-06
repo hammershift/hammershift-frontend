@@ -105,7 +105,7 @@ export const authOptions: NextAuthOptions = {
           token.createdAt = dbUser.createdAt;
         }
 
-        // Update isActive and balance if undefined
+        // update isActive and balance if undefined
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
           dbUser.balance = 100;
@@ -115,9 +115,12 @@ export const authOptions: NextAuthOptions = {
 
       return token;
     },
-    signIn: async ({ user, account }) => {
-      if (account?.provider === 'google') {
-        if (typeof user.email === 'string' && (await emailExistsInDatabase(user.email))) {
+    async signIn({ user, account, req }: any) {
+      const isCreatingAccount = req?.query?.isCreatingAccount === 'true';
+
+      if (account.provider === 'google' && isCreatingAccount) {
+        const emailExists = await emailExistsInDatabase(user.email);
+        if (emailExists) {
           return `/create_account?emailExists=true`;
         }
       }
