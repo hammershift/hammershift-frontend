@@ -94,18 +94,10 @@ const CreateAccount = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   setCountries(Country.getAllCountries());
-  //   if (session) {
-  //     setCreateAccountPage('page two');
-  //   }
-  // }, [session]);
-
   useEffect(() => {
     setCountries(Country.getAllCountries());
     if (session && !emailExistsError) {
-      // Check if emailExistsError is false before proceeding
-      setCreateAccountPage('page two');
+      setCreateAccountPage('page two'); // check if emailExistsError is false before proceeding
     }
   }, [session]);
 
@@ -195,48 +187,6 @@ const CreateAccount = () => {
   };
 
   // ACCOUNT CREATION
-  // const handleAccountCreation = async () => {
-  //   if (!validity.isEmailValid || !validity.isPasswordValid) {
-  //     console.error('Invalid email or password');
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-
-  //   try {
-  //     const response = await fetch('/api/signup', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ email: userDetails.email, password: userDetails.password }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (response.ok) {
-  //       console.log('Registration successful:', data.message);
-  //       const signInResponse = await signIn('credentials', {
-  //         redirect: false,
-  //         email: userDetails.email,
-  //         password: userDetails.password,
-  //       });
-
-  //       if (signInResponse?.error) {
-  //         console.error('Sign-in failed:', signInResponse.error);
-  //       } else {
-  //         setCreateAccountPage('page two');
-  //       }
-  //     } else {
-  //       console.error('Registration failed:', data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during account creation:', error);
-  //   }
-
-  //   setIsLoading(false);
-  // };
-
   const handleAccountCreation = async () => {
     if (!validity.isEmailValid || !validity.isPasswordValid) {
       console.error('Invalid email or password');
@@ -438,7 +388,7 @@ const CreateAccount = () => {
       setIsLoading(false);
     }
   };
-  console.log('Email Exists Error:', emailExistsError);
+
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {/* Loading */}
