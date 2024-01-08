@@ -91,13 +91,13 @@ const LiveGamesCard: React.FC<any> = ({
             <div className="tw-ml-4 sm:tw-ml-0">
                 <div className="info tw-my-3 tw-flex tw-flex-col tw-items-center tw-justify-center">
                     <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium tw-line-clamp-2 tw-w-40 tw-text-center">{`${year} ${make} ${model} `}</div>
-                    <div className="tw-flex tw-items-center tw-pt-1">
+                    <div className="tw-flex tw-items-center tw-pt-2">
                         <Image
                             src={HourGlassIcon}
                             width={12}
                             height={14}
                             alt="hour glass"
-                            className="tw-w-[12px] tw-h-[14px] tw-mr-1 "
+                            className="tw-w-[12px] tw-h-[14px] tw-mr-1"
                         />
                         <div className="tw-text-sm">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
                     </div>
