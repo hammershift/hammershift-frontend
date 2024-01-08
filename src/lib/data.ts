@@ -562,3 +562,25 @@ export const dislikeComment = async (commentID: string, userID: string, dislikes
     }
   }
 };
+
+
+// creates reply
+export const createReply = async (commentID: string, reply: string) => {
+  try {
+    const res = await fetch('/api/comments/replies', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ commentID, reply }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+

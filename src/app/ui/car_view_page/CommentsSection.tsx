@@ -11,7 +11,7 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment, deleteComment, dislikeComment, getComments, likeComment } from "@/lib/data";
+import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
 import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
@@ -30,6 +30,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
     const [reload, setReload] = useState(0);
     const [commentAlert, setCommentAlert] = useState(false);
     const [inputAlert, setInputAlert] = useState(false);
+
 
     //fetch comments 
     useEffect(() => {
@@ -230,7 +231,9 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                                     commentID={item._id}
                                     userID={session.data?.user.id}
                                     setReload={setReload}
-                                    commenterUserID={item.user.userId} />
+                                    commenterUserID={item.user.userId}
+                                    replies={item.replies || []}
+                                    session={session} />
                             </div>
                         ))
                         :
@@ -271,7 +274,9 @@ export const CommentsCard = ({
     commentID,
     userID,
     setReload,
-    commenterUserID
+    commenterUserID,
+    replies,
+    session
 }: {
     comment: string,
     username: string,
@@ -281,12 +286,17 @@ export const CommentsCard = ({
     commentID: string,
     userID: string,
     setReload: any,
-    commenterUserID: string
+    commenterUserID: string,
+    replies: string[],
+    session: any
 }) => {
     const dropdownRef = useRef<any | null>(null);
     const [dropdown, setDropdown] = useState(false);
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [likeDislikeAlert, setLikeDislikeAlert] = useState(false);
+    const [replyInput, setReplyInput] = useState(false);
+    const [replyDropdown, setReplyDropdown] = useState(false);
+    const [repliesData, setRepliesData] = useState([]);
 
     useEffect(() => {
         function handleClickOutside(event: any) {
@@ -393,6 +403,7 @@ export const CommentsCard = ({
 
 
 
+
     return (
         <div className="tw-flex tw-mt-8 tw-text-[14px]">
             <Image
@@ -436,7 +447,9 @@ export const CommentsCard = ({
                     {comment}
                 </div>
                 <div className="tw-flex tw-opacity-50 tw-items-center">
-                    Reply
+                    <div
+                        onClick={e => setReplyInput(prev => !prev)}
+                        className="tw-cursor-pointer">Reply</div>
                     <span className="tw-ml-4">·</span>
 
                     <div className="tw-flex tw-items-center" onClick={handleLiking}>
@@ -475,18 +488,42 @@ export const CommentsCard = ({
                     </div>
 
                 </div>
+                {replyInput && <ReplyInputDropdown session={session} setReload={setReload} auctionID={commentID} />}
                 {likeDislikeAlert && <AlertMessage message="Please login before liking or disliking" />}
 
-                {/* <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">
-                    <Image
-                        src={CornerDownRight}
-                        width={16}
-                        height={16}
-                        alt="camera plus"
-                        className="tw-w-4 tw-h-4 tw-mr-2 "
-                    />
-                    1 Replay
-                </div> */}
+                {replies.length > 0
+                    && <div>
+                        <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex tw-cursor-pointer"
+                            onClick={e => setReplyDropdown(prev => !prev)}>
+                            <Image
+                                src={CornerDownRight}
+                                width={16}
+                                height={16}
+                                alt="camera plus"
+                                className="tw-w-4 tw-h-4 tw-mr-2 "
+                            />
+                            {`${replies.length} ${replies.length > 1 ? "Replies" : "Reply"}`}
+                        </div>
+                        {replyDropdown
+                            &&
+                            <div>
+                                <div className="tw-h-[1px] tw-w-full tw-mt-3 tw-bg-white/10"></div>
+                                {replies.map((item: any, index: any) => (
+                                    <ReplyCard
+                                        key={item._id}
+                                        reply={item.reply}
+                                        username={item.user?.username}
+                                        createdAt={item.createdAt}
+                                        likes={item.likes || []}
+                                        dislikes={item.dislikes || []}
+                                        userID={session.data?.user.id}
+                                    />
+                                ))}
+                            </div>
+                        }
+                    </div>
+                }
+
             </div>
         </div>
     );
@@ -500,4 +537,176 @@ const AlertMessage = ({ message }: { message: string }) => {
             {message}
         </div>
     );
+}
+
+const ReplyInputDropdown = ({ session, setReload, auctionID }: { session: any, setReload: any, auctionID: string }) => {
+    const [reply, setReply] = useState("");
+
+    const handlePostReply = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        if (reply == "") {
+            console.log("reply input is empty")
+            return;
+        } else {
+            if (session.data?.user.id) {
+                try {
+                    const response = await createReply(auctionID, reply)
+
+                    if (response) {
+                        console.log("comment has been posted");
+                        setReply("");
+                        setReload((prev: number) => prev + 1);
+                    }
+                } catch (error) {
+                    console.error("error posting comment:", error);
+                }
+            } else {
+                console.log("You cannot post a reply. Please log in first")
+            }
+        }
+    }
+
+
+    return (
+        <div className="tw-flex tw-my-3">
+            <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
+                <input
+                    type="text" value={reply}
+                    placeholder="Add a reply"
+                    className="tw-bg-[#172431] tw-w-full"
+                    name="comment"
+                    onChange={(e) => setReply(e.target.value)}
+                />
+            </div>
+            <button
+                className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
+                onClick={handlePostReply}>Reply</button>
+        </div>
+    )
+}
+
+const ReplyCard = ({ userID,
+    username,
+    reply,
+    likes,
+    dislikes,
+    createdAt
+}: {
+    userID: string,
+    username: string,
+    reply: string,
+    likes: string[],
+    dislikes: string[],
+    createdAt: string
+}) => {
+    const [dropdown, setDropdown] = useState(false);
+    const [deleteAlert, setDeleteAlert] = useState(false);
+    const [likeDislikeAlert, setLikeDislikeAlert] = useState(false);
+    const dropdownRef = useRef<any | null>(null);
+
+    const timeSince = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+
+        const diffInMilliseconds = Math.abs(now.getTime() - date.getTime());
+        const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
+        const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+
+        if (diffInDays > 0) {
+            return `${diffInDays} day(s) ago`;
+        }
+
+        return `${diffInHours} hour(s) ago`;
+    };
+
+    const handleDeleteReply = async () => { }
+    const handleLiking = async () => { }
+    const handleDisliking = async () => { }
+    return (
+        <div className="tw-flex tw-mt-4 tw-text-xs tw-text-[14px]">
+            <Image
+                src={AvatarOne}
+                width={24}
+                height={24}
+                alt="camera plus"
+                className="tw-w-6 tw-h-6 tw-ml-2"
+            />
+            <div className="tw-ml-4">
+                <div className="tw-relative tw-flex tw-justify-between">
+                    <div>
+                        <span className="tw-font-bold">{username}</span>
+                        <span className="tw-text-[#F2CA16] tw-ml-1">
+                            User
+                        </span>
+                        <span className="tw-opacity-50 tw-ml-1">
+                            {timeSince(createdAt)}
+                        </span>
+                    </div>
+                    <div onClick={e => setDropdown((prev) => !prev)}>
+                        <Image
+                            src={ThreeDots}
+                            width={16}
+                            height={16}
+                            alt="dots"
+                            className="tw-w-4 tw-h-4 tw-ml-4"
+                        />
+                    </div>
+                    {dropdown && <div
+                        ref={dropdownRef}
+                        className="tw-absolute tw-grid tw-rounded tw-top-6 tw-right-0 tw-bg-[#172431] tw-z-10 hover:tw-bg-white/10">
+                        <div
+                            onClick={handleDeleteReply}
+                            className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center `}
+                        >Delete</div>
+                    </div>}
+                    {deleteAlert && <AlertMessage message="Please login before deleting" />}
+                </div>
+                <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
+                    {reply}
+                </div>
+                <div className="tw-flex tw-opacity-50 tw-items-center">
+                    <div
+                        className="tw-flex tw-items-center"
+                        onClick={handleLiking}
+                    >
+                        {likes.includes(userID)
+                            ? <div className="tw-ml-4">
+                                <Image src={BlueThumbUp} alt="thumbs up" width={16} height={16} className="tw-w-4 tw-h-4" />
+                            </div>
+                            : <div >
+                                <Image
+                                    src={ThumbsUp}
+                                    width={16}
+                                    height={16}
+                                    alt="thumbs up"
+                                    className="tw-w-4 tw-h-4"
+                                />
+                            </div>}
+                        {likes.length > 0 && <div className="tw-ml-1">{likes.length}</div>}
+                        <div></div>
+                    </div>
+                    <div className="tw-flex tw-items-center" onClick={handleDisliking}>
+                        {dislikes.includes(userID)
+                            ? <div className="tw-ml-4">
+                                <Image src={BlueThumbsDown} alt="thumbs down" width={16} height={16} className="tw-w-4 tw-h-4" />
+                            </div>
+                            : <div >
+                                <Image
+                                    src={ThumbsDown}
+                                    width={16}
+                                    height={16}
+                                    alt="thumbs down"
+                                    className="tw-w-4 tw-h-4 tw-ml-4"
+                                />
+                            </div>}
+                        {dislikes.length > 0 && <div className="tw-ml-1">{dislikes.length}</div>}
+                        <div></div>
+                    </div>
+
+                </div>
+                {likeDislikeAlert && <AlertMessage message="Please login before liking or disliking" />}
+
+            </div>
+        </div>
+    )
 }
