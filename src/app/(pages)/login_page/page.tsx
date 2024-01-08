@@ -154,12 +154,16 @@ const CreateAccount = () => {
             <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-cursor-auto tw-opacity-30 tw-disabled'>
               <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
-            tw-cursor-auto tw-opacity-30 tw-disabled'>
+            <div
+              className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
+            tw-cursor-auto tw-opacity-30 tw-disabled'
+            >
               <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
-            tw-cursor-auto tw-opacity-30 tw-disabled'>
+            <div
+              className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
+            tw-cursor-auto tw-opacity-30 tw-disabled'
+            >
               <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
             </div>
           </div>

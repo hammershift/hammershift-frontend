@@ -5,6 +5,7 @@ export interface User {
   image?: string;
   isActive: boolean;
   balance: number;
+  action?: 'create' | 'login';
 }
 
 export interface Credentials {

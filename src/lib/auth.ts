@@ -23,8 +23,14 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
   return { clientId, clientSecret };
 }
 
+const emailExistsInDatabase = async (email: string): Promise<boolean> => {
+  const client = await clientPromise;
+  const db = client.db();
+  const user = await db.collection<User>('users').findOne({ email: email });
+  return !!user;
+};
+
 export const authOptions: NextAuthOptions = {
-  // debug: true,
   adapter: MongoDBAdapter(clientPromise),
   session: {
     strategy: 'jwt',
@@ -59,7 +65,6 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
-      console.log('Session callback - Token:', token);
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
@@ -68,12 +73,9 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.username;
         session.user.image = token.image;
       }
-      console.log('Session callback - Final Session object:', session);
       return session;
     },
     async jwt({ token, user }) {
-      console.log('JWT callback - Initial token:', token);
-
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -103,7 +105,7 @@ export const authOptions: NextAuthOptions = {
           token.createdAt = dbUser.createdAt;
         }
 
-        // Update isActive and balance if undefined
+        // update isActive and balance if undefined
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
           dbUser.balance = 100;
@@ -111,8 +113,18 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      console.log('JWT callback - Final token:', token);
       return token;
+    },
+    async signIn({ user, account, req }: any) {
+      const isCreatingAccount = req?.query?.isCreatingAccount === 'true';
+
+      if (account.provider === 'google' && isCreatingAccount) {
+        const emailExists = await emailExistsInDatabase(user.email);
+        if (emailExists) {
+          return `/create_account?emailExists=true`;
+        }
+      }
+      return true;
     },
   },
 };

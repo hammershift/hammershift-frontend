@@ -59,10 +59,6 @@ import { ObjectId } from 'mongodb';
 //   }
 // }
 
-
-
-
-
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -108,8 +104,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
-
 // URL: api/userInfo?id=<id>
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -118,7 +112,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
   }
 
-  const ID = req.nextUrl.searchParams.get("id");
+  const ID = req.nextUrl.searchParams.get('id');
   //if ID is not provided, return error
   if (!ID) {
     return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -136,5 +130,4 @@ export async function GET(req: NextRequest) {
     console.error('Error during profile update:', error);
     return NextResponse.json({ message: 'Server error during profile update' }, { status: 500 });
   }
-
 }
