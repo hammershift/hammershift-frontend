@@ -133,6 +133,7 @@ export interface CreateWagerProps {
     fullName: string;
     username: string;
   };
+  auctionIdentifierId?: string;
 }
 
 // export const createWager = async (body: CreateWagerProps) => {

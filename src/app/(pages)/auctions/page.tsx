@@ -1,21 +1,21 @@
-'use client';
-import { useState, useEffect, Suspense, lazy, useRef } from 'react';
-import { getCars, getCarsWithFilter } from '@/lib/data';
-import FiltersAndSort from '@/app/components/filter_and_sort';
-import { TimerProvider } from '@/app/_context/TimerContext';
-import { GamesCard } from '@/app/components/card';
-import { useParams } from 'next/navigation';
-const AuctionsList = lazy(() => import('@/app/ui/auctions/AuctionsList'));
-import { useRouter } from 'next/navigation';
-import { MoonLoader } from 'react-spinners';
-import { useSearchParams } from 'next/navigation'
+"use client";
+import { useState, useEffect, Suspense, lazy, useRef } from "react";
+import { getCars, getCarsWithFilter } from "@/lib/data";
+import FiltersAndSort from "@/app/components/filter_and_sort";
+import { TimerProvider } from "@/app/_context/TimerContext";
+import { GamesCard } from "@/app/components/card";
+import { useParams } from "next/navigation";
+const AuctionsList = lazy(() => import("@/app/ui/auctions/AuctionsList"));
+import { useRouter } from "next/navigation";
+import { MoonLoader } from "react-spinners";
+import { useSearchParams } from "next/navigation";
 
 const filtersInitialState = {
-    make: ['All'],
-    category: ['All'],
-    era: ['All'],
-    location: ['All'],
-    sort: 'Newly Listed',
+    make: ["All"],
+    category: ["All"],
+    era: ["All"],
+    location: ["All"],
+    sort: "Newly Listed",
 };
 
 type Filter = {
@@ -27,7 +27,7 @@ type Filter = {
     limit?: number;
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const AuctionListingPage = () => {
     const [filters, setFilters] = useState<Filter>(filtersInitialState);
@@ -37,7 +37,7 @@ const AuctionListingPage = () => {
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
     const renderCount = useRef(0);
-    const searchParamsObj = useSearchParams()
+    const searchParamsObj = useSearchParams();
 
     // main fetch function
     const fetchData = async (filterObject: any) => {
@@ -47,17 +47,16 @@ const AuctionListingPage = () => {
             const res = await getCarsWithFilter(filterWithLimit);
             if (res) {
                 setListing(res?.cars);
-                setTotalAuctions(res?.total)
+                setTotalAuctions(res?.total);
                 setLoading(false);
-                return
+                return;
             }
             setLoading(false);
         } catch (error) {
-            console.error(error)
+            console.error(error);
             setLoading(false);
         }
-    }
-
+    };
 
     // function to set seachParams to filters
     const createFilterObject = () => {
@@ -68,44 +67,51 @@ const AuctionListingPage = () => {
                 if (key == "sort") {
                     query[key] = filter[key];
                 } else {
-                    query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+                    query[key] = Array.isArray(filter[key])
+                        ? filter[key]
+                        : [filter[key]];
                 }
             });
             setFilters(query);
-
         };
 
         const getSearchParams = () => {
             let newQuery = {};
-            if (searchParamsObj.getAll('make').length > 0) {
-                newQuery = { ...newQuery, make: searchParamsObj.getAll('make') }
+            if (searchParamsObj.getAll("make").length > 0) {
+                newQuery = {
+                    ...newQuery,
+                    make: searchParamsObj.getAll("make"),
+                };
             }
-            if (searchParamsObj.getAll('category').length > 0) {
-                newQuery = { ...newQuery, category: searchParamsObj.getAll('category') }
+            if (searchParamsObj.getAll("category").length > 0) {
+                newQuery = {
+                    ...newQuery,
+                    category: searchParamsObj.getAll("category"),
+                };
             }
-            if (searchParamsObj.getAll('location').length > 0) {
-                newQuery = { ...newQuery, location: searchParamsObj.getAll('location') }
+            if (searchParamsObj.getAll("location").length > 0) {
+                newQuery = {
+                    ...newQuery,
+                    location: searchParamsObj.getAll("location"),
+                };
             }
-            if (searchParamsObj.getAll('era').length > 0) {
-                newQuery = { ...newQuery, era: searchParamsObj.getAll('era') }
+            if (searchParamsObj.getAll("era").length > 0) {
+                newQuery = { ...newQuery, era: searchParamsObj.getAll("era") };
             }
-            if (searchParamsObj.getAll('sort').length > 0) {
-                newQuery = { ...newQuery, sort: searchParamsObj.get('sort') }
+            if (searchParamsObj.getAll("sort").length > 0) {
+                newQuery = { ...newQuery, sort: searchParamsObj.get("sort") };
             }
 
             filtersFromSearchParams(newQuery);
-
-        }
+        };
 
         getSearchParams();
-
-    }
+    };
 
     // calls createFilterObject when searchParams are changed
     useEffect(() => {
         createFilterObject();
     }, [searchParamsObj]);
-
 
     // calls fetchData when filters are changed
     useEffect(() => {
@@ -116,18 +122,20 @@ const AuctionListingPage = () => {
     }, [filters, loadMore]);
 
     useEffect(() => {
-        if (searchParamsObj.getAll('location').length == 0 && searchParamsObj.getAll('make').length == 0 && searchParamsObj.getAll('category').length == 0 && searchParamsObj.getAll('era').length == 0) {
+        if (
+            searchParamsObj.getAll("location").length == 0 &&
+            searchParamsObj.getAll("make").length == 0 &&
+            searchParamsObj.getAll("category").length == 0 &&
+            searchParamsObj.getAll("era").length == 0
+        ) {
             fetchData(filters);
         }
     }, []);
-
 
     //console log to check filters
     useEffect(() => {
         console.log("filters:", filters);
     }, [filters]);
-
-
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
@@ -135,7 +143,9 @@ const AuctionListingPage = () => {
     }, [filters]);
 
     //adds 21 to loadMore when button is clicked
-    const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const clickHandler = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
         e.preventDefault();
 
         if (listing.length > totalAuctions - 21) {
@@ -143,50 +153,53 @@ const AuctionListingPage = () => {
         } else {
             setLoadMore((prev: number) => prev + 21);
         }
-
     };
 
-
-
     return (
-        <div className=' tw-relative tw-flex tw-flex-col tw-items-center'>
+        <div className=" tw-relative tw-flex tw-flex-col tw-items-center">
             <FiltersAndSort filters={filters} setFilters={setFilters} />
-            {
-                loading && listing.length === 0
-                    ? <Loader />
-                    : <>{(listing.length != 0 && filters != filtersInitialState)
-                        ? <div className='tw-pb-16 '>
-                            <section className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden'>
-                                <div className=' tw-w-full 2xl:tw-w-[1312px] '>
-                                    {
-                                        listing
-                                        && <AuctionsList listing={listing} />
-                                    }
+            {loading && listing.length === 0 ? (
+                <Loader />
+            ) : (
+                <>
+                    {listing.length != 0 && filters != filtersInitialState ? (
+                        <div className="tw-pb-16 ">
+                            <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
+                                <div className=" tw-w-full 2xl:tw-w-[1312px] ">
+                                    {listing && (
+                                        <AuctionsList listing={listing} />
+                                    )}
                                 </div>
                             </section>
                         </div>
-                        : <div className='tw-p-16'>
+                    ) : (
+                        <div className="tw-p-16">
                             No Cars with those requirements...
                         </div>
-
-                    }
-                    </>
-
-            }
-            {
-                loading && listing.length > 0
-                && <Loader />
-            }
-            <div className='tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 '>
-                <div className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && 'tw-hidden'}`}>{`Showing ${listing.length > 0 ? listing?.length : '0'} of ${totalAuctions || '0'} auctions`}</div>
+                    )}
+                </>
+            )}
+            {loading && listing.length > 0 && <Loader />}
+            <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 ">
+                <div
+                    className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${
+                        loading && "tw-hidden"
+                    }`}
+                >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${
+                    totalAuctions || "0"
+                } auctions`}</div>
                 <button
-                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null || loading) && 'tw-hidden'}`}
-                    style={{ paddingTop: '16px', paddingBottom: '16px' }}
+                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${
+                        (listing?.length >= totalAuctions ||
+                            listing === null ||
+                            loading) &&
+                        "tw-hidden"
+                    }`}
+                    style={{ paddingTop: "16px", paddingBottom: "16px" }}
                     onClick={clickHandler}
                 >
                     Load more
                 </button>
-
             </div>
         </div>
     );
@@ -194,12 +207,10 @@ const AuctionListingPage = () => {
 
 export default AuctionListingPage;
 
-
 const Loader = () => {
     return (
-        <div className='tw-flex tw-justify-center tw-items-center tw-h-[500px]'>
-            <MoonLoader color='#f2ca16' />
+        <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+            <MoonLoader color="#f2ca16" />
         </div>
-    )
-}
-
+    );
+};
