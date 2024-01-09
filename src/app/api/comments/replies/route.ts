@@ -115,11 +115,16 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    // if (!session) {
-    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    // }
 
-    const { commentID, replyID, key } = await req.json();
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
+
+    const {
+        commentID,
+        replyID,
+        key
+    } = await req.json();
 
     if (!commentID || !key) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -128,7 +133,8 @@ export async function PUT(req: NextRequest) {
     try {
         const client = await clientPromise;
         const db = client.db();
-        const userId = new ObjectId("65824ed1db2ea85500c815d9");
+        // const userId = new ObjectId("65824ed1db2ea85500c815d9");
+        const userId = new ObjectId(session.user.id);
 
         let updateOperation;
 
@@ -179,31 +185,7 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ message: 'Invalid operation' }, { status: 400 });
         }
 
-        // Check if user has already liked/disliked reply
-        const comment = await db.collection('comments').findOne(
-            {
-                _id: new ObjectId(commentID),
-                replies: {
-                    $elemMatch: {
-                        _id: new ObjectId(replyID),
-                        likes: userId
-                    }
-                }
-            }
-        );
 
-        if (comment) {
-            if (key === "likes" || key === "dislikes") {
-                console.log(`User has already liked/disliked this reply`);
-                return NextResponse.json({ message: 'User has already liked/disliked reply' }, { status: 400 });
-            }
-        } else {
-            if (key === "removeLikes" || key === "removeDislikes") {
-                console.log(`User has not yet liked/disliked this reply`);
-                return NextResponse.json({ message: 'User has NOT yet liked/disliked this reply' }, { status: 400 });
-            }
-
-        }
 
         // Continue with the update operation
         const replyData = await db.collection('comments').updateOne(

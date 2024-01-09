@@ -11,7 +11,7 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply, deleteReply } from "@/lib/data";
+import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply, deleteReply, likeReply, dislikeReply } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
 import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
@@ -683,8 +683,29 @@ const ReplyCard = ({
         }
     }
 
-    const handleLiking = async () => { }
-    const handleDisliking = async () => { }
+    const handleLiking = async () => {
+        try {
+            const response = await likeReply(commentID, replyID, userID, likes);
+            if (response) {
+                console.log("reply has been liked");
+                setReload((prev: number) => prev + 1);
+            }
+        } catch (error) {
+            console.error("error in liking reply:", error)
+        }
+    }
+
+    const handleDisliking = async () => {
+        try {
+            const response = await dislikeReply(commentID, replyID, userID, dislikes);
+            if (response) {
+                console.log("reply has been disliked");
+                setReload((prev: number) => prev + 1);
+            }
+        } catch (error) {
+            console.error("error in disliking reply:", error)
+        }
+    }
     return (
         <div className="tw-flex tw-mt-4 tw-text-xs tw-text-[14px]">
             <Image
@@ -733,7 +754,7 @@ const ReplyCard = ({
                         onClick={handleLiking}
                     >
                         {likes.includes(userID)
-                            ? <div className="tw-ml-4">
+                            ? <div>
                                 <Image src={BlueThumbUp} alt="thumbs up" width={16} height={16} className="tw-w-4 tw-h-4" />
                             </div>
                             : <div >
