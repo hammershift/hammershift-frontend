@@ -14,8 +14,8 @@ import CornerDownRight from "../../../../public/images/corner-down-right.svg";
 import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply, deleteReply, likeReply, dislikeReply } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
-import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
-import BlueThumbsDown from "../../../../public/images/blue-thumbs-down.png";
+import BlueThumbUp from "../../../../public/images/thumbs-up-blue.svg";
+import BlueThumbsDown from "../../../../public/images/thumbs-down-blue.svg";
 import { comment } from "postcss";
 
 
@@ -459,7 +459,7 @@ export const CommentsCard = ({
                     <div className="tw-flex tw-items-center" onClick={handleLiking}>
                         {likes.includes(userID)
                             ? <div className="tw-ml-4">
-                                <Image src={BlueThumbUp} alt="thumbs up" width={16} height={16} className="tw-w-4 tw-h-4" />
+                                <Image src={BlueThumbUp} alt="thumbs up" width={20} height={20} className="tw-w-5 tw-h-5" />
                             </div>
                             : <div >
                                 <Image
@@ -476,7 +476,7 @@ export const CommentsCard = ({
                     <div className="tw-flex tw-items-center" onClick={handleDisliking}>
                         {dislikes.includes(userID)
                             ? <div className="tw-ml-4">
-                                <Image src={BlueThumbsDown} alt="thumbs down" width={16} height={16} className="tw-w-4 tw-h-4" />
+                                <Image src={BlueThumbsDown} alt="thumbs down" width={20} height={20} className="tw-w-5 tw-h-5" />
                             </div>
                             : <div >
                                 <Image
@@ -793,7 +793,7 @@ const ReplyCard = ({
                     >
                         {likes.includes(userID)
                             ? <div>
-                                <Image src={BlueThumbUp} alt="thumbs up" width={16} height={16} className="tw-w-4 tw-h-4" />
+                                <Image src={BlueThumbUp} alt="thumbs up" width={20} height={20} className="tw-w-5 tw-h-5" />
                             </div>
                             : <div >
                                 <Image
@@ -810,7 +810,7 @@ const ReplyCard = ({
                     <div className="tw-flex tw-items-center" onClick={handleDisliking}>
                         {dislikes.includes(userID)
                             ? <div className="tw-ml-4">
-                                <Image src={BlueThumbsDown} alt="thumbs down" width={16} height={16} className="tw-w-4 tw-h-4" />
+                                <Image src={BlueThumbsDown} alt="thumbs down" width={20} height={20} className="tw-w-5 tw-h-5" />
                             </div>
                             : <div >
                                 <Image
