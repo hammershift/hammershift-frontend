@@ -498,6 +498,7 @@ export const CommentsCard = ({
                         setReload={setReload}
                         commentID={commentID}
                         auctionID={auctionID}
+
                     />
                 }
 
@@ -548,33 +549,32 @@ export const CommentsCard = ({
 };
 
 
-const AlertMessage = ({ message }: { message: string }) => {
 
-    return (
-        <div className="tw-flex tw-justify-center tw-items-center tw-text-sm tw-text-black tw-bg-[#F2CA16] tw-py-2 tw-px-4 tw-rounded">
-            {message}
-        </div>
-    );
-}
 
 const ReplyInputDropdown = ({
     session,
     setReload,
     commentID,
-    auctionID
+    auctionID,
+
 }: {
     session: any,
     setReload: any,
     commentID: string,
-    auctionID: string
+    auctionID: string,
+
 }) => {
 
     const [reply, setReply] = useState("");
+    const [replyAlert, setReplyAlert] = useState(false);
+    const [replyInputAlert, setReplyInputAlert] = useState(false);
 
     const handlePostReply = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (reply == "") {
             console.log("reply input is empty")
+            setReplyInputAlert(true);
+            handleAlertTimer();
             return;
         } else {
             if (session.data?.user.id) {
@@ -595,21 +595,32 @@ const ReplyInputDropdown = ({
         }
     }
 
+    const handleAlertTimer = () => {
+        setTimeout(() => {
+            setReplyInputAlert(false);
+            setReplyAlert(false);
+        }, 2000);
+    };
+
 
     return (
-        <div className="tw-flex tw-my-3">
-            <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
-                <input
-                    type="text" value={reply}
-                    placeholder="Add a reply"
-                    className="tw-bg-[#172431] tw-w-full"
-                    name="comment"
-                    onChange={(e) => setReply(e.target.value)}
-                />
+        <div className="tw-relative">
+            <div className="tw-relative tw-flex tw-my-3">
+                <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
+                    <input
+                        type="text" value={reply}
+                        placeholder="Add a reply"
+                        className="tw-bg-[#172431] tw-w-full"
+                        name="comment"
+                        onChange={(e) => setReply(e.target.value)}
+                    />
+                </div>
+                <button
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
+                    onClick={handlePostReply}>Reply</button>
             </div>
-            <button
-                className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
-                onClick={handlePostReply}>Reply</button>
+            {replyAlert && <AlertMessage message="Please login before deleting" />}
+            {replyInputAlert && <AlertMessage message="Input is empty" />}
         </div>
     )
 }
@@ -658,6 +669,7 @@ const ReplyCard = ({
     };
 
     const handleDeleteReply = async () => {
+        setDropdown(false);
         //check if user is logged in
         if (userID) {
             //check if user is the the one who posted the reply
@@ -680,32 +692,58 @@ const ReplyCard = ({
             }
         } else {
             console.log("Cannot delete reply. Please login first")
+            setDeleteAlert(true);
+            handleAlertTimer();
         }
     }
 
     const handleLiking = async () => {
-        try {
-            const response = await likeReply(commentID, replyID, userID, likes);
-            if (response) {
-                console.log("reply has been liked");
-                setReload((prev: number) => prev + 1);
+        if (userID) {
+            try {
+                const response = await likeReply(commentID, replyID, userID, likes);
+                if (response) {
+                    console.log("reply has been liked");
+                    setReload((prev: number) => prev + 1);
+                }
+            } catch (error) {
+                console.error("error in liking reply:", error)
             }
-        } catch (error) {
-            console.error("error in liking reply:", error)
+        } else {
+            setLikeDislikeAlert(true);
+            handleAlertTimer();
+            console.log("Cannot like reply. Please login first")
+            return;
         }
+
     }
 
     const handleDisliking = async () => {
-        try {
-            const response = await dislikeReply(commentID, replyID, userID, dislikes);
-            if (response) {
-                console.log("reply has been disliked");
-                setReload((prev: number) => prev + 1);
+
+        if (userID) {
+            try {
+                const response = await dislikeReply(commentID, replyID, userID, dislikes);
+                if (response) {
+                    console.log("reply has been disliked");
+                    setReload((prev: number) => prev + 1);
+                }
+            } catch (error) {
+                console.error("error in disliking reply:", error)
             }
-        } catch (error) {
-            console.error("error in disliking reply:", error)
+        } else {
+            setLikeDislikeAlert(true);
+            handleAlertTimer();
+            console.log("Cannot dislike reply. Please login first")
         }
+
     }
+
+    const handleAlertTimer = () => {
+        setTimeout(() => {
+            setLikeDislikeAlert(false);
+            setDeleteAlert(false);
+        }, 2000);
+    };
+
     return (
         <div className="tw-flex tw-mt-4 tw-text-xs tw-text-[14px]">
             <Image
@@ -793,4 +831,14 @@ const ReplyCard = ({
             </div>
         </div>
     )
+}
+
+
+const AlertMessage = ({ message }: { message: string }) => {
+
+    return (
+        <div className="tw-flex tw-justify-center tw-items-center tw-text-sm tw-text-black tw-bg-[#F2CA16] tw-py-2 tw-px-4 tw-rounded">
+            {message}
+        </div>
+    );
 }
