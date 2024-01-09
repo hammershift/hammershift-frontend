@@ -11,11 +11,12 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply } from "@/lib/data";
+import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply, deleteReply } from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
 import BlueThumbUp from "../../../../public/images/blue-thumbs-up.png";
 import BlueThumbsDown from "../../../../public/images/blue-thumbs-down.png";
+import { comment } from "postcss";
 
 
 export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
@@ -233,6 +234,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                                     setReload={setReload}
                                     commenterUserID={item.user.userId}
                                     replies={item.replies || []}
+                                    auctionID={auctionID}
                                     session={session} />
                             </div>
                         ))
@@ -276,6 +278,7 @@ export const CommentsCard = ({
     setReload,
     commenterUserID,
     replies,
+    auctionID,
     session
 }: {
     comment: string,
@@ -288,6 +291,7 @@ export const CommentsCard = ({
     setReload: any,
     commenterUserID: string,
     replies: string[],
+    auctionID: string,
     session: any
 }) => {
     const dropdownRef = useRef<any | null>(null);
@@ -486,10 +490,20 @@ export const CommentsCard = ({
                         {dislikes.length > 0 && <div className="tw-ml-1">{dislikes.length}</div>}
                         <div></div>
                     </div>
-
                 </div>
-                {replyInput && <ReplyInputDropdown session={session} setReload={setReload} auctionID={commentID} />}
-                {likeDislikeAlert && <AlertMessage message="Please login before liking or disliking" />}
+
+                {replyInput
+                    && <ReplyInputDropdown
+                        session={session}
+                        setReload={setReload}
+                        commentID={commentID}
+                        auctionID={auctionID}
+                    />
+                }
+
+                {likeDislikeAlert
+                    && <AlertMessage message="Please login before liking or disliking" />
+                }
 
                 {replies.length > 0
                     && <div>
@@ -511,12 +525,16 @@ export const CommentsCard = ({
                                 {replies.map((item: any, index: any) => (
                                     <ReplyCard
                                         key={item._id}
+                                        replyID={item._id}
                                         reply={item.reply}
+                                        replyUserID={item.user?.userId}
                                         username={item.user?.username}
                                         createdAt={item.createdAt}
+                                        commentID={commentID}
                                         likes={item.likes || []}
                                         dislikes={item.dislikes || []}
                                         userID={session.data?.user.id}
+                                        setReload={setReload}
                                     />
                                 ))}
                             </div>
@@ -539,7 +557,18 @@ const AlertMessage = ({ message }: { message: string }) => {
     );
 }
 
-const ReplyInputDropdown = ({ session, setReload, auctionID }: { session: any, setReload: any, auctionID: string }) => {
+const ReplyInputDropdown = ({
+    session,
+    setReload,
+    commentID,
+    auctionID
+}: {
+    session: any,
+    setReload: any,
+    commentID: string,
+    auctionID: string
+}) => {
+
     const [reply, setReply] = useState("");
 
     const handlePostReply = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -550,7 +579,7 @@ const ReplyInputDropdown = ({ session, setReload, auctionID }: { session: any, s
         } else {
             if (session.data?.user.id) {
                 try {
-                    const response = await createReply(auctionID, reply)
+                    const response = await createReply(commentID, reply, auctionID)
 
                     if (response) {
                         console.log("comment has been posted");
@@ -585,19 +614,28 @@ const ReplyInputDropdown = ({ session, setReload, auctionID }: { session: any, s
     )
 }
 
-const ReplyCard = ({ userID,
+const ReplyCard = ({
+    userID,
     username,
+    replyID,
     reply,
+    replyUserID,
+    commentID,
     likes,
     dislikes,
-    createdAt
+    createdAt,
+    setReload
 }: {
     userID: string,
     username: string,
+    replyID: string,
     reply: string,
+    replyUserID: string,
+    commentID: string,
     likes: string[],
     dislikes: string[],
-    createdAt: string
+    createdAt: string,
+    setReload: any
 }) => {
     const [dropdown, setDropdown] = useState(false);
     const [deleteAlert, setDeleteAlert] = useState(false);
@@ -619,7 +657,28 @@ const ReplyCard = ({ userID,
         return `${diffInHours} hour(s) ago`;
     };
 
-    const handleDeleteReply = async () => { }
+    const handleDeleteReply = async () => {
+        //check if user is logged in
+        if (userID) {
+            try {
+                const response = await deleteReply(replyID, userID, replyUserID, commentID);
+
+                if (response) {
+                    console.log("reply has been deleted");
+                    setReload((prev: number) => prev + 1);
+                } else {
+                    console.log("reply has not been deleted. Incorrect user");
+                }
+            } catch (error) {
+                console.error("error in deleting comment:", error)
+            }
+        } else {
+            setDropdown(false);
+            setDeleteAlert(true);
+            console.log("Cannot delete comment. Please login first")
+        }
+    }
+
     const handleLiking = async () => { }
     const handleDisliking = async () => { }
     return (

@@ -8,21 +8,22 @@ import { ObjectId } from 'mongodb';
 export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    // if (!session) {
-    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    // }
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
 
-    const { reply, commentID, auctionID } = await req.json();
+    const { commentID, reply, auctionID } = await req.json();
 
     if (!reply || !commentID || !auctionID) {
+        console.error("missing required fields")
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
     try {
         const client = await clientPromise;
         const db = client.db();
-        // const userId = new ObjectId(session.user.id);
-        const userId = new ObjectId("65824ed1db2ea85500c815d9");
+        const userId = new ObjectId(session.user.id);
+        // const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
         // create comment for auction
         const replyData = {
@@ -30,9 +31,11 @@ export async function POST(req: NextRequest) {
             reply,
             user: {
                 userId,
-                username: "test",
-                // username: session.user.username,
+                // username: "test",
+                username: session.user.username
             },
+            commentID,
+            auctionID,
             likes: [],
             dislikes: [],
             createdAt: new Date(),
@@ -74,6 +77,7 @@ export async function GET(req: NextRequest) {
 
     // check if id is present, otherwise return error
     if (!commentID) {
+        console.error("missing required fields")
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -107,7 +111,7 @@ export async function GET(req: NextRequest) {
 
 
 
-//add likes and dislikes and edit comment URL: /api/comments
+//add likes and dislikes and edit comment URL: /api/comments/replies
 export async function PUT(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
@@ -169,17 +173,19 @@ export async function PUT(req: NextRequest) {
 }
 
 
-// Delete comment URL: /api/comments
+// Delete comment URL: /api/comments/replies
 export async function DELETE(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    }
+    // if (!session) {
+    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    // }
 
-    const { commentID } = await req.json();
+    const { replyID, commentID } = await req.json();
 
-    if (!commentID) {
+    // check if id is present, otherwise return error
+    if (!replyID) {
+        console.error("missing required fields")
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -188,22 +194,27 @@ export async function DELETE(req: NextRequest) {
         const db = client.db();
         // const userId = new ObjectId(session.user.id);
 
-        const commentData = await db.collection('comments').deleteOne(
-            { _id: new ObjectId(commentID) }
+        const commentData = await db.collection('comments').updateOne(
+            { _id: new ObjectId(commentID) },
+            { $pull: { replies: { _id: new ObjectId(replyID) } } }
         );
 
-        if (!commentData.deletedCount) {
+        console.log("commentData", commentData)
+
+        if (!commentData.modifiedCount) {
             console.error("delete comment failed")
             return NextResponse.json({ message: 'Cannot delete comment' }, { status: 400 });
         }
+
+        console.log("reply deleted")
         return NextResponse.json(
             {
-                message: "comment deleted"
+                message: "reply deleted"
             },
             { status: 200 }
         );
     } catch (error) {
-        console.error('Error in deleting comment', error);
-        return NextResponse.json({ message: 'Server error in deleting comment' }, { status: 500 });
+        console.error('Error in deleting reply', error);
+        return NextResponse.json({ message: 'Server error in deleting reply' }, { status: 500 });
     }
 }

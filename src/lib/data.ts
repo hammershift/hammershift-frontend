@@ -565,14 +565,14 @@ export const dislikeComment = async (commentID: string, userID: string, dislikes
 
 
 // creates reply
-export const createReply = async (commentID: string, reply: string) => {
+export const createReply = async (commentID: string, reply: string, auctionID: string) => {
   try {
     const res = await fetch('/api/comments/replies', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ commentID, reply }),
+      body: JSON.stringify({ commentID, reply, auctionID }),
     });
     if (res.ok) {
       const data = await res.json();
@@ -584,3 +584,33 @@ export const createReply = async (commentID: string, reply: string) => {
   }
 };
 
+// deletes reply
+export const deleteReply = async (
+  replyID: string,
+  userID: string,
+  replyUserID: string,
+  commentID: string
+) => {
+
+  if (userID == replyUserID) {
+    try {
+      const res = await fetch('/api/comments/replies', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ replyID, commentID }),
+      });
+      if (res.ok) {
+
+        return res;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  } else {
+    console.log("deleter not comment owner")
+
+  }
+};
