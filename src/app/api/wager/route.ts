@@ -22,10 +22,10 @@ export async function POST(req: NextRequest) {
     const requestBody = await req.json();
     console.log('Received Wager Data:', requestBody);
 
-    const { auctionID, priceGuessed, wagerAmount, user } = requestBody;
+    const { auctionID, priceGuessed, wagerAmount, user, auctionIdentifierId } = requestBody;
 
     // validate the fields
-    if (!auctionID || priceGuessed === undefined || wagerAmount === undefined) {
+    if (!auctionID || priceGuessed === undefined || wagerAmount === undefined || auctionIdentifierId === undefined) {
       console.log('Missing required fields:', requestBody);
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       priceGuessed,
       wagerAmount,
       user,
+      auctionIdentifierId
     });
 
     await newWager.save();

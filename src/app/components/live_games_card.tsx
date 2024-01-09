@@ -89,9 +89,9 @@ const LiveGamesCard: React.FC<any> = ({
                 />
             </div>
             <div className="tw-ml-4 sm:tw-ml-0">
-                <div className="info tw-my-3 tw-flex tw-flex-col tw-items-center tw-justify-center">
-                    <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium tw-line-clamp-2 tw-w-40 tw-text-center">{`${year} ${make} ${model} `}</div>
-                    <div className="tw-flex tw-items-center tw-pt-2">
+                <div className="info tw-my-3 tw-flex tw-flex-col tw-items-center tw-justify-center sm:tw-w-auto tw-w-[191px]">
+                    <div className="tw-mt-0 sm:tw-mt-3 tw-font-medium tw-line-clamp-2 sm:tw-w-40 sm:tw-text-center tw-w-full">{`${year} ${make} ${model} `}</div>
+                    <div className="tw-flex tw-items-center sm:tw-justify-center tw-pt-2 tw-w-full">
                         <Image
                             src={HourGlassIcon}
                             width={12}
@@ -99,7 +99,7 @@ const LiveGamesCard: React.FC<any> = ({
                             alt="hour glass"
                             className="tw-w-[12px] tw-h-[14px] tw-mr-1"
                         />
-                        <div className="tw-text-sm">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+                        <div className="tw-text-sm sm:tw-text-center">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
                     </div>
                     <div className="avatars-container tw-mt-2 sm:tw-mt-4 tw-flex sm:tw-justify-center tw-w-full">
                         {!auctionWagers.length && (
@@ -154,7 +154,7 @@ const LiveGamesCard: React.FC<any> = ({
                             </div>
                         )}
                         {auctionWagers.length === 2 && (
-                            <div className="tw-flex tw-translate-x-[24%]">
+                            <div className="tw-flex sm:tw-translate-x-[24%] tw-translate-x-[17%]">
                                 {auctionWagers
                                     .slice(0, 5)
                                     .map((wager: any, index: number) => {
@@ -188,7 +188,7 @@ const LiveGamesCard: React.FC<any> = ({
                             </div>
                         )}
                         {auctionWagers.length === 3 && (
-                            <div className="tw-flex tw-translate-x-[21%]">
+                            <div className="tw-flex sm:tw-translate-x-[21%] tw-translate-x-[10%]">
                                 {auctionWagers
                                     .slice(0, 5)
                                     .map((wager: any, index: number) => {
@@ -221,8 +221,42 @@ const LiveGamesCard: React.FC<any> = ({
                                     })}
                             </div>
                         )}
-                        {auctionWagers.length >= 4 && (
-                            <div className="tw-flex tw-translate-x-[20%]">
+                        {auctionWagers.length === 4 && (
+                            <div className="tw-flex sm:tw-translate-x-[20%] tw-translate-x-[8%]">
+                                {auctionWagers
+                                    .slice(0, 5)
+                                    .map((wager: any, index: number) => {
+                                        return (
+                                            <div
+                                                key={wager._id}
+                                                style={{
+                                                    transform: `translate(${
+                                                        -10 * (index + 1)
+                                                    }px, 0)`,
+                                                    zIndex: 1,
+                                                }}
+                                            >
+                                                <Image
+                                                    src={
+                                                        wager.user.image
+                                                            ? wager.user.image
+                                                            : AvatarThree
+                                                    }
+                                                    width={32}
+                                                    height={32}
+                                                    alt="avatar"
+                                                    className="tw-w-8 tw-h-8 tw-rounded-full"
+                                                    style={{
+                                                        border: "1px solid black",
+                                                    }}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                            </div>
+                        )}
+                        {auctionWagers.length >= 5 && (
+                            <div className="tw-flex sm:tw-translate-x-[20%] tw-translate-x-[6%]">
                                 {auctionWagers
                                     .slice(0, 5)
                                     .map((wager: any, index: number) => {

@@ -187,11 +187,13 @@ option {
   );
 }
 
-#search-box::-webkit-scrollbar {
+#search-box::-webkit-scrollbar,
+#make-dropdown::-webkit-scrollbar {
   width: 8px;
 }
 
-#search-box::-webkit-scrollbar-thumb {
+#search-box::-webkit-scrollbar-thumb,
+#make-dropdown::-webkit-scrollbar-thumb {
   background: #314150;
   border-radius: 8px;
 }
