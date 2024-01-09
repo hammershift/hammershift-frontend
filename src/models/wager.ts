@@ -6,6 +6,10 @@ const wagerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Auction',
     },
+    auctionIdentifierId: {
+      type: String,
+      required: true,
+    },
     priceGuessed: {
       type: Number,
       required: true,
