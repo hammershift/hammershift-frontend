@@ -111,15 +111,15 @@ export async function GET(req: NextRequest) {
 
 
 
-//add likes and dislikes and edit comment URL: /api/comments/replies
+//add likes and dislikes and edit reply. URL: /api/comments/replies
 export async function PUT(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    }
+    // if (!session) {
+    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    // }
 
-    const { commentID, key } = await req.json();
+    const { commentID, replyID, key } = await req.json();
 
     if (!commentID || !key) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -128,46 +128,104 @@ export async function PUT(req: NextRequest) {
     try {
         const client = await clientPromise;
         const db = client.db();
-        const userId = new ObjectId(session.user.id);
-        // const userId = new ObjectId("65824ed1db2ea85500c815d9");
+        const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
         let updateOperation;
 
         switch (key) {
             case "likes":
-                updateOperation = { $addToSet: { likes: userId } };
+                updateOperation = { $addToSet: { "replies.$[elem].likes": userId } };
                 break;
             case "dislikes":
-                updateOperation = { $addToSet: { dislikes: userId } };
+                updateOperation = { $addToSet: { "replies.$[elem].dislikes": userId } };
                 break;
             case "removeLikes":
-                updateOperation = { $pull: { likes: userId } };
+                updateOperation = { $pull: { "replies.$[elem].likes": userId } };
                 break;
             case "removeDislikes":
-                updateOperation = { $pull: { dislikes: userId } };
+                updateOperation = { $pull: { "replies.$[elem].dislikes": userId } };
                 break;
             default:
                 throw new Error(`Invalid key: ${key}`);
         }
 
-        const commentData = await db.collection('comments').updateOne(
-            { _id: new ObjectId(commentID) },
-            updateOperation
+        // Define the operation based on the key
+        const operations: any = {
+            likes: {
+                update: { $addToSet: { "replies.$[elem].likes": userId } },
+                error: "cannot like reply",
+                success: "reply liked"
+            },
+            dislikes: {
+                update: { $addToSet: { "replies.$[elem].dislikes": userId } },
+                error: "cannot dislike reply",
+                success: "reply disliked"
+            },
+            removeLikes: {
+                update: { $pull: { "replies.$[elem].likes": userId } },
+                error: "cannot remove like reply",
+                success: "reply like removed"
+            },
+            removeDislikes: {
+                update: { $pull: { "replies.$[elem].dislikes": userId } },
+                error: "cannot remove dislike reply",
+                success: "reply dislike removed"
+            }
+        };
+
+        // Check if the key is valid
+        if (!operations[key]) {
+            console.error(`Invalid key: ${key}`);
+            return NextResponse.json({ message: 'Invalid operation' }, { status: 400 });
+        }
+
+        // Check if user has already liked/disliked reply
+        const comment = await db.collection('comments').findOne(
+            {
+                _id: new ObjectId(commentID),
+                replies: {
+                    $elemMatch: {
+                        _id: new ObjectId(replyID),
+                        likes: userId
+                    }
+                }
+            }
         );
 
+        if (comment) {
+            if (key === "likes" || key === "dislikes") {
+                console.log(`User has already liked/disliked this reply`);
+                return NextResponse.json({ message: 'User has already liked/disliked reply' }, { status: 400 });
+            }
+        } else {
+            if (key === "removeLikes" || key === "removeDislikes") {
+                console.log(`User has not yet liked/disliked this reply`);
+                return NextResponse.json({ message: 'User has NOT yet liked/disliked this reply' }, { status: 400 });
+            }
 
-        if (!commentData) {
-            console.error("update comment failed")
-            return NextResponse.json({ message: 'Cannot edit comment' }, { status: 400 });
         }
+
+        // Continue with the update operation
+        const replyData = await db.collection('comments').updateOne(
+            { _id: new ObjectId(commentID) },
+            operations[key].update,
+            { arrayFilters: [{ "elem._id": new ObjectId(replyID) }] }
+        );
+
+        if (!replyData.modifiedCount) {
+            console.error(operations[key].error);
+            return NextResponse.json({ message: 'Cannot like/dislike reply' }, { status: 400 });
+        }
+
+        console.log(operations[key].success);
         return NextResponse.json(
             {
-                message: "comment edited"
+                message: `reply was edited - ${key}`
             },
             { status: 200 }
         );
     } catch (error) {
-        console.error('Error in editing comment', error);
+        console.error('Error in liking/disliking reply', error);
         return NextResponse.json({ message: 'Server error in posting comment' }, { status: 500 });
     }
 }
@@ -177,9 +235,9 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
-    // if (!session) {
-    //     return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-    // }
+    if (!session) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+    }
 
     const { replyID, commentID } = await req.json();
 
@@ -199,7 +257,6 @@ export async function DELETE(req: NextRequest) {
             { $pull: { replies: { _id: new ObjectId(replyID) } } }
         );
 
-        console.log("commentData", commentData)
 
         if (!commentData.modifiedCount) {
             console.error("delete comment failed")

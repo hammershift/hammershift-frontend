@@ -582,12 +582,12 @@ const ReplyInputDropdown = ({
                     const response = await createReply(commentID, reply, auctionID)
 
                     if (response) {
-                        console.log("comment has been posted");
+                        console.log("reply has been posted");
                         setReply("");
                         setReload((prev: number) => prev + 1);
                     }
                 } catch (error) {
-                    console.error("error posting comment:", error);
+                    console.error("error posting reply:", error);
                 }
             } else {
                 console.log("You cannot post a reply. Please log in first")
@@ -660,22 +660,26 @@ const ReplyCard = ({
     const handleDeleteReply = async () => {
         //check if user is logged in
         if (userID) {
-            try {
-                const response = await deleteReply(replyID, userID, replyUserID, commentID);
+            //check if user is the the one who posted the reply
+            if (userID == replyUserID) {
+                try {
+                    const response = await deleteReply(replyID, userID, replyUserID, commentID);
 
-                if (response) {
-                    console.log("reply has been deleted");
-                    setReload((prev: number) => prev + 1);
-                } else {
-                    console.log("reply has not been deleted. Incorrect user");
+                    if (response) {
+                        console.log("reply has been deleted");
+                        setReload((prev: number) => prev + 1);
+                    } else {
+                        console.log("reply has not been deleted. Incorrect user");
+                    }
+                } catch (error) {
+                    console.error("error in deleting comment:", error)
                 }
-            } catch (error) {
-                console.error("error in deleting comment:", error)
+            } else {
+                console.log("Cannot delete reply. Incorrect user");
+                return;
             }
         } else {
-            setDropdown(false);
-            setDeleteAlert(true);
-            console.log("Cannot delete comment. Please login first")
+            console.log("Cannot delete reply. Please login first")
         }
     }
 

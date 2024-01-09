@@ -610,7 +610,7 @@ export const deleteReply = async (
       throw error;
     }
   } else {
-    console.log("deleter not comment owner")
+    console.error("deleter not reply owner")
 
   }
 };
