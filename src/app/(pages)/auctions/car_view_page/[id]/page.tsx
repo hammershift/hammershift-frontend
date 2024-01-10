@@ -232,7 +232,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     };
 
     return (
-        <div>
+        <div className="tw-w-full">
             {toggleWagerModal ? (
                 <TimerProvider deadline={carData.deadline}>
                     <WagerModal
