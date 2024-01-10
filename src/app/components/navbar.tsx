@@ -227,7 +227,7 @@ const Navbar = () => {
     return (
         <div>
             {isLoggedIn ? (
-                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link onClick={() => closeMenu()} href="/">
@@ -400,7 +400,7 @@ const Navbar = () => {
                     </div>
                 </div>
             ) : (
-                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link href="/">

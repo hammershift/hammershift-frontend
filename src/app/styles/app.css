@@ -49,13 +49,13 @@ option {
   background-color: #172431;
 }
 .page-container {
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .section-container {
-  width: 100vw;
+  width: 100%;
   padding-left: 16px;
   padding-right: 16px;
 }
@@ -186,6 +186,29 @@ option {
     46% 17%
   );
 }
+
+/* custon scrollbar style */
+/* ::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f2ca16;
+}
+
+::-webkit-scrollbar-track {
+  background: gray;
+} */
+
+/* remove scrollbar keep functionality */
+/* ::-webkit-scrollbar {
+  display: none;
+}
+
+:root {
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+} */
 
 #search-box::-webkit-scrollbar,
 #make-dropdown::-webkit-scrollbar {

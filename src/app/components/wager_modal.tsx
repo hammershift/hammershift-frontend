@@ -85,7 +85,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                     {/* Content */}
                     <form
                         onSubmit={(e) => handleWagerSubmit(e, sessionData)}
-                        className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-screen tw-overflow-y-auto md:tw-h-[700px] tw-pt-8 tw-flex tw-flex-col tw-gap-6 tw-rounded-sm"
+                        className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-screen tw-overflow-y-auto md:tw-min-h-[602px] md:tw-max-h-[800px] tw-pt-8 tw-flex tw-flex-col tw-gap-6 tw-rounded-sm"
                     >
                         <div className="tw-flex tw-flex-col md:tw-flex-row md:tw-gap-6 tw-gap-[220px] tw-px-6">
                             <div className="tw-flex md:tw-hidden tw-items-center tw-justify-between md:tw-justify-start tw-w-full">
