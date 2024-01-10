@@ -52,6 +52,10 @@ const FiltersAndSort = ({
         useState<DropdownMenuProps>(null);
 
     const [totalAuctions, setTotalAuctions] = useState(0);
+    const [makeDropdown, setMakeDropdown] = useState(false);
+    const [categoryDropdown, setCategoryDropdown] = useState(false);
+    const [eraDropdown, setEraDropdown] = useState(false);
+    const [locationDropdown, setLocationDropdown] = useState(false);
 
     // get the total auctions
     const fetchData = async () => {
@@ -85,25 +89,90 @@ const FiltersAndSort = ({
             );
             const makeSearchBar = document.getElementById("make-searchbar");
 
+            if (sortButton && !sortButton.contains(e.target as Node)) {
+                setDropdownMenuRegular(null);
+            }
+
+            //make drop down, search bar and checkboxes
             if (
-                sortButton &&
-                !sortButton.contains(e.target as Node) &&
                 makeFilterButton &&
                 !makeFilterButton.contains(e.target as Node) &&
+                makeSearchBar &&
+                !makeSearchBar.contains(e.target as Node)
+            ) {
+                setMakeDropdown(false);
+            }
+
+            const makeCheckboxes = document.getElementsByClassName(
+                "make-checkbox"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isMakeCheckboxClicked = Array.from(makeCheckboxes).some(
+                (checkbox) => checkbox.contains(e.target as Node)
+            );
+
+            if (isMakeCheckboxClicked) {
+                setMakeDropdown(true);
+            }
+
+            //category drop down and checkboxes
+            if (
                 categoryFilterButton &&
-                !categoryFilterButton.contains(e.target as Node) &&
+                !categoryFilterButton.contains(e.target as Node)
+            ) {
+                setCategoryDropdown(false);
+            }
+
+            const categoryCheckboxes = document.getElementsByClassName(
+                "category-checkbox"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isCategoryCheckboxClicked = Array.from(
+                categoryCheckboxes
+            ).some((checkbox) => checkbox.contains(e.target as Node));
+
+            if (isCategoryCheckboxClicked) {
+                setCategoryDropdown(true);
+            }
+
+            //era drop down and checkboxes
+            if (
                 eraFilterButton &&
-                !eraFilterButton.contains(e.target as Node) &&
+                !eraFilterButton.contains(e.target as Node)
+            ) {
+                setEraDropdown(false);
+            }
+
+            const eraCheckboxes = document.getElementsByClassName(
+                "era-checkbox"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isEraCheckboxClicked = Array.from(eraCheckboxes).some(
+                (checkbox) => checkbox.contains(e.target as Node)
+            );
+
+            if (isEraCheckboxClicked) {
+                setEraDropdown(true);
+            }
+
+            //location drop down and checkboxes
+            if (
                 locationFilterButton &&
                 !locationFilterButton.contains(e.target as Node)
             ) {
-                if (
-                    makeSearchBar &&
-                    !makeSearchBar.contains(e.target as Node)
-                ) {
-                    setDropdownMenuRegular(null);
-                }
-                setDropdownMenuRegular(null);
+                setLocationDropdown(false);
+            }
+
+            const locationCheckboxes = document.getElementsByClassName(
+                "location-checkbox"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isLocationCheckboxClicked = Array.from(
+                locationCheckboxes
+            ).some((checkbox) => checkbox.contains(e.target as Node));
+
+            if (isLocationCheckboxClicked) {
+                setLocationDropdown(true);
             }
         };
 
@@ -112,7 +181,13 @@ const FiltersAndSort = ({
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
-    }, [setDropdownMenuRegular]);
+    }, [
+        setDropdownMenuRegular,
+        setMakeDropdown,
+        setCategoryDropdown,
+        setEraDropdown,
+        setLocationDropdown,
+    ]);
 
     return (
         <div className="tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]">
@@ -131,16 +206,11 @@ const FiltersAndSort = ({
                                 type="button"
                                 className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
                                 style={
-                                    dropdownMenuRegular === "Make"
+                                    makeDropdown
                                         ? { backgroundColor: "#1A2C3D" }
                                         : {}
                                 }
-                                onClick={() =>
-                                    setDropdownMenuRegular((prev) => {
-                                        if (prev === "Make") return null;
-                                        else return "Make";
-                                    })
-                                }
+                                onClick={() => setMakeDropdown((prev) => !prev)}
                             >
                                 {filters.make[0] == "All"
                                     ? "Make"
@@ -154,9 +224,7 @@ const FiltersAndSort = ({
                                 />
                             </button>
                         </div>
-                        {dropdownMenuRegular === "Make" && (
-                            <MakeDropdown filters={filters} />
-                        )}
+                        {makeDropdown && <MakeDropdown filters={filters} />}
                     </div>
                     {/* Dropdown for Category filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
@@ -166,15 +234,12 @@ const FiltersAndSort = ({
                                 id="filter-category-button"
                                 className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
                                 style={
-                                    dropdownMenuRegular === "Category"
+                                    categoryDropdown
                                         ? { backgroundColor: "#1A2C3D" }
                                         : {}
                                 }
                                 onClick={() =>
-                                    setDropdownMenuRegular((prev) => {
-                                        if (prev === "Category") return null;
-                                        else return "Category";
-                                    })
+                                    setCategoryDropdown((prev) => !prev)
                                 }
                             >
                                 {filters.category[0] == "All"
@@ -190,7 +255,7 @@ const FiltersAndSort = ({
                                 />
                             </button>
                         </div>
-                        {dropdownMenuRegular === "Category" && (
+                        {categoryDropdown && (
                             <CategoryDropdown filters={filters} />
                         )}
                     </div>
@@ -202,16 +267,11 @@ const FiltersAndSort = ({
                                 id="filter-era-button"
                                 className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
                                 style={
-                                    dropdownMenuRegular === "Era"
+                                    eraDropdown
                                         ? { backgroundColor: "#1A2C3D" }
                                         : {}
                                 }
-                                onClick={() =>
-                                    setDropdownMenuRegular((prev) => {
-                                        if (prev === "Era") return null;
-                                        else return "Era";
-                                    })
-                                }
+                                onClick={() => setEraDropdown((prev) => !prev)}
                             >
                                 {filters.era[0] == "All"
                                     ? "Era"
@@ -225,9 +285,7 @@ const FiltersAndSort = ({
                                 />
                             </button>
                         </div>
-                        {dropdownMenuRegular === "Era" && (
-                            <EraDropdown filters={filters} />
-                        )}
+                        {eraDropdown && <EraDropdown filters={filters} />}
                     </div>
                     {/* Dropdown for Location filter*/}
                     <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
@@ -237,15 +295,12 @@ const FiltersAndSort = ({
                                 type="button"
                                 className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
                                 style={
-                                    dropdownMenuRegular === "Location"
+                                    locationDropdown
                                         ? { backgroundColor: "#1A2C3D" }
                                         : {}
                                 }
                                 onClick={() =>
-                                    setDropdownMenuRegular((prev) => {
-                                        if (prev === "Location") return null;
-                                        else return "Location";
-                                    })
+                                    setLocationDropdown((prev) => !prev)
                                 }
                             >
                                 {filters.location[0] == "All"
@@ -261,7 +316,7 @@ const FiltersAndSort = ({
                                 />
                             </button>
                         </div>
-                        {dropdownMenuRegular === "Location" && (
+                        {locationDropdown && (
                             <LocationDropdown filters={filters} />
                         )}
                     </div>
@@ -654,7 +709,7 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
                                 filters["make"].includes(value)
                                     ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
                                     : "tw-bg-white/5 tw-border-white/10"
-                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `}
+                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity make-checkbox`}
                         />
                         {filters["make"].includes(value) && (
                             <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -730,7 +785,7 @@ const CategoryContent: React.FC<FiltersContentProps> = ({
                                 filters["category"].includes(value)
                                     ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
                                     : "tw-bg-white/5 tw-border-white/10"
-                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `}
+                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity category-checkbox`}
                         />
                         {filters["category"].includes(value) && (
                             <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -804,7 +859,7 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
                                 filters["era"].includes(value)
                                     ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
                                     : "tw-bg-white/5 tw-border-white/10"
-                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `}
+                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity era-checkbox`}
                         />
                         {filters["era"].includes(value) && (
                             <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -877,7 +932,7 @@ const LocationContent: React.FC<FiltersContentProps> = ({
                                     filters["location"].includes(value)
                                         ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
                                         : "tw-bg-white/5 tw-border-white/10"
-                                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border   tw-transition-opacity `}
+                                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity location-checkbox`}
                             />
                             {filters["location"].includes(value) && (
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -964,20 +1019,15 @@ const SortContent: React.FC<FiltersContentProps> = ({ filters }) => {
         <>
             {SortList.map((value) => {
                 return (
-                    <div
+                    <button
                         className={`${
                             filters["sort"] === value ? "tw-bg-white/10" : ""
-                        } hover:tw-bg-white/5 tw-rounded tw-p-2 `}
+                        } hover:tw-bg-white/5 tw-rounded tw-p-2 tw-block tw-w-full tw-text-left`}
                         key={value}
+                        onClick={() => addSortToFilters(value, filters, route)}
                     >
-                        <button
-                            onClick={() =>
-                                addSortToFilters(value, filters, route)
-                            }
-                        >
-                            {value}
-                        </button>
-                    </div>
+                        {value}
+                    </button>
                 );
             })}
         </>
