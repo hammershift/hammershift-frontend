@@ -50,7 +50,7 @@ const NewEraWagering = () => {
                 </div>
             </div>
 
-            <div className="options tw-grid tw-cols-1 lg:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16 tw-pt-16 sm:tw-pt-[120px] tw-w-screen 2xl:tw-w-[1440px] tw-self-center">
+            <div className="options tw-grid tw-cols-1 lg:tw-grid-cols-3 tw-gap-6 tw-px-4 md:tw-px-16 tw-pt-16 sm:tw-pt-[120px] tw-w-full 2xl:tw-w-[1440px] tw-self-center">
                 <div className=" tw-bg-white tw-rounded-lg tw-text-center tw-py-[32px] tw-px-[24px]">
                     <Image
                         src={LiveGamesIcon}
