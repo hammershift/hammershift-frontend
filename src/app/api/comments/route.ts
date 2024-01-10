@@ -34,12 +34,17 @@ export async function POST(req: NextRequest) {
             },
             likes: [],
             dislikes: [],
+            replies: [],
             createdAt: new Date(),
         });
 
         if (!commentData) {
             return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
         }
+
+
+
+
         return NextResponse.json(
             {
                 message: "comment posted"

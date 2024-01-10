@@ -563,3 +563,157 @@ export const dislikeComment = async (commentID: string, userID: string, dislikes
     }
   }
 };
+
+
+// creates reply
+export const createReply = async (commentID: string, reply: string, auctionID: string) => {
+  try {
+    const res = await fetch('/api/comments/replies', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ commentID, reply, auctionID }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
+
+// deletes reply
+export const deleteReply = async (
+  replyID: string,
+  userID: string,
+  replyUserID: string,
+  commentID: string
+) => {
+
+  if (userID == replyUserID) {
+    try {
+      const res = await fetch('/api/comments/replies', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ replyID, commentID }),
+      });
+      if (res.ok) {
+
+        return res;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  } else {
+    console.error("deleter not reply owner")
+
+  }
+};
+
+
+//like reply
+export const likeReply = async (
+  commentID: string,
+  replyID: string,
+  userID: string,
+  likes: string[]
+) => {
+  if (likes.includes(userID)) {
+    try {
+      const res = await fetch('/api/comments/replies', {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          replyID,
+          key: "removeLikes",
+        })
+      })
+
+      if (res.status === 200) {
+        console.log("removed like reply")
+        const data = await res.json();
+        return data;
+      } else {
+        console.error("Error in removing liking reply")
+      }
+
+    } catch (error) {
+      console.error("Error in removing liking reply")
+    }
+  } else {
+    try {
+      const res = await fetch('/api/comments/replies', {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          commentID,
+          replyID,
+          key: "likes",
+        })
+      })
+
+
+      if (res.status === 200) {
+        console.log("liking reply successful")
+        const data = await res.json();
+        return data;
+      } else {
+        console.error("Error in liking reply")
+      }
+
+    } catch (error) {
+      console.error("Error in liking reply")
+    }
+  }
+
+}
+
+//dislike reply
+export const dislikeReply = async (
+  commentID: string,
+  replyID: string,
+  userID: string,
+  dislikes: string[]
+) => {
+  const key = dislikes.includes(userID) ? "removeDislikes" : "dislikes";
+  const successMessage = dislikes.includes(userID) ? "removed dislike reply" : "disliking reply successful";
+  const errorMessage = dislikes.includes(userID) ? "Error in removing disliking reply" : "Error in disliking reply";
+
+  try {
+    const res = await fetch('/api/comments/replies', {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        commentID,
+        replyID,
+        key,
+      })
+    });
+
+    if (res.status === 200) {
+      console.log(successMessage);
+      const data = await res.json();
+      return data;
+    } else {
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
+  } catch (error) {
+    console.error(errorMessage);
+    throw error;
+  }
+}
