@@ -381,7 +381,13 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
             alt="car"
             className="tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto"
           />
-          <div className="tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
+          <div
+            className="tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]"
+            onClick={() => {
+              setOpenModal(true);
+              console.log("clicked");
+            }}
+          >
             {images_list.length + 1}{" "}
             <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
             <span className="tw-block md:tw-hidden">+</span>
