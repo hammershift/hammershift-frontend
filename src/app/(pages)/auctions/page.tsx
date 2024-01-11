@@ -113,12 +113,14 @@ const AuctionListingPage = () => {
     // calls createFilterObject when searchParams are changed
     useEffect(() => {
         createFilterObject();
+        console.log("set")
     }, [searchParamsObj]);
 
     // calls fetchData when filters are changed
     useEffect(() => {
         if (renderCount.current > 1) {
             if (!loading) {
+                console.log("render")
                 fetchData(filters);
             }
         }
@@ -127,18 +129,19 @@ const AuctionListingPage = () => {
 
     // useEffect(() => {
     //     fetchData(filters);
-    // }, [loadMore]);
+    // }, [createFilterObject]);
 
-    // useEffect(() => {
-    //     if (
-    //         searchParamsObj.getAll("location").length == 0 &&
-    //         searchParamsObj.getAll("make").length == 0 &&
-    //         searchParamsObj.getAll("category").length == 0 &&
-    //         searchParamsObj.getAll("era").length == 0
-    //     ) {
-    //         fetchData(filters);
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (
+            searchParamsObj.getAll("location").length == 0 &&
+            searchParamsObj.getAll("make").length == 0 &&
+            searchParamsObj.getAll("category").length == 0 &&
+            searchParamsObj.getAll("era").length == 0
+        ) {
+            console.log("render1")
+            fetchData(filters);
+        }
+    }, []);
 
     //console log to check filters
     useEffect(() => {
