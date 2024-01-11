@@ -37,7 +37,6 @@ const AuctionListingPage = () => {
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
-    const renderCount = useRef(0);
     const searchParamsObj = useSearchParams();
 
     // main fetch function
@@ -118,17 +117,14 @@ const AuctionListingPage = () => {
 
     // calls fetchData when filters are changed
     useEffect(() => {
-        renderCount.current += 1;
+
         if (filters.ready) {
             const { ready, ...currentFilters } = filters
-            console.log("render", renderCount.current, filters)
             fetchData(currentFilters);
         }
     }, [filters, loadMore]);
 
-    useEffect(() => {
-        console.log(renderCount.current, filters)
-    }, [renderCount.current]);
+
 
     // fetch data for default filter
     useEffect(() => {
