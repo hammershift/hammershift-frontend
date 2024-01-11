@@ -121,16 +121,16 @@ const AuctionListingPage = () => {
         renderCount.current += 1;
     }, [filters, loadMore]);
 
-    useEffect(() => {
-        if (
-            searchParamsObj.getAll("location").length == 0 &&
-            searchParamsObj.getAll("make").length == 0 &&
-            searchParamsObj.getAll("category").length == 0 &&
-            searchParamsObj.getAll("era").length == 0
-        ) {
-            fetchData(filters);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (
+    //         searchParamsObj.getAll("location").length == 0 &&
+    //         searchParamsObj.getAll("make").length == 0 &&
+    //         searchParamsObj.getAll("category").length == 0 &&
+    //         searchParamsObj.getAll("era").length == 0
+    //     ) {
+    //         fetchData(filters);
+    //     }
+    // }, []);
 
     //console log to check filters
     useEffect(() => {
@@ -188,8 +188,8 @@ const AuctionListingPage = () => {
                     } auctions`}</div>
                 <button
                     className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions ||
-                            listing === null ||
-                            loading) &&
+                        listing === null ||
+                        loading) &&
                         "tw-hidden"
                         }`}
                     style={{ paddingTop: "16px", paddingBottom: "16px" }}
