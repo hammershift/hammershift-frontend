@@ -18,8 +18,11 @@ import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const GamesByMake = () => {
+  const router = useRouter();
+
   // sample data
   const carList = [
     { name: BMWLogo, width: 100, make: 'BMW' },
@@ -70,7 +73,10 @@ const GamesByMake = () => {
         {carList.map((car) => {
           return (
             <div key={car.name}>
-              <Link href={`/auctions?make=${car.make}&sort=Newly+Listed`}>
+              {/* <Link href={`/auctions?make=${car.make}&sort=Newly+Listed`}> */}
+              <div
+                onClick={e => router.push(`/auctions?make=${car.make}&sort=Newly+Listed`)}
+                className="tw-cursor-pointer">
                 <Image
                   src={car.name}
                   width={car.width}
@@ -79,7 +85,8 @@ const GamesByMake = () => {
                   style={{ width: car.width, height: "100px" }}
                   className="tw-block tw-mx-auto"
                 />
-              </Link>
+              </div>
+              {/* </Link> */}
             </div>
           );
         })}
