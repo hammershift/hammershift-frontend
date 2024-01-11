@@ -25,6 +25,7 @@ type Filter = {
     era?: string | string[];
     sort?: string;
     limit?: number;
+    ready?: boolean;
 };
 
 export const dynamic = "force-dynamic";
@@ -73,7 +74,7 @@ const AuctionListingPage = () => {
                         : [filter[key]];
                 }
             });
-            setFilters(query);
+            setFilters({ ...query, ready: true });
             setLoading(false);
         };
 
@@ -118,9 +119,10 @@ const AuctionListingPage = () => {
     // calls fetchData when filters are changed
     useEffect(() => {
         renderCount.current += 1;
-        if (renderCount.current > 2) {
+        if (filters.ready) {
+            const { ready, ...currentFilters } = filters
             console.log("render", renderCount.current, filters)
-            fetchData(filters);
+            fetchData(currentFilters);
         }
     }, [filters, loadMore]);
 
