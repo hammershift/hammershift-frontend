@@ -134,7 +134,6 @@ const AuctionListingPage = () => {
             searchParamsObj.getAll("category").length == 0 &&
             searchParamsObj.getAll("era").length == 0
         ) {
-            console.log("render1")
             fetchData(filters);
         }
     }, []);
