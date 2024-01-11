@@ -60,6 +60,7 @@ const AuctionListingPage = () => {
 
     // function to set seachParams to filters
     const createFilterObject = () => {
+        setLoading(true);
         const query: any = JSON.parse(JSON.stringify(filtersInitialState));
 
         const filtersFromSearchParams = (filter: any) => {
@@ -73,6 +74,7 @@ const AuctionListingPage = () => {
                 }
             });
             setFilters(query);
+            setLoading(false);
         };
 
         const getSearchParams = () => {
@@ -115,15 +117,17 @@ const AuctionListingPage = () => {
 
     // calls fetchData when filters are changed
     useEffect(() => {
-        if (renderCount.current >= 1) {
-            fetchData(filters);
+        if (renderCount.current > 1) {
+            if (!loading) {
+                fetchData(filters);
+            }
         }
         renderCount.current += 1;
-    }, [filters]);
+    }, [filters, loadMore]);
 
-    useEffect(() => {
-        fetchData(filters);
-    }, [loadMore]);
+    // useEffect(() => {
+    //     fetchData(filters);
+    // }, [loadMore]);
 
     // useEffect(() => {
     //     if (
