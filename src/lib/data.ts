@@ -114,7 +114,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
           status: data.attributes[14].value,
         })),
       };
-      console.log(auctions)
+      // console.log(auctions)
       return auctions;
     } else {
       throw new Error('Failed to fetch cars list!');
