@@ -115,8 +115,8 @@ const AuctionListingPage = () => {
 
     // calls fetchData when filters are changed
     useEffect(() => {
-        fetchData(filters);
         if (renderCount.current >= 1) {
+            fetchData(filters);
         }
         renderCount.current += 1;
     }, [filters]);
