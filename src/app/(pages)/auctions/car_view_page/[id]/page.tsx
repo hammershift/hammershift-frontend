@@ -40,7 +40,6 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const [isWagerValid, setIsWagerValid] = useState(true); // TEST IMPLEMENTATION
   const [wagerErrorMessage, setWagerErrorMessage] = useState(""); // TEST IMPLEMENTATION
 
-
   // const router = useRouter();
 
   const ID = params.id;
@@ -50,17 +49,12 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const fetchWalletBalance = async () => {
       if (session?.user?.id) {
         try {
-          const response = await fetch(
-            `/api/wallet?userId=${session.user.id}`
-          );
+          const response = await fetch(`/api/wallet?userId=${session.user.id}`);
           const data = await response.json();
           if (response.ok) {
             setWalletBalance(data.balance);
           } else {
-            console.error(
-              "Failed to fetch wallet balance:",
-              data.message
-            );
+            console.error("Failed to fetch wallet balance:", data.message);
           }
         } catch (error) {
           console.error("Error fetching wallet balance:", error);
@@ -81,13 +75,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       setWagerInputs({ ...wagerInputs, auctionID: data?._id });
 
       if (session) {
-        const userWager = await getOneUserWager(
-          data?._id,
-          session?.user.id
-        );
-        !userWager.length
-          ? setAlreadyWagered(false)
-          : setAlreadyWagered(true);
+        const userWager = await getOneUserWager(data?._id, session?.user.id);
+        !userWager.length ? setAlreadyWagered(false) : setAlreadyWagered(true);
       }
 
       setAuctionEnded(auctionDeadline < currentDate);
@@ -213,6 +202,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         ...wagerInputs,
         wagerAmount,
         user: sessionData.user,
+        auctionIdentifierId: carData.auction_id,
       });
       if (!wagerResponse.ok) {
         console.error("Failed to place wager");
@@ -220,10 +210,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       }
 
       // wallet update and wager placement were both successful
-      console.log(
-        "Wager placed successfully. Wallet updated:",
-        walletData
-      );
+      console.log("Wager placed successfully. Wallet updated:", walletData);
       setWalletBalance(walletData.newBalance);
       setToggleWagerModal(false);
     } catch (error) {
@@ -232,7 +219,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <div>
+    <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
       {toggleWagerModal ? (
         <TimerProvider deadline={carData.deadline}>
           <WagerModal
@@ -247,7 +234,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             handleWagerSubmit={handleWagerSubmit}
             players_num={playerNum}
             prize={carData.pot}
-          // walletBalance={walletBalance}
+            // walletBalance={walletBalance}
           />
         </TimerProvider>
       ) : null}
@@ -334,9 +321,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             </div>
           ) : null}
           <GuessThePriceInfoSection />
-          <CommentsSection
-            auctionID={ID}
-          />
+          <CommentsSection auctionID={ID} />
         </div>
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
           {wagersData ? (

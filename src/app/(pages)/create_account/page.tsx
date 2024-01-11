@@ -21,109 +21,175 @@ import PasswordInput from '@/app/components/password_input';
 
 import { BounceLoader } from 'react-spinners';
 
+type createAccountPageProps = 'page one' | 'page two' | 'page three';
+
+interface UserDetails {
+  email: string;
+  password: string;
+  fullName: string;
+  username: string;
+  country: string;
+  state: string;
+  aboutMe: string;
+}
+
+interface ValidityState {
+  isEmailValid: boolean;
+  isPasswordValid: boolean;
+  isFullNameValid: boolean;
+  isUsernameValid: boolean;
+  isCountryValid: boolean;
+  isStateValid: boolean;
+}
+
+interface UserExistenceResponse {
+  emailExists: boolean;
+  usernameExists: boolean;
+}
+
+interface UniqueFieldsState {
+  isEmailUnique: boolean;
+  isUsernameUnique: boolean;
+}
+
 const CreateAccount = () => {
-  type createAccountPageProps = 'page one' | 'page two' | 'page three';
   const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>('page one');
-
-  // TEST
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [fullName, setFullName] = useState('');
-  const [username, setUsername] = useState('');
-  const [country, setCountry] = useState('');
-  const [state, setState] = useState('');
-  const [aboutMe, setAboutMe] = useState('');
-
-  const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
-  const [emailValidationMessage, setEmailValidationMessage] = useState<string>('');
-
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
-  const [passwordValidationMessage, setPasswordValidationMessage] = useState<string>('');
-
-  // for country and state selection
+  const [userDetails, setUserDetails] = useState<UserDetails>({
+    email: '',
+    password: '',
+    fullName: '',
+    username: '',
+    country: '',
+    state: '',
+    aboutMe: '',
+  });
+  const [validity, setValidity] = useState<ValidityState>({
+    isEmailValid: true,
+    isPasswordValid: true,
+    isFullNameValid: true,
+    isUsernameValid: true,
+    isCountryValid: true,
+    isStateValid: true,
+  });
+  const [touchedFields, setTouchedFields] = useState({
+    email: false,
+    password: false,
+    fullName: false,
+    username: false,
+    country: false,
+    state: false,
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const [countries, setCountries] = useState<ICountry[]>([]);
   const [states, setStates] = useState<IState[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<ICountry | null>(null);
   const [selectedState, setSelectedState] = useState<IState | null>(null);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [isFullNameValid, setIsFullNameValid] = useState(true);
-  const [isUsernameValid, setIsUsernameValid] = useState(true);
-  const [isCountryValid, setIsCountryValid] = useState(true);
-  const [isStateValid, setIsStateValid] = useState(true);
+  const [emailExistsError, setEmailExistsError] = useState(false);
+  const [uniqueFields, setUniqueFields] = useState<UniqueFieldsState>({
+    isEmailUnique: true,
+    isUsernameUnique: true,
+  });
 
   // session and routing
   const { data: session } = useSession();
   const router = useRouter();
 
-  // for component mounting, set countries
   useEffect(() => {
     setCountries(Country.getAllCountries());
-  }, []);
-
-  // navigate to page two if session exists
-  useEffect(() => {
-    if (session) {
-      setCreateAccountPage('page two');
+    if (session && !emailExistsError) {
+      setCreateAccountPage('page two'); // check if emailExistsError is false before proceeding
     }
   }, [session]);
 
+  const validateEmail = (email: string): boolean => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
+  const validatePassword = (password: string): boolean => password.trim().length >= 8;
+  const validateFullName = (fullName: string): boolean => fullName.trim().length > 0;
+  const validateUsername = (username: string): boolean => username.trim().length >= 3;
+  const isCountrySelected = (country: string): boolean => country !== '';
+  const isStateSelected = (state: string): boolean => state !== '';
+
+  const handleInputChange = (field: keyof UserDetails, value: string) => {
+    setUserDetails({ ...userDetails, [field]: value });
+    setTouchedFields({ ...touchedFields, [field]: value });
+
+    switch (field) {
+      case 'email':
+        setEmailExistsError(false);
+        setValidity({ ...validity, isEmailValid: validateEmail(value) });
+        if (validateEmail(value)) {
+          checkUserExistence('email', value);
+        }
+        break;
+      case 'password':
+        setValidity({ ...validity, isPasswordValid: validatePassword(value) });
+        break;
+      case 'fullName':
+        setValidity({ ...validity, isFullNameValid: validateFullName(value) });
+        break;
+      case 'username':
+        setValidity({ ...validity, isUsernameValid: validateUsername(value) });
+        if (validateUsername(value)) {
+          checkUserExistence('username', value);
+        }
+        break;
+      case 'country':
+        setValidity({ ...validity, isCountryValid: isCountrySelected(value) });
+        break;
+      case 'state':
+        setValidity({ ...validity, isStateValid: isStateSelected(value) });
+        break;
+    }
+  };
+
+  const checkUserExistence = async (field: 'email' | 'username', value: string) => {
+    try {
+      const response = await fetch('/api/checkUserExistence', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ [field]: value }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data: UserExistenceResponse = await response.json();
+      setUniqueFields((prevState) => ({
+        ...prevState,
+        ...(field === 'email' && { isEmailUnique: !data.emailExists }),
+        ...(field === 'username' && { isUsernameUnique: !data.usernameExists }),
+      }));
+    } catch (error) {
+      console.error('Error during user existence check:', error);
+    }
+  };
+
   // COUNTRY AND STATE
   const handleCountrySelect = (countryCode: string) => {
-    const country = Country.getCountryByCode(countryCode);
-    if (country) {
-      setSelectedCountry(country);
-      setStates(State.getStatesOfCountry(country.isoCode));
-      setCountry(country.name);
+    const selected = Country.getCountryByCode(countryCode);
+    if (selected) {
+      setSelectedCountry(selected);
+      setStates(State.getStatesOfCountry(selected.isoCode));
+      handleInputChange('country', selected.name);
     }
   };
 
   const handleStateSelect = (stateCode: string) => {
     if (selectedCountry) {
-      const state = State.getStateByCodeAndCountry(stateCode, selectedCountry.isoCode);
-      if (state) {
-        setSelectedState(state);
-        setState(state.name);
+      const selected = State.getStateByCodeAndCountry(stateCode, selectedCountry.isoCode);
+      if (selected) {
+        setSelectedState(selected);
+        handleInputChange('state', selected.name);
       }
-    }
-  };
-
-  // EMAIL VALIDATION
-  const handleEmailChange = (email: string) => {
-    setEmail(email);
-    if (email.length === 0) {
-      setIsEmailValid(true);
-      setEmailValidationMessage('');
-    } else if (email.includes('@')) {
-      setIsEmailValid(true);
-      setEmailValidationMessage('✔');
-    } else {
-      setIsEmailValid(false);
-      setEmailValidationMessage('Please enter a valid email address');
-    }
-  };
-
-  // PASSWORD VALIDATION
-  const handlePasswordChange = (password: string) => {
-    setPassword(password);
-    if (password.length === 0) {
-      setIsPasswordValid(true);
-      setPasswordValidationMessage('');
-    } else if (password.length >= 8) {
-      setIsPasswordValid(true);
-      setPasswordValidationMessage('✔');
-    } else {
-      setIsPasswordValid(false);
-      setPasswordValidationMessage('Password must be at least 8 characters long');
     }
   };
 
   // ACCOUNT CREATION
   const handleAccountCreation = async () => {
-    if (!isPasswordValid) {
-      console.error('Invalid password');
+    if (!validity.isEmailValid || !validity.isPasswordValid) {
+      console.error('Invalid email or password');
       return;
     }
 
@@ -135,7 +201,7 @@ const CreateAccount = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: userDetails.email, password: userDetails.password }),
       });
 
       const data = await response.json();
@@ -144,13 +210,13 @@ const CreateAccount = () => {
         console.log('Registration successful:', data.message);
         const signInResponse = await signIn('credentials', {
           redirect: false,
-          email,
-          password,
+          email: userDetails.email,
+          password: userDetails.password,
         });
 
         if (signInResponse?.error) {
           console.error('Sign-in failed:', signInResponse.error);
-        } else {
+        } else if (!emailExistsError) {
           setCreateAccountPage('page two');
         }
       } else {
@@ -165,37 +231,24 @@ const CreateAccount = () => {
 
   // PROFILE SUBMISSION
   const handleProfileSubmission = async () => {
-    let isValid = true;
-
-    if (!fullName) {
-      setIsFullNameValid(false);
-      isValid = false;
-    }
-
-    if (!username) {
-      setIsUsernameValid(false);
-      isValid = false;
-    }
-
-    if (!selectedCountry?.name) {
-      setIsCountryValid(false);
-      isValid = false;
-    }
-
-    if (!selectedState?.name) {
-      setIsStateValid(false);
-      isValid = false;
-    }
-
-    if (!isValid) {
+    const { isFullNameValid, isUsernameValid, isCountryValid, isStateValid } = validity;
+    if (!isFullNameValid || !isUsernameValid || !isCountryValid || !isStateValid) {
+      console.error('Profile information is invalid');
       setIsLoading(false);
-      return; // Stop further processing if validation fails
+      return;
     }
-    const profileData = { fullName, username, country: selectedCountry?.name, state: selectedState?.name, aboutMe };
 
     setIsLoading(true);
 
     try {
+      const profileData = {
+        fullName: userDetails.fullName,
+        username: userDetails.username,
+        country: userDetails.country,
+        state: userDetails.state,
+        aboutMe: userDetails.aboutMe,
+      };
+
       const response = await fetch('/api/userInfo', {
         method: 'POST',
         headers: {
@@ -208,11 +261,10 @@ const CreateAccount = () => {
 
       if (response.ok) {
         console.log('Profile updated successfully:', data.message);
-        // setCreateAccountPage('page three');
         await getSession();
         handleVerifyLater();
       } else {
-        console.error(data.message);
+        console.error('Error updating profile:', data.message);
       }
     } catch (error) {
       console.error('Error during profile submission:', error);
@@ -222,76 +274,117 @@ const CreateAccount = () => {
   };
 
   // GOOGLE SIGNIN
-  const handleGoogleSignIn = async (provider: string) => {
-    try {
-      await signIn(provider, { callbackUrl: window.location.href });
-    } catch (error) {
-      console.error(`Error during ${provider} sign in:`, error);
+  useEffect(() => {
+    const emailExistsParam = new URLSearchParams(window.location.search).get('emailExists');
+    if (emailExistsParam === 'true') {
+      setEmailExistsError(true);
+      setIsLoading(false);
     }
+  }, []);
+
+  const handleGoogleSignIn = async (provider: string, isCreatingAccount = false) => {
+    setIsLoading(true);
+
+    try {
+      const result = await signIn(provider, {
+        redirect: false,
+        callbackUrl: isCreatingAccount ? `/create_account?emailExists=true` : `${window.location.origin}`,
+      });
+
+      if (result?.error) {
+        if (result.error === 'EmailExistsError') {
+          setEmailExistsError(true);
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      const session = await getSession();
+      if (!session?.user?.email) {
+        setIsLoading(false);
+        return;
+      }
+
+      if (isCreatingAccount && !emailExistsError) {
+        setCreateAccountPage('page two');
+        router.push('/create_account');
+      } else {
+        router.push('/');
+      }
+    } catch (error) {
+      console.error(`Exception during sign-in with ${provider}:`, error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onGoogleSignInClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    handleGoogleSignIn('google', true);
   };
 
   // VERIFY LATER
   const handleVerifyLater = async () => {
-    let isValid = true;
+    setTouchedFields({
+      email: true,
+      password: true,
+      fullName: true,
+      username: true,
+      country: true,
+      state: true,
+    });
 
-    if (!fullName) {
-      setIsFullNameValid(false);
-      isValid = false;
-    } else {
-      setIsFullNameValid(true);
-    }
+    const newValidity = {
+      isEmailValid: validateEmail(userDetails.email),
+      isPasswordValid: validatePassword(userDetails.password),
+      isFullNameValid: validateFullName(userDetails.fullName),
+      isUsernameValid: validateUsername(userDetails.username),
+      isCountryValid: isCountrySelected(userDetails.country),
+      isStateValid: isStateSelected(userDetails.state),
+    };
 
-    if (!username) {
-      setIsUsernameValid(false);
-      isValid = false;
-    } else {
-      setIsUsernameValid(true);
-    }
+    setValidity(newValidity);
 
-    if (!selectedCountry?.name) {
-      setIsCountryValid(false);
-      isValid = false;
-    } else {
-      setIsCountryValid(true);
-    }
-
-    if (!selectedState?.name) {
-      setIsStateValid(false);
-      isValid = false;
-    } else {
-      setIsStateValid(true);
-    }
-
-    if (!isValid) {
+    if (
+      !newValidity.isEmailValid ||
+      !newValidity.isPasswordValid ||
+      !newValidity.isFullNameValid ||
+      !newValidity.isUsernameValid ||
+      !newValidity.isCountryValid ||
+      !newValidity.isStateValid
+    ) {
+      console.error('Profile information is invalid');
       setIsLoading(false);
-      return; // Stop further processing if validation fails
+      return;
     }
 
     setIsLoading(true);
 
-    const userData = { fullName, username, country, state, aboutMe };
     try {
       const response = await fetch('/api/userInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({
+          fullName: userDetails.fullName,
+          username: userDetails.username,
+          country: userDetails.country,
+          state: userDetails.state,
+          aboutMe: userDetails.aboutMe,
+        }),
       });
 
       const data = await response.json();
       if (response.ok) {
         console.log('Profile updated successfully:', data.message);
         await getSession();
-
-        setIsLoading(false);
         router.push('/');
       } else {
         console.error('Failed to update profile:', data.message);
-        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error during profile update:', error);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -322,20 +415,34 @@ const CreateAccount = () => {
               <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
                 <div className='tw-flex tw-flex-col tw-gap-2'>
                   <label>Email</label>
-                  <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => handleEmailChange(e.target.value)} />
-                  <div className={isEmailValid ? 'tw-text-sm tw-text-green-500' : 'tw-text-sm tw-text-red-500'}>{emailValidationMessage}</div>
+                  <input
+                    id='email'
+                    type='email'
+                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    placeholder='you@email.com'
+                    value={userDetails.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onBlur={() => checkUserExistence('email', userDetails.email)}
+                  />
+                  {touchedFields.email && !uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500'>✕ Email is already in use</div>}
+                  {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}
+                  {touchedFields.email && !validity.isEmailValid && <div className='tw-text-sm tw-text-red-500'>✕ Invalid Email</div>}
+                  {emailExistsError && <div className='tw-text-sm tw-text-red-500'>✕ An account with this email already exists</div>}{' '}
                 </div>
+
                 <div className='tw-flex tw-flex-col tw-gap-2'>
-                  <label>Password</label>
-                  <PasswordInput value={password} onChange={handlePasswordChange} />
-                  <div className={isPasswordValid ? 'tw-text-sm tw-text-green-500' : 'tw-text-sm tw-text-red-500'}>{passwordValidationMessage}</div>{' '}
+                  <label htmlFor='password'>Password</label>
+                  <PasswordInput value={userDetails.password} onChange={(value) => handleInputChange('password', value)} />
+                  <div className={touchedFields.password && !validity.isPasswordValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
+                    {touchedFields.password && (validity.isPasswordValid ? '✔' : '✕ Password must be at least 8 characters')}
+                  </div>
                 </div>
                 <button className='btn-yellow' onClick={handleAccountCreation}>
                   CREATE ACCOUNT
                 </button>
               </div>
               <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 clickable-icon'>
-                <div onClick={() => handleGoogleSignIn('google')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+                <div onClick={onGoogleSignInClick} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
                   <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
                 </div>
                 <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
@@ -352,121 +459,101 @@ const CreateAccount = () => {
             </div>
           )}
           {createAccountPage === 'page two' && (
-            // Setup your profile
             <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
               <div className='tw-font-bold tw-text-4xl sm:tw-text-[44px]'>Setup your profile</div>
-              <div className='tw-flex tw-flex-col tw-gap-5'>
-                {/* Profile picture and Full name */}
-                <div className='tw-flex tw-flex-col sm:tw-flex-row tw-gap-6'>
-                  <div className='tw-bg-[#F2CA16] tw-rounded-full tw-w-[120px] tw-h-[120px] tw-flex tw-justify-center tw-items-center'>
-                    <Image src={UserImage} width={52} height={52} alt='user profile' className='tw-w-[52px] tw-h-[52px]' />
-                  </div>
-
-                  {/* Full Name */}
-                  <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
-                    <label>Full Name *</label>
-                    <input
-                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                      placeholder='full name'
-                      value={fullName}
-                      onChange={(e) => {
-                        setFullName(e.target.value);
-                        setIsFullNameValid(true);
-                      }}
-                    />
-                    {!isFullNameValid && !fullName && <div className='tw-text-sm tw-text-red-500'>✕ Full Name is required</div>}
-                    {isFullNameValid && fullName && <div className='tw-text-green-500'>✓</div>}
-                  </div>
+              <div className='tw-flex tw-flex-col sm:tw-flex-row tw-gap-6'>
+                {/* Profile picture */}
+                <div className='tw-bg-[#F2CA16] tw-rounded-full tw-w-[120px] tw-h-[120px] tw-flex tw-justify-center tw-items-center'>
+                  <Image src={UserImage} width={52} height={52} alt='user profile' className='tw-w-[52px] tw-h-[52px]' />
                 </div>
-
-                {/* Username */}
+                {/* Full Name */}
                 <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
-                  <label>Username *</label>
+                  <label>Full Name *</label>
                   <input
                     className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                    value={username}
-                    onChange={(e) => {
-                      setUsername(e.target.value);
-                      setIsUsernameValid(true);
-                    }}
+                    placeholder='full name'
+                    value={userDetails.fullName}
+                    onChange={(e) => handleInputChange('fullName', e.target.value)}
                   />
-                  {!isUsernameValid && !username && <div className='tw-text-sm tw-text-red-500'>✕ Username is required</div>}
-                  {isUsernameValid && username && <div className='tw-text-green-500'>✓</div>}
-                  <div className='tw-text-sm tw-opacity-40'>At least x characters with no special symbols</div>
-                </div>
-
-                {/* Country and State */}
-                <div className='tw-grid tw-grid-cols-2 tw-gap-5'>
-                  {/* Country */}
-                  <div className='tw-flex tw-flex-col tw-gap-2 tw-grow'>
-                    <label>Country *</label>
-                    <select
-                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                      value={selectedCountry?.isoCode || ''}
-                      onChange={(e) => {
-                        handleCountrySelect(e.target.value);
-                        setIsCountryValid(true);
-                      }}
-                    >
-                      <option value=''>Select Country</option>
-                      {countries.map((country) => (
-                        <option key={country.isoCode} value={country.isoCode}>
-                          {country.name}
-                        </option>
-                      ))}
-                    </select>
-                    {!isCountryValid && <div className='tw-text-red-500'>✕ Country is required</div>}
-                    {isCountryValid && selectedCountry && <div className='tw-text-green-500'>✓</div>}
-                  </div>
-
-                  {/* State */}
-                  <div className='tw-flex tw-flex-col tw-gap-2 tw-grow'>
-                    <label>State *</label>
-                    <select
-                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                      value={selectedState?.isoCode || ''}
-                      onChange={(e) => {
-                        handleStateSelect(e.target.value);
-                        setIsStateValid(true);
-                      }}
-                      disabled={!selectedCountry}
-                    >
-                      <option value=''>Select State</option>
-                      {selectedCountry &&
-                        states.map((state) => (
-                          <option key={state.isoCode} value={state.isoCode}>
-                            {state.name}
-                          </option>
-                        ))}
-                    </select>
-                    {!isStateValid && <div className='tw-text-red-500'>✕ State is required</div>}
-                    {isStateValid && selectedState && <div className='tw-text-green-500'>✓</div>}
+                  <div className={touchedFields.fullName && !validity.isFullNameValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
+                    {touchedFields.fullName && (validity.isFullNameValid ? '✔' : '✕ Full Name is required')}
                   </div>
                 </div>
+              </div>
+              {/* Username */}
+              <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2'>
+                <label>Username *</label>
+                <input
+                  className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                  value={userDetails.username}
+                  onChange={(e) => handleInputChange('username', e.target.value)}
+                  onBlur={() => checkUserExistence('username', userDetails.username)}
+                />
+                {touchedFields.username && !uniqueFields.isUsernameUnique && <div className='tw-text-sm tw-text-red-500'>Username is already taken</div>}
+                {touchedFields.username && validity.isUsernameValid && uniqueFields.isUsernameUnique && <div className='tw-text-sm tw-text-green-500'>✔ Username is available</div>}
+                {touchedFields.username && !validity.isUsernameValid && <div className='tw-text-sm tw-text-red-500'>✕ Must be at least 3 characters</div>}
+              </div>
 
-                {/* About Me */}
-                <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
-                  <label>About Me</label>
-                  <textarea
-                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                    placeholder='Tell the community about yourself'
-                    rows={8}
-                    value={aboutMe}
-                    onChange={(e) => setAboutMe(e.target.value)}
-                  />
-                </div>
-
+              {/* Country and State Selection */}
+              <div className='tw-grid tw-grid-cols-2 tw-gap-5'>
+                {/* Country */}
                 <div className='tw-flex tw-flex-col tw-gap-2'>
-                  <button className='btn-yellow tw-opacity-30 tw-cursor-auto' onClick={handleProfileSubmission}>
-                    Proceed to Account Verification
-                  </button>
-                  <button className='btn-transparent-yellow' onClick={handleVerifyLater}>
-                    Verify Later
-                  </button>
+                  <label>Country *</label>
+                  <select className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={selectedCountry?.isoCode || ''} onChange={(e) => handleCountrySelect(e.target.value)}>
+                    <option value=''>Select Country</option>
+                    {countries.map((country) => (
+                      <option key={country.isoCode} value={country.isoCode}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                  {touchedFields.country && !validity.isCountryValid && <div className='tw-text-sm tw-text-red-500'>✕ Country is required</div>}
+                  {touchedFields.country && validity.isCountryValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}{' '}
                 </div>
+                {/* State */}
+                <div className='tw-flex tw-flex-col tw-gap-2'>
+                  <label>State *</label>
+                  <select
+                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    value={selectedState?.isoCode || ''}
+                    onChange={(e) => handleStateSelect(e.target.value)}
+                    disabled={!selectedCountry}
+                  >
+                    <option value=''>Select State</option>
+                    {states.map((state) => (
+                      <option key={state.isoCode} value={state.isoCode}>
+                        {state.name}
+                      </option>
+                    ))}
+                  </select>
+                  {touchedFields.state && !validity.isStateValid && <div className='tw-text-sm tw-text-red-500'>✕ State is required</div>}
+                  {touchedFields.state && validity.isStateValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}{' '}
+                </div>
+              </div>
+
+              {/* About Me */}
+              <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2'>
+                <label>About Me</label>
+                <textarea
+                  className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                  placeholder='Tell the community about yourself'
+                  rows={8}
+                  value={userDetails.aboutMe}
+                  onChange={(e) => handleInputChange('aboutMe', e.target.value)}
+                />
+              </div>
+              {/* Buttons */}
+              <div className='tw-flex tw-flex-col tw-gap-2'>
+                <button className='btn-yellow' onClick={handleProfileSubmission}>
+                  Proceed to Account Verification
+                </button>
+                <button className='btn-transparent-yellow' onClick={handleVerifyLater}>
+                  Verify Later
+                </button>
               </div>
             </div>
           )}
+
           {createAccountPage === 'page three' && (
             //Account Verification
             // TODO: Integrate Onfido for user verification process

@@ -1,21 +1,32 @@
-import type { Session } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
-
-type UserId = string;
+import 'next-auth';
+import { NextApiRequest } from 'next';
 
 declare module 'next-auth' {
+  interface User {
+    action?: 'create' | 'login';
+  }
+
   interface Session {
     user: {
-      id: UserId;
+      id?: string;
       isActive?: boolean;
+      action?: 'create' | 'login';
     } & DefaultSession['user'];
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    id: UserId;
+    id?: string;
     isActive?: boolean;
-    needsProfileCompletion?: boolean;
+    action?: 'create' | 'login';
+  }
+}
+
+declare module 'next' {
+  interface NextApiRequest {
+    query: {
+      isCreatingAccount?: string;
+    };
   }
 }

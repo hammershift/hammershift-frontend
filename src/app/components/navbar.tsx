@@ -227,7 +227,7 @@ const Navbar = () => {
     return (
         <div>
             {isLoggedIn ? (
-                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link onClick={() => closeMenu()} href="/">
@@ -400,7 +400,7 @@ const Navbar = () => {
                     </div>
                 </div>
             ) : (
-                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-screen tw-justify-between tw-py-3">
+                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link href="/">
@@ -618,7 +618,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <>
                     <button
                         onClick={() => setDropWatchlistOrWagers("watchlist")}
-                        className="tw-flex tw-py-2 tw-w-full"
+                        className={`tw-flex tw-py-2 tw-w-full ${
+                            dropWatchlistOrWagers === "watchlist" &&
+                            "tw-font-bold"
+                        }`}
                     >
                         <Image
                             src={WatchlistIcon}
@@ -634,7 +637,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     ) : null}
                     <button
                         onClick={() => setDropWatchlistOrWagers("wagers")}
-                        className="tw-flex tw-py-2 tw-w-full"
+                        className={`tw-flex tw-py-2 tw-w-full ${
+                            dropWatchlistOrWagers === "wagers" && "tw-font-bold"
+                        }`}
                     >
                         <Image
                             src={WagersIcon}
@@ -801,7 +806,7 @@ const MyWatchlistDropdownMenu = () => {
                             <div className="tw-font-bold tw-text-xl tw-text-center">
                                 No active wagers
                             </div>
-                            <div className="tw-opacity-70">
+                            <div className="tw-opacity-70 tw-text-center">
                                 Quam temere in vitiis, legem sancimus haerentia
                             </div>
                         </div>
@@ -1073,7 +1078,7 @@ const MyWagersDropdownMenu = () => {
                             <div className="tw-font-bold tw-text-xl tw-text-center">
                                 No active wagers
                             </div>
-                            <div className="tw-opacity-70">
+                            <div className="tw-opacity-70 tw-text-center">
                                 Quam temere in vitiis, legem sancimus haerentia
                             </div>
                         </div>
@@ -1282,8 +1287,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                             </div>
                                         )}
                                         <span
-                                            className={`${loading && "tw-hidden"
-                                                }`}
+                                            className={`${
+                                                loading && "tw-hidden"
+                                            }`}
                                         >
                                             REFUND
                                             {/* CLAIM $
@@ -1642,7 +1648,7 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                 <div className="tw-font-bold tw-text-xl tw-text-center">
                                     No active wagers
                                 </div>
-                                <div className="tw-opacity-70">
+                                <div className="tw-opacity-70 tw-text-center">
                                     Quam temere in vitiis, legem sancimus
                                     haerentia
                                 </div>
@@ -1797,7 +1803,7 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                 <div className="tw-font-bold tw-text-xl tw-text-center">
                                     No active wagers
                                 </div>
-                                <div className="tw-opacity-70">
+                                <div className="tw-opacity-70 tw-text-center">
                                     Quam temere in vitiis, legem sancimus
                                     haerentia
                                 </div>

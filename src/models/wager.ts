@@ -6,6 +6,10 @@ const wagerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Auction',
     },
+    auctionIdentifierId: {
+      type: String,
+      required: true,
+    },
     priceGuessed: {
       type: Number,
       required: true,
@@ -26,6 +30,10 @@ const wagerSchema = new mongoose.Schema(
     refunded: {
       type: Boolean,
       default: false,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true }
