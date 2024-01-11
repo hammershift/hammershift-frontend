@@ -127,9 +127,9 @@ const AuctionListingPage = () => {
         renderCount.current += 1;
     }, [filters, loadMore]);
 
-    // useEffect(() => {
-    //     fetchData(filters);
-    // }, [createFilterObject]);
+    useEffect(() => {
+        console.log(renderCount.current)
+    }, [renderCount.current]);
 
     // fetch data for default filter
     useEffect(() => {
