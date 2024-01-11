@@ -131,6 +131,7 @@ const AuctionListingPage = () => {
     //     fetchData(filters);
     // }, [createFilterObject]);
 
+    // fetch data for default filter
     useEffect(() => {
         if (
             searchParamsObj.getAll("location").length == 0 &&
