@@ -17,20 +17,21 @@ import FordLogo from "../../../public/images/brand-logos/ford-logo.svg";
 import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
+import Link from "next/link";
 
 const GamesByMake = () => {
   // sample data
   const carList = [
-    { name: BMWLogo, width: 100 },
-    { name: AudiLogo, width: 120 },
-    { name: DodgeLogo, width: 180 },
-    { name: FordLogo, width: 160 },
-    { name: HondaLogo, width: 120 },
-    { name: JeepLogo, width: 100 },
-    { name: NissanLogo, width: 120 },
-    { name: SubaruLogo, width: 120 },
-    { name: TeslaLogo, width: 160 },
-    { name: ToyotaLogo, width: 120 },
+    { name: BMWLogo, width: 100, make: 'BMW' },
+    { name: AudiLogo, width: 120, make: 'Audi' },
+    { name: DodgeLogo, width: 180, make: 'Dodge' },
+    { name: FordLogo, width: 160, make: 'Ford' },
+    { name: HondaLogo, width: 120, make: 'Honda' },
+    { name: JeepLogo, width: 100, make: 'Jeep' },
+    { name: NissanLogo, width: 120, make: 'Nissan' },
+    { name: SubaruLogo, width: 120, make: 'Subaru' },
+    { name: TeslaLogo, width: 160, make: 'Tesla' },
+    { name: ToyotaLogo, width: 120, make: 'Toyota' },
   ];
 
   return (
@@ -69,14 +70,16 @@ const GamesByMake = () => {
         {carList.map((car) => {
           return (
             <div key={car.name}>
-              <Image
-                src={car.name}
-                width={car.width}
-                height={100}
-                alt={car.name}
-                style={{ width: car.width, height: "100px" }}
-                className="tw-block tw-mx-auto"
-              />
+              <Link href={`/auctions?make=${car.make}&sort=Newly%20Listed`}>
+                <Image
+                  src={car.name}
+                  width={car.width}
+                  height={100}
+                  alt={car.name}
+                  style={{ width: car.width, height: "100px" }}
+                  className="tw-block tw-mx-auto"
+                />
+              </Link>
             </div>
           );
         })}
