@@ -70,7 +70,7 @@ const GamesByMake = () => {
         {carList.map((car) => {
           return (
             <div key={car.name}>
-              <Link href={`/auctions?make=${car.make}&sort=Newly%20Listed`}>
+              <Link href={`/auctions?make=${car.make}&sort=Newly+Listed`}>
                 <Image
                   src={car.name}
                   width={car.width}
