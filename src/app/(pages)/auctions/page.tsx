@@ -113,22 +113,19 @@ const AuctionListingPage = () => {
     // calls createFilterObject when searchParams are changed
     useEffect(() => {
         createFilterObject();
-        console.log("set")
     }, [searchParamsObj]);
 
     // calls fetchData when filters are changed
     useEffect(() => {
-        if (renderCount.current > 1) {
-            if (!loading) {
-                console.log("render")
-                fetchData(filters);
-            }
-        }
         renderCount.current += 1;
+        if (renderCount.current > 2) {
+            console.log("render", renderCount.current, filters)
+            fetchData(filters);
+        }
     }, [filters, loadMore]);
 
     useEffect(() => {
-        console.log(renderCount.current)
+        console.log(renderCount.current, filters)
     }, [renderCount.current]);
 
     // fetch data for default filter
