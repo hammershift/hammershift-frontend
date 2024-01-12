@@ -42,6 +42,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [insufficientFunds, setInsufficientFunds] = useState(false);
     const [invalidPrice, setInvalidPrice] = useState(false);
     const [invalidWager, setInvalidWager] = useState(false);
+    const [showCarImageModal, setShowCarImageModal] = useState(false);
 
     // const router = useRouter();
 
@@ -261,6 +262,10 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         }
     };
 
+    const toggleCarImageModal = () => {
+        setShowCarImageModal((prev) => !prev);
+    };
+
     return (
         <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
             {toggleWagerModal ? (
@@ -329,6 +334,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             <PhotosLayout
                                 images_list={carData.images_list}
                                 img={carData.image}
+                                showCarImageModal={showCarImageModal}
+                                toggleModal={toggleCarImageModal}
                             />
                             <ArticleSection
                                 images_list={carData.images_list}
@@ -363,6 +370,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                                 lot_num={carData.lot_num}
                                 listing_details={carData.listing_details}
                                 images_list={carData.images_list}
+                                toggleCarImageModal={toggleCarImageModal}
                             />
                         </div>
                     ) : null}
@@ -391,6 +399,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                             lot_num={carData.lot_num}
                             listing_details={carData.listing_details}
                             images_list={carData.images_list}
+                            toggleCarImageModal={toggleCarImageModal}
                         />
                     ) : null}
                 </div>
