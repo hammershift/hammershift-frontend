@@ -213,52 +213,52 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             setInsufficientFunds(false);
         }
 
-        // try {
-        //     // update the prize pool
-        //     await addPrizePool(
-        //         {
-        //             pot:
-        //                 carData.pot + Math.floor(wagerAmount * 0.88) ||
-        //                 Math.floor(wagerAmount * 0.88),
-        //         },
-        //         urlPath.id
-        //     );
+        try {
+            // update the prize pool
+            await addPrizePool(
+                {
+                    pot:
+                        carData.pot + Math.floor(wagerAmount * 0.88) ||
+                        Math.floor(wagerAmount * 0.88),
+                },
+                urlPath.id
+            );
 
-        //     // deduct the wagerAmount from the wallet
-        //     const walletResponse = await fetch("/api/wallet", {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         body: JSON.stringify({ wagerAmount: wagerAmount }),
-        //     });
+            // deduct the wagerAmount from the wallet
+            const walletResponse = await fetch("/api/wallet", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ wagerAmount: wagerAmount }),
+            });
 
-        //     const walletData = await walletResponse.json();
-        //     if (!walletResponse.ok) {
-        //         console.error("Failed to update wallet balance:", walletData); // if the wallet update was not successful, log the error and stop
-        //         return;
-        //     }
+            const walletData = await walletResponse.json();
+            if (!walletResponse.ok) {
+                console.error("Failed to update wallet balance:", walletData); // if the wallet update was not successful, log the error and stop
+                return;
+            }
 
-        //     // the wallet has been successfully updated, place the wager
-        //     const wagerResponse = await createWager({
-        //         ...wagerInputs,
-        //         wagerAmount,
-        //         user: sessionData.user,
-        //         auctionIdentifierId: carData.auction_id,
-        //     });
-        //     if (!wagerResponse.ok) {
-        //         console.error("Failed to place wager");
-        //         return;
-        //     }
+            // the wallet has been successfully updated, place the wager
+            const wagerResponse = await createWager({
+                ...wagerInputs,
+                wagerAmount,
+                user: sessionData.user,
+                auctionIdentifierId: carData.auction_id,
+            });
+            if (!wagerResponse.ok) {
+                console.error("Failed to place wager");
+                return;
+            }
 
-        //     // wallet update and wager placement were both successful
-        //     console.log(
-        //         "Wager placed successfully. Wallet updated:",
-        //         walletData
-        //     );
-        //     setWalletBalance(walletData.newBalance);
-        //     setToggleWagerModal(false);
-        // } catch (error) {
-        //     console.error("Error in wager placement or wallet update:", error);
-        // }
+            // wallet update and wager placement were both successful
+            console.log(
+                "Wager placed successfully. Wallet updated:",
+                walletData
+            );
+            setWalletBalance(walletData.newBalance);
+            setToggleWagerModal(false);
+        } catch (error) {
+            console.error("Error in wager placement or wallet update:", error);
+        }
     };
 
     return (
