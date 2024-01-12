@@ -17,9 +17,13 @@ const winnerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
-  auctionID: {
+  objectID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Auction',
+  },
+  auctionID: {
+    type: String,
+    required: true,
   },
   wager: {
     type: mongoose.Schema.Types.ObjectId,
