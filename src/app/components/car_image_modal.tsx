@@ -26,7 +26,7 @@ const CarImageModal: React.FC<CarImageModalProps> = ({
                     className="tw-text-white tw-text-xl tw-place-self-end tw-rounded-full tw-border-2 tw-w-8 hover:tw-bg-yellow-400"
                     onClick={() => onClose()}
                 >
-                    x
+                    ✕
                 </button>
                 <ShowModal images={image} />
             </div>

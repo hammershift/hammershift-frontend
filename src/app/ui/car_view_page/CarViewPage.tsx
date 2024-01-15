@@ -738,13 +738,6 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
                         </span>
                     </button>
                 </div>
-                <Image
-                    src={CarFaxLogo}
-                    width={130}
-                    height={44}
-                    alt="bring a trailer logo"
-                    className="tw-w-[130px] tw-h-[44px] tw-my-4"
-                />
             </div>
         </div>
     );
