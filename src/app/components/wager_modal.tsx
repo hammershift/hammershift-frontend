@@ -15,6 +15,7 @@ import Players from "../../../public/images/players-icon-green.svg";
 import CancelIcon from "../../../public/images/x-icon.svg";
 import { useTimer } from "@/app/_context/TimerContext";
 import { useSession } from "next-auth/react";
+import Wallet from "../../../public/images/wallet--money-payment-finance-wallet.svg";
 
 interface SessionDataI {
     user: {
@@ -40,7 +41,10 @@ interface WagerModalProps {
     image: string;
     players_num: number;
     prize: number;
-    // walletBalance: number; // TEST IMPLEMENTATION
+    walletBalance: number; // TEST IMPLEMENTATION
+    insufficientFunds: boolean;
+    invalidPrice: boolean;
+    invalidWager: boolean;
 }
 
 const WagerModal: React.FC<WagerModalProps> = ({
@@ -55,7 +59,10 @@ const WagerModal: React.FC<WagerModalProps> = ({
     handleWagerSubmit,
     players_num,
     prize,
-    // walletBalance, // TEST IMPLEMENTATION
+    walletBalance, // TEST IMPLEMENTATION
+    insufficientFunds,
+    invalidPrice,
+    invalidWager,
 }) => {
     const router = useRouter();
     const timerValues = useTimer();
@@ -76,6 +83,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
         if (!session) {
             router.push("/create_account");
         }
+        console.log(session);
     }, [session]);
 
     return (
@@ -185,6 +193,26 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="tw-flex tw-items-center">
+                                        <Image
+                                            src={Wallet}
+                                            width={14}
+                                            height={14}
+                                            alt="wallet icon"
+                                            className="tw-w-3.5 tw-h-3.5"
+                                        />
+                                        <div className="tw-text-sm tw-ml-2">
+                                            <span className="tw-opacity-80">
+                                                Wallet Balance:
+                                            </span>
+                                            <span className="tw-font-bold tw-ml-2">
+                                                $
+                                                {new Intl.NumberFormat().format(
+                                                    walletBalance
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -198,12 +226,39 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     $
                                 </div>
                                 <input
+                                    onKeyDown={(event) => {
+                                        if (
+                                            !(
+                                                event.key === "Backspace" ||
+                                                /\d/.test(event.key)
+                                            )
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
+                                    onInput={(event) => {
+                                        const inputValue = (
+                                            event.target as HTMLInputElement
+                                        ).value;
+                                        if (
+                                            inputValue.length > 0 &&
+                                            !/\d/.test(inputValue.slice(-1))
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
                                     required
                                     name="price-guessed"
                                     type="number"
-                                    className="tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded"
+                                    className="tw-bg-white/5 focus:tw-outline tw-outline-[6px] tw-outline-[#273039] tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
                                     onChange={handleWagerInputChange}
                                 />
+                                {invalidPrice && (
+                                    <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
+                                        *Invalid input. Please enter numeric
+                                        values only.
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="tw-flex tw-flex-col tw-gap-3 tw-px-6">
@@ -213,12 +268,39 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     $
                                 </div>
                                 <input
+                                    onKeyDown={(event) => {
+                                        if (
+                                            !(
+                                                event.key === "Backspace" ||
+                                                /\d/.test(event.key)
+                                            )
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
+                                    onInput={(event) => {
+                                        const inputValue = (
+                                            event.target as HTMLInputElement
+                                        ).value;
+                                        if (
+                                            inputValue.length > 0 &&
+                                            !/\d/.test(inputValue.slice(-1))
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
                                     required
                                     name="wager-amount"
                                     type="number"
-                                    className="tw-bg-white/5 tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-2 focus:tw-border-white/10 tw-rounded"
+                                    className="tw-bg-white/5 focus:tw-outline tw-outline-[6px] tw-outline-[#273039] tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
                                     onChange={handleWagerInputChange}
                                 />
+                                {invalidWager && (
+                                    <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
+                                        *Invalid input. Please enter numeric
+                                        values only.
+                                    </div>
+                                )}
                             </div>
                             {!isWagerValid && (
                                 <div className="tw-text-red-500 tw-mt-2 tw-text-sm">
@@ -270,7 +352,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                 </div>
                             </div>
                         </div>
-                        <div className="md:tw-absolute md:tw-bottom-0 md:tw-left-0 tw-items-center tw-flex tw-justify-between tw-h-[80px] tw-w-full tw-p-6 tw-bg-white/5">
+                        <div className="md:tw-absolute tw-relative md:tw-bottom-0 tw-flex-col md:tw-flex-row md:tw-left-0 tw-items-center tw-flex tw-justify-between tw-h-auto tw-w-full tw-px-6 tw-pt-8 tw-pb-6 tw-bg-white/5">
                             <button
                                 className="tw-hidden md:tw-block"
                                 onClick={showWagerModal}
@@ -278,6 +360,15 @@ const WagerModal: React.FC<WagerModalProps> = ({
                             >
                                 CANCEL
                             </button>
+                            {insufficientFunds && (
+                                <div className="md:tw-text-base tw-text-sm tw-text-red-500 tw-font-medium tw-absolute md:tw-static tw-top-2">
+                                    <span className="tw-hidden md:tw-inline-block">
+                                        ✕
+                                    </span>{" "}
+                                    Insufficient funds. Top up your wallet to
+                                    continue.
+                                </div>
+                            )}
                             <button
                                 className="btn-yellow tw-h-[48px] tw-w-full md:tw-w-auto"
                                 type="submit"

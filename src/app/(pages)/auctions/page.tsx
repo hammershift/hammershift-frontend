@@ -25,6 +25,7 @@ type Filter = {
     era?: string | string[];
     sort?: string;
     limit?: number;
+    ready?: boolean;
 };
 
 export const dynamic = "force-dynamic";
@@ -36,7 +37,6 @@ const AuctionListingPage = () => {
     const [loading, setLoading] = useState(false);
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
-    const renderCount = useRef(0);
     const searchParamsObj = useSearchParams();
 
     // main fetch function
@@ -60,6 +60,7 @@ const AuctionListingPage = () => {
 
     // function to set seachParams to filters
     const createFilterObject = () => {
+        setLoading(true);
         const query: any = JSON.parse(JSON.stringify(filtersInitialState));
 
         const filtersFromSearchParams = (filter: any) => {
@@ -72,7 +73,8 @@ const AuctionListingPage = () => {
                         : [filter[key]];
                 }
             });
-            setFilters(query);
+            setFilters({ ...query, ready: true });
+            setLoading(false);
         };
 
         const getSearchParams = () => {
@@ -115,12 +117,16 @@ const AuctionListingPage = () => {
 
     // calls fetchData when filters are changed
     useEffect(() => {
-        if (renderCount.current > 1) {
-            fetchData(filters);
+
+        if (filters.ready) {
+            const { ready, ...currentFilters } = filters
+            fetchData(currentFilters);
         }
-        renderCount.current += 1;
     }, [filters, loadMore]);
 
+
+
+    // fetch data for default filter
     useEffect(() => {
         if (
             searchParamsObj.getAll("location").length == 0 &&
@@ -133,9 +139,9 @@ const AuctionListingPage = () => {
     }, []);
 
     //console log to check filters
-    useEffect(() => {
-        console.log("filters:", filters);
-    }, [filters]);
+    // useEffect(() => {
+    //     console.log("filters:", filters);
+    // }, [filters]);
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
@@ -182,19 +188,16 @@ const AuctionListingPage = () => {
             {loading && listing.length > 0 && <Loader />}
             <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 ">
                 <div
-                    className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${
-                        loading && "tw-hidden"
-                    }`}
-                >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${
-                    totalAuctions || "0"
-                } auctions`}</div>
+                    className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"
+                        }`}
+                >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"
+                    } auctions`}</div>
                 <button
-                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${
-                        (listing?.length >= totalAuctions ||
-                            listing === null ||
-                            loading) &&
+                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions ||
+                        listing === null ||
+                        loading) &&
                         "tw-hidden"
-                    }`}
+                        }`}
                     style={{ paddingTop: "16px", paddingBottom: "16px" }}
                     onClick={clickHandler}
                 >

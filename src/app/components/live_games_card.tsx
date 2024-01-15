@@ -80,7 +80,7 @@ const LiveGamesCard: React.FC<any> = ({
                 <div className="tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]">
                     LIVE
                 </div>
-                <Image
+                <img
                     src={image}
                     width={200}
                     height={200}
@@ -128,9 +128,8 @@ const LiveGamesCard: React.FC<any> = ({
                                             <div
                                                 key={wager._id}
                                                 style={{
-                                                    transform: `translate(${
-                                                        -10 * (index + 1)
-                                                    }px, 0)`,
+                                                    transform: `translate(${-10 * (index + 1)
+                                                        }px, 0)`,
                                                     zIndex: 1,
                                                 }}
                                             >
@@ -162,9 +161,8 @@ const LiveGamesCard: React.FC<any> = ({
                                             <div
                                                 key={wager._id}
                                                 style={{
-                                                    transform: `translate(${
-                                                        -10 * (index + 1)
-                                                    }px, 0)`,
+                                                    transform: `translate(${-10 * (index + 1)
+                                                        }px, 0)`,
                                                     zIndex: 1,
                                                 }}
                                             >
@@ -196,9 +194,8 @@ const LiveGamesCard: React.FC<any> = ({
                                             <div
                                                 key={wager._id}
                                                 style={{
-                                                    transform: `translate(${
-                                                        -10 * (index + 1)
-                                                    }px, 0)`,
+                                                    transform: `translate(${-10 * (index + 1)
+                                                        }px, 0)`,
                                                     zIndex: 1,
                                                 }}
                                             >
@@ -230,9 +227,8 @@ const LiveGamesCard: React.FC<any> = ({
                                             <div
                                                 key={wager._id}
                                                 style={{
-                                                    transform: `translate(${
-                                                        -10 * (index + 1)
-                                                    }px, 0)`,
+                                                    transform: `translate(${-10 * (index + 1)
+                                                        }px, 0)`,
                                                     zIndex: 1,
                                                 }}
                                             >
@@ -264,9 +260,8 @@ const LiveGamesCard: React.FC<any> = ({
                                             <div
                                                 key={wager._id}
                                                 style={{
-                                                    transform: `translate(${
-                                                        -10 * (index + 1)
-                                                    }px, 0)`,
+                                                    transform: `translate(${-10 * (index + 1)
+                                                        }px, 0)`,
                                                     zIndex: 1,
                                                 }}
                                             >
