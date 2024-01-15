@@ -38,17 +38,9 @@ const Card: React.FC<any> = ({
     <TimerProvider deadline={new Date(deadline)}>
       <div className="tw-flex tw-flex-col tw-justify-between tw-h-[654px]">
         <div>
-          {/* <Image
+          <img
             onClick={() => console.log(object_id)}
             src={image}
-            width={416}
-            height={219}
-            alt={make}
-            className="tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover"
-          /> */}
-          <ImageWithFallback
-            src={image}
-            fallbackSrc={FallbackImage}
             width={416}
             height={219}
             alt={make}
@@ -510,25 +502,25 @@ export const TournamentsListCard = () => {
 
 
 
-export const ImageWithFallback = ({ src, fallbackSrc, width, height, alt, className }: { src: string, fallbackSrc: any, width: number, height: number, alt: string, className: string }) => {
-  const [imgSrc, setImgSrc] = useState(src);
+// export const ImageWithFallback = ({ src, fallbackSrc, width, height, alt, className }: { src: string, fallbackSrc: any, width: number, height: number, alt: string, className: string }) => {
+//   const [imgSrc, setImgSrc] = useState(src);
 
-  useEffect(() => {
-    setImgSrc(src);
-  }, [src]);
+//   useEffect(() => {
+//     setImgSrc(src);
+//   }, [src]);
 
-  return (
-    <Image
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-      src={imgSrc}
-      onError={() => {
-        setImgSrc(fallbackSrc);
-      }}
-    />
-  );
-};
+//   return (
+//     <Image
+//       alt={alt}
+//       width={width}
+//       height={height}
+//       className={className}
+//       src={imgSrc}
+//       onError={() => {
+//         setImgSrc(fallbackSrc);
+//       }}
+//     />
+//   );
+// };
 
 
