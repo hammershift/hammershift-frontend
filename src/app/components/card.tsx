@@ -111,22 +111,22 @@ export const GamesCard = (props: any) => {
     <TimerProvider deadline={new Date()}>
       <div className="tw-flex tw-flex-col tw-justify-between tw-h-[654px]">
         <div>
-          {/* <Image
+          <img
             src={props.image}
             width={416}
             height={219}
             alt={props.make}
             className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto"
 
-          /> */}
-          <ImageWithFallback
+          />
+          {/* <ImageWithFallback
             src={props.image}
             fallbackSrc={FallbackImage}
             width={416}
             height={219}
             alt={props.make}
             className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto"
-          />
+          /> */}
           <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
             {props.year} {props.make} {props.model}
           </div>
