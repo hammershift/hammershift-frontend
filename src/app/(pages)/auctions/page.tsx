@@ -139,9 +139,9 @@ const AuctionListingPage = () => {
     }, []);
 
     //console log to check filters
-    useEffect(() => {
-        console.log("filters:", filters);
-    }, [filters]);
+    // useEffect(() => {
+    //     console.log("filters:", filters);
+    // }, [filters]);
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {

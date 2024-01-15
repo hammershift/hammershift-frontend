@@ -33,7 +33,7 @@ function AuctionImageCarousel({ images }: AuctionImageCarouselProps) {
             >
                 <Image src={ArrowLeft} width={60} height={60} alt="arrow" />
             </button>
-            <Image
+            <img
                 src={images[currentIndex]}
                 width={800}
                 height={800}
