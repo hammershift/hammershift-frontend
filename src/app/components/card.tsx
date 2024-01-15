@@ -17,6 +17,7 @@ import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { getWagers } from "@/lib/data";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import FallbackImage from "../../../public/images/Picture-Unavailable.png"
 import { ClipLoader, SyncLoader } from "react-spinners";
 import { useSession } from "next-auth/react";
 
@@ -37,12 +38,20 @@ const Card: React.FC<any> = ({
     <TimerProvider deadline={new Date(deadline)}>
       <div className="tw-flex tw-flex-col tw-justify-between tw-h-[654px]">
         <div>
-          <Image
+          {/* <Image
             onClick={() => console.log(object_id)}
             src={image}
             width={416}
             height={219}
-            alt="ferrari"
+            alt={make}
+            className="tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover"
+          /> */}
+          <ImageWithFallback
+            src={image}
+            fallbackSrc={FallbackImage}
+            width={416}
+            height={219}
+            alt={make}
             className="tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover"
           />
           <div className="tw-font-bold tw-text-[24px] tw-py-[12px]">
@@ -102,8 +111,17 @@ export const GamesCard = (props: any) => {
     <TimerProvider deadline={new Date()}>
       <div className="tw-flex tw-flex-col tw-justify-between tw-h-[654px]">
         <div>
-          <Image
+          {/* <Image
             src={props.image}
+            width={416}
+            height={219}
+            alt={props.make}
+            className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto"
+
+          /> */}
+          <ImageWithFallback
+            src={props.image}
+            fallbackSrc={FallbackImage}
             width={416}
             height={219}
             alt={props.make}
@@ -186,9 +204,8 @@ export const CardWagersSection = ({ objectID }: any) => {
       {auctionWagers.length !== 0 && (
         <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
           <div
-            className={`tw-flex tw-flex-col tw-gap-2 ${
-              auctionWagers.length >= 3 && "tw-mb-3"
-            }`}
+            className={`tw-flex tw-flex-col tw-gap-2 ${auctionWagers.length >= 3 && "tw-mb-3"
+              }`}
           >
             {auctionWagers.slice(0, 2).map((wager: any) => {
               return (
@@ -342,9 +359,8 @@ export const CardWagersSection = ({ objectID }: any) => {
                     })}
                 </div>
               </div>
-              <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
-                auctionWagers.length - 2
-              } players`}</div>
+              <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${auctionWagers.length - 2
+                } players`}</div>
             </div>
           )}
         </div>
@@ -490,3 +506,29 @@ export const TournamentsListCard = () => {
     </TimerProvider>
   );
 };
+
+
+
+
+export const ImageWithFallback = ({ src, fallbackSrc, width, height, alt, className }: { src: string, fallbackSrc: any, width: number, height: number, alt: string, className: string }) => {
+  const [imgSrc, setImgSrc] = useState(src);
+
+  useEffect(() => {
+    setImgSrc(src);
+  }, [src]);
+
+  return (
+    <Image
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+      src={imgSrc}
+      onError={() => {
+        setImgSrc(fallbackSrc);
+      }}
+    />
+  );
+};
+
+
