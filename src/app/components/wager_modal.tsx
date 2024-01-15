@@ -236,6 +236,17 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                             event.preventDefault();
                                         }
                                     }}
+                                    onInput={(event) => {
+                                        const inputValue = (
+                                            event.target as HTMLInputElement
+                                        ).value;
+                                        if (
+                                            inputValue.length > 0 &&
+                                            !/\d/.test(inputValue.slice(-1))
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
                                     required
                                     name="price-guessed"
                                     type="number"
@@ -263,6 +274,17 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                                 event.key === "Backspace" ||
                                                 /\d/.test(event.key)
                                             )
+                                        ) {
+                                            event.preventDefault();
+                                        }
+                                    }}
+                                    onInput={(event) => {
+                                        const inputValue = (
+                                            event.target as HTMLInputElement
+                                        ).value;
+                                        if (
+                                            inputValue.length > 0 &&
+                                            !/\d/.test(inputValue.slice(-1))
                                         ) {
                                             event.preventDefault();
                                         }

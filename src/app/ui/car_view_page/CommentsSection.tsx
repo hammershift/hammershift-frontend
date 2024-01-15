@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -11,13 +11,22 @@ import ThreeDots from "../../../../public/images/dots-vertical.svg";
 import ThumbsUp from "../../../../public/images/thumbs-up.svg";
 import ThumbsDown from "../../../../public/images/thumbs-down.svg";
 import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import { createComment, deleteComment, dislikeComment, getComments, likeComment, createReply, deleteReply, likeReply, dislikeReply } from "@/lib/data";
+import {
+    createComment,
+    deleteComment,
+    dislikeComment,
+    getComments,
+    likeComment,
+    createReply,
+    deleteReply,
+    likeReply,
+    dislikeReply,
+} from "@/lib/data";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
 import BlueThumbUp from "../../../../public/images/thumbs-up-blue.svg";
 import BlueThumbsDown from "../../../../public/images/thumbs-down-blue.svg";
 import { comment } from "postcss";
-
 
 export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
     const [sort, setSort] = useState("Best"); // "Newest", "Oldest", "Best"
@@ -32,8 +41,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
     const [commentAlert, setCommentAlert] = useState(false);
     const [inputAlert, setInputAlert] = useState(false);
 
-
-    //fetch comments 
+    //fetch comments
     useEffect(() => {
         const fetchComments = async () => {
             setSortDropdown(false);
@@ -45,39 +53,42 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     setIsLoading(false);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error("Error:", error);
             }
             setIsLoading(false);
         };
         if (auctionID) {
             fetchComments();
         }
-    }, [sort, reload])
+    }, [sort, reload]);
 
     // sets displayed comments to 3 when sort is changed
     useEffect(() => {
         setCommentsDisplayed(3);
-    }, [sort])
-
+    }, [sort]);
 
     const handleLoadComments = () => {
         if (commentsDisplayed < commentsList.length) {
-            setCommentsDisplayed(prevCount => Math.min(prevCount + 3, commentsList.length));
+            setCommentsDisplayed((prevCount) =>
+                Math.min(prevCount + 3, commentsList.length)
+            );
         }
-    }
+    };
 
     // handle submit comment
-    const handlePostComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handlePostComment = async (
+        e: React.MouseEvent<HTMLButtonElement>
+    ) => {
         e.preventDefault();
         if (comment == "") {
             setInputAlert(true);
             handleAlertTimer();
-            console.log("comment is empty")
+            console.log("comment is empty");
             return;
         } else {
             if (session.data?.user.id) {
                 try {
-                    const response = await createComment(auctionID, comment)
+                    const response = await createComment(auctionID, comment);
 
                     if (response) {
                         console.log("comment has been posted");
@@ -88,12 +99,12 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     console.error("error posting comment:", error);
                 }
             } else {
-                console.log("You cannot post a comment. Please log in first")
+                console.log("You cannot post a comment. Please log in first");
                 setCommentAlert(true);
                 handleAlertTimer();
             }
         }
-    }
+    };
 
     const handleAlertTimer = () => {
         setTimeout(() => {
@@ -109,7 +120,10 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
 
     useEffect(() => {
         function handleClickOutside(event: any) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
                 setSortDropdown(false);
             }
         }
@@ -120,16 +134,18 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
         };
     }, []);
 
-
     return (
         <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
             <div className="tw-flex tw-justify-between">
                 <div className="tw-text-xl md:tw-text-3xl">
                     <span className="tw-font-bold">Comments</span>
-                    {`(${Array.isArray(commentsList) && commentsList.length > 0 ? commentsList.length : 0})`}
+                    {`(${
+                        Array.isArray(commentsList) && commentsList.length > 0
+                            ? commentsList.length
+                            : 0
+                    })`}
                 </div>
-                {
-                    session.status == "unauthenticated" &&
+                {session.status == "unauthenticated" && (
                     <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
                         {/* <Image
                             src={BellIcon}
@@ -149,12 +165,13 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                             </div>
                         </Link>
                     </div>
-                }
+                )}
             </div>
             <div className="tw-flex tw-my-3">
                 <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
                     <input
-                        type="text" value={comment}
+                        type="text"
+                        value={comment}
                         placeholder="Add a comment"
                         className="tw-bg-[#172431] tw-w-full"
                         name="comment"
@@ -177,16 +194,30 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     /> */}
                 </div>
                 <button
-                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
-                    onClick={handlePostComment}>Comment</button>
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
+                        session.status == "unauthenticated"
+                            ? "tw-opacity-50 tw-disabled"
+                            : "btn-white"
+                    }`}
+                    onClick={handlePostComment}
+                >
+                    Comment
+                </button>
             </div>
-            {commentAlert && <AlertMessage message="Please login before commenting" />}
+            {commentAlert && (
+                <AlertMessage message="Please login before commenting" />
+            )}
             {inputAlert && <AlertMessage message="Input is empty" />}
             <div className=" tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                <div >Sort by</div>
-                <div className="tw-font-bold tw-ml-2 tw-cursor-pointer" onClick={e => setSortDropdown((prev) => !prev)}>{sort}</div>
+                <div>Sort by</div>
+                <div
+                    className="tw-font-bold tw-ml-2 tw-cursor-pointer"
+                    onClick={(e) => setSortDropdown((prev) => !prev)}
+                >
+                    {sort}
+                </div>
                 <div className="tw-relative">
-                    <button onClick={e => setSortDropdown((prev) => !prev)}>
+                    <button onClick={(e) => setSortDropdown((prev) => !prev)}>
                         <Image
                             src={ArrowDown}
                             width={14}
@@ -195,33 +226,48 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                             className="tw-w-[14px] tw-h-[14px] tw-ml-2"
                         />
                     </button>
-                    {sortDropdown &&
+                    {sortDropdown && (
                         <div
                             ref={dropdownRef}
-                            className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-py-2 tw-px-2 tw-bg-[#172431] tw-z-10">
+                            className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-py-2 tw-px-2 tw-bg-[#172431] tw-z-10"
+                        >
                             <div
-                                onClick={e => setSort("Newest")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Newest" ? "tw-bg-white/10" : ""}`}
-                            >Newest</div>
+                                onClick={(e) => setSort("Newest")}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
+                                    sort == "Newest" ? "tw-bg-white/10" : ""
+                                }`}
+                            >
+                                Newest
+                            </div>
                             <div
-                                onClick={e => setSort("Oldest")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Oldest" ? "tw-bg-white/10" : ""}`}
-                            >Oldest</div>
+                                onClick={(e) => setSort("Oldest")}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
+                                    sort == "Oldest" ? "tw-bg-white/10" : ""
+                                }`}
+                            >
+                                Oldest
+                            </div>
                             <div
-                                onClick={e => setSort("Best")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Best" ? "tw-bg-white/10" : ""}`}
-                            >Best</div>
+                                onClick={(e) => setSort("Best")}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
+                                    sort == "Best" ? "tw-bg-white/10" : ""
+                                }`}
+                            >
+                                Best
+                            </div>
                         </div>
-                    }
+                    )}
                 </div>
             </div>
             <section>
-                {isLoading
-                    ? <div className="tw-flex tw-w-full tw-justify-center tw-h-12 tw-items-center">
-                        <BeatLoader color='#f2ca16' />
+                {isLoading ? (
+                    <div className="tw-flex tw-w-full tw-justify-center tw-h-12 tw-items-center">
+                        <BeatLoader color="#f2ca16" />
                     </div>
-                    : (Array.isArray(commentsList) && commentsList.length > 0
-                        ? commentsList.slice(0, commentsDisplayed).map((item: any, index: any) => (
+                ) : Array.isArray(commentsList) && commentsList.length > 0 ? (
+                    commentsList
+                        .slice(0, commentsDisplayed)
+                        .map((item: any, index: any) => (
                             <div key={item._id}>
                                 <CommentsCard
                                     comment={item.comment}
@@ -235,37 +281,30 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                                     commenterUserID={item.user.userId}
                                     replies={item.replies || []}
                                     auctionID={auctionID}
-                                    session={session} />
+                                    session={session}
+                                />
                             </div>
                         ))
-                        :
-                        <div className="tw-w-full tw-h-12 tw-flex tw-justify-center tw-items-center">
-                            No Comments Yet
-                        </div>
-                    )}
-                {commentsDisplayed < commentsList.length &&
+                ) : (
+                    <div className="tw-w-full tw-h-12 tw-flex tw-justify-center tw-items-center">
+                        No Comments Yet
+                    </div>
+                )}
+                {commentsDisplayed < commentsList.length && (
                     <button
                         className="btn-transparent-white tw-w-full tw-mt-8 tw-text-sm"
-                        onClick={handleLoadComments}>
-                        {`Load ${Math.min(commentsList.length - commentsDisplayed, 3)} more comment(s)`}
+                        onClick={handleLoadComments}
+                    >
+                        {`Load ${Math.min(
+                            commentsList.length - commentsDisplayed,
+                            3
+                        )} more comment(s)`}
                     </button>
-                }
-                <div className="tw-flex tw-items-center tw-mt-8">
-                    <span>Powered by</span>
-                    <Image
-                        src={OpenWebLogo}
-                        width={97}
-                        height={28}
-                        alt="camera plus"
-                        className="tw-w-[97px] tw-h-[28px] tw-ml-2"
-                    />
-                </div>
+                )}
             </section>
         </div>
     );
 };
-
-
 
 export const CommentsCard = ({
     comment,
@@ -279,20 +318,20 @@ export const CommentsCard = ({
     commenterUserID,
     replies,
     auctionID,
-    session
+    session,
 }: {
-    comment: string,
-    username: string,
-    createdAt: string,
-    likes: string[],
-    dislikes: string[],
-    commentID: string,
-    userID: string,
-    setReload: any,
-    commenterUserID: string,
-    replies: string[],
-    auctionID: string,
-    session: any
+    comment: string;
+    username: string;
+    createdAt: string;
+    likes: string[];
+    dislikes: string[];
+    commentID: string;
+    userID: string;
+    setReload: any;
+    commenterUserID: string;
+    replies: string[];
+    auctionID: string;
+    session: any;
 }) => {
     const dropdownRef = useRef<any | null>(null);
     const [dropdown, setDropdown] = useState(false);
@@ -304,7 +343,10 @@ export const CommentsCard = ({
 
     useEffect(() => {
         function handleClickOutside(event: any) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
                 setDropdown(false);
             }
         }
@@ -321,7 +363,9 @@ export const CommentsCard = ({
 
         const diffInMilliseconds = Math.abs(now.getTime() - date.getTime());
         const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-        const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+        const diffInDays = Math.floor(
+            diffInMilliseconds / (1000 * 60 * 60 * 24)
+        );
 
         if (diffInDays > 0) {
             return `${diffInDays} day(s) ago`;
@@ -329,7 +373,6 @@ export const CommentsCard = ({
 
         return `${diffInHours} hour(s) ago`;
     };
-
 
     const handleLiking = async (e: any) => {
         e.preventDefault();
@@ -342,43 +385,47 @@ export const CommentsCard = ({
                     setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
-                console.error("error in liking comment:", error)
+                console.error("error in liking comment:", error);
             }
-
         } else {
             setLikeDislikeAlert(true);
             handleAlertTimer();
-            console.log("Cannot like comment. Please log in first")
+            console.log("Cannot like comment. Please log in first");
             return;
         }
-
-    }
-
+    };
 
     const handleDisliking = async (e: any) => {
         e.preventDefault();
         if (userID) {
             try {
-                const response = await dislikeComment(commentID, userID, dislikes);
+                const response = await dislikeComment(
+                    commentID,
+                    userID,
+                    dislikes
+                );
 
                 if (response) {
                     console.log("comment has been liked");
                     setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
-                console.error("error in disliking comment:", error)
+                console.error("error in disliking comment:", error);
             }
         } else {
             setLikeDislikeAlert(true);
             handleAlertTimer();
-            console.log("Cannot dislike comment. Please log in first")
+            console.log("Cannot dislike comment. Please log in first");
         }
-
-    }
+    };
     const handleDeleteComment = async () => {
         if (userID) {
             try {
-                const response = await deleteComment(commentID, userID, commenterUserID);
+                const response = await deleteComment(
+                    commentID,
+                    userID,
+                    commenterUserID
+                );
 
                 if (response) {
                     console.log("comment has been deleted");
@@ -387,15 +434,15 @@ export const CommentsCard = ({
                     console.log("comment has not been deleted. Incorrect user");
                 }
             } catch (error) {
-                console.error("error in deleting comment:", error)
+                console.error("error in deleting comment:", error);
             }
         } else {
             setDropdown(false);
             setDeleteAlert(true);
             handleAlertTimer();
-            console.log("Cannot delete comment. Please login first")
+            console.log("Cannot delete comment. Please login first");
         }
-    }
+    };
 
     const handleAlertTimer = () => {
         setTimeout(() => {
@@ -403,10 +450,6 @@ export const CommentsCard = ({
             setLikeDislikeAlert(false);
         }, 2000);
     };
-
-
-
-
 
     return (
         <div className="tw-flex tw-mt-8 tw-text-[14px]">
@@ -421,14 +464,12 @@ export const CommentsCard = ({
                 <div className="tw-relative tw-flex tw-justify-between">
                     <div>
                         <span className="tw-font-bold">{username}</span>
-                        <span className="tw-text-[#F2CA16] tw-ml-2">
-                            User
-                        </span>
+                        <span className="tw-text-[#F2CA16] tw-ml-2">User</span>
                         <span className="tw-opacity-50 tw-ml-2">
                             {timeSince(createdAt)}
                         </span>
                     </div>
-                    <div onClick={e => setDropdown((prev) => !prev)}>
+                    <div onClick={(e) => setDropdown((prev) => !prev)}>
                         <Image
                             src={ThreeDots}
                             width={16}
@@ -437,31 +478,51 @@ export const CommentsCard = ({
                             className="tw-w-4 tw-h-4 tw-ml-4"
                         />
                     </div>
-                    {dropdown && <div
-                        ref={dropdownRef}
-                        className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-bg-[#172431] tw-z-10">
+                    {dropdown && (
                         <div
-                            onClick={handleDeleteComment}
-                            className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center`}
-                        >Delete</div>
-                    </div>}
-                    {deleteAlert && <AlertMessage message="Please login before deleting" />}
+                            ref={dropdownRef}
+                            className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-bg-[#172431] tw-z-10"
+                        >
+                            <div
+                                onClick={handleDeleteComment}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center`}
+                            >
+                                Delete
+                            </div>
+                        </div>
+                    )}
+                    {deleteAlert && (
+                        <AlertMessage message="Please login before deleting" />
+                    )}
                 </div>
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
                     {comment}
                 </div>
                 <div className="tw-flex tw-opacity-50 tw-items-center">
                     <div
-                        onClick={e => setReplyInput(prev => !prev)}
-                        className="tw-cursor-pointer">Reply</div>
+                        onClick={(e) => setReplyInput((prev) => !prev)}
+                        className="tw-cursor-pointer"
+                    >
+                        Reply
+                    </div>
                     <span className="tw-ml-4">·</span>
 
-                    <div className="tw-flex tw-items-center" onClick={handleLiking}>
-                        {likes.includes(userID)
-                            ? <div className="tw-ml-4">
-                                <Image src={BlueThumbUp} alt="thumbs up" width={20} height={20} className="tw-w-5 tw-h-5" />
+                    <div
+                        className="tw-flex tw-items-center"
+                        onClick={handleLiking}
+                    >
+                        {likes.includes(userID) ? (
+                            <div className="tw-ml-4">
+                                <Image
+                                    src={BlueThumbUp}
+                                    alt="thumbs up"
+                                    width={20}
+                                    height={20}
+                                    className="tw-w-5 tw-h-5"
+                                />
                             </div>
-                            : <div >
+                        ) : (
+                            <div>
                                 <Image
                                     src={ThumbsUp}
                                     width={16}
@@ -469,16 +530,29 @@ export const CommentsCard = ({
                                     alt="thumbs up"
                                     className="tw-w-4 tw-h-4 tw-ml-4"
                                 />
-                            </div>}
-                        {likes.length > 0 && <div className="tw-ml-1">{likes.length}</div>}
+                            </div>
+                        )}
+                        {likes.length > 0 && (
+                            <div className="tw-ml-1">{likes.length}</div>
+                        )}
                         <div></div>
                     </div>
-                    <div className="tw-flex tw-items-center" onClick={handleDisliking}>
-                        {dislikes.includes(userID)
-                            ? <div className="tw-ml-4">
-                                <Image src={BlueThumbsDown} alt="thumbs down" width={20} height={20} className="tw-w-5 tw-h-5" />
+                    <div
+                        className="tw-flex tw-items-center"
+                        onClick={handleDisliking}
+                    >
+                        {dislikes.includes(userID) ? (
+                            <div className="tw-ml-4">
+                                <Image
+                                    src={BlueThumbsDown}
+                                    alt="thumbs down"
+                                    width={20}
+                                    height={20}
+                                    className="tw-w-5 tw-h-5"
+                                />
                             </div>
-                            : <div >
+                        ) : (
+                            <div>
                                 <Image
                                     src={ThumbsDown}
                                     width={16}
@@ -486,30 +560,34 @@ export const CommentsCard = ({
                                     alt="thumbs down"
                                     className="tw-w-4 tw-h-4 tw-ml-4"
                                 />
-                            </div>}
-                        {dislikes.length > 0 && <div className="tw-ml-1">{dislikes.length}</div>}
+                            </div>
+                        )}
+                        {dislikes.length > 0 && (
+                            <div className="tw-ml-1">{dislikes.length}</div>
+                        )}
                         <div></div>
                     </div>
                 </div>
 
-                {replyInput
-                    && <ReplyInputDropdown
+                {replyInput && (
+                    <ReplyInputDropdown
                         session={session}
                         setReload={setReload}
                         commentID={commentID}
                         auctionID={auctionID}
-
                     />
-                }
+                )}
 
-                {likeDislikeAlert
-                    && <AlertMessage message="Please login before liking or disliking" />
-                }
+                {likeDislikeAlert && (
+                    <AlertMessage message="Please login before liking or disliking" />
+                )}
 
-                {replies.length > 0
-                    && <div>
-                        <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex tw-cursor-pointer"
-                            onClick={e => setReplyDropdown(prev => !prev)}>
+                {replies.length > 0 && (
+                    <div>
+                        <div
+                            className="tw-text-[#42A0FF] tw-mt-3 tw-flex tw-cursor-pointer"
+                            onClick={(e) => setReplyDropdown((prev) => !prev)}
+                        >
                             <Image
                                 src={CornerDownRight}
                                 width={16}
@@ -517,10 +595,11 @@ export const CommentsCard = ({
                                 alt="camera plus"
                                 className="tw-w-4 tw-h-4 tw-mr-2 "
                             />
-                            {`${replies.length} ${replies.length > 1 ? "Replies" : "Reply"}`}
+                            {`${replies.length} ${
+                                replies.length > 1 ? "Replies" : "Reply"
+                            }`}
                         </div>
-                        {replyDropdown
-                            &&
+                        {replyDropdown && (
                             <div>
                                 <div className="tw-h-[1px] tw-w-full tw-mt-3 tw-bg-white/10"></div>
                                 {replies.map((item: any, index: any) => (
@@ -539,32 +618,25 @@ export const CommentsCard = ({
                                     />
                                 ))}
                             </div>
-                        }
+                        )}
                     </div>
-                }
-
+                )}
             </div>
         </div>
     );
 };
-
-
-
 
 const ReplyInputDropdown = ({
     session,
     setReload,
     commentID,
     auctionID,
-
 }: {
-    session: any,
-    setReload: any,
-    commentID: string,
-    auctionID: string,
-
+    session: any;
+    setReload: any;
+    commentID: string;
+    auctionID: string;
 }) => {
-
     const [reply, setReply] = useState("");
     const [replyAlert, setReplyAlert] = useState(false);
     const [replyInputAlert, setReplyInputAlert] = useState(false);
@@ -572,14 +644,18 @@ const ReplyInputDropdown = ({
     const handlePostReply = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (reply == "") {
-            console.log("reply input is empty")
+            console.log("reply input is empty");
             setReplyInputAlert(true);
             handleAlertTimer();
             return;
         } else {
             if (session.data?.user.id) {
                 try {
-                    const response = await createReply(commentID, reply, auctionID)
+                    const response = await createReply(
+                        commentID,
+                        reply,
+                        auctionID
+                    );
 
                     if (response) {
                         console.log("reply has been posted");
@@ -590,10 +666,10 @@ const ReplyInputDropdown = ({
                     console.error("error posting reply:", error);
                 }
             } else {
-                console.log("You cannot post a reply. Please log in first")
+                console.log("You cannot post a reply. Please log in first");
             }
         }
-    }
+    };
 
     const handleAlertTimer = () => {
         setTimeout(() => {
@@ -602,13 +678,13 @@ const ReplyInputDropdown = ({
         }, 2000);
     };
 
-
     return (
         <div className="tw-relative">
             <div className="tw-relative tw-flex tw-my-3">
                 <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
                     <input
-                        type="text" value={reply}
+                        type="text"
+                        value={reply}
                         placeholder="Add a reply"
                         className="tw-bg-[#172431] tw-w-full"
                         name="comment"
@@ -616,14 +692,23 @@ const ReplyInputDropdown = ({
                     />
                 </div>
                 <button
-                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated" ? "tw-opacity-50 tw-disabled" : "btn-white"}`}
-                    onClick={handlePostReply}>Reply</button>
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
+                        session.status == "unauthenticated"
+                            ? "tw-opacity-50 tw-disabled"
+                            : "btn-white"
+                    }`}
+                    onClick={handlePostReply}
+                >
+                    Reply
+                </button>
             </div>
-            {replyAlert && <AlertMessage message="Please login before deleting" />}
+            {replyAlert && (
+                <AlertMessage message="Please login before deleting" />
+            )}
             {replyInputAlert && <AlertMessage message="Input is empty" />}
         </div>
-    )
-}
+    );
+};
 
 const ReplyCard = ({
     userID,
@@ -635,18 +720,18 @@ const ReplyCard = ({
     likes,
     dislikes,
     createdAt,
-    setReload
+    setReload,
 }: {
-    userID: string,
-    username: string,
-    replyID: string,
-    reply: string,
-    replyUserID: string,
-    commentID: string,
-    likes: string[],
-    dislikes: string[],
-    createdAt: string,
-    setReload: any
+    userID: string;
+    username: string;
+    replyID: string;
+    reply: string;
+    replyUserID: string;
+    commentID: string;
+    likes: string[];
+    dislikes: string[];
+    createdAt: string;
+    setReload: any;
 }) => {
     const [dropdown, setDropdown] = useState(false);
     const [deleteAlert, setDeleteAlert] = useState(false);
@@ -659,7 +744,9 @@ const ReplyCard = ({
 
         const diffInMilliseconds = Math.abs(now.getTime() - date.getTime());
         const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-        const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+        const diffInDays = Math.floor(
+            diffInMilliseconds / (1000 * 60 * 60 * 24)
+        );
 
         if (diffInDays > 0) {
             return `${diffInDays} day(s) ago`;
@@ -675,67 +762,81 @@ const ReplyCard = ({
             //check if user is the the one who posted the reply
             if (userID == replyUserID) {
                 try {
-                    const response = await deleteReply(replyID, userID, replyUserID, commentID);
+                    const response = await deleteReply(
+                        replyID,
+                        userID,
+                        replyUserID,
+                        commentID
+                    );
 
                     if (response) {
                         console.log("reply has been deleted");
                         setReload((prev: number) => prev + 1);
                     } else {
-                        console.log("reply has not been deleted. Incorrect user");
+                        console.log(
+                            "reply has not been deleted. Incorrect user"
+                        );
                     }
                 } catch (error) {
-                    console.error("error in deleting comment:", error)
+                    console.error("error in deleting comment:", error);
                 }
             } else {
                 console.log("Cannot delete reply. Incorrect user");
                 return;
             }
         } else {
-            console.log("Cannot delete reply. Please login first")
+            console.log("Cannot delete reply. Please login first");
             setDeleteAlert(true);
             handleAlertTimer();
         }
-    }
+    };
 
     const handleLiking = async () => {
         if (userID) {
             try {
-                const response = await likeReply(commentID, replyID, userID, likes);
+                const response = await likeReply(
+                    commentID,
+                    replyID,
+                    userID,
+                    likes
+                );
                 if (response) {
                     console.log("reply has been liked");
                     setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
-                console.error("error in liking reply:", error)
+                console.error("error in liking reply:", error);
             }
         } else {
             setLikeDislikeAlert(true);
             handleAlertTimer();
-            console.log("Cannot like reply. Please login first")
+            console.log("Cannot like reply. Please login first");
             return;
         }
-
-    }
+    };
 
     const handleDisliking = async () => {
-
         if (userID) {
             try {
-                const response = await dislikeReply(commentID, replyID, userID, dislikes);
+                const response = await dislikeReply(
+                    commentID,
+                    replyID,
+                    userID,
+                    dislikes
+                );
                 if (response) {
                     console.log("reply has been disliked");
                     setReload((prev: number) => prev + 1);
                 }
             } catch (error) {
-                console.error("error in disliking reply:", error)
+                console.error("error in disliking reply:", error);
             }
         } else {
             setLikeDislikeAlert(true);
             handleAlertTimer();
-            console.log("Cannot dislike reply. Please login first")
+            console.log("Cannot dislike reply. Please login first");
         }
-
-    }
+    };
 
     const handleAlertTimer = () => {
         setTimeout(() => {
@@ -757,14 +858,12 @@ const ReplyCard = ({
                 <div className="tw-relative tw-flex tw-justify-between">
                     <div>
                         <span className="tw-font-bold">{username}</span>
-                        <span className="tw-text-[#F2CA16] tw-ml-1">
-                            User
-                        </span>
+                        <span className="tw-text-[#F2CA16] tw-ml-1">User</span>
                         <span className="tw-opacity-50 tw-ml-1">
                             {timeSince(createdAt)}
                         </span>
                     </div>
-                    <div onClick={e => setDropdown((prev) => !prev)}>
+                    <div onClick={(e) => setDropdown((prev) => !prev)}>
                         <Image
                             src={ThreeDots}
                             width={16}
@@ -773,15 +872,22 @@ const ReplyCard = ({
                             className="tw-w-4 tw-h-4 tw-ml-4"
                         />
                     </div>
-                    {dropdown && <div
-                        ref={dropdownRef}
-                        className="tw-absolute tw-grid tw-rounded tw-top-6 tw-right-0 tw-bg-[#172431] tw-z-10 hover:tw-bg-white/10">
+                    {dropdown && (
                         <div
-                            onClick={handleDeleteReply}
-                            className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center `}
-                        >Delete</div>
-                    </div>}
-                    {deleteAlert && <AlertMessage message="Please login before deleting" />}
+                            ref={dropdownRef}
+                            className="tw-absolute tw-grid tw-rounded tw-top-6 tw-right-0 tw-bg-[#172431] tw-z-10 hover:tw-bg-white/10"
+                        >
+                            <div
+                                onClick={handleDeleteReply}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center `}
+                            >
+                                Delete
+                            </div>
+                        </div>
+                    )}
+                    {deleteAlert && (
+                        <AlertMessage message="Please login before deleting" />
+                    )}
                 </div>
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
                     {reply}
@@ -791,11 +897,18 @@ const ReplyCard = ({
                         className="tw-flex tw-items-center"
                         onClick={handleLiking}
                     >
-                        {likes.includes(userID)
-                            ? <div>
-                                <Image src={BlueThumbUp} alt="thumbs up" width={20} height={20} className="tw-w-5 tw-h-5" />
+                        {likes.includes(userID) ? (
+                            <div>
+                                <Image
+                                    src={BlueThumbUp}
+                                    alt="thumbs up"
+                                    width={20}
+                                    height={20}
+                                    className="tw-w-5 tw-h-5"
+                                />
                             </div>
-                            : <div >
+                        ) : (
+                            <div>
                                 <Image
                                     src={ThumbsUp}
                                     width={16}
@@ -803,16 +916,29 @@ const ReplyCard = ({
                                     alt="thumbs up"
                                     className="tw-w-4 tw-h-4"
                                 />
-                            </div>}
-                        {likes.length > 0 && <div className="tw-ml-1">{likes.length}</div>}
+                            </div>
+                        )}
+                        {likes.length > 0 && (
+                            <div className="tw-ml-1">{likes.length}</div>
+                        )}
                         <div></div>
                     </div>
-                    <div className="tw-flex tw-items-center" onClick={handleDisliking}>
-                        {dislikes.includes(userID)
-                            ? <div className="tw-ml-4">
-                                <Image src={BlueThumbsDown} alt="thumbs down" width={20} height={20} className="tw-w-5 tw-h-5" />
+                    <div
+                        className="tw-flex tw-items-center"
+                        onClick={handleDisliking}
+                    >
+                        {dislikes.includes(userID) ? (
+                            <div className="tw-ml-4">
+                                <Image
+                                    src={BlueThumbsDown}
+                                    alt="thumbs down"
+                                    width={20}
+                                    height={20}
+                                    className="tw-w-5 tw-h-5"
+                                />
                             </div>
-                            : <div >
+                        ) : (
+                            <div>
                                 <Image
                                     src={ThumbsDown}
                                     width={16}
@@ -820,25 +946,26 @@ const ReplyCard = ({
                                     alt="thumbs down"
                                     className="tw-w-4 tw-h-4 tw-ml-4"
                                 />
-                            </div>}
-                        {dislikes.length > 0 && <div className="tw-ml-1">{dislikes.length}</div>}
+                            </div>
+                        )}
+                        {dislikes.length > 0 && (
+                            <div className="tw-ml-1">{dislikes.length}</div>
+                        )}
                         <div></div>
                     </div>
-
                 </div>
-                {likeDislikeAlert && <AlertMessage message="Please login before liking or disliking" />}
-
+                {likeDislikeAlert && (
+                    <AlertMessage message="Please login before liking or disliking" />
+                )}
             </div>
         </div>
-    )
-}
-
+    );
+};
 
 const AlertMessage = ({ message }: { message: string }) => {
-
     return (
         <div className="tw-flex tw-justify-center tw-items-center tw-text-sm tw-text-black tw-bg-[#F2CA16] tw-py-2 tw-px-4 tw-rounded">
             {message}
         </div>
     );
-}
+};
