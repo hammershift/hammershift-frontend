@@ -6,18 +6,25 @@ import Image from "next/image";
 import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
 import TeamBattlesIcon from "../../../public/images/team-battles-icon.svg";
 import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
+import TransitionPattern2 from "../../../public/images/transition-pattern-2.svg";
 
 const NewEraWagering = () => {
     return (
-        <div className="tw-w-full tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px] tw-flex tw-flex-col">
-            <div className="design-container">
+        <div className="tw-w-full tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-pb-[120px] tw-flex tw-flex-col tw-relative sm:tw-mt-0 -tw-mt-3">
+            {/* <div className="design-container">
                 <div className="tw-h-[6px]"></div>
                 <div className="tw-bg-[#0F1923] tw-h-[40px]"></div>
                 <div className="tw-bg-[#0F1923] tw-h-[24px] tw-mt-3.5"></div>
                 <div className="tw-bg-[#0F1923] tw-h-[8px] tw-mt-8"></div>
                 <div className="tw-bg-[#0F1923] tw-h-[4px] tw-mt-12"></div>
-            </div>
-
+            </div> */}
+            <Image
+                src={TransitionPattern2}
+                width={288}
+                height={356}
+                alt="pattern"
+                className="tw-w-full tw-h-[200px] tw-object-cover tw-object-center"
+            />
             <div className="section-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-pt-16 sm:tw-pt-[120px]  tw-self-center">
                 <div className="tw-relative">
                     <div className=" tw-font-bold tw-text-[48px] md:tw-text-[56px] lg:tw-text-[60px] lg:tw-text-[80px] tw-leading-tight">
