@@ -204,8 +204,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                     $
                                     {pot
                                         ? new Intl.NumberFormat().format(
-                                              pot || 0
-                                          )
+                                            pot || 0
+                                        )
                                         : " --"}
                                 </span>
                             </span>
@@ -307,11 +307,10 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             width={20}
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
-                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
-                                isWatching
-                                    ? "scale-animation is-watching"
-                                    : "scale-animation"
-                            }`}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
+                                ? "scale-animation is-watching"
+                                : "scale-animation"
+                                }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
@@ -368,7 +367,7 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
                 onClose={toggleModal}
                 image={images_list}
             />
-            <Image
+            <img
                 onClick={toggleModal}
                 src={img}
                 width={832}
@@ -377,21 +376,21 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
                 className="tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto tw-cursor-pointer"
             />
             <div className="tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full tw-h-auto">
-                <Image
+                <img
                     src={images_list[0].src}
                     width={202}
                     height={120}
                     alt="car"
                     className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
                 />
-                <Image
+                <img
                     src={images_list[1].src}
                     width={202}
                     height={120}
                     alt="car"
                     className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
                 />
-                <Image
+                <img
                     src={images_list[2].src}
                     width={202}
                     height={120}
@@ -402,7 +401,7 @@ export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
                     className="tw-relative tw-cursor-pointer"
                     onClick={toggleModal}
                 >
-                    <Image
+                    <img
                         src={images_list[3].src}
                         width={202}
                         height={120}
@@ -562,7 +561,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
                                                 {session?.user.id ===
-                                                wager.user._id
+                                                    wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>
