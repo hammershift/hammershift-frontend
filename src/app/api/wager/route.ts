@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       priceGuessed,
       wagerAmount,
       user,
-      auctionIdentifierId
+      auctionIdentifierId,
     });
 
     await newWager.save();
@@ -104,31 +104,75 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest): Promise<NextResponse<any>> {
-  try {
-    await connectToDB();
-    const id = req.nextUrl.searchParams.get('id');
+// export async function PUT(req: NextRequest): Promise<NextResponse<any>> {
+//   try {
+//     await connectToDB();
+//     const id = req.nextUrl.searchParams.get('id');
 
-    if (!id) {
-      return NextResponse.json({ message: "Invalid request: 'id' parameter is missing" }, { status: 400 });
+//     if (!id) {
+//       return NextResponse.json({ message: "Invalid request: 'id' parameter is missing" }, { status: 400 });
+//     }
+
+//     const edits = await req.json();
+//     const editedWager = await Wager.findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }] }, { $set: edits }, { new: true });
+
+//     if (editedWager) {
+//       return NextResponse.json(editedWager, { status: 202 });
+//     } else {
+//       return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+//   }
+// }
+
+// export async function GET(req: NextRequest) {
+//   try {
+//     const client = await clientPromise;
+//     const db = client.db();
+//     const id = req.nextUrl.searchParams.get('id');
+//     const user = req.nextUrl.searchParams.get('user_id');
+
+//     let query = {};
+
+//     if (id && user) {
+//       query = { auctionID: new ObjectId(id), 'user._id': new ObjectId(user) };
+//     } else if (id) {
+//       query = { auctionID: new ObjectId(id) };
+//     } else if (user) {
+//       query = { 'user._id': new ObjectId(user) };
+//     }
+
+//     const wagers = await db.collection('wagers').find(query).toArray();
+//     return NextResponse.json({ wagers });
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json({ message: 'Internal server error' });
+//   }
+// }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    const auction_id = req.nextUrl.searchParams.get('auction_id');
+
+    if (!auction_id) {
+      return NextResponse.json({ message: "Invalid request: 'auction_id' parameter is missing" }, { status: 400 });
     }
 
     const edits = await req.json();
-    const editedWager = await Wager.findOneAndUpdate(
-      { $and: [{ _id: new ObjectId(id) }] },
-      { $set: edits },
-      { new: true }
-    );
 
-    if (editedWager) {
-      return NextResponse.json(editedWager, { status: 202 });
+    const updateResult = await db.collection('auctions').findOneAndUpdate({ auction_id: auction_id, isActive: true }, { $set: edits }, { returnDocument: 'after' });
+
+    if (updateResult.value) {
+      return NextResponse.json(updateResult.value, { status: 202 });
     } else {
-      return NextResponse.json({ message: "Wager not found" }, { status: 404 });
+      return NextResponse.json({ message: 'Auction not found' }, { status: 404 });
     }
-
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
-

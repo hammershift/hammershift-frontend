@@ -46,103 +46,106 @@ export async function GET(req: NextRequest) {
     //(search queries are case insensitive) api/cars/filter?search=land%20cruiser&completed=true
 
     if (searchedKeyword) {
-      const searchedCars = await Auctions.aggregate([
-        {
-          $search: {
-            index: 'auctionSearchAutocomplete',
-            text: {
-              query: searchedKeyword,
-              path: 'attributes.value',
-              fuzzy: {
-                prefixLength: 3,
+      const searchedCars = await db
+        .collection('auctions')
+        .aggregate([
+          {
+            $search: {
+              index: 'auctionSearchAutocomplete',
+              text: {
+                query: searchedKeyword,
+                path: 'attributes.value',
+                fuzzy: {
+                  prefixLength: 3,
+                },
               },
             },
           },
-        },
-        {
-          $project: {
-            _id: 0,
-            auction_id: 1,
-            make: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributes',
-                    cond: { $eq: ['$$this.key', 'make'] },
+          {
+            $project: {
+              _id: 0,
+              auction_id: 1,
+              make: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributes',
+                      cond: { $eq: ['$$this.key', 'make'] },
+                    },
                   },
-                },
-                0,
-              ],
-            },
-            model: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributes',
-                    cond: { $eq: ['$$this.key', 'model'] },
+                  0,
+                ],
+              },
+              model: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributes',
+                      cond: { $eq: ['$$this.key', 'model'] },
+                    },
                   },
-                },
-                0,
-              ],
-            },
-            year: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributes',
-                    cond: { $eq: ['$$this.key', 'year'] },
+                  0,
+                ],
+              },
+              year: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributes',
+                      cond: { $eq: ['$$this.key', 'year'] },
+                    },
                   },
-                },
-                0,
-              ],
-            },
-            price: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributes',
-                    cond: { $eq: ['$$this.key', 'price'] },
+                  0,
+                ],
+              },
+              price: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributes',
+                      cond: { $eq: ['$$this.key', 'price'] },
+                    },
                   },
-                },
-                0,
-              ],
-            },
-            bids: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributes',
-                    cond: { $eq: ['$$this.key', 'bids'] },
+                  0,
+                ],
+              },
+              bids: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributes',
+                      cond: { $eq: ['$$this.key', 'bids'] },
+                    },
                   },
-                },
-                0,
-              ],
-            },
-            deadline: {
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributes',
-                    cond: { $eq: ['$$this.key', 'deadline'] },
+                  0,
+                ],
+              },
+              deadline: {
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributes',
+                      cond: { $eq: ['$$this.key', 'deadline'] },
+                    },
                   },
-                },
-                0,
-              ],
+                  0,
+                ],
+              },
             },
           },
-        },
-        {
-          $project: {
-            auction_id: 1,
-            make: '$make.value',
-            model: '$model.value',
-            year: '$year.value',
-            price: '$price.value',
-            bids: '$bids.value',
-            deadline: '$deadline.value',
+          {
+            $project: {
+              auction_id: 1,
+              make: '$make.value',
+              model: '$model.value',
+              year: '$year.value',
+              price: '$price.value',
+              bids: '$bids.value',
+              deadline: '$deadline.value',
+            },
           },
-        },
-      ]);
+        ])
+        .toArray();
 
       return NextResponse.json({
         total: searchedCars.length,
