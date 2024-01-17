@@ -11,199 +11,197 @@ import { MoonLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 
 const filtersInitialState = {
-  make: ["All"],
-  category: ["All"],
-  era: ["All"],
-  location: ["All"],
-  sort: "Newly Listed",
+    make: ["All"],
+    category: ["All"],
+    era: ["All"],
+    location: ["All"],
+    sort: "Newly Listed",
 };
 
 type Filter = {
-  make?: string | string[];
-  category?: string | string[];
-  location?: string | string[];
-  era?: string | string[];
-  sort?: string;
-  limit?: number;
-  ready?: boolean;
+    make?: string | string[];
+    category?: string | string[];
+    location?: string | string[];
+    era?: string | string[];
+    sort?: string;
+    limit?: number;
+    ready?: boolean;
 };
 
 export const dynamic = "force-dynamic";
 
 const AuctionListingPage = () => {
-  const [filters, setFilters] = useState<Filter>(filtersInitialState);
-  const [loadMore, setLoadMore] = useState(21);
-  const [listing, setListing] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [totalAuctions, setTotalAuctions] = useState(0);
-  const router = useRouter();
-  const searchParamsObj = useSearchParams();
+    const [filters, setFilters] = useState<Filter>(filtersInitialState);
+    const [loadMore, setLoadMore] = useState(21);
+    const [listing, setListing] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [isGridView, setIsGridView] = useState(true);
+    const [totalAuctions, setTotalAuctions] = useState(0);
+    const router = useRouter();
+    const searchParamsObj = useSearchParams();
 
-  // main fetch function
-  const fetchData = async (filterObject: any) => {
-    setLoading(true);
-    try {
-      const filterWithLimit: any = { ...filterObject, limit: loadMore };
-      const res = await getCarsWithFilter(filterWithLimit);
-      if (res) {
-        setListing(res?.cars);
-        setTotalAuctions(res?.total);
-        setLoading(false);
-        return;
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
-  };
-
-  // function to set seachParams to filters
-  const createFilterObject = () => {
-    setLoading(true);
-    const query: any = JSON.parse(JSON.stringify(filtersInitialState));
-
-    const filtersFromSearchParams = (filter: any) => {
-      Object.keys(filter).forEach((key) => {
-        if (key == "sort") {
-          query[key] = filter[key];
-        } else {
-          query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+    // main fetch function
+    const fetchData = async (filterObject: any) => {
+        setLoading(true);
+        try {
+            const filterWithLimit: any = { ...filterObject, limit: loadMore };
+            const res = await getCarsWithFilter(filterWithLimit);
+            if (res) {
+                setListing(res?.cars);
+                setTotalAuctions(res?.total);
+                setLoading(false);
+                return;
+            }
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
         }
-      });
-      setFilters({ ...query, ready: true });
-      setLoading(false);
     };
 
-    const getSearchParams = () => {
-      let newQuery = {};
-      if (searchParamsObj.getAll("make").length > 0) {
-        newQuery = {
-          ...newQuery,
-          make: searchParamsObj.getAll("make"),
-        };
-      }
-      if (searchParamsObj.getAll("category").length > 0) {
-        newQuery = {
-          ...newQuery,
-          category: searchParamsObj.getAll("category"),
-        };
-      }
-      if (searchParamsObj.getAll("location").length > 0) {
-        newQuery = {
-          ...newQuery,
-          location: searchParamsObj.getAll("location"),
-        };
-      }
-      if (searchParamsObj.getAll("era").length > 0) {
-        newQuery = { ...newQuery, era: searchParamsObj.getAll("era") };
-      }
-      if (searchParamsObj.getAll("sort").length > 0) {
-        newQuery = { ...newQuery, sort: searchParamsObj.get("sort") };
-      }
+    // function to set seachParams to filters
+    const createFilterObject = () => {
+        setLoading(true);
+        const query: any = JSON.parse(JSON.stringify(filtersInitialState));
 
-      filtersFromSearchParams(newQuery);
+        const filtersFromSearchParams = (filter: any) => {
+            Object.keys(filter).forEach((key) => {
+                if (key == "sort") {
+                    query[key] = filter[key];
+                } else {
+                    query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
+                }
+            });
+            setFilters({ ...query, ready: true });
+            setLoading(false);
+        };
+
+        const getSearchParams = () => {
+            let newQuery = {};
+            if (searchParamsObj.getAll("make").length > 0) {
+                newQuery = {
+                    ...newQuery,
+                    make: searchParamsObj.getAll("make"),
+                };
+            }
+            if (searchParamsObj.getAll("category").length > 0) {
+                newQuery = {
+                    ...newQuery,
+                    category: searchParamsObj.getAll("category"),
+                };
+            }
+            if (searchParamsObj.getAll("location").length > 0) {
+                newQuery = {
+                    ...newQuery,
+                    location: searchParamsObj.getAll("location"),
+                };
+            }
+            if (searchParamsObj.getAll("era").length > 0) {
+                newQuery = { ...newQuery, era: searchParamsObj.getAll("era") };
+            }
+            if (searchParamsObj.getAll("sort").length > 0) {
+                newQuery = { ...newQuery, sort: searchParamsObj.get("sort") };
+            }
+
+            filtersFromSearchParams(newQuery);
+        };
+
+        getSearchParams();
     };
 
-    getSearchParams();
-  };
+    // calls createFilterObject when searchParams are changed
+    useEffect(() => {
+        createFilterObject();
+    }, [searchParamsObj]);
 
-  // calls createFilterObject when searchParams are changed
-  useEffect(() => {
-    createFilterObject();
-  }, [searchParamsObj]);
+    // calls fetchData when filters are changed
+    useEffect(() => {
+        if (filters.ready) {
+            const { ready, ...currentFilters } = filters;
+            fetchData(currentFilters);
+        }
+    }, [filters, loadMore]);
 
-  // calls fetchData when filters are changed
-  useEffect(() => {
-    if (filters.ready) {
-      const { ready, ...currentFilters } = filters;
-      fetchData(currentFilters);
-    }
-  }, [filters, loadMore]);
+    // fetch data for default filter
+    useEffect(() => {
+        if (
+            searchParamsObj.getAll("location").length == 0 &&
+            searchParamsObj.getAll("make").length == 0 &&
+            searchParamsObj.getAll("category").length == 0 &&
+            searchParamsObj.getAll("era").length == 0
+        ) {
+            fetchData(filters);
+        }
+    }, []);
 
-  // fetch data for default filter
-  useEffect(() => {
-    if (
-      searchParamsObj.getAll("location").length == 0 &&
-      searchParamsObj.getAll("make").length == 0 &&
-      searchParamsObj.getAll("category").length == 0 &&
-      searchParamsObj.getAll("era").length == 0
-    ) {
-      fetchData(filters);
-    }
-  }, []);
+    //console log to check filters
+    // useEffect(() => {
+    //     console.log("filters:", filters);
+    // }, [filters]);
 
-  //console log to check filters
-  // useEffect(() => {
-  //     console.log("filters:", filters);
-  // }, [filters]);
+    //if filters are changed, reset loadMore to 21
+    useEffect(() => {
+        setLoadMore(21);
+    }, [filters]);
 
-  //if filters are changed, reset loadMore to 21
-  useEffect(() => {
-    setLoadMore(21);
-  }, [filters]);
+    //adds 21 to loadMore when button is clicked
+    const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
 
-  //adds 21 to loadMore when button is clicked
-  const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+        if (listing.length > totalAuctions - 21) {
+            setLoadMore(() => totalAuctions);
+        } else {
+            setLoadMore((prev: number) => prev + 21);
+        }
+    };
 
-    if (listing.length > totalAuctions - 21) {
-      setLoadMore(() => totalAuctions);
-    } else {
-      setLoadMore((prev: number) => prev + 21);
-    }
-  };
-
-  return (
-    <div className=" tw-relative tw-flex tw-flex-col tw-items-center">
-      <FiltersAndSort filters={filters} setFilters={setFilters} />
-      {loading && listing.length === 0 ? (
-        <Loader />
-      ) : (
-        <>
-          {listing.length != 0 && filters != filtersInitialState ? (
-            <div className="tw-pb-16 ">
-              <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
-                <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-                  {listing && <AuctionsList listing={listing} />}
-                </div>
-              </section>
+    return (
+        <div className=" tw-relative tw-flex tw-flex-col tw-items-center">
+            <FiltersAndSort filters={filters} isGridView={isGridView} setIsGridView={setIsGridView} />
+            {loading && listing.length === 0 ? (
+                <Loader />
+            ) : (
+                <>
+                    {listing.length != 0 && filters != filtersInitialState ? (
+                        <div className="tw-pb-16 ">
+                            <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
+                                <div className=" tw-w-full 2xl:tw-w-[1312px] ">
+                                    {listing && <AuctionsList listing={listing} />}
+                                </div>
+                            </section>
+                        </div>
+                    ) : (
+                        <div className="tw-p-16">No Cars with those requirements...</div>
+                    )}
+                </>
+            )}
+            {loading && listing.length > 0 && <Loader />}
+            <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 ">
+                <div
+                    className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"
+                        }`}
+                >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"
+                    } auctions`}</div>
+                <button
+                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null || loading) &&
+                        "tw-hidden"
+                        }`}
+                    style={{ paddingTop: "16px", paddingBottom: "16px" }}
+                    onClick={clickHandler}
+                >
+                    Load more
+                </button>
             </div>
-          ) : (
-            <div className="tw-p-16">No Cars with those requirements...</div>
-          )}
-        </>
-      )}
-      {loading && listing.length > 0 && <Loader />}
-      <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 ">
-        <div
-          className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${
-            loading && "tw-hidden"
-          }`}
-        >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${
-          totalAuctions || "0"
-        } auctions`}</div>
-        <button
-          className={`btn-transparent-white tw-w-full tw-text-[18px] ${
-            (listing?.length >= totalAuctions || listing === null || loading) &&
-            "tw-hidden"
-          }`}
-          style={{ paddingTop: "16px", paddingBottom: "16px" }}
-          onClick={clickHandler}
-        >
-          Load more
-        </button>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default AuctionListingPage;
 
 const Loader = () => {
-  return (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <MoonLoader color="#f2ca16" />
-    </div>
-  );
+    return (
+        <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+            <MoonLoader color="#f2ca16" />
+        </div>
+    );
 };
