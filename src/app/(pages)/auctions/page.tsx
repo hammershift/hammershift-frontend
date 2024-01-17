@@ -5,10 +5,12 @@ import FiltersAndSort from "@/app/components/filter_and_sort";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { GamesCard } from "@/app/components/card";
 import { useParams } from "next/navigation";
+const AuctionsGrid = lazy(() => import("@/app/ui/auctions/AuctionsGrid"));
 const AuctionsList = lazy(() => import("@/app/ui/auctions/AuctionsList"));
 import { useRouter } from "next/navigation";
 import { MoonLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
+
 
 const filtersInitialState = {
     make: ["All"],
@@ -114,6 +116,12 @@ const AuctionListingPage = () => {
         createFilterObject();
     }, [searchParamsObj]);
 
+    // calls createFilterObject when searchParams are changed
+    useEffect(() => {
+        console.log("isGridView:", isGridView);
+    }, [isGridView]);
+
+
     // calls fetchData when filters are changed
     useEffect(() => {
         if (filters.ready) {
@@ -162,11 +170,12 @@ const AuctionListingPage = () => {
                 <Loader />
             ) : (
                 <>
+                    {/* TODO: changing the view*/}
                     {listing.length != 0 && filters != filtersInitialState ? (
                         <div className="tw-pb-16 ">
                             <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
                                 <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-                                    {listing && <AuctionsList listing={listing} />}
+                                    {isGridView ? <AuctionsGrid listing={listing} /> : <AuctionsList listing={listing} />}
                                 </div>
                             </section>
                         </div>
@@ -177,11 +186,9 @@ const AuctionListingPage = () => {
             )}
             {loading && listing.length > 0 && <Loader />}
             <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 ">
-                <div
-                    className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"
-                        }`}
-                >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"
-                    } auctions`}</div>
+                <div className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"}`}>
+                    {`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"} auctions`}
+                </div>
                 <button
                     className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null || loading) &&
                         "tw-hidden"
