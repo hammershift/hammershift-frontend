@@ -126,12 +126,12 @@ function Profile(props: Props) {
 
     return (
         <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
-            <div className="tw-max-w-[862px]">
-                <Image
-                    src={TransitionPattern}
-                    className="black-filter"
-                    alt=""
-                />
+            <Image
+                src={TransitionPattern}
+                className="black-filter tw-absolute tw-max-h-[280px] tw-object-cover tw-object-bottom"
+                alt=""
+            />
+            <div className="tw-max-w-[862px] tw-w-full sm:tw-mt-[200px] tw-mt-[120px] tw-z-10">
                 <div className="tw-px-6 sm:tw-flex sm:tw-px-0 sm:tw-justify-between">
                     <div className="sm:tw-flex sm:tw-items-center sm:tw-gap-6">
                         <Image

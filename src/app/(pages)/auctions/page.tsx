@@ -5,10 +5,12 @@ import FiltersAndSort from "@/app/components/filter_and_sort";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { GamesCard } from "@/app/components/card";
 import { useParams } from "next/navigation";
+const AuctionsGrid = lazy(() => import("@/app/ui/auctions/AuctionsGrid"));
 const AuctionsList = lazy(() => import("@/app/ui/auctions/AuctionsList"));
 import { useRouter } from "next/navigation";
 import { MoonLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
+
 
 const filtersInitialState = {
     make: ["All"],
@@ -35,6 +37,7 @@ const AuctionListingPage = () => {
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isGridView, setIsGridView] = useState(true);
     const [totalAuctions, setTotalAuctions] = useState(0);
     const router = useRouter();
     const searchParamsObj = useSearchParams();
@@ -68,9 +71,7 @@ const AuctionListingPage = () => {
                 if (key == "sort") {
                     query[key] = filter[key];
                 } else {
-                    query[key] = Array.isArray(filter[key])
-                        ? filter[key]
-                        : [filter[key]];
+                    query[key] = Array.isArray(filter[key]) ? filter[key] : [filter[key]];
                 }
             });
             setFilters({ ...query, ready: true });
@@ -115,16 +116,16 @@ const AuctionListingPage = () => {
         createFilterObject();
     }, [searchParamsObj]);
 
+
+
+
     // calls fetchData when filters are changed
     useEffect(() => {
-
         if (filters.ready) {
-            const { ready, ...currentFilters } = filters
+            const { ready, ...currentFilters } = filters;
             fetchData(currentFilters);
         }
-    }, [filters, loadMore]);
-
-
+    }, [filters, loadMore, isGridView]);
 
     // fetch data for default filter
     useEffect(() => {
@@ -146,12 +147,10 @@ const AuctionListingPage = () => {
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
         setLoadMore(21);
-    }, [filters]);
+    }, [filters, isGridView]);
 
     //adds 21 to loadMore when button is clicked
-    const clickHandler = (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => {
+    const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
         if (listing.length > totalAuctions - 21) {
@@ -163,42 +162,35 @@ const AuctionListingPage = () => {
 
     return (
         <div className=" tw-relative tw-flex tw-flex-col tw-items-center">
-            <FiltersAndSort filters={filters} setFilters={setFilters} />
+            <FiltersAndSort filters={filters} isGridView={isGridView} setIsGridView={setIsGridView} />
             {loading && listing.length === 0 ? (
                 <Loader />
             ) : (
                 <>
+                    {/* TODO: changing the view*/}
                     {listing.length != 0 && filters != filtersInitialState ? (
-                        <div className="tw-pb-16 ">
+                        <div className="tw-pb-8 sm:tw-pb-16 ">
                             <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
                                 <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-                                    {listing && (
-                                        <AuctionsList listing={listing} />
-                                    )}
+                                    {isGridView ? <AuctionsGrid listing={listing} /> : <AuctionsList listing={listing} />}
                                 </div>
                             </section>
                         </div>
                     ) : (
-                        <div className="tw-p-16">
-                            No Cars with those requirements...
-                        </div>
+                        <div className="tw-p-16 tw-text-center">No Cars with those requirements...</div>
                     )}
                 </>
             )}
             {loading && listing.length > 0 && <Loader />}
-            <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-16 ">
-                <div
-                    className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"
-                        }`}
-                >{`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"
-                    } auctions`}</div>
+            <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16 ">
+                <div className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"}`}>
+                    {`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"} auctions`}
+                </div>
                 <button
-                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions ||
-                        listing === null ||
-                        loading) &&
+                    className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null || loading) &&
                         "tw-hidden"
                         }`}
-                    style={{ paddingTop: "16px", paddingBottom: "16px" }}
+
                     onClick={clickHandler}
                 >
                     Load more

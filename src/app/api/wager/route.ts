@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       priceGuessed,
       wagerAmount,
       user,
-      auctionIdentifierId
+      auctionIdentifierId,
     });
 
     await newWager.save();
@@ -104,9 +104,58 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest): Promise<NextResponse<any>> {
+// export async function PUT(req: NextRequest): Promise<NextResponse<any>> {
+//   try {
+//     await connectToDB();
+//     const id = req.nextUrl.searchParams.get('id');
+
+//     if (!id) {
+//       return NextResponse.json({ message: "Invalid request: 'id' parameter is missing" }, { status: 400 });
+//     }
+
+//     const edits = await req.json();
+//     const editedWager = await Wager.findOneAndUpdate({ $and: [{ _id: new ObjectId(id) }] }, { $set: edits }, { new: true });
+
+//     if (editedWager) {
+//       return NextResponse.json(editedWager, { status: 202 });
+//     } else {
+//       return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+//   }
+// }
+
+// export async function GET(req: NextRequest) {
+//   try {
+//     const client = await clientPromise;
+//     const db = client.db();
+//     const id = req.nextUrl.searchParams.get('id');
+//     const user = req.nextUrl.searchParams.get('user_id');
+
+//     let query = {};
+
+//     if (id && user) {
+//       query = { auctionID: new ObjectId(id), 'user._id': new ObjectId(user) };
+//     } else if (id) {
+//       query = { auctionID: new ObjectId(id) };
+//     } else if (user) {
+//       query = { 'user._id': new ObjectId(user) };
+//     }
+
+//     const wagers = await db.collection('wagers').find(query).toArray();
+//     return NextResponse.json({ wagers });
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json({ message: 'Internal server error' });
+//   }
+// }
+
+export async function PUT(req: NextRequest) {
   try {
-    await connectToDB();
+    const client = await clientPromise;
+    const db = client.db();
     const id = req.nextUrl.searchParams.get('id');
 
     if (!id) {
@@ -114,21 +163,27 @@ export async function PUT(req: NextRequest): Promise<NextResponse<any>> {
     }
 
     const edits = await req.json();
-    const editedWager = await Wager.findOneAndUpdate(
-      { $and: [{ _id: new ObjectId(id) }] },
-      { $set: edits },
-      { new: true }
-    );
 
-    if (editedWager) {
-      return NextResponse.json(editedWager, { status: 202 });
-    } else {
-      return NextResponse.json({ message: "Wager not found" }, { status: 404 });
+    const currentWager = await db.collection('wagers').findOne({ _id: new ObjectId(id) });
+
+    if (!currentWager) {
+      return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
     }
 
+    // Check if the wager has already been refunded (assuming there's a field like 'isRefunded')
+    if (currentWager.refunded) {
+      return NextResponse.json({ message: 'Refund already processed' }, { status: 409 });
+    }
+
+    const updateResult = await db.collection('wagers').findOneAndUpdate({ _id: new ObjectId(id) }, { $set: edits }, { returnDocument: 'after' });
+
+    if (updateResult.value) {
+      return NextResponse.json(updateResult.value, { status: 202 });
+    } else {
+      return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
+    }
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
-
