@@ -116,10 +116,7 @@ const AuctionListingPage = () => {
         createFilterObject();
     }, [searchParamsObj]);
 
-    // calls createFilterObject when searchParams are changed
-    useEffect(() => {
-        console.log("isGridView:", isGridView);
-    }, [isGridView]);
+
 
 
     // calls fetchData when filters are changed
@@ -128,7 +125,7 @@ const AuctionListingPage = () => {
             const { ready, ...currentFilters } = filters;
             fetchData(currentFilters);
         }
-    }, [filters, loadMore]);
+    }, [filters, loadMore, isGridView]);
 
     // fetch data for default filter
     useEffect(() => {
@@ -150,7 +147,7 @@ const AuctionListingPage = () => {
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
         setLoadMore(21);
-    }, [filters]);
+    }, [filters, isGridView]);
 
     //adds 21 to loadMore when button is clicked
     const clickHandler = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
