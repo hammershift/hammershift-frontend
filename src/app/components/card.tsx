@@ -36,7 +36,7 @@ const Card: React.FC<any> = ({
   const timerValues = useTimer();
   return (
     <TimerProvider deadline={new Date(deadline)}>
-      <div className="tw-flex tw-flex-col tw-justify-between tw-h-full">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-h-auto">
         <div>
           <img
             onClick={() => router.push(`/auctions/car_view_page/${auction_id}`)}
