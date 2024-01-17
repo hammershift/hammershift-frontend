@@ -104,7 +104,7 @@ export const GamesCard = (props: any) => {
 
   return (
     <TimerProvider deadline={new Date()}>
-      <div className="tw-flex tw-flex-col tw-justify-between tw-h-full tw-divide-slate-700">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-place-items-stretch tw-h-full tw-divide-slate-700">
         <div>
           <img
             src={props.image}
@@ -159,11 +159,11 @@ export const GamesCard = (props: any) => {
             <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
             <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
           </div>
-          <CardWagersSection objectID={props.object_id} />
         </div>
         <div>
+          <CardWagersSection objectID={props.object_id} />
           <button
-            className="btn-yellow-thin tw-w-full tw-mt-4 md:tw-w-auto"
+            className="btn-yellow-thin tw-w-full md:tw-w-auto"
             onClick={() =>
               router.push(`/auctions/car_view_page/${props.auction_id}`)
             }
@@ -193,7 +193,7 @@ export const CardWagersSection = ({ objectID }: any) => {
   return (
     <>
       {auctionWagers.length === 0 && (
-        <div className="tw-bg-[#172431] tw-p-4 tw-flex tw-gap-2 tw-rounded-[4px] tw-mt-4">
+        <div className="tw-bg-[#172431] tw-p-4 tw-flex tw-gap-2 tw-rounded-[4px] tw-my-4">
           <Image
             src={AvatarFour}
             width={24}
