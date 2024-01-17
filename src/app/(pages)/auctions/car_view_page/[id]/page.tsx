@@ -183,6 +183,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         sessionData: any
     ) => {
         e.preventDefault();
+        const fixedWagerAmount = 10;
 
         // if (String(wagerInputs.priceGuessed).includes(".")) {
         //     if (wagerInputs.priceGuessed) {
@@ -198,7 +199,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             return;
         }
 
-        if (pattern.test(String(wagerInputs.wagerAmount))) {
+        if (pattern.test(String(fixedWagerAmount))) {
             setInvalidWager(false);
         } else {
             setInvalidWager(true);
@@ -206,7 +207,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         }
         // ensure wagerAmount is defined and is a number greater than zero
         const wagerAmount = wagerInputs.wagerAmount ?? 0;
-        if (wagerAmount > walletBalance) {
+        if (fixedWagerAmount > walletBalance) {
             console.log("Insufficient funds. Please top-up your wallet."); // check if the defined wager amount is more than the wallet balance
             setInsufficientFunds(true);
             return;
@@ -219,8 +220,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             await addPrizePool(
                 {
                     pot:
-                        carData.pot + Math.floor(wagerAmount * 0.88) ||
-                        Math.floor(wagerAmount * 0.88),
+                        carData.pot + Math.floor(fixedWagerAmount * 0.88) ||
+                        Math.floor(fixedWagerAmount * 0.88),
                 },
                 urlPath.id
             );
@@ -229,7 +230,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             const walletResponse = await fetch("/api/wallet", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ wagerAmount: wagerAmount }),
+                body: JSON.stringify({ wagerAmount: fixedWagerAmount }),
             });
 
             const walletData = await walletResponse.json();
@@ -241,7 +242,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             // the wallet has been successfully updated, place the wager
             const wagerResponse = await createWager({
                 ...wagerInputs,
-                wagerAmount,
+                wagerAmount: fixedWagerAmount,
                 user: sessionData.user,
                 auctionIdentifierId: carData.auction_id,
             });
