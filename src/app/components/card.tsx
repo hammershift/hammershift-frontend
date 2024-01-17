@@ -177,14 +177,14 @@ export const AuctionsListCard = (props: any) => {
 
   return (
     <TimerProvider deadline={new Date()}>
-      <div className="tw-flex tw-flex-row tw-gap-8 tw-max-w-[944px]">
-        <div className="tw-w-[416px] tw-h-[240px]">
+      <div className="tw-flex tw-flex-row tw-gap-4 sm:tw-gap-8 tw-w-full tw-max-w-[944px] ">
+        <div className="tw-max-w-[156px] sm:tw-max-w-[416px] tw-w-full tw-min-w-[156px] tw-h-auto tw-h-[147px] sm:tw-h-[240px]">
           <img
             src={props.image}
             width={416}
             height={240}
             alt={props.make}
-            className="tw-w-full  tw-h-auto 2xl:tw-h-[240px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+            className="tw-max-w-[156px] sm:tw-max-w-[416px] tw-w-full tw-min-w-[156px] tw-h-auto  tw-min-h-[147px] xl:tw-h-[240px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
             onClick={() =>
               router.push(`/auctions/car_view_page/${props.auction_id}`)
             }
@@ -192,14 +192,14 @@ export const AuctionsListCard = (props: any) => {
         </div>
         <div className="tw-flex tw-flex-col tw-w-auto tw-flex-grow">
           <div
-            className="tw-font-bold tw-text-[24px] hover:tw-cursor-pointer"
+            className=" tw-font-bold tw-text-[18px] sm:tw-text-[24px] hover:tw-cursor-pointer "
             onClick={() =>
               router.push(`/auctions/car_view_page/${props.auction_id}`)
             }
           >
             {props.year} {props.make} {props.model}
           </div>
-          <div className="tw-flex tw-items-center tw-gap-8 tw-mt-4">
+          <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-4 sm:tw-gap-8 tw-mt-3 sm:tw-mt-4">
             <div className="tw-flex tw-gap-2">
               <Image
                 src={Dollar}
@@ -228,7 +228,9 @@ export const AuctionsListCard = (props: any) => {
           {/* <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
             {props.description[0]}
           </p> */}
-          <CardWagersSection objectID={props.object_id} />
+          <div className="tw-hidden lg:tw-flex tw-flex-col tw-w-auto tw-flex-grow ">
+            <CardWagersSection objectID={props.object_id} />
+          </div>
           {/* <div>
             <button
               className="btn-yellow-thin tw-w-full tw-mt-4 md:tw-w-auto"
