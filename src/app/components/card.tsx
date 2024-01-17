@@ -151,8 +151,6 @@ export const GamesCard = (props: any) => {
             <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
             <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
           </div>
-        </div>
-        <div>
           <CardWagersSection objectID={props.object_id} />
           <button
             className="btn-yellow-thin tw-w-full md:tw-w-auto"
@@ -163,7 +161,7 @@ export const GamesCard = (props: any) => {
             Play Game
           </button>
         </div>
-        <hr className="tw-h-px tw-mt-8 tw-border-1" />
+        <hr className="tw-h-px tw-mt-8 sm:tw-mt-16 tw-border-1" />
       </div>
     </TimerProvider>
   );
@@ -284,7 +282,7 @@ export const CardWagersSection = ({ objectID }: any) => {
           >
             {auctionWagers.slice(0, 2).map((wager: any) => {
               return (
-                <div key={wager.auctionObjectId} className="tw-flex tw-gap-2">
+                <div key={wager.auctionObjectId} className="tw-flex  tw-items-center tw-gap-2">
                   <Image
                     src={wager.user?.image ? wager.user.image : AvatarTwo}
                     width={24}
@@ -292,7 +290,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                     alt="dollar"
                     className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
                   />
-                  <div className="tw-flex tw-text-sm tw-gap-1 tw-items-center">
+                  <div className="tw-flex tw-flex-col sm:tw-flex-row tw-text-sm tw-gap-1 sm:tw-items-center">
                     <div className="tw-text-[#42A0FF]">{`@${wager.user.username}`}</div>
                     <div>{`wagered $${new Intl.NumberFormat().format(
                       wager.priceGuessed
