@@ -38,10 +38,12 @@ type DropdownMenuProps =
 
 const FiltersAndSort = ({
     filters,
-    setFilters,
+    isGridView,
+    setIsGridView
 }: {
     filters: any;
-    setFilters: any;
+    isGridView: boolean;
+    setIsGridView: any;
 }) => {
     const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
     const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -245,7 +247,7 @@ const FiltersAndSort = ({
                                 {filters.category[0] == "All"
                                     ? "Category"
                                     : "Category: " +
-                                      filters.category.join(", ")}
+                                    filters.category.join(", ")}
                                 <Image
                                     src={DropdownArrow}
                                     width={12}
@@ -306,7 +308,7 @@ const FiltersAndSort = ({
                                 {filters.location[0] == "All"
                                     ? "Location"
                                     : "Location: " +
-                                      filters.location.join(", ")}
+                                    filters.location.join(", ")}
                                 <Image
                                     src={DropdownArrow}
                                     width={12}
@@ -322,7 +324,21 @@ const FiltersAndSort = ({
                     </div>
                 </div>
             </div>
-            <div className="right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex">
+            <div className="right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex tw-gap-6">
+                {/* TODO: */}
+                <div className="tw-flex tw-gap-6">
+                    <div
+                        className={`tw-p-2 tw-rounded tw-cursor-pointer ${isGridView ? "tw-bg-[#172431]" : ""}`}
+                        onClick={e => setIsGridView(true)}>
+                        <Image src={GridIcon} alt="grid view" width={24} height={24} className={`tw-w-[24px] tw-h-[24px]`} />
+                    </div>
+                    <div
+                        className={`tw-p-2 tw-rounded tw-cursor-pointer ${!isGridView ? "tw-bg-[#172431]" : ""}`}
+                        onClick={e => setIsGridView(false)}>
+                        <Image src={ListIcon} alt="grid view" width={24} height={24} className={`tw-w-[24px] tw-h-[24px]  `} />
+                    </div>
+                </div>
+
                 {/* Dropdown for Sort*/}
                 <div className="tw-relative tw-text-left tw-mx-2">
                     <div>
@@ -689,9 +705,8 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
 
     return (
         <div
-            className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${
-                columns === 1 ? 39 : 13
-            }`}
+            className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${columns === 1 ? 39 : 13
+                }`}
         >
             {MakeDropdownContent.map((value) => (
                 <div
@@ -705,11 +720,10 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
                     >
                         <input
                             type="checkbox"
-                            className={` ${
-                                filters["make"].includes(value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity make-checkbox`}
+                            className={` ${filters["make"].includes(value)
+                                ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                : "tw-bg-white/5 tw-border-white/10"
+                                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity make-checkbox`}
                         />
                         {filters["make"].includes(value) && (
                             <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -781,11 +795,10 @@ const CategoryContent: React.FC<FiltersContentProps> = ({
                     >
                         <input
                             type="checkbox"
-                            className={` ${
-                                filters["category"].includes(value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity category-checkbox`}
+                            className={` ${filters["category"].includes(value)
+                                ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                : "tw-bg-white/5 tw-border-white/10"
+                                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity category-checkbox`}
                         />
                         {filters["category"].includes(value) && (
                             <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -855,11 +868,10 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
                     >
                         <input
                             type="checkbox"
-                            className={` ${
-                                filters["era"].includes(value)
-                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                    : "tw-bg-white/5 tw-border-white/10"
-                            } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity era-checkbox`}
+                            className={` ${filters["era"].includes(value)
+                                ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                : "tw-bg-white/5 tw-border-white/10"
+                                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity era-checkbox`}
                         />
                         {filters["era"].includes(value) && (
                             <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -928,11 +940,10 @@ const LocationContent: React.FC<FiltersContentProps> = ({
                         >
                             <input
                                 type="checkbox"
-                                className={` ${
-                                    filters["location"].includes(value)
-                                        ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                                        : "tw-bg-white/5 tw-border-white/10"
-                                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity location-checkbox`}
+                                className={` ${filters["location"].includes(value)
+                                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
+                                    : "tw-bg-white/5 tw-border-white/10"
+                                    } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity location-checkbox`}
                             />
                             {filters["location"].includes(value) && (
                                 <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
@@ -1020,9 +1031,8 @@ const SortContent: React.FC<FiltersContentProps> = ({ filters }) => {
             {SortList.map((value) => {
                 return (
                     <button
-                        className={`${
-                            filters["sort"] === value ? "tw-bg-white/10" : ""
-                        } hover:tw-bg-white/5 tw-rounded tw-p-2 tw-block tw-w-full tw-text-left`}
+                        className={`${filters["sort"] === value ? "tw-bg-white/10" : ""
+                            } hover:tw-bg-white/5 tw-rounded tw-p-2 tw-block tw-w-full tw-text-left`}
                         key={value}
                         onClick={() => addSortToFilters(value, filters, route)}
                     >
