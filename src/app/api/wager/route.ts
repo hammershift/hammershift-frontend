@@ -156,20 +156,31 @@ export async function PUT(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db();
-    const auction_id = req.nextUrl.searchParams.get('auction_id');
+    const id = req.nextUrl.searchParams.get('id');
 
-    if (!auction_id) {
-      return NextResponse.json({ message: "Invalid request: 'auction_id' parameter is missing" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ message: "Invalid request: 'id' parameter is missing" }, { status: 400 });
     }
 
     const edits = await req.json();
 
-    const updateResult = await db.collection('auctions').findOneAndUpdate({ auction_id: auction_id, isActive: true }, { $set: edits }, { returnDocument: 'after' });
+    const currentWager = await db.collection('wagers').findOne({ _id: new ObjectId(id) });
+
+    if (!currentWager) {
+      return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
+    }
+
+    // Check if the wager has already been refunded (assuming there's a field like 'isRefunded')
+    if (currentWager.refunded) {
+      return NextResponse.json({ message: 'Refund already processed' }, { status: 409 });
+    }
+
+    const updateResult = await db.collection('wagers').findOneAndUpdate({ _id: new ObjectId(id) }, { $set: edits }, { returnDocument: 'after' });
 
     if (updateResult.value) {
       return NextResponse.json(updateResult.value, { status: 202 });
     } else {
-      return NextResponse.json({ message: 'Auction not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
     }
   } catch (error) {
     console.error(error);

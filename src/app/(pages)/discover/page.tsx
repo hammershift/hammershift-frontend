@@ -13,9 +13,10 @@ const filtersInitialState = {
 
 const Discover = () => {
   const [filters, setFilters] = useState(filtersInitialState);
+  const [isGridView, setIsGridView] = useState(true);
   return (
     <div className="section-container">
-      <FiltersAndSort filters={filters} setFilters={setFilters} />
+      <FiltersAndSort filters={filters} isGridView={isGridView} setIsGridView={setIsGridView} />
       <DiscoverPage />
     </div>
   );
