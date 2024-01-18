@@ -172,10 +172,7 @@ function EditProfile() {
                 <div className="tw-text-2xl tw-font-bold tw-mb-6">
                     Notification
                 </div>
-                <input
-                    type="checkbox"
-                    className="tw-bg-[#f2ca16] tw-border-[#f2ca16] tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity location-checkbox"
-                />
+                <input type="checkbox" name="account" />
                 <label htmlFor="account">Account</label>
                 <div>Excepteur sint obcaecat cupiditat non proident culpa</div>
                 <input type="checkbox" name="wagers" />
