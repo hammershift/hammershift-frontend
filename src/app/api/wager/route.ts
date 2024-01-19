@@ -53,6 +53,8 @@ export async function POST(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
 
+    await db.collection('users').updateOne({ _id: newWager.user._id }, { $push: { wagers: newWager._id } });
+
     // calculate the total wager for the auction
     const totalWagerAggregation = await db
       .collection('wagers')

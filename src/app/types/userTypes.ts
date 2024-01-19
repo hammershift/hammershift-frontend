@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 export interface User {
   _id?: string;
   email: string;
@@ -7,8 +9,10 @@ export interface User {
   balance: number;
   action?: 'create' | 'login';
   isBanned: boolean;
-  wagers?: Wager[]; // TEST IMPLEMENTATION
-  winnings: Winning[]; // TEST IMPLEMENTATION
+  // wagers?: Wager[]; // TEST IMPLEMENTATION
+  // winnings: Winning[]; // TEST IMPLEMENTATION
+  wagers?: ObjectId[];
+  winnings?: ObjectId[];
 }
 
 export interface Credentials {

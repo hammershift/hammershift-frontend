@@ -58,6 +58,17 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Invalid credentials');
         }
 
+        const updateQuery: Partial<User> = {};
+        if (!user.wagers) {
+          updateQuery['wagers'] = [];
+        }
+        if (!user.winnings) {
+          updateQuery['winnings'] = [];
+        }
+        if (Object.keys(updateQuery).length > 0) {
+          await db.collection<User>('users').updateOne({ _id: user._id }, { $set: updateQuery });
+        }
+
         return { id: user._id, email: user.email };
       },
     }),
@@ -85,6 +96,8 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.image = user.image;
+        token.wagers = user.wagers;
+        token.winnings = user.winnings;
       }
 
       const client = await clientPromise;
