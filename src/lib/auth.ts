@@ -75,6 +75,8 @@ export const authOptions: NextAuthOptions = {
         session.user.fullName = token.fullName;
         session.user.username = token.username;
         session.user.image = token.image;
+        session.user.wagers = token.wagers;
+        session.user.winnings = token.winnings;
       }
       return session;
     },
@@ -98,6 +100,8 @@ export const authOptions: NextAuthOptions = {
         token.isActive = dbUser.isActive;
         token.balance = dbUser.balance;
         token.isBanned = dbUser.isBanned;
+        token.wagers = dbUser.wagers;
+        token.winnings = dbUser.winnings;
 
         // check if the user doesn't have a createdAt field and set it
         if (!dbUser.createdAt) {
