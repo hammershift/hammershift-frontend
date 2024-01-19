@@ -16,6 +16,7 @@ export interface Credentials {
   password: string;
 }
 
+// TEST IMPLEMENTATION
 export interface Wager {
   _id?: string;
   userID: string;
@@ -26,6 +27,7 @@ export interface Wager {
   isActive: boolean;
 }
 
+// TEST IMPLEMENTATION
 export interface Winning {
   _id?: string;
   userID: string;
