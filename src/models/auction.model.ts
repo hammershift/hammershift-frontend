@@ -60,6 +60,12 @@ const carSchema = new mongoose.Schema(
     page_url: { type: String, required: true },
     website: { type: String, required: true },
     winners: [winnerSchema],
+    wagers: [
+      {
+        types: mongoose.Schema.Types.ObjectId,
+        ref: 'Wager',
+      },
+    ],
   },
   { timestamps: true }
 );
