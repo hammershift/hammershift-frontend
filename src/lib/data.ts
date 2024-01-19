@@ -717,3 +717,29 @@ export const dislikeReply = async (
     throw error;
   }
 }
+
+export const editUserInfo = async (userId: string, edits: any) => {
+  try {
+    const res = await fetch('/api/userInfo', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId,
+        updatedFields: edits,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to update user. Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log("User updated successfully:", data.updatedUser);
+    return data.updatedUser;
+  } catch (error: any) {
+    console.error('Error updating user:', error.message);
+    throw error;
+  }
+}
