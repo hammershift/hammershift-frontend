@@ -62,7 +62,7 @@ const carSchema = new mongoose.Schema(
     winners: [winnerSchema],
     wagers: [
       {
-        types: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Wager',
       },
     ],
