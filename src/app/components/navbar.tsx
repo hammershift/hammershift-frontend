@@ -227,7 +227,7 @@ const Navbar = () => {
     return (
         <div>
             {isLoggedIn ? (
-                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
+                <div className=" tw-flex tw-px-4 md:tw-px-16 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link onClick={() => closeMenu()} href="/">

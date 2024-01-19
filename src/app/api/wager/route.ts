@@ -170,7 +170,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ message: 'Wager not found' }, { status: 404 });
     }
 
-    // Check if the wager has already been refunded (assuming there's a field like 'isRefunded')
+    // check if the wager has already been refunded
     if (currentWager.refunded) {
       return NextResponse.json({ message: 'Refund already processed' }, { status: 409 });
     }

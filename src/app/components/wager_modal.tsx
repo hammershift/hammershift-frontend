@@ -295,7 +295,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     value={10}
                                     name="wager-amount"
                                     type="number"
-                                    className="tw-bg-white/5 focus:tw-outline tw-opacity-50 tw-outline-[6px] tw-outline-[#273039] tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
+                                    className="tw-bg-white/5 focus:tw-outline tw-opacity-50 tw-outline-[6px] tw-outline-[#273039] tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded tw-outline-[#273039]"
                                     onChange={handleWagerInputChange}
                                 />
                                 {invalidWager && (

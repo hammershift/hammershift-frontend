@@ -31,6 +31,9 @@ export const getCarData = async (ID: string) => {
         bids: data.attributes[13].value,
         status: data.attributes[14].value,
         pot: data.pot,
+        comments: data.comments,
+        views: data.views,
+        watchers: data.watchers
       };
       return car;
     } else {
@@ -714,6 +717,32 @@ export const dislikeReply = async (
 
   } catch (error) {
     console.error(errorMessage);
+    throw error;
+  }
+}
+
+export const editUserInfo = async (userId: string, edits: any) => {
+  try {
+    const res = await fetch('/api/userInfo', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId,
+        updatedFields: edits,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to update user. Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log("User updated successfully:", data.updatedUser);
+    return data.updatedUser;
+  } catch (error: any) {
+    console.error('Error updating user:', error.message);
     throw error;
   }
 }
