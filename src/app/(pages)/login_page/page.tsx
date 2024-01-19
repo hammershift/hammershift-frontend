@@ -65,12 +65,19 @@ const CreateAccount = () => {
 
       console.log('signIn result:', result);
 
-      if (result?.error) {
-        setError('✕ Invalid credentials. Please try again');
-      } else {
+      if (!result?.error) {
         console.log('Login successful');
         router.push('/');
+        return;
       }
+
+      if (result.error === 'Your account has been banned') {
+        setError('✕ Your account has been banned. Please contact support');
+        return;
+      }
+
+      // for any other errors
+      setError('✕ Invalid credentials. Please try again');
     } catch (error) {
       console.error('An unexpected error occurred during login:', error);
       setError('An unexpected error occurred');
