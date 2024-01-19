@@ -15,6 +15,9 @@ import HourGlassIcon from "../../../../public/images/hour-glass.svg";
 import PrizeIcon from "../../../../public/images/monetization-browser-bag.svg";
 import CheckIcon from "../../../../public/images/check-black.svg";
 import CheckIconGreen from "../../../../public/images/check-green.svg";
+import CommentsIcon from "../../../../public/images/comments-icon.svg";
+import EyeIcon from "../../../../public/images/eye-on.svg";
+import TelescopeIcon from "../../../../public/images/telescope-sharp.svg";
 
 import CameraPlus from "../../../../public/images/camera-plus.svg";
 import GifIcon from "../../../../public/images/image-document-gif.svg";
@@ -74,6 +77,9 @@ interface TitleContainerProps {
     players_num: number;
     prize: string;
     pot: number;
+    comments: number;
+    views: number;
+    watchers: number;
 }
 
 const TitleContainer: React.FC<TitleContainerProps> = ({
@@ -87,6 +93,9 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
     players_num,
     prize,
     pot,
+    comments,
+    views,
+    watchers,
 }) => {
     const timerValues = useTimer();
 
@@ -96,8 +105,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                 {year} {make} {model}
             </div>
             <div className="info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4">
-                <div className="info-left-marker tw-w-[300px]">
-                    <div className="tw-flex">
+                <div className="tw-w-[280px]">
+                    <div className="tw-flex tw-items-center">
                         <div>
                             <Image
                                 src={DollarIcon}
@@ -115,7 +124,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                             <span className="tw-block md:tw-hidden tw-ml-2">{`(${bids_num} bids)`}</span>
                         </div>
                     </div>
-                    <div className="tw-flex tw-mt-0 md:tw-mt-1">
+                    <div className="tw-flex tw-mt-0 md:tw-mt-1 tw-items-center">
                         <div>
                             <Image
                                 src={CalendarIcon}
@@ -132,23 +141,8 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                     </div>
                 </div>
                 <div className="right-section-marker">
-                    <div className="top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between">
-                        <div className="tw-w-[160px] tw-hidden md:tw-flex">
-                            <div>
-                                <Image
-                                    src={HashtagIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5  tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Bids:{" "}
-                                <span className="tw-font-bold">{bids_num}</span>
-                            </span>
-                        </div>
-                        <div className="tw-flex">
+                    <div className="tw-flex tw-flex-col md:tw-flex-row">
+                        <div className="tw-flex tw-w-[270px] tw-items-center">
                             <div>
                                 <Image
                                     src={HourGlassIcon}
@@ -169,9 +163,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                 )}
                             </span>
                         </div>
-                    </div>
-                    <div className="bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
-                        <div className="tw-flex  tw-w-[160px]">
+                        <div className="tw-flex tw-items-center">
                             <div>
                                 <Image
                                     src={PlayersIcon}
@@ -188,7 +180,24 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                 </span>
                             </span>
                         </div>
-                        <div className="tw-flex">
+                    </div>
+                    <div className="tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
+                        <div className="tw-hidden md:tw-flex md:tw-w-[270px] tw-items-center">
+                            <div>
+                                <Image
+                                    src={HashtagIcon}
+                                    width={20}
+                                    height={20}
+                                    alt="calendar"
+                                    className="tw-w-5 tw-h-5  tw-mr-2"
+                                />
+                            </div>
+                            <span className="tw-opacity-80">
+                                Bids:{" "}
+                                <span className="tw-font-bold">{bids_num}</span>
+                            </span>
+                        </div>
+                        <div className="tw-flex tw-items-center">
                             <div>
                                 <Image
                                     src={PrizeIcon}
@@ -204,12 +213,65 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                     $
                                     {pot
                                         ? new Intl.NumberFormat().format(
-                                            pot || 0
-                                        )
+                                              pot || 0
+                                          )
                                         : " --"}
                                 </span>
                             </span>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div className="tw-opacity-80 md:tw-flex md:tw-mt-1">
+                <div className="tw-flex tw-gap-2 tw-items-center tw-w-full tw-max-w-[280px]">
+                    <Image
+                        src={CommentsIcon}
+                        width={20}
+                        height={20}
+                        alt="calendar"
+                        className="tw-w-5 tw-h-5 tw-text-white"
+                    />
+                    <div>
+                        Comments:{" "}
+                        <span className="tw-font-bold">
+                            {comments
+                                ? new Intl.NumberFormat().format(comments)
+                                : "--"}{" "}
+                        </span>
+                    </div>
+                </div>
+                <div className="tw-flex tw-gap-2 tw-items-center  tw-w-full tw-max-w-[270px]">
+                    <Image
+                        src={EyeIcon}
+                        width={20}
+                        height={20}
+                        alt="calendar"
+                        className="tw-w-5 tw-h-5 tw-text-white"
+                    />
+                    <div>
+                        Views:{" "}
+                        <span className="tw-font-bold">
+                            {views
+                                ? new Intl.NumberFormat().format(views)
+                                : "--"}
+                        </span>
+                    </div>
+                </div>
+                <div className="tw-flex tw-gap-2 tw-items-center">
+                    <Image
+                        src={TelescopeIcon}
+                        width={20}
+                        height={20}
+                        alt="calendar"
+                        className="tw-w-5 tw-h-5 tw-text-white"
+                    />
+                    <div>
+                        Watchers:{" "}
+                        <span className="tw-font-bold">
+                            {watchers
+                                ? new Intl.NumberFormat().format(watchers)
+                                : "--"}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -307,10 +369,11 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             width={20}
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
-                            className={`tw-w-5 tw-h-5 tw-mr-2 ${isWatching
-                                ? "scale-animation is-watching"
-                                : "scale-animation"
-                                }`}
+                            className={`tw-w-5 tw-h-5 tw-mr-2 ${
+                                isWatching
+                                    ? "scale-animation is-watching"
+                                    : "scale-animation"
+                            }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}
                     </button>
@@ -561,7 +624,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
                                                 {session?.user.id ===
-                                                    wager.user._id
+                                                wager.user._id
                                                     ? "You"
                                                     : wager.user.username}
                                             </div>

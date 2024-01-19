@@ -313,6 +313,9 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                                 make={carData.make}
                                 model={carData.model}
                                 pot={carData.pot}
+                                comments={carData.comments}
+                                views={carData.views}
+                                watchers={carData.watchers}
                                 current_bid={currencyString}
                                 bids_num={carData.bids}
                                 ending_date={formattedDateString}
