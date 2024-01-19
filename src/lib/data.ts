@@ -31,6 +31,9 @@ export const getCarData = async (ID: string) => {
         bids: data.attributes[13].value,
         status: data.attributes[14].value,
         pot: data.pot,
+        comments: data.comments,
+        views: data.views,
+        watchers: data.watchers
       };
       return car;
     } else {
