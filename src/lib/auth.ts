@@ -51,6 +51,9 @@ export const authOptions: NextAuthOptions = {
         const db = client.db();
         const user = await db.collection<User>('users').findOne({ email: credentials.email });
 
+        if (user?.isBanned) {
+          throw new Error('Your account has been banned');
+        }
         if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password))) {
           throw new Error('Invalid credentials');
         }
@@ -94,6 +97,7 @@ export const authOptions: NextAuthOptions = {
         token.image = dbUser.image;
         token.isActive = dbUser.isActive;
         token.balance = dbUser.balance;
+        token.isBanned = dbUser.isBanned;
 
         // check if the user doesn't have a createdAt field and set it
         if (!dbUser.createdAt) {
@@ -119,6 +123,14 @@ export const authOptions: NextAuthOptions = {
       const isCreatingAccount = req?.query?.isCreatingAccount === 'true';
 
       if (account.provider === 'google' && isCreatingAccount) {
+        const client = await clientPromise;
+        const db = client.db();
+        const dbUser = await db.collection<User>('users').findOne({ email: user.email });
+
+        if (dbUser && dbUser.isBanned) {
+          return false;
+        }
+
         const emailExists = await emailExistsInDatabase(user.email);
         if (emailExists) {
           return `/create_account?emailExists=true`;
