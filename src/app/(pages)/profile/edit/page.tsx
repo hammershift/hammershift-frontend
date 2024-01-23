@@ -15,6 +15,7 @@ function EditProfile() {
     const [edits, setEdits] = useState<any>({});
     const [countries, setCountries] = useState<ICountry[]>([]);
     const [states, setStates] = useState<IState[]>([]);
+    const [saved, setSaved] = useState(false);
 
     useEffect(() => {
         setCountries(Country.getAllCountries());
@@ -33,7 +34,6 @@ function EditProfile() {
             const fetchUserInfo = async () => {
                 const userInfo = await getUserInfo(data.user.id);
                 setUserInfo(userInfo);
-                console.log(userInfo);
             };
 
             fetchUserInfo();
@@ -47,6 +47,8 @@ function EditProfile() {
                 userInfo.user._id,
                 edits
             );
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2000);
         } catch (error: any) {
             console.error("Error updating user:", error.message);
         }
@@ -72,9 +74,15 @@ function EditProfile() {
                         <div className="tw-text-4xl tw-font-bold">
                             My Details
                         </div>
-                        <button className="tw-text-[#0f1923] tw-bg-[#f2ca16] tw-text-base tw-font-bold tw-px-3.5 tw-py-2.5 tw-rounded">
-                            SAVE
-                        </button>
+                        {saved ? (
+                            <button className="tw-text-black tw-bg-white tw-text-base tw-font-bold tw-px-3.5 tw-py-2.5 tw-rounded">
+                                SAVED
+                            </button>
+                        ) : (
+                            <button className="tw-text-[#0f1923] tw-bg-[#f2ca16] tw-text-base tw-font-bold tw-px-3.5 tw-py-2.5 tw-rounded">
+                                SAVE
+                            </button>
+                        )}
                     </div>
                     <div>
                         <div className="sm:tw-flex sm:tw-gap-6 sm:tw-mt-8 sm:tw-mb-6 sm:tw-items-center">

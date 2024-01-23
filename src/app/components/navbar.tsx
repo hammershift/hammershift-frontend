@@ -677,12 +677,101 @@ interface MyAccountMenuProps {
 }
 
 const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
+    const [walletBalance, setWalletBalance] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchWalletBalance = async () => {
+            if (session) {
+                setIsLoading(true);
+                try {
+                    const res = await fetch("/api/wallet", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        setWalletBalance(data.balance);
+                    } else {
+                        console.error(
+                            "Failed to fetch wallet balance:",
+                            data.message
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error fetching wallet balance:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchWalletBalance();
+    }, [session]);
+
+    const handleSignOut = async () => {
+        try {
+            await signOut({ redirect: false });
+            router.push("/");
+            console.log("User successfully logged out");
+        } catch (error) {
+            console.error("Error during sign out:", error);
+        }
+    };
+
     return (
         <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto tw-z-50">
-            <div className="tw-text-lg tw-font-bold">MY ACCOUNT</div>
-            <div className="tw-m-1.5">Profile</div>
-            <div className="tw-m-1.5">Setting</div>
-            <div className="tw-m-1.5">Logout</div>
+            <div className="tw-text-lg tw-font-bold tw-p-1.5">MY ACCOUNT</div>
+            {isLoading ? (
+                <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
+                    <BeatLoader color="#696969" size={10} />
+                </div>
+            ) : typeof walletBalance === "number" ? (
+                <div className="tw-w-full">
+                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                        <Image
+                            src={Wallet}
+                            width={32}
+                            height={32}
+                            alt="wallet icon"
+                            className="tw-w-8 tw-h-8"
+                        />
+                        <div className="tw-flex tw-flex-col tw-items-start tw-grow">
+                            <span className="tw-font-bold tw-text-xl tw-py-1">
+                                ${walletBalance.toFixed(2)}
+                            </span>
+                            <span className="tw-text-[#49C742]">Withdraw</span>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="tw-px-6 tw-w-full">
+                    Error fetching wallet balance
+                </div>
+            )}
+            <Link
+                href="/profile"
+                className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+            >
+                Profile
+            </Link>
+            <Link
+                href="/profile"
+                className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+            >
+                Settings
+            </Link>
+            <button
+                onClick={handleSignOut}
+                className="tw-p-1.5 tw-text-left hover:tw-bg-white/5 tw-w-full"
+            >
+                Logout
+            </button>
         </div>
     );
 };
