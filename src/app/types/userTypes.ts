@@ -6,6 +6,7 @@ export interface User {
   isActive: boolean;
   balance: number;
   action?: 'create' | 'login';
+  isBanned: boolean;
 }
 
 export interface Credentials {
