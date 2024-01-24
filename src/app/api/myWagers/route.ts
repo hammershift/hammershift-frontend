@@ -51,6 +51,7 @@ export async function GET(req: NextRequest) {
           wagerAmount: wager.wagerAmount,
           user: wager.user,
           createdAt: wager.createdAt,
+          prize: wager.prize,
         };
       })
       .filter((detail) => detail !== null);
