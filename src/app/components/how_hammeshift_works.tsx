@@ -17,7 +17,7 @@ import articleImageFour from "../../../public/images/howhammershiftworks/article
 
 const HowHammerShiftWorks = () => {
     return (
-        <div className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center">
+        <div className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center" id="how-hammershift-works">
             <div className=" section-container tw-py-16 md:tw-py-[120px]">
                 <header>
                     <h1 className="tw-text-5xl tw-font-bold">
