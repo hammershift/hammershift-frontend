@@ -555,7 +555,16 @@ interface WinnersI {
 }
 
 export const WinnersSection: React.FC<WinnersI> = ({ winners, price }) => {
-    const [userWon, setUserWon] = useState(true);
+    const [userWon, setUserWon] = useState<any>(false);
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        winners.forEach((winner: any) => {
+            if (session?.user.id === winner.userID) {
+                setUserWon(winner);
+            }
+        });
+    }, [winners, session]);
 
     return (
         <div className="tw-bg-[#156cc3] tw-p-6 tw-rounded-lg">
@@ -590,9 +599,12 @@ export const WinnersSection: React.FC<WinnersI> = ({ winners, price }) => {
                                 />
                                 <div>
                                     <div className="tw-text-sm tw-font-bold">
-                                        {winner.username} 🎉
+                                        {session?.user.id === winner.userID
+                                            ? "You"
+                                            : winner.username}{" "}
+                                        🎉
                                     </div>
-                                    <div className="tw-text-xs tw-bg-[#42a0ff] tw-rounded-full tw-py-0.5 tw-px-2 tw-font-medium">
+                                    <div className="tw-text-xs tw-inline-block tw-bg-[#42a0ff] tw-rounded-full tw-py-0.5 tw-px-2 tw-font-medium">
                                         Won $
                                         {winner.prize % 1 === 0
                                             ? winner.prize.toLocaleString()
@@ -622,8 +634,15 @@ export const WinnersSection: React.FC<WinnersI> = ({ winners, price }) => {
                     <div>
                         <div className="tw-font-bold">Congratulations!</div>
                         <div className="tw-text-sm tw-opacity-70 tw-leading-5">
-                            You won $200 in this game. The amount has been added
-                            to your wallet. Hope to see you in more games.
+                            You won $
+                            {userWon.prize % 1 === 0
+                                ? userWon.prize.toLocaleString()
+                                : userWon.prize.toLocaleString(undefined, {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                  })}{" "}
+                            in this game. The amount has been added to your
+                            wallet. Hope to see you in more games.
                         </div>
                     </div>
                 </div>

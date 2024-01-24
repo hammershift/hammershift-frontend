@@ -38,6 +38,10 @@ const wagerSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    prize: {
+      type: Number,
+      required: false,
+    },
   },
   { timestamps: true }
 );
