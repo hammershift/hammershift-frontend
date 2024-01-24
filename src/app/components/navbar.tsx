@@ -1122,6 +1122,8 @@ const MyWagersDropdownMenu = () => {
                                     objectID={wager.auctionObjectId}
                                     wagerID={wager._id}
                                     isRefunded={wager.refunded}
+                                    prize={wager.prize}
+                                    deadline={wager.auctionDeadline}
                                 />
                             </TimerProvider>
                         </div>
