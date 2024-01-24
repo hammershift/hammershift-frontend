@@ -126,7 +126,7 @@ const NewGames = () => {
                 } = auctions;
                 return (
                   <TimerProvider key={index} deadline={deadline}>
-                    <div className="tw-w-[300px] sm:tw-w-[416px]">
+                    <div className="tw-w-[200px] sm:tw-w-[416px]">
                       <DynamicCards
                         image={image}
                         year={year}

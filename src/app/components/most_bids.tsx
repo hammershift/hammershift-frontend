@@ -109,7 +109,7 @@ const MostBids = () => {
       ) : (
         <section className="tw-overflow-x-auto tw-w-full">
           <div className=" tw-w-[632px] sm:tw-w-[1312px] ">
-            <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12 ">
+            <div className=" tw-grid tw-grid-cols-3 tw-gap-4 sm:tw-gap-8 tw-mt-12">
               {mostBids.map((auctions, index) => {
                 const {
                   image,
