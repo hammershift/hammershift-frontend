@@ -21,19 +21,30 @@ const winnerSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Auction',
   },
-  auctionID: {
-    type: String,
-    required: true,
+  transaction: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Transaction',
   },
   wager: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Wager',
   },
-  transaction: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Transaction',
+  auctionID: {
+    type: String,
+    required: true,
   },
-  wagerAmount: {
+  username: {
+    type: String,
+    required: true,
+  },
+  userImage: {
+    type: String,
+  },
+  priceGuessed: {
+    type: Number,
+    required: true,
+  },
+  prize: {
     type: Number,
     required: true,
   },
@@ -60,6 +71,12 @@ const carSchema = new mongoose.Schema(
     page_url: { type: String, required: true },
     website: { type: String, required: true },
     winners: [winnerSchema],
+    wagers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Wager',
+      },
+    ],
   },
   { timestamps: true }
 );

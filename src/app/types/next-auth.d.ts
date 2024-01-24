@@ -4,6 +4,8 @@ import { NextApiRequest } from 'next';
 declare module 'next-auth' {
   interface User {
     action?: 'create' | 'login';
+    wagers?: ObjectId[]; // test
+    winnings?: ObjectId[]; // test
   }
 
   interface Session {
@@ -11,6 +13,8 @@ declare module 'next-auth' {
       id?: string;
       isActive?: boolean;
       action?: 'create' | 'login';
+      wagers?: ObjectId[]; // test
+      winnings?: ObjectId[]; // test
     } & DefaultSession['user'];
   }
 }
@@ -20,6 +24,8 @@ declare module 'next-auth/jwt' {
     id?: string;
     isActive?: boolean;
     action?: 'create' | 'login';
+    wagers?: ObjectId[]; // test
+    winnings?: ObjectId[]; // test
   }
 }
 

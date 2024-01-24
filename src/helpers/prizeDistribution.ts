@@ -1,12 +1,17 @@
+import mongoose, { ObjectId } from 'mongoose';
+
 type Wager = {
   userID: string;
   priceGuessed: number;
+  _id: mongoose.Types.ObjectId;
 };
 
 type Winner = {
   userID: string;
   prize: number;
   rank: number;
+  wagerID: mongoose.Types.ObjectId;
+  transactionID?: mongoose.Types.ObjectId;
 };
 
 type WagerWithDelta = Wager & {
@@ -18,6 +23,7 @@ function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot:
   const wagersWithDelta: WagerWithDelta[] = wagers.map((wager) => ({
     ...wager,
     delta: Math.abs(wager.priceGuessed - finalSellingPrice),
+    wagerID: wager._id,
   }));
 
   // sort wagers by their delta (closeness to the final selling price)
@@ -56,6 +62,7 @@ function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot:
           userID: tiedWager.userID,
           prize: prizePerWinner,
           rank: currentRank,
+          wagerID: tiedWager._id, // TEST
         });
       }
     }
