@@ -16,7 +16,7 @@ export const Links = () => {
           <Link href="/about_page" className="tw-ml-4 md:tw-ml-9">
             ABOUT HAMMERSHIFT
           </Link>
-          <Link href="/homepage" className="tw-ml-4 md:tw-ml-9">
+          <Link href="/" className="tw-ml-4 md:tw-ml-9">
             HOW IT WORKS
           </Link>
         </div>

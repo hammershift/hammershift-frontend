@@ -18,7 +18,9 @@ import Dollar from "../../../public/images/dollar.svg";
 import Hourglass from "../../../public/images/hour-glass.svg";
 import WalletSmall from "../../../public/images/wallet--money-payment-finance-wallet.svg";
 import MoneyBagGreen from "../../../public/images/monetization-browser-bag-green.svg";
+import MoneyBagBlack from "../../../public/images/money-bag-black.svg";
 import RankingStarTop from "../../../public/images/ranking-star-top.svg";
+import HammerIcon from "../../../public/images/hammer-icon.svg";
 
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg";
 import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-photo-two.svg";
@@ -677,12 +679,101 @@ interface MyAccountMenuProps {
 }
 
 const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
+    const [walletBalance, setWalletBalance] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchWalletBalance = async () => {
+            if (session) {
+                setIsLoading(true);
+                try {
+                    const res = await fetch("/api/wallet", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        setWalletBalance(data.balance);
+                    } else {
+                        console.error(
+                            "Failed to fetch wallet balance:",
+                            data.message
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error fetching wallet balance:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchWalletBalance();
+    }, [session]);
+
+    const handleSignOut = async () => {
+        try {
+            await signOut({ redirect: false });
+            router.push("/");
+            console.log("User successfully logged out");
+        } catch (error) {
+            console.error("Error during sign out:", error);
+        }
+    };
+
     return (
         <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto tw-z-50">
-            <div className="tw-text-lg tw-font-bold">MY ACCOUNT</div>
-            <div className="tw-m-1.5">Profile</div>
-            <div className="tw-m-1.5">Setting</div>
-            <div className="tw-m-1.5">Logout</div>
+            <div className="tw-text-lg tw-font-bold tw-p-1.5">MY ACCOUNT</div>
+            {isLoading ? (
+                <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
+                    <BeatLoader color="#696969" size={10} />
+                </div>
+            ) : typeof walletBalance === "number" ? (
+                <div className="tw-w-full">
+                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                        <Image
+                            src={Wallet}
+                            width={32}
+                            height={32}
+                            alt="wallet icon"
+                            className="tw-w-8 tw-h-8"
+                        />
+                        <div className="tw-flex tw-flex-col tw-items-start tw-grow">
+                            <span className="tw-font-bold tw-text-xl tw-py-1">
+                                ${walletBalance.toFixed(2)}
+                            </span>
+                            <span className="tw-text-[#49C742]">Withdraw</span>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="tw-px-6 tw-w-full">
+                    Error fetching wallet balance
+                </div>
+            )}
+            <Link
+                href="/profile"
+                className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+            >
+                Profile
+            </Link>
+            <Link
+                href="/profile"
+                className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+            >
+                Settings
+            </Link>
+            <button
+                onClick={handleSignOut}
+                className="tw-p-1.5 tw-text-left hover:tw-bg-white/5 tw-w-full"
+            >
+                Logout
+            </button>
         </div>
     );
 };
@@ -1031,6 +1122,8 @@ const MyWagersDropdownMenu = () => {
                                     objectID={wager.auctionObjectId}
                                     wagerID={wager._id}
                                     isRefunded={wager.refunded}
+                                    prize={wager.prize}
+                                    deadline={wager.auctionDeadline}
                                 />
                             </TimerProvider>
                         </div>
@@ -1057,6 +1150,8 @@ const MyWagersDropdownMenu = () => {
                                         objectID={wager.auctionObjectId}
                                         wagerID={wager._id}
                                         isRefunded={wager.refunded}
+                                        prize={wager.prize}
+                                        deadline={wager.auctionDeadline}
                                     />
                                 </TimerProvider>
                             </div>
@@ -1115,6 +1210,8 @@ interface MyWagersCardProps {
     wagerID: string;
     isRefunded: boolean;
     closeMenu?: () => void;
+    prize?: number;
+    deadline: Date;
 }
 export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
@@ -1131,10 +1228,23 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     wagerID,
     isRefunded,
     closeMenu,
+    prize,
+    deadline,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
     const [refunded, setRefunded] = useState(false);
     const [loading, setLoading] = useState(false);
+    let formattedDateString;
+    if (deadline) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(deadline));
+    }
 
     useEffect(() => {
         setRefunded(isRefunded);
@@ -1169,10 +1279,15 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         onClick={() => closeMenu && closeMenu()}
                         className="tw-self-start"
                     >
-                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
+                    {status !== 3 && (
+                        <div className="tw-text-xs tw-mb-2 tw-opacity-80">
+                            Ended {formattedDateString}
+                        </div>
+                    )}
                     <div className="tw-w-full tw-mt-1 tw-text-sm">
                         <div className="tw-flex tw-items-center tw-gap-2">
                             <Image
@@ -1187,19 +1302,70 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 ${new Intl.NumberFormat().format(my_wager)}
                             </span>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2">
-                            <Image
-                                src={Dollar}
-                                width={14}
-                                height={14}
-                                alt="wallet icon"
-                                className="tw-w-[14px] tw-h-[14px]"
-                            />
-                            <span className="tw-opacity-80">Current Bid:</span>
-                            <span className="tw-text-[#49C742] tw-font-bold">
-                                ${new Intl.NumberFormat().format(current_bid)}
-                            </span>
-                        </div>
+                        {prize ? (
+                            <div className="tw-flex tw-items-center tw-gap-2">
+                                <Image
+                                    src={HammerIcon}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Hammer Price:
+                                </span>
+                                <span className="tw-text-[#49C742] tw-font-bold">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        ) : (
+                            <div className="tw-flex tw-items-center tw-gap-2">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Current Bid:
+                                </span>
+                                <span className="tw-text-[#49C742] tw-font-bold">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        )}
+
+                        {prize && (
+                            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
+                                <div className="tw-flex tw-gap-2">
+                                    <Image
+                                        src={MoneyBagBlack}
+                                        width={20}
+                                        height={20}
+                                        alt="money bag"
+                                        className="tw-w-[20px] tw-h-[20px]"
+                                    />
+                                    <div>WINNINGS</div>
+                                </div>
+                                <div>
+                                    $
+                                    {prize % 1 === 0
+                                        ? prize.toLocaleString()
+                                        : prize.toLocaleString(undefined, {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                          })}{" "}
+                                    🎉
+                                </div>
+                            </div>
+                        )}
                         {isActive && (
                             <div className="tw-flex tw-items-center tw-gap-2">
                                 <Image
@@ -1221,16 +1387,18 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         )}
                     </div>
                     {isActive && (
-                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs tw-gap-2">
-                            <Image
-                                src={MoneyBagGreen}
-                                width={20}
-                                height={20}
-                                alt="money bag"
-                                className="tw-w-[20px] tw-h-[20px]"
-                            />
-                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
-                                POTENTIAL PRIZE
+                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
+                            <div className="tw-flex tw-gap-2">
+                                <Image
+                                    src={MoneyBagGreen}
+                                    width={20}
+                                    height={20}
+                                    alt="money bag"
+                                    className="tw-w-[20px] tw-h-[20px]"
+                                />
+                                <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
+                                    POTENTIAL PRIZE
+                                </div>
                             </div>
                             <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
                                 $
@@ -1753,6 +1921,8 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                             wagerID={wager._id}
                                             isRefunded={wager.refunded}
                                             closeMenu={closeMenu}
+                                            prize={wager.prize}
+                                            deadline={wager.auctionDeadline}
                                         />
                                     </TimerProvider>
                                 </div>
@@ -1782,6 +1952,8 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                             wagerID={wager._id}
                                             isRefunded={wager.refunded}
                                             closeMenu={closeMenu}
+                                            prize={wager.prize}
+                                            deadline={wager.auctionDeadline}
                                         />
                                     </TimerProvider>
                                 </div>
