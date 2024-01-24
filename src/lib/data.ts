@@ -33,7 +33,8 @@ export const getCarData = async (ID: string) => {
         pot: data.pot,
         comments: data.comments,
         views: data.views,
-        watchers: data.watchers
+        watchers: data.watchers,
+        winners: data.winners
       };
       return car;
     } else {

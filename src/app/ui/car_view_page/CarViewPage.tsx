@@ -499,6 +499,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
     auctionEnded,
 }) => {
     const [showDetails, setShowDetails] = useState(false);
+
     return (
         <div className="tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full tw-gap-16">
             <div className="tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
@@ -544,6 +545,89 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
                     </button>
                 )}
             </div>
+        </div>
+    );
+};
+
+interface WinnersI {
+    winners: any;
+    price: number;
+}
+
+export const WinnersSection: React.FC<WinnersI> = ({ winners, price }) => {
+    const [userWon, setUserWon] = useState(true);
+
+    return (
+        <div className="tw-bg-[#156cc3] tw-p-6 tw-rounded-lg">
+            <div className="tw-mb-6">
+                <div className="tw-font-bold tw-text-lg tw-mb-1">WINNERS</div>
+                <span className="tw-text-[#0f1923] tw-bg-[#f2ca16] tw-font-extrabold tw-text-sm tw-py-2 tw-px-2.5 tw-rounded">
+                    Hammer Price: $
+                    {price ? new Intl.NumberFormat().format(price) : "--"}
+                </span>
+            </div>
+            <div>
+                {winners.map((winner: any, index: number) => {
+                    return (
+                        <div
+                            key={winner.userID}
+                            className="tw-flex tw-justify-between tw-items-center tw-py-2"
+                        >
+                            <div className="tw-flex tw-gap-4 tw-items-center">
+                                <div className="tw-text-lg tw-opacity-30">
+                                    {index + 1}
+                                </div>
+                                <Image
+                                    src={
+                                        winner.userImage
+                                            ? winner.userImage
+                                            : AvatarOne
+                                    }
+                                    width={44}
+                                    height={44}
+                                    alt="arrow down"
+                                    className="tw-w-[44px] tw-h-[44px] tw-rounded-full"
+                                />
+                                <div>
+                                    <div className="tw-text-sm tw-font-bold">
+                                        {winner.username} 🎉
+                                    </div>
+                                    <div className="tw-text-xs tw-bg-[#42a0ff] tw-rounded-full tw-py-0.5 tw-px-2 tw-font-medium">
+                                        Won $
+                                        {winner.prize % 1 === 0
+                                            ? winner.prize.toLocaleString()
+                                            : winner.prize.toLocaleString(
+                                                  undefined,
+                                                  {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                  }
+                                              )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="tw-text-sm tw-text-[#0f1923] tw-font-extrabold tw-bg-white tw-py-1 tw-px-1.5 tw-rounded">
+                                $
+                                {new Intl.NumberFormat().format(
+                                    winner.priceGuessed
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            {userWon && (
+                <div className="tw-flex tw-gap-6 tw-py-4 tw-px-6 tw-items-center tw-bg-[#2c7bc9] tw-rounded-[10px] tw-mt-6">
+                    <div className="tw-text-[32px]">🏆</div>
+                    <div>
+                        <div className="tw-font-bold">Congratulations!</div>
+                        <div className="tw-text-sm tw-opacity-70 tw-leading-5">
+                            You won $200 in this game. The amount has been added
+                            to your wallet. Hope to see you in more games.
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
