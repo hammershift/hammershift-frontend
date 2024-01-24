@@ -7,6 +7,7 @@ import {
     WagersSection,
     DetailsSection,
     GamesYouMightLike,
+    WinnersSection,
 } from "@/app/ui/car_view_page/CarViewPage";
 import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
@@ -43,6 +44,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [invalidPrice, setInvalidPrice] = useState(false);
     const [invalidWager, setInvalidWager] = useState(false);
     const [showCarImageModal, setShowCarImageModal] = useState(false);
+    const [winners, setWinners] = useState([]);
 
     // const router = useRouter();
 
@@ -86,6 +88,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
 
             setCarData(data);
             setWagerInputs({ ...wagerInputs, auctionID: data?._id });
+            setWinners(data?.winners);
 
             if (session) {
                 const userWager = await getOneUserWager(
@@ -351,6 +354,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         </>
                     ) : null}
                     <div className="tw-block sm:tw-hidden tw-mt-8">
+                        {winners && wagersData ? (
+                            <WinnersSection
+                                price={carData?.price}
+                                winners={winners}
+                            />
+                        ) : null}
+                    </div>
+                    <div className="tw-block sm:tw-hidden tw-mt-8">
                         {wagersData ? (
                             <WagersSection
                                 toggleWagerModal={showWagerModal}
@@ -382,6 +393,12 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     <CommentsSection auctionID={ID} />
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
+                    {winners && wagersData ? (
+                        <WinnersSection
+                            price={carData?.price}
+                            winners={winners}
+                        />
+                    ) : null}
                     {wagersData ? (
                         <WagersSection
                             toggleWagerModal={showWagerModal}
