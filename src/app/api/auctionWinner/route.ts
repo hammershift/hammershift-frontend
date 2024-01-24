@@ -1,3 +1,4 @@
+import { addWagerWinnings } from '@/helpers/addWagerWinnings';
 import { createWinningTransaction } from '@/helpers/createWinningTransaction';
 import prizeDistribution from '@/helpers/prizeDistribution';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
@@ -100,10 +101,10 @@ import { NextRequest, NextResponse } from 'next/server';
 // }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
+  // const session = await getServerSession(authOptions);
+  // if (!session) {
+  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  // }
 
   try {
     const { auctionID } = await req.json();
@@ -139,6 +140,7 @@ export async function POST(req: NextRequest) {
           console.log(`Updating wallet balance for user ${winner.userID} with amount ${winner.prize}`);
           await updateWinnerWallet(new ObjectId(winner.userID), winner.prize);
           console.log(`Wallet balance updated for user ${winner.userID}`);
+          await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize);
         }
       }
 
