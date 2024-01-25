@@ -68,9 +68,9 @@ const LeaderBoardPage = () => {
                     </span>
                 </div>
                 <div className='tw-font-bold tw-text-3xl md:tw-text-5xl'>Top 10 Winners</div>
-                <table className='tw-w-full tw-border-separate tw-border-spacing-y-6'>
-                    <thead>
-                        <tr className='tw-text-xl md:tw-text-3xl tw-text-[#F2CA16]'>
+                <table className='tw-w-full'>
+                    <thead className='tw-text-xl md:tw-text-2xl tw-text-black tw-bg-[#F2CA16]'>
+                        <tr className='tw-leading-10'>
                             <th>Rank</th>
                             <th>User</th>
                             <th>Score</th>
@@ -79,7 +79,7 @@ const LeaderBoardPage = () => {
                     <tbody className='tw-text-center tw-space-y-1'>
                         {
                             sampleData.map((item, index) => (
-                                <tr key={index + "LDB"} className='tw-border-b tw-border-gray-600'>
+                                <tr key={index + "LDB"} className={`tw-leading-10 ${index % 2 === 1 ? 'tw-bg-white/5' : ''}`}>
                                     <td>{item.place}</td>
                                     <td>{item.user}</td>
                                     <td>{item.points}</td>
