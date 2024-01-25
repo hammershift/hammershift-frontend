@@ -7,7 +7,7 @@ export const Links = () => {
   return (
     <main className="section-container ">
       <div className="tw-w-full tw-overflow-x-auto tw-flex">
-        <div className="tw-flex tw-justify-start xl:tw-justify-center tw-py-4 tw-w-full  tw-min-w-[901px]">
+        <div className="tw-flex tw-justify-start md:tw-justify-center tw-py-4 tw-w-full  tw-min-w-[500px]">
           {/* <Link href="/homepage" className='tw-flex'>
                         <Image src={GiftIcon} width={20} height={20} alt="gift icon" className='tw-w-[20px] tw-h-[20px] tw-mr-2' />
                         {`TODAY'S MINI GAME`}</Link >
@@ -18,6 +18,9 @@ export const Links = () => {
           </Link>
           <Link href="/" className="tw-ml-4 md:tw-ml-9">
             HOW IT WORKS
+          </Link>
+          <Link href="/leaderboard" className="tw-ml-4 md:tw-ml-9">
+            LEADERBOARD
           </Link>
         </div>
       </div>
