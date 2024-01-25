@@ -223,6 +223,10 @@ const Navbar = () => {
         setSearchedData([]);
     };
 
+    const closeMyAccountMenu = () => {
+        setMyAccountMenuOpen(false);
+    };
+
     const { data: session } = useSession();
     const isLoggedIn = !!session;
 
@@ -354,9 +358,13 @@ const Navbar = () => {
                     </div>
                     <div className="sm:tw-hidden">
                         <button
-                            onClick={() =>
-                                setMyAccountMenuOpen((prev) => !prev)
-                            }
+                            onClick={() => {
+                                setMyAccountMenuOpen((prev) => !prev);
+                                setMenuIsOpen(false);
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                            }}
                             className="tw-mr-4"
                         >
                             <Image
@@ -370,6 +378,7 @@ const Navbar = () => {
                         <button
                             onClick={() => {
                                 setMenuIsOpen((prev) => !prev);
+                                setMyAccountMenuOpen(false);
                                 if (!menuIsOpen) {
                                     document.body.classList.add(
                                         "stop-scrolling"
@@ -517,7 +526,12 @@ const Navbar = () => {
                     clearSearchInputs={clearSearchInputs}
                 />
             )}
-            {myAccountMenuOpen && <MyAccountMenu isLoggedIn={isLoggedIn} />}
+            {myAccountMenuOpen && (
+                <MyAccountMenu
+                    closeMyAccountMenu={closeMyAccountMenu}
+                    isLoggedIn={isLoggedIn}
+                />
+            )}
         </div>
     );
 };
@@ -676,9 +690,13 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
 
 interface MyAccountMenuProps {
     isLoggedIn: boolean;
+    closeMyAccountMenu: () => void;
 }
 
-const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
+const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
+    isLoggedIn,
+    closeMyAccountMenu,
+}) => {
     const [walletBalance, setWalletBalance] = useState<number>(0);
     const [isLoading, setIsLoading] = useState(true);
     const { data: session } = useSession();
@@ -759,12 +777,14 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({ isLoggedIn }) => {
             <Link
                 href="/profile"
                 className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                onClick={closeMyAccountMenu}
             >
                 Profile
             </Link>
             <Link
                 href="/profile"
                 className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                onClick={closeMyAccountMenu}
             >
                 Settings
             </Link>
@@ -1258,7 +1278,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     };
 
     return (
-        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
+        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-3 tw-border-t-[1px] tw-border-[#253747]">
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
@@ -1283,11 +1303,11 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             {title}
                         </div>
                     </Link>
-                    {status !== 3 && (
+                    {status === 2 || status === 4 ? (
                         <div className="tw-text-xs tw-mb-2 tw-opacity-80">
                             Ended {formattedDateString}
                         </div>
-                    )}
+                    ) : null}
                     <div className="tw-w-full tw-mt-1 tw-text-sm">
                         <div className="tw-flex tw-items-center tw-gap-2">
                             <Image
