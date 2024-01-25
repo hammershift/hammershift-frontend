@@ -17,7 +17,7 @@ const filtersInitialState = {
     category: ["All"],
     era: ["All"],
     location: ["All"],
-    sort: "Newly Listed",
+    sort: "Ending Soon",
 };
 
 type Filter = {
