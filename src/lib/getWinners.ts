@@ -35,6 +35,5 @@ export const getWinnersRank = async () => {
         newData.push({ rank: data[i].rank, user: username.username, numberOfWinnings: data[i].numberOfWinnings });
     }
 
-    console.log(newData)
     return { winners: newData };
 };

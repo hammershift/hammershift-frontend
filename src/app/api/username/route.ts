@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
         const username = user ? user.username : null;
 
         if (!username) {
-            return NextResponse.json({ username: "no username found" });
+            return NextResponse.json({ username: "user not found" });
         }
 
 

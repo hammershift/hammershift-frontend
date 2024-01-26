@@ -13,7 +13,7 @@ interface DataItem {
 }
 
 const LeaderBoardPage = () => {
-    const [data, setData] = useState([])
+    const [data, setData] = useState<DataItem[]>([])
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -21,9 +21,7 @@ const LeaderBoardPage = () => {
             setLoading(true)
             const res = await getWinnersRank()
             if (!res) return
-
             setData(res.winners)
-            console.log(res)
             setLoading(false)
         }
         getWinners()
@@ -37,7 +35,7 @@ const LeaderBoardPage = () => {
                         LEADERBOARD
                     </span>
                 </div>
-                <div className='tw-font-bold tw-text-3xl md:tw-text-5xl'>Top 10 Winners</div>
+                <div className='tw-font-bold tw-text-3xl md:tw-text-5xl'>Top Winners</div>
                 {
                     loading ? (
                         <LoadingSpinner />
@@ -45,9 +43,9 @@ const LeaderBoardPage = () => {
                         <table className='tw-w-full md:tw-table-fixed'>
                             <thead className='tw-text-xl md:tw-text-2xl tw-text-black tw-bg-[#F2CA16]'>
                                 <tr className='tw-leading-10'>
-                                    <th className='tw-w-1/3'>Rank</th>
-                                    <th className='tw-w-1/3'>User</th>
-                                    <th className='tw-w-1/3'>Winnings</th>
+                                    <th className='sm:tw-w-1/3'>RANK</th>
+                                    <th className='sm:tw-w-1/3'>USER</th>
+                                    <th className='sm:tw-w-1/3'>WINS</th>
                                 </tr>
                             </thead>
                             <tbody className='tw-text-center tw-space-y-1'>
@@ -55,9 +53,9 @@ const LeaderBoardPage = () => {
                                     data.length > 0
                                     && (data as DataItem[]).map((item, index) => (
                                         <tr key={index + "LDB"} className={`tw-leading-10 ${index % 2 === 1 ? 'tw-bg-white/5' : ''}`}>
-                                            <td className='tw-w-1/3'>{item.rank}</td>
-                                            <td className='tw-w-1/3'>{item.user}</td>
-                                            <td className='tw-w-1/3'>{item.numberOfWinnings}</td>
+                                            <td className='sm:tw-w-1/3'>{item.rank}</td>
+                                            <td className='sm:tw-w-1/3'>{item.user}</td>
+                                            <td className='sm:tw-w-1/3'>{item.numberOfWinnings}</td>
                                         </tr>
                                     ))
                                 }
