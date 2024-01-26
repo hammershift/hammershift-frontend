@@ -36,13 +36,13 @@ export async function GET(req: NextRequest) {
             .sort((a, b) => b.numberOfWinnings - a.numberOfWinnings)
             .map((item, index) => ({ rank: index + 1, user: item.user, numberOfWinnings: item.numberOfWinnings }));
 
-        const total = data.length;
 
         // For checking
+        // const total = data.length;
         // let totalAfter = winnersRank.reduce((a, b) => a + b.numberOfWinnings, 0);
 
 
-        return NextResponse.json({ total, winnersRank });
+        return NextResponse.json({ winners: winnersRank });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ message: 'Internal server error' });
