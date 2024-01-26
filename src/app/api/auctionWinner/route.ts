@@ -13,83 +13,6 @@ import prizeDistribution from '@/helpers/prizeDistribution';
 import { refundWagers } from '@/helpers/refundWagers';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
 
-// dont delete this
-// export async function POST(req: NextRequest) {
-//   const session = await getServerSession(authOptions);
-//   if (!session) {
-//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-//   }
-
-//   try {
-//     const { auctionID } = await req.json();
-//     const convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
-
-//     const client = await clientPromise;
-//     const db = client.db();
-
-//     const auction = await db.collection('auctions').findOne({ _id: convertedAuctionID });
-//     if (!auction) {
-//       return NextResponse.json({ message: 'Auction not found' }, { status: 404 });
-//     }
-
-//     const auctionStatus = auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value;
-//     const hasPot = auction.pot && auction.pot > 0;
-
-//     if (auctionStatus === 2 && hasPot) {
-//       const wagers = await db.collection('wagers').find({ auctionID: convertedAuctionID }).toArray();
-//       const finalSellingPrice = auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0;
-
-//       const formattedWagers = wagers.map((wager) => ({
-//         _id: wager._id,
-//         userID: wager.user._id,
-//         priceGuessed: wager.priceGuessed,
-//       }));
-
-//       const winners = prizeDistribution(formattedWagers, finalSellingPrice, auction.pot);
-
-//       for (const winner of winners) {
-//         const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
-//         if (correspondingWager) {
-//           const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize);
-//           console.log(`Updating wallet balance for user ${winner.userID} with amount ${winner.prize}`);
-//           await updateWinnerWallet(new ObjectId(winner.userID), winner.prize);
-//           console.log(`Wallet balance updated for user ${winner.userID}`);
-//           await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize);
-
-//           winner.transactionID = transactionId;
-//         }
-//       }
-
-//       const winnerObjects = winners.map((winner) => {
-//         const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
-
-//         return {
-//           userID: new mongoose.Types.ObjectId(winner.userID),
-//           objectID: convertedAuctionID,
-//           wagerID: correspondingWager ? correspondingWager._id : null,
-//           transaction: winner.transactionID,
-//           auctionID: auction.auction_id,
-//           prize: winner.prize,
-//           rank: winner.rank,
-//           username: correspondingWager ? correspondingWager.user.username : null,
-//           userImage: correspondingWager ? correspondingWager.user.image : null,
-//           priceGuessed: correspondingWager ? correspondingWager.priceGuessed : null,
-//           winningDate: new Date(),
-//         };
-//       });
-
-//       await db.collection('auctions').updateOne({ _id: convertedAuctionID }, { $push: { winners: { $each: winnerObjects } } });
-
-//       return NextResponse.json({ winners: winnerObjects }, { status: 200 });
-//     }
-
-//     return NextResponse.json({ message: 'No action performed' }, { status: 200 });
-//   } catch (error) {
-//     console.error('Error in POST auctionWinner API:', error);
-//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-//   }
-// }
-
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -221,7 +144,7 @@ export async function GET(req: NextRequest) {
     const auctionStatus = auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value;
     const hasPot = auction.pot && auction.pot > 0;
 
-    if (auctionStatus === 2 && hasPot) {
+    if (auctionStatus === 2 || (auctionStatus === 3 && hasPot)) {
       // fetch all wagers associated with this auction
       const wagers = await db.collection('wagers').find({ auctionID: convertedAuctionID }).toArray();
 

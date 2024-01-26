@@ -32,9 +32,15 @@ import { NextRequest, NextResponse } from 'next/server';
 //     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 //   }
 
+//   const client = await clientPromise;
+//   const db = client.db();
+//   const transactionSession = client.startSession();
+//   let transactionStarted = false;
+//   let transactionCommittedOrAborted = false;
+
 //   try {
-//     const client = await clientPromise;
-//     const db = client.db();
+//     transactionSession.startTransaction();
+//     transactionStarted = true;
 
 //     // get all auction IDs that need processing
 //     const auctionsToProcess = await db
@@ -48,13 +54,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 //     // loop over all auction IDs
 //     for (const { _id } of auctionsToProcess) {
-//       const auction = await db.collection('auctions').findOne({ _id });
+//       const auction = await db.collection('auctions').findOne({ _id }, { session: transactionSession });
 //       if (!auction) {
 //         console.error(`Auction with ID ${_id} not found`);
 //         continue;
 //       }
 
-//       const wagers = await db.collection('wagers').find({ auctionID: _id }).toArray();
+//       const wagers = await db.collection('wagers').find({ auctionID: _id }, { session: transactionSession }).toArray();
 //       if (wagers.length <= 3) {
 //         auctionsToUpdate.push(_id);
 //         wagerIDsForRefund.push(...wagers.map((wager) => wager._id));
@@ -74,11 +80,11 @@ import { NextRequest, NextResponse } from 'next/server';
 //       for (const winner of winners) {
 //         const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
 //         if (correspondingWager) {
-//           const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize);
+//           const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize, transactionSession);
 //           console.log(`Updating wallet balance for user ${winner.userID} with amount ${winner.prize}`);
-//           await updateWinnerWallet(new ObjectId(winner.userID), winner.prize);
+//           await updateWinnerWallet(new ObjectId(winner.userID), winner.prize, transactionSession);
 //           console.log(`Wallet balance updated for user ${winner.userID}`);
-//           await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize);
+//           await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize, transactionSession);
 
 //           winner.transactionID = transactionId;
 //         }
@@ -108,23 +114,37 @@ import { NextRequest, NextResponse } from 'next/server';
 //           $push: { winners: { $each: winnerObjects } },
 //           $set: { 'attributes.$[elem].value': 4 },
 //         },
-//         { arrayFilters: [{ 'elem.key': 'status' }] }
+//         {
+//           arrayFilters: [{ 'elem.key': 'status' }],
+//           session: transactionSession,
+//         }
 //       );
 //     }
 
 //     // update status for auctions with insufficient players
 //     for (const auctionID of auctionsToUpdate) {
-//       await db.collection('auctions').updateOne({ _id: auctionID, 'attributes.key': 'status' }, { $set: { 'attributes.$.value': 3 } });
+//       await db.collection('auctions').updateOne({ _id: auctionID, 'attributes.key': 'status' }, { $set: { 'attributes.$.value': 3 } }, { session: transactionSession });
 //     }
 
 //     // perform refunds in a batch
 //     if (wagerIDsForRefund.length > 0) {
-//       await refundWagers(wagerIDsForRefund);
+//       await refundWagers(wagerIDsForRefund, transactionSession);
 //     }
 
-//     return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
+//     await transactionSession.commitTransaction();
+//     transactionStarted = false;
+//     transactionCommittedOrAborted = true;
 //   } catch (error) {
-//     console.error('Error in POST auctionWinner API:', error);
+//     if (transactionStarted && !transactionCommittedOrAborted) {
+//       console.error('Aborting transaction due to error:', error);
+//       await transactionSession.abortTransaction();
+//     } else {
+//       console.error('Error occurred:', error);
+//     }
 //     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+//   } finally {
+//     await transactionSession.endSession();
 //   }
+
+//   return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
 // }

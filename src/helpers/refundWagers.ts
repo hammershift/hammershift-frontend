@@ -2,38 +2,6 @@ import clientPromise from '@/lib/mongodb';
 import Transaction from '@/models/transaction';
 import { ObjectId } from 'mongodb';
 
-// export async function refundWager(wagerID: ObjectId): Promise<void> {
-//   const client = await clientPromise;
-//   const db = client.db();
-
-//   const wager = await db.collection('wagers').findOne({ _id: wagerID });
-//   if (!wager) {
-//     console.log(`Wager not found: ${wagerID}`);
-//     return;
-//   }
-
-//   const user = await db.collection('users').findOne({ _id: wager.user._id });
-//   if (!user) {
-//     console.log(`User not found for wager: ${wagerID}, skipping refund.`);
-//     return;
-//   }
-
-//   const updatedBalance = (user.balance || 0) + wager.wagerAmount;
-//   await db.collection('users').updateOne({ _id: user._id }, { $set: { balance: updatedBalance } });
-
-//   const refundTransaction = new Transaction({
-//     userID: user._id,
-//     wagerID: wager._id,
-//     transactionType: 'refund',
-//     amount: wager.wagerAmount,
-//     type: '+',
-//     transactionDate: new Date(),
-//   });
-
-//   await refundTransaction.save();
-//   console.log(`Refund processed for user ${user._id} for wager ${wagerID}`);
-// }
-
 export async function refundWagers(wagerIDs: ObjectId[]): Promise<void> {
   const client = await clientPromise;
   const db = client.db();

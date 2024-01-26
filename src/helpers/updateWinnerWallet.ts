@@ -36,29 +36,3 @@ export async function updateWinnerWallet(userID: ObjectId, amount: number): Prom
     await session.endSession();
   }
 }
-
-// export async function updateWinnerWallet(userID: ObjectId, amount: number): Promise<void> {
-//   const client = await clientPromise;
-//   try {
-//     // retrieve the current balance and update it
-//     const user = await client.db().collection('users').findOne({ _id: userID });
-//     const currentBalance = user?.balance ?? 0; // 0 if balance does not exist
-//     const newBalance = currentBalance + amount;
-
-//     const updateResult = await client
-//       .db()
-//       .collection('users')
-//       .updateOne({ _id: userID }, { $set: { balance: newBalance } });
-
-//     console.log(`Attempted to update wallet balance for userID: ${userID}, Amount: ${amount}`);
-//     console.log('Update wallet result:', updateResult);
-
-//     if (updateResult.modifiedCount > 0) {
-//       console.log(`Wallet balance updated for user ${userID}.`);
-//     } else {
-//       console.log(`No updates made to the wallet for userID: ${userID}.`);
-//     }
-//   } catch (error) {
-//     console.error(`Error updating wallet balance for userID: ${userID}:`, error);
-//   }
-// }
