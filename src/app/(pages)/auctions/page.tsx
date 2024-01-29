@@ -133,7 +133,8 @@ const AuctionListingPage = () => {
             searchParamsObj.getAll("location").length == 0 &&
             searchParamsObj.getAll("make").length == 0 &&
             searchParamsObj.getAll("category").length == 0 &&
-            searchParamsObj.getAll("era").length == 0
+            searchParamsObj.getAll("era").length == 0 &&
+            !searchParamsObj.getAll("sort")
         ) {
             fetchData(filters);
         }
