@@ -243,6 +243,9 @@ const Navbar = () => {
                                 onClick={() => {
                                     closeMenu();
                                     closeMyAccountMenu();
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
                                 }}
                                 href="/"
                             >
@@ -271,6 +274,9 @@ const Navbar = () => {
                             onClick={() => {
                                 closeMenu();
                                 closeMyAccountMenu();
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
                             }}
                             href="/auctions"
                         >
@@ -437,6 +443,9 @@ const Navbar = () => {
                             <Link
                                 onClick={() => {
                                     closeMenu();
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
                                 }}
                                 href="/"
                             >
@@ -457,6 +466,9 @@ const Navbar = () => {
                         <Link
                             onClick={() => {
                                 closeMenu();
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
                             }}
                             href="/auctions"
                         >
@@ -673,7 +685,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     </Link> */}
                     <Link
                         href="/auctions"
-                        onClick={closeMenu}
+                        onClick={() => {
+                            closeMenu();
+                            document.body.classList.remove("stop-scrolling");
+                        }}
                         className="tw-flex tw-py-2"
                     >
                         <div>AUCTIONS</div>
@@ -725,6 +740,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     <button
                         onClick={() => {
                             router.push("/create_account");
+                            document.body.classList.remove("stop-scrolling");
                             closeMenu();
                         }}
                         className="btn-white tw-w-full"
