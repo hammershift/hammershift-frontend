@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Logo from "../../../public/images/hammershift-logo.svg";
 import LogoSmall from "../../../public/images/logo-small.svg";
 import MagnifyingGlass from "../../../public/images/magnifying-glass.svg";
@@ -44,6 +45,7 @@ type NavbarDropdownMenuProps =
 
 const Navbar = () => {
     const router = useRouter();
+    const pathname = usePathname();
     const [menuIsOpen, setMenuIsOpen] = useState(false);
     const [searchedData, setSearchedData] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState("");
@@ -216,8 +218,9 @@ const Navbar = () => {
             "dropdown-search-bar"
         ) as HTMLInputElement;
 
-        searchInput.value = "";
-        dropDownSearchInput.value = "";
+        if (searchInput) searchInput.value = "";
+
+        if (dropDownSearchInput) dropDownSearchInput.value = "";
 
         setShowClearSearchButton(false);
         setSearchedData([]);
@@ -236,7 +239,13 @@ const Navbar = () => {
                 <div className=" tw-flex tw-px-4 md:tw-px-16 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
-                            <Link onClick={() => closeMenu()} href="/">
+                            <Link
+                                onClick={() => {
+                                    closeMenu();
+                                    closeMyAccountMenu();
+                                }}
+                                href="/"
+                            >
                                 <Image
                                     src={Logo}
                                     width={176}
@@ -258,8 +267,19 @@ const Navbar = () => {
                                 DISCOVER
                             </div>
                         </Link> */}
-                        <Link onClick={() => closeMenu()} href="/auctions">
-                            <div className="tw-block tw-mx-2 sm:tw-mx-4 ">
+                        <Link
+                            onClick={() => {
+                                closeMenu();
+                                closeMyAccountMenu();
+                            }}
+                            href="/auctions"
+                        >
+                            <div
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/auctions" &&
+                                    "tw-font-bold tw-border-b-2"
+                                }`}
+                            >
                                 AUCTIONS
                             </div>
                         </Link>
@@ -414,7 +434,12 @@ const Navbar = () => {
                 <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
-                            <Link href="/">
+                            <Link
+                                onClick={() => {
+                                    closeMenu();
+                                }}
+                                href="/"
+                            >
                                 <Image
                                     src={Logo}
                                     width={176}
@@ -429,8 +454,18 @@ const Navbar = () => {
                                 DISCOVER
                             </div>
                         </Link> */}
-                        <Link href="/auctions">
-                            <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">
+                        <Link
+                            onClick={() => {
+                                closeMenu();
+                            }}
+                            href="/auctions"
+                        >
+                            <div
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/auctions" &&
+                                    "tw-font-bold tw-border-b-2"
+                                }`}
+                            >
                                 AUCTIONS
                             </div>
                         </Link>
@@ -489,7 +524,21 @@ const Navbar = () => {
                                 CREATE ACCOUNT
                             </button>
                         </Link>
-                        <button onClick={() => setMenuIsOpen((prev) => !prev)}>
+                        <button
+                            onClick={() => {
+                                setMenuIsOpen((prev) => !prev);
+                                setMyAccountMenuOpen(false);
+                                if (!menuIsOpen) {
+                                    document.body.classList.add(
+                                        "stop-scrolling"
+                                    );
+                                } else {
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
+                                }
+                            }}
+                        >
                             {menuIsOpen ? (
                                 <Image
                                     src={CancelIcon}
@@ -789,7 +838,10 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
                 Settings
             </Link>
             <button
-                onClick={handleSignOut}
+                onClick={() => {
+                    handleSignOut();
+                    closeMyAccountMenu();
+                }}
                 className="tw-p-1.5 tw-text-left hover:tw-bg-white/5 tw-w-full"
             >
                 Logout
