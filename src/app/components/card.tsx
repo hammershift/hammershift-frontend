@@ -38,24 +38,27 @@ const Card: React.FC<any> = ({
         <TimerProvider deadline={new Date(deadline)}>
             <div className="tw-flex tw-flex-col tw-justify-between tw-h-auto">
                 <div>
-                    <img
-                        onClick={() =>
-                            router.push(`/auctions/car_view_page/${auction_id}`)
-                        }
-                        src={image}
-                        width={416}
-                        height={219}
-                        alt={make}
-                        className="tw-w-[200px] sm:tw-w-[416px] tw-h-[147px] sm:tw-h-[219px] tw-rounded tw-object-cover hover:tw-cursor-pointer"
-                    />
-                    <div
-                        className="tw-font-bold tw-text-[24px] tw-py-[12px] hover:tw-cursor-pointer"
-                        onClick={() =>
-                            router.push(`/auctions/car_view_page/${auction_id}`)
-                        }
+                    <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`/auctions/car_view_page/${auction_id}`}
+                    >
+                        <img
+                            src={image}
+                            width={416}
+                            height={219}
+                            alt={make}
+                            className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+                        />
+                    </Link>
+                    <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`/auctions/car_view_page/${auction_id}`}
+                        className="tw-font-bold tw-text-[24px] tw-py-[12px] hover:tw-cursor-pointer tw-inline-block"
                     >
                         {year} {make} {model}
-                    </div>
+                    </Link>
                     <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
                         {description}
                     </p>
@@ -122,28 +125,27 @@ export const GamesCard = (props: any) => {
         <TimerProvider deadline={new Date()}>
             <div className="tw-flex tw-flex-col tw-justify-between tw-place-items-stretch tw-h-full tw-divide-slate-700">
                 <div>
-                    <img
-                        src={props.image}
-                        width={416}
-                        height={219}
-                        alt={props.make}
-                        className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
-                        onClick={() =>
-                            router.push(
-                                `/auctions/car_view_page/${props.auction_id}`
-                            )
-                        }
-                    />
-                    <div
-                        className="tw-font-bold tw-text-[24px] tw-py-[12px] hover:tw-cursor-pointer"
-                        onClick={() =>
-                            router.push(
-                                `/auctions/car_view_page/${props.auction_id}`
-                            )
-                        }
+                    <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`/auctions/car_view_page/${props.auction_id}`}
+                    >
+                        <img
+                            src={props.image}
+                            width={416}
+                            height={219}
+                            alt={props.make}
+                            className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+                        />
+                    </Link>
+                    <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`/auctions/car_view_page/${props.auction_id}`}
+                        className="tw-font-bold tw-text-[24px] tw-py-[12px] hover:tw-cursor-pointer tw-inline-block"
                     >
                         {props.year} {props.make} {props.model}
-                    </div>
+                    </Link>
                     <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
                         {props.description[0]}
                     </p>
