@@ -207,9 +207,15 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                             </span>
                                             <span className="tw-font-bold tw-ml-2">
                                                 $
-                                                {new Intl.NumberFormat().format(
-                                                    walletBalance
-                                                )}
+                                                {walletBalance % 1 === 0
+                                                    ? walletBalance.toLocaleString()
+                                                    : walletBalance.toLocaleString(
+                                                          undefined,
+                                                          {
+                                                              minimumFractionDigits: 2,
+                                                              maximumFractionDigits: 2,
+                                                          }
+                                                      )}
                                             </span>
                                         </div>
                                     </div>
