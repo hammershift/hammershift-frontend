@@ -18,8 +18,9 @@ import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
 import { set } from "mongoose";
+import { get } from "http";
 
-interface Props {}
+interface Props { }
 
 function Profile(props: Props) {
     const [name, setName] = useState("User");
@@ -33,7 +34,7 @@ function Profile(props: Props) {
     const [completedWatchlist, setCompletedWatchlist] = useState([]);
     const [isActiveWager, setIsActiveWager] = useState(true);
     const [userInfo, setUserInfo] = useState<any | null>(null);
-    const {} = props;
+    const { } = props;
     const { data } = useSession();
     const router = useRouter();
 
@@ -82,9 +83,9 @@ function Profile(props: Props) {
     useEffect(() => {
         setTotalWagersAndWatchlist(
             activeWagers.length +
-                completedWagers.length +
-                activeWatchlist.length +
-                completedWatchlist.length
+            completedWagers.length +
+            activeWatchlist.length +
+            completedWatchlist.length
         );
     }, [activeWagers, completedWagers, activeWatchlist, completedWatchlist]);
 
@@ -231,11 +232,10 @@ function Profile(props: Props) {
                         <button
                             id="active-watchlist-button"
                             onClick={() => setIsActiveWager(true)}
-                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] tw-flex tw-justify-center tw-items-center tw-gap-2 ${
-                                isActiveWager == true
-                                    ? "tw-font-bold tw-text-lg tw-border-white"
-                                    : ""
-                            }`}
+                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] tw-flex tw-justify-center tw-items-center tw-gap-2 ${isActiveWager == true
+                                ? "tw-font-bold tw-text-lg tw-border-white"
+                                : ""
+                                }`}
                         >
                             <div>ACTIVE </div>
                             {!isLoading && (
@@ -247,11 +247,10 @@ function Profile(props: Props) {
                         <button
                             id="completed-watchlist-button"
                             onClick={() => setIsActiveWager(false)}
-                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] ${
-                                isActiveWager == false
-                                    ? "tw-font-bold tw-text-lg tw-border-white"
-                                    : ""
-                            }`}
+                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] ${isActiveWager == false
+                                ? "tw-font-bold tw-text-lg tw-border-white"
+                                : ""
+                                }`}
                         >
                             COMPLETED
                         </button>
@@ -298,6 +297,8 @@ function Profile(props: Props) {
                                             img={wager.auctionImage}
                                             my_wager={wager.priceGuessed}
                                             id={wager.auctionIdentifierId}
+                                            status={wager.auctionStatus}
+                                            finalPrice={wager.auctionPrice}
                                         />
                                     </TimerProvider>
                                 </div>
@@ -349,6 +350,8 @@ type CompletedWagerCardProps = {
     img: string;
     my_wager: number;
     id: string;
+    status: number;
+    finalPrice: number;
 };
 
 const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
@@ -356,7 +359,23 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
     img,
     my_wager,
     id,
+    status,
+    finalPrice
 }) => {
+    const [auctionStatus, setAuctionStatus] = useState("Completed");
+
+    const statusMap: any = {
+        1: "Ongoing",
+        2: "Completed",
+        3: "Unsuccessful Auction",
+        4: "Completed and Prize Distributed",
+        default: "Status Unknown"
+    };
+
+    useEffect(() => {
+        setAuctionStatus(statusMap[status] || statusMap.default);
+    }, [status]);
+
     return (
         <div>
             <div className="tw-flex tw-gap-6 tw-py-6 tw-px-6 tw-items-center">
@@ -390,10 +409,10 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 className="tw-text-[#d1d3d6] tw-w-3.5"
                             />
                             <div className="tw-text-[#d1d3d6]">
-                                Winning Bid:
+                                Final Price:
                             </div>
                             <div className="tw-text-[#49c742] tw-font-bold">
-                                --
+                                ${finalPrice}
                             </div>
                         </div>
                         <div className="tw-flex tw-gap-2 tw-text-sm tw-items-center">
@@ -403,7 +422,7 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 className="tw-text-[#d1d3d6] tw-w-3.5 tw-h-3.5"
                             />
                             <div className="tw-text-[#d1d3d6]">Status:</div>
-                            <div>Completed</div>
+                            <div>{auctionStatus}</div>
                         </div>
                     </div>
                 </div>
