@@ -154,7 +154,7 @@ function Profile(props: Props) {
                             </div>
                         </div>
                     </div>
-                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px] tw-disabled tw-cursor-auto tw-opacity-30">
+                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px] tw-disabled tw-cursor-auto tw-opacity-30 ">
                         Edit Profile
                     </button>
                 </div>
@@ -376,6 +376,10 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
         setAuctionStatus(statusMap[status] || statusMap.default);
     }, [status]);
 
+    const currencyMyWager = new Intl.NumberFormat().format(my_wager);
+    const currencyFinalPrice = new Intl.NumberFormat().format(finalPrice);
+
+
     return (
         <div>
             <div className="tw-flex tw-gap-6 tw-py-6 tw-px-6 tw-items-center">
@@ -397,9 +401,9 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 alt=""
                                 className="tw-text-[#d1d3d6] tw-w-3.5"
                             />
-                            <div className="tw-text-[#d1d3d6]">Wager:</div>
+                            <div className="tw-text-[#d1d3d6]">Your Price Guess:</div>
                             <div className="tw-text-[#f2ca16] tw-font-bold">
-                                ${my_wager}
+                                ${currencyMyWager}
                             </div>
                         </div>
                         <div className="tw-flex tw-gap-2 tw-text-sm">
@@ -412,7 +416,7 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 Final Price:
                             </div>
                             <div className="tw-text-[#49c742] tw-font-bold">
-                                ${finalPrice}
+                                ${currencyFinalPrice}
                             </div>
                         </div>
                         <div className="tw-flex tw-gap-2 tw-text-sm tw-items-center">
