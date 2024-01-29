@@ -33,7 +33,7 @@ type Filter = {
 export const dynamic = "force-dynamic";
 
 const AuctionListingPage = () => {
-    const [filters, setFilters] = useState<Filter>(filtersInitialState);
+    const [filters, setFilters] = useState<Filter | null>(filtersInitialState);
     const [loadMore, setLoadMore] = useState(21);
     const [listing, setListing] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -121,9 +121,11 @@ const AuctionListingPage = () => {
 
     // calls fetchData when filters are changed
     useEffect(() => {
-        if (filters.ready) {
-            const { ready, ...currentFilters } = filters;
-            fetchData(currentFilters);
+        if (filters !== null) {
+            if (filters.ready) {
+                const { ready, ...currentFilters } = filters;
+                fetchData(currentFilters);
+            }
         }
     }, [filters, loadMore, isGridView]);
 
@@ -133,7 +135,8 @@ const AuctionListingPage = () => {
             searchParamsObj.getAll("location").length == 0 &&
             searchParamsObj.getAll("make").length == 0 &&
             searchParamsObj.getAll("category").length == 0 &&
-            searchParamsObj.getAll("era").length == 0
+            searchParamsObj.getAll("era").length == 0 &&
+            !searchParamsObj.getAll("sort")
         ) {
             fetchData(filters);
         }
@@ -177,14 +180,14 @@ const AuctionListingPage = () => {
                             </section>
                         </div>
                     ) : (
-                        <div className="tw-p-16 tw-text-center">No Cars with those requirements...</div>
+                        <div className="tw-p-16 tw-text-center">{filters != filtersInitialState && "No Cars with those requirements..."}</div>
                     )}
                 </>
             )}
             {loading && listing.length > 0 && <Loader />}
             <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16 ">
                 <div className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"}`}>
-                    {`Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"} auctions`}
+                    {filters != filtersInitialState && `Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"} auctions`}
                 </div>
                 <button
                     className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null || loading) &&
