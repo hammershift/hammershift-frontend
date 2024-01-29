@@ -109,7 +109,6 @@ const AuctionListingPage = () => {
         };
 
         getSearchParams();
-        console.log("Fetch Search Params")
     };
 
     // calls createFilterObject when searchParams are changed
