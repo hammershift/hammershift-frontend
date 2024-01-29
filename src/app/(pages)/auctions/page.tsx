@@ -109,6 +109,7 @@ const AuctionListingPage = () => {
         };
 
         getSearchParams();
+        console.log("Fetch Search Params")
     };
 
     // calls createFilterObject when searchParams are changed
@@ -140,9 +141,9 @@ const AuctionListingPage = () => {
     }, []);
 
     //console log to check filters
-    // useEffect(() => {
-    //     console.log("filters:", filters);
-    // }, [filters]);
+    useEffect(() => {
+        console.log("filters:", filters);
+    }, [filters]);
 
     //if filters are changed, reset loadMore to 21
     useEffect(() => {
