@@ -865,7 +865,7 @@ const MyWatchlistDropdownMenu = () => {
             )}
             {activeOrCompleted === "active" && activeWatchlist.length !== 0 && (
                 <div className="tw-w-full">
-                    {activeWatchlist.map((watchlist: any) => (
+                    {activeWatchlist.map((watchlist: any, index: number) => (
                         <div key={watchlist._id}>
                             <TimerProvider deadline={watchlist.auctionDeadline}>
                                 <MyWatchlistCard
@@ -875,6 +875,7 @@ const MyWatchlistDropdownMenu = () => {
                                     time_left={watchlist.auctionDeadline}
                                     id={watchlist.auctionIdentifierId}
                                     isActive={true}
+                                    index={index}
                                 />
                             </TimerProvider>
                         </div>
@@ -884,22 +885,27 @@ const MyWatchlistDropdownMenu = () => {
             {activeOrCompleted === "completed" &&
                 completedWatchlist.length !== 0 && (
                     <div className="tw-w-full">
-                        {completedWatchlist.map((watchlist: any) => (
-                            <div key={watchlist._id}>
-                                <TimerProvider
-                                    deadline={watchlist.auctionDeadline}
-                                >
-                                    <MyWatchlistCard
-                                        title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                        img={watchlist.auctionImage}
-                                        current_bid={watchlist.auctionPrice}
-                                        id={watchlist.auctionIdentifierId}
-                                        time_left={watchlist.auctionDeadline}
-                                        isActive={false}
-                                    />
-                                </TimerProvider>
-                            </div>
-                        ))}
+                        {completedWatchlist.map(
+                            (watchlist: any, index: number) => (
+                                <div key={watchlist._id}>
+                                    <TimerProvider
+                                        deadline={watchlist.auctionDeadline}
+                                    >
+                                        <MyWatchlistCard
+                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                            img={watchlist.auctionImage}
+                                            current_bid={watchlist.auctionPrice}
+                                            id={watchlist.auctionIdentifierId}
+                                            time_left={
+                                                watchlist.auctionDeadline
+                                            }
+                                            isActive={false}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            )
+                        )}
                     </div>
                 )}
             {isLoading === false &&
@@ -947,6 +953,7 @@ interface MyWatchlistCardProps {
     id: string;
     isActive: boolean;
     closeMenu?: () => void;
+    index?: number;
 }
 export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     title,
@@ -956,11 +963,16 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     id,
     isActive,
     closeMenu,
+    index,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
 
     return (
-        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-3 tw-border-b-[1px] tw-border-[#253747]">
+        <div
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
+                index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
+            }`}
+        >
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
@@ -1011,7 +1023,11 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                                 <span className="tw-opacity-80">
                                     Time Left:
                                 </span>
-                                <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                {Number(days) < 1 ? (
+                                    <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
                             </div>
                         )}
                     </div>
@@ -1090,7 +1106,7 @@ const MyWagersDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="my-wagers-menu tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="my-wagers-menu tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-6 tw-pb-2 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WAGERS
@@ -1119,13 +1135,13 @@ const MyWagersDropdownMenu = () => {
                 </div>
             </div>
             {isLoading && (
-                <div className="tw-pb-[50px] tw-pt-[74px] tw-flex tw-justify-center">
+                <div className="tw-pb-[66px] tw-pt-[74px] tw-flex tw-justify-center">
                     <BounceLoader color="#696969" loading={true} />
                 </div>
             )}
             {activeOrCompleted === "active" && activeWagers.length !== 0 && (
                 <div className="tw-w-full">
-                    {activeWagers.map((wager: any) => (
+                    {activeWagers.map((wager: any, index: number) => (
                         <div key={wager._id}>
                             <TimerProvider deadline={wager.auctionDeadline}>
                                 <MyWagersCard
@@ -1144,6 +1160,7 @@ const MyWagersDropdownMenu = () => {
                                     isRefunded={wager.refunded}
                                     prize={wager.prize}
                                     deadline={wager.auctionDeadline}
+                                    index={index}
                                 />
                             </TimerProvider>
                         </div>
@@ -1153,7 +1170,7 @@ const MyWagersDropdownMenu = () => {
             {activeOrCompleted === "completed" &&
                 completedWagers.length !== 0 && (
                     <div className="tw-w-full">
-                        {completedWagers.map((wager: any) => (
+                        {completedWagers.map((wager: any, index: number) => (
                             <div key={wager._id}>
                                 <TimerProvider deadline={wager.auctionDeadline}>
                                     <MyWagersCard
@@ -1172,6 +1189,7 @@ const MyWagersDropdownMenu = () => {
                                         isRefunded={wager.refunded}
                                         prize={wager.prize}
                                         deadline={wager.auctionDeadline}
+                                        index={index}
                                     />
                                 </TimerProvider>
                             </div>
@@ -1232,6 +1250,7 @@ interface MyWagersCardProps {
     closeMenu?: () => void;
     prize?: number;
     deadline: Date;
+    index?: number;
 }
 export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     title,
@@ -1250,6 +1269,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     closeMenu,
     prize,
     deadline,
+    index,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
     const [refunded, setRefunded] = useState(false);
@@ -1278,7 +1298,11 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     };
 
     return (
-        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-3 tw-border-t-[1px] tw-border-[#253747]">
+        <div
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
+                index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
+            }`}
+        >
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
                     href={`/auctions/car_view_page/${id}`}
@@ -1776,49 +1800,63 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                 {activeOrCompleted === "active" &&
                     activeWatchlist.length !== 0 && (
                         <div className="tw-w-full">
-                            {activeWatchlist.map((watchlist: any) => (
-                                <div key={watchlist._id}>
-                                    <TimerProvider
-                                        deadline={watchlist.auctionDeadline}
-                                    >
-                                        <MyWatchlistCard
-                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                            img={watchlist.auctionImage}
-                                            current_bid={watchlist.auctionPrice}
-                                            time_left={
-                                                watchlist.auctionDeadline
-                                            }
-                                            id={watchlist.auctionIdentifierId}
-                                            isActive={true}
-                                            closeMenu={closeMenu}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            ))}
+                            {activeWatchlist.map(
+                                (watchlist: any, index: number) => (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.auctionDeadline}
+                                        >
+                                            <MyWatchlistCard
+                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                                img={watchlist.auctionImage}
+                                                current_bid={
+                                                    watchlist.auctionPrice
+                                                }
+                                                time_left={
+                                                    watchlist.auctionDeadline
+                                                }
+                                                id={
+                                                    watchlist.auctionIdentifierId
+                                                }
+                                                isActive={true}
+                                                closeMenu={closeMenu}
+                                                index={index}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                )
+                            )}
                         </div>
                     )}
                 {activeOrCompleted === "completed" &&
                     completedWatchlist.length !== 0 && (
                         <div className="tw-w-full">
-                            {completedWatchlist.map((watchlist: any) => (
-                                <div key={watchlist._id}>
-                                    <TimerProvider
-                                        deadline={watchlist.auctionDeadline}
-                                    >
-                                        <MyWatchlistCard
-                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                            img={watchlist.auctionImage}
-                                            current_bid={watchlist.auctionPrice}
-                                            id={watchlist.auctionIdentifierId}
-                                            time_left={
-                                                watchlist.auctionDeadline
-                                            }
-                                            isActive={false}
-                                            closeMenu={closeMenu}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            ))}
+                            {completedWatchlist.map(
+                                (watchlist: any, index: number) => (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.auctionDeadline}
+                                        >
+                                            <MyWatchlistCard
+                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                                img={watchlist.auctionImage}
+                                                current_bid={
+                                                    watchlist.auctionPrice
+                                                }
+                                                id={
+                                                    watchlist.auctionIdentifierId
+                                                }
+                                                time_left={
+                                                    watchlist.auctionDeadline
+                                                }
+                                                isActive={false}
+                                                closeMenu={closeMenu}
+                                                index={index}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                )
+                            )}
                         </div>
                     )}
                 {isLoading === false &&
@@ -1921,7 +1959,7 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                 {activeOrCompleted === "active" &&
                     activeWagers.length !== 0 && (
                         <div className="tw-w-full">
-                            {activeWagers.map((wager: any) => (
+                            {activeWagers.map((wager: any, index: number) => (
                                 <div key={wager._id}>
                                     <TimerProvider
                                         deadline={wager.auctionDeadline}
@@ -1943,6 +1981,7 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                             closeMenu={closeMenu}
                                             prize={wager.prize}
                                             deadline={wager.auctionDeadline}
+                                            index={index}
                                         />
                                     </TimerProvider>
                                 </div>
@@ -1952,32 +1991,39 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                 {activeOrCompleted === "completed" &&
                     completedWagers.length !== 0 && (
                         <div className="tw-w-full">
-                            {completedWagers.map((wager: any) => (
-                                <div key={wager._id}>
-                                    <TimerProvider
-                                        deadline={wager.auctionDeadline}
-                                    >
-                                        <MyWagersCard
-                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                                            img={wager.auctionImage}
-                                            my_wager={wager.priceGuessed}
-                                            current_bid={wager.auctionPrice}
-                                            time_left={wager.auctionDeadline}
-                                            potential_prize={wager.auctionPot}
-                                            id={wager.auctionIdentifierId}
-                                            isActive={false}
-                                            status={wager.auctionStatus}
-                                            wagerAmount={wager.wagerAmount}
-                                            objectID={wager.auctionObjectId}
-                                            wagerID={wager._id}
-                                            isRefunded={wager.refunded}
-                                            closeMenu={closeMenu}
-                                            prize={wager.prize}
+                            {completedWagers.map(
+                                (wager: any, index: number) => (
+                                    <div key={wager._id}>
+                                        <TimerProvider
                                             deadline={wager.auctionDeadline}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            ))}
+                                        >
+                                            <MyWagersCard
+                                                title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                                img={wager.auctionImage}
+                                                my_wager={wager.priceGuessed}
+                                                current_bid={wager.auctionPrice}
+                                                time_left={
+                                                    wager.auctionDeadline
+                                                }
+                                                potential_prize={
+                                                    wager.auctionPot
+                                                }
+                                                id={wager.auctionIdentifierId}
+                                                isActive={false}
+                                                status={wager.auctionStatus}
+                                                wagerAmount={wager.wagerAmount}
+                                                objectID={wager.auctionObjectId}
+                                                wagerID={wager._id}
+                                                isRefunded={wager.refunded}
+                                                closeMenu={closeMenu}
+                                                prize={wager.prize}
+                                                deadline={wager.auctionDeadline}
+                                                index={index}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                )
+                            )}
                         </div>
                     )}
                 {isLoading === false &&

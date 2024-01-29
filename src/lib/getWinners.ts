@@ -15,7 +15,7 @@ export const getWinnersRank = async () => {
     const winners = await response.json();
     const data = winners.winners;
     const newData = [];
-    console.log(winners)
+
 
     for (let i = 0; i < data.length; i++) {
         const usernameResponse = await fetch('/api/username', {
