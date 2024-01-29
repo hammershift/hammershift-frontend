@@ -9,10 +9,8 @@ export interface User {
   balance: number;
   action?: 'create' | 'login';
   isBanned: boolean;
-  // wagers?: Wager[]; // TEST IMPLEMENTATION
-  // winnings: Winning[]; // TEST IMPLEMENTATION
-  wagers?: ObjectId[];
-  winnings?: ObjectId[];
+  // wagers?: ObjectId[];
+  // winnings?: ObjectId[];
 }
 
 export interface Credentials {

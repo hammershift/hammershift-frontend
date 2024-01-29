@@ -74,8 +74,9 @@ function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot:
     // skip over the other tied winners in the outer loop
     i += tiedWinners.length - 1;
   }
+  const actualWinners = winners.filter((winner) => winner.prize > 0);
 
-  return winners;
+  return actualWinners;
 }
 
 export default prizeDistribution;
