@@ -135,7 +135,7 @@ export async function POST(req: NextRequest) {
 
     await transaction.save({ session: mongoSession });
 
-    await db.collection('users').updateOne({ _id: new mongoose.Types.ObjectId(user._id) }, { $inc: { balance: -wagerAmount } }, { session: mongoSession });
+    // await db.collection('users').updateOne({ _id: new mongoose.Types.ObjectId(user._id) }, { $inc: { balance: -wagerAmount } }, { session: mongoSession });
 
     await mongoSession.commitTransaction();
     console.log('Transaction committed');
