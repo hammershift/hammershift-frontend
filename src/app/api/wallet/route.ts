@@ -57,18 +57,7 @@ export async function POST(req: NextRequest) {
     const newBalance = user.balance - wagerAmount;
     await db.collection('users').updateOne({ _id: userID }, { $set: { balance: newBalance } });
 
-    const transaction = new Transaction({
-      userID,
-      transactionType: 'wager',
-      amount: wagerAmount,
-      type: '-',
-      transactionDate: new Date(),
-      // might add wagerID?
-    });
-
-    await transaction.save();
-
-    return NextResponse.json({ message: 'Wager placed successfully', newBalance });
+    return NextResponse.json({ message: 'Wager amount deducted from wallet', newBalance });
   } catch (error) {
     console.error('POST Update User Wallet - Internal server error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });

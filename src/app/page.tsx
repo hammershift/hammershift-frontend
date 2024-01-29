@@ -36,7 +36,7 @@ const DynamicCarousel = withDynamicImport("carousel", {
 });
 const DynamicLiveGames = withDynamicImport("live_games", {
   loading: () => (
-    <div className="section-container tw-my-10 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-items-center">
@@ -585,7 +585,7 @@ const Homepage = () => {
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center tw-justify-center">
       <DynamicCarousel />
-      <div ref={liveGamesRef} className="section-container">
+      <div ref={liveGamesRef}>
         {isLiveGamesVisible ? <DynamicLiveGames /> : null}
       </div>
       <div ref={teamBattlesRef}>
@@ -595,7 +595,7 @@ const Homepage = () => {
         {isTournamentsVisible ? <DynamicTournaments /> : null}
       </div>
       <div
-        className="tw-w-auto tw-flex tw-justify-center"
+        className="tw-w-full tw-flex tw-justify-center"
         ref={newEraWageringRef}
       >
         {isNewEraWageringVisible ? <DynamicNewEraWagering /> : null}
