@@ -167,34 +167,31 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    // await connectToDB();
-    const client = await clientPromise;
-    const db = client.db();
-
+    await connectToDB();
     const id = req.nextUrl.searchParams.get('id');
     const user = req.nextUrl.searchParams.get('user_id');
 
     if (id && user) {
-      const wager = await db.collection('wagers').find({
+      const wager = await Wager.find({
         auctionID: new ObjectId(id),
         'user._id': new ObjectId(user),
-      }).toArray();
+      });
       return NextResponse.json(wager);
     }
 
     //IMPORTANT use the _id instead of auction_id when fetching wagers
     // api/wager?auction_id=656e95bc8727754b7cb5ec6b to get all wagers with the same auctionID
     if (id) {
-      const auctionWagers = await db.collection('wagers').find({ auctionID: new ObjectId(id) }).sort({ createdAt: -1 }).toArray();
+      const auctionWagers = await Wager.find({ auctionID: new ObjectId(id) }).sort({ createdAt: -1 });
       return NextResponse.json(auctionWagers);
     }
 
     if (user) {
-      const userWagers = await db.collection('wagers').find({ 'user._id': new ObjectId(user) }).toArray();
+      const userWagers = await Wager.find({ 'user._id': new ObjectId(user) });
       return NextResponse.json(userWagers);
     }
     // api/wager to get all wagers
-    const wagers = await db.collection('wagers').find().toArray();
+    const wagers = await Wager.find();
     return NextResponse.json({ wagers: wagers });
   } catch (error) {
     console.error(error);
