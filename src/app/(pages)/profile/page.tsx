@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import dayjs from 'dayjs';
 import { useSession } from "next-auth/react";
 
 import AvatarOne from "../../../../public/images/avatar-one.svg";
@@ -34,6 +35,9 @@ function Profile(props: Props) {
     const [completedWatchlist, setCompletedWatchlist] = useState([]);
     const [isActiveWager, setIsActiveWager] = useState(true);
     const [userInfo, setUserInfo] = useState<any | null>(null);
+    const [winsNum, setWinsNum] = useState<number>(0);
+    const [joinedDate, setJoinedDate] = useState<string>("");
+
     const { } = props;
     const { data } = useSession();
     const router = useRouter();
@@ -43,8 +47,6 @@ function Profile(props: Props) {
             setName(data?.user.fullName);
             setUsername(data?.user.username);
         }
-        console.log("data:", data);
-        // console.log(data?.user.name);
     }, [name, data]);
 
     // fetch wagers
@@ -117,13 +119,27 @@ function Profile(props: Props) {
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getUserInfo(data?.user.id);
-            console.log("userData:", res);
             setUserInfo(res.user);
+            setJoinedDate(dayjs(res.user.createdAt).format('MMMM YYYY'));
         };
         if (data) {
             fetchUser();
         }
     }, [data]);
+
+    //fetch winnings number
+    useEffect(() => {
+        const fetchWinnings = async () => {
+            const res = await fetch("/api/winnings");
+            const data = await res.json();
+            setWinsNum(data.winnings);
+        };
+
+        fetchWinnings();
+
+    }, []);
+
+
 
     return (
         <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
@@ -145,12 +161,12 @@ function Profile(props: Props) {
                                 {name}
                             </div>
                             <div className="tw-text-lg tw-text-[#d1d5d8]">
-                                {"Joined September 2023 (default)"}
+                                {`Joined ${joinedDate}`}
                             </div>
                             <div className="tw-flex tw-text-base tw-gap-6 tw-text-[#487f4b]">
                                 <div>@{username}</div>
                                 <div>{totalWagersAndWatchlist} wagers</div>
-                                <div>-- wins</div>
+                                <div>{winsNum} wins</div>
                             </div>
                         </div>
                     </div>
