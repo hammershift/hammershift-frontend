@@ -63,8 +63,6 @@ export async function POST(req: Request) {
       password: hashedPassword,
       isActive: true,
       balance: 100, // initial wallet balance
-      wagers: [], // test
-      winnings: [], // test
     });
 
     return NextResponse.json({ message: 'User created with initial balance' }, { status: 201 });
