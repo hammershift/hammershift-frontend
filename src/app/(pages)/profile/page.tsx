@@ -18,7 +18,7 @@ import { getMyWagers, getMyWatchlist, getUserInfo, refundWager } from "@/lib/dat
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
 import { useRouter } from "next/navigation";
-import { PulseLoader } from "react-spinners";
+import { BeatLoader, PulseLoader } from "react-spinners";
 import Dollar from "../../../../public/images/dollar.svg";
 
 
@@ -326,6 +326,7 @@ function Profile(props: Props) {
                                             wagerAmount={wager.wagerAmount}
                                             auctionObjectID={wager.auctionObjectId}
                                             wagerID={wager._id}
+                                            prize={wager.prize}
                                         />
                                     </TimerProvider>
                                 </div>
@@ -382,6 +383,8 @@ type CompletedWagerCardProps = {
     wagerAmount: number;
     auctionObjectID: string;
     wagerID: string
+    prize?: number;
+
 };
 
 const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
@@ -393,12 +396,14 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
     finalPrice,
     wagerAmount,
     auctionObjectID,
-    wagerID
+    wagerID,
+    prize,
+
+
 }) => {
     const [auctionStatus, setAuctionStatus] = useState("Completed");
     const [refunded, setRefunded] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [winnings, setWinnings] = useState(0);
 
     const statusMap: any = {
         1: "Ongoing",
@@ -418,31 +423,9 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
     const currencyWagerAmount = new Intl.NumberFormat().format(wagerAmount);
 
     // refund for when auction is unsuccessful
-    const handleRefund = async (auctionObjectID: string, wagerID: string) => {
-        setLoading(true);
-        await refundWager(auctionObjectID, wagerID);
-        setRefunded(true);
-        setLoading(false);
-    };
 
-    useEffect(() => {
-        const fetchWinnings = async () => {
-            const res = await fetch("/api/winnings", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    key: 'auctionID',
-                    value: auctionObjectID,
-                }),
-            });
-            const data = await res.json();
-            setWinnings(data.winnings);
 
-        }
-        fetchWinnings();
-    }, [])
+
 
 
     return (
@@ -524,7 +507,7 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                             </div>
                         </>
                     )}
-                    {status == 4 && (
+                    {status == 4 && prize && (
                         <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
                             <div className="tw-flex tw-gap-2">
                                 <Image
@@ -538,9 +521,9 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                             </div>
                             <div>
                                 $
-                                {winnings % 1 === 0
-                                    ? winnings.toLocaleString()
-                                    : winnings.toLocaleString(undefined, {
+                                {prize % 1 === 0
+                                    ? prize.toLocaleString()
+                                    : prize.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2,
                                     })}{" "}
