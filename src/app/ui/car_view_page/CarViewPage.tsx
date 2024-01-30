@@ -741,17 +741,19 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                     <button
                                         className={
                                             session?.user.id === wager.user._id
-                                                ? "tw-bg-[#156cc3] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
-                                                : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
+                                                ? "tw-bg-[#156cc3] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold tw-flex tw-items-center tw-gap-1 tw-line-clamp-1"
+                                                : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold tw-flex tw-items-center tw-gap-1"
                                         }
                                     >
-                                        <span className="tw-hidden xl:tw-inline-block">
+                                        <div className="tw-hidden 2xl:tw-inline-block">
                                             Wager:
-                                        </span>{" "}
-                                        $
-                                        {new Intl.NumberFormat().format(
-                                            wager.priceGuessed
-                                        )}
+                                        </div>{" "}
+                                        <div>
+                                            $
+                                            {new Intl.NumberFormat().format(
+                                                wager.priceGuessed
+                                            )}
+                                        </div>
                                     </button>
                                 </div>
                             );
