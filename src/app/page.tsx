@@ -585,13 +585,13 @@ const Homepage = () => {
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center tw-justify-center">
       <DynamicCarousel />
-      <div ref={liveGamesRef}>
+      <div ref={liveGamesRef} className="section-container">
         {isLiveGamesVisible ? <DynamicLiveGames /> : null}
       </div>
-      <div ref={teamBattlesRef}>
+      <div ref={teamBattlesRef} className="section-container">
         {isTeamBattlesVisible ? <DynamicTeamBattles /> : null}
       </div>
-      <div ref={tournamentsRef}>
+      <div ref={tournamentsRef} className="section-container">
         {isTournamentsVisible ? <DynamicTournaments /> : null}
       </div>
       <div
@@ -600,7 +600,7 @@ const Homepage = () => {
       >
         {isNewEraWageringVisible ? <DynamicNewEraWagering /> : null}
       </div>
-      <div ref={gamesByMakeRef}>
+      <div ref={gamesByMakeRef} className="section-container">
         {isGamesByMakeVisible ? <DynamicGamesByMake /> : null}
       </div>
       <div className="tw-w-full" ref={wagerByCategoryRef}>
