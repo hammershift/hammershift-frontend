@@ -147,7 +147,7 @@ const DynamicTournaments = withDynamicImport("tournaments", {
 });
 const DynamicNewEraWagering = withDynamicImport("new_era_wagering", {
   loading: () => (
-    <div className="section-container tw-flex tw-w-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-flex tw-w-full tw-justify-center tw-items-center tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-flex-col tw-m-10">
@@ -444,7 +444,7 @@ const DynamicMostBids = withDynamicImport("most_bids", {
 });
 const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-w-full tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-mr-5 tw-w-1/2 tw-my-10 tw-mb-16 tw-h-24 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
         <div className="tw-flex tw-my-10">
@@ -485,7 +485,7 @@ const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works", {
 });
 const DynamicSubscribe = withDynamicImport("subscribe", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-w-full tw-justify-center tw-items-center tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col tw-justify-evenly">
         <div className="tw-mr-5 tw-w-1/2 tw-my-10 tw-mb-16 tw-h-32 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
         <div className="tw-mr-5 tw-w-1/2 tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
@@ -605,7 +605,10 @@ const Homepage = () => {
       <div ref={gamesByMakeRef} className="section-container">
         {isGamesByMakeVisible ? <DynamicGamesByMake /> : null}
       </div>
-      <div className="tw-w-full" ref={wagerByCategoryRef}>
+      <div
+        className="tw-w-full tw-flex tw-justify-center"
+        ref={wagerByCategoryRef}
+      >
         {isWagerByCategoryVisible ? <DynamicWagerByCategory /> : null}
       </div>
       <div ref={skillsStrategyAndStakesRef}>
