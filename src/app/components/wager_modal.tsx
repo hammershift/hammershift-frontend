@@ -45,6 +45,7 @@ interface WagerModalProps {
     insufficientFunds: boolean;
     invalidPrice: boolean;
     invalidWager: boolean;
+    isButtonClicked: boolean;
 }
 
 const WagerModal: React.FC<WagerModalProps> = ({
@@ -63,6 +64,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
     insufficientFunds,
     invalidPrice,
     invalidWager,
+    isButtonClicked,
 }) => {
     const router = useRouter();
     const timerValues = useTimer();
@@ -381,6 +383,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                             <button
                                 className="btn-yellow tw-h-[48px] tw-w-full md:tw-w-auto"
                                 type="submit"
+                                disabled={isButtonClicked}
                             >
                                 PLACE MY WAGER
                             </button>
