@@ -132,7 +132,7 @@ function Profile(props: Props) {
                 className="black-filter tw-absolute tw-max-h-[280px] tw-object-cover tw-object-bottom"
                 alt=""
             />
-            <div className="tw-max-w-[862px] tw-w-full sm:tw-mt-[200px] tw-mt-[120px] tw-z-10">
+            <div className="tw-max-w-[862px] tw-w-full sm:tw-mt-[200px] tw-mt-[120px] tw-z-[1]">
                 <div className="tw-px-6 sm:tw-flex sm:tw-px-0 sm:tw-justify-between">
                     <div className="sm:tw-flex sm:tw-items-center sm:tw-gap-6">
                         <Image
@@ -154,7 +154,8 @@ function Profile(props: Props) {
                             </div>
                         </div>
                     </div>
-                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px] tw-disabled tw-cursor-auto tw-opacity-30 ">
+                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px]  tw-cursor-pointer "
+                        onClick={e => router.push("/profile/edit")}>
                         Edit Profile
                     </button>
                 </div>
