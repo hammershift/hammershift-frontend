@@ -38,7 +38,7 @@ const GamesByMake = () => {
   ];
 
   return (
-    <div className="section-container tw-py-8 md:tw-py-[120px]">
+    <div className="tw-py-8 md:tw-py-[120px]">
       <header className="tw-flex tw-justify-between">
         <div className="tw-flex tw-items-center">
           <Image
