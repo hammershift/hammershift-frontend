@@ -45,6 +45,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [invalidWager, setInvalidWager] = useState(false);
     const [showCarImageModal, setShowCarImageModal] = useState(false);
     const [winners, setWinners] = useState([]);
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
 
     // const router = useRouter();
 
@@ -186,6 +187,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         sessionData: any
     ) => {
         e.preventDefault();
+        setIsButtonClicked(true);
         const fixedWagerAmount = 10;
 
         // if (String(wagerInputs.priceGuessed).includes(".")) {
@@ -290,6 +292,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         insufficientFunds={insufficientFunds}
                         invalidPrice={invalidPrice}
                         invalidWager={invalidWager}
+                        isButtonClicked={isButtonClicked}
                     />
                 </TimerProvider>
             ) : null}
