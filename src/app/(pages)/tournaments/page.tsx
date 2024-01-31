@@ -904,7 +904,7 @@ const DetailsSection = () => {
   );
 };
 
-const TournamentsYouMightLike = () => {
+export const TournamentsYouMightLike = () => {
   return (
     <div className="section-container tw-py-8 sm:tw-py-12 tw-mb-8  tw-mt-8 ">
       <header className="tw-max-w-[1312px]">

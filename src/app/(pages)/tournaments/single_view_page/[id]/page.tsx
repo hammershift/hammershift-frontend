@@ -29,7 +29,7 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
 
-const CarViewPage = ({ params }: { params: { id: string } }) => {
+const SingleViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
   const { data: session, status } = useSession();
   const [carData, setCarData] = useState<any>(null);
@@ -288,7 +288,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       ) : null}
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
         <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
-          GUESS THE PRICE
+          TOURNAMENT
         </div>
         <div className="tw-hidden sm:tw-block">
           <WatchAndWagerButtons
@@ -417,4 +417,4 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default CarViewPage;
+export default SingleViewPage;
