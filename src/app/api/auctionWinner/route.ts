@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       }
 
       const wagers = await db.collection('wagers').find({ auctionID: _id }).toArray();
-      if (wagers.length <= 3) {
+      if (wagers.length < 3) {
         auctionsToUpdate.push(_id);
         wagerIDsForRefund.push(...wagers.map((wager) => wager._id));
         continue;
