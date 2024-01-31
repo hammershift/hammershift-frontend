@@ -9,7 +9,6 @@ import { SubscribeSmall } from "../../components/subscribe";
 import { TournamentsCard } from "../../components/card";
 import Footer from "../../components/footer";
 import Link from "next/link";
-import TournamentWagerPage from "../tournament_wager_page/page";
 
 import DollarIcon from "../../../../public/images/dollar.svg";
 import CalendarIcon from "../../../../public/images/calendar-icon.svg";
