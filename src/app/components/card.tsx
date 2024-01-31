@@ -374,7 +374,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                                                 (wager: any, index: number) => {
                                                     return (
                                                         <div
-                                                            key={wager._id}
+                                                            key={wager._id + "sm"}
                                                             style={{
                                                                 transform: `translate(${-10 *
                                                                     (index + 1)
@@ -469,7 +469,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                                         .map((wager: any, index: number) => {
                                             return (
                                                 <div
-                                                    key={wager._id}
+                                                    key={wager._id + "md"}
                                                     style={{
                                                         transform: `translate(${-10 * (index + 1)
                                                             }px, 0)`,

@@ -132,10 +132,10 @@ const AuctionListingPage = () => {
     // fetch data for default filter
     useEffect(() => {
         if (
-            searchParamsObj.getAll("location").length == 0 &&
-            searchParamsObj.getAll("make").length == 0 &&
-            searchParamsObj.getAll("category").length == 0 &&
-            searchParamsObj.getAll("era").length == 0 &&
+            !searchParamsObj.getAll("location") &&
+            !searchParamsObj.getAll("make") &&
+            !searchParamsObj.getAll("category") &&
+            !searchParamsObj.getAll("era") &&
             !searchParamsObj.getAll("sort")
         ) {
             fetchData(filters);

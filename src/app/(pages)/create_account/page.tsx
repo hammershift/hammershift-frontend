@@ -537,7 +537,7 @@ const CreateAccount = () => {
                                     <div
                                         className={
                                             touchedFields.password &&
-                                            !validity.isPasswordValid
+                                                !validity.isPasswordValid
                                                 ? "tw-text-sm tw-text-red-500"
                                                 : "tw-text-sm tw-text-green-500"
                                         }
@@ -636,7 +636,7 @@ const CreateAccount = () => {
                                     <div
                                         className={
                                             touchedFields.fullName &&
-                                            !validity.isFullNameValid
+                                                !validity.isFullNameValid
                                                 ? "tw-text-sm tw-text-red-500"
                                                 : "tw-text-sm tw-text-green-500"
                                         }
@@ -778,7 +778,7 @@ const CreateAccount = () => {
                             {/* Buttons */}
                             <div className="tw-flex tw-flex-col tw-gap-2">
                                 <button
-                                    className="btn-yellow"
+                                    className="tw-cursor-auto btn-yellow tw-disabled tw-opacity-40"
                                     onClick={handleProfileSubmission}
                                 >
                                     Proceed to Account Verification
