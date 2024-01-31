@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import dayjs from 'dayjs';
 import { useSession } from "next-auth/react";
 
 import AvatarOne from "../../../../public/images/avatar-one.svg";
@@ -12,28 +13,33 @@ import TransitionPattern from "../../../../public/images/transition-pattern.svg"
 import Twitter from "../../../../public/images/twitter-social.svg";
 import Globe from "../../../../public/images/earth11.svg";
 import Pin from "../../../../public/images/pin1.svg";
-import { getMyWagers, getMyWatchlist, getUserInfo } from "@/lib/data";
+import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
+import { getMyWagers, getMyWatchlist, getUserInfo, refundWager } from "@/lib/data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
 import { useRouter } from "next/navigation";
-import { PulseLoader } from "react-spinners";
-import { set } from "mongoose";
+import { BeatLoader, PulseLoader } from "react-spinners";
+import Dollar from "../../../../public/images/dollar.svg";
 
-interface Props {}
+
+interface Props { }
 
 function Profile(props: Props) {
     const [name, setName] = useState("User");
     const [username, setUsername] = useState("Username");
     const [totalWagersAndWatchlist, setTotalWagersAndWatchlist] = useState(0);
     const [dataIsLoading, setDataIsLoading] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [activeWagers, setActiveWagers] = useState([]);
     const [completedWagers, setCompletedWagers] = useState([]);
     const [activeWatchlist, setActiveWatchlist] = useState([]);
     const [completedWatchlist, setCompletedWatchlist] = useState([]);
     const [isActiveWager, setIsActiveWager] = useState(true);
     const [userInfo, setUserInfo] = useState<any | null>(null);
-    const {} = props;
+    const [winsNum, setWinsNum] = useState<number>(0);
+    const [joinedDate, setJoinedDate] = useState<string>("");
+
+    const { } = props;
     const { data } = useSession();
     const router = useRouter();
 
@@ -42,8 +48,6 @@ function Profile(props: Props) {
             setName(data?.user.fullName);
             setUsername(data?.user.username);
         }
-        console.log("data:", data);
-        // console.log(data?.user.name);
     }, [name, data]);
 
     // fetch wagers
@@ -64,11 +68,11 @@ function Profile(props: Props) {
                     return auctionDeadline >= currentDate;
                 });
 
+
                 setActiveWagers(active);
                 setCompletedWagers(completed);
-                setDataIsLoading(false);
             }
-            setIsLoading(false);
+            setDataIsLoading(false);
         };
         fetchWagers();
     }, []);
@@ -82,9 +86,9 @@ function Profile(props: Props) {
     useEffect(() => {
         setTotalWagersAndWatchlist(
             activeWagers.length +
-                completedWagers.length +
-                activeWatchlist.length +
-                completedWatchlist.length
+            completedWagers.length +
+            activeWatchlist.length +
+            completedWatchlist.length
         );
     }, [activeWagers, completedWagers, activeWatchlist, completedWatchlist]);
 
@@ -107,7 +111,7 @@ function Profile(props: Props) {
                 setActiveWatchlist(active);
                 setCompletedWatchlist(completed);
             }
-            setIsLoading(false);
+            setDataIsLoading(false);
         };
         fetchWatchlist();
     }, []);
@@ -116,13 +120,27 @@ function Profile(props: Props) {
     useEffect(() => {
         const fetchUser = async () => {
             const res = await getUserInfo(data?.user.id);
-            console.log("userData:", res);
             setUserInfo(res.user);
+            setJoinedDate(dayjs(res.user.createdAt).format('MMMM YYYY'));
         };
         if (data) {
             fetchUser();
         }
     }, [data]);
+
+    //fetch winnings number
+    useEffect(() => {
+        const fetchWinnings = async () => {
+            const res = await fetch("/api/winnings");
+            const data = await res.json();
+            setWinsNum(data.winnings);
+        };
+
+        fetchWinnings();
+
+    }, []);
+
+
 
     return (
         <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
@@ -131,7 +149,7 @@ function Profile(props: Props) {
                 className="black-filter tw-absolute tw-max-h-[280px] tw-object-cover tw-object-bottom"
                 alt=""
             />
-            <div className="tw-max-w-[862px] tw-w-full sm:tw-mt-[200px] tw-mt-[120px] tw-z-10">
+            <div className="tw-max-w-[862px] tw-w-full sm:tw-mt-[200px] tw-mt-[120px] tw-z-[1]">
                 <div className="tw-px-6 sm:tw-flex sm:tw-px-0 sm:tw-justify-between">
                     <div className="sm:tw-flex sm:tw-items-center sm:tw-gap-6">
                         <Image
@@ -144,16 +162,17 @@ function Profile(props: Props) {
                                 {name}
                             </div>
                             <div className="tw-text-lg tw-text-[#d1d5d8]">
-                                {"Joined September 2023 (default)"}
+                                {`Joined ${joinedDate}`}
                             </div>
                             <div className="tw-flex tw-text-base tw-gap-6 tw-text-[#487f4b]">
                                 <div>@{username}</div>
                                 <div>{totalWagersAndWatchlist} wagers</div>
-                                <div>-- wins</div>
+                                <div>{winsNum} wins</div>
                             </div>
                         </div>
                     </div>
-                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px] tw-disabled tw-cursor-auto tw-opacity-30">
+                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px]  tw-cursor-pointer "
+                        onClick={e => router.push("/profile/edit")}>
                         Edit Profile
                     </button>
                 </div>
@@ -186,7 +205,7 @@ function Profile(props: Props) {
                             ? userInfo.aboutMe
                             : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud."}
                     </div>
-                    <div className="tw-flex tw-gap-6 tw-text-lg tw-font-light tw-leading-7">
+                    <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-2 sm:tw-gap-6 tw-text-sm sm:tw-text-lg tw-font-light tw-leading-7">
                         <div className="tw-flex tw-items-center tw-gap-2">
                             <Image
                                 src={Pin}
@@ -231,14 +250,13 @@ function Profile(props: Props) {
                         <button
                             id="active-watchlist-button"
                             onClick={() => setIsActiveWager(true)}
-                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] tw-flex tw-justify-center tw-items-center tw-gap-2 ${
-                                isActiveWager == true
-                                    ? "tw-font-bold tw-text-lg tw-border-white"
-                                    : ""
-                            }`}
+                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] tw-flex tw-justify-center tw-items-center tw-gap-2 ${isActiveWager == true
+                                ? "tw-font-bold tw-text-lg tw-border-white"
+                                : ""
+                                }`}
                         >
                             <div>ACTIVE </div>
-                            {!isLoading && (
+                            {!dataIsLoading && (
                                 <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
                                     {activeWagers.length}
                                 </span>
@@ -247,11 +265,10 @@ function Profile(props: Props) {
                         <button
                             id="completed-watchlist-button"
                             onClick={() => setIsActiveWager(false)}
-                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] ${
-                                isActiveWager == false
-                                    ? "tw-font-bold tw-text-lg tw-border-white"
-                                    : ""
-                            }`}
+                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] ${isActiveWager == false
+                                ? "tw-font-bold tw-text-lg tw-border-white"
+                                : ""
+                                }`}
                         >
                             COMPLETED
                         </button>
@@ -262,46 +279,59 @@ function Profile(props: Props) {
                                 <PulseLoader color="#f2ca16" />
                             </div>
                         ) : isActiveWager == true ? (
-                            activeWagers.map((wager: any) => (
-                                <div key={wager._id}>
-                                    <TimerProvider
-                                        deadline={wager.auctionDeadline}
-                                    >
-                                        <MyWagersCard
-                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                                            img={wager.auctionImage}
-                                            my_wager={wager.priceGuessed}
-                                            current_bid={wager.auctionPrice}
-                                            time_left={wager.auctionDeadline}
-                                            potential_prize={wager.auctionPot}
-                                            id={wager.auctionIdentifierId}
-                                            isActive={true}
-                                            status={wager.auctionStatus}
-                                            wagerAmount={wager.wagerAmount}
-                                            objectID={wager.auctionObjectId}
-                                            wagerID={wager._id}
-                                            isRefunded={wager.refunded}
-                                            prize={wager.prize}
+                            activeWagers.length == 0 ? (
+                                <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Active Wagers</div>
+                            ) : (
+                                activeWagers.map((wager: any) => (
+                                    <div key={wager._id + "active"}>
+                                        <TimerProvider
                                             deadline={wager.auctionDeadline}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            ))
+                                        >
+                                            <MyWagersCard
+                                                title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                                img={wager.auctionImage}
+                                                my_wager={wager.priceGuessed}
+                                                current_bid={wager.auctionPrice}
+                                                time_left={wager.auctionDeadline}
+                                                potential_prize={wager.auctionPot}
+                                                id={wager.auctionIdentifierId}
+                                                isActive={true}
+                                                status={wager.auctionStatus}
+                                                wagerAmount={wager.wagerAmount}
+                                                objectID={wager.auctionObjectId}
+                                                wagerID={wager._id}
+                                                isRefunded={wager.refunded}
+                                                prize={wager.prize}
+                                                deadline={wager.auctionDeadline}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                ))
+                            )
+                        ) : (completedWagers.length == 0 ? (
+                            <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Completed Wagers</div>
                         ) : (
                             completedWagers.map((wager: any) => (
-                                <div key={wager._id}>
+                                <div key={wager._id + "completed"}>
                                     <TimerProvider
                                         deadline={wager.auctionDeadline}
                                     >
                                         <CompletedWagerCard
                                             title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
                                             img={wager.auctionImage}
-                                            my_wager={wager.priceGuessed}
+                                            priceGuess={wager.priceGuessed}
                                             id={wager.auctionIdentifierId}
+                                            status={wager.auctionStatus}
+                                            finalPrice={wager.auctionPrice}
+                                            wagerAmount={wager.wagerAmount}
+                                            auctionObjectID={wager.auctionObjectId}
+                                            wagerID={wager._id}
+                                            prize={wager.prize}
                                         />
                                     </TimerProvider>
                                 </div>
                             ))
+                        )
                         )}
                     </div>
                     {/* <UserWagerList /> */}
@@ -316,25 +346,30 @@ function Profile(props: Props) {
                                 <PulseLoader color="#f2ca16" />
                             </div>
                         ) : (
-                            activeWatchlist.map((watchlist: any) => (
-                                <div key={watchlist._id}>
-                                    <TimerProvider
-                                        deadline={watchlist.auctionDeadline}
-                                    >
-                                        <MyWatchlistCard
-                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                            img={watchlist.auctionImage}
-                                            current_bid={watchlist.auctionPrice}
-                                            time_left={
-                                                watchlist.auctionDeadline
-                                            }
-                                            id={watchlist.auctionIdentifierId}
-                                            isActive={true}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            ))
-                        )}
+                            activeWatchlist.length === 0 ? (
+                                <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Active Watchlist</div>
+                            ) : (
+                                activeWatchlist.map((watchlist: any) => (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.auctionDeadline}
+                                        >
+                                            <MyWatchlistCard
+                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                                img={watchlist.auctionImage}
+                                                current_bid={watchlist.auctionPrice}
+                                                time_left={
+                                                    watchlist.auctionDeadline
+                                                }
+                                                id={watchlist.auctionIdentifierId}
+                                                isActive={true}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                ))
+                            )
+                        )
+                        }
                     </div>
                 </div>
             </div>
@@ -347,19 +382,61 @@ export default Profile;
 type CompletedWagerCardProps = {
     title: string;
     img: string;
-    my_wager: number;
+    priceGuess: number;
     id: string;
+    status: number;
+    finalPrice: number;
+    wagerAmount: number;
+    auctionObjectID: string;
+    wagerID: string
+    prize?: number;
+
 };
 
 const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
     title,
     img,
-    my_wager,
+    priceGuess,
     id,
+    status,
+    finalPrice,
+    wagerAmount,
+    auctionObjectID,
+    wagerID,
+    prize,
+
+
 }) => {
+    const [auctionStatus, setAuctionStatus] = useState("Completed");
+    const [refunded, setRefunded] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const statusMap: any = {
+        1: "Ongoing",
+        2: "Completed",
+        3: "Unsuccessful Auction",
+        4: "Completed and Prize Distributed",
+        default: "Status Unknown"
+    };
+
+    useEffect(() => {
+        setAuctionStatus(statusMap[status] || statusMap.default);
+    }, [status]);
+
+    //convert number to currency
+    const currencyMyWager = new Intl.NumberFormat().format(priceGuess);
+    const currencyFinalPrice = new Intl.NumberFormat().format(finalPrice);
+    const currencyWagerAmount = new Intl.NumberFormat().format(wagerAmount);
+
+    // refund for when auction is unsuccessful
+
+
+
+
+
     return (
         <div>
-            <div className="tw-flex tw-gap-6 tw-py-6 tw-px-6 tw-items-center">
+            <div className="tw-flex tw-gap-6 tw-py-6 tw-px-6">
                 <Image
                     src={img}
                     width={100}
@@ -367,7 +444,7 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                     alt={title}
                     className="tw-rounded tw-w-[100px] tw-h-[100px] tw-object-cover"
                 />
-                <div className="tw-grid tw-gap-1.5">
+                <div className="tw-flex tw-flex-col tw-flex-auto tw-gap-1.5">
                     <div className="tw-font-bold tw-text-xl tw-leading-7">
                         {title}
                     </div>
@@ -378,9 +455,9 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 alt=""
                                 className="tw-text-[#d1d3d6] tw-w-3.5"
                             />
-                            <div className="tw-text-[#d1d3d6]">Wager:</div>
+                            <div className="tw-text-[#d1d3d6]">Your Price Guess:</div>
                             <div className="tw-text-[#f2ca16] tw-font-bold">
-                                ${my_wager}
+                                ${currencyMyWager}
                             </div>
                         </div>
                         <div className="tw-flex tw-gap-2 tw-text-sm">
@@ -390,11 +467,27 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 className="tw-text-[#d1d3d6] tw-w-3.5"
                             />
                             <div className="tw-text-[#d1d3d6]">
-                                Winning Bid:
+                                Final Price:
                             </div>
                             <div className="tw-text-[#49c742] tw-font-bold">
-                                --
+                                ${currencyFinalPrice}
                             </div>
+                        </div>
+                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full tw-text-sm">
+                            <Image
+                                src={Dollar}
+                                width={14}
+                                height={14}
+                                alt="wallet icon"
+                                className="tw-w-[14px] tw-h-[14px]"
+                            />
+                            <span className="tw-opacity-80">
+                                Wager Amount:
+                            </span>
+                            <span className=" tw-font-bold">
+                                $
+                                {currencyWagerAmount}
+                            </span>
                         </div>
                         <div className="tw-flex tw-gap-2 tw-text-sm tw-items-center">
                             <Image
@@ -403,9 +496,47 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                                 className="tw-text-[#d1d3d6] tw-w-3.5 tw-h-3.5"
                             />
                             <div className="tw-text-[#d1d3d6]">Status:</div>
-                            <div>Completed</div>
+                            <div>{auctionStatus}</div>
                         </div>
                     </div>
+                    {status === 3 && (
+                        <>
+
+                            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
+                                <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                                    ❌ UNSUCCESSFUL{" "}
+                                    <span className="tw-hidden sm:tw-inline-block">
+                                        AUCTION
+                                    </span>
+                                </div>
+
+                            </div>
+                        </>
+                    )}
+                    {status == 4 && prize && (
+                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
+                            <div className="tw-flex tw-gap-2">
+                                <Image
+                                    src={MoneyBagBlack}
+                                    width={20}
+                                    height={20}
+                                    alt="money bag"
+                                    className="tw-w-[20px] tw-h-[20px]"
+                                />
+                                <div>WINNINGS</div>
+                            </div>
+                            <div>
+                                $
+                                {prize % 1 === 0
+                                    ? prize.toLocaleString()
+                                    : prize.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}{" "}
+                                🎉
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="tw-h-[2px] tw-bg-white/10"></div>

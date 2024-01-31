@@ -17,7 +17,6 @@ export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db();
-    await connectToDB();
     const offset = Number(req.nextUrl.searchParams.get('offset')) || 0;
     const limit = Number(req.nextUrl.searchParams.get('limit'));
     const searchedKeyword = req.nextUrl.searchParams.get('search');

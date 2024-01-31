@@ -281,10 +281,9 @@ const Navbar = () => {
                             href="/auctions"
                         >
                             <div
-                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
-                                    pathname === "/auctions" &&
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${pathname === "/auctions" &&
                                     "tw-font-bold tw-border-b-2"
-                                }`}
+                                    }`}
                             >
                                 AUCTIONS
                             </div>
@@ -473,10 +472,9 @@ const Navbar = () => {
                             href="/auctions"
                         >
                             <div
-                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
-                                    pathname === "/auctions" &&
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${pathname === "/auctions" &&
                                     "tw-font-bold tw-border-b-2"
-                                }`}
+                                    }`}
                             >
                                 AUCTIONS
                             </div>
@@ -629,7 +627,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
     const [dropWatchlistOrWagers, setDropWatchlistOrWagers] = useState("");
 
     return (
-        <div className="drop-down-custom-height slide-in-top tw-absolute tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full tw-z-50">
+        <div className="drop-down-custom-height slide-in-top tw-absolute tw-z-50 tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full ">
             <div className="tw-relative">
                 <form
                     autoComplete="off"
@@ -698,10 +696,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <>
                     <button
                         onClick={() => setDropWatchlistOrWagers("watchlist")}
-                        className={`tw-flex tw-py-2 tw-w-full ${
-                            dropWatchlistOrWagers === "watchlist" &&
+                        className={`tw-flex tw-py-2 tw-w-full ${dropWatchlistOrWagers === "watchlist" &&
                             "tw-font-bold"
-                        }`}
+                            }`}
                     >
                         <Image
                             src={WatchlistIcon}
@@ -717,9 +714,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     ) : null}
                     <button
                         onClick={() => setDropWatchlistOrWagers("wagers")}
-                        className={`tw-flex tw-py-2 tw-w-full ${
-                            dropWatchlistOrWagers === "wagers" && "tw-font-bold"
-                        }`}
+                        className={`tw-flex tw-py-2 tw-w-full ${dropWatchlistOrWagers === "wagers" && "tw-font-bold"
+                            }`}
                     >
                         <Image
                             src={WagersIcon}
@@ -810,7 +806,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
     };
 
     return (
-        <div className="slide-in-top tw-absolute tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto tw-z-50">
+        <div className="slide-in-top tw-absolute tw-z-30 tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto">
             <div className="tw-text-lg tw-font-bold tw-p-1.5">MY ACCOUNT</div>
             {isLoading ? (
                 <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
@@ -898,7 +894,7 @@ const MyWatchlistDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="watchlist-menu tw-absolute tw-z-10 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="watchlist-menu tw-absolute tw-z-30 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WATCHLIST
@@ -1037,9 +1033,8 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 
     return (
         <div
-            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
-                index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
-            }`}
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
+                }`}
         >
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
@@ -1174,7 +1169,7 @@ const MyWagersDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="my-wagers-menu tw-absolute tw-z-10 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-6 tw-pb-2 tw-shadow-xl tw-shadow-black">
+        <div className="my-wagers-menu tw-absolute tw-z-30 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-6 tw-pb-2 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WAGERS
@@ -1367,9 +1362,8 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
     return (
         <div
-            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
-                index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
-            }`}
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
+                }`}
         >
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
@@ -1471,9 +1465,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                     {prize % 1 === 0
                                         ? prize.toLocaleString()
                                         : prize.toLocaleString(undefined, {
-                                              minimumFractionDigits: 2,
-                                              maximumFractionDigits: 2,
-                                          })}{" "}
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}{" "}
                                     🎉
                                 </div>
                             </div>
@@ -1567,9 +1561,8 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                             </div>
                                         )}
                                         <span
-                                            className={`${
-                                                loading && "tw-hidden"
-                                            }`}
+                                            className={`${loading && "tw-hidden"
+                                                }`}
                                         >
                                             REFUND
                                             {/* CLAIM $
