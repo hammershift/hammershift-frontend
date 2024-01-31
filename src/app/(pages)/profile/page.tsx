@@ -29,7 +29,7 @@ function Profile(props: Props) {
     const [username, setUsername] = useState("Username");
     const [totalWagersAndWatchlist, setTotalWagersAndWatchlist] = useState(0);
     const [dataIsLoading, setDataIsLoading] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [activeWagers, setActiveWagers] = useState([]);
     const [completedWagers, setCompletedWagers] = useState([]);
     const [activeWatchlist, setActiveWatchlist] = useState([]);
@@ -71,9 +71,8 @@ function Profile(props: Props) {
 
                 setActiveWagers(active);
                 setCompletedWagers(completed);
-                setDataIsLoading(false);
             }
-            setIsLoading(false);
+            setDataIsLoading(false);
         };
         fetchWagers();
     }, []);
@@ -112,7 +111,7 @@ function Profile(props: Props) {
                 setActiveWatchlist(active);
                 setCompletedWatchlist(completed);
             }
-            setIsLoading(false);
+            setDataIsLoading(false);
         };
         fetchWatchlist();
     }, []);
@@ -257,7 +256,7 @@ function Profile(props: Props) {
                                 }`}
                         >
                             <div>ACTIVE </div>
-                            {!isLoading && (
+                            {!dataIsLoading && (
                                 <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
                                     {activeWagers.length}
                                 </span>
