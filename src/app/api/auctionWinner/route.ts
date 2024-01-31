@@ -13,11 +13,11 @@ import prizeDistribution from '@/helpers/prizeDistribution';
 import { refundWagers } from '@/helpers/refundWagers';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
 
-export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
+export async function GET(req: NextRequest) {
+  // const session = await getServerSession(authOptions);
+  // if (!session) {
+  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  // }
 
   try {
     const client = await clientPromise;
@@ -109,6 +109,8 @@ export async function POST(req: NextRequest) {
       await refundWagers(wagerIDsForRefund);
     }
 
+    const dateNow = new Date();
+    console.log('Auctions processed at:', dateNow);
     return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
   } catch (error) {
     console.error('Error in POST auctionWinner API:', error);
@@ -116,11 +118,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
+export async function POST(req: NextRequest) {
+  // const session = await getServerSession(authOptions);
+  // if (!session) {
+  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  // }
 
   try {
     const client = await clientPromise;
