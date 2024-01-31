@@ -308,6 +308,8 @@ function Profile(props: Props) {
                                     </div>
                                 ))
                             )
+                        ) : (completedWagers.length == 0 ? (
+                            <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Completed Wagers</div>
                         ) : (
                             completedWagers.map((wager: any) => (
                                 <div key={wager._id + "completed"}>
@@ -329,6 +331,7 @@ function Profile(props: Props) {
                                     </TimerProvider>
                                 </div>
                             ))
+                        )
                         )}
                     </div>
                     {/* <UserWagerList /> */}
