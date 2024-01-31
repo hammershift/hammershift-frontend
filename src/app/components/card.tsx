@@ -563,17 +563,12 @@ export const TournamentsCard = () => {
   );
 };
 
-export const TournamentsListCard = () => {
-  const tournamentsListCardData = {
-    name: "1974 Maserati Bora 4.9",
-    description:
-      "Nisi anim cupidatat elit proident ipsum reprehenderit adipisicing ullamco do pariatur quis sunt exercitation officia. Tempor magna duis mollit culpa. Laborum esse eu occaecat dolor laborum exercitation. Sunt labore et sunt consequat culpa velit non do culpa ex tempor irure. Deserunt est exercitation consectetur nisi id.",
-    deadline: "05:16:00",
-  };
-
+export const TournamentsListCard = (props: any) => {
+  const { index, auction_id, name, description, deadline } = props;
   const timerValues = useTimer();
+  console.log(timerValues);
   return (
-    <TimerProvider deadline={new Date()}>
+    <TimerProvider deadline={deadline}>
       <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8">
         <Image
           src={CarTournamnetsListOne}
@@ -583,12 +578,12 @@ export const TournamentsListCard = () => {
           className="tw-w-full tw-h-auto tw-object-cover tw-aspect-auto"
         />
         <div>
-          <div className="tw-opacity-30 tw-text-2xl tw-font-bold">1</div>
-          <div className="tw-text-2xl tw-font-bold tw-mt-4">
-            {tournamentsListCardData.name}
+          <div className="tw-opacity-30 tw-text-2xl tw-font-bold">
+            {index + 1}
           </div>
+          <div className="tw-text-2xl tw-font-bold tw-mt-4">{name}</div>
           <div className="tw-h-[72px] tw-ellipsis tw-overflow-hidden">
-            {tournamentsListCardData.description}
+            {description}
           </div>
           <div className="tw-flex tw-mt-4">
             <Image
