@@ -68,7 +68,6 @@ function Profile(props: Props) {
                     return auctionDeadline >= currentDate;
                 });
 
-                console.log("completed:", completed);
 
                 setActiveWagers(active);
                 setCompletedWagers(completed);
@@ -285,7 +284,7 @@ function Profile(props: Props) {
                                 <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Active Wagers</div>
                             ) : (
                                 activeWagers.map((wager: any) => (
-                                    <div key={wager._id}>
+                                    <div key={wager._id + "active"}>
                                         <TimerProvider
                                             deadline={wager.auctionDeadline}
                                         >
@@ -312,7 +311,7 @@ function Profile(props: Props) {
                             )
                         ) : (
                             completedWagers.map((wager: any) => (
-                                <div key={wager._id}>
+                                <div key={wager._id + "completed"}>
                                     <TimerProvider
                                         deadline={wager.auctionDeadline}
                                     >
@@ -345,25 +344,30 @@ function Profile(props: Props) {
                                 <PulseLoader color="#f2ca16" />
                             </div>
                         ) : (
-                            activeWatchlist.map((watchlist: any) => (
-                                <div key={watchlist._id}>
-                                    <TimerProvider
-                                        deadline={watchlist.auctionDeadline}
-                                    >
-                                        <MyWatchlistCard
-                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                            img={watchlist.auctionImage}
-                                            current_bid={watchlist.auctionPrice}
-                                            time_left={
-                                                watchlist.auctionDeadline
-                                            }
-                                            id={watchlist.auctionIdentifierId}
-                                            isActive={true}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            ))
-                        )}
+                            activeWatchlist.length === 0 ? (
+                                <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Active Watchlist</div>
+                            ) : (
+                                activeWatchlist.map((watchlist: any) => (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.auctionDeadline}
+                                        >
+                                            <MyWatchlistCard
+                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                                img={watchlist.auctionImage}
+                                                current_bid={watchlist.auctionPrice}
+                                                time_left={
+                                                    watchlist.auctionDeadline
+                                                }
+                                                id={watchlist.auctionIdentifierId}
+                                                isActive={true}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                ))
+                            )
+                        )
+                        }
                     </div>
                 </div>
             </div>
