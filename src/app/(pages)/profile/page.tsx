@@ -205,7 +205,7 @@ function Profile(props: Props) {
                             ? userInfo.aboutMe
                             : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud."}
                     </div>
-                    <div className="tw-flex tw-gap-6 tw-text-lg tw-font-light tw-leading-7">
+                    <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-2 sm:tw-gap-6 tw-text-sm sm:tw-text-lg tw-font-light tw-leading-7">
                         <div className="tw-flex tw-items-center tw-gap-2">
                             <Image
                                 src={Pin}
