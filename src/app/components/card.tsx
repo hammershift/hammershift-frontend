@@ -564,14 +564,15 @@ export const TournamentsCard = () => {
 };
 
 export const TournamentsListCard = (props: any) => {
-  const { index, auction_id, name, description, deadline } = props;
+  const { index, auction_id, img, year, make, model, description, deadline } =
+    props;
   const timerValues = useTimer();
   console.log(timerValues);
   return (
     <TimerProvider deadline={deadline}>
       <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8">
         <Image
-          src={CarTournamnetsListOne}
+          src={img}
           width={416}
           height={240}
           alt="car"
@@ -581,7 +582,7 @@ export const TournamentsListCard = (props: any) => {
           <div className="tw-opacity-30 tw-text-2xl tw-font-bold">
             {index + 1}
           </div>
-          <div className="tw-text-2xl tw-font-bold tw-mt-4">{name}</div>
+          <div className="tw-text-2xl tw-font-bold tw-mt-4">{year} {make} {model}</div>
           <div className="tw-h-[72px] tw-ellipsis tw-overflow-hidden">
             {description}
           </div>

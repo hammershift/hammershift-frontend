@@ -56,6 +56,7 @@ import AvatarTwo from "../../../../public/images/avatar-two.svg";
 import AvatarThree from "../../../../public/images/avatar-three.svg";
 import AvatarFour from "../../../../public/images/avatar-four.svg";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
+import { carDataThree } from "@/sample_data";
 
 const CarViewData = {
   name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -408,58 +409,11 @@ const TournamentsList: React.FC<TournamentListI> = ({
 }) => {
   const router = useRouter();
 
-  const tournamentAuctionsData = [
-    {
-      auction_id: "12345",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex felis, congue sit amet fermentum sed, placerat vitae nisi.",
-      img: SedanPhotoOne,
-      name: "620-Mile 2019 Ford GT",
-      current_bid: "$904,000",
-      deadline: "2024-01-31T18:00:00.000+00:00",
-    },
-    {
-      auction_id: "54321",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex felis, congue sit amet fermentum sed, placerat vitae nisi.",
-      img: SedanPhotoTwo,
-      name: "620-Mile 2019 Ford GT",
-      current_bid: "$904,000",
-      deadline: "2024-01-31T18:00:00.000+00:00",
-    },
-    {
-      auction_id: "13425",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex felis, congue sit amet fermentum sed, placerat vitae nisi.",
-      img: SedanPhotoThree,
-      name: "620-Mile 2019 Ford GT",
-      current_bid: "$904,000",
-      deadline: "2024-01-31T18:00:00.000+00:00",
-    },
-    {
-      auction_id: "42135",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex felis, congue sit amet fermentum sed, placerat vitae nisi.",
-      img: SedanPhotoFour,
-      name: "620-Mile 2019 Ford GT",
-      current_bid: "$904,000",
-      deadline: "2024-01-31T18:00:00.000+00:00",
-    },
-    {
-      auction_id: "32415",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex felis, congue sit amet fermentum sed, placerat vitae nisi.",
-      img: SedanPhotoFive,
-      name: "620-Mile 2019 Ford GT",
-      current_bid: "$904,000",
-      deadline: "2024-01-31T18:00:00.000+00:00",
-    },
-  ];
   return (
     <div className="tw-mt-8 md:tw-mt-16">
       <div className="tw-text-3xl tw-font-bold">Cars in Tournament</div>
       <div className="tw-flex tw-flex-col">
-        {tournamentAuctionsData.map((item, index) => (
+        {carDataThree.map((item, index) => (
           <div
             key={index}
             className="hover:tw-cursor-pointer"
@@ -472,10 +426,12 @@ const TournamentsList: React.FC<TournamentListI> = ({
             <TournamentsListCard
               index={index}
               auction_id={item.auction_id}
-              img={item.img}
-              name={item.name}
+              img={item.image}
+              year={item.attributes[1].value}
+              make={item.attributes[2].value}
+              model={item.attributes[3].value}
               description={item.description}
-              deadline={item.deadline}
+              deadline={item.attributes[12].value}
             />
           </div>
         ))}

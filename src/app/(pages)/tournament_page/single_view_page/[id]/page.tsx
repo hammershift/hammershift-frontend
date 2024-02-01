@@ -29,9 +29,12 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
 
+import { carDataThree } from "../../../../../sample_data";
+
 const SingleViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
   const { data: session, status } = useSession();
+
   const [carData, setCarData] = useState<any>(null);
   const [wagersData, setWagersData] = useState<any>(null);
   const [playerNum, setPlayerNum] = useState(0);
