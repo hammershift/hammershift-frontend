@@ -28,8 +28,12 @@ import WagerModal from "@/app/components/wager_modal";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
+import WatchListIcon from "../../../../../../public/images/watchlist-icon.svg";
 
 import { carDataThree } from "../../../../../sample_data";
+import { TournamentWagersSection } from "../../page";
+import TournamentWagerModal from "@/app/components/tournament_wager_modal";
+import Image from "next/image";
 
 const SingleViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
@@ -50,6 +54,8 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
   const [showCarImageModal, setShowCarImageModal] = useState(false);
   const [winners, setWinners] = useState([]);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
+    useState(false);
 
   // const router = useRouter();
 
@@ -89,6 +95,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
       const auctionDeadline = new Date(data?.deadline);
 
       setCarData(data);
+      console.log(data);
       setWagerInputs({ ...wagerInputs, auctionID: data?._id });
       setWinners(data?.winners);
 
@@ -265,40 +272,22 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
     setShowCarImageModal((prev) => !prev);
   };
 
+  const toggleModal = () => {
+    setToggleTournamentWagerModal((prev) => !prev);
+  };
+
   return (
     <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
-      {toggleWagerModal ? (
-        <TimerProvider deadline={carData.deadline}>
-          <WagerModal
-            showWagerModal={showWagerModal}
-            make={carData.make}
-            model={carData.model}
-            price={currencyString}
-            bids={carData.bids}
-            ending={formattedDateString}
-            image={carData.image}
-            handleWagerInputChange={handleWagerInputChange}
-            handleWagerSubmit={handleWagerSubmit}
-            players_num={playerNum}
-            prize={carData.pot}
-            walletBalance={walletBalance}
-            insufficientFunds={insufficientFunds}
-            invalidPrice={invalidPrice}
-            invalidWager={invalidWager}
-            isButtonClicked={isButtonClicked}
-          />
-        </TimerProvider>
+      {toggleTournamentWagerModal ? (
+        <TournamentWagerModal toggleTournamentWagerModal={toggleModal} />
       ) : null}
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
         <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
           TOURNAMENT
         </div>
         <div className="tw-hidden sm:tw-block">
-          <WatchAndWagerButtons
-            auctionID={carData?._id}
-            alreadyWagered={alreadyWagered}
-            toggleWagerModal={showWagerModal}
-            auctionEnded={auctionEnded}
+          <WatchAndJoinTournamentButtons
+            toggleTournamentWagerModal={toggleModal}
           />
         </div>
       </div>
@@ -325,11 +314,8 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
             </TimerProvider>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">
-            <WatchAndWagerButtons
-              auctionID={carData?._id}
-              alreadyWagered={alreadyWagered}
-              toggleWagerModal={showWagerModal}
-              auctionEnded={auctionEnded}
+            <WatchAndJoinTournamentButtons
+              toggleTournamentWagerModal={toggleModal}
             />
           </div>
           {carData ? (
@@ -356,12 +342,8 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="tw-block sm:tw-hidden tw-mt-8">
             {wagersData ? (
-              <WagersSection
-                toggleWagerModal={showWagerModal}
-                players_num={playerNum}
-                wagers={wagersData}
-                alreadyWagered={alreadyWagered}
-                auctionEnded={auctionEnded}
+              <TournamentWagersSection
+                toggleTournamentWagerModal={toggleModal}
               />
             ) : null}
           </div>
@@ -390,13 +372,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
             <WinnersSection price={carData?.price} winners={winners} />
           ) : null}
           {wagersData ? (
-            <WagersSection
-              toggleWagerModal={showWagerModal}
-              players_num={playerNum}
-              wagers={wagersData}
-              alreadyWagered={alreadyWagered}
-              auctionEnded={auctionEnded}
-            />
+            <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
           ) : null}
           {carData ? (
             <DetailsSection
@@ -421,3 +397,36 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
 };
 
 export default SingleViewPage;
+
+interface TournamentButtonsI {
+  toggleTournamentWagerModal: () => void;
+}
+
+const WatchAndJoinTournamentButtons: React.FC<TournamentButtonsI> = ({
+  toggleTournamentWagerModal,
+}) => {
+  return (
+    <div>
+      <div>
+        <div className="tw-flex tw-gap-4">
+          <button
+            className={`btn-transparent-white tw-flex tw-items-center tw-transition-all`}
+          >
+            <Image
+              src={WatchListIcon}
+              width={20}
+              height={20}
+              alt="watch button"
+              className={`tw-w-5 tw-h-5 tw-mr-2 scale-animation 
+                  }`}
+            />
+            WATCH
+          </button>
+          <button className="btn-yellow" onClick={toggleTournamentWagerModal}>
+            BUY IN FOR $50
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

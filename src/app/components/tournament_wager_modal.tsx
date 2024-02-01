@@ -132,7 +132,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                         CANCEL
                     </button>
                     <button className="btn-yellow tw-h-[48px] tw-w-full sm:tw-w-[224px]">
-                        BUY-IN FOR $100
+                        BUY-IN FOR $50
                     </button>
                 </div>
             </div>

@@ -703,7 +703,7 @@ interface TournamentWagerSectionI {
   toggleTournamentWagerModal: () => void;
 }
 
-const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
+export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
   toggleTournamentWagerModal,
 }) => {
   const teamPlayers = [
