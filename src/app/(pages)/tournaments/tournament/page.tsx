@@ -1,60 +1,60 @@
 "use client";
 
 import React, { useState } from "react";
-import Links from "../../components/links";
+import Links from "../../../components/links";
 import { useRouter } from "next/navigation";
-import { TournamentsListCard } from "../../components/card";
+import { TournamentsListCard } from "../../../components/card";
 import Image from "next/image";
-import { LatestNews } from "../../components/how_hammeshift_works";
-import { SubscribeSmall } from "../../components/subscribe";
-import { TournamentsCard } from "../../components/card";
-import Footer from "../../components/footer";
+import { LatestNews } from "../../../components/how_hammeshift_works";
+import { SubscribeSmall } from "../../../components/subscribe";
+import { TournamentsCard } from "../../../components/card";
+import Footer from "../../../components/footer";
 import Link from "next/link";
 
-import DollarIcon from "../../../../public/images/dollar.svg";
-import CalendarIcon from "../../../../public/images/calendar-icon.svg";
-import HashtagIcon from "../../../../public/images/hash-02.svg";
-import PlayersIcon from "../../../../public/images/users-01.svg";
-import HourGlassIcon from "../../../../public/images/hour-glass.svg";
-import PrizeIcon from "../../../../public/images/monetization-browser-bag.svg";
+import DollarIcon from "../../../../../public/images/dollar.svg";
+import CalendarIcon from "../../../../../public/images/calendar-icon.svg";
+import HashtagIcon from "../../../../../public/images/hash-02.svg";
+import PlayersIcon from "../../../../../public/images/users-01.svg";
+import HourGlassIcon from "../../../../../public/images/hour-glass.svg";
+import PrizeIcon from "../../../../../public/images/monetization-browser-bag.svg";
 import LiveGamesIcon from "../../../../public/images/currency-dollar-circle.svg";
 
-import CameraPlus from "../../../../public/images/camera-plus.svg";
-import GifIcon from "../../../../public/images/image-document-gif.svg";
-import BellIcon from "../../../../public/images/bell-02.svg";
-import ThumbsUp from "../../../../public/images/thumbs-up.svg";
-import ThumbsDown from "../../../../public/images/thumbs-down.svg";
-import CornerDownRight from "../../../../public/images/corner-down-right.svg";
-import ThreeDots from "../../../../public/images/dots-vertical.svg";
-import OpenWebLogo from "../../../../public/images/open-web-logo.svg";
+import CameraPlus from "../../../../../public/images/camera-plus.svg";
+import GifIcon from "../../../../../public/images/image-document-gif.svg";
+import BellIcon from "../../../../../public/images/bell-02.svg";
+import ThumbsUp from "../../../../../public/images/thumbs-up.svg";
+import ThumbsDown from "../../../../../public/images/thumbs-down.svg";
+import CornerDownRight from "../../../../../public/images/corner-down-right.svg";
+import ThreeDots from "../../../../../public/images/dots-vertical.svg";
+import OpenWebLogo from "../../../../../public/images/open-web-logo.svg";
 
-import ArrowDown from "../../../../public/images/arrow-down.svg";
-import DiagonalLines from "../../../../public/images/green-diagonal.svg";
-import TransitionPattern from "../../../../public/images/transition-pattern.svg";
-import BringATrailerLogo from "../../../../public/images/bring-a-trailer-logo.svg";
-import ProfilePhoto from "../../../../public/images/ellipse-415.svg";
-import CarFaxLogo from "../../../../public/images/show-me-carfax.svg";
+import ArrowDown from "../../../../../public/images/arrow-down.svg";
+import DiagonalLines from "../../../../../public/images/green-diagonal.svg";
+import TransitionPattern from "../../../../../public/images/transition-pattern.svg";
+import BringATrailerLogo from "../../../../../public/images/bring-a-trailer-logo.svg";
+import ProfilePhoto from "../../../../../public/images/ellipse-415.svg";
+import CarFaxLogo from "../../../../../public/images/show-me-carfax.svg";
 import GiftIcon from "../../../../public/images/gift-02.svg";
-import WatchListIcon from "../../../../public/images/watchlist-icon.svg";
-import ThropyIconBlue from "../../../../public/images/thropy-blue-big.svg";
-import CarsImage from "../../../../public/images/cars-icon.svg";
-import CarIcon from "../../../../public/images/car-01.svg";
+import WatchListIcon from "../../../../../public/images/watchlist-icon.svg";
+import ThropyIconBlue from "../../../../../public/images/thropy-blue-big.svg";
+import CarsImage from "../../../../../public/images/cars-icon.svg";
+import CarIcon from "../../../../../public/images/car-01.svg";
 
-import PhotoOne from "../../../../public/images/car-view-page/photoOne.svg";
-import PhotoTwo from "../../../../public/images/car-view-page/photoTwo.svg";
-import PhotoThree from "../../../../public/images/car-view-page/photoThree.svg";
-import PhotoFour from "../../../../public/images/car-view-page/photoFour.svg";
-import PhotoFive from "../../../../public/images/car-view-page/photoOne.svg";
+import PhotoOne from "../../../../../public/images/car-view-page/photoOne.svg";
+import PhotoTwo from "../../../../../public/images/car-view-page/photoTwo.svg";
+import PhotoThree from "../../../../../public/images/car-view-page/photoThree.svg";
+import PhotoFour from "../../../../../public/images/car-view-page/photoFour.svg";
+import PhotoFive from "../../../../../public/images/car-view-page/photoOne.svg";
 import SedanPhotoOne from "../../../../public/images/tournament-wager/sedan-photo-one.svg";
 import SedanPhotoTwo from "../../../../public/images/tournament-wager/sedan-photo-two.svg";
 import SedanPhotoThree from "../../../../public/images/tournament-wager/sedan-photo-three.svg";
 import SedanPhotoFour from "../../../../public/images/tournament-wager/sedan-photo-four.svg";
 import SedanPhotoFive from "../../../../public/images/tournament-wager/sedan-photo-five.svg";
 
-import AvatarOne from "../../../../public/images/avatar-one.svg";
-import AvatarTwo from "../../../../public/images/avatar-two.svg";
-import AvatarThree from "../../../../public/images/avatar-three.svg";
-import AvatarFour from "../../../../public/images/avatar-four.svg";
+import AvatarOne from "../../../../../public/images/avatar-one.svg";
+import AvatarTwo from "../../../../../public/images/avatar-two.svg";
+import AvatarThree from "../../../../../public/images/avatar-three.svg";
+import AvatarFour from "../../../../../public/images/avatar-four.svg";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import { carDataThree } from "@/sample_data";
 
@@ -71,9 +71,8 @@ const CarViewData = {
     "This 2011 Mercedes-Benz SLS AMG was initially sold by Ray Catena Mercedes Benz Union in New Jersey, and remained registered in the state prior to being acquired by the selling dealer in 2023 and now has 13k miles. It is powered by a 6.2-liter V8 linked with a seven-speed dual-clutch automatic transaxle and a limited-slip differential. Finished in Iridium Silver Metallic over Charcoal Exclusive leather upholstery, the car is equipped with 19″ and 20″ seven-spoke alloy wheels, gullwing doors, a speed-activated aerofoil, bi-xenon headlights, Parktronic, heated power-adjustable seats, Keyless-Go, a rearview camera, COMAND infotainment, navigation, a radar detector, a Bang & Olufsen sound system, carbon-fiber interior trim, and dual-zone automatic climate control. This SLS AMG is now offered in Texas by the selling dealer at no reserve with a clean Carfax report and a clean New Jersey title.",
 };
 
-const TournamentPage = () => {
+const TournamentViewPage = () => {
   // Change to true for tournament single car page
-  const [selected, setSelected] = useState(false);
   const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
   const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
     useState(false);
@@ -96,53 +95,25 @@ const TournamentPage = () => {
           <TournamentButtons toggleTournamentWagerModal={toggleModal} />
         </div>
       </div>
-      {selected ? (
-        <div className="section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
-          <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
-            <TitleSingleCarContainer />
-            <div className="tw-block sm:tw-hidden tw-mt-8">
-              <TournamentButtons toggleTournamentWagerModal={toggleModal} />
-            </div>
-            <PhotosLayout />
-            <ArticleSection />
-            <div className="tw-block sm:tw-hidden tw-mt-8">
-              <TournamentWagersSection
-                toggleTournamentWagerModal={toggleModal}
-              />
-            </div>
-            <TournamentInfoSection />
-            <div className="tw-block sm:tw-hidden tw-mt-8">
-              <DetailsSection />
-            </div>
-            <CommentsSection />
+
+      <div className="section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
+        <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
+          <TitleTournamentsList />
+          <div className="sm:tw-hidden tw-mt-4">
+            <TournamentButtons toggleTournamentWagerModal={toggleModal} />
           </div>
-          <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
-            <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
-            <DetailsSection />
-          </div>
-        </div>
-      ) : (
-        <div className="section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
-          <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
-            <TitleTournamentsList />
-            <div className="sm:tw-hidden tw-mt-4">
-              <TournamentButtons toggleTournamentWagerModal={toggleModal} />
-            </div>
-            <TournamentsList toggleTournamentWagerModal={toggleModal} />
-            <div className="sm:tw-hidden tw-my-8">
-              <TournamentWagersSection
-                toggleTournamentWagerModal={toggleModal}
-              />
-              <TournamentInfoSection />
-            </div>
-            <CommentsSection />
-          </div>
-          <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
+          <TournamentsList toggleTournamentWagerModal={toggleModal} />
+          <div className="sm:tw-hidden tw-my-8">
             <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
             <TournamentInfoSection />
           </div>
+          <CommentsSection />
         </div>
-      )}
+        <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
+          <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
+          <TournamentInfoSection />
+        </div>
+      </div>
 
       <TournamentsYouMightLike />
       <LatestNews />
@@ -157,7 +128,7 @@ const TournamentPage = () => {
   );
 };
 
-export default TournamentPage;
+export default TournamentViewPage;
 
 interface TournamentButtonsI {
   toggleTournamentWagerModal: () => void;
@@ -192,7 +163,7 @@ const TournamentButtons: React.FC<TournamentButtonsI> = ({
   );
 };
 
-const TitleSingleCarContainer = () => {
+export const TitleSingleCarContainer = () => {
   return (
     <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
       <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
@@ -418,9 +389,7 @@ const TournamentsList: React.FC<TournamentListI> = ({
             key={index}
             className="hover:tw-cursor-pointer"
             onClick={() =>
-              router.push(
-                `/tournament_page/single_view_page/${item.auction_id}`
-              )
+              router.push(`/tournament_page/tournaments/${item.auction_id}`)
             }
           >
             <TournamentsListCard
@@ -449,7 +418,7 @@ const TournamentsList: React.FC<TournamentListI> = ({
   );
 };
 
-const PhotosLayout = () => {
+export const PhotosLayout = () => {
   return (
     <div className=" tw-my-8">
       <Image
@@ -499,7 +468,9 @@ const PhotosLayout = () => {
   );
 };
 
-const ArticleSection = () => {
+export const ArticleSection: React.FC<TournamentButtonsI> = ({
+  toggleTournamentWagerModal,
+}) => {
   return (
     <div className="tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full">
       <div className="tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
@@ -517,7 +488,12 @@ const ArticleSection = () => {
           />
         </span>
       </button>
-      <button className="btn-yellow tw-mt-3">PLACE MY WAGER</button>
+      <button
+        className="btn-yellow tw-mt-3"
+        onClick={toggleTournamentWagerModal}
+      >
+        PLACE MY WAGER
+      </button>
     </div>
   );
 };
@@ -629,7 +605,7 @@ const CommentsSection = () => {
   );
 };
 
-const CommentsCard = () => {
+export const CommentsCard = () => {
   const commentsData = [
     {
       id: "com1",
@@ -833,7 +809,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
   );
 };
 
-const DetailsSection = () => {
+export const DetailsSection = () => {
   const DetailsData = {
     auction: { name: "Bring a Trailer", logo: BringATrailerLogo },
     make: "Mercedes Benz",
@@ -969,7 +945,7 @@ const DetailsSection = () => {
   );
 };
 
-const TournamentsYouMightLike = () => {
+export const TournamentsYouMightLike = () => {
   return (
     <div className="section-container tw-py-8 sm:tw-py-12 tw-mb-8  tw-mt-8 ">
       <header className="tw-max-w-[1312px]">

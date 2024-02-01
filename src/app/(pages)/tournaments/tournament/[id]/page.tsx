@@ -3,13 +3,18 @@
 import React, { Suspense, useEffect, useState } from "react";
 import {
   WatchAndWagerButtons,
-  PhotosLayout,
-  ArticleSection,
   WagersSection,
-  DetailsSection,
   GamesYouMightLike,
   WinnersSection,
 } from "@/app/ui/car_view_page/CarViewPage";
+import {
+  PhotosLayout,
+  TournamentWagersSection,
+  TournamentsYouMightLike,
+  DetailsSection,
+  ArticleSection,
+  TitleSingleCarContainer,
+} from "../../tournament/page";
 import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
@@ -31,7 +36,7 @@ import { set } from "mongoose";
 import WatchListIcon from "../../../../../../public/images/watchlist-icon.svg";
 
 import { carDataThree } from "../../../../../sample_data";
-import { TournamentWagersSection } from "../../page";
+
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import Image from "next/image";
 
@@ -296,21 +301,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           {carData ? (
             <TimerProvider deadline={carData.deadline}>
               {" "}
-              <TitleContainer
-                year={carData.year}
-                make={carData.make}
-                model={carData.model}
-                pot={carData.pot}
-                comments={carData.comments}
-                views={carData.views}
-                watchers={carData.watchers}
-                current_bid={currencyString}
-                bids_num={carData.bids}
-                ending_date={formattedDateString}
-                deadline={carData.deadline}
-                players_num={playerNum}
-                prize={auctionDataOne.prize}
-              />
+              <TitleSingleCarContainer />
             </TimerProvider>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">
@@ -320,19 +311,8 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           </div>
           {carData ? (
             <>
-              <PhotosLayout
-                images_list={carData.images_list}
-                img={carData.image}
-                showCarImageModal={showCarImageModal}
-                toggleModal={toggleCarImageModal}
-              />
-              <ArticleSection
-                images_list={carData.images_list}
-                description={carData.description}
-                toggleWagerModal={showWagerModal}
-                alreadyWagered={alreadyWagered}
-                auctionEnded={auctionEnded}
-              />
+              <PhotosLayout />
+              <ArticleSection toggleTournamentWagerModal={toggleModal} />
             </>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">
@@ -349,19 +329,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           </div>
           {carData ? (
             <div className="tw-block sm:tw-hidden tw-mt-8">
-              <DetailsSection
-                website={carData.website}
-                make={carData.make}
-                model={carData.model}
-                seller={carData.seller}
-                location={carData.location}
-                mileage="55,400"
-                listing_type={carData.listing_type}
-                lot_num={carData.lot_num}
-                listing_details={carData.listing_details}
-                images_list={carData.images_list}
-                toggleCarImageModal={toggleCarImageModal}
-              />
+              <DetailsSection />
             </div>
           ) : null}
           <GuessThePriceInfoSection />
@@ -374,24 +342,10 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           {wagersData ? (
             <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
           ) : null}
-          {carData ? (
-            <DetailsSection
-              website={carData.website}
-              make={carData.make}
-              model={carData.model}
-              seller={carData.seller}
-              location={carData.location}
-              mileage="55,400"
-              listing_type={carData.listing_type}
-              lot_num={carData.lot_num}
-              listing_details={carData.listing_details}
-              images_list={carData.images_list}
-              toggleCarImageModal={toggleCarImageModal}
-            />
-          ) : null}
+          {carData ? <DetailsSection /> : null}
         </div>
       </div>
-      <GamesYouMightLike />
+      <TournamentsYouMightLike />
     </div>
   );
 };

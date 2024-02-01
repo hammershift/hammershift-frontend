@@ -582,7 +582,9 @@ export const TournamentsListCard = (props: any) => {
           <div className="tw-opacity-30 tw-text-2xl tw-font-bold">
             {index + 1}
           </div>
-          <div className="tw-text-2xl tw-font-bold tw-mt-4">{year} {make} {model}</div>
+          <div className="tw-text-2xl tw-font-bold tw-mt-4">
+            {year} {make} {model}
+          </div>
           <div className="tw-h-[72px] tw-ellipsis tw-overflow-hidden">
             {description}
           </div>
