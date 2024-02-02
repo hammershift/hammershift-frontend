@@ -14,6 +14,10 @@ const tournamentSchema = new mongoose.Schema(
         ref: 'PlayerTournament', // TODO
       },
     ],
+    // winner: {
+    //   type: mongoose.Types.ObjectId,
+    //   ref: 'User',
+    // },
     buyInFee: {
       type: Number,
       required: true,
