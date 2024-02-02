@@ -618,7 +618,6 @@ export const TournamentsListCard = (props: any) => {
     const { index, auction_id, img, year, make, model, description, deadline } =
         props;
     const timerValues = useTimer();
-    console.log(timerValues);
     return (
         <TimerProvider deadline={deadline}>
             <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8">
