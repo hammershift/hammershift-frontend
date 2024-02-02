@@ -14,10 +14,14 @@ const transactionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Auction',
   },
+  tournamentID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Tournament',
+  },
   transactionType: {
     type: String,
     required: true,
-    enum: ['wager', 'deposits', 'withdrawals', 'winnings', 'refund'],
+    enum: ['wager', 'deposits', 'withdrawals', 'winnings', 'refund', 'tournament buy-in'],
   },
   amount: {
     type: Number,
