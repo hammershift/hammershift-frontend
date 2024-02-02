@@ -10,29 +10,19 @@ const AuctionsGrid = ({ listing }: { listing: any }) => {
           return (
             <div key={car._id ? car._id : index + "gamesCard"}>
               <Suspense>
-                <TimerProvider
-                  deadline={new Date(car.deadline)}
-                >
+                <TimerProvider deadline={new Date(car.deadline)}>
                   <GamesCard
                     auction_id={
-                      car.auction_id
-                        ? car.auction_id
-                        : index + "auctionId"
+                      car.auction_id ? car.auction_id : index + "auctionId"
                     }
                     object_id={car._id}
                     make={car.make ? car.make : ""}
                     year={car.year ? car.year : ""}
                     model={car.model ? car.model : ""}
-                    description={
-                      car.description
-                        ? car.description
-                        : [""]
-                    }
+                    description={car.description ? car.description : [""]}
                     image={car.image ? car.image : ""}
                     price={car.price ? car.price : 0}
-                    deadline={
-                      car.deadline ? car.deadline : Date()
-                    }
+                    deadline={car.deadline ? car.deadline : Date()}
                   />
                 </TimerProvider>
               </Suspense>
@@ -44,7 +34,3 @@ const AuctionsGrid = ({ listing }: { listing: any }) => {
 };
 
 export default AuctionsGrid;
-
-
-
-

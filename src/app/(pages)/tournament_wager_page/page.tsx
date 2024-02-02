@@ -1,25 +1,24 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import MoneyBag from "../../../public/images/money-bag-green.svg";
-import PlayersIcon from "../../../public/images/players-icon-green.svg";
-import HourGlass from "../../../public/images/hour-glass.svg";
-import Dollar from "../../../public/images/dollar.svg";
-import CancelIcon from "../../../public/images/x-icon.svg";
-import SedanPhotoOne from "../../../public/images/tournament-wager/sedan-photo-one.svg";
-import SedanPhotoTwo from "../../../public/images/tournament-wager/sedan-photo-two.svg";
-import SedanPhotoThree from "../../../public/images/tournament-wager/sedan-photo-three.svg";
-import SedanPhotoFour from "../../../public/images/tournament-wager/sedan-photo-four.svg";
-import SedanPhotoFive from "../../../public/images/tournament-wager/sedan-photo-five.svg";
+import MoneyBag from "../../../../public/images/money-bag-green.svg";
+import PlayersIcon from "../../../../public/images/players-icon-green.svg";
+import HourGlass from "../../../../public/images/hour-glass.svg";
+import Dollar from "../../../../public/images/dollar.svg";
+import CancelIcon from "../../../../public/images/x-icon.svg";
+import SedanPhotoOne from "../../../../public/images/tournament-wager/sedan-photo-one.svg";
+import SedanPhotoTwo from "../../../../public/images/tournament-wager/sedan-photo-two.svg";
+import SedanPhotoThree from "../../../../public/images/tournament-wager/sedan-photo-three.svg";
+import SedanPhotoFour from "../../../../public/images/tournament-wager/sedan-photo-four.svg";
+import SedanPhotoFive from "../../../../public/images/tournament-wager/sedan-photo-five.svg";
+import { useRouter } from "next/navigation";
 
-interface TournamentWagerI {
-  toggleTournamentWagerModal: () => void;
-}
+const TournamentWagerPage = () => {
+  const router = useRouter();
 
-const TournamentWagerModal: React.FC<TournamentWagerI> = ({
-  toggleTournamentWagerModal,
-}) => {
   const tournamentWagerPageData = [
     {
       img: SedanPhotoOne,
@@ -52,9 +51,8 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
       time_left: "12:17:00",
     },
   ];
-
   return (
-    <div className="tw-bg-black md:tw-bg-black/90 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-fixed tw-top-0 tw-left-0 tw-z-50">
+    <div className="tw-bg-black/80 tw-w-screen tw-h-auto sm:tw-h-screen tw-flex tw-justify-center tw-items-center tw-absolute tw-top-0 tw-left-0">
       <div className="tw-relative tw-bg-[#0F1923] tw-w-full sm:tw-w-[864px] tw-h-full sm:tw-h-[900px] tw-pt-8">
         <div className="tw-flex tw-flex-col tw-gap-4  tw-px-6">
           <div className="tw-flex tw-items-center tw-justify-between sm:tw-justify-start">
@@ -120,16 +118,13 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
         </div>
         <div className="tw-fixed tw-bottom-0 tw-left-0 sm:tw-static tw-items-center tw-flex tw-justify-between tw-h-[80px] tw-w-full tw-p-6 tw-bg-[#172431] tw-mt-6 tw-z-20">
           <button
-            onClick={() => {
-              document.body.classList.remove("stop-scrolling");
-              toggleTournamentWagerModal();
-            }}
             className="tw-hidden sm:tw-block"
+            onClick={() => router.push("/tournaments")}
           >
             CANCEL
           </button>
           <button className="btn-yellow tw-h-[48px] tw-w-full sm:tw-w-[224px]">
-            BUY-IN FOR $50
+            BUY-IN FOR $100
           </button>
         </div>
       </div>
@@ -137,7 +132,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
   );
 };
 
-export default TournamentWagerModal;
+export default TournamentWagerPage;
 
 interface TournamentWagerPageCardProps {
   img: string;
