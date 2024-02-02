@@ -1,12 +1,7 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
-import {
-  WatchAndWagerButtons,
-  WagersSection,
-  GamesYouMightLike,
-  WinnersSection,
-} from "@/app/ui/car_view_page/CarViewPage";
+import { WinnersSection } from "@/app/ui/car_view_page/CarViewPage";
 import {
   PhotosLayout,
   TournamentWagersSection,
@@ -14,9 +9,9 @@ import {
   DetailsSection,
   ArticleSection,
   TitleSingleCarContainer,
+  TournamentButtons,
 } from "../../tournament/page";
 import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
-import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
 import {
@@ -39,6 +34,7 @@ import { carDataThree } from "../../../../../sample_data";
 
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import Image from "next/image";
+import Links from "@/app/components/links";
 
 const SingleViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
@@ -283,6 +279,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
+      <Links />
       {toggleTournamentWagerModal ? (
         <TournamentWagerModal toggleTournamentWagerModal={toggleModal} />
       ) : null}
@@ -291,9 +288,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           TOURNAMENT
         </div>
         <div className="tw-hidden sm:tw-block">
-          <WatchAndJoinTournamentButtons
-            toggleTournamentWagerModal={toggleModal}
-          />
+          <TournamentButtons toggleTournamentWagerModal={toggleModal} />
         </div>
       </div>
       <div className="section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
@@ -305,9 +300,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
             </TimerProvider>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">
-            <WatchAndJoinTournamentButtons
-              toggleTournamentWagerModal={toggleModal}
-            />
+            <TournamentButtons toggleTournamentWagerModal={toggleModal} />
           </div>
           {carData ? (
             <>
@@ -351,36 +344,3 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
 };
 
 export default SingleViewPage;
-
-interface TournamentButtonsI {
-  toggleTournamentWagerModal: () => void;
-}
-
-const WatchAndJoinTournamentButtons: React.FC<TournamentButtonsI> = ({
-  toggleTournamentWagerModal,
-}) => {
-  return (
-    <div>
-      <div>
-        <div className="tw-flex tw-gap-4">
-          <button
-            className={`btn-transparent-white tw-flex tw-items-center tw-transition-all`}
-          >
-            <Image
-              src={WatchListIcon}
-              width={20}
-              height={20}
-              alt="watch button"
-              className={`tw-w-5 tw-h-5 tw-mr-2 scale-animation 
-                  }`}
-            />
-            WATCH
-          </button>
-          <button className="btn-yellow" onClick={toggleTournamentWagerModal}>
-            BUY IN FOR $50
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};

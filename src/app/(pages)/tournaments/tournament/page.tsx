@@ -134,7 +134,7 @@ interface TournamentButtonsI {
   toggleTournamentWagerModal: () => void;
 }
 
-const TournamentButtons: React.FC<TournamentButtonsI> = ({
+export const TournamentButtons: React.FC<TournamentButtonsI> = ({
   toggleTournamentWagerModal,
 }) => {
   const router = useRouter();
@@ -157,7 +157,7 @@ const TournamentButtons: React.FC<TournamentButtonsI> = ({
           toggleTournamentWagerModal();
         }}
       >
-        BUY-IN FOR $100
+        BUY-IN FOR $50
       </button>
     </div>
   );
