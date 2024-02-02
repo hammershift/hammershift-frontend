@@ -10,7 +10,7 @@ import {
   ArticleSection,
   TitleSingleCarContainer,
   TournamentButtons,
-} from "../../tournament/page";
+} from "../../../../ui/tournaments_car_view_page/TournamentsCarViewPage";
 import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
