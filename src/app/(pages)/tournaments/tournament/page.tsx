@@ -29,19 +29,6 @@ import {
   TournamentsYouMightLike,
 } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
 
-const CarViewData = {
-  name: "13k-Mile 2011 Mercedes Benz SLS AMG",
-  currentBid: "$64,000",
-  endingDate: "Jul 5, 2023, 7:00 PM",
-  bids: 48,
-  players: 4,
-  timeLeft: "02:16:00",
-  prize: "$1,000",
-  images: [PhotoOne, PhotoTwo, PhotoThree, PhotoFour, PhotoFive],
-  description:
-    "This 2011 Mercedes-Benz SLS AMG was initially sold by Ray Catena Mercedes Benz Union in New Jersey, and remained registered in the state prior to being acquired by the selling dealer in 2023 and now has 13k miles. It is powered by a 6.2-liter V8 linked with a seven-speed dual-clutch automatic transaxle and a limited-slip differential. Finished in Iridium Silver Metallic over Charcoal Exclusive leather upholstery, the car is equipped with 19″ and 20″ seven-spoke alloy wheels, gullwing doors, a speed-activated aerofoil, bi-xenon headlights, Parktronic, heated power-adjustable seats, Keyless-Go, a rearview camera, COMAND infotainment, navigation, a radar detector, a Bang & Olufsen sound system, carbon-fiber interior trim, and dual-zone automatic climate control. This SLS AMG is now offered in Texas by the selling dealer at no reserve with a clean Carfax report and a clean New Jersey title.",
-};
-
 const TournamentViewPage = () => {
   // Change to true for tournament single car page
   const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
