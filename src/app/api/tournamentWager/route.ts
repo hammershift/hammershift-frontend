@@ -10,16 +10,16 @@ import { ObjectId } from 'mongodb';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
-  // const session = await getServerSession(authOptions);
-  // if (!session) {
-  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  // }
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
   const client = await clientPromise;
   const db = client.db();
-  const mongoSession = client.startSession();
+  // const mongoSession = client.startSession();
 
-  let transactionCommitted = false;
+  // let transactionCommitted = false;
 
   try {
     // await mongoSession.startTransaction();
