@@ -45,6 +45,6 @@ const tournamentWagerSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-const TournamentWager = mongoose.models.TournamentWager || mongoose.model('tournament_wagers', tournamentWagerSchema);
+const TournamentWager = mongoose.models.tournament_wager || mongoose.model('tournament_wager', tournamentWagerSchema);
 
 export default TournamentWager;
