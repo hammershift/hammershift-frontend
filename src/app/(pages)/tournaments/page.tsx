@@ -5,7 +5,6 @@ import React from "react";
 const TournamentsPage = () => {
   return (
     <div className=" tw-relative tw-flex tw-flex-col tw-items-center">
-      <Links />
       <TournamentsList />
     </div>
   );

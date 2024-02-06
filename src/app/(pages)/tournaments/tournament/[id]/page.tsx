@@ -277,9 +277,10 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
     setToggleTournamentWagerModal((prev) => !prev);
   };
 
+  console.log(carData);
+
   return (
     <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
-      <Links />
       {toggleTournamentWagerModal ? (
         <TournamentWagerModal toggleTournamentWagerModal={toggleModal} />
       ) : null}
@@ -296,7 +297,21 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           {carData ? (
             <TimerProvider deadline={carData.deadline}>
               {" "}
-              <TitleSingleCarContainer />
+              <TitleSingleCarContainer
+                year={carData.year}
+                make={carData.make}
+                model={carData.model}
+                pot={carData.pot}
+                comments={carData.comments}
+                views={carData.views}
+                watchers={carData.watchers}
+                current_bid={currencyString}
+                bids_num={carData.bids}
+                ending_date={formattedDateString}
+                deadline={carData.deadline}
+                players_num={playerNum}
+                prize={auctionDataOne.prize}
+              />
             </TimerProvider>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">
@@ -304,8 +319,15 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
           </div>
           {carData ? (
             <>
-              <PhotosLayout />
-              <ArticleSection toggleTournamentWagerModal={toggleModal} />
+              <PhotosLayout
+                img={carData.image}
+                images_list={carData.images_list}
+              />
+              <ArticleSection
+                images_list={carData.images_list}
+                description={carData.description}
+                toggleTournamentWagerModal={toggleModal}
+              />
             </>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">

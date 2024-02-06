@@ -44,7 +44,6 @@ const TournamentViewPage = () => {
       {toggleTournamentWagerModal ? (
         <TournamentWagerModal toggleTournamentWagerModal={toggleModal} />
       ) : null}
-      <Links />
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-16">
         <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
           TOURNAMENT
@@ -72,16 +71,12 @@ const TournamentViewPage = () => {
           <TournamentInfoSection />
         </div>
       </div>
-
-      <TournamentsYouMightLike />
-      <LatestNews />
-      <SubscribeSmall />
-      <Footer />
       {/* TODO: Check if working*/}
       {/* <TournamentWagerPage /> */}
       {isWagerMenuOpen && (
         <div className="tw-bg-black tw-w-screen tw-h-full"></div>
       )}
+      <TournamentsYouMightLike />
     </div>
   );
 };

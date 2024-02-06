@@ -2,6 +2,7 @@ import Links from "@/app/components/links";
 import { SubscribeSmall } from "@/app/components/subscribe";
 import Footer from "@/app/components/footer";
 import { LatestNews } from "@/app/components/how_hammeshift_works";
+import { TournamentsYouMightLike } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
