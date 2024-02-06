@@ -25,12 +25,14 @@ interface TournamentWagerI {
         e: React.FormEvent<HTMLFormElement>,
         sessionData: any
     ) => void;
+    isButtonClicked: boolean;
 }
 
 const TournamentWagerModal: React.FC<TournamentWagerI> = ({
     toggleTournamentWagerModal,
     handleInputs,
     handleSubmit,
+    isButtonClicked,
 }) => {
     const router = useRouter();
     const { data: session } = useSession();
@@ -207,6 +209,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                                         $
                                     </div>
                                     <input
+                                        onWheel={(e) => e.currentTarget.blur()}
                                         id={auction._id}
                                         onChange={(e) => handleInputs(e)}
                                         onKeyDown={(event) => {
@@ -214,6 +217,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                                                 !(
                                                     event.key === "Backspace" ||
                                                     event.key === "Tab" ||
+                                                    event.key === "Enter" ||
                                                     /\d/.test(event.key)
                                                 )
                                             ) {
@@ -242,7 +246,11 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                     >
                         CANCEL
                     </button>
-                    <button className="tw-font-bold tw-p-3 tw-px-[43px] tw-text-center tw-w-full sm:tw-w-auto tw-bg-[#f2ca16] tw-text-[#0f1923] tw-rounded">
+                    <button
+                        type="submit"
+                        disabled={isButtonClicked}
+                        className="tw-font-bold tw-p-3 tw-px-[43px] tw-text-center tw-w-full sm:tw-w-auto tw-bg-[#f2ca16] tw-text-[#0f1923] tw-rounded"
+                    >
                         BUY-IN FOR $100
                     </button>
                 </div>

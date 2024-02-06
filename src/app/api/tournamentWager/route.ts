@@ -88,3 +88,24 @@ export async function POST(req: NextRequest) {
     // await mongoSession.endSession();
   }
 }
+
+export async function GET(req: NextRequest) {
+  try {
+    const client = await clientPromise;
+    const db = client.db();
+    const tournamentID = req.nextUrl.searchParams.get('tournament_id');
+
+    if (tournamentID) {
+      const wagers = await db.collection('tournament_wagers').find({
+        $and: [{ tournamentID: new ObjectId(tournamentID) }, { isActive: true }]
+      }).toArray();
+      return NextResponse.json({ wagers });
+    }
+
+    const wagers = await db.collection('tournament_wagers').find().toArray();
+    return NextResponse.json({ wagers: wagers });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: 'Internal server error' });
+  }
+}

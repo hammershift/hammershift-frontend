@@ -34,6 +34,7 @@ import { useSession } from "next-auth/react";
 const TournamentViewPage = () => {
     const { data: session } = useSession();
     const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
     const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
         useState(false);
 
@@ -96,6 +97,8 @@ const TournamentViewPage = () => {
         sessionData: any
     ) => {
         e.preventDefault();
+        setIsButtonClicked(true);
+
         const wagerArray = Object.values(wagers).map((item: any) => ({
             auctionID: item.auctionID,
             priceGuessed: item.priceGuessed,
@@ -131,6 +134,7 @@ const TournamentViewPage = () => {
                     handleSubmit={handleSubmit}
                     handleInputs={handleInputs}
                     toggleTournamentWagerModal={toggleModal}
+                    isButtonClicked={isButtonClicked}
                 />
             ) : null}
             <Links />
