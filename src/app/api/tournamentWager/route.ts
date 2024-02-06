@@ -17,23 +17,34 @@ export async function POST(req: NextRequest) {
 
   const client = await clientPromise;
   const db = client.db();
-  // const mongoSession = client.startSession();
-
-  // let transactionCommitted = false;
 
   try {
-    // await mongoSession.startTransaction();
-    // console.log('Transaction started');
-
     const requestBody = await req.json();
     console.log('Received Wager Data:', requestBody);
 
     const { tournamentID, wagers, buyInAmount, user } = requestBody;
+
     if (!tournamentID || !wagers || !buyInAmount || !user) {
       console.log('Missing required fields:', requestBody);
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
+    // validate tournament details
+    // const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentID) });
+    // if (!tournament || !tournament.isActive) {
+    //   return NextResponse.json({ message: 'Invalid or inactive tournament' }, { status: 400 });
+    // }
+
+    // check if user already participated
+    // const existingEntry = await db.collection('tournament_wagers').findOne({
+    //   tournamentID: new ObjectId(tournamentID),
+    //   'user._id': new ObjectId(user._id),
+    // });
+    // if (existingEntry) {
+    //   return NextResponse.json({ message: 'User has already entered the tournament' }, { status: 400 });
+    // }
+
+    // validate sub-wagers
     for (const subWager of wagers) {
       const { auctionID, priceGuessed } = subWager;
       if (!auctionID || priceGuessed === undefined) {
@@ -42,49 +53,36 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // const userBalance = await db.collection('users').findOne({ _id: new mongoose.Types.ObjectId(user._id) });
-    // if (!userBalance || userBalance.balance < buyInAmount) {
-    //   return NextResponse.json({ message: 'Insufficient balance' }, { status: 400 });
-    // }
+    // deduct buy-in amount from the user's wallet
+    const userUpdateResult = await db
+      .collection('users')
+      .findOneAndUpdate({ _id: new mongoose.Types.ObjectId(user._id) }, { $inc: { balance: -buyInAmount } }, { returnDocument: 'after' });
+    if (!userUpdateResult.value || userUpdateResult.value.balance < 0) {
+      return NextResponse.json({ message: 'Insufficient funds for buy-in' }, { status: 400 });
+    }
+
+    // create the transaction record for the buy-in
+    await db.collection('transactions').insertOne({
+      userID: new mongoose.Types.ObjectId(user._id),
+      tournamentID: new ObjectId(tournamentID),
+      transactionType: 'tournament buy-in',
+      amount: buyInAmount,
+      type: '-',
+      transactionDate: new Date(),
+    });
 
     const newTournamentWager = new TournamentWager({
-      tournamentID: new mongoose.Types.ObjectId(tournamentID),
+      tournamentID: new ObjectId(tournamentID),
       wagers,
       buyInAmount,
       user,
     });
 
     await db.collection('tournament_wagers').insertOne(newTournamentWager);
-    // await TournamentWager.insertMany(newWagers, { session: mongoSession });
 
-    // const transaction = new Transaction({
-    //   userID: new mongoose.Types.ObjectId(user._id),
-    //   wagerIDs: newWagers.map((wager: any) => wager._id),
-    //   tournamentID: new mongoose.Types.ObjectId(tournamentID),
-    //   transactionType: 'wager',
-    //   amount: buyInAmount,
-    //   type: '-',
-    //   transactionDate: new Date(),
-    // });
-
-    // await transaction.save({ session: mongoSession });
-
-    // await mongoSession.commitTransaction();
-    // console.log('Transaction committed');
-    // console.log('Wagers and transaction created successfully');
-    // transactionCommitted = true;
-
-    return NextResponse.json({ message: 'Wagers created successfully' }, { status: 201 });
+    return NextResponse.json({ message: 'Tournament wager created successfully' }, { status: 201 });
   } catch (error) {
-    console.log('An error occurred');
-    // if (!transactionCommitted) {
-    //   console.log('Aborting transaction');
-    //   await mongoSession.abortTransaction();
-    // }
     console.error('Error in wager creation:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-  } finally {
-    console.log('Ending session');
-    // await mongoSession.endSession();
   }
 }

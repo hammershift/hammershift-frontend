@@ -2,22 +2,6 @@ import mongoose from 'mongoose';
 
 const tournamentSchema = new mongoose.Schema(
   {
-    auctionID: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Auction',
-      },
-    ],
-    players: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'PlayerTournament', // TODO
-      },
-    ],
-    // winner: {
-    //   type: mongoose.Types.ObjectId,
-    //   ref: 'User',
-    // },
     buyInFee: {
       type: Number,
       required: true,
@@ -37,10 +21,6 @@ const tournamentSchema = new mongoose.Schema(
     endTime: {
       type: Date,
       required: true,
-    },
-    totalWagers: {
-      type: Number,
-      default: 0,
     },
   },
   { timestamps: true }
