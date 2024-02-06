@@ -61,11 +61,13 @@ const winnerSchema = new mongoose.Schema({
 const carSchema = new mongoose.Schema(
   {
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    tournamentID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Tournament',
-      required: false,
-    },
+    tournamentID: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tournament',
+        required: false,
+      },
+    ],
     auction_id: { type: String, required: true },
     pot: { type: Number },
     __v: { type: Number, default: 0 },
