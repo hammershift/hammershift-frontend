@@ -747,3 +747,41 @@ export const editUserInfo = async (userId: string, edits: any) => {
     throw error;
   }
 }
+
+interface TournamentUser {
+  _id: string;
+  fullName: string;
+  username: string;
+  image: string;
+}
+
+interface TournamentWager {
+  auctionID: string;
+  priceGuessed: number;
+}
+
+interface TournamentData {
+  tournamentID: string;
+  wagers: TournamentWager[];
+  buyInAmount: number;
+  user: TournamentUser;
+}
+
+export const createTournamentWager = async (wagerData: TournamentData) => {
+  try {
+    const res = await fetch('/api/tournamentWager', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(wagerData),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
