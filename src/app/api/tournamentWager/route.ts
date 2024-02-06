@@ -103,25 +103,26 @@ export async function POST(req: NextRequest) {
     console.log('Received Wager Data:', requestBody);
 
     const { tournamentID, wagers, buyInAmount, user } = requestBody;
-    if (!tournamentID || !wagers || buyInAmount === undefined || !user) {
+
+    if (!tournamentID || !wagers || !buyInAmount || !user) {
       console.log('Missing required fields:', requestBody);
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
     // validate tournament details
-    const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentID) });
-    if (!tournament || !tournament.isActive) {
-      return NextResponse.json({ message: 'Invalid or inactive tournament' }, { status: 400 });
-    }
+    // const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentID) });
+    // if (!tournament || !tournament.isActive) {
+    //   return NextResponse.json({ message: 'Invalid or inactive tournament' }, { status: 400 });
+    // }
 
     // check if user already participated
-    const existingEntry = await db.collection('tournament_wagers').findOne({
-      tournamentID: new ObjectId(tournamentID),
-      'user._id': new ObjectId(user._id),
-    });
-    if (existingEntry) {
-      return NextResponse.json({ message: 'User has already entered the tournament' }, { status: 400 });
-    }
+    // const existingEntry = await db.collection('tournament_wagers').findOne({
+    //   tournamentID: new ObjectId(tournamentID),
+    //   'user._id': new ObjectId(user._id),
+    // });
+    // if (existingEntry) {
+    //   return NextResponse.json({ message: 'User has already entered the tournament' }, { status: 400 });
+    // }
 
     // validate sub-wagers
     for (const subWager of wagers) {
@@ -135,14 +136,14 @@ export async function POST(req: NextRequest) {
     // deduct buy-in amount from the user's wallet
     const userUpdateResult = await db
       .collection('users')
-      .findOneAndUpdate({ _id: new ObjectId(session.user.id) }, { $inc: { balance: -buyInAmount } }, { returnDocument: 'after' });
+      .findOneAndUpdate({ _id: new mongoose.Types.ObjectId(user._id) }, { $inc: { balance: -buyInAmount } }, { returnDocument: 'after' });
     if (!userUpdateResult.value || userUpdateResult.value.balance < 0) {
       return NextResponse.json({ message: 'Insufficient funds for buy-in' }, { status: 400 });
     }
 
     // create the transaction record for the buy-in
     await db.collection('transactions').insertOne({
-      userID: new ObjectId(session.user.id),
+      userID: new mongoose.Types.ObjectId(user._id),
       tournamentID: new ObjectId(tournamentID),
       transactionType: 'tournament buy-in',
       amount: buyInAmount,
