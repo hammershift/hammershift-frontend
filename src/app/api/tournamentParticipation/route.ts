@@ -6,6 +6,12 @@ import { ObjectId } from 'mongodb';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
+interface Wager {
+  auctionID: ObjectId;
+  priceGuessed: number;
+  amount: number;
+}
+
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -18,10 +24,13 @@ export async function POST(req: NextRequest) {
 
   try {
     await mongoSession.startTransaction();
-    const body = await req.json();
-    const { tournamentID, wagers } = body;
+    const { tournamentID, wagers }: { tournamentID: string; wagers: Wager[] } = await req.json();
     const userID = session.user.id;
-    const buyInAmount = 50;
+    const buyInAmount = 50; // fixed buy-in
+
+    // Calculate total wager amount based on user-submitted wagers
+    const totalWagerAmount = wagers.reduce((total, wager) => total + wager.amount, 0);
+    const totalDeduction = buyInAmount + totalWagerAmount;
 
     // Validate tournament details
     const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentID) });
@@ -41,13 +50,14 @@ export async function POST(req: NextRequest) {
       throw new Error('User has already entered the tournament');
     }
 
-    // Deduct the buy-in amount from the user's wallet balance
-    const { value: user } = await db
-      .collection('users')
-      .findOneAndUpdate({ _id: new ObjectId(userID) }, { $inc: { balance: -buyInAmount } }, { session: mongoSession, returnDocument: 'after' });
-    if (!user || user.balance < 0) {
+    // Verify if the user has sufficient balance for the total deduction
+    const user = await db.collection('users').findOne({ _id: new ObjectId(userID) });
+    if (!user || user.balance < totalDeduction) {
       throw new Error('Insufficient balance');
     }
+
+    // Deduct the total amount (buy-in + wagers) from the user's wallet
+    await db.collection('users').updateOne({ _id: new ObjectId(userID) }, { $inc: { balance: -totalDeduction } }, { session: mongoSession });
 
     // Create tournament entry and wager record
     await TournamentWager.create(
@@ -55,14 +65,14 @@ export async function POST(req: NextRequest) {
         {
           tournamentID: new ObjectId(tournamentID),
           buyInAmount,
+          wagers,
           user: { _id: new ObjectId(userID), fullName: user.fullName, username: user.username, image: user.image },
-          wagers: wagers,
         },
       ],
       { session: mongoSession }
     );
 
-    // Record the buy-in transaction
+    // Record the transaction for the buy-in and wagers
     await Transaction.create(
       [
         {
@@ -73,16 +83,24 @@ export async function POST(req: NextRequest) {
           type: '-',
           transactionDate: new Date(),
         },
+        {
+          userID: new ObjectId(userID),
+          tournamentID: new ObjectId(tournamentID),
+          transactionType: 'wager',
+          amount: totalWagerAmount, // recording the total wager amount as a single transaction
+          type: '-',
+          transactionDate: new Date(),
+        },
       ],
       { session: mongoSession }
     );
 
     await mongoSession.commitTransaction();
-    return NextResponse.json({ message: 'Tournament participation successful' }, { status: 200 });
+    return NextResponse.json({ message: 'Tournament participation successful', tournamentID, userID, buyInAmount, totalWagerAmount }, { status: 200 });
   } catch (error) {
     await mongoSession.abortTransaction();
     return NextResponse.json({ message: 'Failed to process tournament participation' }, { status: 500 });
   } finally {
-    await mongoSession.endSession();
+    mongoSession.endSession();
   }
 }
