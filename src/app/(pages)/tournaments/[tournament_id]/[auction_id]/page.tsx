@@ -37,7 +37,7 @@ import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import Image from "next/image";
 import Links from "@/app/components/links";
 
-const SingleViewPage = ({ params }: { params: { id: string } }) => {
+const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
   const urlPath = useParams();
   const { data: session, status } = useSession();
 
@@ -61,7 +61,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
 
   // const router = useRouter();
 
-  const ID = params.id;
+  const ID = params.auction_id;
 
   // TEST IMPLEMENTATION
   useEffect(() => {
@@ -406,6 +406,8 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
               <PhotosLayout
                 img={carData.image}
                 images_list={carData.images_list}
+                showCarImageModal={showCarImageModal}
+                toggleModal={toggleCarImageModal}
               />
               <ArticleSection
                 images_list={carData.images_list}

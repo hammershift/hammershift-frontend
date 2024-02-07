@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 
 const tournamentSchema = new mongoose.Schema(
@@ -46,6 +47,7 @@ const tournamentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Tournament = mongoose.model("Tournament", tournamentSchema);
+const Tournament = (module.exports =
+  mongoose.models.Tournament || mongoose.model("Tournament", tournamentSchema));
 
 export default Tournament;

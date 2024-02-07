@@ -468,7 +468,7 @@ export const CardWagersSection = ({ objectID }: any) => {
   );
 };
 
-export const TournamentsCard = () => {
+export const TournamentsCard = ({ tournament_id }: any) => {
   const router = useRouter();
 
   const userList = [
@@ -550,12 +550,11 @@ export const TournamentsCard = () => {
         </div>
         <div>
           <button
-            className="tw-bg-slate-600 tw-rounded-md tw-h-10 tw-w-full"
-            onClick={() => router.push("/tournaments")}
-            disabled
+            className="tw-bg-yellow-400 tw-rounded-md tw-h-10 tw-w-full"
+            onClick={() => router.push(`/tournaments/${tournament_id}`)}
           >
             {/* View Results */}
-            Coming Soon
+            Join Tournament
           </button>
         </div>
       </div>

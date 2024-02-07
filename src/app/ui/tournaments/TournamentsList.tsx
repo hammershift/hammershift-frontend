@@ -1,39 +1,31 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { TournamentsCard } from "@/app/components/card";
-import React from "react";
+import { getTournaments } from "@/lib/data";
+
+interface Tournaments {
+  _id: string;
+  // Add other properties of the tournament here
+}
 
 const TournamentsList = () => {
-  const sampleTournamentData = [
-    {
-      auctionID: "123456",
-      players: [{}],
-      buyInFee: 100,
-      finalPrize: 250000,
-      isActive: true,
-      startTime: new Date("2024-02-05T01:45:19.114+00:00"),
-      endTime: new Date("2024-12-12T01:45:19.114+00:00"),
-      totalWagers: 5,
-    },
-    {
-      auctionID: "1234567",
-      players: [{}],
-      buyInFee: 100,
-      finalPrize: 250000,
-      isActive: true,
-      startTime: new Date("2024-02-05T01:45:19.114+00:00"),
-      endTime: new Date("2024-12-12T01:45:19.114+00:00"),
-      totalWagers: 5,
-    },
-    {
-      auctionID: "12345678",
-      players: [{}],
-      buyInFee: 100,
-      finalPrize: 250000,
-      isActive: true,
-      startTime: new Date("2024-02-05T01:45:19.114+00:00"),
-      endTime: new Date("2024-12-12T01:45:19.114+00:00"),
-      totalWagers: 5,
-    },
-  ];
+  const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
+
+  useEffect(() => {
+    const fetchTournamentsData = async () => {
+      try {
+        const res = await getTournaments();
+        const tournamentsArray = res.tournaments; // Extract the tournaments array from the response
+        setTournamentsData(tournamentsArray); // Set the extracted array to your state
+      } catch (error) {
+        console.error("Failed to fetch tournament data:", error);
+      }
+    };
+    fetchTournamentsData();
+  }, []);
+
+  console.log(typeof tournamentsData, tournamentsData);
 
   return (
     <div>
@@ -43,10 +35,12 @@ const TournamentsList = () => {
         </span>
       </div>
       <div className="tw-flex tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
-        {/* to be replaced with map */}
-        <TournamentsCard />
-        <TournamentsCard />
-        <TournamentsCard />
+        {tournamentsData &&
+          tournamentsData.map((tournament) => (
+            <div key={tournament._id}>
+              <TournamentsCard tournament_id={tournament._id} />
+            </div>
+          ))}
       </div>
     </div>
   );

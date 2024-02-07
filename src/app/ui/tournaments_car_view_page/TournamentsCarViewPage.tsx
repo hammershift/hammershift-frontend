@@ -61,6 +61,7 @@ import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import dayjs from "dayjs";
 import { carDataThree } from "@/sample_data";
 import { useTimer } from "@/app/_context/TimerContext";
+import CarImageModal from "@/app/components/car_image_modal";
 
 const CarViewData = {
   name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -450,53 +451,63 @@ export const TournamentsList: React.FC<TournamentListI> = ({
 interface PhotosLayoutProps {
   images_list: { placing: number; src: string }[];
   img: string;
+  showCarImageModal: boolean;
+  toggleModal: () => void;
 }
-
 export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
   images_list,
   img,
+  showCarImageModal,
+  toggleModal,
 }) => {
   return (
     <div className=" tw-my-8">
-      <Image
+      <CarImageModal
+        isOpen={showCarImageModal}
+        onClose={toggleModal}
+        image={images_list}
+      />
+      <img
+        onClick={toggleModal}
         src={img}
         width={832}
         height={520}
         alt="car"
-        className="tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto"
+        className="tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto tw-cursor-pointer"
       />
       <div className="tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full tw-h-auto">
-        <Image
+        <img
           src={images_list[0].src}
           width={202}
           height={120}
           alt="car"
           className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
         />
-        <Image
+        <img
           src={images_list[1].src}
           width={202}
           height={120}
           alt="car"
           className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
         />
-        <Image
+        <img
           src={images_list[2].src}
           width={202}
           height={120}
           alt="car"
           className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
         />
-        <div className="tw-relative">
-          <Image
+        <div className="tw-relative tw-cursor-pointer" onClick={toggleModal}>
+          <img
             src={images_list[3].src}
             width={202}
             height={120}
             alt="car"
             className="tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto"
           />
-          <div className="tw-absolute tw-flex tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
-            88 <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
+          <div className="tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
+            {images_list.length + 1}{" "}
+            <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
             <span className="tw-block md:tw-hidden">+</span>
           </div>
         </div>
@@ -538,7 +549,10 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
             <div>{description[image.placing]}</div>
           </div>
         ))}
-      <button className="btn-transparent-white tw-mt-16" onClick={() => setShowDetails((prev) => !prev)}>
+      <button
+        className="btn-transparent-white tw-mt-16"
+        onClick={() => setShowDetails((prev) => !prev)}
+      >
         <span className="tw-w-full tw-flex tw-items-center tw-justify-center">
           VIEW MORE DETAILS
           <Image

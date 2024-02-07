@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Links from "../../../components/links";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { TournamentsListCard } from "../../../components/card";
 import Image from "next/image";
 import { LatestNews } from "../../../components/how_hammeshift_works";
@@ -31,13 +31,19 @@ import {
 import { createTournamentWager } from "@/lib/data";
 import { useSession } from "next-auth/react";
 
-const TournamentViewPage = () => {
+const TournamentViewPage = ({
+  params,
+}: {
+  params: { tournament_id: string };
+}) => {
   const { data: session } = useSession();
   const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
   const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
     useState(false);
-
   const [wagers, setWagers] = useState<any>({});
+  const [tournamentData, setTournamentData] = useState({});
+
+  const ID = params.tournament_id;
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
