@@ -380,6 +380,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
                     handleSubmit={handleSubmit}
                     handleInputs={handleInputs}
                     toggleTournamentWagerModal={toggleModal}
+                    isButtonClicked={isButtonClicked}
                 />
             ) : null}
             <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
