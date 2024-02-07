@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 
 export const dynamic = 'force-dynamic';
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
     const client = await clientPromise;
     const db = client.db();
@@ -15,12 +15,18 @@ export async function PUT(req: NextRequest) {
     if (id) {
       const editedAuction = await db
         .collection('tournaments')
-        .findOneAndUpdate({ $and: [{ _id: new mongoose.Types.ObjectId(id) }, { isActive: true }] }, { $set: edits }, { returnDocument: 'after' });
+        .findOneAndUpdate(
+          { $and: [{ _id: new mongoose.Types.ObjectId(id) }, { isActive: true }] },
+          { $set: edits },
+          { returnDocument: 'after' }
+        );
 
       return NextResponse.json(editedAuction, { status: 202 });
+    } else {
+      return NextResponse.json({ message: 'Invalid ID provided' }, { status: 400 });
     }
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
