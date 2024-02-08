@@ -39,10 +39,6 @@ const tournamentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    totalWagers: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 );

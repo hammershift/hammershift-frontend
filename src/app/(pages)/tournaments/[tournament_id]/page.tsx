@@ -40,6 +40,7 @@ const TournamentViewPage = ({
   const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
   const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
     useState(false);
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [wagers, setWagers] = useState<any>({});
   const [tournamentData, setTournamentData] = useState({});
 
@@ -135,6 +136,7 @@ const TournamentViewPage = ({
           handleSubmit={handleSubmit}
           handleInputs={handleInputs}
           toggleTournamentWagerModal={toggleModal}
+          isButtonClicked={isButtonClicked}
         />
       ) : null}
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-16">

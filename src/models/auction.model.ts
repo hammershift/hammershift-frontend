@@ -63,7 +63,7 @@ const carSchema = new mongoose.Schema(
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
     tournamentID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Tournament",
+      ref: 'Tournament',
       required: false,
     },
     auction_id: { type: String, required: true },

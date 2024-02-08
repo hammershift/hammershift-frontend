@@ -12,67 +12,6 @@ import Transaction from '@/models/transaction';
 
 export const dynamic = 'force-dynamic';
 
-// export async function POST(req: NextRequest) {
-//   const session = await getServerSession(authOptions);
-//   if (!session) {
-//     console.log('Unauthorized: No session found');
-//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-//   }
-
-//   try {
-//     const requestBody = await req.json();
-//     console.log('Received Wager Data:', requestBody);
-
-//     const { auctionID, priceGuessed, wagerAmount, user, auctionIdentifierId } = requestBody;
-
-//     // validate the fields
-//     if (!auctionID || priceGuessed === undefined || wagerAmount === undefined || auctionIdentifierId === undefined) {
-//       console.log('Missing required fields:', requestBody);
-//       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
-//     }
-
-//     // convert auctionID from string to ObjectId
-//     let convertedAuctionID;
-//     try {
-//       convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
-//     } catch (error) {
-//       console.error('Invalid auctionID:', auctionID, error);
-//       return NextResponse.json({ message: 'Invalid auctionID' }, { status: 400 });
-//     }
-
-//     const newWager = new Wager({
-//       _id: new mongoose.Types.ObjectId(),
-//       auctionID: convertedAuctionID,
-//       priceGuessed,
-//       wagerAmount,
-//       user,
-//       auctionIdentifierId,
-//     });
-
-//     await newWager.save();
-
-//     const client = await clientPromise;
-//     const db = client.db();
-
-//     await db.collection('users').updateOne({ _id: newWager.user._id }, { $push: { wagers: newWager._id } });
-
-//     // calculate the total wager for the auction
-//     const totalWagerAggregation = await db
-//       .collection('wagers')
-//       .aggregate([{ $match: { auctionID: convertedAuctionID } }, { $group: { _id: '$auctionID', totalWager: { $sum: '$wagerAmount' } } }])
-//       .toArray();
-
-//     const totalWager = totalWagerAggregation.length > 0 ? totalWagerAggregation[0].totalWager : 0;
-
-//     console.log('Wager created successfully. Total wager for auction:', Math.floor(totalWager * 0.88));
-
-//     return NextResponse.json({ message: 'Wager created successfully' }, { status: 201 });
-//   } catch (error) {
-//     console.error('Error in wager creation:', error);
-//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-//   }
-// }
-
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {

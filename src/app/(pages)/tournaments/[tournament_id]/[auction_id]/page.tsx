@@ -37,7 +37,7 @@ import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import Image from "next/image";
 import Links from "@/app/components/links";
 
-const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
+const SingleViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
   const { data: session, status } = useSession();
 
@@ -61,7 +61,7 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
 
   // const router = useRouter();
 
-  const ID = params.auction_id;
+  const ID = params.id;
 
   // TEST IMPLEMENTATION
   useEffect(() => {
@@ -366,6 +366,7 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
           handleSubmit={handleSubmit}
           handleInputs={handleInputs}
           toggleTournamentWagerModal={toggleModal}
+          isButtonClicked={isButtonClicked}
         />
       ) : null}
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
