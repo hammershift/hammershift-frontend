@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Links from "../../../components/links";
 import { useParams, useRouter } from "next/navigation";
 import { TournamentsListCard } from "../../../components/card";
@@ -28,8 +28,18 @@ import {
   TournamentsList,
   TournamentsYouMightLike,
 } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
-import { createTournamentWager } from "@/lib/data";
+import { createTournamentWager, getAuctionsByTournamentId } from "@/lib/data";
 import { useSession } from "next-auth/react";
+
+interface Auction {
+  year: string;
+  make: string;
+  model: string;
+  description: string;
+  image: string;
+  images_list: string[];
+  deadline: string;
+}
 
 const TournamentViewPage = ({
   params,
@@ -40,11 +50,25 @@ const TournamentViewPage = ({
   const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
   const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
     useState(false);
-    const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [wagers, setWagers] = useState<any>({});
-  const [tournamentData, setTournamentData] = useState({});
+  const [auctionData, setAuctionData] = useState<Auction[]>([]);
 
   const ID = params.tournament_id;
+  console.log(ID);
+
+  useEffect(() => {
+    const fetchAuctionData = async () => {
+      try {
+        const data = await getAuctionsByTournamentId(ID);
+        console.log("auctions: ", data);
+        setAuctionData(data);
+      } catch (error) {
+        console.error("Failed to fetch tournament data:", error);
+      }
+    };
+    fetchAuctionData();
+  }, [ID]);
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {

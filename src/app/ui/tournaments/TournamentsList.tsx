@@ -2,22 +2,35 @@
 
 import React, { useEffect, useState } from "react";
 import { TournamentsCard } from "@/app/components/card";
-import { getTournaments } from "@/lib/data";
+import { getAuctionsByTournamentId, getTournaments } from "@/lib/data";
+import { TimerProvider } from "@/app/_context/TimerContext";
+import Image from "next/image"; // Assuming you are using Next.js Image component
 
 interface Tournaments {
   _id: string;
+  title: string;
+  pot: number;
+  endTime: Date;
   // Add other properties of the tournament here
+}
+
+interface Auctions {
+  _id: string;
+  image: string;
 }
 
 const TournamentsList = () => {
   const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
+  const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
+    {}
+  );
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
       try {
-        const res = await getTournaments();
-        const tournamentsArray = res.tournaments; // Extract the tournaments array from the response
-        setTournamentsData(tournamentsArray); // Set the extracted array to your state
+        const data = await getTournaments();
+        const tournamentsArray = data.tournaments;
+        setTournamentsData(tournamentsArray);
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
@@ -25,7 +38,23 @@ const TournamentsList = () => {
     fetchTournamentsData();
   }, []);
 
-  console.log(typeof tournamentsData, tournamentsData);
+  useEffect(() => {
+    const fetchAuctionData = async () => {
+      try {
+        const auctionsByTournament: Record<string, Auctions[]> = {};
+        for (const tournament of tournamentsData) {
+          const auctionDataForTournament = await getAuctionsByTournamentId(
+            tournament._id
+          );
+          auctionsByTournament[tournament._id] = auctionDataForTournament;
+        }
+        setAuctionData(auctionsByTournament);
+      } catch (error) {
+        console.error("Failed to fetch auction data:", error);
+      }
+    };
+    fetchAuctionData();
+  }, [tournamentsData]);
 
   return (
     <div>
@@ -36,11 +65,24 @@ const TournamentsList = () => {
       </div>
       <div className="tw-flex tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
         {tournamentsData &&
-          tournamentsData.map((tournament) => (
-            <div key={tournament._id}>
-              <TournamentsCard tournament_id={tournament._id} />
-            </div>
-          ))}
+          tournamentsData.map((tournament) => {
+            const imagesForTournament =
+              auctionData[tournament._id]?.map((auction) => auction.image) ||
+              [];
+            return (
+              <div key={tournament._id}>
+                <TimerProvider deadline={tournament.endTime}>
+                  <TournamentsCard
+                    tournament_id={tournament._id}
+                    pot={tournament.pot}
+                    title={tournament.title}
+                    deadline={tournament.endTime}
+                    images={imagesForTournament}
+                  />
+                </TimerProvider>
+              </div>
+            );
+          })}
       </div>
     </div>
   );

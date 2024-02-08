@@ -829,10 +829,20 @@ export const getTournamentById = async (id: string) => {
   try {
     const res = await fetch(`/api/tournaments?id=${id}`);
     const data = await res.json();
-    console.log(data)
+    console.log(data);
     return data;
   } catch (error) {
     console.error("Tournament Error", error);
     throw error;
+  }
+};
+
+export const getAuctionsByTournamentId = async (tournamentID: string) => {
+  try {
+    const res = await fetch(`/api/cars?tournamentID=${tournamentID}`);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Auctions by Tournament ID: ", error);
   }
 };

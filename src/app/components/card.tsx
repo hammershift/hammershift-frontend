@@ -468,7 +468,13 @@ export const CardWagersSection = ({ objectID }: any) => {
   );
 };
 
-export const TournamentsCard = ({ tournament_id }: any) => {
+export const TournamentsCard = ({
+  tournament_id,
+  pot,
+  title,
+  deadline,
+  images,
+}: any) => {
   const router = useRouter();
 
   const userList = [
@@ -491,40 +497,60 @@ export const TournamentsCard = ({ tournament_id }: any) => {
       points: "1,000",
     },
   ];
+
+  const timerValues = useTimer();
   return (
-    <div className="">
+    <div>
       <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4">
-        <div className="tw-flex tw-justify-end ">
-          <Image
-            src={BlackMercedes}
-            width={90}
-            height={90}
-            alt="image"
-            className="tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]"
-          />
-        </div>
-        <div className="tw-flex tw-justify-center">
-          <Image
-            src={BlackMercedes}
-            width={100}
-            height={100}
-            alt="image"
-            className="tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full "
-          />
-        </div>
-        <div className="tw-flex tw-justify-start">
-          <Image
-            src={BlackMercedes}
-            width={90}
-            height={90}
-            alt="image"
-            className="tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]"
-          />
-        </div>
+        {images && images.length > 0 && (
+          <>
+            <div className="tw-flex tw-justify-end ">
+              <Image
+                src={images[0]}
+                width={90}
+                height={90}
+                alt="image"
+                className="tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]"
+              />
+            </div>
+            <div className="tw-flex tw-justify-center">
+              <Image
+                src={images[1]}
+                width={100}
+                height={100}
+                alt="image"
+                className="tw-w-[100px] tw-h-[100px] tw-absolute tw-object-cover tw-rounded-full "
+              />
+            </div>
+            <div className="tw-flex tw-justify-start">
+              <Image
+                src={images[2]}
+                width={90}
+                height={90}
+                alt="image"
+                className="tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]"
+              />
+            </div>
+          </>
+        )}
       </div>
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
-        <div className="tw-text-[18px] tw-font-bold">2000s Tournament</div>
-        <div className="tw-text-[#53944F]">Just Ended</div>
+        <div className="tw-text-[18px] tw-font-bold">{title}</div>
+        <div className="tw-flex tw-items-center tw-justify-center">
+          {" "}
+          <Image
+            src={HourGlass}
+            width={20}
+            height={20}
+            alt="dollar"
+            className="tw-w-5 tw-h-5 tw-mx-1"
+          />
+          <div className="tw-text-red-600 tw-font-bold">
+            {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
+            {timerValues.seconds}
+          </div>
+        </div>
+
         <div>
           {userList.map((user) => (
             <div
@@ -550,11 +576,11 @@ export const TournamentsCard = ({ tournament_id }: any) => {
         </div>
         <div>
           <button
-            className="tw-bg-yellow-400 tw-rounded-md tw-h-10 tw-w-full"
+            className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
             onClick={() => router.push(`/tournaments/${tournament_id}`)}
           >
             {/* View Results */}
-            Join Tournament
+            View Tournament
           </button>
         </div>
       </div>

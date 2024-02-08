@@ -419,7 +419,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
             key={index}
             className="hover:tw-cursor-pointer"
             onClick={() =>
-              router.push(`/tournaments/tournament/${item.auction_id}`)
+              router.push(`/tournaments/${item.tournament_id}/${item.auction_id}`)
             }
           >
             <TournamentsListCard
