@@ -1,21 +1,22 @@
 "use client";
 
 import React, { Suspense, useEffect, useState } from "react";
+import { WinnersSection } from "@/app/ui/car_view_page/CarViewPage";
 import {
-  WatchAndWagerButtons,
   PhotosLayout,
-  ArticleSection,
-  WagersSection,
+  TournamentWagersSection,
+  TournamentsYouMightLike,
   DetailsSection,
-  GamesYouMightLike,
-  WinnersSection,
-} from "@/app/ui/car_view_page/CarViewPage";
+  ArticleSection,
+  TitleSingleCarContainer,
+  TournamentButtons,
+} from "../../../../ui/tournaments_car_view_page/TournamentsCarViewPage";
 import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
-import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
 import {
   addPrizePool,
+  createTournamentWager,
   createWager,
   getCarData,
   getComments,
@@ -28,10 +29,18 @@ import WagerModal from "@/app/components/wager_modal";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
+import WatchListIcon from "../../../../../../public/images/watchlist-icon.svg";
 
-const CarViewPage = ({ params }: { params: { id: string } }) => {
+import { carDataThree } from "../../../../../sample_data";
+
+import TournamentWagerModal from "@/app/components/tournament_wager_modal";
+import Image from "next/image";
+import Links from "@/app/components/links";
+
+const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
   const urlPath = useParams();
   const { data: session, status } = useSession();
+
   const [carData, setCarData] = useState<any>(null);
   const [wagersData, setWagersData] = useState<any>(null);
   const [playerNum, setPlayerNum] = useState(0);
@@ -47,10 +56,13 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
   const [showCarImageModal, setShowCarImageModal] = useState(false);
   const [winners, setWinners] = useState([]);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
+    useState(false);
 
   // const router = useRouter();
 
-  const ID = params.id;
+  const ID = params.auction_id;
+  console.log("ID: ", ID);
 
   // TEST IMPLEMENTATION
   useEffect(() => {
@@ -86,6 +98,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
       const auctionDeadline = new Date(data?.deadline);
 
       setCarData(data);
+      console.log("car data: ", data);
       setWagerInputs({ ...wagerInputs, auctionID: data?._id });
       setWinners(data?.winners);
 
@@ -183,6 +196,12 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     setIsButtonClicked(true);
     const fixedWagerAmount = 10;
 
+    // if (String(wagerInputs.priceGuessed).includes(".")) {
+    //     if (wagerInputs.priceGuessed) {
+    //         console.log(Math.floor(wagerInputs.priceGuessed));
+    //     }
+    // }
+
     const pattern = /^[0-9]+$/;
     if (pattern.test(String(wagerInputs.priceGuessed))) {
       setInvalidPrice(false);
@@ -256,41 +275,107 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     setShowCarImageModal((prev) => !prev);
   };
 
+  const [wagers, setWagers] = useState<any>({});
+
+  const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
+    switch (e.target.name) {
+      case "auction_1":
+        setWagers({
+          ...wagers,
+          auction_1: {
+            auctionID: e.target.id,
+            priceGuessed: Number(e.target.value),
+          },
+        });
+        break;
+      case "auction_2":
+        setWagers({
+          ...wagers,
+          auction_2: {
+            auctionID: e.target.id,
+            priceGuessed: Number(e.target.value),
+          },
+        });
+        break;
+      case "auction_3":
+        setWagers({
+          ...wagers,
+          auction_3: {
+            auctionID: e.target.id,
+            priceGuessed: Number(e.target.value),
+          },
+        });
+        break;
+      case "auction_4":
+        setWagers({
+          ...wagers,
+          auction_4: {
+            auctionID: e.target.id,
+            priceGuessed: Number(e.target.value),
+          },
+        });
+        break;
+      case "auction_5":
+        setWagers({
+          ...wagers,
+          auction_5: {
+            auctionID: e.target.id,
+            priceGuessed: Number(e.target.value),
+          },
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    sessionData: any
+  ) => {
+    e.preventDefault();
+    const wagerArray = Object.values(wagers).map((item: any) => ({
+      auctionID: item.auctionID,
+      priceGuessed: item.priceGuessed,
+    }));
+
+    const tournamentWagerData = {
+      tournamentID: "6576f81032fad9708a3c3f8f",
+      wagers: wagerArray,
+      buyInAmount: 100,
+      user: sessionData,
+    };
+    try {
+      console.log(tournamentWagerData);
+
+      const tournamentWager = await createTournamentWager(tournamentWagerData);
+      setToggleTournamentWagerModal(false);
+      console.log(tournamentWager);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const toggleModal = () => {
+    setToggleTournamentWagerModal((prev) => !prev);
+  };
+
   return (
     <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
-      {toggleWagerModal ? (
-        <TimerProvider deadline={carData.deadline}>
-          <WagerModal
-            showWagerModal={showWagerModal}
-            make={carData.make}
-            model={carData.model}
-            price={currencyString}
-            bids={carData.bids}
-            ending={formattedDateString}
-            image={carData.image}
-            handleWagerInputChange={handleWagerInputChange}
-            handleWagerSubmit={handleWagerSubmit}
-            players_num={playerNum}
-            prize={carData.pot}
-            walletBalance={walletBalance}
-            insufficientFunds={insufficientFunds}
-            invalidPrice={invalidPrice}
-            invalidWager={invalidWager}
-            isButtonClicked={isButtonClicked}
-          />
-        </TimerProvider>
+      {toggleTournamentWagerModal ? (
+        <TournamentWagerModal
+          handleSubmit={handleSubmit}
+          handleInputs={handleInputs}
+          toggleTournamentWagerModal={toggleModal}
+          isButtonClicked={isButtonClicked}
+        />
       ) : null}
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
         <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
-          GUESS THE PRICE
+          TOURNAMENT
         </div>
         <div className="tw-hidden sm:tw-block">
-          <WatchAndWagerButtons
-            auctionID={carData?._id}
-            alreadyWagered={alreadyWagered}
-            toggleWagerModal={showWagerModal}
-            auctionEnded={auctionEnded}
-          />
+          <TournamentButtons toggleTournamentWagerModal={toggleModal} />
         </div>
       </div>
       <div className="section-container tw-w-full tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
@@ -298,7 +383,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
           {carData ? (
             <TimerProvider deadline={carData.deadline}>
               {" "}
-              <TitleContainer
+              <TitleSingleCarContainer
                 year={carData.year}
                 make={carData.make}
                 model={carData.model}
@@ -316,27 +401,20 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             </TimerProvider>
           ) : null}
           <div className="tw-block sm:tw-hidden tw-mt-8">
-            <WatchAndWagerButtons
-              auctionID={carData?._id}
-              alreadyWagered={alreadyWagered}
-              toggleWagerModal={showWagerModal}
-              auctionEnded={auctionEnded}
-            />
+            <TournamentButtons toggleTournamentWagerModal={toggleModal} />
           </div>
           {carData ? (
             <>
               <PhotosLayout
-                images_list={carData.images_list}
                 img={carData.image}
+                images_list={carData.images_list}
                 showCarImageModal={showCarImageModal}
                 toggleModal={toggleCarImageModal}
               />
               <ArticleSection
                 images_list={carData.images_list}
                 description={carData.description}
-                toggleWagerModal={showWagerModal}
-                alreadyWagered={alreadyWagered}
-                auctionEnded={auctionEnded}
+                toggleTournamentWagerModal={toggleModal}
               />
             </>
           ) : null}
@@ -347,30 +425,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="tw-block sm:tw-hidden tw-mt-8">
             {wagersData ? (
-              <WagersSection
-                toggleWagerModal={showWagerModal}
-                players_num={playerNum}
-                wagers={wagersData}
-                alreadyWagered={alreadyWagered}
-                auctionEnded={auctionEnded}
+              <TournamentWagersSection
+                toggleTournamentWagerModal={toggleModal}
               />
             ) : null}
           </div>
           {carData ? (
             <div className="tw-block sm:tw-hidden tw-mt-8">
-              <DetailsSection
-                website={carData.website}
-                make={carData.make}
-                model={carData.model}
-                seller={carData.seller}
-                location={carData.location}
-                mileage="55,400"
-                listing_type={carData.listing_type}
-                lot_num={carData.lot_num}
-                listing_details={carData.listing_details}
-                images_list={carData.images_list}
-                toggleCarImageModal={toggleCarImageModal}
-              />
+              <DetailsSection />
             </div>
           ) : null}
           <GuessThePriceInfoSection />
@@ -381,34 +443,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             <WinnersSection price={carData?.price} winners={winners} />
           ) : null}
           {wagersData ? (
-            <WagersSection
-              toggleWagerModal={showWagerModal}
-              players_num={playerNum}
-              wagers={wagersData}
-              alreadyWagered={alreadyWagered}
-              auctionEnded={auctionEnded}
-            />
+            <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
           ) : null}
-          {carData ? (
-            <DetailsSection
-              website={carData.website}
-              make={carData.make}
-              model={carData.model}
-              seller={carData.seller}
-              location={carData.location}
-              mileage="55,400"
-              listing_type={carData.listing_type}
-              lot_num={carData.lot_num}
-              listing_details={carData.listing_details}
-              images_list={carData.images_list}
-              toggleCarImageModal={toggleCarImageModal}
-            />
-          ) : null}
+          {carData ? <DetailsSection /> : null}
         </div>
       </div>
-      <GamesYouMightLike />
+      <TournamentsYouMightLike />
     </div>
   );
 };
 
-export default CarViewPage;
+export default SingleViewPage;

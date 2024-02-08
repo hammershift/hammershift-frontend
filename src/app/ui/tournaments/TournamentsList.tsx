@@ -1,14 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-
-import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
-import ArrowRight from "../../../public/images/arrow-right.svg";
-import ArrowLeft from "../../../public/images/arrow-left.svg";
-import { TournamentsCard } from "./card";
+import { TournamentsCard } from "@/app/components/card";
 import { getAuctionsByTournamentId, getTournaments } from "@/lib/data";
-import { TimerProvider } from "../_context/TimerContext";
+import { TimerProvider } from "@/app/_context/TimerContext";
+import Image from "next/image"; // Assuming you are using Next.js Image component
 
 interface Tournaments {
   _id: string;
@@ -23,7 +19,7 @@ interface Auctions {
   image: string;
 }
 
-const Tournaments = () => {
+const TournamentsList = () => {
   const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
   const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
     {}
@@ -32,9 +28,9 @@ const Tournaments = () => {
   useEffect(() => {
     const fetchTournamentsData = async () => {
       try {
-        const res = await getTournaments();
-        const tournamentsArray = res.tournaments; // Extract the tournaments array from the response
-        setTournamentsData(tournamentsArray); // Set the extracted array to your state
+        const data = await getTournaments();
+        const tournamentsArray = data.tournaments;
+        setTournamentsData(tournamentsArray);
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
@@ -61,38 +57,13 @@ const Tournaments = () => {
   }, [tournamentsData]);
 
   return (
-    <div className="tw-py-8 sm:tw-py-16">
-      <header className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
-          <Image
-            src={TournamentsIcon}
-            width={40}
-            height={40}
-            alt="dollar"
-            className="tw-w-10 tw-h-10"
-          />
-          <div className="tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4">
-            Tournaments
-          </div>
-        </div>
-        <div className="tw-flex">
-          <Image
-            src={ArrowLeft}
-            width={32}
-            height={32}
-            alt="arrow left"
-            className="tw-w-8 tw-h-8"
-          />
-          <Image
-            src={ArrowRight}
-            width={32}
-            height={32}
-            alt="arrow right"
-            className="tw-w-8 tw-h-8 tw-ml-4"
-          />
-        </div>
-      </header>
-      <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto tw-gap-4 sm:tw-gap-8 tw-mt-8">
+    <div>
+      <div className="tw-mt-5">
+        <span className="tw-bg-[#156CC3] tw-rounded-full tw-px-2.5 tw-py-2 tw-font-bold">
+          ACTIVE TOURNAMENTS
+        </span>
+      </div>
+      <div className="tw-flex tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
         {tournamentsData &&
           tournamentsData.map((tournament) => {
             const imagesForTournament =
@@ -112,9 +83,9 @@ const Tournaments = () => {
               </div>
             );
           })}
-      </section>
+      </div>
     </div>
   );
 };
 
-export default Tournaments;
+export default TournamentsList;

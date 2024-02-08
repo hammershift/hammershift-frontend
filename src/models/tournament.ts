@@ -1,7 +1,24 @@
-import mongoose from 'mongoose';
+import { ObjectId } from "mongodb";
+import mongoose from "mongoose";
 
 const tournamentSchema = new mongoose.Schema(
   {
+    auctionID: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Auction",
+      },
+    ],
+    players: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PlayerTournament", // TODO
+      },
+    ],
+    // winner: {
+    //   type: mongoose.Types.ObjectId,
+    //   ref: 'User',
+    // },
     buyInFee: {
       type: Number,
       required: true,
@@ -26,6 +43,7 @@ const tournamentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Tournament = mongoose.model('Tournament', tournamentSchema);
+const Tournament = (module.exports =
+  mongoose.models.Tournament || mongoose.model("Tournament", tournamentSchema));
 
 export default Tournament;

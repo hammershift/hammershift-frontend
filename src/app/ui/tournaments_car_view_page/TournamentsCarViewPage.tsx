@@ -37,6 +37,9 @@ import WatchListIcon from "../../../../public/images/watchlist-icon.svg";
 import ThropyIconBlue from "../../../../public/images/thropy-blue-big.svg";
 import CarsImage from "../../../../public/images/cars-icon.svg";
 import CarIcon from "../../../../public/images/car-01.svg";
+import CommentsIcon from "../../../../public/images/comments-icon.svg";
+import EyeIcon from "../../../../public/images/eye-on.svg";
+import TelescopeIcon from "../../../../public/images/telescope-sharp.svg";
 
 import PhotoOne from "../../../../public/images/car-view-page/photoOne.svg";
 import PhotoTwo from "../../../../public/images/car-view-page/photoTwo.svg";
@@ -54,7 +57,11 @@ import AvatarTwo from "../../../../public/images/avatar-two.svg";
 import AvatarThree from "../../../../public/images/avatar-three.svg";
 import AvatarFour from "../../../../public/images/avatar-four.svg";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
+
+import dayjs from "dayjs";
 import { carDataThree } from "@/sample_data";
+import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
+import CarImageModal from "@/app/components/car_image_modal";
 
 const CarViewData = {
   name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -71,6 +78,22 @@ const CarViewData = {
 
 interface TournamentButtonsI {
   toggleTournamentWagerModal: () => void;
+}
+
+interface TitleSingleCarContainerProps {
+  year: string;
+  make: string;
+  model: string;
+  current_bid: string;
+  bids_num: number;
+  ending_date: string;
+  deadline: Date | string;
+  players_num: number;
+  prize: string;
+  pot: number;
+  comments: number;
+  views: number;
+  watchers: number;
 }
 
 export const TournamentButtons: React.FC<TournamentButtonsI> = ({
@@ -102,15 +125,32 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
   );
 };
 
-export const TitleSingleCarContainer = () => {
+export const TitleSingleCarContainer: React.FC<
+  TitleSingleCarContainerProps
+> = ({
+  year,
+  make,
+  model,
+  current_bid,
+  bids_num,
+  ending_date,
+  deadline,
+  players_num,
+  prize,
+  pot,
+  comments,
+  views,
+  watchers,
+}) => {
+  const timerValues = useTimer();
   return (
     <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
       <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-        {CarViewData.name}
+        {year} {make} {model}
       </div>
       <div className="info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4">
-        <div className="info-left-marker tw-w-[300px]">
-          <div className="tw-flex">
+        <div className="tw-w-[280px]">
+          <div className="tw-flex tw-items-center">
             <div>
               <Image
                 src={DollarIcon}
@@ -122,13 +162,13 @@ export const TitleSingleCarContainer = () => {
             </div>
             <div className="tw-opacity-80 tw-flex">
               Current Bid:
-              <span className="tw-text-[#49C742] tw-font-bold tw-ml-2">
-                {CarViewData.currentBid}
-              </span>
-              <span className="tw-block md:tw-hidden tw-ml-2">{`(${CarViewData.bids} bids)`}</span>
+              <span className="tw-text-[#49C742] tw-font-bold tw-ml-2">{`$ ${String(
+                current_bid
+              )}`}</span>
+              <span className="tw-block md:tw-hidden tw-ml-2">{`(${bids_num} bids)`}</span>
             </div>
           </div>
-          <div className="tw-flex tw-mt-0 md:tw-mt-1">
+          <div className="tw-flex tw-mt-0 md:tw-mt-1 tw-items-center">
             <div>
               <Image
                 src={CalendarIcon}
@@ -139,28 +179,13 @@ export const TitleSingleCarContainer = () => {
               />
             </div>
             <span className="tw-opacity-80">
-              Ending:{" "}
-              <span className="tw-font-bold">{CarViewData.endingDate}</span>
+              Ending: <span className="tw-font-bold">{ending_date}</span>
             </span>
           </div>
         </div>
         <div className="right-section-marker">
-          <div className="top-section-marker tw-flex tw-flex-col md:tw-flex-row tw-justify-between">
-            <div className="tw-w-[160px] tw-hidden md:tw-flex">
-              <div>
-                <Image
-                  src={HashtagIcon}
-                  width={20}
-                  height={20}
-                  alt="calendar"
-                  className="tw-w-5 tw-h-5  tw-mr-2"
-                />
-              </div>
-              <span className="tw-opacity-80">
-                Bids: <span className="tw-font-bold">{CarViewData.bids}</span>
-              </span>
-            </div>
-            <div className="tw-flex">
+          <div className="tw-flex tw-flex-col md:tw-flex-row">
+            <div className="tw-flex tw-w-[270px] tw-items-center">
               <div>
                 <Image
                   src={HourGlassIcon}
@@ -172,14 +197,16 @@ export const TitleSingleCarContainer = () => {
               </div>
               <span className="tw-opacity-80">
                 Time Left:{" "}
-                <span className="tw-font-bold tw-text-[#C2451E]">
-                  {CarViewData.timeLeft}
-                </span>
+                {new Date(deadline) < new Date() ? (
+                  <span className="tw-font-bold tw-text-[#C2451E]">
+                    Ended {dayjs(deadline).fromNow()}
+                  </span>
+                ) : (
+                  <span className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+                )}
               </span>
             </div>
-          </div>
-          <div className="bottom-section-marker tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
-            <div className="tw-flex  tw-w-[160px]">
+            <div className="tw-flex tw-items-center">
               <div>
                 <Image
                   src={PlayersIcon}
@@ -190,11 +217,26 @@ export const TitleSingleCarContainer = () => {
                 />
               </div>
               <span className="tw-opacity-80">
-                Time Left:{" "}
-                <span className="tw-font-bold ">{CarViewData.players}</span>
+                Players: <span className="tw-font-bold ">{players_num}</span>
               </span>
             </div>
-            <div className="tw-flex">
+          </div>
+          <div className="tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
+            <div className="tw-hidden md:tw-flex md:tw-w-[270px] tw-items-center">
+              <div>
+                <Image
+                  src={HashtagIcon}
+                  width={20}
+                  height={20}
+                  alt="calendar"
+                  className="tw-w-5 tw-h-5  tw-mr-2"
+                />
+              </div>
+              <span className="tw-opacity-80">
+                Bids: <span className="tw-font-bold">{bids_num}</span>
+              </span>
+            </div>
+            <div className="tw-flex tw-items-center">
               <div>
                 <Image
                   src={PrizeIcon}
@@ -205,10 +247,59 @@ export const TitleSingleCarContainer = () => {
                 />
               </div>
               <span className="tw-opacity-80">
-                Time Left:{" "}
-                <span className="tw-font-bold ">{CarViewData.prize}</span>
+                Prize:{" "}
+                <span className="tw-font-bold ">
+                  ${pot ? new Intl.NumberFormat().format(pot || 0) : " --"}
+                </span>
               </span>
             </div>
+          </div>
+        </div>
+      </div>
+      <div className="tw-opacity-80 md:tw-flex md:tw-mt-1">
+        <div className="tw-flex tw-gap-2 tw-items-center tw-w-full tw-max-w-[280px]">
+          <Image
+            src={CommentsIcon}
+            width={20}
+            height={20}
+            alt="calendar"
+            className="tw-w-5 tw-h-5 tw-text-white"
+          />
+          <div>
+            Comments:{" "}
+            <span className="tw-font-bold">
+              {comments ? new Intl.NumberFormat().format(comments) : "--"}{" "}
+            </span>
+          </div>
+        </div>
+        <div className="tw-flex tw-gap-2 tw-items-center  tw-w-full tw-max-w-[270px]">
+          <Image
+            src={EyeIcon}
+            width={20}
+            height={20}
+            alt="calendar"
+            className="tw-w-5 tw-h-5 tw-text-white"
+          />
+          <div>
+            Views:{" "}
+            <span className="tw-font-bold">
+              {views ? new Intl.NumberFormat().format(views) : "--"}
+            </span>
+          </div>
+        </div>
+        <div className="tw-flex tw-gap-2 tw-items-center">
+          <Image
+            src={TelescopeIcon}
+            width={20}
+            height={20}
+            alt="calendar"
+            className="tw-w-5 tw-h-5 tw-text-white"
+          />
+          <div>
+            Watchers:{" "}
+            <span className="tw-font-bold">
+              {watchers ? new Intl.NumberFormat().format(watchers) : "--"}
+            </span>
           </div>
         </div>
       </div>
@@ -216,15 +307,23 @@ export const TitleSingleCarContainer = () => {
   );
 };
 
-export const TitleTournamentsList = () => {
-  const TournamentsListData = {
-    title: "Sedan Champions Tournament",
-    cars: 5,
-    buy_in_ends: "02:16:00",
-    tournament_ends: "Jul 5, 2023, 7:00 pm",
-    prize: "$1,000",
-    list: [{ img: "", name: "", description: "", time: "" }],
-  };
+interface Tournaments {
+  cars: number;
+  _id: string;
+  title: string;
+  pot: number;
+  endTime: Date;
+  // Add other properties of the tournament here
+}
+
+export const TitleTournamentsList: React.FC<Tournaments> = ({
+  title,
+  cars,
+  pot,
+  endTime,
+}) => {
+  const formattedEndTime = new Date(endTime).toUTCString();
+  const timerValues = useTimer();
   return (
     <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
       <Image
@@ -235,7 +334,7 @@ export const TitleTournamentsList = () => {
         className="tw-w-36 tw-h-auto"
       />
       <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-        {TournamentsListData.title}
+        {title}
       </div>
       <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6">
         <div className="tw-flex">
@@ -251,7 +350,7 @@ export const TitleTournamentsList = () => {
           <span className="tw-opacity-80">
             Cars:{" "}
             <span className="tw-font-bold">
-              {TournamentsListData.cars}
+              {cars}
               {" cars"}
             </span>
           </span>
@@ -269,7 +368,8 @@ export const TitleTournamentsList = () => {
           <span className="tw-opacity-80">
             Buy-in Ends:{" "}
             <span className="tw-font-bold tw-text-[#C2451E]">
-              {TournamentsListData.buy_in_ends}
+              {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
+              {timerValues.seconds}
             </span>
           </span>
         </div>
@@ -285,9 +385,7 @@ export const TitleTournamentsList = () => {
           </div>
           <span className="tw-opacity-80">
             Tournament Ends:{" "}
-            <span className="tw-font-bold">
-              {TournamentsListData.tournament_ends}
-            </span>
+            <span className="tw-font-bold">{formattedEndTime}</span>
           </span>
         </div>
         <div className="tw-flex">
@@ -301,8 +399,7 @@ export const TitleTournamentsList = () => {
             />
           </div>
           <span className="tw-opacity-80">
-            Prize:{" "}
-            <span className="tw-font-bold ">{TournamentsListData.prize}</span>
+            Prize: <span className="tw-font-bold ">{pot}</span>
           </span>
         </div>
       </div>
@@ -310,12 +407,22 @@ export const TitleTournamentsList = () => {
   );
 };
 
-export interface TournamentListI {
+interface Auction {
+  auction_id: string;
+  description: string;
+  image: string;
+  tournamentID: string;
+  attributes: any[];
+}
+
+interface TournamentListI {
   toggleTournamentWagerModal: () => void;
+  auctionData: Auction[];
 }
 
 export const TournamentsList: React.FC<TournamentListI> = ({
   toggleTournamentWagerModal,
+  auctionData,
 }) => {
   const router = useRouter();
 
@@ -323,24 +430,28 @@ export const TournamentsList: React.FC<TournamentListI> = ({
     <div className="tw-mt-8 md:tw-mt-16">
       <div className="tw-text-3xl tw-font-bold">Cars in Tournament</div>
       <div className="tw-flex tw-flex-col">
-        {carDataThree.map((item, index) => (
+        {auctionData.map((item, index) => (
           <div
             key={index}
             className="hover:tw-cursor-pointer"
             onClick={() =>
-              router.push(`/tournament_page/tournaments/${item.auction_id}`)
+              router.push(
+                `/tournaments/${item.tournamentID}/${item.auction_id}`
+              )
             }
           >
-            <TournamentsListCard
-              index={index}
-              auction_id={item.auction_id}
-              img={item.image}
-              year={item.attributes[1].value}
-              make={item.attributes[2].value}
-              model={item.attributes[3].value}
-              description={item.description}
-              deadline={item.attributes[12].value}
-            />
+            <TimerProvider deadline={item.attributes[12].value}>
+              <TournamentsListCard
+                index={index}
+                auction_id={item.auction_id}
+                img={item.image}
+                year={item.attributes[1].value}
+                make={item.attributes[2].value}
+                model={item.attributes[3].value}
+                description={item.description}
+                deadline={item.attributes[12].value}
+              />
+            </TimerProvider>
           </div>
         ))}
       </div>
@@ -357,48 +468,66 @@ export const TournamentsList: React.FC<TournamentListI> = ({
   );
 };
 
-export const PhotosLayout = () => {
+interface PhotosLayoutProps {
+  images_list: { placing: number; src: string }[];
+  img: string;
+  showCarImageModal: boolean;
+  toggleModal: () => void;
+}
+export const PhotosLayout: React.FC<PhotosLayoutProps> = ({
+  images_list,
+  img,
+  showCarImageModal,
+  toggleModal,
+}) => {
   return (
     <div className=" tw-my-8">
-      <Image
-        src={PhotoOne}
+      <CarImageModal
+        isOpen={showCarImageModal}
+        onClose={toggleModal}
+        image={images_list}
+      />
+      <img
+        onClick={toggleModal}
+        src={img}
         width={832}
         height={520}
         alt="car"
-        className="tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto"
+        className="tw-w-full tw-max-h-[520px] tw-object-cover tw-rounded tw-aspect-auto tw-cursor-pointer"
       />
       <div className="tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-2 tw-w-full tw-h-auto">
-        <Image
-          src={PhotoTwo}
+        <img
+          src={images_list[0].src}
           width={202}
           height={120}
           alt="car"
           className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
         />
-        <Image
-          src={PhotoThree}
+        <img
+          src={images_list[1].src}
           width={202}
           height={120}
           alt="car"
           className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
         />
-        <Image
-          src={PhotoFour}
+        <img
+          src={images_list[2].src}
           width={202}
           height={120}
           alt="car"
           className="tw-w-full tw-max-h-[120px] tw-object-cover tw-rounded tw-aspect-auto"
         />
-        <div className="tw-relative">
-          <Image
-            src={PhotoFive}
+        <div className="tw-relative tw-cursor-pointer" onClick={toggleModal}>
+          <img
+            src={images_list[3].src}
             width={202}
             height={120}
             alt="car"
             className="tw-w-full tw-max-h-[120px] tw-object-cover tw-opacity-40 tw-rounded tw-aspect-auto"
           />
-          <div className="tw-absolute tw-flex tw-z-50 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
-            88 <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
+          <div className="tw-absolute tw-flex tw-z-20 tw-left-1/2 tw-translate-x-[-50%] tw-top-[50%] tw-translate-y-[-50%]">
+            {images_list.length + 1}{" "}
+            <span className="tw-hidden md:tw-block tw-ml-1">photos</span>
             <span className="tw-block md:tw-hidden">+</span>
           </div>
         </div>
@@ -407,15 +536,43 @@ export const PhotosLayout = () => {
   );
 };
 
-export const ArticleSection: React.FC<TournamentButtonsI> = ({
+interface ArticleSectionProps {
+  description: string[];
+  images_list: { placing: number; src: string }[];
+  toggleTournamentWagerModal: () => void;
+}
+
+export const ArticleSection: React.FC<ArticleSectionProps> = ({
   toggleTournamentWagerModal,
+  description,
+  images_list,
 }) => {
+  const [showDetails, setShowDetails] = useState(false);
   return (
     <div className="tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full">
       <div className="tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-        {CarViewData.description}
+        {description[0]}
       </div>
-      <button className="btn-transparent-white tw-mt-16">
+      {showDetails &&
+        images_list.map((image) => (
+          <div
+            key={"image" + image.placing}
+            className="tw-grid tw-gap-8 md:tw-gap-16"
+          >
+            <Image
+              src={image.src}
+              width={832}
+              height={500}
+              alt="car"
+              className="tw-w-full tw-h-auto tw-object-cover tw-aspect-ratio-auto"
+            />
+            <div>{description[image.placing]}</div>
+          </div>
+        ))}
+      <button
+        className="btn-transparent-white tw-mt-16"
+        onClick={() => setShowDetails((prev) => !prev)}
+      >
         <span className="tw-w-full tw-flex tw-items-center tw-justify-center">
           VIEW MORE DETAILS
           <Image
