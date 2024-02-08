@@ -37,7 +37,7 @@ import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import Image from "next/image";
 import Links from "@/app/components/links";
 
-const SingleViewPage = ({ params }: { params: { id: string } }) => {
+const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
   const urlPath = useParams();
   const { data: session, status } = useSession();
 
@@ -61,7 +61,8 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
 
   // const router = useRouter();
 
-  const ID = params.id;
+  const ID = params.auction_id;
+  console.log("ID: ", ID);
 
   // TEST IMPLEMENTATION
   useEffect(() => {
@@ -97,7 +98,7 @@ const SingleViewPage = ({ params }: { params: { id: string } }) => {
       const auctionDeadline = new Date(data?.deadline);
 
       setCarData(data);
-      console.log(data);
+      console.log("car data: ", data);
       setWagerInputs({ ...wagerInputs, auctionID: data?._id });
       setWinners(data?.winners);
 

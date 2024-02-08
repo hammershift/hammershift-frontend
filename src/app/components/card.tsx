@@ -591,39 +591,54 @@ export const TournamentsCard = ({
 export const TournamentsListCard = (props: any) => {
   const { index, auction_id, img, year, make, model, description, deadline } =
     props;
+  const [auctionEnded, setIsAuctionEnded] = useState(false);
   const timerValues = useTimer();
+
+  useEffect(() => {
+    const deadlineDate = new Date(deadline);
+    if (new Date() > deadlineDate) {
+      setIsAuctionEnded(true);
+    }
+  }, [deadline]);
+
   return (
-    <TimerProvider deadline={deadline}>
-      <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8">
-        <Image
-          src={img}
-          width={416}
-          height={240}
-          alt="car"
-          className="tw-w-full tw-h-auto tw-object-cover tw-aspect-auto"
-        />
-        <div>
-          <div className="tw-opacity-30 tw-text-2xl tw-font-bold">
-            {index + 1}
-          </div>
-          <div className="tw-text-2xl tw-font-bold tw-mt-4">
-            {year} {make} {model}
-          </div>
-          <div className="tw-h-[72px] tw-ellipsis tw-overflow-hidden">
-            {description}
-          </div>
-          <div className="tw-flex tw-mt-4">
-            <Image
-              src={HourGlass}
-              width={20}
-              height={20}
-              alt="car"
-              className="tw-w-5 tw-h-5"
-            />
-            <span className="tw-text-[#F2CA16] tw-font-bold tw-ml-2">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
-          </div>
+    <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8">
+      <Image
+        src={img}
+        width={416}
+        height={240}
+        alt="car"
+        className="tw-w-full tw-h-auto tw-object-cover tw-aspect-auto"
+      />
+      <div>
+        <div className="tw-opacity-30 tw-text-2xl tw-font-bold">
+          {index + 1}
+        </div>
+        <div className="tw-text-2xl tw-font-bold tw-mt-4">
+          {year} {make} {model}
+        </div>
+        <div className="tw-h-[72px] tw-ellipsis tw-overflow-hidden">
+          {description}
+        </div>
+        <div className="tw-flex tw-mt-4">
+          {auctionEnded ? (
+            <span className="tw-text-red-500 tw-font-bold">
+              Auction has ended
+            </span>
+          ) : (
+            <>
+              <Image
+                src={HourGlass}
+                width={20}
+                height={20}
+                alt="car"
+                className="tw-w-5 tw-h-5"
+              />
+              <span className="tw-text-[#F2CA16] tw-font-bold tw-ml-2">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+            </>
+          )}
         </div>
       </div>
-    </TimerProvider>
+    </div>
   );
 };

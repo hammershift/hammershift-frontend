@@ -28,17 +28,30 @@ import {
   TournamentsList,
   TournamentsYouMightLike,
 } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
-import { createTournamentWager, getAuctionsByTournamentId } from "@/lib/data";
+import {
+  createTournamentWager,
+  getAuctionsByTournamentId,
+  getTournamentById,
+} from "@/lib/data";
 import { useSession } from "next-auth/react";
+import { TimerProvider } from "@/app/_context/TimerContext";
 
+interface Tournaments {
+  _id: string;
+  title: string;
+  pot: number;
+  endTime: Date;
+  cars: number;
+
+  // Add other properties of the tournament here
+}
 interface Auction {
-  year: string;
-  make: string;
-  model: string;
+  auction_id: string;
   description: string;
   image: string;
-  images_list: string[];
   deadline: string;
+  tournamentID: string;
+  attributes: any[];
 }
 
 const TournamentViewPage = ({
@@ -52,10 +65,12 @@ const TournamentViewPage = ({
     useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [wagers, setWagers] = useState<any>({});
+  const [tournamentData, setTournamentData] = useState<Tournaments | undefined>(
+    undefined
+  );
   const [auctionData, setAuctionData] = useState<Auction[]>([]);
 
   const ID = params.tournament_id;
-  console.log(ID);
 
   useEffect(() => {
     const fetchAuctionData = async () => {
@@ -64,10 +79,23 @@ const TournamentViewPage = ({
         console.log("auctions: ", data);
         setAuctionData(data);
       } catch (error) {
-        console.error("Failed to fetch tournament data:", error);
+        console.error("Failed to fetch auctions data:", error);
       }
     };
     fetchAuctionData();
+  }, [ID]);
+
+  useEffect(() => {
+    const fetchTournamentsData = async () => {
+      try {
+        const data = await getTournamentById(ID);
+        console.log("tournament: ", data);
+        setTournamentData(data);
+      } catch (error) {
+        console.error("Failed to fetch tournament data:", error);
+      }
+    };
+    fetchTournamentsData();
   }, [ID]);
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,11 +202,24 @@ const TournamentViewPage = ({
 
       <div className="section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
         <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
-          <TitleTournamentsList />
+          {tournamentData && (
+            <TimerProvider deadline={tournamentData.endTime}>
+              <TitleTournamentsList
+                _id={tournamentData._id}
+                title={tournamentData.title}
+                cars={auctionData.length}
+                pot={tournamentData.pot}
+                endTime={tournamentData.endTime}
+              />
+            </TimerProvider>
+          )}
           <div className="sm:tw-hidden tw-mt-4">
             <TournamentButtons toggleTournamentWagerModal={toggleModal} />
           </div>
-          <TournamentsList toggleTournamentWagerModal={toggleModal} />
+          <TournamentsList
+            toggleTournamentWagerModal={toggleModal}
+            auctionData={auctionData}
+          />
           <div className="sm:tw-hidden tw-my-8">
             <TournamentWagersSection toggleTournamentWagerModal={toggleModal} />
             <TournamentInfoSection />

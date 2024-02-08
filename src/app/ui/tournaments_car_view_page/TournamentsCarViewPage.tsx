@@ -60,7 +60,7 @@ import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 
 import dayjs from "dayjs";
 import { carDataThree } from "@/sample_data";
-import { useTimer } from "@/app/_context/TimerContext";
+import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 import CarImageModal from "@/app/components/car_image_modal";
 
 const CarViewData = {
@@ -307,15 +307,23 @@ export const TitleSingleCarContainer: React.FC<
   );
 };
 
-export const TitleTournamentsList = () => {
-  const TournamentsListData = {
-    title: "Sedan Champions Tournament",
-    cars: 5,
-    buy_in_ends: "02:16:00",
-    tournament_ends: "Jul 5, 2023, 7:00 pm",
-    prize: "$1,000",
-    list: [{ img: "", name: "", description: "", time: "" }],
-  };
+interface Tournaments {
+  cars: number;
+  _id: string;
+  title: string;
+  pot: number;
+  endTime: Date;
+  // Add other properties of the tournament here
+}
+
+export const TitleTournamentsList: React.FC<Tournaments> = ({
+  title,
+  cars,
+  pot,
+  endTime,
+}) => {
+  const formattedEndTime = new Date(endTime).toUTCString();
+  const timerValues = useTimer();
   return (
     <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
       <Image
@@ -326,7 +334,7 @@ export const TitleTournamentsList = () => {
         className="tw-w-36 tw-h-auto"
       />
       <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-        {TournamentsListData.title}
+        {title}
       </div>
       <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6">
         <div className="tw-flex">
@@ -342,7 +350,7 @@ export const TitleTournamentsList = () => {
           <span className="tw-opacity-80">
             Cars:{" "}
             <span className="tw-font-bold">
-              {TournamentsListData.cars}
+              {cars}
               {" cars"}
             </span>
           </span>
@@ -360,7 +368,8 @@ export const TitleTournamentsList = () => {
           <span className="tw-opacity-80">
             Buy-in Ends:{" "}
             <span className="tw-font-bold tw-text-[#C2451E]">
-              {TournamentsListData.buy_in_ends}
+              {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
+              {timerValues.seconds}
             </span>
           </span>
         </div>
@@ -376,9 +385,7 @@ export const TitleTournamentsList = () => {
           </div>
           <span className="tw-opacity-80">
             Tournament Ends:{" "}
-            <span className="tw-font-bold">
-              {TournamentsListData.tournament_ends}
-            </span>
+            <span className="tw-font-bold">{formattedEndTime}</span>
           </span>
         </div>
         <div className="tw-flex">
@@ -392,8 +399,7 @@ export const TitleTournamentsList = () => {
             />
           </div>
           <span className="tw-opacity-80">
-            Prize:{" "}
-            <span className="tw-font-bold ">{TournamentsListData.prize}</span>
+            Prize: <span className="tw-font-bold ">{pot}</span>
           </span>
         </div>
       </div>
@@ -401,12 +407,22 @@ export const TitleTournamentsList = () => {
   );
 };
 
-export interface TournamentListI {
+interface Auction {
+  auction_id: string;
+  description: string;
+  image: string;
+  tournamentID: string;
+  attributes: any[];
+}
+
+interface TournamentListI {
   toggleTournamentWagerModal: () => void;
+  auctionData: Auction[];
 }
 
 export const TournamentsList: React.FC<TournamentListI> = ({
   toggleTournamentWagerModal,
+  auctionData,
 }) => {
   const router = useRouter();
 
@@ -414,24 +430,28 @@ export const TournamentsList: React.FC<TournamentListI> = ({
     <div className="tw-mt-8 md:tw-mt-16">
       <div className="tw-text-3xl tw-font-bold">Cars in Tournament</div>
       <div className="tw-flex tw-flex-col">
-        {carDataThree.map((item, index) => (
+        {auctionData.map((item, index) => (
           <div
             key={index}
             className="hover:tw-cursor-pointer"
             onClick={() =>
-              router.push(`/tournaments/${item.tournament_id}/${item.auction_id}`)
+              router.push(
+                `/tournaments/${item.tournamentID}/${item.auction_id}`
+              )
             }
           >
-            <TournamentsListCard
-              index={index}
-              auction_id={item.auction_id}
-              img={item.image}
-              year={item.attributes[1].value}
-              make={item.attributes[2].value}
-              model={item.attributes[3].value}
-              description={item.description}
-              deadline={item.attributes[12].value}
-            />
+            <TimerProvider deadline={item.attributes[12].value}>
+              <TournamentsListCard
+                index={index}
+                auction_id={item.auction_id}
+                img={item.image}
+                year={item.attributes[1].value}
+                make={item.attributes[2].value}
+                model={item.attributes[3].value}
+                description={item.description}
+                deadline={item.attributes[12].value}
+              />
+            </TimerProvider>
           </div>
         ))}
       </div>
