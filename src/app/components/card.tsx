@@ -1,7 +1,7 @@
 "use client";
 
 import "../styles/app.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -110,11 +110,42 @@ const Card: React.FC<any> = ({
 export default Card;
 
 export const GamesCard = (props: any) => {
+  const [imageSrc, setImageSrc] = useState(props.image);
+  const [index, setIndex] = useState(0);
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const timerValues = useTimer();
   dayjs.extend(relativeTime);
-
   const currencyString = new Intl.NumberFormat().format(props.price);
+
+  const handleOnHover = () => {
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+    }
+    timerRef.current = setInterval(() => {
+      setIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % props.imageList.length;
+        setImageSrc(props.imageList[nextIndex].src);
+        return nextIndex;
+      });
+    }, 1000);
+  };
+
+  const handleOnLeave = () => {
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+    }
+    setImageSrc(props.image);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <TimerProvider deadline={new Date()}>
@@ -126,11 +157,13 @@ export const GamesCard = (props: any) => {
             href={`/auctions/car_view_page/${props.auction_id}`}
           >
             <img
-              src={props.image}
+              src={imageSrc}
               width={416}
               height={219}
               alt={props.make}
               className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+              onMouseEnter={handleOnHover}
+              onMouseLeave={handleOnLeave}
             />
           </Link>
           <Link
@@ -475,6 +508,15 @@ export const TournamentsCard = ({
   deadline,
   images,
 }: any) => {
+  const [auctionEnded, setIsAuctionEnded] = useState(false);
+  const timerValues = useTimer();
+
+  useEffect(() => {
+    const deadlineDate = new Date(deadline);
+    if (new Date() > deadlineDate) {
+      setIsAuctionEnded(true);
+    }
+  }, [deadline]);
   const router = useRouter();
 
   const userList = [
@@ -498,7 +540,6 @@ export const TournamentsCard = ({
     },
   ];
 
-  const timerValues = useTimer();
   return (
     <div>
       <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4">
@@ -536,20 +577,23 @@ export const TournamentsCard = ({
       </div>
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
-        <div className="tw-flex tw-items-center tw-justify-center">
-          {" "}
-          <Image
-            src={HourGlass}
-            width={20}
-            height={20}
-            alt="dollar"
-            className="tw-w-5 tw-h-5 tw-mx-1"
-          />
-          <div className="tw-text-red-600 tw-font-bold">
-            {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
-            {timerValues.seconds}
+        {auctionEnded ? (
+          <p className="tw-text-green-600 tw-font-bold">Tournament has ended</p>
+        ) : (
+          <div className="tw-flex tw-items-center tw-justify-center">
+            <Image
+              src={HourGlass}
+              width={20}
+              height={20}
+              alt="dollar"
+              className="tw-w-5 tw-h-5 tw-mx-1"
+            />
+            <div className="tw-text-green-600 tw-font-bold">
+              {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
+              {timerValues.seconds}
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           {userList.map((user) => (

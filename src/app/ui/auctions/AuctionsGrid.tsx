@@ -23,6 +23,7 @@ const AuctionsGrid = ({ listing }: { listing: any }) => {
                     image={car.image ? car.image : ""}
                     price={car.price ? car.price : 0}
                     deadline={car.deadline ? car.deadline : Date()}
+                    imageList={car.images_list ? car.images_list : ""}
                   />
                 </TimerProvider>
               </Suspense>

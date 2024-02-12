@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Links from "../../components/links";
 import { useRouter } from "next/navigation";
 import { TournamentsListCard } from "../../components/card";
@@ -358,89 +358,99 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
     pot,
     endTime,
 }) => {
-    const formattedEndTime = new Date(endTime).toUTCString();
-    const timerValues = useTimer();
-    return (
-        <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
+  const [isTournamentEnded, setIsTournamentEnded] = useState(false)
+  const formattedEndTime = new Date(endTime).toUTCString();
+  const timerValues = useTimer();
+
+  useEffect(() => {
+    const endDate = new Date(endTime);
+    if (new Date() > endDate) {
+      setIsTournamentEnded(true);
+    }
+  }, [endTime]);
+  
+  return (
+    <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
+      <Image
+        src={CarsImage}
+        width={144}
+        height={32}
+        alt="cars image"
+        className="tw-w-36 tw-h-auto"
+      />
+      <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
+        {title}
+      </div>
+      <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6">
+        <div className="tw-flex">
+          <div>
             <Image
-                src={CarsImage}
-                width={144}
-                height={32}
-                alt="cars image"
-                className="tw-w-36 tw-h-auto"
+              src={CarIcon}
+              width={20}
+              height={20}
+              alt="calendar"
+              className="tw-w-5 tw-h-5  tw-mr-2"
             />
-            <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-                {title}
-            </div>
-            <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6">
-                <div className="tw-flex">
-                    <div>
-                        <Image
-                            src={CarIcon}
-                            width={20}
-                            height={20}
-                            alt="calendar"
-                            className="tw-w-5 tw-h-5  tw-mr-2"
-                        />
-                    </div>
-                    <span className="tw-opacity-80">
-                        Cars:{" "}
-                        <span className="tw-font-bold">
-                            {cars}
-                            {" cars"}
-                        </span>
-                    </span>
-                </div>
-                <div className="tw-flex">
-                    <div>
-                        <Image
-                            src={HourGlassIcon}
-                            width={20}
-                            height={20}
-                            alt="calendar"
-                            className="tw-w-5 tw-h-5  tw-mr-2"
-                        />
-                    </div>
-                    <span className="tw-opacity-80">
-                        Buy-in Ends:{" "}
-                        <span className="tw-font-bold tw-text-[#C2451E]">
-                            {timerValues.days}:{timerValues.hours}:
-                            {timerValues.minutes}:{timerValues.seconds}
-                        </span>
-                    </span>
-                </div>
-                <div className="tw-flex tw-mt-0 md:tw-mt-1">
-                    <div>
-                        <Image
-                            src={CalendarIcon}
-                            width={20}
-                            height={20}
-                            alt="calendar"
-                            className="tw-w-5 tw-h-5  tw-mr-2"
-                        />
-                    </div>
-                    <span className="tw-opacity-80">
-                        Tournament Ends:{" "}
-                        <span className="tw-font-bold">{formattedEndTime}</span>
-                    </span>
-                </div>
-                <div className="tw-flex">
-                    <div>
-                        <Image
-                            src={PrizeIcon}
-                            width={20}
-                            height={20}
-                            alt="calendar"
-                            className="tw-w-5 tw-h-5 tw-mr-2"
-                        />
-                    </div>
-                    <span className="tw-opacity-80">
-                        Prize: <span className="tw-font-bold ">{pot}</span>
-                    </span>
-                </div>
-            </div>
+          </div>
+          <span className="tw-opacity-80">
+            Cars:{" "}
+            <span className="tw-font-bold">
+              {cars}
+              {" cars"}
+            </span>
+          </span>
         </div>
-    );
+        <div className="tw-flex">
+          <div>
+            <Image
+              src={HourGlassIcon}
+              width={20}
+              height={20}
+              alt="calendar"
+              className="tw-w-5 tw-h-5  tw-mr-2"
+            />
+          </div>
+          <span className="tw-opacity-80">
+            Buy-in Ends:{" "}
+            {isTournamentEnded ? (<span className="tw-font-bold tw-text-[#C2451E]">Tournament has ended</span>):(<span className="tw-font-bold tw-text-[#C2451E]">
+              {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
+              {timerValues.seconds}
+            </span>)}
+            
+          </span>
+        </div>
+        <div className="tw-flex tw-mt-0 md:tw-mt-1">
+          <div>
+            <Image
+              src={CalendarIcon}
+              width={20}
+              height={20}
+              alt="calendar"
+              className="tw-w-5 tw-h-5  tw-mr-2"
+            />
+          </div>
+          <span className="tw-opacity-80">
+            Tournament Ends:{" "}
+            <span className="tw-font-bold">{formattedEndTime}</span>
+          </span>
+        </div>
+        <div className="tw-flex">
+          <div>
+            <Image
+              src={PrizeIcon}
+              width={20}
+              height={20}
+              alt="calendar"
+              className="tw-w-5 tw-h-5 tw-mr-2"
+            />
+          </div>
+          <span className="tw-opacity-80">
+            Prize: <span className="tw-font-bold ">{pot}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 interface Auction {
