@@ -92,10 +92,21 @@ export async function GET(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
     const tournamentID = req.nextUrl.searchParams.get('tournament_id');
+    const userID = req.nextUrl.searchParams.get('user_id');
+
+    if (tournamentID && userID) {
+      const userWager = await db.collection('tournament_wagers').findOne({
+        tournamentID: new ObjectId(tournamentID),
+        'user._id': new ObjectId(userID),
+        isActive: true
+      });
+      return NextResponse.json(userWager);
+    }
 
     if (tournamentID) {
       const wagers = await db.collection('tournament_wagers').find({
-        $and: [{ tournamentID: new ObjectId(tournamentID) }, { isActive: true }]
+        tournamentID: new ObjectId(tournamentID),
+        isActive: true
       }).toArray();
       return NextResponse.json({ wagers });
     }
