@@ -667,7 +667,7 @@ export const TournamentsListCard = (props: any) => {
         <div className="tw-flex tw-mt-4">
           {auctionEnded ? (
             <span className="tw-text-red-500 tw-font-bold">
-              Tournament has ended
+              Auction has ended
             </span>
           ) : (
             <>
