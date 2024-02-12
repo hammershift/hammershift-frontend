@@ -17,6 +17,8 @@ import SedanPhotoTwo from "../../../public/images/tournament-wager/sedan-photo-t
 import SedanPhotoThree from "../../../public/images/tournament-wager/sedan-photo-three.svg";
 import SedanPhotoFour from "../../../public/images/tournament-wager/sedan-photo-four.svg";
 import SedanPhotoFive from "../../../public/images/tournament-wager/sedan-photo-five.svg";
+import { Auction } from "../(pages)/tournaments/[tournament_id]/page";
+import { TimerProvider, useTimer } from "../_context/TimerContext";
 
 interface TournamentWagerI {
     toggleTournamentWagerModal: () => void;
@@ -26,6 +28,8 @@ interface TournamentWagerI {
         sessionData: any
     ) => void;
     isButtonClicked: boolean;
+    auctionData: Auction[];
+    tournamentData: any;
 }
 
 const TournamentWagerModal: React.FC<TournamentWagerI> = ({
@@ -33,6 +37,8 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
     handleInputs,
     handleSubmit,
     isButtonClicked,
+    auctionData,
+    tournamentData,
 }) => {
     const router = useRouter();
     const { data: session } = useSession();
@@ -50,43 +56,15 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
         console.log(session);
     }, [session]);
 
-    const tournamentWagerPageData = [
-        {
-            _id: "657669afd0bf9483fc2339b9",
-            img: SedanPhotoOne,
-            name: "620-Mile 2019 Ford GT",
-            current_bid: "$904,000",
-            time_left: "12:17:00",
-        },
-        {
-            _id: "6577ba8f65d46f8992df7946",
-            img: SedanPhotoTwo,
-            name: "620-Mile 2019 Ford GT",
-            current_bid: "$904,000",
-            time_left: "12:17:00",
-        },
-        {
-            _id: "6580f91fcf59bfbc4432c65c",
-            img: SedanPhotoThree,
-            name: "620-Mile 2019 Ford GT",
-            current_bid: "$904,000",
-            time_left: "12:17:00",
-        },
-        {
-            _id: "6580f920cf59bfbc4432c680",
-            img: SedanPhotoFour,
-            name: "620-Mile 2019 Ford GT",
-            current_bid: "$904,000",
-            time_left: "12:17:00",
-        },
-        {
-            _id: "6580f920cf59bfbc4432c6b2",
-            img: SedanPhotoFive,
-            name: "620-Mile 2019 Ford GT",
-            current_bid: "$904,000",
-            time_left: "12:17:00",
-        },
-    ];
+    const date = new Date(tournamentData.endTime);
+    const formattedDateString = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+    }).format(date);
 
     return (
         <div className="tw-bg-black md:tw-bg-black/90 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-fixed tw-top-0 tw-left-0 tw-z-50">
@@ -96,7 +74,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
             >
                 <div className="tw-flex tw-items-center tw-mb-6 sm:tw-mb-1 tw-pt-6 tw-px-6 sm:tw-pt-8 sm:tw-px-8">
                     <div className="tw-font-bold tw-text-2xl">
-                        Sedan Champions Tournament
+                        {tournamentData.title}
                     </div>
                     <button
                         type="button"
@@ -134,7 +112,12 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                             <div className="tw-text-xs tw-tracking-widest tw-text-[#40ab3d] tw-font-semibold">
                                 POTENTIAL PRIZE
                             </div>
-                            <div className="tw-text-lg">$1,000</div>
+                            <div className="tw-text-lg">
+                                $
+                                {new Intl.NumberFormat().format(
+                                    tournamentData.pot
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className="tw-flex tw-items-center tw-gap-2 sm:tw-w-1/2">
@@ -150,87 +133,25 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                                 TOURNAMENT ENDS
                             </div>
                             <div className="tw-text-lg">
-                                Jul 5, 2023, 7:00 pm
+                                {formattedDateString}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="tw-mb-[94px] sm:tw-mb-0 sm:tw-max-h-[488px] sm:tw-overflow-y-auto tw-px-6 sm:tw-px-8">
-                    {tournamentWagerPageData.map((auction, index: number) => {
+                    {auctionData.map((auction, index: number) => {
                         return (
-                            <div
+                            <TimerProvider
                                 key={auction._id}
-                                className="sm:tw-flex sm:tw-justify-between sm:tw-pb-4"
+                                deadline={auction.sort.deadline}
                             >
-                                <div className="tw-flex tw-items-center tw-gap-4 tw-mb-2 sm:tw-mb-0">
-                                    <Image
-                                        src={auction.img}
-                                        width={100}
-                                        height={100}
-                                        alt="sedan"
-                                        className="tw-w-[100px] tw-h-[100px]"
-                                    />
-                                    <div>
-                                        <div className="tw-mb-1 tw-font-bold">
-                                            {auction.name}
-                                        </div>
-                                        <div className="tw-flex tw-text-sm tw-items-center tw-gap-1">
-                                            <Image
-                                                src={Dollar}
-                                                width={14}
-                                                height={14}
-                                                alt="sedan"
-                                                className="tw-w-[14px] tw-h-[14px]"
-                                            />
-                                            <div className="tw-text-[#cfd1d3]">
-                                                Current Bid:
-                                            </div>
-                                            <div className="tw-font-bold tw-text-[#49C742]">
-                                                {auction.current_bid}
-                                            </div>
-                                        </div>
-                                        <div className="tw-flex tw-text-sm tw-items-center tw-gap-1">
-                                            <Image
-                                                src={HourGlass}
-                                                width={14}
-                                                height={14}
-                                                alt="sedan"
-                                                className="tw-w-[14px] tw-h-[14px]"
-                                            />
-                                            <div className="tw-text-[#cfd1d3]">
-                                                Time Left:
-                                            </div>
-                                            <div>{auction.time_left}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="tw-relative tw-flex tw-items-center tw-rounded tw-mb-4 sm:tw-mb-0">
-                                    <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
-                                        $
-                                    </div>
-                                    <input
-                                        onWheel={(e) => e.currentTarget.blur()}
-                                        id={auction._id}
-                                        onChange={(e) => handleInputs(e)}
-                                        onKeyDown={(event) => {
-                                            if (
-                                                !(
-                                                    event.key === "Backspace" ||
-                                                    event.key === "Tab" ||
-                                                    event.key === "Enter" ||
-                                                    /\d/.test(event.key)
-                                                )
-                                            ) {
-                                                event.preventDefault();
-                                            }
-                                        }}
-                                        required
-                                        name={`auction_${String(index + 1)}`}
-                                        type="number"
-                                        className="tw-bg-[#172431] focus:tw-outline sm:tw-outline-[6px] tw-outline-[3px] tw-outline-[#273039] tw-p-3 tw-pl-8 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
-                                    />
-                                </div>
-                            </div>
+                                <TournamentModalCard
+                                    auction={auction}
+                                    handleInputs={handleInputs}
+                                    index={index}
+                                    tournamentID={tournamentData._id}
+                                />
+                            </TimerProvider>
                         );
                     })}
                 </div>
@@ -260,3 +181,99 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
 };
 
 export default TournamentWagerModal;
+
+interface TournamentCardI {
+    handleInputs: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    auction: Auction;
+    index: number;
+    tournamentID: string;
+}
+
+export const TournamentModalCard: React.FC<TournamentCardI> = ({
+    handleInputs,
+    auction,
+    index,
+    tournamentID,
+}) => {
+    const timerValues = useTimer();
+
+    return (
+        <div
+            key={auction._id}
+            className="sm:tw-flex sm:tw-justify-between sm:tw-pb-4"
+        >
+            <Link
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`/tournaments/${tournamentID}/${auction.auction_id}`}
+                className="tw-flex tw-items-center tw-gap-4 tw-mb-2 sm:tw-mb-0"
+            >
+                <Image
+                    src={auction.image}
+                    width={100}
+                    height={100}
+                    alt="sedan"
+                    className="tw-w-[100px] tw-h-[100px] tw-rounded tw-object-cover"
+                />
+                <div>
+                    <div className="tw-mb-1 tw-font-bold">
+                        {`${auction.attributes[1].value} ${auction.attributes[2].value} ${auction.attributes[3].value}`}
+                    </div>
+                    <div className="tw-flex tw-text-sm tw-items-center tw-gap-1">
+                        <Image
+                            src={Dollar}
+                            width={14}
+                            height={14}
+                            alt="sedan"
+                            className="tw-w-[14px] tw-h-[14px]"
+                        />
+                        <div className="tw-text-[#cfd1d3]">Current Bid:</div>
+                        <div className="tw-font-bold tw-text-[#49C742]">
+                            $
+                            {new Intl.NumberFormat().format(
+                                auction.attributes[0].value
+                            )}
+                        </div>
+                    </div>
+                    <div className="tw-flex tw-text-sm tw-items-center tw-gap-1">
+                        <Image
+                            src={HourGlass}
+                            width={14}
+                            height={14}
+                            alt="sedan"
+                            className="tw-w-[14px] tw-h-[14px]"
+                        />
+                        <div className="tw-text-[#cfd1d3]">Time Left:</div>
+                        <div>{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+                    </div>
+                </div>
+            </Link>
+            <div className="tw-relative tw-flex tw-items-center tw-rounded tw-mb-4 sm:tw-mb-0">
+                <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
+                    $
+                </div>
+                <input
+                    onWheel={(e) => e.currentTarget.blur()}
+                    id={auction._id}
+                    onChange={(e) => handleInputs(e)}
+                    onKeyDown={(event) => {
+                        if (
+                            !(
+                                event.key === "Backspace" ||
+                                event.key === "Tab" ||
+                                event.key === "Enter" ||
+                                /\d/.test(event.key)
+                            )
+                        ) {
+                            event.preventDefault();
+                        }
+                    }}
+                    required
+                    name={`auction_${String(index + 1)}`}
+                    type="number"
+                    className="tw-bg-[#172431] focus:tw-outline sm:tw-outline-[6px] tw-outline-[3px] tw-outline-[#273039] tw-p-3 tw-pl-8 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
+                />
+            </div>
+        </div>
+    );
+};
