@@ -111,7 +111,6 @@ const TournamentViewPage = ({
                     tournamentData._id,
                     session.user.id
                 );
-                console.log(tournamentWager);
 
                 !tournamentWager
                     ? setAlreadyJoined(false)
@@ -179,6 +178,7 @@ const TournamentViewPage = ({
         sessionData: any
     ) => {
         e.preventDefault();
+        setIsButtonClicked(true);
         if (tournamentData) {
             const wagerArray = Object.values(wagers).map((item: any) => ({
                 auctionID: item.auctionID,
@@ -194,7 +194,6 @@ const TournamentViewPage = ({
 
             try {
                 console.log(tournamentWagerData);
-
                 const tournamentWager = await createTournamentWager(
                     tournamentWagerData
                 );
