@@ -1,6 +1,8 @@
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
 import Auctions from '@/models/auction.model';
+import Tournament from '@/models/tournament';
+import TournamentWager from '@/models/tournament_wager.model';
 import Wager from '@/models/wager';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
@@ -56,7 +58,36 @@ export async function GET(req: NextRequest) {
       })
       .filter((detail) => detail !== null);
 
-    return NextResponse.json({ wagers: wagerDetails }, { status: 200 });
+    const userTournamentWagers = await TournamentWager.find({ 'user._id': userID })
+      .populate({
+        path: 'tournamentID',
+        model: Tournament,
+        select: 'title pot endTime',
+      })
+      .sort({ createdAt: 1 })
+      .exec();
+
+    const tournamentWagerDetails = userTournamentWagers
+      .map((wager) => {
+        if (!wager.tournamentID) {
+          console.error(`Missing auction details for wager with ID: ${wager._id}`);
+          return null;
+        }
+
+        const tournamentDetails = wager.tournamentID;
+
+        return {
+          _id: tournamentDetails._id,
+          tournamentTitle: tournamentDetails.title,
+          pot: tournamentDetails.pot,
+          endTime: tournamentDetails.endTime,
+          buyInAmount: wager.buyInAmount,
+          user: wager.user,
+        };
+      })
+      .filter((detail) => detail !== null);
+
+    return NextResponse.json({ wagers: wagerDetails, tournament_wagers: tournamentWagerDetails }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user wagers:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
