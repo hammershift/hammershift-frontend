@@ -80,7 +80,7 @@ const CarViewData = {
 interface TournamentButtonsI {
     toggleTournamentWagerModal: () => void;
     buyInFee?: number;
-    alreadyJoined: boolean;
+    alreadyJoined?: boolean;
 }
 
 interface TitleSingleCarContainerProps {
