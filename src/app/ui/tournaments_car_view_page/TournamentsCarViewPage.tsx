@@ -40,6 +40,7 @@ import CarIcon from "../../../../public/images/car-01.svg";
 import CommentsIcon from "../../../../public/images/comments-icon.svg";
 import EyeIcon from "../../../../public/images/eye-on.svg";
 import TelescopeIcon from "../../../../public/images/telescope-sharp.svg";
+import CheckIcon from "../../../../public/images/check-black.svg";
 
 import PhotoOne from "../../../../public/images/car-view-page/photoOne.svg";
 import PhotoTwo from "../../../../public/images/car-view-page/photoTwo.svg";
@@ -79,6 +80,7 @@ const CarViewData = {
 interface TournamentButtonsI {
     toggleTournamentWagerModal: () => void;
     buyInFee?: number;
+    alreadyJoined: boolean;
 }
 
 interface TitleSingleCarContainerProps {
@@ -100,10 +102,11 @@ interface TitleSingleCarContainerProps {
 export const TournamentButtons: React.FC<TournamentButtonsI> = ({
     toggleTournamentWagerModal,
     buyInFee,
+    alreadyJoined,
 }) => {
     const router = useRouter();
     return (
-        <div className="tw-flex">
+        <div className="tw-flex tw-gap-4">
             <button className="btn-transparent-white tw-flex ">
                 <Image
                     src={WatchListIcon}
@@ -114,9 +117,22 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
                 />
                 WATCH
             </button>
-            {buyInFee && (
+            {alreadyJoined ? (
                 <button
-                    className="btn-yellow tw-ml-2"
+                    type="button"
+                    disabled
+                    className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+                >
+                    JOINED{" "}
+                    <Image
+                        src={CheckIcon}
+                        alt=""
+                        className="tw-border-2 tw-border-[#0f1923] tw-rounded-full tw-p-[1.5px] tw-w-5 tw-h-5 black-check-filter"
+                    />
+                </button>
+            ) : (
+                <button
+                    className="btn-yellow"
                     onClick={() => {
                         document.body.classList.add("stop-scrolling");
                         toggleTournamentWagerModal();

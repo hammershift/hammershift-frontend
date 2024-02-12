@@ -172,7 +172,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                         disabled={isButtonClicked}
                         className="tw-font-bold tw-p-3 tw-px-[43px] tw-text-center tw-w-full sm:tw-w-auto tw-bg-[#f2ca16] tw-text-[#0f1923] tw-rounded"
                     >
-                        BUY-IN FOR $100
+                        BUY-IN FOR ${tournamentData.buyInFee}
                     </button>
                 </div>
             </form>

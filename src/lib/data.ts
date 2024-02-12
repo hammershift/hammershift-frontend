@@ -846,3 +846,22 @@ export const getAuctionsByTournamentId = async (tournamentID: string) => {
     console.error("Auctions by Tournament ID: ", error);
   }
 };
+
+export const addTournamentPot = async (
+  pot: number,
+  tournamentID: string
+) => {
+  await fetch(`/api/tournament?id=${tournamentID}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ pot: pot }),
+  });
+};
+
+export const getOneTournamentWager = async (tournament_id: string, user_id: string) => {
+  const res = await fetch(`/api/tournamentWager?tournament_id=${tournament_id}&user_id=${user_id}`);
+  const data = await res.json();
+  return data;
+};

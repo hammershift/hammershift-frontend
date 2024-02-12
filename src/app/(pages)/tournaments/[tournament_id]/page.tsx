@@ -29,8 +29,10 @@ import {
     TournamentsYouMightLike,
 } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
 import {
+    addTournamentPot,
     createTournamentWager,
     getAuctionsByTournamentId,
+    getOneTournamentWager,
     getTournamentById,
 } from "@/lib/data";
 import { useSession } from "next-auth/react";
@@ -64,6 +66,7 @@ const TournamentViewPage = ({
 }) => {
     const { data: session } = useSession();
     const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
+    const [alreadyJoined, setAlreadyJoined] = useState(false);
     const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
         useState(false);
     const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -99,7 +102,25 @@ const TournamentViewPage = ({
             }
         };
         fetchTournamentsData();
-    }, [ID]);
+    }, [ID, toggleTournamentWagerModal]);
+
+    useEffect(() => {
+        const checkIfAlreadyWagered = async () => {
+            if (session && tournamentData) {
+                const tournamentWager = await getOneTournamentWager(
+                    tournamentData._id,
+                    session.user.id
+                );
+                console.log(tournamentWager);
+
+                !tournamentWager
+                    ? setAlreadyJoined(false)
+                    : setAlreadyJoined(true);
+            }
+        };
+
+        checkIfAlreadyWagered();
+    }, [toggleTournamentWagerModal, session, tournamentData]);
 
     const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
         switch (e.target.name) {
@@ -177,6 +198,10 @@ const TournamentViewPage = ({
                 const tournamentWager = await createTournamentWager(
                     tournamentWagerData
                 );
+                await addTournamentPot(
+                    tournamentData.buyInFee * 0.88 + tournamentData.pot,
+                    tournamentData._id
+                );
                 setToggleTournamentWagerModal(false);
                 console.log(tournamentWager);
             } catch (error) {
@@ -206,10 +231,13 @@ const TournamentViewPage = ({
                     TOURNAMENT
                 </div>
                 <div className="tw-hidden sm:tw-block">
-                    <TournamentButtons
-                        toggleTournamentWagerModal={toggleModal}
-                        buyInFee={tournamentData?.buyInFee}
-                    />
+                    {tournamentData && (
+                        <TournamentButtons
+                            toggleTournamentWagerModal={toggleModal}
+                            buyInFee={tournamentData.buyInFee}
+                            alreadyJoined={alreadyJoined}
+                        />
+                    )}
                 </div>
             </div>
 
@@ -227,10 +255,13 @@ const TournamentViewPage = ({
                         </TimerProvider>
                     )}
                     <div className="sm:tw-hidden tw-mt-4">
-                        <TournamentButtons
-                            toggleTournamentWagerModal={toggleModal}
-                            buyInFee={tournamentData?.buyInFee}
-                        />
+                        {tournamentData && (
+                            <TournamentButtons
+                                toggleTournamentWagerModal={toggleModal}
+                                buyInFee={tournamentData.buyInFee}
+                                alreadyJoined={alreadyJoined}
+                            />
+                        )}
                     </div>
                     <TournamentsList
                         toggleTournamentWagerModal={toggleModal}
