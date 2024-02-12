@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Links from "../../components/links";
 import { useRouter } from "next/navigation";
 import { TournamentsListCard } from "../../components/card";
@@ -322,8 +322,17 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
   pot,
   endTime,
 }) => {
+  const [isTournamentEnded, setIsTournamentEnded] = useState(false)
   const formattedEndTime = new Date(endTime).toUTCString();
   const timerValues = useTimer();
+
+  useEffect(() => {
+    const endDate = new Date(endTime);
+    if (new Date() > endDate) {
+      setIsTournamentEnded(true);
+    }
+  }, [endTime]);
+  
   return (
     <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
       <Image
@@ -367,10 +376,11 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
           </div>
           <span className="tw-opacity-80">
             Buy-in Ends:{" "}
-            <span className="tw-font-bold tw-text-[#C2451E]">
+            {isTournamentEnded ? (<span className="tw-font-bold tw-text-[#C2451E]">Tournament has ended</span>):(<span className="tw-font-bold tw-text-[#C2451E]">
               {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
               {timerValues.seconds}
-            </span>
+            </span>)}
+            
           </span>
         </div>
         <div className="tw-flex tw-mt-0 md:tw-mt-1">
