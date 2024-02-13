@@ -31,6 +31,7 @@ import {
 import {
     addTournamentPot,
     createTournamentWager,
+    getAllTournamentWagers,
     getAuctionsByTournamentId,
     getOneTournamentWager,
     getTournamentById,
@@ -75,6 +76,7 @@ const TournamentViewPage = ({
         Tournaments | undefined
     >(undefined);
     const [auctionData, setAuctionData] = useState<Auction[]>([]);
+    const [tournamentWagers, setTournamentWagers] = useState([]);
 
     const ID = params.tournament_id;
 
@@ -118,7 +120,15 @@ const TournamentViewPage = ({
             }
         };
 
+        const fetchTournamentWagers = async () => {
+            if (session && tournamentData) {
+                const wagers = await getAllTournamentWagers(tournamentData._id);
+                setTournamentWagers(wagers);
+            }
+        };
+
         checkIfAlreadyWagered();
+        fetchTournamentWagers();
     }, [toggleTournamentWagerModal, session, tournamentData]);
 
     const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -265,10 +275,13 @@ const TournamentViewPage = ({
                     <TournamentsList
                         toggleTournamentWagerModal={toggleModal}
                         auctionData={auctionData}
+                        alreadyJoined={alreadyJoined}
                     />
                     <div className="sm:tw-hidden tw-my-8">
                         <TournamentWagersSection
+                            tournamentWagers={tournamentWagers}
                             toggleTournamentWagerModal={toggleModal}
+                            alreadyJoined={alreadyJoined}
                         />
                         <TournamentInfoSection />
                     </div>
@@ -276,7 +289,9 @@ const TournamentViewPage = ({
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
                     <TournamentWagersSection
+                        tournamentWagers={tournamentWagers}
                         toggleTournamentWagerModal={toggleModal}
+                        alreadyJoined={alreadyJoined}
                     />
                     <TournamentInfoSection />
                 </div>
