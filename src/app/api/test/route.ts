@@ -2,6 +2,7 @@
 // import prizeDistribution from '@/helpers/prizeDistribution';
 
 import { addWagerWinnings } from '@/helpers/addWagerWinnings';
+import { calculateTournamentScores } from '@/helpers/calculateTournamentScores';
 import { createWinningTransaction } from '@/helpers/createWinningTransaction';
 import prizeDistribution from '@/helpers/prizeDistribution';
 import { refundWagers } from '@/helpers/refundWagers';
@@ -148,3 +149,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 //   return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
 // }
+
+export async function POST(req: NextRequest) {
+  try {
+    const { userWagers, auctions } = await req.json();
+
+    if (!userWagers || !auctions) {
+      return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
+    }
+
+    const tournamentResults = calculateTournamentScores(userWagers, auctions);
+    return NextResponse.json({ tournamentResults });
+  } catch (error) {
+    console.error('Error in calculateTournamentScores:', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  }
+}
