@@ -108,7 +108,7 @@ export async function GET(req: NextRequest) {
         tournamentID: new ObjectId(tournamentID),
         isActive: true
       }).toArray();
-      return NextResponse.json({ wagers });
+      return NextResponse.json(wagers);
     }
 
     const wagers = await db.collection('tournament_wagers').find().toArray();

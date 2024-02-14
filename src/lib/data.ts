@@ -865,3 +865,9 @@ export const getOneTournamentWager = async (tournament_id: string, user_id: stri
   const data = await res.json();
   return data;
 };
+
+export const getAllTournamentWagers = async (tournament_id: string) => {
+  const res = await fetch(`/api/tournamentWager?tournament_id=${tournament_id}`);
+  const data = await res.json();
+  return data;
+}

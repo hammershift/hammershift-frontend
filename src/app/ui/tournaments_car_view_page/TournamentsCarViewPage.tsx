@@ -60,9 +60,11 @@ import AvatarFour from "../../../../public/images/avatar-four.svg";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { carDataThree } from "@/sample_data";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 import CarImageModal from "@/app/components/car_image_modal";
+dayjs.extend(relativeTime);
 
 const CarViewData = {
     name: "13k-Mile 2011 Mercedes Benz SLS AMG",
@@ -358,99 +360,104 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
     pot,
     endTime,
 }) => {
-  const [isTournamentEnded, setIsTournamentEnded] = useState(false)
-  const formattedEndTime = new Date(endTime).toUTCString();
-  const timerValues = useTimer();
+    const [isTournamentEnded, setIsTournamentEnded] = useState(false);
+    const formattedEndTime = new Date(endTime).toUTCString();
+    const timerValues = useTimer();
 
-  useEffect(() => {
-    const endDate = new Date(endTime);
-    if (new Date() > endDate) {
-      setIsTournamentEnded(true);
-    }
-  }, [endTime]);
-  
-  return (
-    <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
-      <Image
-        src={CarsImage}
-        width={144}
-        height={32}
-        alt="cars image"
-        className="tw-w-36 tw-h-auto"
-      />
-      <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-        {title}
-      </div>
-      <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6">
-        <div className="tw-flex">
-          <div>
+    useEffect(() => {
+        const endDate = new Date(endTime);
+        if (new Date() > endDate) {
+            setIsTournamentEnded(true);
+        }
+    }, [endTime]);
+
+    return (
+        <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
             <Image
-              src={CarIcon}
-              width={20}
-              height={20}
-              alt="calendar"
-              className="tw-w-5 tw-h-5  tw-mr-2"
+                src={CarsImage}
+                width={144}
+                height={32}
+                alt="cars image"
+                className="tw-w-36 tw-h-auto"
             />
-          </div>
-          <span className="tw-opacity-80">
-            Cars:{" "}
-            <span className="tw-font-bold">
-              {cars}
-              {" cars"}
-            </span>
-          </span>
+            <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
+                {title}
+            </div>
+            <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-mt-6">
+                <div className="tw-flex">
+                    <div>
+                        <Image
+                            src={CarIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5  tw-mr-2"
+                        />
+                    </div>
+                    <span className="tw-opacity-80">
+                        Cars:{" "}
+                        <span className="tw-font-bold">
+                            {cars}
+                            {" cars"}
+                        </span>
+                    </span>
+                </div>
+                <div className="tw-flex">
+                    <div>
+                        <Image
+                            src={HourGlassIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5  tw-mr-2"
+                        />
+                    </div>
+                    <span className="tw-opacity-80">
+                        Buy-in Ends:{" "}
+                        {isTournamentEnded ? (
+                            <span className="tw-font-bold tw-text-[#C2451E]">
+                                Tournament has ended
+                            </span>
+                        ) : (
+                            <span className="tw-font-bold tw-text-[#C2451E]">
+                                {timerValues.days}:{timerValues.hours}:
+                                {timerValues.minutes}:{timerValues.seconds}
+                            </span>
+                        )}
+                    </span>
+                </div>
+                <div className="tw-flex tw-mt-0 md:tw-mt-1">
+                    <div>
+                        <Image
+                            src={CalendarIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5  tw-mr-2"
+                        />
+                    </div>
+                    <span className="tw-opacity-80">
+                        Tournament Ends:{" "}
+                        <span className="tw-font-bold">{formattedEndTime}</span>
+                    </span>
+                </div>
+                <div className="tw-flex">
+                    <div>
+                        <Image
+                            src={PrizeIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5 tw-mr-2"
+                        />
+                    </div>
+                    <span className="tw-opacity-80">
+                        Prize: <span className="tw-font-bold ">{pot}</span>
+                    </span>
+                </div>
+            </div>
         </div>
-        <div className="tw-flex">
-          <div>
-            <Image
-              src={HourGlassIcon}
-              width={20}
-              height={20}
-              alt="calendar"
-              className="tw-w-5 tw-h-5  tw-mr-2"
-            />
-          </div>
-          <span className="tw-opacity-80">
-            Buy-in Ends:{" "}
-            {isTournamentEnded ? (<span className="tw-font-bold tw-text-[#C2451E]">Tournament has ended</span>):(<span className="tw-font-bold tw-text-[#C2451E]">
-              {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
-              {timerValues.seconds}
-            </span>)}
-            
-          </span>
-        </div>
-        <div className="tw-flex tw-mt-0 md:tw-mt-1">
-          <div>
-            <Image
-              src={CalendarIcon}
-              width={20}
-              height={20}
-              alt="calendar"
-              className="tw-w-5 tw-h-5  tw-mr-2"
-            />
-          </div>
-          <span className="tw-opacity-80">
-            Tournament Ends:{" "}
-            <span className="tw-font-bold">{formattedEndTime}</span>
-          </span>
-        </div>
-        <div className="tw-flex">
-          <div>
-            <Image
-              src={PrizeIcon}
-              width={20}
-              height={20}
-              alt="calendar"
-              className="tw-w-5 tw-h-5 tw-mr-2"
-            />
-          </div>
-          <span className="tw-opacity-80">
-            Prize: <span className="tw-font-bold ">{pot}</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 interface Auction {
@@ -464,11 +471,15 @@ interface Auction {
 interface TournamentListI {
     toggleTournamentWagerModal: () => void;
     auctionData: Auction[];
+    alreadyJoined: boolean;
+    tournamentID: string;
 }
 
 export const TournamentsList: React.FC<TournamentListI> = ({
     toggleTournamentWagerModal,
     auctionData,
+    alreadyJoined,
+    tournamentID,
 }) => {
     const router = useRouter();
 
@@ -477,14 +488,10 @@ export const TournamentsList: React.FC<TournamentListI> = ({
             <div className="tw-text-3xl tw-font-bold">Cars in Tournament</div>
             <div className="tw-flex tw-flex-col">
                 {auctionData.map((item, index) => (
-                    <div
+                    <Link
+                        href={`/tournaments/${tournamentID}/${item.auction_id}`}
                         key={index}
                         className="hover:tw-cursor-pointer"
-                        onClick={() =>
-                            router.push(
-                                `/tournaments/${item.tournamentID}/${item.auction_id}`
-                            )
-                        }
                     >
                         <TimerProvider deadline={item.attributes[12].value}>
                             <TournamentsListCard
@@ -498,18 +505,20 @@ export const TournamentsList: React.FC<TournamentListI> = ({
                                 deadline={item.attributes[12].value}
                             />
                         </TimerProvider>
-                    </div>
+                    </Link>
                 ))}
             </div>
-            <button
-                className="btn-yellow tw-w-full tw-mt-8"
-                onClick={() => {
-                    document.body.classList.add("stop-scrolling");
-                    toggleTournamentWagerModal();
-                }}
-            >
-                BUY-IN FOR $100
-            </button>
+            {!alreadyJoined && (
+                <button
+                    className="btn-yellow tw-w-full tw-mt-8"
+                    onClick={() => {
+                        document.body.classList.add("stop-scrolling");
+                        toggleTournamentWagerModal();
+                    }}
+                >
+                    BUY-IN FOR $100
+                </button>
+            )}
         </div>
     );
 };
@@ -648,7 +657,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
 export const TournamentInfoSection = () => {
     return (
         <div>
-            <div className="tw-mt-8 lg:tw-mt-16 tw-p-6 tw-bg-[#172431]">
+            <div className="tw-mt-8 tw-p-6 tw-bg-[#172431] tw-rounded-lg">
                 <Image
                     src={ThropyIconBlue}
                     width={68}
@@ -834,137 +843,104 @@ export const CommentsCard = () => {
 
 interface TournamentWagerSectionI {
     toggleTournamentWagerModal: () => void;
+    tournamentWagers: any[];
+    alreadyJoined: boolean;
 }
 
 export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
     toggleTournamentWagerModal,
+    tournamentWagers,
+    alreadyJoined,
 }) => {
-    const teamPlayers = [
-        {
-            id: "wager1",
-            username: "Username",
-            avatar: AvatarOne,
-            time: "2 hours ago",
-        },
-        {
-            id: "wager2",
-            username: "Username",
-            avatar: AvatarTwo,
-            time: "3 hours ago",
-        },
-        {
-            id: "wager3",
-            username: "Username",
-            avatar: AvatarThree,
-            time: "2 days ago",
-        },
-        {
-            id: "wager4",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-        {
-            id: "wager5",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-        {
-            id: "wager6",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-        {
-            id: "wager7",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-        {
-            id: "wager8",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-        {
-            id: "wager9",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-        {
-            id: "wager10",
-            username: "Username",
-            avatar: AvatarFour,
-            time: "2 days ago",
-        },
-    ];
     return (
         <div>
             <div className="tw-relative tw-pb-8 sm:tw-pb-0">
-                <div className="tw-px-5 tw-w-full tw-h-auto tw-pt-8 tw-pb-6">
-                    <div className="tw-flex tw-justify-between">
-                        <div className="tw-font-bold tw-text-[18px]">
-                            PLAYERS
+                <div className="tw-p-6 tw-w-full tw-h-auto">
+                    <div className="tw-mb-6">
+                        <div className="tw-flex tw-justify-between">
+                            <div className="tw-font-bold tw-text-[18px]">
+                                PLAYERS
+                            </div>
+                            <Image
+                                src={ArrowDown}
+                                width={20}
+                                height={20}
+                                alt="arrow down"
+                                className="tw-w-5 tw-h-5"
+                            />
                         </div>
-                        <Image
-                            src={ArrowDown}
-                            width={20}
-                            height={20}
-                            alt="arrow down"
-                            className="tw-w-5 tw-h-5"
-                        />
+                        <div className="tw-text-[14px]">
+                            {tournamentWagers.length
+                                ? tournamentWagers.length
+                                : 0}{" "}
+                            Players
+                        </div>
                     </div>
-                    <div className="tw-text-[14px]">18 Players</div>
-                    <div className="tw-relative tw-mt-4">
-                        {teamPlayers.map((player) => {
+                    <div>
+                        {tournamentWagers.map((wager) => {
                             return (
                                 <div
-                                    key={player.id}
-                                    className="tw-my-5 tw-flex"
+                                    key={wager._id}
+                                    className="tw-flex tw-items-center tw-py-2"
                                 >
                                     <div className="tw-flex">
                                         <Image
-                                            src={player.avatar}
-                                            width={40}
-                                            height={40}
+                                            src={
+                                                wager.user.image
+                                                    ? wager.user.image
+                                                    : AvatarOne
+                                            }
+                                            width={44}
+                                            height={44}
                                             alt="dollar"
-                                            className="tw-w-[40px] tw-h-[40px] tw-mr-4"
+                                            className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
+                                            onClick={() =>
+                                                console.log(wager.user.image)
+                                            }
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
-                                                {player.username}
+                                                {wager.user.username}
                                             </div>
-                                            <div className="tw-opacity-50">{`Joined ${player.time}`}</div>
+                                            <div className="tw-opacity-50">{`Joined ${dayjs(
+                                                wager.createdAt
+                                            ).fromNow()}`}</div>
                                         </div>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
-                    <button className="btn-transparent-white tw-w-full tw-mt-2">
-                        More Players...
-                    </button>
-                    <button
-                        onClick={() => {
-                            document.body.classList.add("stop-scrolling");
-                            toggleTournamentWagerModal();
-                        }}
-                        className="btn-yellow tw-w-full tw-mt-2"
-                    >
-                        JOIN TOURNAMENT
-                    </button>
+                    {tournamentWagers.length > 4 ? (
+                        <button className="btn-transparent-white tw-w-full tw-mt-2">
+                            More Players...
+                        </button>
+                    ) : null}
+
+                    {!alreadyJoined && (
+                        <button
+                            onClick={() => {
+                                document.body.classList.add("stop-scrolling");
+                                toggleTournamentWagerModal();
+                            }}
+                            className={`btn-yellow tw-w-full ${
+                                tournamentWagers.length > 4
+                                    ? "tw-mt-2"
+                                    : "tw-mt-6"
+                            }`}
+                        >
+                            JOIN TOURNAMENT
+                        </button>
+                    )}
                 </div>
                 {/* Background and button*/}
-                <div className="tw-absolute tw-top-0 tw-h-full tw-z-[-1] tw-w-full">
+                <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
                     <Image
                         src={TransitionPattern}
                         width={288}
                         height={356}
                         alt="pattern"
-                        className="tw-w-full tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover"
+                        className="tw-w-full tw-h-auto tw-rounded-lg tw-mr-1 tw-object-cover"
                     />
                     <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]"></div>
                 </div>
@@ -1007,7 +983,7 @@ export const DetailsSection = () => {
         ],
     };
     return (
-        <div className="tw-mt-8 tw-bg-[#172431] tw-p-6">
+        <div className="tw-bg-[#172431] tw-p-6 tw-rounded-lg">
             <div className="tw-flex tw-justify-between tw-py-2">
                 <div className="tw-font-bold tw-text-[18px]">DETAILS</div>
                 <Image
