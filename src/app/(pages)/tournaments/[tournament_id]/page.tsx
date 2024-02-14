@@ -39,7 +39,7 @@ import {
 import { useSession } from "next-auth/react";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 
-interface Tournaments {
+export interface Tournaments {
     _id: string;
     title: string;
     pot: number;
@@ -235,7 +235,7 @@ const TournamentViewPage = ({
                     isButtonClicked={isButtonClicked}
                 />
             ) : null}
-            <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-16">
+            <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
                 <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
                     TOURNAMENT
                 </div>
@@ -276,6 +276,7 @@ const TournamentViewPage = ({
                         toggleTournamentWagerModal={toggleModal}
                         auctionData={auctionData}
                         alreadyJoined={alreadyJoined}
+                        tournamentID={ID}
                     />
                     <div className="sm:tw-hidden tw-my-8">
                         <TournamentWagersSection

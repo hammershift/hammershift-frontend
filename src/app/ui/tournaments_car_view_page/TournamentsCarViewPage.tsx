@@ -472,12 +472,14 @@ interface TournamentListI {
     toggleTournamentWagerModal: () => void;
     auctionData: Auction[];
     alreadyJoined: boolean;
+    tournamentID: string;
 }
 
 export const TournamentsList: React.FC<TournamentListI> = ({
     toggleTournamentWagerModal,
     auctionData,
     alreadyJoined,
+    tournamentID,
 }) => {
     const router = useRouter();
 
@@ -486,14 +488,10 @@ export const TournamentsList: React.FC<TournamentListI> = ({
             <div className="tw-text-3xl tw-font-bold">Cars in Tournament</div>
             <div className="tw-flex tw-flex-col">
                 {auctionData.map((item, index) => (
-                    <div
+                    <Link
+                        href={`/tournaments/${tournamentID}/${item.auction_id}`}
                         key={index}
                         className="hover:tw-cursor-pointer"
-                        onClick={() =>
-                            router.push(
-                                `/tournaments/${item.tournamentID}/${item.auction_id}`
-                            )
-                        }
                     >
                         <TimerProvider deadline={item.attributes[12].value}>
                             <TournamentsListCard
@@ -507,7 +505,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
                                 deadline={item.attributes[12].value}
                             />
                         </TimerProvider>
-                    </div>
+                    </Link>
                 ))}
             </div>
             {!alreadyJoined && (
@@ -857,29 +855,33 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
     return (
         <div>
             <div className="tw-relative tw-pb-8 sm:tw-pb-0">
-                <div className="tw-px-5 tw-w-full tw-h-auto tw-pt-8 tw-pb-6">
-                    <div className="tw-flex tw-justify-between">
-                        <div className="tw-font-bold tw-text-[18px]">
-                            PLAYERS
+                <div className="tw-p-6 tw-w-full tw-h-auto">
+                    <div className="tw-mb-6">
+                        <div className="tw-flex tw-justify-between">
+                            <div className="tw-font-bold tw-text-[18px]">
+                                PLAYERS
+                            </div>
+                            <Image
+                                src={ArrowDown}
+                                width={20}
+                                height={20}
+                                alt="arrow down"
+                                className="tw-w-5 tw-h-5"
+                            />
                         </div>
-                        <Image
-                            src={ArrowDown}
-                            width={20}
-                            height={20}
-                            alt="arrow down"
-                            className="tw-w-5 tw-h-5"
-                        />
+                        <div className="tw-text-[14px]">
+                            {tournamentWagers.length
+                                ? tournamentWagers.length
+                                : 0}{" "}
+                            Players
+                        </div>
                     </div>
-                    <div className="tw-text-[14px]">
-                        {tournamentWagers.length ? tournamentWagers.length : 0}{" "}
-                        Players
-                    </div>
-                    <div className="tw-relative tw-mt-4">
+                    <div>
                         {tournamentWagers.map((wager) => {
                             return (
                                 <div
                                     key={wager._id}
-                                    className="tw-my-5 tw-flex"
+                                    className="tw-flex tw-items-center tw-py-2"
                                 >
                                     <div className="tw-flex">
                                         <Image
@@ -888,10 +890,10 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                                                     ? wager.user.image
                                                     : AvatarOne
                                             }
-                                            width={40}
-                                            height={40}
+                                            width={44}
+                                            height={44}
                                             alt="dollar"
-                                            className="tw-w-[40px] tw-h-[40px] tw-mr-4 tw-rounded-full"
+                                            className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
                                             onClick={() =>
                                                 console.log(wager.user.image)
                                             }
@@ -909,29 +911,36 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                             );
                         })}
                     </div>
-                    <button className="btn-transparent-white tw-w-full tw-mt-2">
-                        More Players...
-                    </button>
+                    {tournamentWagers.length > 4 ? (
+                        <button className="btn-transparent-white tw-w-full tw-mt-2">
+                            More Players...
+                        </button>
+                    ) : null}
+
                     {!alreadyJoined && (
                         <button
                             onClick={() => {
                                 document.body.classList.add("stop-scrolling");
                                 toggleTournamentWagerModal();
                             }}
-                            className="btn-yellow tw-w-full tw-mt-2"
+                            className={`btn-yellow tw-w-full ${
+                                tournamentWagers.length > 4
+                                    ? "tw-mt-2"
+                                    : "tw-mt-6"
+                            }`}
                         >
                             JOIN TOURNAMENT
                         </button>
                     )}
                 </div>
                 {/* Background and button*/}
-                <div className="tw-absolute tw-top-0 tw-h-full tw-z-[-1] tw-w-full">
+                <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
                     <Image
                         src={TransitionPattern}
                         width={288}
                         height={356}
                         alt="pattern"
-                        className="tw-w-full tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover"
+                        className="tw-w-full tw-h-auto tw-rounded-lg tw-mr-1 tw-object-cover"
                     />
                     <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]"></div>
                 </div>
@@ -974,7 +983,7 @@ export const DetailsSection = () => {
         ],
     };
     return (
-        <div className="tw-mt-8 tw-bg-[#172431] tw-p-6">
+        <div className="tw-bg-[#172431] tw-p-6 tw-rounded-lg">
             <div className="tw-flex tw-justify-between tw-py-2">
                 <div className="tw-font-bold tw-text-[18px]">DETAILS</div>
                 <Image
