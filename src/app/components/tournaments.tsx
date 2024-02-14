@@ -33,8 +33,8 @@ const Tournaments = () => {
     const fetchTournamentsData = async () => {
       try {
         const res = await getTournaments();
-        const tournamentsArray = res.tournaments; // Extract the tournaments array from the response
-        setTournamentsData(tournamentsArray); // Set the extracted array to your state
+        const tournamentsArray = res.tournaments;
+        setTournamentsData(tournamentsArray);
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
