@@ -43,6 +43,10 @@ const tournamentWagerSchema = new mongoose.Schema({
     type: Number,
     required: false,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 }, { timestamps: true });
 
 const TournamentWager = mongoose.models.tournament_wager || mongoose.model('tournament_wager', tournamentWagerSchema);

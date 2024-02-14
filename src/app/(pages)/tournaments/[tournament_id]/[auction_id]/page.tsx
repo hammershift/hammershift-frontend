@@ -18,9 +18,13 @@ import {
     addPrizePool,
     createTournamentWager,
     createWager,
+    getAllTournamentWagers,
+    getAuctionsByTournamentId,
     getCarData,
     getComments,
+    getOneTournamentWager,
     getOneUserWager,
+    getTournamentById,
     getWagers,
     sortByNewGames,
 } from "@/lib/data";
@@ -36,8 +40,14 @@ import { carDataThree } from "../../../../../sample_data";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import Image from "next/image";
 import Links from "@/app/components/links";
+import Tournaments from "@/app/components/tournaments";
+import { Auction } from "../page";
 
-const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
+const SingleViewPage = ({
+    params,
+}: {
+    params: { auction_id: string; tournament_id: string };
+}) => {
     const urlPath = useParams();
     const { data: session, status } = useSession();
 
@@ -59,10 +69,68 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
     const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
         useState(false);
 
+    const [tournamentWagers, setTournamentWagers] = useState([]);
+    const [tournamentData, setTournamentData] = useState<
+        Tournaments | undefined
+    >(undefined);
+    const [alreadyJoined, setAlreadyJoined] = useState(false);
+    const [auctionData, setAuctionData] = useState<Auction[]>([]);
+
     // const router = useRouter();
 
     const ID = params.auction_id;
-    console.log("ID: ", ID);
+    const TournamentID = params.tournament_id;
+
+    useEffect(() => {
+        const fetchAuctionData = async () => {
+            try {
+                const data = await getAuctionsByTournamentId(TournamentID);
+                console.log("auctions: ", data);
+                setAuctionData(data);
+            } catch (error) {
+                console.error("Failed to fetch auctions data:", error);
+            }
+        };
+        fetchAuctionData();
+    }, [TournamentID]);
+
+    useEffect(() => {
+        const fetchTournamentsData = async () => {
+            try {
+                const data = await getTournamentById(TournamentID);
+                console.log("tournament: ", data);
+                setTournamentData(data);
+            } catch (error) {
+                console.error("Failed to fetch tournament data:", error);
+            }
+        };
+        fetchTournamentsData();
+    }, [TournamentID, toggleTournamentWagerModal]);
+
+    useEffect(() => {
+        const checkIfAlreadyWagered = async () => {
+            if (session && tournamentData) {
+                const tournamentWager = await getOneTournamentWager(
+                    tournamentData._id,
+                    session.user.id
+                );
+
+                !tournamentWager
+                    ? setAlreadyJoined(false)
+                    : setAlreadyJoined(true);
+            }
+        };
+
+        const fetchTournamentWagers = async () => {
+            if (session && tournamentData) {
+                const wagers = await getAllTournamentWagers(tournamentData._id);
+                setTournamentWagers(wagers);
+            }
+        };
+
+        checkIfAlreadyWagered();
+        fetchTournamentWagers();
+    }, [toggleTournamentWagerModal, session, tournamentData]);
 
     // TEST IMPLEMENTATION
     useEffect(() => {
@@ -102,7 +170,6 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
 
             setCarData(data);
             console.log("car data: ", data);
-            setWagerInputs({ ...wagerInputs, auctionID: data?._id });
             setWinners(data?.winners);
 
             if (session) {
@@ -148,139 +215,6 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
             document.body.classList.remove("body-no-scroll");
         };
     }, [toggleWagerModal]);
-
-    const showWagerModal = () => {
-        setToggleWagerModal(!toggleWagerModal);
-    };
-
-    const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({});
-
-    interface WagerInputsI {
-        auctionID?: string;
-        priceGuessed?: number;
-        wagerAmount?: number | undefined;
-    }
-
-    const handleWagerInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(e.target.value);
-        switch (e.target.name) {
-            case "price-guessed":
-                setWagerInputs({
-                    ...wagerInputs,
-                    priceGuessed: value,
-                });
-                break;
-            case "wager-amount":
-                if (value <= 0) {
-                    // check for positive numbers
-                    setIsWagerValid(false);
-                    setWagerErrorMessage("Please enter a valid wager amount.");
-                } else if (value > walletBalance) {
-                    // check if the user has enough funds
-                    setIsWagerValid(false);
-                    setWagerErrorMessage(
-                        "Insufficient funds. Please top-up your wallet."
-                    );
-                } else {
-                    // if the input is valid and the user has enough funds
-                    setIsWagerValid(true);
-                    setWagerErrorMessage("");
-                }
-                setWagerInputs({
-                    ...wagerInputs,
-                    wagerAmount: value,
-                });
-                break;
-            default:
-                break;
-        }
-    };
-
-    const handleWagerSubmit = async (
-        e: React.FormEvent<HTMLFormElement>,
-        sessionData: any
-    ) => {
-        e.preventDefault();
-        setIsButtonClicked(true);
-        const fixedWagerAmount = 10;
-
-        // if (String(wagerInputs.priceGuessed).includes(".")) {
-        //     if (wagerInputs.priceGuessed) {
-        //         console.log(Math.floor(wagerInputs.priceGuessed));
-        //     }
-        // }
-
-        const pattern = /^[0-9]+$/;
-        if (pattern.test(String(wagerInputs.priceGuessed))) {
-            setInvalidPrice(false);
-        } else {
-            setInvalidPrice(true);
-            return;
-        }
-
-        if (pattern.test(String(fixedWagerAmount))) {
-            setInvalidWager(false);
-        } else {
-            setInvalidWager(true);
-            return;
-        }
-        // ensure wagerAmount is defined and is a number greater than zero
-        const wagerAmount = wagerInputs.wagerAmount ?? 0;
-        if (fixedWagerAmount > walletBalance) {
-            console.log("Insufficient funds. Please top-up your wallet."); // check if the defined wager amount is more than the wallet balance
-            setInsufficientFunds(true);
-            return;
-        } else {
-            setInsufficientFunds(false);
-        }
-
-        try {
-            // update the prize pool
-            await addPrizePool(
-                {
-                    pot:
-                        carData.pot + Math.floor(fixedWagerAmount * 0.88) ||
-                        Math.floor(fixedWagerAmount * 0.88),
-                },
-                urlPath.id
-            );
-
-            // deduct the wagerAmount from the wallet
-            const walletResponse = await fetch("/api/wallet", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ wagerAmount: fixedWagerAmount }),
-            });
-
-            const walletData = await walletResponse.json();
-            if (!walletResponse.ok) {
-                console.error("Failed to update wallet balance:", walletData); // if the wallet update was not successful, log the error and stop
-                return;
-            }
-
-            // the wallet has been successfully updated, place the wager
-            const wagerResponse = await createWager({
-                ...wagerInputs,
-                wagerAmount: fixedWagerAmount,
-                user: sessionData.user,
-                auctionIdentifierId: carData.auction_id,
-            });
-            if (!wagerResponse.ok) {
-                console.error("Failed to place wager");
-                return;
-            }
-
-            // wallet update and wager placement were both successful
-            console.log(
-                "Wager placed successfully. Wallet updated:",
-                walletData
-            );
-            setWalletBalance(walletData.newBalance);
-            setToggleWagerModal(false);
-        } catch (error) {
-            console.error("Error in wager placement or wallet update:", error);
-        }
-    };
 
     const toggleCarImageModal = () => {
         setShowCarImageModal((prev) => !prev);
@@ -375,6 +309,16 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
 
     return (
         <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
+            {toggleTournamentWagerModal ? (
+                <TournamentWagerModal
+                    tournamentData={tournamentData}
+                    auctionData={auctionData}
+                    handleSubmit={handleSubmit}
+                    handleInputs={handleInputs}
+                    toggleTournamentWagerModal={toggleModal}
+                    isButtonClicked={isButtonClicked}
+                />
+            ) : null}
             <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
                 <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
                     TOURNAMENT
@@ -438,7 +382,9 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
                     <div className="tw-block sm:tw-hidden tw-mt-8">
                         {wagersData ? (
                             <TournamentWagersSection
+                                tournamentWagers={tournamentWagers}
                                 toggleTournamentWagerModal={toggleModal}
+                                alreadyJoined={alreadyJoined}
                             />
                         ) : null}
                     </div>
@@ -459,7 +405,9 @@ const SingleViewPage = ({ params }: { params: { auction_id: string } }) => {
                     ) : null}
                     {wagersData ? (
                         <TournamentWagersSection
+                            tournamentWagers={tournamentWagers}
                             toggleTournamentWagerModal={toggleModal}
+                            alreadyJoined={alreadyJoined}
                         />
                     ) : null}
                     {carData ? <DetailsSection /> : null}
