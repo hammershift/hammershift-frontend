@@ -388,7 +388,7 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
             Buy-in Ends:{" "}
             {isTournamentEnded ? (
               <span className="tw-font-bold tw-text-[#C2451E]">
-                Tournament has ended
+                Ended {dayjs(endTime).fromNow()}
               </span>
             ) : (
               <span className="tw-font-bold tw-text-[#C2451E]">
@@ -424,7 +424,11 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
             />
           </div>
           <span className="tw-opacity-80">
-            Prize: <span className="tw-font-bold ">{pot}</span>
+            Prize:{" "}
+            <span className="tw-font-bold ">
+              {" "}
+              ${pot ? new Intl.NumberFormat().format(pot) : "--"}
+            </span>
           </span>
         </div>
       </div>
@@ -441,6 +445,7 @@ interface Auction {
 }
 
 interface TournamentListI {
+  buyInFee?: number;
   toggleTournamentWagerModal: () => void;
   auctionData: Auction[];
   alreadyJoined: boolean;
@@ -448,6 +453,7 @@ interface TournamentListI {
 }
 
 export const TournamentsList: React.FC<TournamentListI> = ({
+  buyInFee,
   toggleTournamentWagerModal,
   auctionData,
   alreadyJoined,
@@ -470,6 +476,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
                 index={index}
                 auction_id={item.auction_id}
                 img={item.image}
+                hammer_price={item.attributes[0].value}
                 year={item.attributes[1].value}
                 make={item.attributes[2].value}
                 model={item.attributes[3].value}
@@ -488,7 +495,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
             toggleTournamentWagerModal();
           }}
         >
-          BUY-IN FOR $100
+          BUY-IN FOR ${buyInFee}
         </button>
       )}
     </div>

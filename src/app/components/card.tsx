@@ -633,8 +633,17 @@ export const TournamentsCard = ({
 };
 
 export const TournamentsListCard = (props: any) => {
-  const { index, auction_id, img, year, make, model, description, deadline } =
-    props;
+  const {
+    index,
+    auction_id,
+    hammer_price,
+    img,
+    year,
+    make,
+    model,
+    description,
+    deadline,
+  } = props;
   const [auctionEnded, setIsAuctionEnded] = useState(false);
   const timerValues = useTimer();
 
@@ -666,8 +675,11 @@ export const TournamentsListCard = (props: any) => {
         </div>
         <div className="tw-flex tw-mt-4">
           {auctionEnded ? (
-            <span className="tw-text-red-500 tw-font-bold">
-              Auction has ended
+            <span className="tw-text-black tw-bg-yellow-400 tw-rounded-md tw-px-2 tw-py-1 tw-font-bold">
+              Hammer Price: $
+              {hammer_price
+                ? new Intl.NumberFormat().format(hammer_price)
+                : "--"}
             </span>
           ) : (
             <>

@@ -59,11 +59,18 @@ const TournamentsList = () => {
   return (
     <div>
       <div className="tw-mt-5">
-        <span className="tw-bg-[#156CC3] tw-rounded-full tw-px-2.5 tw-py-2 tw-font-bold">
-          ACTIVE TOURNAMENTS
-        </span>
+        <div className="tw-flex tw-justify-between">
+          {" "}
+          <span className="tw-bg-[#156CC3] tw-rounded-full tw-px-2.5 tw-py-2 tw-font-bold">
+            ACTIVE TOURNAMENTS
+          </span>
+          <select className="tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate">
+            <option>Newly Listed</option>
+            <option>Ending Soon</option>
+          </select>
+        </div>
       </div>
-      <div className="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
+      <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
         {tournamentsData &&
           tournamentsData.map((tournament) => {
             const imagesForTournament =

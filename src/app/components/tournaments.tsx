@@ -11,6 +11,7 @@ import { getAuctionsByTournamentId, getTournaments } from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
 
 interface Tournaments {
+  buyInFee: number;
   _id: string;
   title: string;
   pot: number;
