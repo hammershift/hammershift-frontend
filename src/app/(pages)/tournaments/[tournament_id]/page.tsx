@@ -68,7 +68,6 @@ const TournamentViewPage = ({
         const fetchAuctionData = async () => {
             try {
                 const data = await getAuctionsByTournamentId(ID);
-                console.log("auctions: ", data);
                 setAuctionData(data);
             } catch (error) {
                 console.error("Failed to fetch auctions data:", error);
@@ -95,7 +94,6 @@ const TournamentViewPage = ({
                 const data = await getTournamentById(ID);
                 const currentDate = new Date();
                 const auctionDeadline = new Date(data?.endTime);
-                console.log("tournament: ", data);
                 setTournamentData(data);
                 setTournamentEnded(auctionDeadline < currentDate);
             } catch (error) {
@@ -200,9 +198,9 @@ const TournamentViewPage = ({
                 buyInAmount: tournamentData.buyInFee,
                 user: sessionData,
             };
+            console.log(tournamentWagerData);
 
             try {
-                console.log(tournamentWagerData);
                 const tournamentWager = await createTournamentWager(
                     tournamentWagerData
                 );
@@ -211,7 +209,6 @@ const TournamentViewPage = ({
                     tournamentData._id
                 );
                 setToggleTournamentWagerModal(false);
-                console.log(tournamentWager);
             } catch (error) {
                 console.log(error);
             }

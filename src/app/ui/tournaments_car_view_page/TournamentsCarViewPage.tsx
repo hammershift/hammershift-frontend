@@ -858,6 +858,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
     tournamentEnded,
 }) => {
     const { data: session } = useSession();
+    const [morePlayers, setMorePlayers] = useState(false);
 
     return (
         <div>
@@ -884,47 +885,91 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                         </div>
                     </div>
                     <div>
-                        {tournamentWagers.map((wager) => {
-                            return (
-                                <div
-                                    key={wager._id}
-                                    className="tw-flex tw-items-center tw-py-2"
-                                >
-                                    <div className="tw-flex">
-                                        <Image
-                                            src={
-                                                wager.user.image
-                                                    ? wager.user.image
-                                                    : AvatarOne
-                                            }
-                                            width={44}
-                                            height={44}
-                                            alt="dollar"
-                                            className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
-                                            onClick={() =>
-                                                console.log(wager.user.image)
-                                            }
-                                        />
-                                        <div className="tw-text-sm ">
-                                            <div className="tw-font-bold">
-                                                {session?.user.id ===
-                                                wager.user._id
-                                                    ? "You"
-                                                    : wager.user.username}
+                        {morePlayers &&
+                            tournamentWagers.map((wager) => {
+                                return (
+                                    <div
+                                        key={wager._id}
+                                        className="tw-flex tw-items-center tw-py-2"
+                                    >
+                                        <div className="tw-flex">
+                                            <Image
+                                                src={
+                                                    wager.user.image
+                                                        ? wager.user.image
+                                                        : AvatarOne
+                                                }
+                                                width={44}
+                                                height={44}
+                                                alt="dollar"
+                                                className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
+                                            />
+                                            <div className="tw-text-sm ">
+                                                <div className="tw-font-bold">
+                                                    {session?.user.id ===
+                                                    wager.user._id
+                                                        ? "You"
+                                                        : wager.user.username}
+                                                </div>
+                                                <div className="tw-opacity-50">{`Joined ${dayjs(
+                                                    wager.createdAt
+                                                ).fromNow()}`}</div>
                                             </div>
-                                            <div className="tw-opacity-50">{`Joined ${dayjs(
-                                                wager.createdAt
-                                            ).fromNow()}`}</div>
                                         </div>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        {!morePlayers &&
+                            tournamentWagers.slice(0, 4).map((wager) => {
+                                return (
+                                    <div
+                                        key={wager._id}
+                                        className="tw-flex tw-items-center tw-py-2"
+                                    >
+                                        <div className="tw-flex">
+                                            <Image
+                                                src={
+                                                    wager.user.image
+                                                        ? wager.user.image
+                                                        : AvatarOne
+                                                }
+                                                width={44}
+                                                height={44}
+                                                alt="dollar"
+                                                className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
+                                            />
+                                            <div className="tw-text-sm ">
+                                                <div className="tw-font-bold">
+                                                    {session?.user.id ===
+                                                    wager.user._id
+                                                        ? "You"
+                                                        : wager.user.username}
+                                                </div>
+                                                <div className="tw-opacity-50">{`Joined ${dayjs(
+                                                    wager.createdAt
+                                                ).fromNow()}`}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                     </div>
                     {tournamentWagers.length > 4 ? (
-                        <button className="btn-transparent-white tw-w-full tw-mt-2">
-                            More Players...
-                        </button>
+                        morePlayers ? (
+                            <button
+                                className="btn-transparent-white tw-w-full tw-mt-2"
+                                onClick={() => setMorePlayers(false)}
+                            >
+                                Less Players...
+                            </button>
+                        ) : (
+                            <button
+                                className="btn-transparent-white tw-w-full tw-mt-2"
+                                onClick={() => setMorePlayers(true)}
+                            >
+                                More Players...
+                            </button>
+                        )
                     ) : null}
 
                     {alreadyJoined || tournamentEnded ? null : (
