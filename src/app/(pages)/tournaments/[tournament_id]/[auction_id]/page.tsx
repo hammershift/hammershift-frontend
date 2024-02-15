@@ -74,6 +74,7 @@ const SingleViewPage = ({
     const [isButtonClicked, setIsButtonClicked] = useState(false);
     const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
         useState(false);
+    const [tournamentEnded, setTournamentEnded] = useState(false);
 
     const [tournamentWagers, setTournamentWagers] = useState([]);
     const [tournamentData, setTournamentData] = useState<Tournaments>();
@@ -102,8 +103,11 @@ const SingleViewPage = ({
         const fetchTournamentsData = async () => {
             try {
                 const data = await getTournamentById(TournamentID);
+                const currentDate = new Date();
+                const auctionDeadline = new Date(data?.endTime);
                 console.log("tournament: ", data);
                 setTournamentData(data);
+                setTournamentEnded(auctionDeadline < currentDate);
             } catch (error) {
                 console.error("Failed to fetch tournament data:", error);
             }
@@ -194,7 +198,7 @@ const SingleViewPage = ({
         };
 
         fetchCarData();
-    }, [ID, toggleWagerModal, session]);
+    }, [ID, toggleTournamentWagerModal, session]);
 
     const currencyString = new Intl.NumberFormat().format(carData?.price || 0);
 
@@ -209,7 +213,7 @@ const SingleViewPage = ({
     }).format(date);
 
     useEffect(() => {
-        if (toggleWagerModal) {
+        if (toggleTournamentWagerModal) {
             document.body.classList.add("stop-scrolling");
         } else {
             document.body.classList.remove("stop-scrolling");
@@ -218,7 +222,7 @@ const SingleViewPage = ({
         return () => {
             document.body.classList.remove("body-no-scroll");
         };
-    }, [toggleWagerModal]);
+    }, [toggleTournamentWagerModal]);
 
     const toggleCarImageModal = () => {
         setShowCarImageModal((prev) => !prev);
@@ -339,6 +343,7 @@ const SingleViewPage = ({
                         toggleTournamentWagerModal={toggleModal}
                         buyInFee={tournamentData?.buyInFee}
                         alreadyJoined={alreadyJoined}
+                        tournamentEnded={tournamentEnded}
                     />
                 </div>
             </div>
@@ -369,6 +374,7 @@ const SingleViewPage = ({
                             toggleTournamentWagerModal={toggleModal}
                             buyInFee={tournamentData?.buyInFee}
                             alreadyJoined={alreadyJoined}
+                            tournamentEnded={tournamentEnded}
                         />
                     </div>
                     {carData ? (
@@ -383,6 +389,8 @@ const SingleViewPage = ({
                                 images_list={carData.images_list}
                                 description={carData.description}
                                 toggleTournamentWagerModal={toggleModal}
+                                alreadyJoined={alreadyJoined}
+                                tournamentEnded={tournamentEnded}
                             />
                         </>
                     ) : null}
@@ -393,6 +401,7 @@ const SingleViewPage = ({
                                 toggleTournamentWagerModal={toggleModal}
                                 tournamentWagers={tournamentWagers}
                                 alreadyJoined={alreadyJoined}
+                                tournamentEnded={tournamentEnded}
                             />
                         ) : null}
                     </div>
@@ -410,6 +419,7 @@ const SingleViewPage = ({
                             toggleTournamentWagerModal={toggleModal}
                             tournamentWagers={tournamentWagers}
                             alreadyJoined={alreadyJoined}
+                            tournamentEnded={tournamentEnded}
                         />
                     ) : null}
                     {carData ? (

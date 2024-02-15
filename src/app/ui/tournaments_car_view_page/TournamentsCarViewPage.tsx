@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Links from "../../components/links";
 import { useRouter } from "next/navigation";
 import { TournamentsListCard } from "../../components/card";
@@ -71,6 +72,7 @@ interface TournamentButtonsI {
     toggleTournamentWagerModal: () => void;
     buyInFee?: number;
     alreadyJoined?: boolean;
+    tournamentEnded: boolean;
 }
 
 interface TitleSingleCarContainerProps {
@@ -93,6 +95,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
     toggleTournamentWagerModal,
     buyInFee,
     alreadyJoined,
+    tournamentEnded,
 }) => {
     const router = useRouter();
     return (
@@ -107,7 +110,11 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
                 />
                 WATCH
             </button>
-            {alreadyJoined ? (
+            {tournamentEnded ? (
+                <button disabled className="btn-yellow hover:tw-bg-[#f2ca16]">
+                    ENDED 🏆
+                </button>
+            ) : alreadyJoined ? (
                 <button
                     type="button"
                     disabled
@@ -461,6 +468,7 @@ interface TournamentListI {
     auctionData: Auction[];
     alreadyJoined: boolean;
     tournamentID: string;
+    tournamentEnded: boolean;
 }
 
 export const TournamentsList: React.FC<TournamentListI> = ({
@@ -468,6 +476,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
     auctionData,
     alreadyJoined,
     tournamentID,
+    tournamentEnded,
 }) => {
     const router = useRouter();
 
@@ -496,7 +505,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
                     </Link>
                 ))}
             </div>
-            {!alreadyJoined && (
+            {alreadyJoined || tournamentEnded ? null : (
                 <button
                     className="btn-yellow tw-w-full tw-mt-8"
                     onClick={() => {
@@ -588,12 +597,16 @@ interface ArticleSectionProps {
     description: string[];
     images_list: { placing: number; src: string }[];
     toggleTournamentWagerModal: () => void;
+    alreadyJoined: boolean;
+    tournamentEnded: boolean;
 }
 
 export const ArticleSection: React.FC<ArticleSectionProps> = ({
     toggleTournamentWagerModal,
     description,
     images_list,
+    alreadyJoined,
+    tournamentEnded,
 }) => {
     const [showDetails, setShowDetails] = useState(false);
     return (
@@ -632,12 +645,14 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
                     />
                 </span>
             </button>
-            <button
-                className="btn-yellow tw-mt-3"
-                onClick={toggleTournamentWagerModal}
-            >
-                PLACE MY WAGER
-            </button>
+            {alreadyJoined || tournamentEnded ? null : (
+                <button
+                    className="btn-yellow tw-mt-3"
+                    onClick={toggleTournamentWagerModal}
+                >
+                    PLACE MY WAGER
+                </button>
+            )}
         </div>
     );
 };
@@ -833,16 +848,20 @@ interface TournamentWagerSectionI {
     toggleTournamentWagerModal: () => void;
     tournamentWagers: any[];
     alreadyJoined: boolean;
+    tournamentEnded: boolean;
 }
 
 export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
     toggleTournamentWagerModal,
     tournamentWagers,
     alreadyJoined,
+    tournamentEnded,
 }) => {
+    const { data: session } = useSession();
+
     return (
         <div>
-            <div className="tw-relative tw-pb-8 sm:tw-pb-0">
+            <div className="tw-relative tw-pb-8 sm:tw-pb-0 tw-min-h-[180px]">
                 <div className="tw-p-6 tw-w-full tw-h-auto">
                     <div className="tw-mb-6">
                         <div className="tw-flex tw-justify-between">
@@ -888,7 +907,10 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                                         />
                                         <div className="tw-text-sm ">
                                             <div className="tw-font-bold">
-                                                {wager.user.username}
+                                                {session?.user.id ===
+                                                wager.user._id
+                                                    ? "You"
+                                                    : wager.user.username}
                                             </div>
                                             <div className="tw-opacity-50">{`Joined ${dayjs(
                                                 wager.createdAt
@@ -905,7 +927,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                         </button>
                     ) : null}
 
-                    {!alreadyJoined && (
+                    {alreadyJoined || tournamentEnded ? null : (
                         <button
                             onClick={() => {
                                 document.body.classList.add("stop-scrolling");
