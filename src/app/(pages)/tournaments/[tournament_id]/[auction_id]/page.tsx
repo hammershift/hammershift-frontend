@@ -386,14 +386,7 @@ const SingleViewPage = ({
                             />
                         </>
                     ) : null}
-                    <div className="tw-block sm:tw-hidden tw-mt-8">
-                        {winners && wagersData ? (
-                            <WinnersSection
-                                price={carData?.price}
-                                winners={winners}
-                            />
-                        ) : null}
-                    </div>
+                    <div className="tw-block sm:tw-hidden tw-mt-8"></div>
                     <div className="tw-block sm:tw-hidden tw-mt-8">
                         {wagersData ? (
                             <TournamentWagersSection
@@ -412,12 +405,6 @@ const SingleViewPage = ({
                     <CommentsSection auctionID={ID} />
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
-                    {winners && wagersData ? (
-                        <WinnersSection
-                            price={carData?.price}
-                            winners={winners}
-                        />
-                    ) : null}
                     {wagersData ? (
                         <TournamentWagersSection
                             toggleTournamentWagerModal={toggleModal}
