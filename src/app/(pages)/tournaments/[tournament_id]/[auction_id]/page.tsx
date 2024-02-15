@@ -297,6 +297,16 @@ const SingleViewPage = ({
 
   return (
     <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
+      {toggleTournamentWagerModal ? (
+        <TournamentWagerModal
+          tournamentData={tournamentData}
+          auctionData={auctionData}
+          handleSubmit={handleSubmit}
+          handleInputs={handleInputs}
+          toggleTournamentWagerModal={toggleModal}
+          isButtonClicked={isButtonClicked}
+        />
+      ) : null}
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
         <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
           TOURNAMENT
@@ -359,11 +369,6 @@ const SingleViewPage = ({
               />
             ) : null}
           </div>
-          {carData ? (
-            <div className="tw-block sm:tw-hidden tw-mt-8">
-              <DetailsSection />
-            </div>
-          ) : null}
           <GuessThePriceInfoSection />
           <CommentsSection auctionID={ID} />
         </div>
