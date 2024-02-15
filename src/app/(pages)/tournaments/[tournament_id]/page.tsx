@@ -1,24 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Links from "../../../components/links";
-import { useParams, useRouter } from "next/navigation";
-import { TournamentsListCard } from "../../../components/card";
-import Image from "next/image";
-import { LatestNews } from "../../../components/how_hammeshift_works";
-import { SubscribeSmall } from "../../../components/subscribe";
-import { TournamentsCard } from "../../../components/card";
-import Footer from "../../../components/footer";
-import Link from "next/link";
-
-import PhotoOne from "../../../../../public/images/car-view-page/photoOne.svg";
-import PhotoTwo from "../../../../../public/images/car-view-page/photoTwo.svg";
-import PhotoThree from "../../../../../public/images/car-view-page/photoThree.svg";
-import PhotoFour from "../../../../../public/images/car-view-page/photoFour.svg";
-import PhotoFive from "../../../../../public/images/car-view-page/photoOne.svg";
-
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
-import { carDataThree } from "@/sample_data";
 import {
     CommentsSection,
     TitleTournamentsList,
@@ -77,6 +60,7 @@ const TournamentViewPage = ({
     >(undefined);
     const [auctionData, setAuctionData] = useState<Auction[]>([]);
     const [tournamentWagers, setTournamentWagers] = useState([]);
+    const [tournamentEnded, setTournamentEnded] = useState(false);
 
     const ID = params.tournament_id;
 
@@ -84,7 +68,6 @@ const TournamentViewPage = ({
         const fetchAuctionData = async () => {
             try {
                 const data = await getAuctionsByTournamentId(ID);
-                console.log("auctions: ", data);
                 setAuctionData(data);
             } catch (error) {
                 console.error("Failed to fetch auctions data:", error);
@@ -94,11 +77,25 @@ const TournamentViewPage = ({
     }, [ID]);
 
     useEffect(() => {
+        if (toggleTournamentWagerModal) {
+            document.body.classList.add("stop-scrolling");
+        } else {
+            document.body.classList.remove("stop-scrolling");
+        }
+
+        return () => {
+            document.body.classList.remove("body-no-scroll");
+        };
+    }, [toggleTournamentWagerModal]);
+
+    useEffect(() => {
         const fetchTournamentsData = async () => {
             try {
                 const data = await getTournamentById(ID);
-                console.log("tournament: ", data);
+                const currentDate = new Date();
+                const auctionDeadline = new Date(data?.endTime);
                 setTournamentData(data);
+                setTournamentEnded(auctionDeadline < currentDate);
             } catch (error) {
                 console.error("Failed to fetch tournament data:", error);
             }
@@ -201,9 +198,9 @@ const TournamentViewPage = ({
                 buyInAmount: tournamentData.buyInFee,
                 user: sessionData,
             };
+            console.log(tournamentWagerData);
 
             try {
-                console.log(tournamentWagerData);
                 const tournamentWager = await createTournamentWager(
                     tournamentWagerData
                 );
@@ -212,7 +209,6 @@ const TournamentViewPage = ({
                     tournamentData._id
                 );
                 setToggleTournamentWagerModal(false);
-                console.log(tournamentWager);
             } catch (error) {
                 console.log(error);
             }
@@ -245,6 +241,7 @@ const TournamentViewPage = ({
                             toggleTournamentWagerModal={toggleModal}
                             buyInFee={tournamentData.buyInFee}
                             alreadyJoined={alreadyJoined}
+                            tournamentEnded={tournamentEnded}
                         />
                     )}
                 </div>
@@ -269,6 +266,7 @@ const TournamentViewPage = ({
                                 toggleTournamentWagerModal={toggleModal}
                                 buyInFee={tournamentData.buyInFee}
                                 alreadyJoined={alreadyJoined}
+                                tournamentEnded={tournamentEnded}
                             />
                         )}
                     </div>
@@ -276,6 +274,7 @@ const TournamentViewPage = ({
                         toggleTournamentWagerModal={toggleModal}
                         auctionData={auctionData}
                         alreadyJoined={alreadyJoined}
+                        tournamentEnded={tournamentEnded}
                         tournamentID={ID}
                     />
                     <div className="sm:tw-hidden tw-my-8">
@@ -283,6 +282,7 @@ const TournamentViewPage = ({
                             tournamentWagers={tournamentWagers}
                             toggleTournamentWagerModal={toggleModal}
                             alreadyJoined={alreadyJoined}
+                            tournamentEnded={tournamentEnded}
                         />
                         <TournamentInfoSection />
                     </div>
@@ -293,6 +293,7 @@ const TournamentViewPage = ({
                         tournamentWagers={tournamentWagers}
                         toggleTournamentWagerModal={toggleModal}
                         alreadyJoined={alreadyJoined}
+                        tournamentEnded={tournamentEnded}
                     />
                     <TournamentInfoSection />
                 </div>

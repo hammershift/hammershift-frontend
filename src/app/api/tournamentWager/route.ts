@@ -107,7 +107,9 @@ export async function GET(req: NextRequest) {
       const wagers = await db.collection('tournament_wagers').find({
         tournamentID: new ObjectId(tournamentID),
         isActive: true
-      }).toArray();
+      })
+        .sort({ createdAt: -1 })
+        .toArray();
       return NextResponse.json(wagers);
     }
 
