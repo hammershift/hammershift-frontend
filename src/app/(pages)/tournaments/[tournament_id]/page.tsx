@@ -1,24 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Links from "../../../components/links";
-import { useParams, useRouter } from "next/navigation";
-import { TournamentsListCard } from "../../../components/card";
-import Image from "next/image";
-import { LatestNews } from "../../../components/how_hammeshift_works";
-import { SubscribeSmall } from "../../../components/subscribe";
-import { TournamentsCard } from "../../../components/card";
-import Footer from "../../../components/footer";
-import Link from "next/link";
-
-import PhotoOne from "../../../../../public/images/car-view-page/photoOne.svg";
-import PhotoTwo from "../../../../../public/images/car-view-page/photoTwo.svg";
-import PhotoThree from "../../../../../public/images/car-view-page/photoThree.svg";
-import PhotoFour from "../../../../../public/images/car-view-page/photoFour.svg";
-import PhotoFive from "../../../../../public/images/car-view-page/photoOne.svg";
-
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
-import { carDataThree } from "@/sample_data";
 import {
     CommentsSection,
     TitleTournamentsList,
