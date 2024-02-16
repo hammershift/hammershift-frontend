@@ -118,7 +118,7 @@ const TournamentViewPage = ({
         };
 
         const fetchTournamentWagers = async () => {
-            if (session && tournamentData) {
+            if (tournamentData) {
                 const wagers = await getAllTournamentWagers(tournamentData._id);
                 setTournamentWagers(wagers);
             }
@@ -210,7 +210,7 @@ const TournamentViewPage = ({
                 );
                 setToggleTournamentWagerModal(false);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
     };
