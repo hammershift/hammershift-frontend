@@ -130,7 +130,7 @@ const SingleViewPage = ({
         };
 
         const fetchTournamentWagers = async () => {
-            if (session && tournamentData) {
+            if (tournamentData) {
                 const wagers = await getAllTournamentWagers(tournamentData._id);
                 setTournamentWagers(wagers);
             }
