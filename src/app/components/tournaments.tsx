@@ -7,7 +7,11 @@ import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
 import { TournamentsCard } from "./card";
-import { getAuctionsByTournamentId, getTournaments } from "@/lib/data";
+import {
+  getAuctionsByTournamentId,
+  getLimitedTournaments,
+  getTournaments,
+} from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
 
 interface Tournaments {
@@ -33,7 +37,7 @@ const Tournaments = () => {
   useEffect(() => {
     const fetchTournamentsData = async () => {
       try {
-        const res = await getTournaments();
+        const res = await getLimitedTournaments(3);
         const tournamentsArray = res.tournaments;
         setTournamentsData(tournamentsArray);
       } catch (error) {

@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { TournamentsCard } from "@/app/components/card";
-import { getAuctionsByTournamentId, getTournaments } from "@/lib/data";
+import {
+  getAuctionsByTournamentId,
+  getSortedTournaments,
+  getTournaments,
+} from "@/lib/data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import Image from "next/image"; // Assuming you are using Next.js Image component
 
@@ -24,11 +28,12 @@ const TournamentsList = () => {
   const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
     {}
   );
+  const [sortType, setSortType] = useState<string>("newest");
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
       try {
-        const data = await getTournaments();
+        const data = await getSortedTournaments(sortType);
         const tournamentsArray = data.tournaments;
         setTournamentsData(tournamentsArray);
       } catch (error) {
@@ -36,7 +41,11 @@ const TournamentsList = () => {
       }
     };
     fetchTournamentsData();
-  }, []);
+  }, [sortType]);
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortType(event.target.value);
+  };
 
   useEffect(() => {
     const fetchAuctionData = async () => {
@@ -64,9 +73,12 @@ const TournamentsList = () => {
           <span className="tw-bg-[#156CC3] tw-rounded-full tw-px-2.5 tw-py-2 tw-font-bold">
             ACTIVE TOURNAMENTS
           </span>
-          <select className="tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate">
-            <option>Newly Listed</option>
-            <option>Ending Soon</option>
+          <select
+            className="tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+            onChange={handleSortChange}
+          >
+            <option value="newest">Newly Listed</option>
+            <option value="endingSoon">Ending Soon</option>
           </select>
         </div>
       </div>
