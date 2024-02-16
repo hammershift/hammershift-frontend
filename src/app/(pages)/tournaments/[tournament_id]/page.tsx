@@ -60,7 +60,7 @@ const TournamentViewPage = ({
   );
   const [auctionData, setAuctionData] = useState<Auction[]>([]);
   const [tournamentWagers, setTournamentWagers] = useState([]);
-    const [tournamentEnded, setTournamentEnded] = useState(false);
+  const [tournamentEnded, setTournamentEnded] = useState(false);
 
   const ID = params.tournament_id;
 
@@ -77,20 +77,20 @@ const TournamentViewPage = ({
     fetchAuctionData();
   }, [ID]);
 
-    useEffect(() => {
-        const fetchTournamentsData = async () => {
-            try {
-                const data = await getTournamentById(ID);
-                const currentDate = new Date();
-                const auctionDeadline = new Date(data?.endTime);
-                setTournamentData(data);
-                setTournamentEnded(auctionDeadline < currentDate);
-            } catch (error) {
-                console.error("Failed to fetch tournament data:", error);
-            }
-        };
-        fetchTournamentsData();
-    }, [ID, toggleTournamentWagerModal]);
+  useEffect(() => {
+    const fetchTournamentsData = async () => {
+      try {
+        const data = await getTournamentById(ID);
+        const currentDate = new Date();
+        const auctionDeadline = new Date(data?.endTime);
+        setTournamentData(data);
+        setTournamentEnded(auctionDeadline < currentDate);
+      } catch (error) {
+        console.error("Failed to fetch tournament data:", error);
+      }
+    };
+    fetchTournamentsData();
+  }, [ID, toggleTournamentWagerModal]);
 
   useEffect(() => {
     const checkIfAlreadyWagered = async () => {
@@ -185,22 +185,22 @@ const TournamentViewPage = ({
         buyInAmount: tournamentData.buyInFee,
         user: sessionData,
       };
-            console.log(tournamentWagerData);
+      console.log(tournamentWagerData);
 
-            try {
-                const tournamentWager = await createTournamentWager(
-                    tournamentWagerData
-                );
-                await addTournamentPot(
-                    tournamentData.buyInFee * 0.88 + tournamentData.pot,
-                    tournamentData._id
-                );
-                setToggleTournamentWagerModal(false);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
+      try {
+        const tournamentWager = await createTournamentWager(
+          tournamentWagerData
+        );
+        await addTournamentPot(
+          tournamentData.buyInFee * 0.88 + tournamentData.pot,
+          tournamentData._id
+        );
+        setToggleTournamentWagerModal(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const toggleModal = () => {
     setToggleTournamentWagerModal((prev) => !prev);
@@ -228,7 +228,7 @@ const TournamentViewPage = ({
               toggleTournamentWagerModal={toggleModal}
               buyInFee={tournamentData.buyInFee}
               alreadyJoined={alreadyJoined}
-                            tournamentEnded={tournamentEnded}
+              tournamentEnded={tournamentEnded}
             />
           )}
         </div>
@@ -253,7 +253,7 @@ const TournamentViewPage = ({
                 toggleTournamentWagerModal={toggleModal}
                 buyInFee={tournamentData.buyInFee}
                 alreadyJoined={alreadyJoined}
-                                tournamentEnded={tournamentEnded}
+                tournamentEnded={tournamentEnded}
               />
             )}
           </div>
@@ -262,7 +262,7 @@ const TournamentViewPage = ({
             toggleTournamentWagerModal={toggleModal}
             auctionData={auctionData}
             alreadyJoined={alreadyJoined}
-                        tournamentEnded={tournamentEnded}
+            tournamentEnded={tournamentEnded}
             tournamentID={ID}
           />
           <div className="sm:tw-hidden tw-my-8">
@@ -270,7 +270,7 @@ const TournamentViewPage = ({
               tournamentWagers={tournamentWagers}
               toggleTournamentWagerModal={toggleModal}
               alreadyJoined={alreadyJoined}
-                            tournamentEnded={tournamentEnded}
+              tournamentEnded={tournamentEnded}
             />
             <TournamentInfoSection />
           </div>
@@ -281,7 +281,7 @@ const TournamentViewPage = ({
             tournamentWagers={tournamentWagers}
             toggleTournamentWagerModal={toggleModal}
             alreadyJoined={alreadyJoined}
-                        tournamentEnded={tournamentEnded}
+            tournamentEnded={tournamentEnded}
           />
           <TournamentInfoSection />
         </div>
