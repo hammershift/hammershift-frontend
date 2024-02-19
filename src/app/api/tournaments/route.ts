@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
     const id = req.nextUrl.searchParams.get("id");
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
+    const sort = req.nextUrl.searchParams.get("sort");
 
     // check if there is a request body
     if (id) {
@@ -39,8 +40,17 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    //sorting
+    let sortOptions = {};
+    if (sort === "newest") {
+      sortOptions = { endTime: -1 };
+    } else if (sort === "endingSoon") {
+      sortOptions = { endTime: 1 };
+    }
+
     // To get all auctions with isActive = true
     const tournaments = await Tournament.find({ isActive: true })
+      .sort(sortOptions)
       .limit(limit)
       .skip(offset);
     // count all tournaments with isActive = true

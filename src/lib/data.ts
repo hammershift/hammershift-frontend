@@ -825,6 +825,30 @@ export const getTournaments = async () => {
   }
 };
 
+export const getSortedTournaments = async (sortType: string) => {
+  try {
+    const res = await fetch(`/api/tournaments?sort=${sortType}`);
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Tournaments Error", error);
+    throw error;
+  }
+};
+
+export const getLimitedTournaments = async (limit: number) => {
+  try {
+    const res = await fetch(`/api/tournaments?limit=${limit}`);
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Tournaments Error", error);
+    throw error;
+  }
+};
+
 export const getTournamentById = async (id: string) => {
   try {
     const res = await fetch(`/api/tournaments?id=${id}`);
@@ -847,10 +871,7 @@ export const getAuctionsByTournamentId = async (tournamentID: string) => {
   }
 };
 
-export const addTournamentPot = async (
-  pot: number,
-  tournamentID: string
-) => {
+export const addTournamentPot = async (pot: number, tournamentID: string) => {
   await fetch(`/api/tournament?id=${tournamentID}`, {
     method: "PUT",
     headers: {
@@ -860,14 +881,21 @@ export const addTournamentPot = async (
   });
 };
 
-export const getOneTournamentWager = async (tournament_id: string, user_id: string) => {
-  const res = await fetch(`/api/tournamentWager?tournament_id=${tournament_id}&user_id=${user_id}`);
+export const getOneTournamentWager = async (
+  tournament_id: string,
+  user_id: string
+) => {
+  const res = await fetch(
+    `/api/tournamentWager?tournament_id=${tournament_id}&user_id=${user_id}`
+  );
   const data = await res.json();
   return data;
 };
 
 export const getAllTournamentWagers = async (tournament_id: string) => {
-  const res = await fetch(`/api/tournamentWager?tournament_id=${tournament_id}`);
+  const res = await fetch(
+    `/api/tournamentWager?tournament_id=${tournament_id}`
+  );
   const data = await res.json();
   return data;
-}
+};
