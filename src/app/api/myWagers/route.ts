@@ -82,6 +82,7 @@ export async function GET(req: NextRequest) {
           pot: tournamentDetails.pot,
           endTime: tournamentDetails.endTime,
           buyInAmount: wager.buyInAmount,
+          tournamentImages: wager.tournamentImages,
           user: wager.user,
         };
       })
