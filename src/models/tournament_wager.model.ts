@@ -22,6 +22,10 @@ const tournamentWagerSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  tournamentImages: {
+    type: [String],
+    required: true,
+  },
   user: {
     _id: {
       type: mongoose.Schema.Types.ObjectId,
