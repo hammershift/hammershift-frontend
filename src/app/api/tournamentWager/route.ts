@@ -68,6 +68,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    //get auction images
+    const tournamentAuctions = await db
+      .collection('auctions')
+      .find({ tournamentID: new mongoose.Types.ObjectId(tournamentID) })
+      .toArray();
+
+    const tournamentImages = tournamentAuctions.map((auction) => auction.image);
+
 
     // create the transaction record for the buy-in
     await db.collection('transactions').insertOne({
@@ -84,6 +92,7 @@ export async function POST(req: NextRequest) {
       wagers,
       buyInAmount,
       user,
+      tournamentImages
     });
 
     await db.collection('tournament_wagers').insertOne(newTournamentWager);
