@@ -440,10 +440,11 @@ export const getUserInfo = async (id: string) => {
   }
 };
 
+///////////////////////// COMMENTS /////////////////////////
 // fetches comments
-export const getComments = async (id: string, sort: string) => {
+export const getComments = async (pageID: string, pageType: "auction" | "tournament", sort: string) => {
   try {
-    const res = await fetch(`/api/comments?id=${id}&sort=${sort}`);
+    const res = await fetch(`/api/comments?pageID=${pageID}&pageType=${pageType}&sort=${sort}`);
     if (res.ok) {
       const data = await res.json();
       return data;
@@ -455,14 +456,14 @@ export const getComments = async (id: string, sort: string) => {
 };
 
 // creates comment
-export const createComment = async (auctionID: string, comment: string) => {
+export const createComment = async (pageID: string, pageType: "auction" | "tournament", comment: string) => {
   try {
     const res = await fetch("/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ auctionID, comment }),
+      body: JSON.stringify({ pageID, pageType, comment }),
     });
     if (res.ok) {
       const data = await res.json();

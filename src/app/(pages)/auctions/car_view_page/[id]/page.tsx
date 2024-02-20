@@ -10,7 +10,7 @@ import {
   GamesYouMightLike,
   WinnersSection,
 } from "@/app/ui/car_view_page/CarViewPage";
-import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
+import { CommentsSection } from "@/app/components/CommentsSection";
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";

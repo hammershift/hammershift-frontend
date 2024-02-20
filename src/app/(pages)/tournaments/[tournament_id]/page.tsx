@@ -274,6 +274,7 @@ const TournamentViewPage = ({
             />
             <TournamentInfoSection />
           </div>
+          {/* FIXME: */}
           <CommentsSection />
         </div>
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">

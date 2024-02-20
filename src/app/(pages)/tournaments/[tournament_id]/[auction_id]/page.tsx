@@ -11,7 +11,7 @@ import {
   TitleSingleCarContainer,
   TournamentButtons,
 } from "../../../../ui/tournaments_car_view_page/TournamentsCarViewPage";
-import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
+import { CommentsSection } from "@/app/components/CommentsSection";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
 import {
@@ -403,7 +403,7 @@ const SingleViewPage = ({
             </div>
           ) : null}
           <GuessThePriceInfoSection />
-          <CommentsSection auctionID={ID} />
+          <CommentsSection pageID={ID} pageType="auction" />
         </div>
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
           {wagersData ? (
