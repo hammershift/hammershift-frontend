@@ -12,7 +12,7 @@ import WatchlistIcon from "../../../public/images/watchlist-icon.svg";
 import AccountIcon from "../../../public/images/account-icon.svg";
 import HamburgerMenu from "../../../public/images/hamburger-menu.svg";
 import CancelIcon from "../../../public/images/x-icon.svg";
-import WatchlistBig from "../../../public/images/watchlist-icon-big.svg";
+import ThreeStars from "../../../public/images/three-star-icon.svg";
 import Wallet from "../../../public/images/wallet--money-payment-finance-wallet.svg";
 import MoneyBag from "../../../public/images/monetization-browser-bag-big.svg";
 import Dollar from "../../../public/images/dollar.svg";
@@ -20,7 +20,7 @@ import Hourglass from "../../../public/images/hour-glass.svg";
 import WalletSmall from "../../../public/images/wallet--money-payment-finance-wallet.svg";
 import MoneyBagGreen from "../../../public/images/monetization-browser-bag-green.svg";
 import MoneyBagBlack from "../../../public/images/money-bag-black.svg";
-import RankingStarTop from "../../../public/images/ranking-star-top.svg";
+import PodiumIcon from "../../../public/images/podium-icon.svg";
 import HammerIcon from "../../../public/images/hammer-icon.svg";
 
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg";
@@ -281,9 +281,10 @@ const Navbar = () => {
                             href="/auctions"
                         >
                             <div
-                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${pathname === "/auctions" &&
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/auctions" &&
                                     "tw-font-bold tw-border-b-2"
-                                    }`}
+                                }`}
                             >
                                 AUCTIONS
                             </div>
@@ -472,9 +473,10 @@ const Navbar = () => {
                             href="/auctions"
                         >
                             <div
-                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${pathname === "/auctions" &&
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/auctions" &&
                                     "tw-font-bold tw-border-b-2"
-                                    }`}
+                                }`}
                             >
                                 AUCTIONS
                             </div>
@@ -696,9 +698,10 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <>
                     <button
                         onClick={() => setDropWatchlistOrWagers("watchlist")}
-                        className={`tw-flex tw-py-2 tw-w-full ${dropWatchlistOrWagers === "watchlist" &&
+                        className={`tw-flex tw-py-2 tw-w-full ${
+                            dropWatchlistOrWagers === "watchlist" &&
                             "tw-font-bold"
-                            }`}
+                        }`}
                     >
                         <Image
                             src={WatchlistIcon}
@@ -714,8 +717,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     ) : null}
                     <button
                         onClick={() => setDropWatchlistOrWagers("wagers")}
-                        className={`tw-flex tw-py-2 tw-w-full ${dropWatchlistOrWagers === "wagers" && "tw-font-bold"
-                            }`}
+                        className={`tw-flex tw-py-2 tw-w-full ${
+                            dropWatchlistOrWagers === "wagers" && "tw-font-bold"
+                        }`}
                     >
                         <Image
                             src={WagersIcon}
@@ -1033,8 +1037,9 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 
     return (
         <div
-            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
-                }`}
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
+                index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
+            }`}
         >
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
@@ -1096,44 +1101,6 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                     </div>
                 </div>
             </div>
-            {/* {type === "Tournament" && (
-                <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
-                    <Link href={"/tournament_page"} className="tw-self-start">
-                        <Image
-                            src={img}
-                            width={100}
-                            height={100}
-                            alt="wallet icon"
-                            className="tw-w-[100px] tw-h-[100px] tw-self-start"
-                        />
-                    </Link>
-                    <div className="tw-w-full tw-flex tw-flex-col tw-items-start tw-grow">
-                        <Link
-                            href={"/tournament_page"}
-                            className="tw-self-start"
-                        >
-                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">
-                                {title}
-                            </div>
-                        </Link>
-                        <div className="tw-w-full tw-mt-1">
-                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
-                                <Image
-                                    src={Hourglass}
-                                    width={14}
-                                    height={14}
-                                    alt="wallet icon"
-                                    className="tw-w-[14px] tw-h-[14px]"
-                                />
-                                <span className="tw-opacity-80">
-                                    Time Left:
-                                </span>
-                                <span className="">{time_left}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )} */}
         </div>
     );
 };
@@ -1143,6 +1110,10 @@ const MyWagersDropdownMenu = () => {
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activeWagers, setActiveWagers] = useState([]);
     const [completedWagers, setCompletedWagers] = useState([]);
+    const [activeTournamentWagers, setActiveTournamentWagers] = useState([]);
+    const [completedTournamentWagers, setCompletedTournamentWagers] = useState(
+        []
+    );
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -1160,8 +1131,24 @@ const MyWagersDropdownMenu = () => {
                     return auctionDeadline >= currentDate;
                 });
 
+                const completedTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(wager.endTime);
+                        return auctionDeadline < currentDate;
+                    }
+                );
+
+                const activeTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(wager.endTime);
+                        return auctionDeadline >= currentDate;
+                    }
+                );
+
                 setActiveWagers(active);
                 setCompletedWagers(completed);
+                setActiveTournamentWagers(activeTournaments);
+                setCompletedTournamentWagers(completedTournaments);
             }
             setIsLoading(false);
         };
@@ -1228,6 +1215,18 @@ const MyWagersDropdownMenu = () => {
                             </TimerProvider>
                         </div>
                     ))}
+                    {activeTournamentWagers.map((wager: any) => {
+                        return (
+                            <div key={wager._id}>
+                                <TimerProvider deadline={wager.endTime}>
+                                    <MyWagersTournamentCard
+                                        wager={wager}
+                                        isActive={true}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
             {activeOrCompleted === "completed" &&
@@ -1257,6 +1256,18 @@ const MyWagersDropdownMenu = () => {
                                 </TimerProvider>
                             </div>
                         ))}
+                        {completedTournamentWagers.map((wager: any) => {
+                            return (
+                                <div key={wager._id}>
+                                    <TimerProvider deadline={wager.endTime}>
+                                        <MyWagersTournamentCard
+                                            wager={wager}
+                                            isActive={false}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
             {isLoading === false &&
@@ -1292,6 +1303,134 @@ const MyWagersDropdownMenu = () => {
                         No wagers in completed
                     </div>
                 )}
+        </div>
+    );
+};
+
+export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
+    const { days, hours, minutes, seconds } = useTimer();
+    let formattedDateString;
+    if (wager.endTime) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(wager.endTime));
+    }
+
+    return (
+        <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 tw-border-t-[1px] tw-border-[#253747]">
+            <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-start tw-gap-6">
+                <Link
+                    href={`/tournaments/${wager._id}`}
+                    className="tw-grid tw-gap-[2px] tw-grid-cols-2 sm:tw-w-[100px] tw-w-[50px] tw-pt-2 sm:tw-p-0"
+                    onClick={() => closeMenu && closeMenu()}
+                >
+                    {wager.tournamentImages
+                        .slice(0, 4)
+                        .map((image: string, index: number) => {
+                            return (
+                                <Image
+                                    key={index}
+                                    src={image}
+                                    alt="car image"
+                                    width={49}
+                                    height={49}
+                                    className="tw-rounded tw-w-[24.5px] tw-h-[24.5px] sm:tw-h-[49px] sm:tw-w-[49px] tw-object-cover"
+                                />
+                            );
+                        })}
+                </Link>
+                <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px] tw-max-w-[230px]">
+                    <Link
+                        href={`/tournaments/${wager._id}`}
+                        className="tw-self-start"
+                        onClick={() => closeMenu && closeMenu()}
+                    >
+                        <div
+                            className={`tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-text-left tw-line-clamp-1 ${
+                                isActive ? "sm:tw-mt-[14px]" : "sm:tw-mt-[5px]"
+                            }`}
+                        >
+                            {wager.tournamentTitle}
+                        </div>
+                    </Link>
+                    {!isActive && (
+                        <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+                            Ended {formattedDateString}
+                        </div>
+                    )}
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
+                        <div className="tw-flex tw-items-center tw-gap-2">
+                            <Image
+                                src={PodiumIcon}
+                                width={14}
+                                height={14}
+                                alt="wallet icon"
+                                className="tw-w-[14px] tw-h-[14px]"
+                            />
+                            <span className="tw-opacity-80">Place:</span>
+                            <span className="tw-text-[#F2CA16] tw-font-bold">
+                                Current -th Place
+                            </span>
+                        </div>
+                        {!isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2">
+                                <Image
+                                    src={ThreeStars}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">Points:</span> -
+                                pts. away
+                            </div>
+                        )}
+                        {isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Time Left:
+                                </span>
+                                {Number(days) < 1 ? (
+                                    <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {isActive && (
+                        <div className="sm:tw-mt-[30px] tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
+                            <div className="tw-flex tw-gap-2 tw-items-center">
+                                <Image
+                                    src={MoneyBagGreen}
+                                    width={20}
+                                    height={20}
+                                    alt="money bag"
+                                    className="tw-w-[20px] tw-h-[20px]"
+                                />
+                                <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
+                                    POTENTIAL PRIZE
+                                </div>
+                            </div>
+                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
+                                ${new Intl.NumberFormat().format(wager.pot)}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
@@ -1362,8 +1501,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
     return (
         <div
-            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
-                }`}
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
+                index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
+            }`}
         >
             <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
                 <Link
@@ -1390,7 +1530,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                         </div>
                     </Link>
                     {status === 2 || status === 4 ? (
-                        <div className="tw-text-xs tw-mb-2 tw-opacity-80">
+                        <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
                             Ended {formattedDateString}
                         </div>
                     ) : null}
@@ -1465,9 +1605,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                     {prize % 1 === 0
                                         ? prize.toLocaleString()
                                         : prize.toLocaleString(undefined, {
-                                            minimumFractionDigits: 2,
-                                            maximumFractionDigits: 2,
-                                        })}{" "}
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                          })}{" "}
                                     🎉
                                 </div>
                             </div>
@@ -1494,7 +1634,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                     </div>
                     {isActive && (
                         <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
-                            <div className="tw-flex tw-gap-2">
+                            <div className="tw-flex tw-gap-2 tw-items-center">
                                 <Image
                                     src={MoneyBagGreen}
                                     width={20}
@@ -1561,8 +1701,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                             </div>
                                         )}
                                         <span
-                                            className={`${loading && "tw-hidden"
-                                                }`}
+                                            className={`${
+                                                loading && "tw-hidden"
+                                            }`}
                                         >
                                             REFUND
                                             {/* CLAIM $
@@ -1577,75 +1718,6 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                     )}
                 </div>
             </div>
-            {/* {type === "Tournament" && (
-                <div className=" tw-w-full tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
-                    <Link
-                        href={"/tournament_page"}
-                        className="tw-self-start tw-w-[100px]"
-                    >
-                        <Image
-                            src={img}
-                            width={100}
-                            height={100}
-                            alt="wallet icon"
-                            className="tw-w-[100px] tw-h-[100px] tw-self-start"
-                        />
-                    </Link>
-                    <div className="tw-flex tw-flex-col tw-items-start tw-grow">
-                        <Link
-                            href={"/tournament_page"}
-                            className="tw-self-start"
-                        >
-                            <div className="tw-w-full tw-font-bold tw-text-xl tw-py-1 tw-text-left">
-                                {title}
-                            </div>
-                        </Link>
-                        <div className="tw-w-full tw-mt-1">
-                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
-                                <Image
-                                    src={RankingStarTop}
-                                    width={14}
-                                    height={14}
-                                    alt="wallet icon"
-                                    className="tw-w-[14px] tw-h-[14px]"
-                                />
-                                <span className="tw-opacity-80">Place:</span>
-                                <span className="tw-text-[#F2CA16] tw-font-bold">
-                                    {place}
-                                </span>
-                            </div>
-                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
-                                <Image
-                                    src={Hourglass}
-                                    width={14}
-                                    height={14}
-                                    alt="wallet icon"
-                                    className="tw-w-[14px] tw-h-[14px]"
-                                />
-                                <span className="tw-opacity-80">
-                                    Time Left:
-                                </span>
-                                <span className="">{time_left}</span>
-                            </div>
-                        </div>
-                        <div className="tw-mt-4 tw-w-full tw-p-2 tw-flex tw-gap-4 tw-bg-[#49C74233] tw-rounded">
-                            <Image
-                                src={MoneyBagGreen}
-                                width={20}
-                                height={20}
-                                alt="money bag"
-                                className="tw-w-[20px] tw-h-[20px]"
-                            />
-                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
-                                POTENTIAL PRIZE
-                            </div>
-                            <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
-                                {potential_prize}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )} */}
         </div>
     );
 };
@@ -1965,6 +2037,10 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
     const [activeWagers, setActiveWagers] = useState([]);
     const [completedWagers, setCompletedWagers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [activeTournamentWagers, setActiveTournamentWagers] = useState([]);
+    const [completedTournamentWagers, setCompletedTournamentWagers] = useState(
+        []
+    );
 
     useEffect(() => {
         const fetchWagers = async () => {
@@ -1980,9 +2056,24 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     const auctionDeadline = new Date(wager.auctionDeadline);
                     return auctionDeadline >= currentDate;
                 });
+                const completedTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(wager.endTime);
+                        return auctionDeadline < currentDate;
+                    }
+                );
+
+                const activeTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(wager.endTime);
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
                 setActiveWagers(active);
                 setCompletedWagers(completed);
+                setActiveTournamentWagers(activeTournaments);
+                setCompletedTournamentWagers(completedTournaments);
             }
             setIsLoading(false);
         };
@@ -2047,8 +2138,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                     </TimerProvider>
                                 </div>
                             ))}
+                            {activeTournamentWagers.map((wager: any) => {
+                                return (
+                                    <div key={wager._id}>
+                                        <TimerProvider deadline={wager.endTime}>
+                                            <MyWagersTournamentCard
+                                                wager={wager}
+                                                isActive={true}
+                                                closeMenu={closeMenu}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
+
                 {activeOrCompleted === "completed" &&
                     completedWagers.length !== 0 && (
                         <div className="tw-w-full">
@@ -2085,6 +2190,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                     </div>
                                 )
                             )}
+                            {completedTournamentWagers.map((wager: any) => {
+                                return (
+                                    <div key={wager._id}>
+                                        <TimerProvider deadline={wager.endTime}>
+                                            <MyWagersTournamentCard
+                                                wager={wager}
+                                                isActive={false}
+                                                closeMenu={closeMenu}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 {isLoading === false &&
