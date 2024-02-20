@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TournamentsCard } from "@/app/components/card";
 import {
   getAuctionsByTournamentId,
   getSortedTournaments,
@@ -10,12 +9,32 @@ import {
 import { TimerProvider } from "@/app/_context/TimerContext";
 import Image from "next/image"; // Assuming you are using Next.js Image component
 import { MoonLoader } from "react-spinners";
+import dynamic from "next/dynamic";
+
+const DynamicTournamentsCards = dynamic(
+  () => import("../../components/tournaments_card"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="tw-flex tw-mt-8 tw-justify-evenly tw-bg-gray-600 tw-rounded-lg tw-animate-pulse">
+        <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-m-2">
+          <div className="tw-w-96 tw-mb-2 tw-h-48 tw-bg-gray-700"></div>
+          <div className="tw-w-3/5 tw-h-6 tw-mb-2 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-3/5 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-3/5 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-full tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+      </div>
+    ),
+  }
+);
 
 interface Tournaments {
   _id: string;
   title: string;
   pot: number;
   endTime: Date;
+  tournamentEndtime: Date;
   // Add other properties of the tournament here
 }
 
@@ -93,7 +112,7 @@ const TournamentsList = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-10">
+        <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
           {tournamentsData &&
             tournamentsData.map((tournament) => {
               const imagesForTournament =
@@ -102,11 +121,12 @@ const TournamentsList = () => {
               return (
                 <div key={tournament._id}>
                   <TimerProvider deadline={tournament.endTime}>
-                    <TournamentsCard
+                    <DynamicTournamentsCards
                       tournament_id={tournament._id}
                       pot={tournament.pot}
                       title={tournament.title}
                       deadline={tournament.endTime}
+                      tournament_deadline={tournament.tournamentEndtime}
                       images={imagesForTournament}
                     />
                   </TimerProvider>

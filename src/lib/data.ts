@@ -839,7 +839,7 @@ export const getSortedTournaments = async (sortType: string) => {
 
 export const getLimitedTournaments = async (limit: number) => {
   try {
-    const res = await fetch(`/api/tournaments?limit=${limit}`);
+    const res = await fetch(`/api/tournaments?sort=newest&&limit=${limit}`);
     const data = await res.json();
     console.log(data);
     return data;

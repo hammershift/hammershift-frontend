@@ -6,7 +6,7 @@ import Image from "next/image";
 import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
-import { TournamentsCard } from "./card";
+import TournamentsCard from "./tournaments_card";
 import {
   getAuctionsByTournamentId,
   getLimitedTournaments,

@@ -8,7 +8,7 @@ import { TournamentsListCard } from "../../components/card";
 import Image from "next/image";
 import { LatestNews } from "../../components/how_hammeshift_works";
 import { SubscribeSmall } from "../../components/subscribe";
-import { TournamentsCard } from "../../components/card";
+import TournamentsCard from "@/app/components/tournaments_card";
 import Footer from "../../components/footer";
 import Link from "next/link";
 
@@ -65,14 +65,19 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { carDataThree } from "@/sample_data";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 import CarImageModal from "@/app/components/car_image_modal";
-import { getAuctionsByTournamentId, getTournaments } from "@/lib/data";
+import {
+  getAuctionsByTournamentId,
+  getLimitedTournaments,
+  getSortedTournaments,
+  getTournaments,
+} from "@/lib/data";
 dayjs.extend(relativeTime);
 
 interface TournamentButtonsI {
   toggleTournamentWagerModal: () => void;
   buyInFee?: number;
   alreadyJoined?: boolean;
-  tournamentEnded: boolean;
+  buyInEnded: boolean;
 }
 
 interface TitleSingleCarContainerProps {
@@ -95,7 +100,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
   toggleTournamentWagerModal,
   buyInFee,
   alreadyJoined,
-  tournamentEnded,
+  buyInEnded,
 }) => {
   const router = useRouter();
   return (
@@ -110,7 +115,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
         />
         WATCH
       </button>
-      {tournamentEnded ? (
+      {buyInEnded ? (
         <button disabled className="btn-yellow hover:tw-bg-[#f2ca16]">
           ENDED 🏆
         </button>
@@ -330,6 +335,7 @@ interface Tournaments {
   title: string;
   pot: number;
   endTime: Date;
+  tournamentEndTime: Date;
   // Add other properties of the tournament here
 }
 
@@ -338,17 +344,23 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
   cars,
   pot,
   endTime,
+  tournamentEndTime,
 }) => {
-  const [isTournamentEnded, setIsTournamentEnded] = useState(false);
-  const formattedEndTime = new Date(endTime).toUTCString();
+  const [buyInEnded, setBuyInEnded] = useState(false);
+  const [tournamentEnded, setTournamentEnded] = useState(false);
+  const formattedEndTime = new Date(tournamentEndTime).toUTCString();
   const timerValues = useTimer();
 
   useEffect(() => {
-    const endDate = new Date(endTime);
-    if (new Date() > endDate) {
-      setIsTournamentEnded(true);
+    const buyInEndDate = new Date(endTime);
+    if (new Date() > buyInEndDate) {
+      setBuyInEnded(true);
     }
-  }, [endTime]);
+    const tournamentEndDate = new Date(tournamentEndTime);
+    if (new Date() > tournamentEndDate) {
+      setTournamentEnded(true);
+    }
+  }, [endTime, tournamentEndTime]);
 
   return (
     <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
@@ -393,7 +405,7 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
           </div>
           <span className="tw-opacity-80">
             Buy-in Ends:{" "}
-            {isTournamentEnded ? (
+            {buyInEnded ? (
               <span className="tw-font-bold tw-text-[#C2451E]">
                 Ended {dayjs(endTime).fromNow()}
               </span>
@@ -417,7 +429,13 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
           </div>
           <span className="tw-opacity-80">
             Tournament Ends:{" "}
-            <span className="tw-font-bold">{formattedEndTime}</span>
+            {tournamentEnded ? (
+              <span className="tw-font-bold">
+                Ended {dayjs(tournamentEndTime).fromNow()}
+              </span>
+            ) : (
+              <span className="tw-font-bold">{formattedEndTime}</span>
+            )}
           </span>
         </div>
         <div className="tw-flex">
@@ -1088,7 +1106,7 @@ export const TournamentsYouMightLike = () => {
   useEffect(() => {
     const fetchTournamentsData = async () => {
       try {
-        const res = await getTournaments();
+        const res = await getLimitedTournaments(3);
         const tournamentsArray = res.tournaments;
         setTournamentsData(tournamentsArray);
       } catch (error) {
