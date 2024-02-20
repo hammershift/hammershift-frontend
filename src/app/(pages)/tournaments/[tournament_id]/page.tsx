@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import {
-    CommentsSection,
     TitleTournamentsList,
     TournamentButtons,
     TournamentInfoSection,
@@ -21,6 +20,7 @@ import {
 } from "@/lib/data";
 import { useSession } from "next-auth/react";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
+import { CommentsSection } from "@/app/components/CommentsSection";
 
 export interface Tournaments {
     _id: string;
@@ -288,7 +288,7 @@ const TournamentViewPage = ({
                         />
                         <TournamentInfoSection />
                     </div>
-                    <CommentsSection />
+                    <CommentsSection pageID={ID} pageType="tournament" />
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
                     <TournamentWagersSection
