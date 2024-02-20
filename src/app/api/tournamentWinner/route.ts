@@ -1,4 +1,5 @@
 import { calculateTournamentScores } from '@/helpers/calculateTournamentScores';
+import prizeDistributionTournament from '@/helpers/prizeDistributionTournament';
 import tournamentPrizeDistribution from '@/helpers/prizeDistributionTournament';
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
 
     // fetch the tournament data to get the total pot amount
     const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentId) });
+    console.log('Tournament Data:', tournament);
     if (!tournament) {
       return NextResponse.json({ message: 'Tournament not found' }, { status: 404 });
     }
@@ -75,11 +77,14 @@ export async function POST(req: NextRequest) {
 
     // check if there are at least two auctions with status of 3
     const unsuccessfulAuctionsCount = auctionStatuses.filter((auctionStatus) => auctionStatus.status === '3').length;
-    console.log(unsuccessfulAuctionsCount);
+    console.log('Unsuccessful Auctions:', unsuccessfulAuctionsCount);
 
     // check if there are only two players who placed a buy-in
     const playerCount = tournamentWagersArray.length;
-    console.log(playerCount);
+    console.log('Players:', playerCount);
+
+    const totalPot = tournament.pot;
+    console.log('Total Pot:', totalPot);
 
     if (unsuccessfulAuctionsCount >= 2 || playerCount < 3) {
       await db.collection('tournaments').updateOne({ _id: new ObjectId(tournamentId) }, { $set: { isActive: true } });
@@ -121,10 +126,7 @@ export async function POST(req: NextRequest) {
         };
       });
 
-      const totalPot = tournament.pot;
-      console.log(totalPot);
-
-      const tournamentWinners = tournamentPrizeDistribution(tournamentWagersForPrizeDistribution, totalPot);
+      const tournamentWinners = prizeDistributionTournament(tournamentWagersForPrizeDistribution, totalPot);
       console.log('Tournament Winners:', tournamentWinners);
 
       return NextResponse.json({ message: 'Tournament complete and prizes distributed' }, { status: 200 });

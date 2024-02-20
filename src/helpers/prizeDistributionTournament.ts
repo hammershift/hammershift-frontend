@@ -14,7 +14,7 @@ type TournamentWinner = {
   transactionID?: mongoose.Types.ObjectId;
 };
 
-function tournamentPrizeDistribution(wagers: TournamentWager[], totalPot: number): TournamentWinner[] {
+function prizeDistributionTournament(wagers: TournamentWager[], totalPot: number): TournamentWinner[] {
   // Sort wagers by their totalScore in ascending order
   const sortedWagers: TournamentWager[] = [...wagers].sort((a, b) => a.totalScore - b.totalScore);
 
@@ -58,4 +58,4 @@ function tournamentPrizeDistribution(wagers: TournamentWager[], totalPot: number
   return actualWinners;
 }
 
-export default tournamentPrizeDistribution;
+export default prizeDistributionTournament;

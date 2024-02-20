@@ -5,6 +5,8 @@ import { addWagerWinnings } from '@/helpers/addWagerWinnings';
 import { calculateTournamentScores } from '@/helpers/calculateTournamentScores';
 import { createWinningTransaction } from '@/helpers/createWinningTransaction';
 import prizeDistribution from '@/helpers/prizeDistribution';
+import prizeDistributionTournament from '@/helpers/prizeDistributionTournament';
+import tournamentPrizeDistribution from '@/helpers/prizeDistributionTournament';
 import { refundWagers } from '@/helpers/refundWagers';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
 import { authOptions } from '@/lib/auth';
@@ -26,6 +28,19 @@ import { NextRequest, NextResponse } from 'next/server';
 //     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 //   }
 // }
+
+export async function POST(req: NextRequest) {
+  try {
+    const requestBody = await req.json();
+    const { tournamentResults, totalPot } = requestBody;
+    const tournamentWinners = tournamentPrizeDistribution(tournamentResults, totalPot);
+
+    return NextResponse.json({ tournamentWinners });
+  } catch (error) {
+    console.error('Error in prizeDistributionTournament', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  }
+}
 
 // export async function POST(req: NextRequest) {
 //   const session = await getServerSession(authOptions);
@@ -150,18 +165,18 @@ import { NextRequest, NextResponse } from 'next/server';
 //   return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
 // }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { userWagers, auctions } = await req.json();
+// export async function POST(req: NextRequest) {
+//   try {
+//     const { userWagers, auctions } = await req.json();
 
-    if (!userWagers || !auctions) {
-      return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
-    }
+//     if (!userWagers || !auctions) {
+//       return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
+//     }
 
-    const tournamentResults = calculateTournamentScores(userWagers, auctions);
-    return NextResponse.json({ tournamentResults });
-  } catch (error) {
-    console.error('Error in calculateTournamentScores:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-  }
-}
+//     const tournamentResults = calculateTournamentScores(userWagers, auctions);
+//     return NextResponse.json({ tournamentResults });
+//   } catch (error) {
+//     console.error('Error in calculateTournamentScores:', error);
+//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+//   }
+// }
