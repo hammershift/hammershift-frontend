@@ -159,54 +159,36 @@ export const TitleSingleCarContainer: React.FC<
     views,
     watchers,
 }) => {
-    const timerValues = useTimer();
-    return (
-        <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
-            <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
-                {year} {make} {model}
-            </div>
-            <div className="info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4">
-                <div className="tw-w-[280px]">
-                    <div className="tw-flex tw-items-center">
-                        <div>
-                            <Image
-                                src={DollarIcon}
-                                width={20}
-                                height={20}
-                                alt="dollar"
-                                className="tw-w-5 tw-h-5  tw-mr-2"
-                            />
-                        </div>
-                        <div className="tw-opacity-80 tw-flex">
-                            Current Bid:
-                            <span className="tw-text-[#49C742] tw-font-bold tw-ml-2">{`$ ${String(
-                                current_bid
-                            )}`}</span>
-                            <span className="tw-block md:tw-hidden tw-ml-2">{`(${bids_num} bids)`}</span>
-                        </div>
-                    </div>
-                    <div className="tw-flex tw-mt-0 md:tw-mt-1 tw-items-center">
-                        <div>
-                            <Image
-                                src={CalendarIcon}
-                                width={20}
-                                height={20}
-                                alt="calendar"
-                                className="tw-w-5 tw-h-5  tw-mr-2"
-                            />
-                        </div>
-                        <span className="tw-opacity-80">
-                            Ending:{" "}
-                            <span className="tw-font-bold">{ending_date}</span>
-                        </span>
-                    </div>
+        const timerValues = useTimer();
+        return (
+            <div className=" tw-flex tw-flex-col tw-flex-grow tw-w-auto">
+                <div className="title-section-marker tw-flex tw-text-3xl md:tw-text-5xl tw-font-bold">
+                    {year} {make} {model}
                 </div>
-                <div className="right-section-marker">
-                    <div className="tw-flex tw-flex-col md:tw-flex-row">
-                        <div className="tw-flex tw-w-[270px] tw-items-center">
+                <div className="info-section-marker tw-flex tw-flex-col md:tw-flex-row tw-mt-4">
+                    <div className="tw-w-[280px]">
+                        <div className="tw-flex tw-items-center">
                             <div>
                                 <Image
-                                    src={HourGlassIcon}
+                                    src={DollarIcon}
+                                    width={20}
+                                    height={20}
+                                    alt="dollar"
+                                    className="tw-w-5 tw-h-5  tw-mr-2"
+                                />
+                            </div>
+                            <div className="tw-opacity-80 tw-flex">
+                                Current Bid:
+                                <span className="tw-text-[#49C742] tw-font-bold tw-ml-2">{`$ ${String(
+                                    current_bid
+                                )}`}</span>
+                                <span className="tw-block md:tw-hidden tw-ml-2">{`(${bids_num} bids)`}</span>
+                            </div>
+                        </div>
+                        <div className="tw-flex tw-mt-0 md:tw-mt-1 tw-items-center">
+                            <div>
+                                <Image
+                                    src={CalendarIcon}
                                     width={20}
                                     height={20}
                                     alt="calendar"
@@ -214,131 +196,149 @@ export const TitleSingleCarContainer: React.FC<
                                 />
                             </div>
                             <span className="tw-opacity-80">
-                                Time Left:{" "}
-                                {new Date(deadline) < new Date() ? (
-                                    <span className="tw-font-bold tw-text-[#C2451E]">
-                                        Ended {dayjs(deadline).fromNow()}
+                                Ending:{" "}
+                                <span className="tw-font-bold">{ending_date}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div className="right-section-marker">
+                        <div className="tw-flex tw-flex-col md:tw-flex-row">
+                            <div className="tw-flex tw-w-[270px] tw-items-center">
+                                <div>
+                                    <Image
+                                        src={HourGlassIcon}
+                                        width={20}
+                                        height={20}
+                                        alt="calendar"
+                                        className="tw-w-5 tw-h-5  tw-mr-2"
+                                    />
+                                </div>
+                                <span className="tw-opacity-80">
+                                    Time Left:{" "}
+                                    {new Date(deadline) < new Date() ? (
+                                        <span className="tw-font-bold tw-text-[#C2451E]">
+                                            Ended {dayjs(deadline).fromNow()}
+                                        </span>
+                                    ) : (
+                                        <span className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+                                    )}
+                                </span>
+                            </div>
+                            <div className="tw-flex tw-items-center">
+                                <div>
+                                    <Image
+                                        src={PlayersIcon}
+                                        width={20}
+                                        height={20}
+                                        alt="calendar"
+                                        className="tw-w-5 tw-h-5  tw-mr-2"
+                                    />
+                                </div>
+                                <span className="tw-opacity-80">
+                                    Players:{" "}
+                                    <span className="tw-font-bold ">
+                                        {players_num}
                                     </span>
-                                ) : (
-                                    <span className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
-                                )}
-                            </span>
-                        </div>
-                        <div className="tw-flex tw-items-center">
-                            <div>
-                                <Image
-                                    src={PlayersIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5  tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Players:{" "}
-                                <span className="tw-font-bold ">
-                                    {players_num}
                                 </span>
+                            </div>
+                        </div>
+                        <div className="tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
+                            <div className="tw-hidden md:tw-flex md:tw-w-[270px] tw-items-center">
+                                <div>
+                                    <Image
+                                        src={HashtagIcon}
+                                        width={20}
+                                        height={20}
+                                        alt="calendar"
+                                        className="tw-w-5 tw-h-5  tw-mr-2"
+                                    />
+                                </div>
+                                <span className="tw-opacity-80">
+                                    Bids:{" "}
+                                    <span className="tw-font-bold">{bids_num}</span>
+                                </span>
+                            </div>
+                            <div className="tw-flex tw-items-center">
+                                <div>
+                                    <Image
+                                        src={PrizeIcon}
+                                        width={20}
+                                        height={20}
+                                        alt="calendar"
+                                        className="tw-w-5 tw-h-5 tw-mr-2"
+                                    />
+                                </div>
+                                <span className="tw-opacity-80">
+                                    Prize:{" "}
+                                    <span className="tw-font-bold ">
+                                        $
+                                        {pot
+                                            ? new Intl.NumberFormat().format(
+                                                pot || 0
+                                            )
+                                            : " --"}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="tw-opacity-80 md:tw-flex md:tw-mt-1">
+                    <div className="tw-flex tw-gap-2 tw-items-center tw-w-full tw-max-w-[280px]">
+                        <Image
+                            src={CommentsIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5 tw-text-white"
+                        />
+                        <div>
+                            Comments:{" "}
+                            <span className="tw-font-bold">
+                                {comments
+                                    ? new Intl.NumberFormat().format(comments)
+                                    : "--"}{" "}
                             </span>
                         </div>
                     </div>
-                    <div className="tw-flex-col md:tw-flex-row tw-mt-0 md:tw-mt-1 tw-flex">
-                        <div className="tw-hidden md:tw-flex md:tw-w-[270px] tw-items-center">
-                            <div>
-                                <Image
-                                    src={HashtagIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5  tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Bids:{" "}
-                                <span className="tw-font-bold">{bids_num}</span>
+                    <div className="tw-flex tw-gap-2 tw-items-center  tw-w-full tw-max-w-[270px]">
+                        <Image
+                            src={EyeIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5 tw-text-white"
+                        />
+                        <div>
+                            Views:{" "}
+                            <span className="tw-font-bold">
+                                {views
+                                    ? new Intl.NumberFormat().format(views)
+                                    : "--"}
                             </span>
                         </div>
-                        <div className="tw-flex tw-items-center">
-                            <div>
-                                <Image
-                                    src={PrizeIcon}
-                                    width={20}
-                                    height={20}
-                                    alt="calendar"
-                                    className="tw-w-5 tw-h-5 tw-mr-2"
-                                />
-                            </div>
-                            <span className="tw-opacity-80">
-                                Prize:{" "}
-                                <span className="tw-font-bold ">
-                                    $
-                                    {pot
-                                        ? new Intl.NumberFormat().format(
-                                              pot || 0
-                                          )
-                                        : " --"}
-                                </span>
+                    </div>
+                    <div className="tw-flex tw-gap-2 tw-items-center">
+                        <Image
+                            src={TelescopeIcon}
+                            width={20}
+                            height={20}
+                            alt="calendar"
+                            className="tw-w-5 tw-h-5 tw-text-white"
+                        />
+                        <div>
+                            Watchers:{" "}
+                            <span className="tw-font-bold">
+                                {watchers
+                                    ? new Intl.NumberFormat().format(watchers)
+                                    : "--"}
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="tw-opacity-80 md:tw-flex md:tw-mt-1">
-                <div className="tw-flex tw-gap-2 tw-items-center tw-w-full tw-max-w-[280px]">
-                    <Image
-                        src={CommentsIcon}
-                        width={20}
-                        height={20}
-                        alt="calendar"
-                        className="tw-w-5 tw-h-5 tw-text-white"
-                    />
-                    <div>
-                        Comments:{" "}
-                        <span className="tw-font-bold">
-                            {comments
-                                ? new Intl.NumberFormat().format(comments)
-                                : "--"}{" "}
-                        </span>
-                    </div>
-                </div>
-                <div className="tw-flex tw-gap-2 tw-items-center  tw-w-full tw-max-w-[270px]">
-                    <Image
-                        src={EyeIcon}
-                        width={20}
-                        height={20}
-                        alt="calendar"
-                        className="tw-w-5 tw-h-5 tw-text-white"
-                    />
-                    <div>
-                        Views:{" "}
-                        <span className="tw-font-bold">
-                            {views
-                                ? new Intl.NumberFormat().format(views)
-                                : "--"}
-                        </span>
-                    </div>
-                </div>
-                <div className="tw-flex tw-gap-2 tw-items-center">
-                    <Image
-                        src={TelescopeIcon}
-                        width={20}
-                        height={20}
-                        alt="calendar"
-                        className="tw-w-5 tw-h-5 tw-text-white"
-                    />
-                    <div>
-                        Watchers:{" "}
-                        <span className="tw-font-bold">
-                            {watchers
-                                ? new Intl.NumberFormat().format(watchers)
-                                : "--"}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+        );
+    };
 
 interface Tournaments {
     cars: number;
@@ -692,164 +692,6 @@ export const TournamentInfoSection = () => {
     );
 };
 
-export const CommentsSection = () => {
-    return (
-        <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
-            <div className="tw-flex tw-justify-between">
-                <div className="tw-text-xl md:tw-text-3xl">
-                    <span className="tw-font-bold">Comments</span>
-                    {`(16)`}
-                </div>
-                <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                    <Image
-                        src={BellIcon}
-                        width={16}
-                        height={16}
-                        alt="Bell"
-                        className="tw-w-4 tw-h-4"
-                    />
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Log in
-                    </div>
-                    <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
-                        Sign Up
-                    </div>
-                </div>
-            </div>
-            <div className="tw-flex tw-my-3">
-                <div className="tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
-                    <input
-                        placeholder="Add a comment"
-                        className="tw-bg-[#172431] tw-w-full"
-                    />
-                    <Image
-                        src={CameraPlus}
-                        width={20}
-                        height={20}
-                        alt="camera plus"
-                        className="tw-w-5 tw-h-5"
-                    />
-                    <Image
-                        src={GifIcon}
-                        width={20}
-                        height={20}
-                        alt="gif"
-                        className="tw-w-5 tw-h-5 tw-ml-2"
-                    />
-                </div>
-                <button className="btn-white tw-ml-2">Comment</button>
-            </div>
-            <div className="tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
-                Sort by
-                <span className="tw-font-bold tw-ml-2">Best</span>
-                <Image
-                    src={ArrowDown}
-                    width={14}
-                    height={14}
-                    alt="arrow down"
-                    className="tw-w-[14px] tw-h-[14px] tw-ml-2"
-                />
-            </div>
-            <section>
-                <div>
-                    {/* To be replaced by map */}
-                    <CommentsCard />
-                    <CommentsCard />
-                    <CommentsCard />
-                </div>
-                <button className="btn-transparent-white tw-w-full tw-mt-8 tw-text-sm">
-                    Load 12 more comments
-                </button>
-                <div className="tw-flex tw-items-center tw-mt-8">
-                    <span>Powered by</span>
-                    <Image
-                        src={OpenWebLogo}
-                        width={97}
-                        height={28}
-                        alt="camera plus"
-                        className="tw-w-[97px] tw-h-[28px] tw-ml-2"
-                    />
-                </div>
-            </section>
-        </div>
-    );
-};
-
-export const CommentsCard = () => {
-    const commentsData = [
-        {
-            id: "com1",
-            username: "@johnadams",
-            text: " Nihil hic munitissimus habendi senatus locus, nihil horum? Qui ipsorum lingua Celtae, nostra Galli appellantur. Ambitioni dedisse scripsisse iudicaretur. Paullum deliquit, ponderibus modulisque suis ratio utitur.Nihil hic munitissimus habendi senatus locus, nihil horum? Praeterea iter est quasdam res quas ex communi.Cum sociis natoque penatibus et magnis dis parturient.Contra legem facit qui id facit quod lex prohibet.Ambitioni dedisse scripsisse iudicaretur.Quid securi etiam tamquam eu fugiat nulla pariatur.Quam diu etiam furor iste tuus nos eludet? Tu quoque, Brute, fili mi, nihil timor populi, nihil! Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae.Unam incolunt Belgae, aliam Aquitani, tertiam.Excepteur sint obcaecat cupiditat non proident culpa.Petierunt uti sibi concilium totius Galliae in diem certam indicere.Phasellus laoreet lorem vel dolor tempus vehicula.Quis aute iure reprehenderit in voluptate velit esse.Quo usque tandem abutere, Catilina, patientia nostra? Prima luce, cum quibus mons aliud consensu ab eo.",
-        },
-    ];
-    return (
-        <div className="tw-flex tw-mt-8 tw-text-[14px]">
-            <Image
-                src={AvatarOne}
-                width={40}
-                height={40}
-                alt="camera plus"
-                className="tw-w-10 tw-h-10 tw-ml-2"
-            />
-            <div className="tw-ml-4">
-                <div className="tw-flex tw-justify-between">
-                    <div>
-                        <span className="tw-font-bold">Jane Doe</span>
-                        <span className="tw-text-[#F2CA16] tw-ml-2">
-                            Seller
-                        </span>
-                        <span className="tw-opacity-50 tw-ml-2">
-                            14 hours ago
-                        </span>
-                    </div>
-                    <Image
-                        src={ThreeDots}
-                        width={16}
-                        height={16}
-                        alt="thumbs up"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                </div>
-                <div className=" tw-my-3 tw-h-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-                    <span className="tw-text-[#42A0FF]">
-                        {commentsData[0].username}
-                    </span>
-                    {commentsData[0].text}
-                </div>
-                <div className="tw-flex tw-opacity-50">
-                    Reply
-                    <span className="tw-ml-4">·</span>
-                    <Image
-                        src={ThumbsUp}
-                        width={16}
-                        height={16}
-                        alt="thumbs up"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                    <Image
-                        src={ThumbsDown}
-                        width={16}
-                        height={16}
-                        alt="thumbs down"
-                        className="tw-w-4 tw-h-4 tw-ml-4"
-                    />
-                </div>
-
-                <div className="tw-text-[#42A0FF] tw-mt-3 tw-flex">
-                    <Image
-                        src={CornerDownRight}
-                        width={16}
-                        height={16}
-                        alt="camera plus"
-                        className="tw-w-4 tw-h-4 tw-mr-2 "
-                    />
-                    1 Replay
-                </div>
-            </div>
-        </div>
-    );
-};
 
 interface TournamentWagerSectionI {
     toggleTournamentWagerModal: () => void;
@@ -914,7 +756,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                                             <div className="tw-text-sm ">
                                                 <div className="tw-font-bold">
                                                     {session?.user.id ===
-                                                    wager.user._id
+                                                        wager.user._id
                                                         ? "You"
                                                         : wager.user.username}
                                                 </div>
@@ -948,7 +790,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                                             <div className="tw-text-sm ">
                                                 <div className="tw-font-bold">
                                                     {session?.user.id ===
-                                                    wager.user._id
+                                                        wager.user._id
                                                         ? "You"
                                                         : wager.user.username}
                                                 </div>
@@ -985,11 +827,10 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
                                 document.body.classList.add("stop-scrolling");
                                 toggleTournamentWagerModal();
                             }}
-                            className={`btn-yellow tw-w-full ${
-                                tournamentWagers.length > 4
+                            className={`btn-yellow tw-w-full ${tournamentWagers.length > 4
                                     ? "tw-mt-2"
                                     : "tw-mt-6"
-                            }`}
+                                }`}
                         >
                             JOIN TOURNAMENT
                         </button>
