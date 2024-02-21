@@ -10,7 +10,7 @@ import {
   GamesYouMightLike,
   WinnersSection,
 } from "@/app/ui/car_view_page/CarViewPage";
-import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
+import { CommentsSection } from "@/app/components/CommentsSection";
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
@@ -374,7 +374,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             </div>
           ) : null}
           <GuessThePriceInfoSection />
-          <CommentsSection auctionID={ID} />
+          <CommentsSection pageID={ID} pageType="auction" />
         </div>
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
           {winners && wagersData ? (
