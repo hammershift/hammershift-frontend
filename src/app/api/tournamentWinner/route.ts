@@ -98,7 +98,6 @@ export async function POST(req: NextRequest) {
     }));
 
     const userWagers = tournamentWagersArray.map((tournamentWager) => ({
-      // userID: tournamentWager.user._id,
       userID: tournamentWager.user._id.toString(),
       wagers: tournamentWager.wagers.map((wager) => ({
         auctionID: wager.auctionID,
