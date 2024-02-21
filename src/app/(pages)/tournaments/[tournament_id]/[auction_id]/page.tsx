@@ -48,6 +48,7 @@ export interface Tournaments {
   title: string;
   pot: number;
   endTime: Date;
+  tournamentEndTime: Date;
   cars: number;
   buyInFee: number;
 
@@ -74,8 +75,8 @@ const SingleViewPage = ({
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
     useState(false);
+  const [buyInEnded, setBuyInEnded] = useState(false);
   const [tournamentEnded, setTournamentEnded] = useState(false);
-
   const [tournamentWagers, setTournamentWagers] = useState([]);
   const [tournamentData, setTournamentData] = useState<Tournaments>();
   const [alreadyJoined, setAlreadyJoined] = useState(false);
@@ -104,10 +105,12 @@ const SingleViewPage = ({
       try {
         const data = await getTournamentById(TournamentID);
         const currentDate = new Date();
-        const auctionDeadline = new Date(data?.endTime);
+        const buyInDeadline = new Date(data?.endTime);
+        const tournamentDeadline = new Date(data?.tournamentEndTime);
         console.log("tournament: ", data);
         setTournamentData(data);
-        setTournamentEnded(auctionDeadline < currentDate);
+        setBuyInEnded(buyInDeadline < currentDate);
+        setTournamentEnded(tournamentDeadline < currentDate);
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
@@ -334,7 +337,7 @@ const SingleViewPage = ({
               toggleTournamentWagerModal={toggleModal}
               buyInFee={tournamentData?.buyInFee}
               alreadyJoined={alreadyJoined}
-              tournamentEnded={tournamentEnded}
+              buyInEnded={buyInEnded}
             />
           </div>
         </div>
@@ -366,7 +369,7 @@ const SingleViewPage = ({
               toggleTournamentWagerModal={toggleModal}
               buyInFee={tournamentData?.buyInFee}
               alreadyJoined={alreadyJoined}
-              tournamentEnded={tournamentEnded}
+              buyInEnded={buyInEnded}
             />
           </div>
           {carData ? (
@@ -382,7 +385,7 @@ const SingleViewPage = ({
                 description={carData.description}
                 toggleTournamentWagerModal={toggleModal}
                 alreadyJoined={alreadyJoined}
-                tournamentEnded={tournamentEnded}
+                tournamentEnded={buyInEnded}
               />
             </>
           ) : null}
@@ -393,7 +396,7 @@ const SingleViewPage = ({
                 toggleTournamentWagerModal={toggleModal}
                 tournamentWagers={tournamentWagers}
                 alreadyJoined={alreadyJoined}
-                tournamentEnded={tournamentEnded}
+                tournamentEnded={buyInEnded}
               />
             ) : null}
           </div>
@@ -411,7 +414,7 @@ const SingleViewPage = ({
               toggleTournamentWagerModal={toggleModal}
               tournamentWagers={tournamentWagers}
               alreadyJoined={alreadyJoined}
-              tournamentEnded={tournamentEnded}
+              tournamentEnded={buyInEnded}
             />
           ) : null}
           {carData ? (

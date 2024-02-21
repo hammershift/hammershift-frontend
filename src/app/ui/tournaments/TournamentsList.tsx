@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TournamentsCard } from "@/app/components/card";
 import {
   getAuctionsByTournamentId,
   getSortedTournaments,
@@ -9,12 +8,33 @@ import {
 } from "@/lib/data";
 import { TimerProvider } from "@/app/_context/TimerContext";
 import Image from "next/image"; // Assuming you are using Next.js Image component
+import { MoonLoader } from "react-spinners";
+import dynamic from "next/dynamic";
+
+const DynamicTournamentsCards = dynamic(
+  () => import("../../components/tournaments_card"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="tw-flex tw-mt-8 tw-justify-evenly tw-bg-gray-600 tw-rounded-lg tw-animate-pulse">
+        <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-m-2">
+          <div className="tw-w-96 tw-mb-2 tw-h-48 tw-bg-gray-700"></div>
+          <div className="tw-w-3/5 tw-h-6 tw-mb-2 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-3/5 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-3/5 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+          <div className="tw-w-full tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        </div>
+      </div>
+    ),
+  }
+);
 
 interface Tournaments {
   _id: string;
   title: string;
   pot: number;
   endTime: Date;
+  tournamentEndtime: Date;
   // Add other properties of the tournament here
 }
 
@@ -29,13 +49,20 @@ const TournamentsList = () => {
     {}
   );
   const [sortType, setSortType] = useState<string>("newest");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
+      setLoading(true);
       try {
         const data = await getSortedTournaments(sortType);
         const tournamentsArray = data.tournaments;
-        setTournamentsData(tournamentsArray);
+        if (data) {
+          setTournamentsData(tournamentsArray);
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
@@ -68,7 +95,7 @@ const TournamentsList = () => {
   return (
     <div>
       <div className="tw-mt-5">
-        <div className="tw-flex tw-justify-between">
+        <div className="tw-flex tw-justify-between tw-items-center">
           {" "}
           <span className="tw-bg-[#156CC3] tw-rounded-full tw-px-2.5 tw-py-2 tw-font-bold">
             ACTIVE TOURNAMENTS
@@ -82,29 +109,42 @@ const TournamentsList = () => {
           </select>
         </div>
       </div>
-      <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
-        {tournamentsData &&
-          tournamentsData.map((tournament) => {
-            const imagesForTournament =
-              auctionData[tournament._id]?.map((auction) => auction.image) ||
-              [];
-            return (
-              <div key={tournament._id}>
-                <TimerProvider deadline={tournament.endTime}>
-                  <TournamentsCard
-                    tournament_id={tournament._id}
-                    pot={tournament.pot}
-                    title={tournament.title}
-                    deadline={tournament.endTime}
-                    images={imagesForTournament}
-                  />
-                </TimerProvider>
-              </div>
-            );
-          })}
-      </div>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
+          {tournamentsData &&
+            tournamentsData.map((tournament) => {
+              const imagesForTournament =
+                auctionData[tournament._id]?.map((auction) => auction.image) ||
+                [];
+              return (
+                <div key={tournament._id}>
+                  <TimerProvider deadline={tournament.endTime}>
+                    <DynamicTournamentsCards
+                      tournament_id={tournament._id}
+                      pot={tournament.pot}
+                      title={tournament.title}
+                      deadline={tournament.endTime}
+                      tournament_deadline={tournament.tournamentEndtime}
+                      images={imagesForTournament}
+                    />
+                  </TimerProvider>
+                </div>
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 };
 
 export default TournamentsList;
+
+const Loader = () => {
+  return (
+    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
+      <MoonLoader color="#f2ca16" />
+    </div>
+  );
+};

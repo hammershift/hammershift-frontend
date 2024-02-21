@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, Suspense, lazy, useRef } from "react";
 import { getCars, getCarsWithFilter } from "@/lib/data";
 import FiltersAndSort from "@/app/components/filter_and_sort";
