@@ -3,22 +3,12 @@
 import React, { useEffect, useState } from "react";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import {
-<<<<<<< HEAD
-  CommentsSection,
   TitleTournamentsList,
   TournamentButtons,
   TournamentInfoSection,
   TournamentWagersSection,
   TournamentsList,
   TournamentsYouMightLike,
-=======
-    TitleTournamentsList,
-    TournamentButtons,
-    TournamentInfoSection,
-    TournamentWagersSection,
-    TournamentsList,
-    TournamentsYouMightLike,
->>>>>>> 1109f7df689507e88ca6572ef87f2137e21255da
 } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
 import {
   addTournamentPot,
@@ -181,7 +171,6 @@ const TournamentViewPage = ({
     }
   };
 
-<<<<<<< HEAD
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     sessionData: any
@@ -236,66 +225,6 @@ const TournamentViewPage = ({
       <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
         <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
           TOURNAMENT
-=======
-            <div className="section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
-                <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
-                    {tournamentData && (
-                        <TimerProvider deadline={tournamentData.endTime}>
-                            <TitleTournamentsList
-                                _id={tournamentData._id}
-                                title={tournamentData.title}
-                                cars={auctionData.length}
-                                pot={tournamentData.pot}
-                                endTime={tournamentData.endTime}
-                            />
-                        </TimerProvider>
-                    )}
-                    <div className="sm:tw-hidden tw-mt-4">
-                        {tournamentData && (
-                            <TournamentButtons
-                                toggleTournamentWagerModal={toggleModal}
-                                buyInFee={tournamentData.buyInFee}
-                                alreadyJoined={alreadyJoined}
-                                tournamentEnded={tournamentEnded}
-                            />
-                        )}
-                    </div>
-                    <TournamentsList
-                        buyInFee={tournamentData?.buyInFee}
-                        toggleTournamentWagerModal={toggleModal}
-                        auctionData={auctionData}
-                        alreadyJoined={alreadyJoined}
-                        tournamentEnded={tournamentEnded}
-                        tournamentID={ID}
-                    />
-                    <div className="sm:tw-hidden tw-my-8">
-                        <TournamentWagersSection
-                            tournamentWagers={tournamentWagers}
-                            toggleTournamentWagerModal={toggleModal}
-                            alreadyJoined={alreadyJoined}
-                            tournamentEnded={tournamentEnded}
-                        />
-                        <TournamentInfoSection />
-                    </div>
-                    <CommentsSection pageID={ID} pageType="tournament" />
-                </div>
-                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
-                    <TournamentWagersSection
-                        tournamentWagers={tournamentWagers}
-                        toggleTournamentWagerModal={toggleModal}
-                        alreadyJoined={alreadyJoined}
-                        tournamentEnded={tournamentEnded}
-                    />
-                    <TournamentInfoSection />
-                </div>
-            </div>
-            {/* TODO: Check if working*/}
-            {/* <TournamentWagerPage /> */}
-            {isWagerMenuOpen && (
-                <div className="tw-bg-black tw-w-screen tw-h-full"></div>
-            )}
-            <TournamentsYouMightLike />
->>>>>>> 1109f7df689507e88ca6572ef87f2137e21255da
         </div>
         <div className="tw-hidden sm:tw-block">
           {tournamentData && (
@@ -349,7 +278,7 @@ const TournamentViewPage = ({
             />
             <TournamentInfoSection />
           </div>
-          <CommentsSection />
+          <CommentsSection pageID={ID} pageType="tournament" />
         </div>
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
           <TournamentWagersSection
