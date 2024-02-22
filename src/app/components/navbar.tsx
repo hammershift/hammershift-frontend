@@ -872,6 +872,11 @@ const MyWatchlistDropdownMenu = () => {
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activeWatchlist, setActiveWatchlist] = useState([]);
     const [completedWatchlist, setCompletedWatchlist] = useState([]);
+    const [activeTournamentWatchlist, setActiveTournamentWatchlist] = useState(
+        []
+    );
+    const [completedTournamentWatchlist, setCompletedTournamentWatchlist] =
+        useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -888,9 +893,24 @@ const MyWatchlistDropdownMenu = () => {
                     const auctionDeadline = new Date(watchlist.auctionDeadline);
                     return auctionDeadline >= currentDate;
                 });
+                const completedTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline < currentDate;
+                    }
+                );
+
+                const activeTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
                 setActiveWatchlist(active);
                 setCompletedWatchlist(completed);
+                setActiveTournamentWatchlist(activeTournaments);
+                setCompletedTournamentWatchlist(completedTournaments);
             }
             setIsLoading(false);
         };
@@ -898,7 +918,7 @@ const MyWatchlistDropdownMenu = () => {
     }, []);
 
     return (
-        <div className="watchlist-menu tw-absolute tw-z-30 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-shadow-xl tw-shadow-black">
+        <div className="watchlist-menu tw-absolute tw-z-30 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-6 tw-pb-2 tw-shadow-xl tw-shadow-black">
             <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
                 <div className="tw-font-bold tw-text-lg tw-text-left">
                     MY WATCHLIST
@@ -931,7 +951,9 @@ const MyWatchlistDropdownMenu = () => {
                     <BounceLoader color="#696969" loading={true} />
                 </div>
             )}
-            {activeOrCompleted === "active" && activeWatchlist.length !== 0 && (
+            {activeOrCompleted === "active" &&
+            (activeWatchlist.length !== 0 ||
+                activeTournamentWatchlist.length !== 0) ? (
                 <div className="tw-w-full">
                     {activeWatchlist.map((watchlist: any, index: number) => (
                         <div key={watchlist._id}>
@@ -948,67 +970,173 @@ const MyWatchlistDropdownMenu = () => {
                             </TimerProvider>
                         </div>
                     ))}
+                    {activeTournamentWatchlist.map((watchlist: any) => {
+                        return (
+                            <div key={watchlist._id}>
+                                <TimerProvider deadline={watchlist.endTime}>
+                                    <MyWatchlistTournamentCard
+                                        watchlist={watchlist}
+                                        isActive={true}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        );
+                    })}
                 </div>
-            )}
+            ) : null}
             {activeOrCompleted === "completed" &&
-                completedWatchlist.length !== 0 && (
-                    <div className="tw-w-full">
-                        {completedWatchlist.map(
-                            (watchlist: any, index: number) => (
-                                <div key={watchlist._id}>
-                                    <TimerProvider
-                                        deadline={watchlist.auctionDeadline}
-                                    >
-                                        <MyWatchlistCard
-                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                            img={watchlist.auctionImage}
-                                            current_bid={watchlist.auctionPrice}
-                                            id={watchlist.auctionIdentifierId}
-                                            time_left={
-                                                watchlist.auctionDeadline
-                                            }
-                                            isActive={false}
-                                            index={index}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            )
+            (completedWatchlist.length !== 0 ||
+                completedTournamentWatchlist.length !== 0) ? (
+                <div className="tw-w-full">
+                    {completedWatchlist.map((watchlist: any, index: number) => (
+                        <div key={watchlist._id}>
+                            <TimerProvider deadline={watchlist.auctionDeadline}>
+                                <MyWatchlistCard
+                                    title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                    img={watchlist.auctionImage}
+                                    current_bid={watchlist.auctionPrice}
+                                    id={watchlist.auctionIdentifierId}
+                                    time_left={watchlist.auctionDeadline}
+                                    isActive={false}
+                                    index={index}
+                                />
+                            </TimerProvider>
+                        </div>
+                    ))}
+                    {completedTournamentWatchlist.map((watchlist: any) => {
+                        return (
+                            <div key={watchlist._id}>
+                                <TimerProvider deadline={watchlist.endTime}>
+                                    <MyWatchlistTournamentCard
+                                        watchlist={watchlist}
+                                        isActive={false}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeWatchlist.length === 0 &&
+            activeTournamentWatchlist.length === 0 ? (
+                <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="tw-w-[80px] tw-h-[80px]"
+                    />
+                    <div className="">
+                        <div className="tw-font-bold tw-text-xl tw-text-center">
+                            No active wagers
+                        </div>
+                        <div className="tw-opacity-70 tw-text-center">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {activeOrCompleted === "completed" &&
+            completedWatchlist.length === 0 &&
+            completedTournamentWatchlist.length === 0 ? (
+                <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                    No watchlist in completed
+                </div>
+            ) : null}
+        </div>
+    );
+};
+
+export const MyWatchlistTournamentCard = ({
+    watchlist,
+    isActive,
+    closeMenu,
+}: any) => {
+    const { days, hours, minutes, seconds } = useTimer();
+    let formattedDateString;
+    if (watchlist.endTime) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(watchlist.endTime));
+    }
+
+    return (
+        <div
+            className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 tw-border-t-[1px] tw-border-[#253747]`}
+        >
+            <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
+                <Link
+                    href={`/tournaments/${watchlist.tournamentID}`}
+                    className="tw-grid tw-gap-[2px] tw-grid-cols-2 sm:tw-w-[100px] tw-w-[50px] tw-pt-2 sm:tw-p-0"
+                    onClick={() => closeMenu && closeMenu()}
+                >
+                    {watchlist.tournamentImages
+                        .slice(0, 4)
+                        .map((image: string, index: number) => {
+                            return (
+                                <Image
+                                    key={index}
+                                    src={image}
+                                    alt="car image"
+                                    width={49}
+                                    height={49}
+                                    className="tw-rounded tw-w-[24.5px] tw-h-[24.5px] sm:tw-h-[49px] sm:tw-w-[49px] tw-object-cover"
+                                />
+                            );
+                        })}
+                </Link>
+                <div className="tw-flex tw-flex-col tw-items-start sm:tw-max-w-[323px] tw-max-w-[230px]">
+                    <Link
+                        href={`/tournaments/${watchlist.tournamentID}`}
+                        className="tw-self-start"
+                        onClick={() => closeMenu && closeMenu()}
+                    >
+                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base sm:tw-py-1 tw-text-left tw-line-clamp-1">
+                            {watchlist.title}
+                        </div>
+                    </Link>
+                    {!isActive && (
+                        <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+                            Ended {formattedDateString}
+                        </div>
+                    )}
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
+                        {isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Time Left:
+                                </span>
+                                {Number(days) < 1 ? (
+                                    <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
                         )}
                     </div>
-                )}
-            {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeWatchlist.length === 0 && (
-                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                        <Image
-                            src={MoneyBag}
-                            width={80}
-                            height={80}
-                            alt="watchlist icon"
-                            className="tw-w-[80px] tw-h-[80px]"
-                        />
-                        <div className="">
-                            <div className="tw-font-bold tw-text-xl tw-text-center">
-                                No active wagers
-                            </div>
-                            <div className="tw-opacity-70 tw-text-center">
-                                Quam temere in vitiis, legem sancimus haerentia
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => router.push("/auctions")}
-                            className="btn-transparent-white"
-                        >
-                            DISCOVER AUCTIONS
-                        </button>
-                    </div>
-                )}
-            {activeOrCompleted === "completed" &&
-                completedWatchlist.length === 0 && (
-                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                        No watchlist in completed
-                    </div>
-                )}
+                </div>
+            </div>
         </div>
     );
 };
@@ -1034,6 +1162,17 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     index,
 }) => {
     const { days, hours, minutes, seconds } = useTimer();
+    let formattedDateString;
+    if (time_left) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(time_left));
+    }
 
     return (
         <div
@@ -1045,7 +1184,7 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                 <Link
                     href={`/auctions/car_view_page/${id}`}
                     onClick={() => closeMenu && closeMenu()}
-                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[50px] tw-h-[50px]"
+                    className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[50px] tw-h-[50px] tw-pt-2 sm:tw-pt-0"
                 >
                     <Image
                         src={img}
@@ -1061,24 +1200,56 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                         className="tw-self-start"
                         onClick={() => closeMenu && closeMenu()}
                     >
-                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-py-1 tw-text-left tw-line-clamp-1">
+                        <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base sm:tw-py-1 tw-text-left tw-line-clamp-1">
                             {title}
                         </div>
                     </Link>
-                    <div className="tw-w-full tw-mt-1 tw-text-sm">
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
-                            <Image
-                                src={Dollar}
-                                width={14}
-                                height={14}
-                                alt="wallet icon"
-                                className="tw-w-[14px] tw-h-[14px]"
-                            />
-                            <span className="tw-opacity-80">Current Bid:</span>
-                            <span className="tw-text-[#49C742] tw-font-bold">
-                                ${new Intl.NumberFormat().format(current_bid)}
-                            </span>
+                    {!isActive && (
+                        <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+                            Ended {formattedDateString}
                         </div>
+                    )}
+                    <div className="tw-w-full tw-mt-1 tw-text-sm">
+                        {!isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                                <Image
+                                    src={HammerIcon}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Hammer Price:
+                                </span>
+                                <span className="tw-text-[#49C742] tw-font-bold">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        )}
+                        {isActive && (
+                            <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="tw-w-[14px] tw-h-[14px]"
+                                />
+                                <span className="tw-opacity-80">
+                                    Current Bid:
+                                </span>
+                                <span className="tw-text-[#49C742] tw-font-bold">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        )}
                         {isActive && (
                             <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
                                 <Image
@@ -1877,6 +2048,11 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activeWatchlist, setActiveWatchlist] = useState([]);
     const [completedWatchlist, setCompletedWatchlist] = useState([]);
+    const [activeTournamentWatchlist, setActiveTournamentWatchlist] = useState(
+        []
+    );
+    const [completedTournamentWatchlist, setCompletedTournamentWatchlist] =
+        useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -1893,9 +2069,24 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     const auctionDeadline = new Date(watchlist.auctionDeadline);
                     return auctionDeadline >= currentDate;
                 });
+                const completedTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline < currentDate;
+                    }
+                );
+
+                const activeTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
                 setActiveWatchlist(active);
                 setCompletedWatchlist(completed);
+                setActiveTournamentWatchlist(activeTournaments);
+                setCompletedTournamentWatchlist(completedTournaments);
             }
             setIsLoading(false);
         };
@@ -1931,101 +2122,122 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 )}
                 {activeOrCompleted === "active" &&
-                    activeWatchlist.length !== 0 && (
-                        <div className="tw-w-full">
-                            {activeWatchlist.map(
-                                (watchlist: any, index: number) => (
-                                    <div key={watchlist._id}>
-                                        <TimerProvider
-                                            deadline={watchlist.auctionDeadline}
-                                        >
-                                            <MyWatchlistCard
-                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                                img={watchlist.auctionImage}
-                                                current_bid={
-                                                    watchlist.auctionPrice
-                                                }
-                                                time_left={
-                                                    watchlist.auctionDeadline
-                                                }
-                                                id={
-                                                    watchlist.auctionIdentifierId
-                                                }
-                                                isActive={true}
-                                                closeMenu={closeMenu}
-                                                index={index}
-                                            />
-                                        </TimerProvider>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    )}
+                (activeWatchlist.length !== 0 ||
+                    activeTournamentWatchlist.length !== 0) ? (
+                    <div className="tw-w-full">
+                        {activeWatchlist.map(
+                            (watchlist: any, index: number) => (
+                                <div key={watchlist._id}>
+                                    <TimerProvider
+                                        deadline={watchlist.auctionDeadline}
+                                    >
+                                        <MyWatchlistCard
+                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                            img={watchlist.auctionImage}
+                                            current_bid={watchlist.auctionPrice}
+                                            time_left={
+                                                watchlist.auctionDeadline
+                                            }
+                                            id={watchlist.auctionIdentifierId}
+                                            isActive={true}
+                                            closeMenu={closeMenu}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            )
+                        )}
+                        {activeTournamentWatchlist.map((watchlist: any) => {
+                            return (
+                                <div key={watchlist._id}>
+                                    <TimerProvider deadline={watchlist.endTime}>
+                                        <MyWatchlistTournamentCard
+                                            watchlist={watchlist}
+                                            isActive={true}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : null}
                 {activeOrCompleted === "completed" &&
-                    completedWatchlist.length !== 0 && (
-                        <div className="tw-w-full">
-                            {completedWatchlist.map(
-                                (watchlist: any, index: number) => (
-                                    <div key={watchlist._id}>
-                                        <TimerProvider
-                                            deadline={watchlist.auctionDeadline}
-                                        >
-                                            <MyWatchlistCard
-                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                                                img={watchlist.auctionImage}
-                                                current_bid={
-                                                    watchlist.auctionPrice
-                                                }
-                                                id={
-                                                    watchlist.auctionIdentifierId
-                                                }
-                                                time_left={
-                                                    watchlist.auctionDeadline
-                                                }
-                                                isActive={false}
-                                                closeMenu={closeMenu}
-                                                index={index}
-                                            />
-                                        </TimerProvider>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    )}
+                (completedWatchlist.length !== 0 ||
+                    completedTournamentWatchlist.length !== 0) ? (
+                    <div className="tw-w-full">
+                        {completedWatchlist.map(
+                            (watchlist: any, index: number) => (
+                                <div key={watchlist._id}>
+                                    <TimerProvider
+                                        deadline={watchlist.auctionDeadline}
+                                    >
+                                        <MyWatchlistCard
+                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                            img={watchlist.auctionImage}
+                                            current_bid={watchlist.auctionPrice}
+                                            id={watchlist.auctionIdentifierId}
+                                            time_left={
+                                                watchlist.auctionDeadline
+                                            }
+                                            isActive={false}
+                                            closeMenu={closeMenu}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            )
+                        )}
+                        {completedTournamentWatchlist.map((watchlist: any) => {
+                            return (
+                                <div key={watchlist._id}>
+                                    <TimerProvider deadline={watchlist.endTime}>
+                                        <MyWatchlistTournamentCard
+                                            watchlist={watchlist}
+                                            isActive={false}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : null}
                 {isLoading === false &&
-                    activeOrCompleted === "active" &&
-                    activeWatchlist.length === 0 && (
-                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                            <Image
-                                src={MoneyBag}
-                                width={80}
-                                height={80}
-                                alt="watchlist icon"
-                                className="tw-w-[80px] tw-h-[80px]"
-                            />
-                            <div className="">
-                                <div className="tw-font-bold tw-text-xl tw-text-center">
-                                    No active wagers
-                                </div>
-                                <div className="tw-opacity-70 tw-text-center">
-                                    Quam temere in vitiis, legem sancimus
-                                    haerentia
-                                </div>
+                activeOrCompleted === "active" &&
+                activeWatchlist.length === 0 &&
+                activeTournamentWatchlist.length === 0 ? (
+                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="tw-w-[80px] tw-h-[80px]"
+                        />
+                        <div className="">
+                            <div className="tw-font-bold tw-text-xl tw-text-center">
+                                No active wagers
                             </div>
-                            <button
-                                onClick={() => router.push("/auctions")}
-                                className="btn-transparent-white"
-                            >
-                                DISCOVER AUCTIONS
-                            </button>
+                            <div className="tw-opacity-70 tw-text-center">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
                         </div>
-                    )}
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
                 {activeOrCompleted === "completed" &&
-                    completedWatchlist.length === 0 && (
-                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                            No watchlist in completed
-                        </div>
-                    )}
+                completedWatchlist.length === 0 &&
+                completedTournamentWatchlist.length === 0 ? (
+                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                        No watchlist in completed
+                    </div>
+                ) : null}
             </div>
         </div>
     );
