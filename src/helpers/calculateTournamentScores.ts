@@ -23,32 +23,9 @@ type UserWager = {
 // };
 
 type TournamentResult = {
-  userID: string; // Change to string to match TournamentWager
+  userID: string; // maybe string will work?
   totalScore: number;
 };
-
-// export function calculateTournamentScores(userWagers: UserWager[], auctions: Auction[]): TournamentResult[] {
-//   const scores = userWagers.map((userWager) => {
-//     const totalDelta = userWager.wagers.reduce((sum, wager) => {
-//       const auction = auctions.find((a) => a._id.toString() === wager.auctionID.toString());
-//       if (!auction) {
-//         throw new Error('Auction not found for wager.');
-//       }
-//       const delta = Math.abs(wager.priceGuessed - auction.finalSellingPrice);
-//       return sum + delta;
-//     }, 0);
-
-//     return {
-//       userID: userWager.userID,
-//       totalScore: totalDelta,
-//     };
-//   });
-
-//   // sort by ascending order
-//   scores.sort((a, b) => a.totalScore - b.totalScore);
-
-//   return scores;
-// }
 
 export function calculateTournamentScores(userWagers: UserWager[], auctions: Auction[]): TournamentResult[] {
   const scores = userWagers.map((userWager) => {
@@ -62,7 +39,7 @@ export function calculateTournamentScores(userWagers: UserWager[], auctions: Auc
     }, 0);
 
     return {
-      userID: userWager.userID.toString(), // Convert ObjectId to string
+      userID: userWager.userID.toString(),
       totalScore: totalDelta,
     };
   });
