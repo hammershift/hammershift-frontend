@@ -1,11 +1,8 @@
 "use client";
 
 import { useState, useEffect, Suspense, lazy, useRef } from "react";
-import { getCars, getCarsWithFilter } from "@/lib/data";
+import { getCarsWithFilter } from "@/lib/data";
 import FiltersAndSort from "@/app/components/filter_and_sort";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import { GamesCard } from "@/app/components/card";
-import { useParams } from "next/navigation";
 const AuctionsGrid = lazy(() => import("@/app/ui/auctions/AuctionsGrid"));
 const AuctionsList = lazy(() => import("@/app/ui/auctions/AuctionsList"));
 import { useRouter } from "next/navigation";
@@ -167,32 +164,28 @@ const AuctionListingPage = () => {
         isGridView={isGridView}
         setIsGridView={setIsGridView}
       />
-      {loading && listing.length === 0 ? (
-        <Loader />
-      ) : (
-        <>
-          {/* TODO: changing the view*/}
-          {listing.length != 0 && filters != filtersInitialState ? (
-            <div className="tw-pb-8 sm:tw-pb-16 ">
-              <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
-                <div className=" tw-w-full 2xl:tw-w-[1312px] ">
-                  {isGridView ? (
-                    <AuctionsGrid listing={listing} />
-                  ) : (
-                    <AuctionsList listing={listing} />
-                  )}
-                </div>
-              </section>
-            </div>
-          ) : (
-            <div className="tw-p-16 tw-text-center">
-              {filters != filtersInitialState &&
-                "No Cars with those requirements..."}
-            </div>
-          )}
-        </>
-      )}
-      {loading && listing.length > 0 && <Loader />}
+      <>
+        {/* TODO: changing the view*/}
+        {listing.length != 0 && filters != filtersInitialState ? (
+          <div className="tw-pb-8 sm:tw-pb-16 ">
+            <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
+              <div className=" tw-w-full 2xl:tw-w-[1312px] ">
+                {isGridView ? (
+                  <AuctionsGrid listing={listing} />
+                ) : (
+                  <AuctionsList listing={listing} />
+                )}
+              </div>
+            </section>
+          </div>
+        ) : (
+          <div className="tw-p-16 tw-text-center">
+            {filters != filtersInitialState &&
+              "No Cars with those requirements..."}
+          </div>
+        )}
+      </>
+      {loading && listing.length > 0}
       <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16 ">
         <div
           className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${
@@ -219,11 +212,3 @@ const AuctionListingPage = () => {
 };
 
 export default AuctionListingPage;
-
-const Loader = () => {
-  return (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <MoonLoader color="#f2ca16" />
-    </div>
-  );
-};
