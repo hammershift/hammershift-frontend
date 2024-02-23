@@ -933,7 +933,8 @@ const MyWatchlistDropdownMenu = () => {
                         <div>ACTIVE </div>
                         {!isLoading && (
                             <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
-                                {activeWatchlist.length}
+                                {activeWatchlist.length +
+                                    activeTournamentWatchlist.length}
                             </span>
                         )}
                     </button>
@@ -1342,7 +1343,8 @@ const MyWagersDropdownMenu = () => {
                         <div>ACTIVE </div>
                         {!isLoading && (
                             <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
-                                {activeWagers.length}
+                                {activeWagers.length +
+                                    activeTournamentWagers.length}
                             </span>
                         )}
                     </button>
