@@ -45,20 +45,23 @@ interface Auctions {
 
 const TournamentsList = () => {
   const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
+  const [totalTournaments, setTotalTournaments] = useState(0);
   const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
     {}
   );
   const [sortType, setSortType] = useState<string>("newest");
+  const [limit, setLimit] = useState(6);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
       setLoading(true);
       try {
-        const data = await getSortedTournaments(sortType);
+        const data = await getSortedTournaments(sortType, limit);
         const tournamentsArray = data.tournaments;
         if (data) {
           setTournamentsData(tournamentsArray);
+          setTotalTournaments(data?.total);
           setLoading(false);
           return;
         }
@@ -68,10 +71,14 @@ const TournamentsList = () => {
       }
     };
     fetchTournamentsData();
-  }, [sortType]);
+  }, [sortType, limit]);
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortType(event.target.value);
+  };
+
+  const handleLoadMore = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setLimit((prev) => prev + 3);
   };
 
   useEffect(() => {
@@ -130,6 +137,19 @@ const TournamentsList = () => {
               </div>
             );
           })}
+      </div>
+      <div>
+        <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4">
+          {limit < totalTournaments
+            ? `Showing ${limit} of ${totalTournaments} tournaments`
+            : `Showing ${totalTournaments} of ${totalTournaments} tournaments`}
+        </div>
+        <button
+          className={`btn-transparent-white tw-w-full tw-text-[18px] tw-mb-8`}
+          onClick={handleLoadMore}
+        >
+          Load More
+        </button>
       </div>
     </div>
   );
