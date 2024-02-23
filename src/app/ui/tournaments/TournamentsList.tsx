@@ -34,7 +34,7 @@ interface Tournaments {
   title: string;
   pot: number;
   endTime: Date;
-  tournamentEndtime: Date;
+  tournamentEndTime: Date;
   // Add other properties of the tournament here
 }
 
@@ -45,20 +45,23 @@ interface Auctions {
 
 const TournamentsList = () => {
   const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
+  const [totalTournaments, setTotalTournaments] = useState(0);
   const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
     {}
   );
   const [sortType, setSortType] = useState<string>("newest");
+  const [limit, setLimit] = useState(6);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
       setLoading(true);
       try {
-        const data = await getSortedTournaments(sortType);
+        const data = await getSortedTournaments(sortType, limit);
         const tournamentsArray = data.tournaments;
         if (data) {
           setTournamentsData(tournamentsArray);
+          setTotalTournaments(data?.total);
           setLoading(false);
           return;
         }
@@ -68,10 +71,14 @@ const TournamentsList = () => {
       }
     };
     fetchTournamentsData();
-  }, [sortType]);
+  }, [sortType, limit]);
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortType(event.target.value);
+  };
+
+  const handleLoadMore = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setLimit((prev) => prev + 3);
   };
 
   useEffect(() => {
@@ -109,42 +116,43 @@ const TournamentsList = () => {
           </select>
         </div>
       </div>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
-          {tournamentsData &&
-            tournamentsData.map((tournament) => {
-              const imagesForTournament =
-                auctionData[tournament._id]?.map((auction) => auction.image) ||
-                [];
-              return (
-                <div key={tournament._id}>
-                  <TimerProvider deadline={tournament.endTime}>
-                    <DynamicTournamentsCards
-                      tournament_id={tournament._id}
-                      pot={tournament.pot}
-                      title={tournament.title}
-                      deadline={tournament.endTime}
-                      tournament_deadline={tournament.tournamentEndtime}
-                      images={imagesForTournament}
-                    />
-                  </TimerProvider>
-                </div>
-              );
-            })}
+      <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
+        {tournamentsData &&
+          tournamentsData.map((tournament) => {
+            const imagesForTournament =
+              auctionData[tournament._id]?.map((auction) => auction.image) ||
+              [];
+            return (
+              <div key={tournament._id}>
+                <TimerProvider deadline={tournament.endTime}>
+                  <DynamicTournamentsCards
+                    tournament_id={tournament._id}
+                    pot={tournament.pot}
+                    title={tournament.title}
+                    deadline={tournament.endTime}
+                    tournament_deadline={tournament.tournamentEndTime}
+                    images={imagesForTournament}
+                  />
+                </TimerProvider>
+              </div>
+            );
+          })}
+      </div>
+      <div>
+        <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4">
+          {limit < totalTournaments
+            ? `Showing ${limit} of ${totalTournaments} tournaments`
+            : `Showing ${totalTournaments} of ${totalTournaments} tournaments`}
         </div>
-      )}
+        <button
+          className={`btn-transparent-white tw-w-full tw-text-[18px] tw-mb-8`}
+          onClick={handleLoadMore}
+        >
+          Load More
+        </button>
+      </div>
     </div>
   );
 };
 
 export default TournamentsList;
-
-const Loader = () => {
-  return (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <MoonLoader color="#f2ca16" />
-    </div>
-  );
-};
