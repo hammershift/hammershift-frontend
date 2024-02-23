@@ -933,7 +933,8 @@ const MyWatchlistDropdownMenu = () => {
                         <div>ACTIVE </div>
                         {!isLoading && (
                             <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
-                                {activeWatchlist.length}
+                                {activeWatchlist.length +
+                                    activeTournamentWatchlist.length}
                             </span>
                         )}
                     </button>
@@ -1045,11 +1046,32 @@ const MyWatchlistDropdownMenu = () => {
                     </button>
                 </div>
             ) : null}
-            {activeOrCompleted === "completed" &&
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
             completedWatchlist.length === 0 &&
             completedTournamentWatchlist.length === 0 ? (
                 <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                    No watchlist in completed
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="tw-w-[80px] tw-h-[80px]"
+                    />
+                    <div className="">
+                        <div className="tw-font-bold tw-text-xl tw-text-center">
+                            No completed wagers
+                        </div>
+                        <div className="tw-opacity-70 tw-text-center">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
                 </div>
             ) : null}
         </div>
@@ -1342,7 +1364,8 @@ const MyWagersDropdownMenu = () => {
                         <div>ACTIVE </div>
                         {!isLoading && (
                             <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
-                                {activeWagers.length}
+                                {activeWagers.length +
+                                    activeTournamentWagers.length}
                             </span>
                         )}
                     </button>
@@ -1360,7 +1383,9 @@ const MyWagersDropdownMenu = () => {
                     <BounceLoader color="#696969" loading={true} />
                 </div>
             )}
-            {activeOrCompleted === "active" && activeWagers.length !== 0 && (
+            {activeOrCompleted === "active" &&
+            (activeWagers.length !== 0 ||
+                activeTournamentWagers.length !== 0) ? (
                 <div className="tw-w-full">
                     {activeWagers.map((wager: any, index: number) => (
                         <div key={wager._id}>
@@ -1399,81 +1424,105 @@ const MyWagersDropdownMenu = () => {
                         );
                     })}
                 </div>
-            )}
+            ) : null}
             {activeOrCompleted === "completed" &&
-                completedWagers.length !== 0 && (
-                    <div className="tw-w-full">
-                        {completedWagers.map((wager: any, index: number) => (
+            (completedWagers.length !== 0 ||
+                completedTournamentWagers.length !== 0) ? (
+                <div className="tw-w-full">
+                    {completedWagers.map((wager: any, index: number) => (
+                        <div key={wager._id}>
+                            <TimerProvider deadline={wager.auctionDeadline}>
+                                <MyWagersCard
+                                    title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                    img={wager.auctionImage}
+                                    my_wager={wager.priceGuessed}
+                                    current_bid={wager.auctionPrice}
+                                    time_left={wager.auctionDeadline}
+                                    potential_prize={wager.auctionPot}
+                                    id={wager.auctionIdentifierId}
+                                    isActive={false}
+                                    status={wager.auctionStatus}
+                                    wagerAmount={wager.wagerAmount}
+                                    objectID={wager.auctionObjectId}
+                                    wagerID={wager._id}
+                                    isRefunded={wager.refunded}
+                                    prize={wager.prize}
+                                    deadline={wager.auctionDeadline}
+                                    index={index}
+                                />
+                            </TimerProvider>
+                        </div>
+                    ))}
+                    {completedTournamentWagers.map((wager: any) => {
+                        return (
                             <div key={wager._id}>
-                                <TimerProvider deadline={wager.auctionDeadline}>
-                                    <MyWagersCard
-                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                                        img={wager.auctionImage}
-                                        my_wager={wager.priceGuessed}
-                                        current_bid={wager.auctionPrice}
-                                        time_left={wager.auctionDeadline}
-                                        potential_prize={wager.auctionPot}
-                                        id={wager.auctionIdentifierId}
+                                <TimerProvider deadline={wager.endTime}>
+                                    <MyWagersTournamentCard
+                                        wager={wager}
                                         isActive={false}
-                                        status={wager.auctionStatus}
-                                        wagerAmount={wager.wagerAmount}
-                                        objectID={wager.auctionObjectId}
-                                        wagerID={wager._id}
-                                        isRefunded={wager.refunded}
-                                        prize={wager.prize}
-                                        deadline={wager.auctionDeadline}
-                                        index={index}
                                     />
                                 </TimerProvider>
                             </div>
-                        ))}
-                        {completedTournamentWagers.map((wager: any) => {
-                            return (
-                                <div key={wager._id}>
-                                    <TimerProvider deadline={wager.endTime}>
-                                        <MyWagersTournamentCard
-                                            wager={wager}
-                                            isActive={false}
-                                        />
-                                    </TimerProvider>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
+                        );
+                    })}
+                </div>
+            ) : null}
             {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeWagers.length === 0 && (
-                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                        <Image
-                            src={MoneyBag}
-                            width={80}
-                            height={80}
-                            alt="watchlist icon"
-                            className="tw-w-[80px] tw-h-[80px]"
-                        />
-                        <div className="">
-                            <div className="tw-font-bold tw-text-xl tw-text-center">
-                                No active wagers
-                            </div>
-                            <div className="tw-opacity-70 tw-text-center">
-                                Quam temere in vitiis, legem sancimus haerentia
-                            </div>
+            activeOrCompleted === "active" &&
+            activeWagers.length === 0 &&
+            activeTournamentWagers.length === 0 ? (
+                <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="tw-w-[80px] tw-h-[80px]"
+                    />
+                    <div className="">
+                        <div className="tw-font-bold tw-text-xl tw-text-center">
+                            No active wagers
                         </div>
-                        <button
-                            onClick={() => router.push("/auctions")}
-                            className="btn-transparent-white"
-                        >
-                            DISCOVER AUCTIONS
-                        </button>
+                        <div className="tw-opacity-70 tw-text-center">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
                     </div>
-                )}
-            {activeOrCompleted === "completed" &&
-                completedWagers.length === 0 && (
-                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                        No wagers in completed
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedWagers.length === 0 &&
+            completedTournamentWagers.length === 0 ? (
+                <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="tw-w-[80px] tw-h-[80px]"
+                    />
+                    <div className="">
+                        <div className="tw-font-bold tw-text-xl tw-text-center">
+                            No completed wagers
+                        </div>
+                        <div className="tw-opacity-70 tw-text-center">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
                     </div>
-                )}
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -2104,7 +2153,8 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     ACTIVE
                     {!isLoading && (
                         <span className="tw-ml-1 tw-px-1 tw-text-xs tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
-                            {activeWatchlist.length}
+                            {activeWatchlist.length +
+                                activeTournamentWatchlist.length}
                         </span>
                     )}
                 </button>
@@ -2231,11 +2281,32 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                         </button>
                     </div>
                 ) : null}
-                {activeOrCompleted === "completed" &&
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
                 completedWatchlist.length === 0 &&
                 completedTournamentWatchlist.length === 0 ? (
                     <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                        No watchlist in completed
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="tw-w-[80px] tw-h-[80px]"
+                        />
+                        <div className="">
+                            <div className="tw-font-bold tw-text-xl tw-text-center">
+                                No completed wagers
+                            </div>
+                            <div className="tw-opacity-70 tw-text-center">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
                     </div>
                 ) : null}
             </div>
@@ -2303,7 +2374,8 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     ACTIVE
                     {!isLoading && (
                         <span className="tw-ml-1 tw-px-1 tw-text-xs tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
-                            {activeWagers.length}
+                            {activeWagers.length +
+                                activeTournamentWagers.length}
                         </span>
                     )}
                 </button>
@@ -2321,136 +2393,150 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 )}
                 {activeOrCompleted === "active" &&
-                    activeWagers.length !== 0 && (
-                        <div className="tw-w-full">
-                            {activeWagers.map((wager: any, index: number) => (
-                                <div key={wager._id}>
-                                    <TimerProvider
+                (activeWagers.length !== 0 ||
+                    activeTournamentWagers.length !== 0) ? (
+                    <div className="tw-w-full">
+                        {activeWagers.map((wager: any, index: number) => (
+                            <div key={wager._id}>
+                                <TimerProvider deadline={wager.auctionDeadline}>
+                                    <MyWagersCard
+                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                        img={wager.auctionImage}
+                                        my_wager={wager.priceGuessed}
+                                        current_bid={wager.auctionPrice}
+                                        time_left={wager.auctionDeadline}
+                                        potential_prize={wager.auctionPot}
+                                        id={wager.auctionIdentifierId}
+                                        isActive={true}
+                                        status={wager.auctionStatus}
+                                        wagerAmount={wager.wagerAmount}
+                                        objectID={wager.auctionObjectId}
+                                        wagerID={wager._id}
+                                        isRefunded={wager.refunded}
+                                        closeMenu={closeMenu}
+                                        prize={wager.prize}
                                         deadline={wager.auctionDeadline}
-                                    >
-                                        <MyWagersCard
-                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                                            img={wager.auctionImage}
-                                            my_wager={wager.priceGuessed}
-                                            current_bid={wager.auctionPrice}
-                                            time_left={wager.auctionDeadline}
-                                            potential_prize={wager.auctionPot}
-                                            id={wager.auctionIdentifierId}
+                                        index={index}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        ))}
+                        {activeTournamentWagers.map((wager: any) => {
+                            return (
+                                <div key={wager._id}>
+                                    <TimerProvider deadline={wager.endTime}>
+                                        <MyWagersTournamentCard
+                                            wager={wager}
                                             isActive={true}
-                                            status={wager.auctionStatus}
-                                            wagerAmount={wager.wagerAmount}
-                                            objectID={wager.auctionObjectId}
-                                            wagerID={wager._id}
-                                            isRefunded={wager.refunded}
                                             closeMenu={closeMenu}
-                                            prize={wager.prize}
-                                            deadline={wager.auctionDeadline}
-                                            index={index}
                                         />
                                     </TimerProvider>
                                 </div>
-                            ))}
-                            {activeTournamentWagers.map((wager: any) => {
-                                return (
-                                    <div key={wager._id}>
-                                        <TimerProvider deadline={wager.endTime}>
-                                            <MyWagersTournamentCard
-                                                wager={wager}
-                                                isActive={true}
-                                                closeMenu={closeMenu}
-                                            />
-                                        </TimerProvider>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                            );
+                        })}
+                    </div>
+                ) : null}
 
                 {activeOrCompleted === "completed" &&
-                    completedWagers.length !== 0 && (
-                        <div className="tw-w-full">
-                            {completedWagers.map(
-                                (wager: any, index: number) => (
-                                    <div key={wager._id}>
-                                        <TimerProvider
-                                            deadline={wager.auctionDeadline}
-                                        >
-                                            <MyWagersCard
-                                                title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                                                img={wager.auctionImage}
-                                                my_wager={wager.priceGuessed}
-                                                current_bid={wager.auctionPrice}
-                                                time_left={
-                                                    wager.auctionDeadline
-                                                }
-                                                potential_prize={
-                                                    wager.auctionPot
-                                                }
-                                                id={wager.auctionIdentifierId}
-                                                isActive={false}
-                                                status={wager.auctionStatus}
-                                                wagerAmount={wager.wagerAmount}
-                                                objectID={wager.auctionObjectId}
-                                                wagerID={wager._id}
-                                                isRefunded={wager.refunded}
-                                                closeMenu={closeMenu}
-                                                prize={wager.prize}
-                                                deadline={wager.auctionDeadline}
-                                                index={index}
-                                            />
-                                        </TimerProvider>
-                                    </div>
-                                )
-                            )}
-                            {completedTournamentWagers.map((wager: any) => {
-                                return (
-                                    <div key={wager._id}>
-                                        <TimerProvider deadline={wager.endTime}>
-                                            <MyWagersTournamentCard
-                                                wager={wager}
-                                                isActive={false}
-                                                closeMenu={closeMenu}
-                                            />
-                                        </TimerProvider>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                {isLoading === false &&
-                    activeOrCompleted === "active" &&
-                    activeWagers.length === 0 && (
-                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                            <Image
-                                src={MoneyBag}
-                                width={80}
-                                height={80}
-                                alt="watchlist icon"
-                                className="tw-w-[80px] tw-h-[80px]"
-                            />
-                            <div className="">
-                                <div className="tw-font-bold tw-text-xl tw-text-center">
-                                    No active wagers
-                                </div>
-                                <div className="tw-opacity-70 tw-text-center">
-                                    Quam temere in vitiis, legem sancimus
-                                    haerentia
-                                </div>
+                (completedWagers.length !== 0 ||
+                    completedTournamentWagers.length !== 0) ? (
+                    <div className="tw-w-full">
+                        {completedWagers.map((wager: any, index: number) => (
+                            <div key={wager._id}>
+                                <TimerProvider deadline={wager.auctionDeadline}>
+                                    <MyWagersCard
+                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                        img={wager.auctionImage}
+                                        my_wager={wager.priceGuessed}
+                                        current_bid={wager.auctionPrice}
+                                        time_left={wager.auctionDeadline}
+                                        potential_prize={wager.auctionPot}
+                                        id={wager.auctionIdentifierId}
+                                        isActive={false}
+                                        status={wager.auctionStatus}
+                                        wagerAmount={wager.wagerAmount}
+                                        objectID={wager.auctionObjectId}
+                                        wagerID={wager._id}
+                                        isRefunded={wager.refunded}
+                                        closeMenu={closeMenu}
+                                        prize={wager.prize}
+                                        deadline={wager.auctionDeadline}
+                                        index={index}
+                                    />
+                                </TimerProvider>
                             </div>
-                            <button
-                                onClick={() => router.push("/auctions")}
-                                className="btn-transparent-white"
-                            >
-                                DISCOVER AUCTIONS
-                            </button>
+                        ))}
+                        {completedTournamentWagers.map((wager: any) => {
+                            return (
+                                <div key={wager._id}>
+                                    <TimerProvider deadline={wager.endTime}>
+                                        <MyWagersTournamentCard
+                                            wager={wager}
+                                            isActive={false}
+                                            closeMenu={closeMenu}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeWagers.length === 0 &&
+                activeTournamentWagers.length === 0 ? (
+                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="tw-w-[80px] tw-h-[80px]"
+                        />
+                        <div className="">
+                            <div className="tw-font-bold tw-text-xl tw-text-center">
+                                No active wagers
+                            </div>
+                            <div className="tw-opacity-70 tw-text-center">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
                         </div>
-                    )}
-                {activeOrCompleted === "completed" &&
-                    completedWagers.length === 0 && (
-                        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
-                            No wagers in completed
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedWagers.length === 0 &&
+                completedTournamentWagers.length === 0 ? (
+                    <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="tw-w-[80px] tw-h-[80px]"
+                        />
+                        <div className="">
+                            <div className="tw-font-bold tw-text-xl tw-text-center">
+                                No completed wagers
+                            </div>
+                            <div className="tw-opacity-70 tw-text-center">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
                         </div>
-                    )}
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
             </div>
         </div>
     );

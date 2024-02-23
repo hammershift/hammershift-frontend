@@ -17,8 +17,14 @@ export async function POST(req: NextRequest) {
 
   const client = await clientPromise;
   const db = client.db();
+  const mongoSession = client.startSession();
+
+  let transactionCommitted = false;
 
   try {
+    await mongoSession.startTransaction();
+    console.log('Transaction started');
+
     const requestBody = await req.json();
     console.log('Received Wager Data:', requestBody);
 
@@ -97,10 +103,23 @@ export async function POST(req: NextRequest) {
 
     await db.collection('tournament_wagers').insertOne(newTournamentWager);
 
+    await mongoSession.commitTransaction();
+    console.log('Transaction committed');
+    console.log('Wager and transaction created successfully');
+    transactionCommitted = true;
+
     return NextResponse.json({ message: 'Tournament wager created successfully' }, { status: 201 });
   } catch (error) {
+    console.log('An error occurred');
+    if (!transactionCommitted) {
+      console.log('Aborting transaction');
+      await mongoSession.abortTransaction();
+    }
     console.error('Error in wager creation:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  } finally {
+    console.log('Ending session');
+    await mongoSession.endSession();
   }
 }
 
