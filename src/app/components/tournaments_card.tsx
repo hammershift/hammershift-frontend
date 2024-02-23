@@ -26,16 +26,15 @@ const TournamentsCard = ({
 
   useEffect(() => {
     const intervalId = setInterval(() => {
+      const currentDate = new Date();
       const buyInDeadlineDate = new Date(deadline);
       const tournamentDeadlineDate = new Date(tournament_deadline);
-      if (new Date() > buyInDeadlineDate) {
+
+      if (currentDate > buyInDeadlineDate) {
         setIsBuyInEnded(true);
       }
-      if (
-        new Date() > tournamentDeadlineDate &&
-        tournamentDeadlineDate > buyInDeadlineDate
-      ) {
-        setIsBuyInEnded(false);
+
+      if (currentDate > tournamentDeadlineDate) {
         setIsTournamentEnded(true);
       }
     }, 1000);
@@ -102,7 +101,7 @@ const TournamentsCard = ({
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         {tournamentEnded ? (
-          <p className="tw-text-green-600 tw-font-bold">Tournament has ended</p>
+          <p className="tw-text-red-600 tw-font-bold">Tournament has ended</p>
         ) : buyInEnded ? (
           <p className="tw-text-green-600 tw-font-bold">
             Buy-in period has ended

@@ -34,7 +34,7 @@ interface Tournaments {
   title: string;
   pot: number;
   endTime: Date;
-  tournamentEndtime: Date;
+  tournamentEndTime: Date;
   // Add other properties of the tournament here
 }
 
@@ -109,42 +109,30 @@ const TournamentsList = () => {
           </select>
         </div>
       </div>
-      {loading ? (
-        <Loader />
-      ) : (
-        <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
-          {tournamentsData &&
-            tournamentsData.map((tournament) => {
-              const imagesForTournament =
-                auctionData[tournament._id]?.map((auction) => auction.image) ||
-                [];
-              return (
-                <div key={tournament._id}>
-                  <TimerProvider deadline={tournament.endTime}>
-                    <DynamicTournamentsCards
-                      tournament_id={tournament._id}
-                      pot={tournament.pot}
-                      title={tournament.title}
-                      deadline={tournament.endTime}
-                      tournament_deadline={tournament.tournamentEndtime}
-                      images={imagesForTournament}
-                    />
-                  </TimerProvider>
-                </div>
-              );
-            })}
-        </div>
-      )}
+      <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
+        {tournamentsData &&
+          tournamentsData.map((tournament) => {
+            const imagesForTournament =
+              auctionData[tournament._id]?.map((auction) => auction.image) ||
+              [];
+            return (
+              <div key={tournament._id}>
+                <TimerProvider deadline={tournament.endTime}>
+                  <DynamicTournamentsCards
+                    tournament_id={tournament._id}
+                    pot={tournament.pot}
+                    title={tournament.title}
+                    deadline={tournament.endTime}
+                    tournament_deadline={tournament.tournamentEndTime}
+                    images={imagesForTournament}
+                  />
+                </TimerProvider>
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
 };
 
 export default TournamentsList;
-
-const Loader = () => {
-  return (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[500px]">
-      <MoonLoader color="#f2ca16" />
-    </div>
-  );
-};
