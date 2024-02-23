@@ -169,7 +169,6 @@ const AuctionListingPage = () => {
         setIsGridView={setIsGridView}
       />
       <>
-        {/* TODO: changing the view*/}
         {!noAuctionsFetched ? (
           <div className="tw-pb-8 sm:tw-pb-16 ">
             <section className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-overflow-hidden">
