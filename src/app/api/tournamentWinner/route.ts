@@ -163,6 +163,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Tournament not found' }, { status: 404 });
     }
 
+    const tournamentTransactions = await db.collection('transactions').find({
+      tournamentID: new ObjectId(tournamentId),
+      transactionType: "tournament buy-in",
+      type: "-"
+    }).toArray();
+
     // check if the tournament has already been completed or cancelled
     if (tournament.status === 4 || tournament.status === 3) {
       return NextResponse.json({ message: 'Tournament already completed or cancelled' }, { status: 400 });
@@ -209,7 +215,10 @@ export async function POST(req: NextRequest) {
     console.log('Players:', playerCount);
 
     // get the totalPot for the tournament
-    const totalPot = tournament.pot;
+    const totalPot = 0.88 * tournamentTransactions
+      .map((transaction) => transaction.amount)
+      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
     console.log('Total Pot:', totalPot);
 
     // check if the tournament should be cancelled due to insufficient participants or unsuccessful auctions
