@@ -64,6 +64,7 @@ const TournamentViewPage = ({
     const [buyInEnded, setBuyInEnded] = useState(false);
     const [tournamentEnded, setTournamentEnded] = useState(false);
     const [tournamentImages, setTournamentImages] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const ID = params.tournament_id;
 
@@ -181,33 +182,38 @@ const TournamentViewPage = ({
         sessionData: any
     ) => {
         e.preventDefault();
+        if (isSubmitting) {
+            console.log("race condition");
+
+            return;
+        }
+        setIsSubmitting(true);
         setIsButtonClicked(true);
-        if (tournamentData) {
-            const wagerArray = Object.values(wagers).map((item: any) => ({
-                auctionID: item.auctionID,
-                priceGuessed: item.priceGuessed,
-            }));
+        const data = await getTournamentById(ID);
 
-            const tournamentWagerData = {
-                tournamentID: tournamentData._id,
-                wagers: wagerArray,
-                buyInAmount: tournamentData.buyInFee,
-                user: sessionData,
-            };
-            console.log(tournamentWagerData);
+        const wagerArray = Object.values(wagers).map((item: any) => ({
+            auctionID: item.auctionID,
+            priceGuessed: item.priceGuessed,
+        }));
 
-            try {
-                const tournamentWager = await createTournamentWager(
-                    tournamentWagerData
-                );
-                await addTournamentPot(
-                    tournamentData.buyInFee * 0.88 + tournamentData.pot,
-                    tournamentData._id
-                );
-                setToggleTournamentWagerModal(false);
-            } catch (error) {
-                console.error(error);
-            }
+        const tournamentWagerData = {
+            tournamentID: data._id,
+            wagers: wagerArray,
+            buyInAmount: data.buyInFee,
+            user: sessionData,
+        };
+        console.log(tournamentWagerData);
+
+        try {
+            const tournamentWager = await createTournamentWager(
+                tournamentWagerData
+            );
+            await addTournamentPot(data.buyInFee * 0.88 + data.pot, data._id);
+            setToggleTournamentWagerModal(false);
+            setIsSubmitting(false);
+        } catch (error) {
+            console.error(error);
+            setIsSubmitting(false);
         }
     };
 
