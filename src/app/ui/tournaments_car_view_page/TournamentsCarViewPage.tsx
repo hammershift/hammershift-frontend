@@ -470,7 +470,7 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
           <span className="tw-opacity-80">
             Tournament Ends:{" "}
             {tournamentEnded ? (
-              <span className="tw-font-bold">
+              <span className="tw-font-bold tw-text-[#C2451E]">
                 Ended {dayjs(tournamentEndTime).fromNow()}
               </span>
             ) : (
