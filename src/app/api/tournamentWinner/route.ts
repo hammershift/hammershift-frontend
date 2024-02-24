@@ -293,18 +293,39 @@ export async function POST(req: NextRequest) {
     const tournamentResults = calculateTournamentScores(userWagers, auctionsToProcess);
     console.log('Tournament Results:', JSON.stringify(tournamentResults, null, 2));
 
-    // save the points to a separate collection
-    const tournamentPointsData = tournamentResults.map((result) => ({
-      tournamentID: new ObjectId(tournamentId),
-      user: {
-        _id: new ObjectId(result.userID),
-        username: result.username,
-        image: result.image,
-      },
-      auctionScores: result.auctionScores,
-    }));
+    // // save the points to a separate collection
+    // const tournamentPointsData = tournamentResults.map((result) => ({
+    //   tournamentID: new ObjectId(tournamentId),
+    //   user: {
+    //     _id: new ObjectId(result.userID),
+    //     username: result.username,
+    //     image: result.image,
+    //   },
+    //   auctionScores: result.auctionScores,
+    // }));
 
-    await TournamentPoints.insertMany(tournamentPointsData);
+    // await TournamentPoints.insertMany(tournamentPointsData);
+    for (const result of tournamentResults) {
+      const filter = {
+        tournamentID: new ObjectId(tournamentId),
+        'user._id': new ObjectId(result.userID),
+      };
+
+      const update = {
+        $set: {
+          user: {
+            _id: new ObjectId(result.userID),
+            username: result.username,
+            image: result.image,
+          },
+          auctionScores: result.auctionScores,
+        },
+      };
+
+      const options = { upsert: true };
+
+      await db.collection('tournament_points').updateOne(filter, update, options);
+    }
 
     // validation if the auctions are successful
     const allAuctionsComplete = auctionStatuses.every((auctionStatus) => parseInt(auctionStatus.status) === 2);
