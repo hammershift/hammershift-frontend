@@ -340,9 +340,15 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     <div className="tw-font-bold">
                                         $
                                         {prize
-                                            ? new Intl.NumberFormat().format(
-                                                  prize
-                                              )
+                                            ? prize % 1 === 0
+                                                ? prize.toLocaleString()
+                                                : prize.toLocaleString(
+                                                      undefined,
+                                                      {
+                                                          minimumFractionDigits: 2,
+                                                          maximumFractionDigits: 2,
+                                                      }
+                                                  )
                                             : " --"}
                                     </div>
                                 </div>

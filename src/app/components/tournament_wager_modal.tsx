@@ -30,6 +30,7 @@ interface TournamentWagerI {
     isButtonClicked: boolean;
     auctionData: Auction[];
     tournamentData: any;
+    pot: number;
 }
 
 const TournamentWagerModal: React.FC<TournamentWagerI> = ({
@@ -39,6 +40,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
     isButtonClicked,
     auctionData,
     tournamentData,
+    pot,
 }) => {
     const router = useRouter();
     const { data: session } = useSession();
@@ -114,9 +116,12 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                             </div>
                             <div className="tw-text-lg">
                                 $
-                                {new Intl.NumberFormat().format(
-                                    tournamentData.pot
-                                )}
+                                {pot % 1 === 0
+                                    ? pot.toLocaleString()
+                                    : pot.toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })}
                             </div>
                         </div>
                     </div>

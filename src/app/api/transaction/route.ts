@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
 
   const userID = new mongoose.Types.ObjectId(session.user.id);
   const tournamentID = req.nextUrl.searchParams.get('tournamentID');
+  const auctionID = req.nextUrl.searchParams.get('auctionID');
 
   try {
     const client = await clientPromise;
@@ -56,6 +57,16 @@ export async function GET(req: NextRequest) {
       }).toArray();
 
       return NextResponse.json(tournamentTransactions);
+    }
+
+    if (auctionID) {
+      const auctionTransactions = await db.collection('transactions').find({
+        auctionID: new ObjectId(auctionID),
+        transactionType: "wager",
+        type: "-"
+      }).toArray();
+
+      return NextResponse.json(auctionTransactions);
     }
 
     const transactions = await db.collection('transactions').find({ userId: userID }).toArray();
