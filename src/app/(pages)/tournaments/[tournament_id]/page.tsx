@@ -17,6 +17,7 @@ import {
     getAuctionsByTournamentId,
     getOneTournamentWager,
     getTournamentById,
+    getTournamentTransactions,
 } from "@/lib/data";
 import { useSession } from "next-auth/react";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
@@ -65,6 +66,7 @@ const TournamentViewPage = ({
     const [tournamentEnded, setTournamentEnded] = useState(false);
     const [tournamentImages, setTournamentImages] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [prize, setPrize] = useState(0);
 
     const ID = params.tournament_id;
 
@@ -87,12 +89,23 @@ const TournamentViewPage = ({
         const fetchTournamentsData = async () => {
             try {
                 const data = await getTournamentById(ID);
+                const transactions = await getTournamentTransactions(ID);
                 const currentDate = new Date();
                 const buyInDeadline = new Date(data?.endTime);
                 const tournamentDeadline = new Date(data?.tournamentEndTime);
+                const totalPrize =
+                    0.88 *
+                    transactions
+                        .map((transaction: any) => transaction.amount)
+                        .reduce(
+                            (accumulator: any, currentValue: any) =>
+                                accumulator + currentValue,
+                            0
+                        );
                 setTournamentData(data);
                 setBuyInEnded(buyInDeadline < currentDate);
                 setTournamentEnded(tournamentDeadline < currentDate);
+                setPrize(totalPrize);
             } catch (error) {
                 console.error("Failed to fetch tournament data:", error);
             }
@@ -225,6 +238,7 @@ const TournamentViewPage = ({
         <div className="page-container tw-relative">
             {toggleTournamentWagerModal ? (
                 <TournamentWagerModal
+                    pot={prize}
                     tournamentData={tournamentData}
                     auctionData={auctionData}
                     handleSubmit={handleSubmit}
@@ -258,7 +272,7 @@ const TournamentViewPage = ({
                                 _id={tournamentData._id}
                                 title={tournamentData.title}
                                 cars={auctionData.length}
-                                pot={tournamentData.pot}
+                                pot={prize}
                                 endTime={tournamentData.endTime}
                                 tournamentEndTime={
                                     tournamentData.tournamentEndTime

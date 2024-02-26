@@ -26,6 +26,7 @@ import {
     getOneTournamentWager,
     getOneUserWager,
     getTournamentById,
+    getTournamentTransactions,
     getWagers,
     sortByNewGames,
 } from "@/lib/data";
@@ -82,6 +83,7 @@ const SingleViewPage = ({
     const [alreadyJoined, setAlreadyJoined] = useState(false);
     const [auctionData, setAuctionData] = useState<Auction[]>([]);
     const [tournamentImages, setTournamentImages] = useState([]);
+    const [prize, setPrize] = useState(0);
 
     // const router = useRouter();
 
@@ -107,13 +109,26 @@ const SingleViewPage = ({
         const fetchTournamentsData = async () => {
             try {
                 const data = await getTournamentById(TournamentID);
+                const transactions = await getTournamentTransactions(
+                    TournamentID
+                );
                 const currentDate = new Date();
                 const buyInDeadline = new Date(data?.endTime);
                 const tournamentDeadline = new Date(data?.tournamentEndTime);
                 console.log("tournament: ", data);
+                const totalPrize =
+                    0.88 *
+                    transactions
+                        .map((transaction: any) => transaction.amount)
+                        .reduce(
+                            (accumulator: any, currentValue: any) =>
+                                accumulator + currentValue,
+                            0
+                        );
                 setTournamentData(data);
                 setBuyInEnded(buyInDeadline < currentDate);
                 setTournamentEnded(tournamentDeadline < currentDate);
+                setPrize(totalPrize);
             } catch (error) {
                 console.error("Failed to fetch tournament data:", error);
             }
@@ -332,6 +347,7 @@ const SingleViewPage = ({
         <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
             {toggleTournamentWagerModal ? (
                 <TournamentWagerModal
+                    pot={prize}
                     tournamentData={tournamentData}
                     auctionData={auctionData}
                     handleSubmit={handleSubmit}
@@ -366,7 +382,7 @@ const SingleViewPage = ({
                                 year={carData.year}
                                 make={carData.make}
                                 model={carData.model}
-                                pot={carData.pot}
+                                pot={prize}
                                 comments={carData.comments}
                                 views={carData.views}
                                 watchers={carData.watchers}
@@ -374,7 +390,7 @@ const SingleViewPage = ({
                                 bids_num={carData.bids}
                                 ending_date={formattedDateString}
                                 deadline={carData.deadline}
-                                players_num={playerNum}
+                                players_num={tournamentWagers.length}
                                 prize={auctionDataOne.prize}
                             />
                         </TimerProvider>

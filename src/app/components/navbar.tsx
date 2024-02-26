@@ -28,7 +28,12 @@ import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-ph
 import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-photo-three.svg";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { getMyWagers, getMyWatchlist, refundWager } from "@/lib/data";
+import {
+    getMyWagers,
+    getMyWatchlist,
+    getTournamentTransactions,
+    refundWager,
+} from "@/lib/data";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { BeatLoader, BounceLoader } from "react-spinners";
 
@@ -1529,6 +1534,7 @@ const MyWagersDropdownMenu = () => {
 
 export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
     const { days, hours, minutes, seconds } = useTimer();
+    const [prize, setPrize] = useState(0);
     let formattedDateString;
     if (wager.endTime) {
         formattedDateString = new Intl.DateTimeFormat("en-US", {
@@ -1540,6 +1546,24 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
             hour12: true,
         }).format(new Date(wager.endTime));
     }
+
+    useEffect(() => {
+        const fetchPrize = async () => {
+            const transactions = await getTournamentTransactions(wager._id);
+
+            const totalPrize =
+                0.88 *
+                transactions
+                    .map((transaction: any) => transaction.amount)
+                    .reduce(
+                        (accumulator: any, currentValue: any) =>
+                            accumulator + currentValue,
+                        0
+                    );
+            setPrize(totalPrize);
+        };
+        fetchPrize();
+    }, []);
 
     return (
         <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 tw-border-t-[1px] tw-border-[#253747]">
@@ -1645,7 +1669,11 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                                 </div>
                             </div>
                             <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
-                                ${new Intl.NumberFormat().format(wager.pot)}
+                                {prize
+                                    ? `$${new Intl.NumberFormat().format(
+                                          prize
+                                      )}`
+                                    : " --"}
                             </div>
                         </div>
                     )}
