@@ -41,6 +41,17 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
+      const auctionTransactions = await db.collection('transactions').find({
+        auctionID: _id,
+        transactionType: "wager",
+        type: "-"
+      }).toArray();
+
+      // get the totalPot for the auction
+      const totalPot = 0.88 * auctionTransactions
+        .map((transaction) => transaction.amount)
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
       const wagers = await db.collection('wagers').find({ auctionID: _id }).toArray();
       if (wagers.length < 3) {
         auctionsToUpdate.push(_id);
@@ -56,7 +67,7 @@ export async function GET(req: NextRequest) {
         priceGuessed: wager.priceGuessed,
       }));
 
-      const winners = prizeDistribution(formattedWagers, finalSellingPrice, auction.pot);
+      const winners = prizeDistribution(formattedWagers, finalSellingPrice, totalPot);
 
       for (const winner of winners) {
         const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
@@ -143,8 +154,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Auction not found' }, { status: 404 });
     }
 
+    let totalPot;
+
+    const auctionTransactions = await db.collection('transactions').find({
+      auctionID: convertedAuctionID,
+      transactionType: "wager",
+      type: "-"
+    }).toArray();
+
+    if (auctionTransactions.length > 0) {
+      totalPot = 0.88 * auctionTransactions
+        .map((transaction) => transaction.amount)
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    }
+
     const auctionStatus = auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value;
-    const hasPot = auction.pot && auction.pot > 0;
+    const hasPot = totalPot && totalPot > 0;
 
     if (auctionStatus === 2 || (auctionStatus === 3 && hasPot)) {
       // fetch all wagers associated with this auction

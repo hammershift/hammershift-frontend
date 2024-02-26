@@ -115,7 +115,13 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                                 POTENTIAL PRIZE
                             </div>
                             <div className="tw-text-lg">
-                                ${new Intl.NumberFormat().format(pot)}
+                                $
+                                {pot % 1 === 0
+                                    ? pot.toLocaleString()
+                                    : pot.toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })}
                             </div>
                         </div>
                     </div>

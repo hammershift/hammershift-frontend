@@ -512,7 +512,15 @@ export const TitleTournamentsList: React.FC<Tournaments> = ({
                         Prize:{" "}
                         <span className="tw-font-bold ">
                             {" "}
-                            ${pot ? new Intl.NumberFormat().format(pot) : "--"}
+                            $
+                            {pot
+                                ? pot % 1 === 0
+                                    ? pot.toLocaleString()
+                                    : pot.toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })
+                                : "--"}
                         </span>
                     </span>
                 </div>

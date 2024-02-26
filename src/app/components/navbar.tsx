@@ -29,6 +29,7 @@ import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
+    getAuctionTransactions,
     getMyWagers,
     getMyWatchlist,
     getTournamentTransactions,
@@ -1724,6 +1725,26 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
     const { days, hours, minutes, seconds } = useTimer();
     const [refunded, setRefunded] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [pot, setPot] = useState(0);
+
+    useEffect(() => {
+        const fetchPrize = async () => {
+            const transactions = await getAuctionTransactions(objectID);
+
+            const totalPrize =
+                0.88 *
+                transactions
+                    .map((transaction: any) => transaction.amount)
+                    .reduce(
+                        (accumulator: any, currentValue: any) =>
+                            accumulator + currentValue,
+                        0
+                    );
+            setPot(totalPrize);
+        };
+        fetchPrize();
+    }, []);
+
     let formattedDateString;
     if (deadline) {
         formattedDateString = new Intl.DateTimeFormat("en-US", {
@@ -1896,9 +1917,12 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             </div>
                             <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
                                 $
-                                {new Intl.NumberFormat().format(
-                                    potential_prize
-                                )}
+                                {pot % 1 === 0
+                                    ? pot.toLocaleString()
+                                    : pot.toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })}
                             </div>
                         </div>
                     )}
