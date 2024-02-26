@@ -295,6 +295,25 @@ const Navbar = () => {
                                 AUCTIONS
                             </div>
                         </Link>
+                        <Link
+                            onClick={() => {
+                                closeMenu();
+                                closeMyAccountMenu();
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                            }}
+                            href="/tournaments"
+                        >
+                            <div
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/tournaments" &&
+                                    "tw-font-bold tw-border-b-2"
+                                }`}
+                            >
+                                TOURNAMENTS
+                            </div>
+                        </Link>
                     </div>
                     <div className="tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block">
                         <form

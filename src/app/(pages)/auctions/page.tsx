@@ -182,24 +182,25 @@ const AuctionListingPage = () => {
             </section>
           </div>
         ) : (
-          <div className="tw-p-16 tw-text-center">
-            Oops! No results found
-          </div>
+          <div className="tw-p-16 tw-text-center">Oops! No results found</div>
         )}
       </>
       <div className="tw-w-screen tw-px-4 md:tw-px-16 2xl:tw-w-[1440px] tw-py-8 sm:tw-py-16 ">
         <div
-          className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${loading && "tw-hidden"
-            }`}
+          className={`tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4 ${
+            loading && "tw-hidden"
+          }`}
         >
           {filters != filtersInitialState &&
-            `Showing ${listing.length > 0 ? listing?.length : "0"} of ${totalAuctions || "0"
+            `Showing ${listing.length > 0 ? listing?.length : "0"} of ${
+              totalAuctions || "0"
             } auctions`}
         </div>
         <button
-          className={`btn-transparent-white tw-w-full tw-text-[18px] ${(listing?.length >= totalAuctions || listing === null || loading) &&
+          className={`btn-transparent-white tw-w-full tw-text-[18px] ${
+            (listing?.length >= totalAuctions || listing === null || loading) &&
             "tw-hidden"
-            }`}
+          }`}
           onClick={clickHandler}
         >
           Load more
