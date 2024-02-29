@@ -7,6 +7,7 @@ import {
     TournamentButtons,
     TournamentInfoSection,
     TournamentWagersSection,
+    TournamentWinnersSection,
     TournamentsList,
     TournamentsYouMightLike,
 } from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
@@ -17,6 +18,7 @@ import {
     getAuctionsByTournamentId,
     getOneTournamentWager,
     getTournamentById,
+    getTournamentTransactions,
 } from "@/lib/data";
 import { useSession } from "next-auth/react";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
@@ -65,6 +67,8 @@ const TournamentViewPage = ({
     const [tournamentEnded, setTournamentEnded] = useState(false);
     const [tournamentImages, setTournamentImages] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [prize, setPrize] = useState(0);
+    const [winners, setWinners] = useState([]);
 
     const ID = params.tournament_id;
 
@@ -87,12 +91,25 @@ const TournamentViewPage = ({
         const fetchTournamentsData = async () => {
             try {
                 const data = await getTournamentById(ID);
+                const transactions = await getTournamentTransactions(ID);
                 const currentDate = new Date();
                 const buyInDeadline = new Date(data?.endTime);
                 const tournamentDeadline = new Date(data?.tournamentEndTime);
+                const totalPrize =
+                    0.88 *
+                    transactions
+                        .map((transaction: any) => transaction.amount)
+                        .reduce(
+                            (accumulator: any, currentValue: any) =>
+                                accumulator + currentValue,
+                            0
+                        );
+
                 setTournamentData(data);
+                setWinners(data?.winners);
                 setBuyInEnded(buyInDeadline < currentDate);
                 setTournamentEnded(tournamentDeadline < currentDate);
+                setPrize(totalPrize);
             } catch (error) {
                 console.error("Failed to fetch tournament data:", error);
             }
@@ -225,6 +242,7 @@ const TournamentViewPage = ({
         <div className="page-container tw-relative">
             {toggleTournamentWagerModal ? (
                 <TournamentWagerModal
+                    pot={prize}
                     tournamentData={tournamentData}
                     auctionData={auctionData}
                     handleSubmit={handleSubmit}
@@ -258,7 +276,7 @@ const TournamentViewPage = ({
                                 _id={tournamentData._id}
                                 title={tournamentData.title}
                                 cars={auctionData.length}
-                                pot={tournamentData.pot}
+                                pot={prize}
                                 endTime={tournamentData.endTime}
                                 tournamentEndTime={
                                     tournamentData.tournamentEndTime
@@ -286,6 +304,11 @@ const TournamentViewPage = ({
                         tournamentEnded={buyInEnded}
                         tournamentID={ID}
                     />
+                    <div className="tw-block sm:tw-hidden tw-mt-8">
+                        {winners.length !== 0 ? (
+                            <TournamentWinnersSection winners={winners} />
+                        ) : null}
+                    </div>
                     <div className="sm:tw-hidden tw-my-8">
                         <TournamentWagersSection
                             tournamentWagers={tournamentWagers}
@@ -297,7 +320,10 @@ const TournamentViewPage = ({
                     </div>
                     <CommentsSection pageID={ID} pageType="tournament" />
                 </div>
-                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-block">
+                <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
+                    {winners.length !== 0 ? (
+                        <TournamentWinnersSection winners={winners} />
+                    ) : null}
                     <TournamentWagersSection
                         tournamentWagers={tournamentWagers}
                         toggleTournamentWagerModal={toggleModal}

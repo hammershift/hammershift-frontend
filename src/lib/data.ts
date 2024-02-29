@@ -923,3 +923,19 @@ export const getTournamentPointsByTournamentId = async (
   const data = await res.json();
   return data;
 };
+
+export const getTournamentTransactions = async (tournament_id: string) => {
+  const res = await fetch(
+    `/api/transaction?tournamentID=${tournament_id}`
+  );
+  const data = await res.json();
+  return data;
+};
+
+export const getAuctionTransactions = async (auction_id: string) => {
+  const res = await fetch(
+    `/api/transaction?auctionID=${auction_id}`
+  );
+  const data = await res.json();
+  return data;
+};
