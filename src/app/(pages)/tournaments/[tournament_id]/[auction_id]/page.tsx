@@ -10,6 +10,7 @@ import {
     ArticleSection,
     TitleSingleCarContainer,
     TournamentButtons,
+    TournamentWinnersSection,
 } from "../../../../ui/tournaments_car_view_page/TournamentsCarViewPage";
 import { CommentsSection } from "@/app/components/CommentsSection";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
@@ -72,7 +73,6 @@ const SingleViewPage = ({
     const [auctionEnded, setAuctionEnded] = useState(false);
     const [walletBalance, setWalletBalance] = useState(0);
     const [showCarImageModal, setShowCarImageModal] = useState(false);
-    const [winners, setWinners] = useState([]);
     const [isButtonClicked, setIsButtonClicked] = useState(false);
     const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
         useState(false);
@@ -84,6 +84,7 @@ const SingleViewPage = ({
     const [auctionData, setAuctionData] = useState<Auction[]>([]);
     const [tournamentImages, setTournamentImages] = useState([]);
     const [prize, setPrize] = useState(0);
+    const [winners, setWinners] = useState([]);
 
     // const router = useRouter();
 
@@ -125,7 +126,9 @@ const SingleViewPage = ({
                                 accumulator + currentValue,
                             0
                         );
+                console.log(data?.winners);
                 setTournamentData(data);
+                setWinners(data?.winners);
                 setBuyInEnded(buyInDeadline < currentDate);
                 setTournamentEnded(tournamentDeadline < currentDate);
                 setPrize(totalPrize);
@@ -199,7 +202,6 @@ const SingleViewPage = ({
 
             setCarData(data);
             console.log("car data: ", data);
-            setWinners(data?.winners);
 
             if (session) {
                 const userWager = await getOneUserWager(
@@ -422,7 +424,11 @@ const SingleViewPage = ({
                             />
                         </>
                     ) : null}
-                    <div className="tw-block sm:tw-hidden tw-mt-8"></div>
+                    <div className="tw-block sm:tw-hidden tw-mt-8">
+                        {winners.length !== 0 ? (
+                            <TournamentWinnersSection winners={winners} />
+                        ) : null}
+                    </div>
                     <div className="tw-block sm:tw-hidden tw-mt-8">
                         {wagersData ? (
                             <TournamentWagersSection
@@ -442,12 +448,16 @@ const SingleViewPage = ({
                     <CommentsSection pageID={ID} pageType="auction" />
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
+                    {winners.length !== 0 ? (
+                        <TournamentWinnersSection winners={winners} />
+                    ) : null}
                     {wagersData ? (
                         <TournamentWagersSection
                             toggleTournamentWagerModal={toggleModal}
                             tournamentWagers={tournamentWagers}
                             alreadyJoined={alreadyJoined}
                             tournamentEnded={buyInEnded}
+                            auctionID={ID}
                         />
                     ) : null}
                     {carData ? (
