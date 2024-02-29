@@ -562,7 +562,7 @@ export const TournamentsList: React.FC<TournamentListI> = ({
             <div className="tw-flex tw-flex-col">
                 {auctionData.map((item, index) => (
                     <Link
-                        href={`/tournaments/${tournamentID}/${item.auction_id}`}
+                        href={`/tournaments/${tournamentID}/${item.auction_id}/${index}`}
                         key={index}
                         className="hover:tw-cursor-pointer"
                     >
@@ -737,7 +737,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
 export const TournamentInfoSection = () => {
     return (
         <div>
-            <div className="tw-mt-8 tw-p-6 tw-bg-[#172431] tw-rounded-lg">
+            <div className="tw-p-6 tw-bg-[#172431] tw-rounded-lg">
                 <Image
                     src={ThropyIconBlue}
                     width={68}
@@ -767,6 +767,7 @@ interface TournamentWagerSectionI {
     tournamentWagers: any[];
     alreadyJoined: boolean;
     tournamentEnded: boolean;
+    auctionID?: string;
 }
 
 export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
@@ -774,6 +775,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
     tournamentWagers,
     alreadyJoined,
     tournamentEnded,
+    auctionID,
 }) => {
     const { data: session } = useSession();
     const [morePlayers, setMorePlayers] = useState(false);
@@ -1119,6 +1121,93 @@ export const TournamentsYouMightLike = () => {
                         );
                     })}
             </section>
+        </div>
+    );
+};
+
+export const TournamentWinnersSection = ({ winners }: any) => {
+    const [userWon, setUserWon] = useState<any>(false);
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        winners.forEach((winner: any) => {
+            if (session?.user.id === winner.userID) {
+                setUserWon(winner);
+            }
+        });
+    }, [winners, session]);
+
+    return (
+        <div className="tw-bg-[#156cc3] tw-p-6 tw-rounded-lg">
+            <div className="tw-mb-6">
+                <div className="tw-font-bold tw-text-lg tw-mb-1">WINNERS</div>
+            </div>
+            <div>
+                {winners.map((winner: any, index: number) => {
+                    return (
+                        <div
+                            key={winner.userID}
+                            className="tw-flex tw-justify-between tw-items-center tw-py-2"
+                        >
+                            <div className="tw-flex tw-gap-4 tw-items-center">
+                                <div className="tw-text-lg tw-opacity-30">
+                                    {winner.rank}
+                                </div>
+                                <Image
+                                    src={
+                                        winner.userImage
+                                            ? winner.userImage
+                                            : AvatarOne
+                                    }
+                                    width={44}
+                                    height={44}
+                                    alt="arrow down"
+                                    className="tw-w-[44px] tw-h-[44px] tw-rounded-full"
+                                />
+                                <div>
+                                    <div className="tw-text-sm tw-font-bold">
+                                        {session?.user.id === winner.userID
+                                            ? "You"
+                                            : winner.username}{" "}
+                                        🎉
+                                    </div>
+                                    <div className="tw-text-xs tw-inline-block tw-bg-[#42a0ff] tw-rounded-full tw-py-0.5 tw-px-2 tw-font-medium">
+                                        Won $
+                                        {winner.prize % 1 === 0
+                                            ? winner.prize.toLocaleString()
+                                            : winner.prize.toLocaleString(
+                                                  undefined,
+                                                  {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                  }
+                                              )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            {userWon && (
+                <div className="tw-flex tw-gap-6 tw-py-4 tw-px-6 tw-items-center tw-bg-[#2c7bc9] tw-rounded-[10px] tw-mt-6">
+                    <div className="tw-text-[32px]">🏆</div>
+                    <div>
+                        <div className="tw-font-bold">Congratulations!</div>
+                        <div className="tw-text-sm tw-opacity-70 tw-leading-5">
+                            You won $
+                            {userWon.prize % 1 === 0
+                                ? userWon.prize.toLocaleString()
+                                : userWon.prize.toLocaleString(undefined, {
+                                      minimumFractionDigits: 2,
+                                      maximumFractionDigits: 2,
+                                  })}{" "}
+                            in this game. The amount has been added to your
+                            wallet. Hope to see you in more games.
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
