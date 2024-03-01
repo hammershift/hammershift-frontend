@@ -1210,19 +1210,22 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
           </div>
           <div>
             {tournamentPointsData &&
-              tournamentPointsData.map((item: any) => {
+              tournamentPointsData.map((item: any, index: number) => {
                 return (
                   <div
                     key={item._id}
                     className="tw-flex tw-justify-between tw-items-center tw-py-2"
                   >
-                    <div className="tw-flex tw-justify-between tw-items-center">
+                    <div className="tw-flex tw-justify-between tw-items-center tw-gap-4">
+                      <div className="tw-text-lg tw-opacity-30">
+                        {index + 1}
+                      </div>
                       <Image
                         src={item.user.image ? item.user.image : AvatarOne}
                         width={44}
                         height={44}
                         alt="dollar"
-                        className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
+                        className="tw-w-[44px] tw-h-[44px] tw-rounded-full"
                       />
                       <div className="tw-text-sm">
                         <div className="tw-font-bold">
