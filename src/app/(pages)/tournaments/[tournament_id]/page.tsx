@@ -6,6 +6,7 @@ import {
   TitleTournamentsList,
   TournamentButtons,
   TournamentInfoSection,
+  TournamentLeadboard,
   TournamentWagersSection,
   TournamentWinnersSection,
   TournamentsList,
@@ -18,6 +19,7 @@ import {
   getAuctionsByTournamentId,
   getOneTournamentWager,
   getTournamentById,
+  getTournamentPointsByTournamentId,
   getTournamentTransactions,
 } from "@/lib/data";
 import { useSession } from "next-auth/react";
@@ -46,6 +48,17 @@ export interface Auction {
   sort: any;
 }
 
+interface AuctionScore {
+  auctionID: string;
+  score: number;
+}
+
+interface TournamentPoints {
+  player: string;
+  points: number;
+  auctionScores: AuctionScore[];
+}
+
 const TournamentViewPage = ({
   params,
 }: {
@@ -69,6 +82,10 @@ const TournamentViewPage = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [prize, setPrize] = useState(0);
   const [winners, setWinners] = useState([]);
+  const [tournamentPointsData, setTournamentPointsData] = useState<
+    TournamentPoints[]
+  >([]);
+  const [playerLimit, setPlayerLimit] = useState(10);
 
   const ID = params.tournament_id;
 
@@ -92,6 +109,10 @@ const TournamentViewPage = ({
       try {
         const data = await getTournamentById(ID);
         const transactions = await getTournamentTransactions(ID);
+        const tournamentPoints = await getTournamentPointsByTournamentId(
+          ID,
+          playerLimit
+        );
         const currentDate = new Date();
         const buyInDeadline = new Date(data?.endTime);
         const tournamentDeadline = new Date(data?.tournamentEndTime);
@@ -110,6 +131,7 @@ const TournamentViewPage = ({
         setBuyInEnded(buyInDeadline < currentDate);
         setTournamentEnded(tournamentDeadline < currentDate);
         setPrize(totalPrize);
+        setTournamentPointsData(tournamentPoints);
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
@@ -317,6 +339,9 @@ const TournamentViewPage = ({
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
           {winners.length !== 0 ? (
             <TournamentWinnersSection winners={winners} />
+          ) : null}
+          {tournamentPointsData.length !== 0 ? (
+            <TournamentLeadboard tournamentPointsData={tournamentPointsData} />
           ) : null}
           <TournamentWagersSection
             tournamentWagers={tournamentWagers}

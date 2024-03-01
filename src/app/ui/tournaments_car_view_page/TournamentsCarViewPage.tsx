@@ -1188,6 +1188,77 @@ export const TournamentWinnersSection = ({ winners }: any) => {
   );
 };
 
-export const TournamentLeadboard = () => {
-  
-}
+export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
+  const { data: session } = useSession();
+
+  return (
+    <div>
+      <div className="tw-relative tw-pb-8 sm:tw-pb-0 tw-min-h-[180px]">
+        <div className="tw-p-6 tw-w-full tw-h-auto">
+          <div className="tw-mb-6">
+            <div className="tw-flex tw-justify-between">
+              <div className="tw-font-bold tw-text-[18px]">LEADERBOARD</div>
+              <Image
+                src={ArrowDown}
+                width={20}
+                height={20}
+                alt="arrow down"
+                className="tw-w-5 tw-h-5"
+              />
+            </div>
+            <div className="tw-text-[14px]">Lowest point wins</div>
+          </div>
+          <div>
+            {tournamentPointsData &&
+              tournamentPointsData.map((item: any) => {
+                return (
+                  <div
+                    key={item._id}
+                    className="tw-flex tw-justify-between tw-items-center tw-py-2"
+                  >
+                    <div className="tw-flex tw-justify-between tw-items-center">
+                      <Image
+                        src={item.user.image ? item.user.image : AvatarOne}
+                        width={44}
+                        height={44}
+                        alt="dollar"
+                        className="tw-w-[44px] tw-h-[44px] tw-mr-4 tw-rounded-full"
+                      />
+                      <div className="tw-text-sm">
+                        <div className="tw-font-bold">
+                          {session?.user._id === item.user._id
+                            ? "You"
+                            : item.user.username}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md">
+                      {Array.isArray(item.auctionScores) &&
+                      item.auctionScores.length > 0
+                        ? `${item.auctionScores.reduce(
+                            (acc: number, scoreObj: { score: number }) =>
+                              acc + scoreObj.score,
+                            0
+                          )} pts.`
+                        : "0 pts."}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+        {/* Background and button*/}
+        <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
+          <Image
+            src={TransitionPattern}
+            width={288}
+            height={356}
+            alt="pattern"
+            className="tw-w-full tw-h-auto tw-rounded-lg tw-mr-1 tw-object-cover"
+          />
+          <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#41a0ff62]"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
