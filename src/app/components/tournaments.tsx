@@ -10,6 +10,7 @@ import TournamentsCard from "./tournaments_card";
 import {
   getAuctionsByTournamentId,
   getLimitedTournaments,
+  getTournamentPointsByTournamentId,
   getTournaments,
 } from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
@@ -28,11 +29,25 @@ interface Auctions {
   image: string;
 }
 
+interface AuctionScore {
+  auctionID: string;
+  score: number;
+}
+interface TournamentPoints {
+  player: string;
+  points: number;
+  auctionScores: AuctionScore[];
+}
+
 const Tournaments = () => {
   const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
   const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
     {}
   );
+  const [playerLimit, setPlayerLimit] = useState(3);
+  const [tournamentPointsData, setTournamentPointsData] = useState<
+    TournamentPoints[]
+  >([]);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
@@ -40,13 +55,22 @@ const Tournaments = () => {
         const res = await getLimitedTournaments(3);
         const tournamentsArray = res.tournaments;
         setTournamentsData(tournamentsArray);
+
+        const tournamentPointsPromises = tournamentsArray.map(
+          (tournament: { _id: string }) =>
+            getTournamentPointsByTournamentId(tournament._id, playerLimit)
+        );
+        const tournamentPointsArray = await Promise.all(
+          tournamentPointsPromises
+        );
+        setTournamentPointsData(tournamentPointsArray);
+        return;
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
     };
     fetchTournamentsData();
-  }, []);
-
+  }, [playerLimit]);
   useEffect(() => {
     const fetchAuctionData = async () => {
       try {
@@ -99,10 +123,11 @@ const Tournaments = () => {
       </header>
       <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto tw-gap-4 sm:tw-gap-8 tw-mt-8">
         {tournamentsData &&
-          tournamentsData.map((tournament) => {
+          tournamentsData.map((tournament, index) => {
             const imagesForTournament =
               auctionData[tournament._id]?.map((auction) => auction.image) ||
               [];
+            const tournamentPoints = tournamentPointsData[index];
             return (
               <div key={tournament._id}>
                 <TimerProvider deadline={tournament.endTime}>
@@ -112,6 +137,7 @@ const Tournaments = () => {
                     title={tournament.title}
                     deadline={tournament.endTime}
                     images={imagesForTournament}
+                    tournamentPoints={tournamentPoints}
                   />
                 </TimerProvider>
               </div>

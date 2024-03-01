@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import {
+  getAllTournamentWagers,
   getAuctionsByTournamentId,
+  getOneTournamentWager,
   getSortedTournaments,
   getTournamentPointsByTournamentId,
   getTournaments,
@@ -11,6 +13,7 @@ import { TimerProvider } from "@/app/_context/TimerContext";
 import Image from "next/image"; // Assuming you are using Next.js Image component
 import { MoonLoader } from "react-spinners";
 import dynamic from "next/dynamic";
+import { useSession } from "next-auth/react";
 
 const DynamicTournamentsCards = dynamic(
   () => import("../../components/tournaments_card"),
@@ -30,12 +33,14 @@ const DynamicTournamentsCards = dynamic(
   }
 );
 
-interface Tournaments {
+export interface Tournaments {
   _id: string;
   title: string;
   pot: number;
   endTime: Date;
   tournamentEndTime: Date;
+  cars: number;
+  buyInFee: number;
   // Add other properties of the tournament here
 }
 
@@ -53,6 +58,13 @@ interface TournamentPoints {
   player: string;
   points: number;
   auctionScores: AuctionScore[];
+}
+
+interface Wager {
+  // Define the properties of a wager here
+  // For example:
+  id: string;
+  amount: number;
 }
 
 const TournamentsList = () => {
@@ -99,7 +111,6 @@ const TournamentsList = () => {
     };
     fetchTournamentsData();
   }, [sortType, tournamentLimit, playerLimit]);
-  console.log(tournamentPointsData);
 
   useEffect(() => {
     const fetchAuctionData = async () => {
@@ -161,7 +172,7 @@ const TournamentsList = () => {
                     deadline={tournament.endTime}
                     tournament_deadline={tournament.tournamentEndTime}
                     images={imagesForTournament}
-                    tournamentPoints={tournamentPoints} // Correctly pass the tournament points for each tournament
+                    tournamentPoints={tournamentPoints}
                   />
                 </TimerProvider>
               </div>

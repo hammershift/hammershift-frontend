@@ -35,7 +35,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 import CarImageModal from "@/app/components/car_image_modal";
-import { getAuctionsByTournamentId, getLimitedTournaments } from "@/lib/data";
+import {
+  getAuctionsByTournamentId,
+  getLimitedTournaments,
+  getTournamentPointsByTournamentId,
+} from "@/lib/data";
 dayjs.extend(relativeTime);
 
 interface TournamentButtonsI {
@@ -998,11 +1002,25 @@ interface Auctions {
   image: string;
 }
 
+interface AuctionScore {
+  auctionID: string;
+  score: number;
+}
+interface TournamentPoints {
+  player: string;
+  points: number;
+  auctionScores: AuctionScore[];
+}
+
 export const TournamentsYouMightLike = () => {
   const [tournamentsData, setTournamentsData] = useState<Tournaments[]>([]);
   const [auctionData, setAuctionData] = useState<Record<string, Auctions[]>>(
     {}
   );
+  const [playerLimit, setPlayerLimit] = useState(3);
+  const [tournamentPointsData, setTournamentPointsData] = useState<
+    TournamentPoints[]
+  >([]);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
@@ -1010,12 +1028,22 @@ export const TournamentsYouMightLike = () => {
         const res = await getLimitedTournaments(3);
         const tournamentsArray = res.tournaments;
         setTournamentsData(tournamentsArray);
+
+        const tournamentPointsPromises = tournamentsArray.map(
+          (tournament: { _id: string }) =>
+            getTournamentPointsByTournamentId(tournament._id, playerLimit)
+        );
+        const tournamentPointsArray = await Promise.all(
+          tournamentPointsPromises
+        );
+        setTournamentPointsData(tournamentPointsArray);
+        return;
       } catch (error) {
         console.error("Failed to fetch tournament data:", error);
       }
     };
     fetchTournamentsData();
-  }, []);
+  }, [playerLimit]);
 
   useEffect(() => {
     const fetchAuctionData = async () => {
@@ -1057,10 +1085,11 @@ export const TournamentsYouMightLike = () => {
 
       <section className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-8 tw-mt-8">
         {tournamentsData &&
-          tournamentsData.slice(0, 3).map((tournament) => {
+          tournamentsData.slice(0, 3).map((tournament, index) => {
             const imagesForTournament =
               auctionData[tournament._id]?.map((auction) => auction.image) ||
               [];
+            const tournamentPoints = tournamentPointsData[index];
             return (
               <div key={tournament._id}>
                 <TimerProvider deadline={tournament.endTime}>
@@ -1070,6 +1099,7 @@ export const TournamentsYouMightLike = () => {
                     title={tournament.title}
                     deadline={tournament.endTime}
                     images={imagesForTournament}
+                    tournamentPoints={tournamentPoints}
                   />
                 </TimerProvider>
               </div>
@@ -1157,3 +1187,7 @@ export const TournamentWinnersSection = ({ winners }: any) => {
     </div>
   );
 };
+
+export const TournamentLeadboard = () => {
+  
+}

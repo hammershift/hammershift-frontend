@@ -9,6 +9,7 @@ import AvatarOne from "../../../public/images/avatar-one.svg";
 import AvatarTwo from "../../../public/images/avatar-two.svg";
 import AvatarThree from "../../../public/images/avatar-three.svg";
 import { useTimer } from "../_context/TimerContext";
+import { useSession } from "next-auth/react";
 
 const TournamentsCard = ({
   tournament_id,
@@ -19,6 +20,7 @@ const TournamentsCard = ({
   images,
   tournamentPoints,
 }: any) => {
+  const { data: session } = useSession();
   const [buyInEnded, setIsBuyInEnded] = useState(false);
   const [tournamentEnded, setIsTournamentEnded] = useState(false);
   const timerValues = useTimer();
@@ -103,49 +105,69 @@ const TournamentsCard = ({
         )}
 
         <div className="tw-h-40">
-          {tournamentPoints && tournamentPoints.length === 0 && (
-            <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
-              <Image
-                src={AvatarOne}
-                width={24}
-                height={24}
-                alt="dollar"
-                className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
-              />
-              <div>Join this tournament now</div>
-            </div>
+          {buyInEnded ? (
+            <>
+              {tournamentPoints && tournamentPoints.length === 0 ? (
+                <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                  <div>Buy-in has ended, no players joined</div>
+                </div>
+              ) : (
+                <>
+                  {tournamentPoints &&
+                    tournamentPoints.map((item: any, index: number) => (
+                      <div
+                        key={index}
+                        className="tw-flex tw-items-center tw-justify-between tw-my-3"
+                      >
+                        <div className="tw-flex tw-items-center">
+                          <div>{index + 1}</div>
+                          <Image
+                            src={item.user.image}
+                            width={40}
+                            height={40}
+                            alt={"avatar"}
+                            className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
+                          />
+                          <div>{item.user.username}</div>
+                        </div>
+                        <div className="tw-text-[#F2CA16] tw-font-bold">
+                          {Array.isArray(item.auctionScores) &&
+                          item.auctionScores.length > 0
+                            ? `${item.auctionScores.reduce(
+                                (acc: number, scoreObj: { score: number }) =>
+                                  acc + scoreObj.score,
+                                0
+                              )} pts.`
+                            : "0 pts."}
+                        </div>
+                      </div>
+                    ))}
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {tournamentPoints && tournamentPoints.length === 0 ? (
+                <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                  <div>Join this tournament</div>
+                </div>
+              ) : (
+                <>
+                  {tournamentPoints &&
+                    tournamentPoints.map((item: any) => (
+                      <div key={item._id}>
+                        <p className="tw-text-white">
+                          {session?.user.id === item.user._id
+                            ? "You joined the tournament"
+                            : item.user.username}{" "}
+                          has joined the tournament
+                        </p>
+                      </div>
+                    ))}
+                </>
+              )}
+            </>
           )}
-          {tournamentPoints &&
-            tournamentPoints.map((item: any, index: number) => (
-              <div
-                key={index}
-                className="tw-flex tw-items-center tw-justify-between tw-my-3"
-              >
-                <div className="tw-flex tw-items-center">
-                  <div>{index + 1}</div>
-                  <Image
-                    src={item.user.image}
-                    width={40}
-                    height={40}
-                    alt={"avatar"}
-                    className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
-                  />
-                  <div>{item.user.username}</div>
-                </div>
-                <div className="tw-text-[#F2CA16] tw-font-bold">
-                  {Array.isArray(item.auctionScores) &&
-                  item.auctionScores.length > 0
-                    ? `${item.auctionScores.reduce(
-                        (acc: number, scoreObj: { score: number }) =>
-                          acc + scoreObj.score,
-                        0
-                      )} pts.`
-                    : "0 pts."}
-                </div>
-              </div>
-            ))}
-
-          {/* other users*/}
         </div>
         <div>
           <button
