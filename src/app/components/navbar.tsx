@@ -1654,6 +1654,33 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                                 pts. away
                             </div>
                         )}
+                        {wager.prize && (
+                            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
+                                <div className="tw-flex tw-gap-2">
+                                    <Image
+                                        src={MoneyBagBlack}
+                                        width={20}
+                                        height={20}
+                                        alt="money bag"
+                                        className="tw-w-[20px] tw-h-[20px]"
+                                    />
+                                    <div>WINNINGS</div>
+                                </div>
+                                <div>
+                                    $
+                                    {wager.prize % 1 === 0
+                                        ? wager.prize.toLocaleString()
+                                        : wager.prize.toLocaleString(
+                                              undefined,
+                                              {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                              }
+                                          )}{" "}
+                                    🎉
+                                </div>
+                            </div>
+                        )}
                         {isActive && (
                             <div className="tw-flex tw-items-center tw-gap-2">
                                 <Image

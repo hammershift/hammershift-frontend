@@ -84,6 +84,7 @@ export async function GET(req: NextRequest) {
           buyInAmount: wager.buyInAmount,
           tournamentImages: wager.tournamentImages,
           user: wager.user,
+          prize: wager.prize,
         };
       })
       .filter((detail) => detail !== null);
