@@ -58,6 +58,7 @@ export function calculateTournamentScores(userWagers: UserWager[], auctions: Auc
     const auctionScores = userWager.wagers.map((wager) => {
       const auction = auctions.find((a) => a._id.toString() === wager.auctionID.toString());
       if (!auction) {
+        console.error(`Auction not found for wager. Wager auction ID: ${wager.auctionID}`);
         throw new Error('Auction not found for wager.');
       }
       const score = Math.abs(wager.priceGuessed - auction.finalSellingPrice);

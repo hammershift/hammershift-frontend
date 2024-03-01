@@ -8,6 +8,8 @@ type TournamentWager = {
 
 type TournamentWinner = {
   userID: string;
+  username: string;
+  userImage: string;
   prize: number;
   rank: number;
   wagerID: mongoose.Types.ObjectId;
@@ -42,6 +44,8 @@ function prizeDistributionTournament(wagers: TournamentWager[], totalPot: number
       if (!winners.some((winner) => winner.userID === tiedWager.userID)) {
         winners.push({
           userID: tiedWager.userID,
+          username: '',
+          userImage: '',
           prize: prizePerWinner,
           rank: currentRank,
           wagerID: tiedWager._id,
