@@ -47,7 +47,7 @@ const TournamentsCard = ({
 
   return (
     <div>
-      <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4">
+      <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4 tw-z-10">
         {images && images.length > 0 && (
           <>
             <div className="tw-flex tw-justify-end ">
@@ -80,7 +80,7 @@ const TournamentsCard = ({
           </>
         )}
       </div>
-      <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
+      <div className="scale-tournament-background-on-hover tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         {tournamentEnded ? (
           <p className="tw-text-red-600 tw-font-bold">Tournament has ended</p>
@@ -156,11 +156,10 @@ const TournamentsCard = ({
                   {tournamentPoints &&
                     tournamentPoints.map((item: any) => (
                       <div key={item._id}>
-                        <p className="tw-text-white">
+                        <p className="tw-text-white tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
                           {session?.user.id === item.user._id
                             ? "You joined the tournament"
-                            : item.user.username}{" "}
-                          has joined the tournament
+                            : `${item.user.username} has joined the tournament`}
                         </p>
                       </div>
                     ))}

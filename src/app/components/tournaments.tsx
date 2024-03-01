@@ -121,7 +121,7 @@ const Tournaments = () => {
           />
         </div>
       </header>
-      <section className="tw-flex tw-flex-col sm:tw-flex-row sm:tw-w-full tw-overflow-x-auto tw-gap-4 sm:tw-gap-8 tw-mt-8">
+      <section className="tw-flex tw-flex-col tw-w-auto sm:tw-flex-row sm:tw-w-full tw-gap-4 sm:tw-gap-8 tw-mt-8">
         {tournamentsData &&
           tournamentsData.map((tournament, index) => {
             const imagesForTournament =
