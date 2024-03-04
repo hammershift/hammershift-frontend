@@ -21,46 +21,10 @@ const LiveGamesCard: React.FC<any> = ({
   deadline,
   auction_id,
   object_id,
+  images_list,
 }) => {
-  const playersData = [
-    {
-      id: "pl1",
-      username: "user1",
-      avatar: AvatarOne,
-    },
-    {
-      id: "pl2",
-      username: "user2",
-      avatar: AvatarTwo,
-    },
-    {
-      id: "pl3",
-      username: "user2",
-      avatar: AvatarThree,
-    },
-    {
-      id: "pl4",
-      username: "user2",
-      avatar: AvatarFour,
-    },
-    {
-      id: "pl5",
-      username: "user2",
-      avatar: AvatarOne,
-    },
-    {
-      id: "pl6",
-      username: "user2",
-      avatar: AvatarTwo,
-    },
-    {
-      id: "pl7",
-      username: "user2",
-      avatar: AvatarThree,
-    },
-  ];
-
   const [auctionWagers, setAuctionWagers] = useState([]);
+  const [currentImage, setCurrentImage] = useState(image);
 
   useEffect(() => {
     const fetchWagers = async () => {
@@ -69,6 +33,25 @@ const LiveGamesCard: React.FC<any> = ({
     };
     fetchWagers();
   }, []);
+
+  useEffect(() => {
+    const imagesSrcList = images_list
+      .slice(0, 5)
+      .map((imageObj: { src: any }) => imageObj.src);
+
+    const intervalId = setInterval(() => {
+      setCurrentImage((prevImage: string) => {
+        const currentIndex = imagesSrcList.indexOf(prevImage);
+        if (currentIndex === imagesSrcList.length - 1) {
+          return image;
+        } else {
+          return imagesSrcList[currentIndex + 1];
+        }
+      });
+    }, 20000);
+
+    return () => clearInterval(intervalId);
+  }, [image, images_list]);
 
   const timerValues = useTimer();
   return (
@@ -81,7 +64,7 @@ const LiveGamesCard: React.FC<any> = ({
           LIVE
         </div>
         <img
-          src={image}
+          src={currentImage}
           width={200}
           height={200}
           alt="car"
