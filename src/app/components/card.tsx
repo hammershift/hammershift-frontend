@@ -1,7 +1,7 @@
 "use client";
 
 import "../styles/app.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,9 +25,46 @@ const Card: React.FC<any> = ({
   auction_id,
   price,
   object_id,
+  images_list,
 }) => {
+  const [imageSrc, setImageSrc] = useState(image);
+  const [index, setIndex] = useState(0);
+
+  console.log(images_list);
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const timerValues = useTimer();
+  dayjs.extend(relativeTime);
+
+  const handleOnHover = () => {
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+    }
+    timerRef.current = setInterval(() => {
+      setIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % images_list.length;
+        setImageSrc(images_list[nextIndex].src);
+        return nextIndex;
+      });
+    }, 1000);
+  };
+
+  const handleOnLeave = () => {
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+    }
+    setImageSrc(image);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
   return (
     <TimerProvider deadline={new Date(deadline)}>
       <div className="tw-flex tw-flex-col tw-justify-between tw-h-auto">
@@ -38,11 +75,13 @@ const Card: React.FC<any> = ({
             href={`/auctions/car_view_page/${auction_id}`}
           >
             <img
-              src={image}
+              src={imageSrc}
               width={416}
               height={219}
               alt={make}
               className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+              onMouseEnter={handleOnHover}
+              onMouseLeave={handleOnLeave}
             />
           </Link>
           <Link
