@@ -21,7 +21,7 @@ const transactionSchema = new mongoose.Schema({
   transactionType: {
     type: String,
     required: true,
-    enum: ['wager', 'deposits', 'withdrawals', 'winnings', 'refund', 'tournament buy-in', 'tournament winnings', 'tournament refund'],
+    enum: ['wager', 'deposits', 'withdrawals', 'winnings', 'refund', 'tournament buy-in'],
   },
   amount: {
     type: Number,
