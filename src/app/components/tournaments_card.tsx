@@ -46,7 +46,7 @@ const TournamentsCard = ({
   }, [deadline, tournament_deadline]);
 
   return (
-    <div>
+    <div className="hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
       <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4 tw-z-10">
         {images && images.length > 0 && (
           <>
@@ -80,7 +80,7 @@ const TournamentsCard = ({
           </>
         )}
       </div>
-      <div className="scale-tournament-background-on-hover tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
+      <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         {tournamentEnded ? (
           <p className="tw-text-red-600 tw-font-bold">Tournament has ended</p>
@@ -104,7 +104,7 @@ const TournamentsCard = ({
           </div>
         )}
 
-        <div className="tw-h-40">
+        <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#172431]">
           {buyInEnded ? (
             <>
               {tournamentPoints && tournamentPoints.length === 0 ? (
@@ -114,34 +114,36 @@ const TournamentsCard = ({
               ) : (
                 <>
                   {tournamentPoints &&
-                    tournamentPoints.map((item: any, index: number) => (
-                      <div
-                        key={index}
-                        className="tw-flex tw-items-center tw-justify-between tw-my-3"
-                      >
-                        <div className="tw-flex tw-items-center">
-                          <div>{index + 1}</div>
-                          <Image
-                            src={item.user.image}
-                            width={40}
-                            height={40}
-                            alt={"avatar"}
-                            className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
-                          />
-                          <div>{item.user.username}</div>
+                    tournamentPoints
+                      .slice(0, 3)
+                      .map((item: any, index: number) => (
+                        <div
+                          key={index}
+                          className="tw-flex tw-items-center tw-justify-between tw-my-3"
+                        >
+                          <div className="tw-flex tw-items-center">
+                            <div>{index + 1}</div>
+                            <Image
+                              src={item.user.image}
+                              width={40}
+                              height={40}
+                              alt={"avatar"}
+                              className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
+                            />
+                            <div>{item.user.username}</div>
+                          </div>
+                          <div className="tw-text-[#F2CA16] tw-font-bold">
+                            {Array.isArray(item.auctionScores) &&
+                            item.auctionScores.length > 0
+                              ? `${item.auctionScores.reduce(
+                                  (acc: number, scoreObj: { score: number }) =>
+                                    acc + scoreObj.score,
+                                  0
+                                )} pts.`
+                              : "0 pts."}
+                          </div>
                         </div>
-                        <div className="tw-text-[#F2CA16] tw-font-bold">
-                          {Array.isArray(item.auctionScores) &&
-                          item.auctionScores.length > 0
-                            ? `${item.auctionScores.reduce(
-                                (acc: number, scoreObj: { score: number }) =>
-                                  acc + scoreObj.score,
-                                0
-                              )} pts.`
-                            : "0 pts."}
-                        </div>
-                      </div>
-                    ))}
+                      ))}
                 </>
               )}
             </>
@@ -149,20 +151,44 @@ const TournamentsCard = ({
             <>
               {tournamentPoints && tournamentPoints.length === 0 ? (
                 <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
-                  <div>Join this tournament</div>
+                  <div className="tw-flex tw-items-center">
+                    {" "}
+                    <Image
+                      src={AvatarThree}
+                      width={40}
+                      height={40}
+                      alt={"avatar"}
+                      className="tw-w-[40px] tw-h-[40px] tw-mx-1 tw-rounded-full"
+                    />
+                    <div>Join this tournament</div>
+                  </div>
                 </div>
               ) : (
                 <>
                   {tournamentPoints &&
-                    tournamentPoints.map((item: any) => (
-                      <div key={item._id}>
-                        <p className="tw-text-white tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
-                          {session?.user.id === item.user._id
-                            ? "You joined the tournament"
-                            : `${item.user.username} has joined the tournament`}
-                        </p>
-                      </div>
-                    ))}
+                    tournamentPoints
+                      .slice(0, 3)
+                      .map((item: any, index: number) => (
+                        <div
+                          key={index}
+                          className="tw-flex tw-items-center tw-justify-between tw-my-3"
+                        >
+                          <div className="tw-flex tw-items-center">
+                            <Image
+                              src={item.user.image}
+                              width={40}
+                              height={40}
+                              alt={"avatar"}
+                              className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
+                            />
+                            <div>
+                              {session?.user.username === item.user.username
+                                ? "You joined the tournament"
+                                : `${item.user.username} has joined the tournament`}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                 </>
               )}
             </>
