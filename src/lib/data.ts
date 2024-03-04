@@ -916,3 +916,11 @@ export const getAuctionTransactions = async (auction_id: string) => {
   const data = await res.json();
   return data;
 };
+
+export const getUserPointsAndPlacing = async (tournament_id: string, user_id: string) => {
+  const res = await fetch(
+    `/api/tournamentPoints?tournament_id=${tournament_id}&user_id=${user_id}`
+  );
+  const data = await res.json();
+  return data;
+};

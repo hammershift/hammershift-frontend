@@ -33,6 +33,7 @@ import {
     getMyWagers,
     getMyWatchlist,
     getTournamentTransactions,
+    getUserPointsAndPlacing,
     refundWager,
 } from "@/lib/data";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
@@ -1555,6 +1556,10 @@ const MyWagersDropdownMenu = () => {
 export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
     const { days, hours, minutes, seconds } = useTimer();
     const [prize, setPrize] = useState(0);
+    const [pointsAndPlacing, setPointsAndPlacing] = useState<{
+        placing: number;
+        totalScore: number;
+    }>({ placing: 0, totalScore: 0 });
     let formattedDateString;
     if (wager.endTime) {
         formattedDateString = new Intl.DateTimeFormat("en-US", {
@@ -1566,6 +1571,38 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
             hour12: true,
         }).format(new Date(wager.endTime));
     }
+
+    const addNumberSuffix = (number: number) => {
+        const suffixes = [
+            "th",
+            "st",
+            "nd",
+            "rd",
+            "th",
+            "th",
+            "th",
+            "th",
+            "th",
+            "th",
+        ];
+        if (number % 100 >= 11 && number % 100 <= 13) {
+            return number + "th";
+        } else {
+            return number + suffixes[number % 10];
+        }
+    };
+
+    useEffect(() => {
+        const fetchTotalPointsAndPlacing = async () => {
+            const data = await getUserPointsAndPlacing(
+                wager._id,
+                wager.user._id
+            );
+            setPointsAndPlacing(data);
+        };
+
+        fetchTotalPointsAndPlacing();
+    }, []);
 
     useEffect(() => {
         const fetchPrize = async () => {
@@ -1638,7 +1675,11 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                             />
                             <span className="tw-opacity-80">Place:</span>
                             <span className="tw-text-[#F2CA16] tw-font-bold">
-                                Current -th Place
+                                {isActive ? "Current: " : null}
+                                {pointsAndPlacing.placing
+                                    ? addNumberSuffix(pointsAndPlacing.placing)
+                                    : "-"}{" "}
+                                Place
                             </span>
                         </div>
                         {!isActive && (
@@ -1650,7 +1691,12 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                                     alt="wallet icon"
                                     className="tw-w-[14px] tw-h-[14px]"
                                 />
-                                <span className="tw-opacity-80">Points:</span> -
+                                <span className="tw-opacity-80">Points:</span>{" "}
+                                {pointsAndPlacing.totalScore
+                                    ? new Intl.NumberFormat().format(
+                                          pointsAndPlacing.totalScore
+                                      )
+                                    : "-"}{" "}
                                 pts. away
                             </div>
                         )}
