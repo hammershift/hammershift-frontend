@@ -25,9 +25,31 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = await client.db();
+    const db = client.db();
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const tournament_id = req.nextUrl.searchParams.get("tournament_id");
+    const user_id = req.nextUrl.searchParams.get("user_id");
+
+    if (user_id && tournament_id) {
+      const tournamentPoints = await db
+        .collection("tournament_points")
+        .find({
+          $and: [{ tournamentID: new mongoose.Types.ObjectId(tournament_id) }],
+        })
+        .limit(limit)
+        .toArray();
+
+      tournamentPoints.forEach(item => {
+        let totalScore = item.auctionScores.reduce((acc: number, curr: { score: number }) => acc + curr.score, 0);
+        item.totalScore = totalScore;
+      });
+
+      tournamentPoints.sort((a, b) => a.totalScore - b.totalScore);
+
+      const placing = tournamentPoints.findIndex((item) => item.user._id == user_id);
+
+      return NextResponse.json({ placing: placing + 1, totalScore: tournamentPoints[placing].totalScore });
+    }
 
     if (tournament_id) {
       const tournamentPoints = await db
@@ -54,7 +76,7 @@ export async function GET(req: NextRequest) {
   } catch {
     return NextResponse.json(
       { message: "Cannot find tournament_points" },
-      { status:  404 }
+      { status: 404 }
     );
   }
 }
