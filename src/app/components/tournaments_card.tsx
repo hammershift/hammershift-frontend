@@ -151,7 +151,17 @@ const TournamentsCard = ({
             <>
               {tournamentPoints && tournamentPoints.length === 0 ? (
                 <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
-                  <div>Join this tournament</div>
+                  <div className="tw-flex tw-items-center">
+                    {" "}
+                    <Image
+                      src={AvatarThree}
+                      width={40}
+                      height={40}
+                      alt={"avatar"}
+                      className="tw-w-[40px] tw-h-[40px] tw-mx-1 tw-rounded-full"
+                    />
+                    <div>Join this tournament</div>
+                  </div>
                 </div>
               ) : (
                 <>
