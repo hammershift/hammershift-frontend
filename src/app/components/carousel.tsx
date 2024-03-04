@@ -111,7 +111,7 @@ const SlideOne = () => {
           CREDITS
         </div>
         <Link href={"/create_account"}>
-          <button className="btn-yellow tw-mt-4 sm:tw-mt-6">
+          <button className="btn-yellow tw-mt-4 sm:tw-mt-6 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
             SIGN UP & WAGER
           </button>
         </Link>

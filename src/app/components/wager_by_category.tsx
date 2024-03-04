@@ -32,7 +32,7 @@ const WagerByCategory = () => {
         <section>
           <div className="first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
             <Link href="/auctions?category=Sedans&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
                   <div className="tw-text-[30px] tw-font-bold tw-x-auto">
                     Sedans
@@ -57,7 +57,7 @@ const WagerByCategory = () => {
               </div>
             </Link>
             <Link href="/auctions?category=SUVs&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
                   <div className="tw-text-[30px] tw-font-bold tw-x-auto">
                     SUVs
@@ -85,7 +85,7 @@ const WagerByCategory = () => {
 
           <div className="second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6">
             <Link href="/auctions?category=EVs+and+Hybrids&sort=Newly+Listed">
-              <div className="tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+              <div className="tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
                   <div className="tw-text-[30px] tw-font-bold tw-x-auto">
                     EVs & Hybrids
@@ -110,7 +110,7 @@ const WagerByCategory = () => {
               </div>
             </Link>
             <Link href="/auctions?category=Luxury+Cars&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
                   <div className="tw-text-[30px] tw-font-bold tw-x-auto">
                     Luxury
@@ -135,7 +135,7 @@ const WagerByCategory = () => {
               </div>
             </Link>
             <Link href="/auctions?category=Pickup+Trucks&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5">
+              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
                 <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
                   <div className="tw-text-[30px] tw-font-bold tw-x-auto">
                     Pickup Trucks
