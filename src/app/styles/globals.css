@@ -13,6 +13,26 @@
   font-family: "euro-star-black-extended";
 }
 
+.scale-tournament-background-on-hover {
+  position: relative;
+}
+
+.scale-tournament-background-on-hover::after {
+  background-color: #1A2C3D;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -2;
+  transition: transform 250ms;
+}
+
+.scale-tournament-background-on-hover:hover::after {
+  transform: scale(1.1);
+}
+
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
