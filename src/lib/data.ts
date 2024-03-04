@@ -442,9 +442,15 @@ export const getUserInfo = async (id: string) => {
 
 ///////////////////////// COMMENTS /////////////////////////
 // fetches comments
-export const getComments = async (pageID: string, pageType: "auction" | "tournament", sort: string) => {
+export const getComments = async (
+  pageID: string,
+  pageType: "auction" | "tournament",
+  sort: string
+) => {
   try {
-    const res = await fetch(`/api/comments?pageID=${pageID}&pageType=${pageType}&sort=${sort}`);
+    const res = await fetch(
+      `/api/comments?pageID=${pageID}&pageType=${pageType}&sort=${sort}`
+    );
     if (res.ok) {
       const data = await res.json();
       return data;
@@ -456,7 +462,11 @@ export const getComments = async (pageID: string, pageType: "auction" | "tournam
 };
 
 // creates comment
-export const createComment = async (pageID: string, pageType: "auction" | "tournament", comment: string) => {
+export const createComment = async (
+  pageID: string,
+  pageType: "auction" | "tournament",
+  comment: string
+) => {
   try {
     const res = await fetch("/api/comments", {
       method: "POST",
@@ -828,7 +838,9 @@ export const getTournaments = async () => {
 
 export const getSortedTournaments = async (sortType: string, limit: number) => {
   try {
-    const res = await fetch(`/api/tournaments?sort=${sortType}&&limit=${limit}`);
+    const res = await fetch(
+      `/api/tournaments?sort=${sortType}&&limit=${limit}`
+    );
     const data = await res.json();
     console.log(data);
     return data;
@@ -901,18 +913,25 @@ export const getAllTournamentWagers = async (tournament_id: string) => {
   return data;
 };
 
-export const getTournamentTransactions = async (tournament_id: string) => {
+export const getTournamentPointsByTournamentId = async (
+  tournament_id: string,
+  limit: number
+) => {
   const res = await fetch(
-    `/api/transaction?tournamentID=${tournament_id}`
+    `/api/tournamentPoints?tournament_id=${tournament_id}&limit=${limit}`
   );
   const data = await res.json();
   return data;
 };
 
+export const getTournamentTransactions = async (tournament_id: string) => {
+  const res = await fetch(`/api/transaction?tournamentID=${tournament_id}`);
+  const data = await res.json();
+  return data;
+};
+
 export const getAuctionTransactions = async (auction_id: string) => {
-  const res = await fetch(
-    `/api/transaction?auctionID=${auction_id}`
-  );
+  const res = await fetch(`/api/transaction?auctionID=${auction_id}`);
   const data = await res.json();
   return data;
 };

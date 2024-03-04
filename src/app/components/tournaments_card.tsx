@@ -9,6 +9,7 @@ import AvatarOne from "../../../public/images/avatar-one.svg";
 import AvatarTwo from "../../../public/images/avatar-two.svg";
 import AvatarThree from "../../../public/images/avatar-three.svg";
 import { useTimer } from "../_context/TimerContext";
+import { useSession } from "next-auth/react";
 
 const TournamentsCard = ({
   tournament_id,
@@ -17,7 +18,9 @@ const TournamentsCard = ({
   deadline,
   tournament_deadline,
   images,
+  tournamentPoints,
 }: any) => {
+  const { data: session } = useSession();
   const [buyInEnded, setIsBuyInEnded] = useState(false);
   const [tournamentEnded, setIsTournamentEnded] = useState(false);
   const timerValues = useTimer();
@@ -42,30 +45,9 @@ const TournamentsCard = ({
     return () => clearInterval(intervalId);
   }, [deadline, tournament_deadline]);
 
-  const userList = [
-    {
-      number: "1",
-      img: AvatarOne,
-      username: "Username",
-      points: "936",
-    },
-    {
-      number: "2",
-      img: AvatarTwo,
-      username: "Username",
-      points: "984",
-    },
-    {
-      number: "3",
-      img: AvatarThree,
-      username: "Username",
-      points: "1,000",
-    },
-  ];
-
   return (
     <div>
-      <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4">
+      <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4 tw-z-10">
         {images && images.length > 0 && (
           <>
             <div className="tw-flex tw-justify-end ">
@@ -98,7 +80,7 @@ const TournamentsCard = ({
           </>
         )}
       </div>
-      <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
+      <div className="scale-tournament-background-on-hover tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         {tournamentEnded ? (
           <p className="tw-text-red-600 tw-font-bold">Tournament has ended</p>
@@ -122,28 +104,69 @@ const TournamentsCard = ({
           </div>
         )}
 
-        <div>
-          {userList.map((user) => (
-            <div
-              key={user.number}
-              className="tw-flex tw-items-center tw-justify-between tw-my-3"
-            >
-              <div className="tw-flex tw-items-center">
-                <div>{user.number}</div>
-                <Image
-                  src={user.img}
-                  width={40}
-                  height={40}
-                  alt="avatar"
-                  className="tw-w-[40px] tw-h-[40px] tw-mx-3"
-                />
-                <div>{user.username}</div>
-              </div>
-              <div className="tw-text-[#F2CA16] tw-font-bold">{`${user.points} pts.`}</div>
-            </div>
-          ))}
-
-          {/* other users*/}
+        <div className="tw-h-40">
+          {buyInEnded ? (
+            <>
+              {tournamentPoints && tournamentPoints.length === 0 ? (
+                <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                  <div>Buy-in has ended, no players joined</div>
+                </div>
+              ) : (
+                <>
+                  {tournamentPoints &&
+                    tournamentPoints.map((item: any, index: number) => (
+                      <div
+                        key={index}
+                        className="tw-flex tw-items-center tw-justify-between tw-my-3"
+                      >
+                        <div className="tw-flex tw-items-center">
+                          <div>{index + 1}</div>
+                          <Image
+                            src={item.user.image}
+                            width={40}
+                            height={40}
+                            alt={"avatar"}
+                            className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
+                          />
+                          <div>{item.user.username}</div>
+                        </div>
+                        <div className="tw-text-[#F2CA16] tw-font-bold">
+                          {Array.isArray(item.auctionScores) &&
+                          item.auctionScores.length > 0
+                            ? `${item.auctionScores.reduce(
+                                (acc: number, scoreObj: { score: number }) =>
+                                  acc + scoreObj.score,
+                                0
+                              )} pts.`
+                            : "0 pts."}
+                        </div>
+                      </div>
+                    ))}
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {tournamentPoints && tournamentPoints.length === 0 ? (
+                <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                  <div>Join this tournament</div>
+                </div>
+              ) : (
+                <>
+                  {tournamentPoints &&
+                    tournamentPoints.map((item: any) => (
+                      <div key={item._id}>
+                        <p className="tw-text-white tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                          {session?.user.id === item.user._id
+                            ? "You joined the tournament"
+                            : `${item.user.username} has joined the tournament`}
+                        </p>
+                      </div>
+                    ))}
+                </>
+              )}
+            </>
+          )}
         </div>
         <div>
           <button
