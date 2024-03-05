@@ -104,11 +104,11 @@ const TournamentsCard = ({
           </div>
         )}
 
-        <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#172431]">
+        <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#1A2C3D]">
           {buyInEnded ? (
             <>
               {tournamentPoints && tournamentPoints.length === 0 ? (
-                <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                <div className="tw-bg-[#1A2C3D] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
                   <div>Buy-in has ended, no players joined</div>
                 </div>
               ) : (
@@ -150,7 +150,7 @@ const TournamentsCard = ({
           ) : (
             <>
               {tournamentPoints && tournamentPoints.length === 0 ? (
-                <div className="tw-bg-[#172431] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                <div className="tw-bg-[#1A2C3D] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
                   <div className="tw-flex tw-items-center">
                     {" "}
                     <Image
