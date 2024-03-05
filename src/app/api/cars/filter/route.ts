@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 interface SortQuery {
   createdAt?: number;
+  pot?: number;
   'sort.price'?: number;
   'sort.deadline'?: number;
   'sort.bids'?: number;
@@ -193,6 +194,9 @@ export async function GET(req: NextRequest) {
           break;
         case 'Least Bids':
           sort = { 'sort.bids': 1 };
+          break;
+        case 'Most Pot':
+          sort = { pot: -1 };
           break;
         //other sorts here
         default:
