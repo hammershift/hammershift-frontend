@@ -124,7 +124,7 @@ const TournamentsCard = ({
                           <div className="tw-flex tw-items-center">
                             <div>{index + 1}</div>
                             <Image
-                              src={item.user.image}
+                              src={item.user.image ? item.user.image : AvatarOne}
                               width={40}
                               height={40}
                               alt={"avatar"}
@@ -175,7 +175,7 @@ const TournamentsCard = ({
                         >
                           <div className="tw-flex tw-items-center">
                             <Image
-                              src={item.user.image}
+                              src={item.user.image ? item.user.image : AvatarOne}
                               width={40}
                               height={40}
                               alt={"avatar"}
