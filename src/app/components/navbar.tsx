@@ -272,11 +272,25 @@ const Navbar = () => {
                                 />
                             </Link>
                         </div>
-                        {/* <Link onClick={() => closeMenu()} href={"/discover"}>
-                            <div className="tw-block tw-mx-2 sm:tw-mx-4 ">
-                                DISCOVER
+                        <Link
+                            onClick={() => {
+                                closeMenu();
+                                closeMyAccountMenu();
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                            }}
+                            href="/live"
+                        >
+                            <div
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/live" &&
+                                    "tw-font-bold tw-border-b-2"
+                                }`}
+                            >
+                                LIVE
                             </div>
-                        </Link> */}
+                        </Link>
                         <Link
                             onClick={() => {
                                 closeMenu();
@@ -294,25 +308,6 @@ const Navbar = () => {
                                 }`}
                             >
                                 AUCTIONS
-                            </div>
-                        </Link>
-                        <Link
-                            onClick={() => {
-                                closeMenu();
-                                closeMyAccountMenu();
-                                document.body.classList.remove(
-                                    "stop-scrolling"
-                                );
-                            }}
-                            href="/tournaments"
-                        >
-                            <div
-                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
-                                    pathname === "/tournaments" &&
-                                    "tw-font-bold tw-border-b-2"
-                                }`}
-                            >
-                                TOURNAMENTS
                             </div>
                         </Link>
                     </div>
@@ -463,7 +458,7 @@ const Navbar = () => {
                     </div>
                 </div>
             ) : (
-                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3">
+                <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
                     <div className=" tw-flex tw-items-center tw-justify-between">
                         <div className="tw-pr-4">
                             <Link
@@ -484,11 +479,6 @@ const Navbar = () => {
                                 />
                             </Link>
                         </div>
-                        {/* <Link href="/discover">
-                            <div className="tw-hidden sm:tw-block tw-mx-1 md:tw-mx-4 ">
-                                DISCOVER
-                            </div>
-                        </Link> */}
                         <Link
                             onClick={() => {
                                 closeMenu();
@@ -496,6 +486,26 @@ const Navbar = () => {
                                     "stop-scrolling"
                                 );
                             }}
+                            className="tw-hidden sm:tw-block"
+                            href="/live"
+                        >
+                            <div
+                                className={`tw-block tw-mx-2 sm:tw-mx-4 ${
+                                    pathname === "/live" &&
+                                    "tw-font-bold tw-border-b-2"
+                                }`}
+                            >
+                                LIVE
+                            </div>
+                        </Link>
+                        <Link
+                            onClick={() => {
+                                closeMenu();
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                            }}
+                            className="tw-hidden sm:tw-block"
                             href="/auctions"
                         >
                             <div
@@ -709,6 +719,16 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     >
                         <div>DISCOVER</div>
                     </Link> */}
+                    <Link
+                        href="/live"
+                        onClick={() => {
+                            closeMenu();
+                            document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-flex tw-py-2"
+                    >
+                        <div>LIVE</div>
+                    </Link>
                     <Link
                         href="/auctions"
                         onClick={() => {
