@@ -54,7 +54,7 @@ export async function updateTournamentStatus(): Promise<{ tournamentId: string; 
       await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 3 } });
       await refundTournamentWagers(tournamentWagersArray.map((wager) => wager._id));
       console.log(`Tournament ${tournament._id} cancelled and refunds processed.`);
-    } else if (allAuctionsComplete) {
+    } else if (allAuctionsComplete && playerCount >= 3) {
       console.log(`All auctions are complete. Updating status for tournament ${tournament._id} to 2`);
       await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 2 } });
     } else {
