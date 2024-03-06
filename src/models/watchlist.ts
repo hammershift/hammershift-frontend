@@ -3,11 +3,19 @@ import mongoose from 'mongoose';
 const watchlistSchema = new mongoose.Schema({
   auctionID: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: false,
   },
   userID: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+  },
+  tournamentID: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: false,
+  },
+  tournamentImages: {
+    type: [String],
+    required: false,
   },
   createdAt: {
     type: Date,

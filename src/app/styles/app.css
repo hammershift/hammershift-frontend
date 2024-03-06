@@ -338,6 +338,8 @@ svg {
     padding-left: 64px;
     padding-right: 64px;
   }
+
+
 }
 @media screen and (min-width: 1536px) {
   .section-container {
@@ -345,6 +347,16 @@ svg {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .live-page-image-sizing {
+    height: calc(100vh - 592px);
+  }
+}
+
 /* 
 SECTION-CONTAINER
 tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
+
+.live-page-shadow {
+  box-shadow: 0px 8px 8px 0px #0000001F;
+}

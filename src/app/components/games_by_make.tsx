@@ -25,20 +25,20 @@ const GamesByMake = () => {
 
   // sample data
   const carList = [
-    { name: BMWLogo, width: 100, make: 'BMW' },
-    { name: AudiLogo, width: 120, make: 'Audi' },
-    { name: DodgeLogo, width: 180, make: 'Dodge' },
-    { name: FordLogo, width: 160, make: 'Ford' },
-    { name: HondaLogo, width: 120, make: 'Honda' },
-    { name: JeepLogo, width: 100, make: 'Jeep' },
-    { name: NissanLogo, width: 120, make: 'Nissan' },
-    { name: SubaruLogo, width: 120, make: 'Subaru' },
-    { name: TeslaLogo, width: 160, make: 'Tesla' },
-    { name: ToyotaLogo, width: 120, make: 'Toyota' },
+    { name: BMWLogo, width: 100, make: "BMW" },
+    { name: AudiLogo, width: 120, make: "Audi" },
+    { name: DodgeLogo, width: 180, make: "Dodge" },
+    { name: FordLogo, width: 160, make: "Ford" },
+    { name: HondaLogo, width: 120, make: "Honda" },
+    { name: JeepLogo, width: 100, make: "Jeep" },
+    { name: NissanLogo, width: 120, make: "Nissan" },
+    { name: SubaruLogo, width: 120, make: "Subaru" },
+    { name: TeslaLogo, width: 160, make: "Tesla" },
+    { name: ToyotaLogo, width: 120, make: "Toyota" },
   ];
 
   return (
-    <div className="section-container tw-py-8 md:tw-py-[120px]">
+    <div className="tw-py-8 md:tw-py-[120px]">
       <header className="tw-flex tw-justify-between">
         <div className="tw-flex tw-items-center">
           <Image
@@ -75,8 +75,11 @@ const GamesByMake = () => {
             <div key={car.name}>
               {/* <Link href={`/auctions?make=${car.make}&sort=Newly+Listed`}> */}
               <div
-                onClick={e => router.push(`/auctions?make=${car.make}&sort=Newly+Listed`)}
-                className="tw-cursor-pointer">
+                onClick={(e) =>
+                  router.push(`/auctions?make=${car.make}&sort=Newly+Listed`)
+                }
+                className="tw-cursor-pointer hover:tw-scale-125 tw-transform tw-transition-all tw-duration-100"
+              >
                 <Image
                   src={car.name}
                   width={car.width}
@@ -94,6 +97,5 @@ const GamesByMake = () => {
     </div>
   );
 };
-
 
 export default GamesByMake;

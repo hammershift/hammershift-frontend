@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const attributeSchema = new mongoose.Schema({
   key: { type: String, required: true },
@@ -15,19 +15,19 @@ const imageSchema = new mongoose.Schema({
 const winnerSchema = new mongoose.Schema({
   userID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
   objectID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Auction',
+    ref: "Auction",
   },
   transaction: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Transaction',
+    ref: "Transaction",
   },
   wager: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Wager',
+    ref: "Wager",
   },
   auctionID: {
     type: String,
@@ -61,6 +61,11 @@ const winnerSchema = new mongoose.Schema({
 const carSchema = new mongoose.Schema(
   {
     _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    tournamentID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Tournament',
+      required: false,
+    },
     auction_id: { type: String, required: true },
     pot: { type: Number },
     __v: { type: Number, default: 0 },
@@ -74,13 +79,14 @@ const carSchema = new mongoose.Schema(
     wagers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Wager',
+        ref: "Wager",
       },
     ],
   },
   { timestamps: true }
 );
 
-const Auctions = mongoose.models.auctions || mongoose.model('auctions', carSchema);
+const Auctions =
+  mongoose.models.auctions || mongoose.model("auctions", carSchema);
 
 export default Auctions;

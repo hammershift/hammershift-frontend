@@ -1,150 +1,246 @@
-// import { NextRequest, NextResponse } from 'next/server';
-// import prizeDistribution from '@/helpers/prizeDistribution';
-
-import { addWagerWinnings } from '@/helpers/addWagerWinnings';
+import { calculateTournamentScores } from '@/helpers/calculateTournamentScores';
 import { createWinningTransaction } from '@/helpers/createWinningTransaction';
-import prizeDistribution from '@/helpers/prizeDistribution';
-import { refundWagers } from '@/helpers/refundWagers';
+import prizeDistributionTournament from '@/helpers/prizeDistributionTournament';
+import { refundTournamentWagers } from '@/helpers/refundTournamentWagers';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
-import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
-// export async function POST(req: NextRequest) {
-//   try {
-//     const { wagers, finalSellingPrice, totalPot } = await req.json();
+interface TournamentWager {
+  _id: ObjectId;
+  tournamentID: ObjectId;
+  wagers: Array<{
+    auctionID: ObjectId;
+    priceGuessed: number;
+  }>;
+  user: {
+    _id: ObjectId;
+    fullName: string;
+    username: string;
+    image: string;
+  };
+}
 
-//     const winners = prizeDistribution(wagers, finalSellingPrice, totalPot);
+export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
 
-//     return NextResponse.json({ winners });
-//   } catch (error) {
-//     console.error('Error in testPrizeDistribution:', error);
-//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-//   }
-// }
+  const client = await clientPromise;
+  const db = client.db();
+  const mongoSession = client.startSession();
 
-// export async function POST(req: NextRequest) {
-//   const session = await getServerSession(authOptions);
-//   if (!session) {
-//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-//   }
+  try {
+    await mongoSession.startTransaction();
+    console.log('Transaction started');
 
-//   const client = await clientPromise;
-//   const db = client.db();
-//   const transactionSession = client.startSession();
-//   let transactionStarted = false;
-//   let transactionCommittedOrAborted = false;
+    const tournamentId = req.nextUrl.searchParams.get('tournament_id');
+    console.log('Tournament ID:', tournamentId);
 
-//   try {
-//     transactionSession.startTransaction();
-//     transactionStarted = true;
+    if (!tournamentId) {
+      return NextResponse.json({ message: 'TournamentID is required' }, { status: 400 });
+    }
 
-//     // get all auction IDs that need processing
-//     const auctionsToProcess = await db
-//       .collection('auctions')
-//       .find({ 'attributes.key': 'status', 'attributes.value': 2, pot: { $gt: 0 } })
-//       .project({ _id: 1 })
-//       .toArray();
+    const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentId) });
+    if (!tournament) {
+      return NextResponse.json({ message: 'Tournament not found' }, { status: 404 });
+    }
 
-//     let auctionsToUpdate = []; // to update to status 3
-//     let wagerIDsForRefund = []; // store wagerIDs for refunds
+    const tournamentTransactions = await db
+      .collection('transactions')
+      .find({
+        tournamentID: new ObjectId(tournamentId),
+        transactionType: 'tournament buy-in',
+        type: '-',
+      })
+      .toArray();
+    console.log('tournamentID:', tournamentTransactions);
 
-//     // loop over all auction IDs
-//     for (const { _id } of auctionsToProcess) {
-//       const auction = await db.collection('auctions').findOne({ _id }, { session: transactionSession });
-//       if (!auction) {
-//         console.error(`Auction with ID ${_id} not found`);
-//         continue;
-//       }
+    // check if the tournament has already been completed or cancelled
+    if (tournament.status === 4 || tournament.status === 3) {
+      return NextResponse.json({ message: 'Tournament already completed or cancelled' }, { status: 400 });
+    }
 
-//       const wagers = await db.collection('wagers').find({ auctionID: _id }, { session: transactionSession }).toArray();
-//       if (wagers.length <= 3) {
-//         auctionsToUpdate.push(_id);
-//         wagerIDsForRefund.push(...wagers.map((wager) => wager._id));
-//         continue;
-//       }
+    // check if the prizes have already been distributed for this tournament
+    if (tournament.winners && tournament.winners.length > 0) {
+      return NextResponse.json({ message: 'Prizes already distributed for this tournament' }, { status: 400 });
+    }
 
-//       const finalSellingPrice = auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0;
+    // fetch all wagers associated with the tournament
+    const tournamentWagersArray: TournamentWager[] = (await db
+      .collection('tournament_wagers')
+      .find({ tournamentID: new ObjectId(tournamentId) })
+      .toArray()) as TournamentWager[];
 
-//       const formattedWagers = wagers.map((wager) => ({
-//         _id: wager._id,
-//         userID: wager.user._id,
-//         priceGuessed: wager.priceGuessed,
-//       }));
+    // extract all auctionIDs from the tournament wagers
+    const auctionIDs: ObjectId[] = tournamentWagersArray.flatMap((tournamentWager) => tournamentWager.wagers.map((wager) => wager.auctionID));
+    console.log(`Auction IDs:`, auctionIDs);
 
-//       const winners = prizeDistribution(formattedWagers, finalSellingPrice, auction.pot);
+    // fetch the corresponding auctions from the db
+    const auctions = await db
+      .collection('auctions')
+      .find({ _id: { $in: auctionIDs } }, { projection: { _id: 1, 'attributes.key': 1, 'attributes.value': 1 } })
+      .toArray();
 
-//       for (const winner of winners) {
-//         const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
-//         if (correspondingWager) {
-//           const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize, transactionSession);
-//           console.log(`Updating wallet balance for user ${winner.userID} with amount ${winner.prize}`);
-//           await updateWinnerWallet(new ObjectId(winner.userID), winner.prize, transactionSession);
-//           console.log(`Wallet balance updated for user ${winner.userID}`);
-//           await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize, transactionSession);
+    // extract the status of each auction
+    const auctionStatuses = auctions.map((auction) => {
+      const statusAttribute = auction.attributes.find((attr: { key: string }) => attr.key === 'status');
+      const status = statusAttribute ? statusAttribute.value : undefined;
+      console.log(`Auction ID: ${auction._id}, Status: ${status}`);
+      return {
+        auctionID: auction._id,
+        status: status,
+      };
+    });
 
-//           winner.transactionID = transactionId;
-//         }
-//       }
+    // count the # of unsuccessful auctions
+    const unsuccessfulAuctionsCount = auctionStatuses.filter((auctionStatus) => parseInt(auctionStatus.status) === 3).length;
+    console.log('Unsuccessful Auctions:', unsuccessfulAuctionsCount);
 
-//       const winnerObjects = winners.map((winner) => {
-//         const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
+    // count the # of players who placed a buy-in
+    const playerCount = tournamentWagersArray.length;
+    console.log('Players:', playerCount);
 
-//         return {
-//           userID: new mongoose.Types.ObjectId(winner.userID),
-//           objectID: _id,
-//           wagerID: correspondingWager ? correspondingWager._id : null,
-//           transaction: winner.transactionID,
-//           auctionID: auction.auction_id,
-//           prize: winner.prize,
-//           rank: winner.rank,
-//           username: correspondingWager ? correspondingWager.user.username : null,
-//           userImage: correspondingWager ? correspondingWager.user.image : null,
-//           priceGuessed: correspondingWager ? correspondingWager.priceGuessed : null,
-//           winningDate: new Date(),
-//         };
-//       });
+    // get the totalPot for the tournament
+    const totalPot = 0.88 * tournamentTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    console.log('Total Pot:', totalPot);
 
-//       await db.collection('auctions').updateOne(
-//         { _id },
-//         {
-//           $push: { winners: { $each: winnerObjects } },
-//           $set: { 'attributes.$[elem].value': 4 },
-//         },
-//         {
-//           arrayFilters: [{ 'elem.key': 'status' }],
-//           session: transactionSession,
-//         }
-//       );
-//     }
+    // check if the tournament should be cancelled due to insufficient participants or unsuccessful auctions
+    if (unsuccessfulAuctionsCount >= 2 || playerCount < 3) {
+      await db.collection('tournaments').updateOne({ _id: new ObjectId(tournamentId) }, { $set: { status: 3 } });
+      await db.collection('auctions').updateMany({ _id: { $in: auctionIDs } }, { $set: { 'attributes.$[elem].value': 3 } }, { arrayFilters: [{ 'elem.key': 'status' }] });
 
-//     // update status for auctions with insufficient players
-//     for (const auctionID of auctionsToUpdate) {
-//       await db.collection('auctions').updateOne({ _id: auctionID, 'attributes.key': 'status' }, { $set: { 'attributes.$.value': 3 } }, { session: transactionSession });
-//     }
+      // check for refunds
+      const liveAuctionsCount = auctionStatuses.filter((auctionStatus) => parseInt(auctionStatus.status) === 1).length;
+      if (liveAuctionsCount === 0) {
+        await refundTournamentWagers(tournamentWagersArray.map((wager) => wager._id));
+      }
+      return NextResponse.json({ message: 'Tournament cancelled due to insufficient participants or unsuccessful auctions' }, { status: 200 });
+    }
 
-//     // perform refunds in a batch
-//     if (wagerIDsForRefund.length > 0) {
-//       await refundWagers(wagerIDsForRefund, transactionSession);
-//     }
+    // prepare the data for calculating tournament scores
+    const auctionsToProcess = auctions.map((auction) => ({
+      _id: auction._id,
+      finalSellingPrice: auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
+    }));
 
-//     await transactionSession.commitTransaction();
-//     transactionStarted = false;
-//     transactionCommittedOrAborted = true;
-//   } catch (error) {
-//     if (transactionStarted && !transactionCommittedOrAborted) {
-//       console.error('Aborting transaction due to error:', error);
-//       await transactionSession.abortTransaction();
-//     } else {
-//       console.error('Error occurred:', error);
-//     }
-//     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
-//   } finally {
-//     await transactionSession.endSession();
-//   }
+    const userWagers = tournamentWagersArray.map((tournamentWager) => ({
+      userID: tournamentWager.user._id.toString(),
+      username: tournamentWager.user.username,
+      image: tournamentWager.user.image || '',
+      wagers: tournamentWager.wagers.map((wager) => ({
+        auctionID: wager.auctionID,
+        priceGuessed: wager.priceGuessed,
+      })),
+    }));
 
-//   return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
-// }
+    // calculate the tournament results (scores)
+    const tournamentResults = calculateTournamentScores(userWagers, auctionsToProcess);
+    console.log('Tournament Results:', JSON.stringify(tournamentResults, null, 2));
+
+    // save the points to a separate collection
+    for (const result of tournamentResults) {
+      const filter = {
+        tournamentID: new ObjectId(tournamentId),
+        'user._id': new ObjectId(result.userID),
+      };
+
+      const update = {
+        $set: {
+          user: {
+            _id: new ObjectId(result.userID),
+            username: result.username,
+            image: result.image,
+          },
+          auctionScores: result.auctionScores,
+        },
+      };
+
+      const options = { upsert: true };
+
+      await db.collection('tournament_points').updateOne(filter, update, options);
+    }
+
+    // validation if the auctions are successful
+    const successfulAuctionsCount = auctionStatuses.filter((auctionStatus) => parseInt(auctionStatus.status) === 2).length;
+    const totalAuctionsCount = auctionStatuses.length;
+    const allAuctionsComplete = (successfulAuctionsCount >= 4 && unsuccessfulAuctionsCount <= 1) || successfulAuctionsCount === totalAuctionsCount;
+
+    if (allAuctionsComplete) {
+      console.log(`Updating status for tournament ${tournament._id} to 2`);
+      const updateResult = await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 2 } });
+      console.log(`Status update result: `, updateResult);
+
+      const tournamentWagersForPrizeDistribution = tournamentResults.map((result) => {
+        const tournamentWager = tournamentWagersArray.find((wager) => wager.user._id.toString() === result.userID.toString());
+
+        if (!tournamentWager) {
+          throw new Error(`Wager not found for user ${result.userID}`);
+        }
+
+        return {
+          userID: result.userID.toString(),
+          totalScore: result.totalScore,
+          _id: tournamentWager._id,
+        };
+      });
+
+      // prizeDistribution
+      const tournamentWinners = prizeDistributionTournament(tournamentWagersForPrizeDistribution, totalPot);
+      console.log('Tournament Winners:', tournamentWinners);
+
+      // create winning transactions and update the wallet balances for the winners
+      for (const winner of tournamentWinners) {
+        const user = await db.collection('users').findOne({ _id: new ObjectId(winner.userID) });
+        const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize);
+        await updateWinnerWallet(new ObjectId(winner.userID), winner.prize);
+
+        // add the transactionID to the winner object
+        winner.transactionID = transactionId;
+        winner.username = user ? user.username : '';
+        winner.userImage = user && user.image ? user.image : '';
+      }
+
+      // update the status of the auction to indicate that it is complete and successful
+      for (const auction of auctionsToProcess) {
+        await db.collection('auctions').updateOne({ _id: auction._id }, { $set: { 'attributes.$[elem].value': 4 } }, { arrayFilters: [{ 'elem.key': 'status' }] });
+      }
+
+      // update the tournament status to indicate that it is complete
+      await db.collection('tournaments').updateOne(
+        { _id: new ObjectId(tournamentId) },
+        {
+          $set: {
+            status: 4,
+            winners: tournamentWinners.map((winner) => ({
+              userID: winner.userID,
+              username: winner.username,
+              userImage: winner.userImage,
+              transactionID: winner.transactionID,
+              prize: winner.prize,
+              rank: winner.rank,
+              winningDate: new Date(),
+            })),
+          },
+        }
+      );
+      await mongoSession.commitTransaction();
+      console.log('Transaction committed');
+
+      return NextResponse.json({ message: 'Tournament complete and prizes distributed', winners: tournamentWinners }, { status: 200 });
+    } else {
+      return NextResponse.json({ message: 'Tournament scores updated' }, { status: 200 });
+    }
+  } catch (error) {
+    await mongoSession.abortTransaction();
+    console.error('Error in POST tournamentWinner API:', error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  } finally {
+    console.log('Ending session');
+    await mongoSession.endSession();
+  }
+}

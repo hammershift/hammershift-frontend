@@ -123,6 +123,7 @@ const MostExpensiveCars = () => {
                   auction_id,
                   price,
                   _id,
+                  images_list
                 } = auctions;
                 return (
                   <TimerProvider key={index} deadline={deadline}>
@@ -137,6 +138,7 @@ const MostExpensiveCars = () => {
                         deadline={deadline}
                         auction_id={auction_id}
                         price={price}
+                        images_list={images_list}
                       />
                     </div>
                   </TimerProvider>

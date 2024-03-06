@@ -2,15 +2,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-
-import BellIcon from "../../../../public/images/bell-02.svg";
-import ArrowDown from "../../../../public/images/arrow-down.svg";
-import OpenWebLogo from "../../../../public/images/open-web-logo.svg";
-import AvatarOne from "../../../../public/images/avatar-one.svg";
-import ThreeDots from "../../../../public/images/dots-vertical.svg";
-import ThumbsUp from "../../../../public/images/thumbs-up.svg";
-import ThumbsDown from "../../../../public/images/thumbs-down.svg";
-import CornerDownRight from "../../../../public/images/corner-down-right.svg";
+import { BeatLoader } from "react-spinners";
+import Link from "next/link";
+// images
+import ArrowDown from "../../../public/images/arrow-down.svg";
+import AvatarOne from "../../../public/images/avatar-one.svg";
+import ThreeDots from "../../../public/images/dots-vertical.svg";
+import ThumbsUp from "../../../public/images/thumbs-up.svg";
+import ThumbsDown from "../../../public/images/thumbs-down.svg";
+import CornerDownRight from "../../../public/images/corner-down-right.svg";
+import BlueThumbUp from "../../../public/images/thumbs-up-blue.svg";
+import BlueThumbsDown from "../../../public/images/thumbs-down-blue.svg";
+//components
 import {
     createComment,
     deleteComment,
@@ -22,13 +25,13 @@ import {
     likeReply,
     dislikeReply,
 } from "@/lib/data";
-import { BeatLoader } from "react-spinners";
-import Link from "next/link";
-import BlueThumbUp from "../../../../public/images/thumbs-up-blue.svg";
-import BlueThumbsDown from "../../../../public/images/thumbs-down-blue.svg";
-import { comment } from "postcss";
 
-export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
+
+
+export const CommentsSection = ({ pageID, pageType }: {
+    pageID: string, // auction or tournament ID
+    pageType: "auction" | "tournament" // "auction" or "tournament"
+}) => {
     const [sort, setSort] = useState("Best"); // "Newest", "Oldest", "Best"
     const [commentsList, setCommentsList] = useState([]);
     const [commentsDisplayed, setCommentsDisplayed] = useState(3);
@@ -47,7 +50,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
             setSortDropdown(false);
             setIsLoading(true);
             try {
-                const response = await getComments(auctionID, sort);
+                const response = await getComments(pageID, pageType, sort);
                 if (response) {
                     setCommentsList(response.comments);
                     setIsLoading(false);
@@ -57,7 +60,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
             }
             setIsLoading(false);
         };
-        if (auctionID) {
+        if (pageID) {
             fetchComments();
         }
     }, [sort, reload]);
@@ -88,7 +91,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
         } else {
             if (session.data?.user.id) {
                 try {
-                    const response = await createComment(auctionID, comment);
+                    const response = await createComment(pageID, pageType, comment);
 
                     if (response) {
                         console.log("comment has been posted");
@@ -139,11 +142,10 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
             <div className="tw-flex tw-justify-between">
                 <div className="tw-text-xl md:tw-text-3xl">
                     <span className="tw-font-bold">Comments</span>
-                    {`(${
-                        Array.isArray(commentsList) && commentsList.length > 0
-                            ? commentsList.length
-                            : 0
-                    })`}
+                    {`(${Array.isArray(commentsList) && commentsList.length > 0
+                        ? commentsList.length
+                        : 0
+                        })`}
                 </div>
                 {session.status == "unauthenticated" && (
                     <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
@@ -194,11 +196,10 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                     /> */}
                 </div>
                 <button
-                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
-                        session.status == "unauthenticated"
-                            ? "tw-opacity-50 tw-disabled"
-                            : "btn-white"
-                    }`}
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated"
+                        ? "tw-opacity-50 tw-disabled"
+                        : "btn-white"
+                        }`}
                     onClick={handlePostComment}
                 >
                     Comment
@@ -233,25 +234,22 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                         >
                             <div
                                 onClick={(e) => setSort("Newest")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
-                                    sort == "Newest" ? "tw-bg-white/10" : ""
-                                }`}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Newest" ? "tw-bg-white/10" : ""
+                                    }`}
                             >
                                 Newest
                             </div>
                             <div
                                 onClick={(e) => setSort("Oldest")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
-                                    sort == "Oldest" ? "tw-bg-white/10" : ""
-                                }`}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Oldest" ? "tw-bg-white/10" : ""
+                                    }`}
                             >
                                 Oldest
                             </div>
                             <div
                                 onClick={(e) => setSort("Best")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
-                                    sort == "Best" ? "tw-bg-white/10" : ""
-                                }`}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Best" ? "tw-bg-white/10" : ""
+                                    }`}
                             >
                                 Best
                             </div>
@@ -280,7 +278,7 @@ export const CommentsSection = ({ auctionID }: { auctionID: any }) => {
                                     setReload={setReload}
                                     commenterUserID={item.user.userId}
                                     replies={item.replies || []}
-                                    auctionID={auctionID}
+                                    pageID={pageID}
                                     session={session}
                                 />
                             </div>
@@ -317,7 +315,7 @@ export const CommentsCard = ({
     setReload,
     commenterUserID,
     replies,
-    auctionID,
+    pageID,
     session,
 }: {
     comment: string;
@@ -330,7 +328,7 @@ export const CommentsCard = ({
     setReload: any;
     commenterUserID: string;
     replies: string[];
-    auctionID: string;
+    pageID: string;
     session: any;
 }) => {
     const dropdownRef = useRef<any | null>(null);
@@ -574,7 +572,7 @@ export const CommentsCard = ({
                         session={session}
                         setReload={setReload}
                         commentID={commentID}
-                        auctionID={auctionID}
+                        pageID={pageID}
                     />
                 )}
 
@@ -595,9 +593,8 @@ export const CommentsCard = ({
                                 alt="camera plus"
                                 className="tw-w-4 tw-h-4 tw-mr-2 "
                             />
-                            {`${replies.length} ${
-                                replies.length > 1 ? "Replies" : "Reply"
-                            }`}
+                            {`${replies.length} ${replies.length > 1 ? "Replies" : "Reply"
+                                }`}
                         </div>
                         {replyDropdown && (
                             <div>
@@ -630,12 +627,12 @@ const ReplyInputDropdown = ({
     session,
     setReload,
     commentID,
-    auctionID,
+    pageID,
 }: {
     session: any;
     setReload: any;
     commentID: string;
-    auctionID: string;
+    pageID: string;
 }) => {
     const [reply, setReply] = useState("");
     const [replyAlert, setReplyAlert] = useState(false);
@@ -654,7 +651,7 @@ const ReplyInputDropdown = ({
                     const response = await createReply(
                         commentID,
                         reply,
-                        auctionID
+                        pageID
                     );
 
                     if (response) {
@@ -692,11 +689,10 @@ const ReplyInputDropdown = ({
                     />
                 </div>
                 <button
-                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
-                        session.status == "unauthenticated"
-                            ? "tw-opacity-50 tw-disabled"
-                            : "btn-white"
-                    }`}
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated"
+                        ? "tw-opacity-50 tw-disabled"
+                        : "btn-white"
+                        }`}
                     onClick={handlePostReply}
                 >
                     Reply

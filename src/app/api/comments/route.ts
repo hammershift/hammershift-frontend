@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
+import page from '@/app/(pages)/auctions/car_view_page/page';
 
 // create comment for auction URL: /api/comments
 export async function POST(req: NextRequest) {
@@ -12,9 +13,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
     }
 
-    const { comment, auctionID } = await req.json();
+    const { comment, pageID, pageType } = await req.json();
 
-    if (!comment || !auctionID) {
+    if (!comment || !pageID || !pageType) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -24,10 +25,11 @@ export async function POST(req: NextRequest) {
         const userId = new ObjectId(session.user.id);
         // const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
-        // create comment for auction
+        // create comment 
         const commentData = await db.collection('comments').insertOne({
             comment,
-            auctionID,
+            pageID,
+            pageType,
             user: {
                 userId,
                 username: session.user.username,
@@ -65,10 +67,12 @@ interface SortQuery {
     "sort"?: string;
 }
 
-// get comments for auction URL: /api/comments?id=69113724&offset=0&limit=2&sort=Newest
+// get comments for auction/tournament URL: /api/comments?pageID=69113724&offset=0&limit=2&sort=Newest
 export async function GET(req: NextRequest) {
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
+    const pageType = req.nextUrl.searchParams.get("pageType");
     const limit = Number(req.nextUrl.searchParams.get("limit"));
+    const pageID = await req.nextUrl.searchParams.get("pageID");
     let sort: string | SortQuery =
         req.nextUrl.searchParams.get("sort") || "Newest";
 
@@ -91,11 +95,9 @@ export async function GET(req: NextRequest) {
     }
 
 
-    // get id from url
-    const auctionID = await req.nextUrl.searchParams.get("id");
 
     // check if id is present, otherwise return error
-    if (!auctionID) {
+    if (!pageID) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
@@ -103,8 +105,11 @@ export async function GET(req: NextRequest) {
         const client = await clientPromise;
         const db = client.db();
 
+
+
+
         // get comment for auction
-        const response = await db.collection('comments').find({ auctionID: auctionID })
+        const response = await db.collection('comments').find({ pageID: pageID })
             .limit(limit)
             .skip(offset)
             .sort(sort as any);

@@ -211,11 +211,12 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                                 Prize:{" "}
                                 <span className="tw-font-bold ">
                                     $
-                                    {pot
-                                        ? new Intl.NumberFormat().format(
-                                              pot || 0
-                                          )
-                                        : " --"}
+                                    {pot % 1 === 0
+                                        ? pot.toLocaleString()
+                                        : pot.toLocaleString(undefined, {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                          })}
                                 </span>
                             </span>
                         </div>
@@ -741,17 +742,19 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                                     <button
                                         className={
                                             session?.user.id === wager.user._id
-                                                ? "tw-bg-[#156cc3] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
-                                                : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold"
+                                                ? "tw-bg-[#156cc3] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold tw-flex tw-items-center tw-gap-1 tw-line-clamp-1"
+                                                : "tw-bg-[#53944F] tw-h-[28px] tw-px-2.5 tw-rounded tw-font-bold tw-flex tw-items-center tw-gap-1"
                                         }
                                     >
-                                        <span className="tw-hidden xl:tw-inline-block">
+                                        <div className="tw-hidden 2xl:tw-inline-block">
                                             Wager:
-                                        </span>{" "}
-                                        $
-                                        {new Intl.NumberFormat().format(
-                                            wager.priceGuessed
-                                        )}
+                                        </div>{" "}
+                                        <div>
+                                            $
+                                            {new Intl.NumberFormat().format(
+                                                wager.priceGuessed
+                                            )}
+                                        </div>
                                     </button>
                                 </div>
                             );
@@ -773,7 +776,7 @@ export const WagersSection: React.FC<WagersSectionProps> = ({
                         width={288}
                         height={356}
                         alt="pattern"
-                        className="tw-w-full tw-h-4/5 tw-rounded-lg tw-mr-1 tw-object-cover"
+                        className="tw-w-full tw-h-auto tw-rounded-lg tw-mr-1 tw-object-cover"
                     />
                     <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]"></div>
                 </div>

@@ -1,4 +1,5 @@
 "use client";
+
 import React, { Suspense, useEffect, useState } from "react";
 import {
     WatchAndWagerButtons,
@@ -9,16 +10,18 @@ import {
     GamesYouMightLike,
     WinnersSection,
 } from "@/app/ui/car_view_page/CarViewPage";
-import { CommentsSection } from "@/app/ui/car_view_page/CommentsSection";
+import { CommentsSection } from "@/app/components/CommentsSection";
 import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
 import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
 import {
     addPrizePool,
     createWager,
+    getAuctionTransactions,
     getCarData,
     getComments,
     getOneUserWager,
+    getTournamentTransactions,
     getWagers,
     sortByNewGames,
 } from "@/lib/data";
@@ -45,6 +48,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [invalidWager, setInvalidWager] = useState(false);
     const [showCarImageModal, setShowCarImageModal] = useState(false);
     const [winners, setWinners] = useState([]);
+    const [isButtonClicked, setIsButtonClicked] = useState(false);
+    const [prize, setPrize] = useState(0);
 
     // const router = useRouter();
 
@@ -98,6 +103,20 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                 !userWager.length
                     ? setAlreadyWagered(false)
                     : setAlreadyWagered(true);
+            }
+
+            if (data) {
+                const transactions = await getAuctionTransactions(data._id);
+                const totalPrize =
+                    0.88 *
+                    transactions
+                        .map((transaction: any) => transaction.amount)
+                        .reduce(
+                            (accumulator: any, currentValue: any) =>
+                                accumulator + currentValue,
+                            0
+                        );
+                setPrize(totalPrize);
             }
 
             setAuctionEnded(auctionDeadline < currentDate);
@@ -186,13 +205,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         sessionData: any
     ) => {
         e.preventDefault();
+        setIsButtonClicked(true);
         const fixedWagerAmount = 10;
-
-        // if (String(wagerInputs.priceGuessed).includes(".")) {
-        //     if (wagerInputs.priceGuessed) {
-        //         console.log(Math.floor(wagerInputs.priceGuessed));
-        //     }
-        // }
 
         const pattern = /^[0-9]+$/;
         if (pattern.test(String(wagerInputs.priceGuessed))) {
@@ -285,11 +299,12 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         handleWagerInputChange={handleWagerInputChange}
                         handleWagerSubmit={handleWagerSubmit}
                         players_num={playerNum}
-                        prize={carData.pot}
+                        prize={prize}
                         walletBalance={walletBalance}
                         insufficientFunds={insufficientFunds}
                         invalidPrice={invalidPrice}
                         invalidWager={invalidWager}
+                        isButtonClicked={isButtonClicked}
                     />
                 </TimerProvider>
             ) : null}
@@ -315,7 +330,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                                 year={carData.year}
                                 make={carData.make}
                                 model={carData.model}
-                                pot={carData.pot}
+                                pot={prize}
                                 comments={carData.comments}
                                 views={carData.views}
                                 watchers={carData.watchers}
@@ -390,7 +405,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         </div>
                     ) : null}
                     <GuessThePriceInfoSection />
-                    <CommentsSection auctionID={ID} />
+                    <CommentsSection pageID={ID} pageType="auction" />
                 </div>
                 <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
                     {winners && wagersData ? (

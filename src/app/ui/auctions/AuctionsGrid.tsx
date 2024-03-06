@@ -1,6 +1,25 @@
 import React, { Suspense } from "react";
 import { TimerProvider } from "@/app/_context/TimerContext";
-import { GamesCard } from "@/app/components/card";
+import dynamic from "next/dynamic";
+
+const DynamicGamesCard = dynamic(() => import("../../components/games_card"), {
+  ssr: false,
+  loading: () => (
+    <div className="tw-flex tw-mt-8 tw-justify-evenly">
+      <div className="tw-flex tw-flex-col tw-m-2">
+        <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700 tw-rounded-md"></div>
+        <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+      </div>
+    </div>
+  ),
+});
 
 const AuctionsGrid = ({ listing }: { listing: any }) => {
   return (
@@ -10,29 +29,20 @@ const AuctionsGrid = ({ listing }: { listing: any }) => {
           return (
             <div key={car._id ? car._id : index + "gamesCard"}>
               <Suspense>
-                <TimerProvider
-                  deadline={new Date(car.deadline)}
-                >
-                  <GamesCard
+                <TimerProvider deadline={new Date(car.deadline)}>
+                  <DynamicGamesCard
                     auction_id={
-                      car.auction_id
-                        ? car.auction_id
-                        : index + "auctionId"
+                      car.auction_id ? car.auction_id : index + "auctionId"
                     }
                     object_id={car._id}
                     make={car.make ? car.make : ""}
                     year={car.year ? car.year : ""}
                     model={car.model ? car.model : ""}
-                    description={
-                      car.description
-                        ? car.description
-                        : [""]
-                    }
+                    description={car.description ? car.description : [""]}
                     image={car.image ? car.image : ""}
                     price={car.price ? car.price : 0}
-                    deadline={
-                      car.deadline ? car.deadline : Date()
-                    }
+                    deadline={car.deadline ? car.deadline : Date()}
+                    imageList={car.images_list ? car.images_list : ""}
                   />
                 </TimerProvider>
               </Suspense>
@@ -44,7 +54,3 @@ const AuctionsGrid = ({ listing }: { listing: any }) => {
 };
 
 export default AuctionsGrid;
-
-
-
-

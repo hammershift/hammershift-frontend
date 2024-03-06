@@ -43,7 +43,7 @@ const TeamBattles = () => {
     },
   ];
   return (
-    <div className="section-container tw-py-8 sm:tw-py-16">
+    <div className="tw-py-8 sm:tw-py-16">
       <header className="tw-flex tw-justify-between">
         <div className="tw-flex tw-items-center">
           <Image

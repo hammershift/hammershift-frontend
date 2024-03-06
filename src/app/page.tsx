@@ -21,11 +21,11 @@ const withDynamicImport = (componentPath: string, options = {}) => {
 //Dynamic Imports
 const DynamicCarousel = withDynamicImport("carousel", {
   loading: () => (
-    <div className="section-container tw-my-10 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
-      <div className="tw-flex tw-w-full tw-justify-between tw-mt-10">
+    <div className="carousel-container tw-h-[280px] tw-my-10 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+      <div className="tw-flex tw-w-full tw-justify-between tw-p-2">
         <div className="tw-flex tw-flex-col tw-w-full tw-justify-between tw-mt-5">
-          <div className="tw-w-24 tw-mb-5 tw-h-5 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
-          <div className="tw-w-2/3 tw-mb-5 tw-h-20 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          <div className="tw-w-20 tw-mb-5 tw-h-5 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+          <div className="tw-w-2/3 tw-mb-5 tw-h-16 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
           <div className="tw-w-40 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
           <div className="tw-w-[200px] sm:tw-w-[416px] tw-bg-gray-200 tw-rounded-lg tw-animate-pulse"></div>
         </div>
@@ -36,11 +36,11 @@ const DynamicCarousel = withDynamicImport("carousel", {
 });
 const DynamicLiveGames = withDynamicImport("live_games", {
   loading: () => (
-    <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-p-4 tw-bg-gray-800 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-items-center">
-            <div className="tw-mr-5 tw-w-10 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
+            <div className="tw-mr-5 tw-w-8 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
             <div className="tw-w-36 tw-h-10 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
           </div>
           <div className="tw-flex">
@@ -101,7 +101,7 @@ const DynamicLiveGames = withDynamicImport("live_games", {
 });
 const DynamicTeamBattles = withDynamicImport("team_battles", {
   loading: () => (
-    <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-p-4 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-my-10">
@@ -124,7 +124,7 @@ const DynamicTeamBattles = withDynamicImport("team_battles", {
 });
 const DynamicTournaments = withDynamicImport("tournaments", {
   loading: () => (
-    <div className="section-container tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-p-4 tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-my-10">
@@ -147,7 +147,7 @@ const DynamicTournaments = withDynamicImport("tournaments", {
 });
 const DynamicNewEraWagering = withDynamicImport("new_era_wagering", {
   loading: () => (
-    <div className="section-container tw-flex tw-w-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-flex tw-w-full tw-justify-center tw-items-center tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-flex-col tw-m-10">
@@ -444,7 +444,7 @@ const DynamicMostBids = withDynamicImport("most_bids", {
 });
 const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-w-full tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-mr-5 tw-w-1/2 tw-my-10 tw-mb-16 tw-h-24 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
         <div className="tw-flex tw-my-10">
@@ -485,7 +485,7 @@ const DynamicHowHammerShiftWorks = withDynamicImport("how_hammeshift_works", {
 });
 const DynamicSubscribe = withDynamicImport("subscribe", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div className="tw-w-full tw-justify-center tw-items-center tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col tw-justify-evenly">
         <div className="tw-mr-5 tw-w-1/2 tw-my-10 tw-mb-16 tw-h-32 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
         <div className="tw-mr-5 tw-w-1/2 tw-my-1 tw-h-3 tw-bg-gray-700 tw-rounded-full tw-animate-pulse"></div>
@@ -584,14 +584,16 @@ const Homepage = () => {
 
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center tw-justify-center">
-      <DynamicCarousel />
-      <div ref={liveGamesRef}>
+      <div className="section-container">
+        <DynamicCarousel />
+      </div>
+      <div ref={liveGamesRef} className="section-container">
         {isLiveGamesVisible ? <DynamicLiveGames /> : null}
       </div>
-      <div ref={teamBattlesRef}>
+      <div ref={teamBattlesRef} className="section-container">
         {isTeamBattlesVisible ? <DynamicTeamBattles /> : null}
       </div>
-      <div ref={tournamentsRef}>
+      <div ref={tournamentsRef} className="section-container">
         {isTournamentsVisible ? <DynamicTournaments /> : null}
       </div>
       <div
@@ -600,10 +602,13 @@ const Homepage = () => {
       >
         {isNewEraWageringVisible ? <DynamicNewEraWagering /> : null}
       </div>
-      <div ref={gamesByMakeRef}>
+      <div ref={gamesByMakeRef} className="section-container">
         {isGamesByMakeVisible ? <DynamicGamesByMake /> : null}
       </div>
-      <div className="tw-w-full" ref={wagerByCategoryRef}>
+      <div
+        className="tw-w-full tw-flex tw-justify-center"
+        ref={wagerByCategoryRef}
+      >
         {isWagerByCategoryVisible ? <DynamicWagerByCategory /> : null}
       </div>
       <div ref={skillsStrategyAndStakesRef}>

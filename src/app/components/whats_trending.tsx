@@ -115,6 +115,7 @@ const WhatsTrending = () => {
                   deadline,
                   auction_id,
                   price,
+                  images_list
                 } = auctions;
                 return (
                   <TimerProvider key={index} deadline={deadline}>
@@ -129,6 +130,7 @@ const WhatsTrending = () => {
                         auction_id={auction_id}
                         price={price}
                         object_id={_id}
+                        images_list={images_list}
                       />
                     </div>
                   </TimerProvider>

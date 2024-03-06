@@ -123,6 +123,7 @@ const NewGames = () => {
                   auction_id,
                   price,
                   _id,
+                  images_list
                 } = auctions;
                 return (
                   <TimerProvider key={index} deadline={deadline}>
@@ -137,6 +138,7 @@ const NewGames = () => {
                         auction_id={auction_id}
                         price={price}
                         object_id={_id}
+                        images_list={images_list}
                       />
                     </div>
                   </TimerProvider>
