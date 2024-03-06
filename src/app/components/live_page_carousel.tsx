@@ -153,7 +153,7 @@ const SlideOne = ({ carData }: any) => {
                         className="tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded xl:tw-w-full"
                     />
                     <div className="tw-absolute tw-bottom-[21px] tw-left-[16px] tw-text-sm tw-font-light tw-flex tw-flex-col tw-gap-[10px]">
-                        {wagers.map((wager: any) => {
+                        {wagers.slice(0, 3).map((wager: any) => {
                             return (
                                 <div
                                     key={wager._id}
