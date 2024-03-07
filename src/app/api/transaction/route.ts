@@ -35,12 +35,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
+  // const session = await getServerSession(authOptions);
+  // if (!session) {
+  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  // }
 
-  const userID = new mongoose.Types.ObjectId(session.user.id);
   const tournamentID = req.nextUrl.searchParams.get('tournamentID');
   const auctionID = req.nextUrl.searchParams.get('auctionID');
 
@@ -69,7 +68,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(auctionTransactions);
     }
 
-    const transactions = await db.collection('transactions').find({ userId: userID }).toArray();
+    const transactions = await db.collection('transactions').find().toArray();
 
     return NextResponse.json({ success: true, transactions });
   } catch (error: any) {
