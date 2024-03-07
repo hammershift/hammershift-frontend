@@ -339,7 +339,9 @@ svg {
     padding-right: 64px;
   }
 
-
+  .load-image-sizing {
+    width: calc(100% - 392px);
+  }
 }
 @media screen and (min-width: 1536px) {
   .section-container {
