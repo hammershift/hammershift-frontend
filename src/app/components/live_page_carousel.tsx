@@ -136,13 +136,13 @@ const SlideOne = ({ carData }: any) => {
     }, []);
 
     return (
-        <div className="tw-bg-gradient-to-br xl:tw-items-end md:tw-justify-center tw-from-[#1a2c3d] tw-from-30% tw-via-[#2b3b6c] tw-via-60% tw-to-[#b91f6c] to-30% tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center">
+        <div className="section-one xl:tw-items-end md:tw-justify-center tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center">
             <div className="xl:tw-py-11 xl:tw-px-14 xl:tw-w-full md:tw-h-full">
                 <Link
                     href={`/auctions/car_view_page/${carData.auction_id}`}
                     className="tw-relative tw-h-full"
                 >
-                    <span className="tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
+                    <span className="tw-animate-pulse tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
                         LIVE
                     </span>
                     <Image
@@ -224,7 +224,7 @@ const SlideOne = ({ carData }: any) => {
                         }
                         className="tw-font-bold tw-text-black tw-bg-[#f2ca16] tw-py-[10px] tw-w-full tw-rounded tw-mb-3"
                     >
-                        PLACE A WAGER
+                        BUY IN FOR $10
                     </button>
                     <div className="tw-text-sm tw-flex tw-items-center tw-gap-2">
                         <Image
