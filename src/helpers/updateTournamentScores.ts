@@ -20,6 +20,7 @@ interface TournamentWager {
 type Auction = {
   _id: mongoose.Types.ObjectId;
   finalSellingPrice: number;
+  status: number;
 };
 
 export async function updateTournamentScores(tournamentId: string): Promise<void> {
@@ -41,6 +42,7 @@ export async function updateTournamentScores(tournamentId: string): Promise<void
   const auctions: Auction[] = auctionDocuments.map((doc) => ({
     _id: doc._id,
     finalSellingPrice: doc.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
+    status: doc.attributes.find((attr: { key: string }) => attr.key === 'status')?.value || 0,
   }));
 
   const userWagers = tournamentWagersArray.map((tournamentWager) => ({

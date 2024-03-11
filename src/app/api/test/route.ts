@@ -126,6 +126,7 @@ export async function POST(req: NextRequest) {
     const auctionsToProcess = auctions.map((auction) => ({
       _id: auction._id,
       finalSellingPrice: auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
+      status: auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value || 0,
     }));
 
     const userWagers = tournamentWagersArray.map((tournamentWager) => ({
@@ -206,9 +207,9 @@ export async function POST(req: NextRequest) {
       }
 
       // update the status of the auction to indicate that it is complete and successful
-      for (const auction of auctionsToProcess) {
-        await db.collection('auctions').updateOne({ _id: auction._id }, { $set: { 'attributes.$[elem].value': 4 } }, { arrayFilters: [{ 'elem.key': 'status' }] });
-      }
+      // for (const auction of auctionsToProcess) {
+      //   await db.collection('auctions').updateOne({ _id: auction._id }, { $set: { 'attributes.$[elem].value': 4 } }, { arrayFilters: [{ 'elem.key': 'status' }] });
+      // }
 
       // update the tournament status to indicate that it is complete
       await db.collection('tournaments').updateOne(

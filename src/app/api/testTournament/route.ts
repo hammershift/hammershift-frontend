@@ -70,7 +70,6 @@ export async function POST(req: NextRequest) {
       });
       console.log(`Auction statuses for tournament ${tournament._id}:`, auctionStatuses);
 
-      // First part: Update Tournament Status
       const liveAuctionsCount = auctionStatuses.filter((status) => status === 1).length;
       const unsuccessfulAuctionsCount = auctionStatuses.filter((status) => status === 3).length;
       const successfulAuctionsCount = auctionStatuses.filter((status) => status === 2).length;
@@ -96,7 +95,7 @@ export async function POST(req: NextRequest) {
         console.log(`Tournament ${tournament._id} is still active.`);
       }
 
-      // Second Part: Update Tournament Scores
+      // Part 1: Update Tournament Scores
       const auctionIDs = tournamentWagersArray.flatMap((wager) => wager.wagers.map((wager) => wager.auctionID));
 
       const auctionDocuments = await db
@@ -109,6 +108,8 @@ export async function POST(req: NextRequest) {
         finalSellingPrice: doc.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
         status: doc.attributes.find((attr: { key: string }) => attr.key === 'status')?.value || 0,
       }));
+
+      const auctionsForScoreCalculation = auctions.filter((auction) => auction.status !== 3);
 
       const userWagers = tournamentWagersArray.map((tournamentWager) => ({
         userID: tournamentWager.user._id.toString(),
