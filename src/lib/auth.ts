@@ -1,23 +1,23 @@
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import clientPromise from '@/lib/mongodb';
-import bcrypt from 'bcrypt';
-import { User, Credentials } from '@/app/types/userTypes';
-import { NextAuthOptions, getServerSession } from 'next-auth';
-import { ObjectId } from 'mongodb';
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "@/lib/mongodb";
+import bcrypt from "bcrypt";
+import { User, Credentials } from "@/app/types/userTypes";
+import { NextAuthOptions, getServerSession } from "next-auth";
+import { ObjectId } from "mongodb";
 
-import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 // Google providers
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   if (!clientId || clientId.length === 0) {
-    throw new Error('Missing GOOGLE_CLIENT_ID');
+    throw new Error("Missing GOOGLE_CLIENT_ID");
   }
 
   if (!clientSecret || clientSecret.length === 0) {
-    throw new Error('Missing GOOGLE_CLIENT_SECRET');
+    throw new Error("Missing GOOGLE_CLIENT_SECRET");
   }
 
   return { clientId, clientSecret };
@@ -26,7 +26,7 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 const emailExistsInDatabase = async (email: string): Promise<boolean> => {
   const client = await clientPromise;
   const db = client.db();
-  const user = await db.collection<User>('users').findOne({ email: email });
+  const user = await db.collection<User>("users").findOne({ email: email });
   return !!user;
 };
 
@@ -34,29 +34,35 @@ export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'you@gmail.com' },
-        password: { label: 'Password', type: 'password' },
+        email: { label: "Email", type: "email", placeholder: "you@gmail.com" },
+        password: { label: "Password", type: "password" },
       },
       authorize: async (credentials: Credentials | undefined) => {
         if (!credentials || !credentials.email || !credentials.password) {
-          throw new Error('Missing credentials');
+          throw new Error("Missing credentials");
         }
 
         const client = await clientPromise;
         const db = client.db();
-        const user = await db.collection<User>('users').findOne({ email: credentials.email });
+        const user = await db
+          .collection<User>("users")
+          .findOne({ email: credentials.email });
 
         if (user?.isBanned) {
-          throw new Error('Your account has been banned');
+          throw new Error("Your account has been banned");
         }
-        if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password))) {
-          throw new Error('Invalid credentials');
+        if (
+          !user ||
+          !user.password ||
+          !(await bcrypt.compare(credentials.password, user.password))
+        ) {
+          throw new Error("Invalid credentials");
         }
 
         return { id: user._id, email: user.email };
@@ -81,6 +87,7 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
+        token.fullName = user.name;
         token.id = user.id;
         token.email = user.email;
         token.image = user.image;
@@ -88,12 +95,14 @@ export const authOptions: NextAuthOptions = {
 
       const client = await clientPromise;
       const db = client.db();
-      const dbUser = await db.collection('users').findOne({ _id: new ObjectId(token.id) });
+      const dbUser = await db
+        .collection("users")
+        .findOne({ _id: new ObjectId(token.id) });
 
-      console.log('JWT callback - Fetched User from DB:', dbUser);
+      console.log("JWT callback - Fetched User from DB:", dbUser);
 
       if (dbUser) {
-        token.fullName = dbUser.fullName;
+        token.fullName = dbUser.name;
         token.username = dbUser.username;
         token.image = dbUser.image;
         token.isActive = dbUser.isActive;
@@ -103,7 +112,12 @@ export const authOptions: NextAuthOptions = {
         // check if the user doesn't have a createdAt field and set it
         if (!dbUser.createdAt) {
           const createdAt = new Date();
-          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { createdAt } });
+          await db
+            .collection("users")
+            .updateOne(
+              { _id: new ObjectId(token.id) },
+              { $set: { createdAt } }
+            );
 
           token.createdAt = createdAt;
         } else {
@@ -114,19 +128,26 @@ export const authOptions: NextAuthOptions = {
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
           dbUser.balance = 100;
-          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { isActive: true, balance: 100 } });
+          await db
+            .collection("users")
+            .updateOne(
+              { _id: new ObjectId(token.id) },
+              { $set: { isActive: true, balance: 100 } }
+            );
         }
       }
-
+      console.log("Token: ", token);
       return token;
     },
     async signIn({ user, account, req }: any) {
-      const isCreatingAccount = req?.query?.isCreatingAccount === 'true';
+      const isCreatingAccount = req?.query?.isCreatingAccount === "true";
 
-      if (account.provider === 'google' && isCreatingAccount) {
+      if (account.provider === "google" && isCreatingAccount) {
         const client = await clientPromise;
         const db = client.db();
-        const dbUser = await db.collection<User>('users').findOne({ email: user.email });
+        const dbUser = await db
+          .collection<User>("users")
+          .findOne({ email: user.email });
 
         if (dbUser && dbUser.isBanned) {
           return false;

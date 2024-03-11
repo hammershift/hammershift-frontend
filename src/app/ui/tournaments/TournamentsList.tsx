@@ -111,6 +111,7 @@ const TournamentsList = () => {
     };
     fetchTournamentsData();
   }, [sortType, tournamentLimit, playerLimit]);
+  console.log("tournaments data: ",tournamentsData)
 
   useEffect(() => {
     const fetchAuctionData = async () => {

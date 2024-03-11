@@ -49,6 +49,7 @@ interface TournamentButtonsI {
   buyInEnded: boolean;
   tournamentID: string;
   tournamentImages: string[];
+  tournamentEnded: boolean;
 }
 
 interface TitleSingleCarContainerProps {
@@ -74,6 +75,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
   buyInEnded,
   tournamentID,
   tournamentImages,
+  tournamentEnded,
 }) => {
   const [isWatching, setIsWatching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -155,9 +157,16 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
         />
         {isWatching ? "WATCHING" : "WATCH"}
       </button>
-      {buyInEnded ? (
+      {tournamentEnded ? (
         <button disabled className="btn-yellow hover:tw-bg-[#f2ca16]">
           ENDED 🏆
+        </button>
+      ) : buyInEnded ? (
+        <button
+          disabled
+          className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+        >
+          Buy-in period has ended
         </button>
       ) : alreadyJoined ? (
         <button
@@ -1191,6 +1200,24 @@ export const TournamentWinnersSection = ({ winners }: any) => {
 export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
   const { data: session } = useSession();
 
+  const sortedTournamentPointsData = tournamentPointsData.sort(
+    (a: any, b: any) => {
+      const aPoints = Array.isArray(a.auctionScores)
+        ? a.auctionScores.reduce(
+            (acc: number, scoreObj: any) => acc + scoreObj.score,
+            0
+          )
+        : 0;
+      const bPoints = Array.isArray(b.auctionScores)
+        ? b.auctionScores.reduce(
+            (acc: number, scoreObj: any) => acc + scoreObj.score,
+            0
+          )
+        : 0;
+      return aPoints - bPoints;
+    }
+  );
+
   return (
     <div>
       <div className="tw-relative tw-pb-8 sm:tw-pb-0 tw-min-h-[180px]">
@@ -1209,8 +1236,8 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
             <div className="tw-text-[14px]">Lowest point wins</div>
           </div>
           <div>
-            {tournamentPointsData &&
-              tournamentPointsData.map((item: any, index: number) => {
+            {sortedTournamentPointsData &&
+              sortedTournamentPointsData.map((item: any, index: number) => {
                 return (
                   <div
                     key={item._id}

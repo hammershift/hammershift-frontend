@@ -89,28 +89,30 @@ const CreateAccount = () => {
     isEmailUnique: true,
     isUsernameUnique: true,
   });
-  const [emailExists, setEmailExists] = useState<boolean>(false);
 
   // session and routing
   const { data: session } = useSession();
+  console.log("User Session: ", session)
   const router = useRouter();
+
+  console.log("Session: ", session);
+  console.log("Session name: ", session?.user.name);
 
   useEffect(() => {
     setCountries(Country.getAllCountries());
     if (session && !emailExistsError) {
       setCreateAccountPage('page two'); // check if emailExistsError is false before proceeding
     }
-  }, [session]);
+  }, [session, emailExistsError]);
 
-  useEffect(() => {
-    if (emailExists === true) {
-      const timeout = setTimeout(() => {
-        router.push('/login_page');
-      }, 3000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [emailExists, router]);
+  // useEffect(() => {
+  //   const redirectToLoginPage = () => {
+  //     if (emailExistsError) {
+  //       setTimeout(() => router.push("/login_page"), 3000);
+  //     }
+  //   };
+  //   redirectToLoginPage();
+  // }, [emailExistsError, router]);
 
   const validateEmail = (email: string): boolean => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
   const validatePassword = (password: string): boolean => password.trim().length >= 8;
@@ -183,7 +185,6 @@ const CreateAccount = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      setEmailExists(true);
 
       const data: UserExistenceResponse = await response.json();
       setUniqueFields((prevState) => ({
@@ -255,7 +256,8 @@ const CreateAccount = () => {
           setCreateAccountPage('page two');
         }
       } else {
-        console.error('Registration failed:', data.message);
+        setEmailExistsError(true);
+        console.error("Registration failed:", data.message);
       }
     } catch (error) {
       console.error('Error during account creation:', error);
@@ -277,7 +279,7 @@ const CreateAccount = () => {
 
     try {
       const profileData = {
-        fullName: userDetails.fullName,
+        fullName: session?.user.name ? session.user.name : userDetails.fullName,
         username: userDetails.username,
         country: userDetails.country,
         state: userDetails.state,
@@ -313,14 +315,12 @@ const CreateAccount = () => {
     const emailExistsParam = new URLSearchParams(window.location.search).get('emailExists');
     if (emailExistsParam === 'true') {
       setEmailExistsError(true);
-      setEmailExists(true);
       setIsLoading(false);
     }
   }, []);
 
   const handleGoogleSignIn = async (provider: string, isCreatingAccount = false) => {
     setIsLoading(true);
-
     try {
       const result = await signIn(provider, {
         redirect: false,
@@ -330,7 +330,6 @@ const CreateAccount = () => {
       if (result?.error) {
         if (result.error === 'EmailExistsError') {
           setEmailExistsError(true);
-          setEmailExists(true);
         }
         setIsLoading(false);
         return;
@@ -341,7 +340,6 @@ const CreateAccount = () => {
         setIsLoading(false);
         return;
       }
-
       if (isCreatingAccount && !emailExistsError) {
         setCreateAccountPage('page two');
         router.push('/create_account');
@@ -373,7 +371,9 @@ const CreateAccount = () => {
     const newValidity = {
       isEmailValid: validateEmail(userDetails.email),
       isPasswordValid: validatePassword(userDetails.password),
-      isFullNameValid: validateFullName(userDetails.fullName),
+      isFullNameValid: validateFullName(
+        session?.user.name ? session.user.name : userDetails.fullName
+      ),
       isUsernameValid: validateUsername(userDetails.username),
       isCountryValid: isCountrySelected(userDetails.country),
       isStateValid: isStateSelected(userDetails.state),
@@ -381,13 +381,13 @@ const CreateAccount = () => {
 
     setValidity(newValidity);
 
+    const { isFullNameValid, isUsernameValid, isCountryValid, isStateValid } =
+      validity;
     if (
-      !newValidity.isEmailValid ||
-      !newValidity.isPasswordValid ||
-      !newValidity.isFullNameValid ||
-      !newValidity.isUsernameValid ||
-      !newValidity.isCountryValid ||
-      !newValidity.isStateValid
+      !isFullNameValid ||
+      !isUsernameValid ||
+      !isCountryValid ||
+      !isStateValid
     ) {
       console.error('Profile information is invalid');
       setIsLoading(false);
@@ -403,7 +403,9 @@ const CreateAccount = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: userDetails.fullName,
+          fullName: session?.user.name
+            ? session?.user.name
+            : userDetails.fullName,
           username: userDetails.username,
           country: userDetails.country,
           state: userDetails.state,
@@ -464,14 +466,16 @@ const CreateAccount = () => {
                   {touchedFields.email && !uniqueFields.isEmailUnique && (
                     <div className='tw-text-sm tw-text-red-500 tw-flex tw-justify-between'>
                       ✕ Email is already in use
-                      <span className='tw-text-sm tw-text-white tw-italic'>Redirecting to login page...</span>
                     </div>
                   )}
                   {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}
                   {touchedFields.email && !validity.isEmailValid && <div className='tw-text-sm tw-text-red-500'>✕ Invalid Email</div>}
                   {emailExistsError && (
-                    <div className='tw-text-sm tw-text-red-500 tw-flex tw-justify-between'>
-                      ✕ An account with this email already exists <span className='tw-text-sm tw-text-white tw-italic'>Redirecting to login page...</span>
+                    <div className="tw-text-sm tw-text-red-500 tw-flex tw-justify-between">
+                      ✕ Email is already in use{" "}
+                      <span className="tw-text-sm tw-text-white tw-italic">
+                        Redirecting to login page...
+                      </span>
                     </div>
                   )}{' '}
                 </div>
@@ -515,14 +519,37 @@ const CreateAccount = () => {
                 {/* Full Name */}
                 <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
                   <label>Full Name *</label>
-                  <input
-                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                    placeholder='full name'
-                    value={userDetails.fullName}
-                    onChange={(e) => handleInputChange('fullName', e.target.value)}
-                  />
-                  <div className={touchedFields.fullName && !validity.isFullNameValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
-                    {touchedFields.fullName && (validity.isFullNameValid ? '✔' : '✕ Full Name is required')}
+                  {session?.user.name ? (
+                    <input
+                      className="tw-py-2.5 tw-px-3 tw-bg-[#172431]"
+                      placeholder={session.user.name}
+                      value={session.user.name}
+                      onChange={(e) =>
+                        handleInputChange("fullName", e.target.value)
+                      }
+                      disabled
+                    />
+                  ) : (
+                    <input
+                      className="tw-py-2.5 tw-px-3 tw-bg-[#172431]"
+                      placeholder="full name"
+                      value={userDetails.fullName}
+                      onChange={(e) =>
+                        handleInputChange("fullName", e.target.value)
+                      }
+                    />
+                  )}
+                  <div
+                    className={
+                      touchedFields.fullName && !validity.isFullNameValid
+                        ? "tw-text-sm tw-text-red-500"
+                        : "tw-text-sm tw-text-green-500"
+                    }
+                  >
+                    {touchedFields.fullName &&
+                      (validity.isFullNameValid
+                        ? "✔"
+                        : "✕ Full Name is required")}
                   </div>
                 </div>
               </div>

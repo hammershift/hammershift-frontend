@@ -48,7 +48,7 @@ const LiveGamesCard: React.FC<any> = ({
           return imagesSrcList[currentIndex + 1];
         }
       });
-    }, 20000);
+    }, 2000);
 
     return () => clearInterval(intervalId);
   }, [image, images_list]);
@@ -57,19 +57,22 @@ const LiveGamesCard: React.FC<any> = ({
   return (
     <Link
       href={`/auctions/car_view_page/${auction_id}`}
-      className="tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center"
+      className="tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100"
     >
-      <div className="tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-relative">
-        <div className="tw-w-[61px] tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]">
+      <div className="tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-pt-3 tw-relative">
+        <div className="tw-w-[61px] tw-z-20 tw-h-[36px] tw-animate-pulse tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]">
           LIVE
         </div>
-        <img
-          src={currentImage}
-          width={200}
-          height={200}
-          alt="car"
-          className="tw-w-[120px] sm:tw-w-[200px] tw-h-[120px] sm:tw-h-[200px] tw-rounded-full tw-object-cover tw-border-solid tw-border-4 tw-border-red-500"
-        />
+        <div className="tw-flex tw-justify-center tw-items-center">
+          <div className="tw-absolute tw-rounded-full tw-w-[130px] sm:tw-w-[200px] tw-h-[130px] sm:tw-h-[200px] tw-bg-red-500 tw-animate-pulse"></div>
+          <img
+            src={currentImage}
+            width={185}
+            height={185}
+            alt="car"
+            className="tw-w-[120px] sm:tw-w-[185px] tw-h-[120px] sm:tw-h-[185px] tw-rounded-full tw-object-cover tw-z-10"
+          />
+        </div>
       </div>
       <div className="tw-ml-4 sm:tw-ml-0">
         <div className="info tw-my-3 tw-flex tw-flex-col tw-items-center tw-justify-center sm:tw-w-auto tw-w-[191px]">
