@@ -58,7 +58,7 @@ const LivePageCarousel = () => {
                 <LoadingLivePageCarousel />
             ) : (
                 <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
-                    <div className="tw-relative tw-w-full tw-overflow-hidden">
+                    <div className="tw-w-full tw-overflow-hidden">
                         <div
                             className="tw-transition tw-duration-[2000ms] tw-flex"
                             style={{
@@ -88,7 +88,7 @@ const LivePageCarousel = () => {
                         </div>
                         <div>
                             <button
-                                className="tw-absolute tw-top-[50%] tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D]"
+                                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-z-50 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D]"
                                 onClick={leftArrowHandler}
                             >
                                 <Image
@@ -99,7 +99,7 @@ const LivePageCarousel = () => {
                                 />
                             </button>
                             <button
-                                className="tw-absolute tw-top-[50%] tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D]"
+                                className="tw-absolute tw-top-[50%] md:tw-right-11 tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D]"
                                 onClick={rightArrowHandler}
                             >
                                 <Image
@@ -122,8 +122,28 @@ export default LivePageCarousel;
 const SlideOne = ({ carData }: any) => {
     const [prize, setPrize] = useState(0);
     const [wagers, setWagers] = useState([]);
+    const [currentImage, setCurrentImage] = useState(carData.image);
     const timerValues = useTimer();
     const router = useRouter();
+
+    useEffect(() => {
+        const imagesSrcList = carData.images_list
+            .slice(0, 5)
+            .map((imageObj: { src: any }) => imageObj.src);
+
+        const intervalId = setInterval(() => {
+            setCurrentImage((prevImage: string) => {
+                const currentIndex = imagesSrcList.indexOf(prevImage);
+                if (currentIndex === imagesSrcList.length - 1) {
+                    return carData.image;
+                } else {
+                    return imagesSrcList[currentIndex + 1];
+                }
+            });
+        }, 2000);
+
+        return () => clearInterval(intervalId);
+    }, [carData.image, carData.images_list]);
 
     useEffect(() => {
         const fetchPrize = async () => {
@@ -156,7 +176,7 @@ const SlideOne = ({ carData }: any) => {
                         LIVE
                     </span>
                     <Image
-                        src={carData.image}
+                        src={currentImage}
                         width={808}
                         height={538}
                         alt="dollar"
