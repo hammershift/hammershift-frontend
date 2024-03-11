@@ -74,6 +74,7 @@ export async function processTournamentWinners(tournamentId: string): Promise<vo
   const auctionsToProcess = auctions.map((auction) => ({
     _id: auction._id,
     finalSellingPrice: auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
+    status: auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value || 0,
   }));
 
   const userWagers = tournamentWagersArray.map((tournamentWager) => ({
@@ -120,10 +121,6 @@ export async function processTournamentWinners(tournamentId: string): Promise<vo
     winner.transactionID = transactionId;
     winner.username = user ? user.username : '';
     winner.userImage = user && user.image ? user.image : '';
-  }
-
-  for (const auction of auctionsToProcess) {
-    await db.collection('auctions').updateOne({ _id: auction._id }, { $set: { 'attributes.$[elem].value': 4 } }, { arrayFilters: [{ 'elem.key': 'status' }] });
   }
 
   await db.collection('tournaments').updateOne(
