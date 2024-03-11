@@ -1,25 +1,26 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const AuctionScoreSchema = new mongoose.Schema({
   auctionID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Auction",
+    ref: 'Auction',
     required: true,
   },
   score: { type: Number, required: true },
+  isSuccessful: { type: Boolean, required: true },
 });
 
 const TournamentPointsSchema = new mongoose.Schema(
   {
     tournamentID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Tournament",
+      ref: 'Tournament',
       required: true,
     },
     user: {
       _id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
         required: true,
       },
       username: { type: String, required: true },
@@ -30,8 +31,6 @@ const TournamentPointsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const TournamentPoints =
-  mongoose.models.tournament_points ||
-  mongoose.model("tournament_points", TournamentPointsSchema);
+const TournamentPoints = mongoose.models.tournament_points || mongoose.model('tournament_points', TournamentPointsSchema);
 
 export default TournamentPoints;
