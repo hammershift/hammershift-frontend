@@ -30,8 +30,6 @@ const Card: React.FC<any> = ({
   const [imageSrc, setImageSrc] = useState(image);
   const [index, setIndex] = useState(0);
 
-  console.log(images_list);
-
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const router = useRouter();
   const timerValues = useTimer();
