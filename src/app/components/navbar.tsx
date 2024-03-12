@@ -462,14 +462,14 @@ const Navbar = () => {
                 document.body.classList.remove("stop-scrolling");
               }}
               className="tw-hidden sm:tw-block"
-              href="/live"
+              href="/discover"
             >
               <div
                 className={`tw-block tw-mx-2 sm:tw-mx-4 ${
-                  pathname === "/live" && "tw-font-bold tw-border-b-2"
+                  pathname === "/discover" && "tw-font-bold tw-border-b-2"
                 }`}
               >
-                LIVE
+                DISCOVER
               </div>
             </Link>
             <Link
