@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
       .populate({
         path: 'tournamentID',
         model: Tournament,
-        select: 'title pot endTime',
+        select: 'title pot endTime tournamentEndTime',
       })
       .sort({ createdAt: 1 })
       .exec();
@@ -81,6 +81,7 @@ export async function GET(req: NextRequest) {
           tournamentTitle: tournamentDetails.title,
           pot: tournamentDetails.pot,
           endTime: tournamentDetails.endTime,
+          tournamentEndTime: tournamentDetails.tournamentEndTime,
           buyInAmount: wager.buyInAmount,
           tournamentImages: wager.tournamentImages,
           user: wager.user,

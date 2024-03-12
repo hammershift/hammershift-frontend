@@ -1372,14 +1372,18 @@ const MyWagersDropdownMenu = () => {
 
                 const completedTournaments = data.tournament_wagers.filter(
                     (wager: any) => {
-                        const auctionDeadline = new Date(wager.endTime);
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
                         return auctionDeadline < currentDate;
                     }
                 );
 
                 const activeTournaments = data.tournament_wagers.filter(
                     (wager: any) => {
-                        const auctionDeadline = new Date(wager.endTime);
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
                         return auctionDeadline >= currentDate;
                     }
                 );
@@ -1460,7 +1464,9 @@ const MyWagersDropdownMenu = () => {
                     {activeTournamentWagers.map((wager: any) => {
                         return (
                             <div key={wager._id}>
-                                <TimerProvider deadline={wager.endTime}>
+                                <TimerProvider
+                                    deadline={wager.tournamentEndTime}
+                                >
                                     <MyWagersTournamentCard
                                         wager={wager}
                                         isActive={true}
@@ -1502,7 +1508,9 @@ const MyWagersDropdownMenu = () => {
                     {completedTournamentWagers.map((wager: any) => {
                         return (
                             <div key={wager._id}>
-                                <TimerProvider deadline={wager.endTime}>
+                                <TimerProvider
+                                    deadline={wager.tournamentEndTime}
+                                >
                                     <MyWagersTournamentCard
                                         wager={wager}
                                         isActive={false}
@@ -1581,7 +1589,7 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
         totalScore: number;
     }>({ placing: 0, totalScore: 0 });
     let formattedDateString;
-    if (wager.endTime) {
+    if (wager.tournamentEndTime) {
         formattedDateString = new Intl.DateTimeFormat("en-US", {
             year: "numeric",
             month: "short",
@@ -1589,7 +1597,7 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
             hour: "numeric",
             minute: "numeric",
             hour12: true,
-        }).format(new Date(wager.endTime));
+        }).format(new Date(wager.tournamentEndTime));
     }
 
     const addNumberSuffix = (number: number) => {
@@ -2503,16 +2511,21 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     const auctionDeadline = new Date(wager.auctionDeadline);
                     return auctionDeadline >= currentDate;
                 });
+
                 const completedTournaments = data.tournament_wagers.filter(
                     (wager: any) => {
-                        const auctionDeadline = new Date(wager.endTime);
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
                         return auctionDeadline < currentDate;
                     }
                 );
 
                 const activeTournaments = data.tournament_wagers.filter(
                     (wager: any) => {
-                        const auctionDeadline = new Date(wager.endTime);
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
                         return auctionDeadline >= currentDate;
                     }
                 );
@@ -2588,7 +2601,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                         {activeTournamentWagers.map((wager: any) => {
                             return (
                                 <div key={wager._id}>
-                                    <TimerProvider deadline={wager.endTime}>
+                                    <TimerProvider
+                                        deadline={wager.tournamentEndTime}
+                                    >
                                         <MyWagersTournamentCard
                                             wager={wager}
                                             isActive={true}
@@ -2633,7 +2648,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                         {completedTournamentWagers.map((wager: any) => {
                             return (
                                 <div key={wager._id}>
-                                    <TimerProvider deadline={wager.endTime}>
+                                    <TimerProvider
+                                        deadline={wager.tournamentEndTime}
+                                    >
                                         <MyWagersTournamentCard
                                             wager={wager}
                                             isActive={false}
