@@ -343,7 +343,7 @@ const TournamentViewPage = ({
           {winners.length !== 0 ? (
             <TournamentWinnersSection winners={winners} />
           ) : null}
-          {tournamentPointsData.length !== 0 ? (
+          {buyInEnded === true && tournamentPointsData.length !== 0 ? (
             <TournamentLeadboard tournamentPointsData={tournamentPointsData} />
           ) : null}
           <TournamentWagersSection
