@@ -41,7 +41,9 @@ export function calculateTournamentScores(userWagers: UserWager[], auctions: Auc
       }
 
       const score = Math.abs(wager.priceGuessed - auction.finalSellingPrice);
-      const isSuccessful = auction.status === 2;
+
+      // to make sure that isSuccessful: false is only for auctions with status 3
+      const isSuccessful = auction.status !== 3;
 
       return {
         auctionID: wager.auctionID.toString(),
