@@ -206,11 +206,6 @@ export async function POST(req: NextRequest) {
         winner.userImage = user && user.image ? user.image : '';
       }
 
-      // update the status of the auction to indicate that it is complete and successful
-      // for (const auction of auctionsToProcess) {
-      //   await db.collection('auctions').updateOne({ _id: auction._id }, { $set: { 'attributes.$[elem].value': 4 } }, { arrayFilters: [{ 'elem.key': 'status' }] });
-      // }
-
       // update the tournament status to indicate that it is complete
       await db.collection('tournaments').updateOne(
         { _id: new ObjectId(tournamentId) },
