@@ -137,7 +137,7 @@ const TournamentViewPage = ({
       }
     };
     fetchTournamentsData();
-  }, [ID, toggleTournamentWagerModal]);
+  }, [ID, playerLimit, toggleTournamentWagerModal]);
 
   useEffect(() => {
     const checkIfAlreadyWagered = async () => {

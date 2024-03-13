@@ -1203,16 +1203,20 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
   const sortedTournamentPointsData = tournamentPointsData.sort(
     (a: any, b: any) => {
       const aPoints = Array.isArray(a.auctionScores)
-        ? a.auctionScores.reduce(
-            (acc: number, scoreObj: any) => acc + scoreObj.score,
-            0
-          )
+        ? a.auctionScores
+            .filter(
+              (auction: { isSuccessful: boolean }) =>
+                auction.isSuccessful === true
+            )
+            .reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
         : 0;
       const bPoints = Array.isArray(b.auctionScores)
-        ? b.auctionScores.reduce(
-            (acc: number, scoreObj: any) => acc + scoreObj.score,
-            0
-          )
+        ? b.auctionScores
+            .filter(
+              (auction: { isSuccessful: boolean }) =>
+                auction.isSuccessful === true
+            )
+            .reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
         : 0;
       return aPoints - bPoints;
     }
@@ -1265,12 +1269,28 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
                     <div className="tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md">
                       {Array.isArray(item.auctionScores) &&
                       item.auctionScores.length > 0
-                        ? `${item.auctionScores.reduce(
-                            (acc: number, scoreObj: { score: number }) =>
-                              acc + scoreObj.score,
-                            0
-                          )} pts.`
-                        : "0 pts."}
+                        ? item.auctionScores.isSuccessful === false
+                          ? "0 pts."
+                          : `${item.auctionScores
+                              .filter(
+                                (auction: { isSuccessful: boolean }) =>
+                                  auction.isSuccessful === true
+                              )
+                              .reduce(
+                                (acc: number, scoreObj: { score: number }) =>
+                                  acc + scoreObj.score,
+                                0
+                              )} pts.`
+                        : `${item.auctionScores
+                            .filter(
+                              (auction: { isSuccessful: boolean }) =>
+                                auction.isSuccessful === true
+                            )
+                            .reduce(
+                              (acc: number, scoreObj: { score: number }) =>
+                                acc + scoreObj.score,
+                              0
+                            )} pts.`}
                     </div>
                   </div>
                 );
