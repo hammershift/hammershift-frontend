@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
           const correspondingAuction = allAuctions.find((auction) => auction._id.toString() === auctionScore.auctionID);
           return {
             ...auctionScore,
-            isSuccessful: correspondingAuction ? correspondingAuction.status === 2 : false,
+            isSuccessful: correspondingAuction ? correspondingAuction.status !== 3 : false,
           };
         });
 
