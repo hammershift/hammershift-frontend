@@ -32,16 +32,20 @@ const TournamentsCard = ({
   const sortedTournamentPoints = tournamentPoints
     ? tournamentPoints.sort((a: any, b: any) => {
         const aPoints = Array.isArray(a.auctionScores)
-          ? a.auctionScores.reduce(
-              (acc: number, scoreObj: any) => acc + scoreObj.score,
-              0
-            )
+          ? a.auctionScores
+              .filter(
+                (auction: { isSuccessful: boolean }) =>
+                  auction.isSuccessful === true
+              )
+              .reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
           : 0;
         const bPoints = Array.isArray(b.auctionScores)
-          ? b.auctionScores.reduce(
-              (acc: number, scoreObj: any) => acc + scoreObj.score,
-              0
-            )
+          ? b.auctionScores
+              .filter(
+                (auction: { isSuccessful: boolean }) =>
+                  auction.isSuccessful === true
+              )
+              .reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
           : 0;
         return aPoints - bPoints;
       })
@@ -103,17 +107,15 @@ const TournamentsCard = ({
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         <div className="tw-flex tw-items-center tw-justify-center">
-            <Image
-              src={PrizeIcon}
-              width={20}
-              height={20}
-              alt="dollar"
-              className="tw-w-5 tw-h-5 tw-mx-1"
-            />
-            <div className="tw-text-white tw-font-bold">
-              ${pot}
-            </div>
-          </div>
+          <Image
+            src={PrizeIcon}
+            width={20}
+            height={20}
+            alt="dollar"
+            className="tw-w-5 tw-h-5 tw-mx-1"
+          />
+          <div className="tw-text-white tw-font-bold">${pot}</div>
+        </div>
         {tournamentEnded ? (
           <p className="tw-text-red-600 tw-font-bold">Tournament has ended</p>
         ) : buyInEnded ? (
@@ -171,11 +173,18 @@ const TournamentsCard = ({
                           <div className="tw-text-[#F2CA16] tw-font-bold">
                             {Array.isArray(item.auctionScores) &&
                             item.auctionScores.length > 0
-                              ? `${item.auctionScores.reduce(
-                                  (acc: number, scoreObj: { score: number }) =>
-                                    acc + scoreObj.score,
-                                  0
-                                )} pts.`
+                              ? `${item.auctionScores
+                                  .filter(
+                                    (auction: { isSuccessful: boolean }) =>
+                                      auction.isSuccessful === true
+                                  )
+                                  .reduce(
+                                    (
+                                      acc: number,
+                                      scoreObj: { score: number }
+                                    ) => acc + scoreObj.score,
+                                    0
+                                  )} pts.`
                               : "0 pts."}
                           </div>
                         </div>

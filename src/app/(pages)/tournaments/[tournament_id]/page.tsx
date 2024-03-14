@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import TournamentWagerModal from '@/app/components/tournament_wager_modal';
+import React, { useEffect, useState } from "react";
+import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import {
   TitleTournamentsList,
   TournamentButtons,
@@ -11,7 +11,7 @@ import {
   TournamentWinnersSection,
   TournamentsList,
   TournamentsYouMightLike,
-} from '@/app/ui/tournaments_car_view_page/TournamentsCarViewPage';
+} from "@/app/ui/tournaments_car_view_page/TournamentsCarViewPage";
 import {
   addTournamentPot,
   createTournamentWager,
@@ -21,10 +21,10 @@ import {
   getTournamentById,
   getTournamentPointsByTournamentId,
   getTournamentTransactions,
-} from '@/lib/data';
-import { useSession } from 'next-auth/react';
-import { TimerProvider, useTimer } from '@/app/_context/TimerContext';
-import { CommentsSection } from '@/app/components/CommentsSection';
+} from "@/lib/data";
+import { useSession } from "next-auth/react";
+import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
+import { CommentsSection } from "@/app/components/CommentsSection";
 
 export interface Tournaments {
   _id: string;
@@ -59,14 +59,21 @@ interface TournamentPoints {
   auctionScores: AuctionScore[];
 }
 
-const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) => {
+const TournamentViewPage = ({
+  params,
+}: {
+  params: { tournament_id: string };
+}) => {
   const { data: session } = useSession();
   const [isWagerMenuOpen, setIsWagerMenuOpen] = useState(false);
   const [alreadyJoined, setAlreadyJoined] = useState(false);
-  const [toggleTournamentWagerModal, setToggleTournamentWagerModal] = useState(false);
+  const [toggleTournamentWagerModal, setToggleTournamentWagerModal] =
+    useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [wagers, setWagers] = useState<any>({});
-  const [tournamentData, setTournamentData] = useState<Tournaments | undefined>(undefined);
+  const [tournamentData, setTournamentData] = useState<Tournaments | undefined>(
+    undefined
+  );
   const [auctionData, setAuctionData] = useState<Auction[]>([]);
   const [tournamentWagers, setTournamentWagers] = useState([]);
   const [buyInEnded, setBuyInEnded] = useState(false);
@@ -75,7 +82,9 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [prize, setPrize] = useState(0);
   const [winners, setWinners] = useState([]);
-  const [tournamentPointsData, setTournamentPointsData] = useState<TournamentPoints[]>([]);
+  const [tournamentPointsData, setTournamentPointsData] = useState<
+    TournamentPoints[]
+  >([]);
   const [playerLimit, setPlayerLimit] = useState(10);
 
   const ID = params.tournament_id;
@@ -84,12 +93,12 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
     const fetchAuctionData = async () => {
       try {
         const data = await getAuctionsByTournamentId(ID);
-        console.log('auctions: ', data);
+        console.log("auctions: ", data);
         setAuctionData(data);
         const images = await data.map((auction: any) => auction.image);
         setTournamentImages(images);
       } catch (error) {
-        console.error('Failed to fetch auctions data:', error);
+        console.error("Failed to fetch auctions data:", error);
       }
     };
     fetchAuctionData();
@@ -100,11 +109,22 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
       try {
         const data = await getTournamentById(ID);
         const transactions = await getTournamentTransactions(ID);
-        const tournamentPoints = await getTournamentPointsByTournamentId(ID, playerLimit);
+        const tournamentPoints = await getTournamentPointsByTournamentId(
+          ID,
+          playerLimit
+        );
         const currentDate = new Date();
         const buyInDeadline = new Date(data?.endTime);
         const tournamentDeadline = new Date(data?.tournamentEndTime);
-        const totalPrize = 0.88 * transactions.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+        const totalPrize =
+          0.88 *
+          transactions
+            .map((transaction: any) => transaction.amount)
+            .reduce(
+              (accumulator: any, currentValue: any) =>
+                accumulator + currentValue,
+              0
+            );
 
         setTournamentData(data);
         setWinners(data?.winners);
@@ -113,16 +133,19 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
         setPrize(totalPrize);
         setTournamentPointsData(tournamentPoints);
       } catch (error) {
-        console.error('Failed to fetch tournament data:', error);
+        console.error("Failed to fetch tournament data:", error);
       }
     };
     fetchTournamentsData();
-  }, [ID, toggleTournamentWagerModal]);
+  }, [ID, playerLimit, toggleTournamentWagerModal]);
 
   useEffect(() => {
     const checkIfAlreadyWagered = async () => {
       if (session && tournamentData) {
-        const tournamentWager = await getOneTournamentWager(tournamentData._id, session.user.id);
+        const tournamentWager = await getOneTournamentWager(
+          tournamentData._id,
+          session.user.id
+        );
 
         !tournamentWager ? setAlreadyJoined(false) : setAlreadyJoined(true);
       }
@@ -141,7 +164,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
 
   const handleInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
-      case 'auction_1':
+      case "auction_1":
         setWagers({
           ...wagers,
           auction_1: {
@@ -150,7 +173,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
           },
         });
         break;
-      case 'auction_2':
+      case "auction_2":
         setWagers({
           ...wagers,
           auction_2: {
@@ -159,7 +182,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
           },
         });
         break;
-      case 'auction_3':
+      case "auction_3":
         setWagers({
           ...wagers,
           auction_3: {
@@ -168,7 +191,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
           },
         });
         break;
-      case 'auction_4':
+      case "auction_4":
         setWagers({
           ...wagers,
           auction_4: {
@@ -177,7 +200,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
           },
         });
         break;
-      case 'auction_5':
+      case "auction_5":
         setWagers({
           ...wagers,
           auction_5: {
@@ -191,10 +214,13 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, sessionData: any) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    sessionData: any
+  ) => {
     e.preventDefault();
     if (isSubmitting) {
-      console.log('race condition');
+      console.log("race condition");
 
       return;
     }
@@ -220,7 +246,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
       await addTournamentPot(data.buyInFee * 0.88 + data.pot, data._id);
       setToggleTournamentWagerModal(false);
       setIsSubmitting(false);
-      document.body.classList.remove('stop-scrolling');
+      document.body.classList.remove("stop-scrolling");
     } catch (error) {
       console.error(error);
       setIsSubmitting(false);
@@ -232,7 +258,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
   };
 
   return (
-    <div className='page-container tw-relative'>
+    <div className="page-container tw-relative">
       {toggleTournamentWagerModal ? (
         <TournamentWagerModal
           pot={prize}
@@ -244,9 +270,11 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
           isButtonClicked={isButtonClicked}
         />
       ) : null}
-      <div className='section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8'>
-        <div className='tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]'>TOURNAMENT</div>
-        <div className='tw-hidden sm:tw-block'>
+      <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
+        <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
+          TOURNAMENT
+        </div>
+        <div className="tw-hidden sm:tw-block">
           {tournamentData && (
             <TournamentButtons
               tournamentImages={tournamentImages}
@@ -260,8 +288,8 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
           )}
         </div>
       </div>
-      <div className='section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row'>
-        <div className='left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8'>
+      <div className="section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
+        <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
           {tournamentData && (
             <TimerProvider deadline={tournamentData.endTime}>
               <TitleTournamentsList
@@ -274,7 +302,7 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
               />
             </TimerProvider>
           )}
-          <div className='sm:tw-hidden tw-mt-4'>
+          <div className="sm:tw-hidden tw-mt-4">
             {tournamentData && (
               <TournamentButtons
                 tournamentImages={tournamentImages}
@@ -295,23 +323,45 @@ const TournamentViewPage = ({ params }: { params: { tournament_id: string } }) =
             tournamentEnded={buyInEnded}
             tournamentID={ID}
           />
-          <div className='tw-block sm:tw-hidden tw-mt-8'>{winners.length !== 0 ? <TournamentWinnersSection winners={winners} /> : null}</div>
-          <div className='sm:tw-hidden tw-my-8'>
-            <TournamentWagersSection tournamentWagers={tournamentWagers} toggleTournamentWagerModal={toggleModal} alreadyJoined={alreadyJoined} tournamentEnded={buyInEnded} />
+          <div className="tw-block sm:tw-hidden tw-mt-8">
+            {winners.length !== 0 ? (
+              <TournamentWinnersSection winners={winners} />
+            ) : null}
+          </div>
+          <div className="sm:tw-hidden tw-my-8">
+            <TournamentWagersSection
+              tournamentWagers={tournamentWagers}
+              toggleTournamentWagerModal={toggleModal}
+              alreadyJoined={alreadyJoined}
+              tournamentEnded={buyInEnded}
+            />
             <TournamentInfoSection />
           </div>
-          <CommentsSection pageID={ID} pageType='tournament' />
+          <CommentsSection pageID={ID} pageType="tournament" />
         </div>
-        <div className='right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8'>
-          {winners.length !== 0 ? <TournamentWinnersSection winners={winners} /> : null}
-          {buyInEnded === true && tournamentPointsData.length !== 0 ? <TournamentLeaderboard tournamentPointsData={tournamentPointsData} /> : null}
-          <TournamentWagersSection tournamentWagers={tournamentWagers} toggleTournamentWagerModal={toggleModal} alreadyJoined={alreadyJoined} tournamentEnded={buyInEnded} />
+        <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
+          {winners.length !== 0 ? (
+            <TournamentWinnersSection winners={winners} />
+          ) : null}
+          {buyInEnded === true && tournamentPointsData.length !== 0 ? (
+            <TournamentLeaderboard
+              tournamentPointsData={tournamentPointsData}
+            />
+          ) : null}
+          <TournamentWagersSection
+            tournamentWagers={tournamentWagers}
+            toggleTournamentWagerModal={toggleModal}
+            alreadyJoined={alreadyJoined}
+            tournamentEnded={buyInEnded}
+          />
           <TournamentInfoSection />
         </div>
       </div>
       {/* TODO: Check if working*/}
       {/* <TournamentWagerPage /> */}
-      {isWagerMenuOpen && <div className='tw-bg-black tw-w-screen tw-h-full'></div>}
+      {isWagerMenuOpen && (
+        <div className="tw-bg-black tw-w-screen tw-h-full"></div>
+      )}
       <TournamentsYouMightLike />
     </div>
   );

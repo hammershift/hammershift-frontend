@@ -7,7 +7,6 @@ import { TournamentsYouMightLike } from "@/app/ui/tournaments_car_view_page/Tour
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="page-container">
-      <Links />
       {children}
       <LatestNews />
       <SubscribeSmall />

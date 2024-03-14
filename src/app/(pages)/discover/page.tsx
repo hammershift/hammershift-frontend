@@ -584,9 +584,6 @@ const Homepage = () => {
 
   return (
     <div className="2xl:tw-flex tw-flex-col tw-items-center tw-justify-center">
-      <div className="section-container">
-        <DynamicCarousel />
-      </div>
       <div ref={liveGamesRef} className="section-container">
         {isLiveGamesVisible ? <DynamicLiveGames /> : null}
       </div>

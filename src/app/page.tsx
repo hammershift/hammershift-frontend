@@ -9,6 +9,7 @@ import NewEraWagering from "@/app/components/new_era_wagering";
 import Subscribe from "@/app/components/subscribe";
 import { getCarsWithMostPot } from "@/lib/data";
 import React, { useEffect, useRef, useState } from "react";
+import Carousel from "./components/carousel";
 
 const LivePage = () => {
   return (
@@ -16,6 +17,9 @@ const LivePage = () => {
       <LivePageCarousel />
       <div className="section-container tw-m-auto">
         <LiveGames />
+      </div>
+      <div className="section-container tw-mx-auto tw-mb-10">
+        <Carousel />
       </div>
       <NewEraWagering />
       <HowHammerShiftWorks />
