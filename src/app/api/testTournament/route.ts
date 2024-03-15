@@ -70,7 +70,6 @@ export async function POST(req: NextRequest) {
       });
       console.log(`Auction statuses for tournament ${tournament._id}:`, auctionStatuses);
 
-      // Part 1: Update Tournament Status
       const liveAuctionsCount = auctionStatuses.filter((status) => status === 1).length;
       const unsuccessfulAuctionsCount = auctionStatuses.filter((status) => status === 3).length;
       const successfulAuctionsCount = auctionStatuses.filter((status) => status === 2).length;
@@ -96,7 +95,7 @@ export async function POST(req: NextRequest) {
         console.log(`Tournament ${tournament._id} is still active.`);
       }
 
-      // Part 2: Update Tournament Scores
+      // Part 1: Update Tournament Scores
       const auctionIDs = tournamentWagersArray.flatMap((wager) => wager.wagers.map((wager) => wager.auctionID));
 
       const auctionDocuments = await db
@@ -104,20 +103,13 @@ export async function POST(req: NextRequest) {
         .find({ _id: { $in: auctionIDs } })
         .toArray();
 
-      // create a map to store the status of each auction
-      const auctionStatusMap = new Map();
-      auctionDocuments.forEach((doc) => {
-        const statusAttribute = doc.attributes.find((attr: { key: string }) => attr.key === 'status');
-        if (statusAttribute) {
-          auctionStatusMap.set(doc._id.toString(), Number(statusAttribute.value));
-        }
-      });
-
       const auctions: Auction[] = auctionDocuments.map((doc) => ({
         _id: doc._id,
         finalSellingPrice: doc.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
         status: doc.attributes.find((attr: { key: string }) => attr.key === 'status')?.value || 0,
       }));
+
+      const auctionsForScoreCalculation = auctions.filter((auction) => auction.status !== 3);
 
       const userWagers = tournamentWagersArray.map((tournamentWager) => ({
         userID: tournamentWager.user._id.toString(),
@@ -134,10 +126,13 @@ export async function POST(req: NextRequest) {
 
       // save the points to a separate collection
       for (const result of tournamentResults) {
-        const auctionScoresWithAllAuctions = result.auctionScores.map((auctionScore) => ({
-          ...auctionScore,
-          isSuccessful: auctionStatusMap.get(auctionScore.auctionID) !== 3,
-        }));
+        const auctionScoresWithAllAuctions = result.auctionScores.map((auctionScore) => {
+          const correspondingAuction = allAuctions.find((auction) => auction._id.toString() === auctionScore.auctionID);
+          return {
+            ...auctionScore,
+            isSuccessful: correspondingAuction ? correspondingAuction.status === 2 : false,
+          };
+        });
 
         const filter = {
           tournamentID: tournament._id,
@@ -161,7 +156,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Part three: Process Tournament Winners
+    // Third part: Process Tournament Winners
     for (const tournament of completedTournaments) {
       if (tournament.status === 2) {
         const tournamentTransactions = await db

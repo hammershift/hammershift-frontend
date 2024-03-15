@@ -140,9 +140,10 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
 };
 
 export const getCarsWithMostPot = async (limit: number) => {
-
   try {
-    const response = await fetch(`/api/cars/filter?sort=Most%20Pot&limit=${limit}`);
+    const response = await fetch(
+      `/api/cars/filter?sort=Most%20Pot&limit=${limit}`
+    );
 
     if (response.ok) {
       const list = await response.json();
@@ -831,6 +832,32 @@ export const editUserInfo = async (userId: string, edits: any) => {
   }
 };
 
+export const checkEmailExistence = async (email: string) => {
+  try {
+    const res = await fetch(`/api/checkUserExistence?`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch user. Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    if (data.emailExists) {
+      console.log("User already existing:", data);
+    }
+    return data.emailExists;
+  } catch (error: any) {
+    console.error("Error fetching user:", error.message);
+    throw error;
+  }
+};
+
 interface TournamentUser {
   _id: string;
   fullName: string;
@@ -981,7 +1008,10 @@ export const getAuctionTransactions = async (auction_id: string) => {
   return data;
 };
 
-export const getUserPointsAndPlacing = async (tournament_id: string, user_id: string) => {
+export const getUserPointsAndPlacing = async (
+  tournament_id: string,
+  user_id: string
+) => {
   const res = await fetch(
     `/api/tournamentPoints?tournament_id=${tournament_id}&user_id=${user_id}`
   );

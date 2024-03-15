@@ -57,6 +57,10 @@ const tournamentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    tournamentEndTime: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

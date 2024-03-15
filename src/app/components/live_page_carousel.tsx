@@ -19,16 +19,22 @@ import {
 import { TimerProvider, useTimer } from "../_context/TimerContext";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import WagerCycle from "./wager_cycle";
+import { io } from "socket.io-client";
+
+const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
 const LivePageCarousel = () => {
     const [sliderTransform, setSlidertransform] = useState(0);
     const [carWithMostPot, setCarWithMostPot] = useState<any>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             const mostPot = await getCarsWithMostPot(1);
             if (mostPot) {
                 setCarWithMostPot(mostPot.cars);
+                setIsLoading(false);
                 console.log(mostPot.cars[0]);
             }
         };
@@ -51,59 +57,67 @@ const LivePageCarousel = () => {
     };
 
     return (
-        <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
-            <div className="tw-relative tw-w-full tw-overflow-hidden">
-                <div
-                    className="tw-transition tw-duration-[2000ms] tw-flex"
-                    style={{
-                        transform: `translate(${sliderTransform}%)`,
-                        width: "500%",
-                    }}
-                >
-                    {carWithMostPot.length > 0 ? (
-                        <TimerProvider deadline={carWithMostPot[0].deadline}>
-                            <SlideOne carData={carWithMostPot[0]} />
-                        </TimerProvider>
-                    ) : null}
-                    <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                        Section 2
-                    </div>
-                    <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                        Section 3
-                    </div>
-                    <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                        Section 4
-                    </div>
-                    <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                        Section 5
+        <>
+            {isLoading ? (
+                <LoadingLivePageCarousel />
+            ) : (
+                <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
+                    <div className="tw-w-full tw-overflow-hidden">
+                        <div
+                            className="tw-transition tw-duration-[2000ms] tw-flex"
+                            style={{
+                                transform: `translate(${sliderTransform}%)`,
+                                width: "500%",
+                            }}
+                        >
+                            {carWithMostPot.length > 0 ? (
+                                <TimerProvider
+                                    deadline={carWithMostPot[0].deadline}
+                                >
+                                    <SlideOne carData={carWithMostPot[0]} />
+                                </TimerProvider>
+                            ) : null}
+                            <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+                                Section 2
+                            </div>
+                            <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+                                Section 3
+                            </div>
+                            <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+                                Section 4
+                            </div>
+                            <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+                                Section 5
+                            </div>
+                        </div>
+                        <div>
+                            <button
+                                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-z-50 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D]"
+                                onClick={leftArrowHandler}
+                            >
+                                <Image
+                                    src={ArrowLeft}
+                                    alt="arrow left"
+                                    width={20}
+                                    height={20}
+                                />
+                            </button>
+                            <button
+                                className="tw-absolute tw-top-[50%] md:tw-right-11 tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D]"
+                                onClick={rightArrowHandler}
+                            >
+                                <Image
+                                    src={ArrowRight}
+                                    alt="arrow left"
+                                    width={20}
+                                    height={20}
+                                />
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <button
-                        className="tw-absolute tw-top-[50%] tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D]"
-                        onClick={leftArrowHandler}
-                    >
-                        <Image
-                            src={ArrowLeft}
-                            alt="arrow left"
-                            width={20}
-                            height={20}
-                        />
-                    </button>
-                    <button
-                        className="tw-absolute tw-top-[50%] tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D]"
-                        onClick={rightArrowHandler}
-                    >
-                        <Image
-                            src={ArrowRight}
-                            alt="arrow left"
-                            width={20}
-                            height={20}
-                        />
-                    </button>
-                </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 };
 
@@ -111,9 +125,48 @@ export default LivePageCarousel;
 
 const SlideOne = ({ carData }: any) => {
     const [prize, setPrize] = useState(0);
-    const [wagers, setWagers] = useState([]);
+    const [wagers, setWagers] = useState<any>([]);
+    const [currentImage, setCurrentImage] = useState(carData.image);
     const timerValues = useTimer();
     const router = useRouter();
+
+    useEffect(() => {
+        const socket = io(WEBSOCKET_SERVER);
+
+        socket.on("connect", () => {
+            console.log(`Connected to server with socket ID: ${socket.id}`);
+        });
+
+        socket.on("addWager", async (wager) => {
+            if (wager.auctionID === carData._id) {
+                setPrize((prev) => prev + wager.wagerAmount * 0.88);
+                setWagers((prev: any) => [...prev, wager]);
+            }
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        const imagesSrcList = carData.images_list
+            .slice(0, 5)
+            .map((imageObj: { src: any }) => imageObj.src);
+
+        const intervalId = setInterval(() => {
+            setCurrentImage((prevImage: string) => {
+                const currentIndex = imagesSrcList.indexOf(prevImage);
+                if (currentIndex === imagesSrcList.length - 1) {
+                    return carData.image;
+                } else {
+                    return imagesSrcList[currentIndex + 1];
+                }
+            });
+        }, 2000);
+
+        return () => clearInterval(intervalId);
+    }, [carData.image, carData.images_list]);
 
     useEffect(() => {
         const fetchPrize = async () => {
@@ -136,24 +189,24 @@ const SlideOne = ({ carData }: any) => {
     }, []);
 
     return (
-        <div className="tw-bg-gradient-to-br xl:tw-items-end md:tw-justify-center tw-from-[#1a2c3d] tw-from-30% tw-via-[#2b3b6c] tw-via-60% tw-to-[#b91f6c] to-30% tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center">
+        <div className="section-one xl:tw-items-end md:tw-justify-center tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center">
             <div className="xl:tw-py-11 xl:tw-px-14 xl:tw-w-full md:tw-h-full">
                 <Link
                     href={`/auctions/car_view_page/${carData.auction_id}`}
                     className="tw-relative tw-h-full"
                 >
-                    <span className="tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
+                    <span className="tw-animate-pulse tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
                         LIVE
                     </span>
                     <Image
-                        src={carData.image}
-                        width={1000}
-                        height={1000}
+                        src={currentImage}
+                        width={808}
+                        height={538}
                         alt="dollar"
                         className="tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded xl:tw-w-full"
                     />
-                    <div className="tw-absolute tw-bottom-[21px] tw-left-[16px] tw-text-sm tw-font-light tw-flex tw-flex-col tw-gap-[10px]">
-                        {wagers.slice(0, 3).map((wager: any) => {
+                    <WagerCycle words={wagers} />
+                    {/* {wagers.slice(0, 3).map((wager: any) => {
                             return (
                                 <div
                                     key={wager._id}
@@ -178,8 +231,7 @@ const SlideOne = ({ carData }: any) => {
                                     </div>
                                 </div>
                             );
-                        })}
-                    </div>
+                        })} */}
                 </Link>
             </div>
             <div className="tw-py-8 tw-px-4 md:tw-max-w-[392px] xl:tw-pt-0 xl:tw-pl-0 xl:tw-pb-11 xl:tw-pr-14">
@@ -224,7 +276,7 @@ const SlideOne = ({ carData }: any) => {
                         }
                         className="tw-font-bold tw-text-black tw-bg-[#f2ca16] tw-py-[10px] tw-w-full tw-rounded tw-mb-3"
                     >
-                        PLACE A WAGER
+                        BUY IN FOR $10
                     </button>
                     <div className="tw-text-sm tw-flex tw-items-center tw-gap-2">
                         <Image
@@ -245,6 +297,26 @@ const SlideOne = ({ carData }: any) => {
                             className="tw-rounded-lg tw-object-cover tw-w-full"
                         />
                     </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const LoadingLivePageCarousel = () => {
+    return (
+        <div className="section-container tw-max-w-[1440px] tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px] md:tw-h-[462px] xl:tw-h-[520px] 2xl:tw-h-[627px]">
+            <div className="tw-bg-gray-800 tw-rounded-t-[20px] md:tw-rounded-[20px] tw-rounded-[20px] md:tw-flex md:tw-items-center xl:tw-items-end tw-h-full">
+                <div className="xl:tw-py-11 xl:tw-px-14 xl:tw-w-full md:tw-h-full load-image-sizing">
+                    <div className="tw-bg-gray-700 md:tw-w-full tw-animate-pulse tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-full live-page-image-sizing md xl:tw-rounded"></div>
+                </div>
+                <div className="tw-h-[462px] tw-py-8 tw-px-4 md:tw-w-[392px] xl:tw-pt-0 xl:tw-pl-0 xl:tw-pb-11 xl:tw-pr-14">
+                    <div className="tw-animate-pulse tw-bg-gray-700 tw-w-[175px] tw-h-[26px] tw-rounded-full tw-mb-3"></div>
+                    <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[28px] tw-rounded tw-mb-2"></div>
+                    <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[20px] tw-rounded tw-mb-1"></div>
+                    <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[20px] tw-rounded tw-mb-1"></div>
+                    <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[20px] tw-rounded tw-mb-[32px]"></div>
+                    <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[236px] tw-rounded"></div>
                 </div>
             </div>
         </div>

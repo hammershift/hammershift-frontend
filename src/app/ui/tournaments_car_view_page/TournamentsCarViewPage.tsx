@@ -49,6 +49,8 @@ interface TournamentButtonsI {
   buyInEnded: boolean;
   tournamentID: string;
   tournamentImages: string[];
+  tournamentEnded: boolean;
+  canceledTournament: boolean;
 }
 
 interface TitleSingleCarContainerProps {
@@ -74,6 +76,8 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
   buyInEnded,
   tournamentID,
   tournamentImages,
+  tournamentEnded,
+  canceledTournament,
 }) => {
   const [isWatching, setIsWatching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -155,9 +159,23 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
         />
         {isWatching ? "WATCHING" : "WATCH"}
       </button>
-      {buyInEnded ? (
+      {canceledTournament ? (
+        <button
+          disabled
+          className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+        >
+          Tournament Cancelled
+        </button>
+      ) : tournamentEnded ? (
         <button disabled className="btn-yellow hover:tw-bg-[#f2ca16]">
           ENDED 🏆
+        </button>
+      ) : buyInEnded ? (
+        <button
+          disabled
+          className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+        >
+          Buy-in period has ended
         </button>
       ) : alreadyJoined ? (
         <button
@@ -1188,8 +1206,12 @@ export const TournamentWinnersSection = ({ winners }: any) => {
   );
 };
 
-export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
+export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
   const { data: session } = useSession();
+
+  const sortedTournamentPointsData = tournamentPointsData.sort(
+    (a: any, b: any) => a.totalScore - b.totalScore
+  );
 
   return (
     <div>
@@ -1209,8 +1231,8 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
             <div className="tw-text-[14px]">Lowest point wins</div>
           </div>
           <div>
-            {tournamentPointsData &&
-              tournamentPointsData.map((item: any, index: number) => {
+            {sortedTournamentPointsData &&
+              sortedTournamentPointsData.map((item: any, index: number) => {
                 return (
                   <div
                     key={item._id}
@@ -1236,13 +1258,8 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
                       </div>
                     </div>
                     <div className="tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md">
-                      {Array.isArray(item.auctionScores) &&
-                      item.auctionScores.length > 0
-                        ? `${item.auctionScores.reduce(
-                            (acc: number, scoreObj: { score: number }) =>
-                              acc + scoreObj.score,
-                            0
-                          )} pts.`
+                      {item.auctionScores && item.auctionScores.length > 0
+                        ? `${item.totalScore} pts.`
                         : "0 pts."}
                     </div>
                   </div>
@@ -1250,7 +1267,7 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
               })}
           </div>
         </div>
-        {/* Background and button*/}
+        {/* Background and button */}
         <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
           <Image
             src={TransitionPattern}

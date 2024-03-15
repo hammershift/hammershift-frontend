@@ -261,6 +261,7 @@ export const TournamentModalCard: React.FC<TournamentCardI> = ({
                     onWheel={(e) => e.currentTarget.blur()}
                     id={auction._id}
                     onChange={(e) => handleInputs(e)}
+                    placeholder="Enter your guess here"
                     onKeyDown={(event) => {
                         if (
                             !(

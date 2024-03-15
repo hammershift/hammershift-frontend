@@ -339,7 +339,9 @@ svg {
     padding-right: 64px;
   }
 
-
+  .load-image-sizing {
+    width: calc(100% - 392px);
+  }
 }
 @media screen and (min-width: 1536px) {
   .section-container {
@@ -359,4 +361,38 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
 
 .live-page-shadow {
   box-shadow: 0px 8px 8px 0px #0000001F;
+}
+
+.section-one {
+	background: linear-gradient(-45deg, #b91f6c,#2b3b6c,#1a2c3d);
+	background-size: 400% 400%;
+	animation: gradient 5s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.wager-cycle {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import HourGlass from "../../../public/images/hour-glass.svg";
+import PrizeIcon from "../../../public/images/monetization-browser-bag.svg";
 import AvatarOne from "../../../public/images/avatar-one.svg";
 import AvatarTwo from "../../../public/images/avatar-two.svg";
 import AvatarThree from "../../../public/images/avatar-three.svg";
@@ -19,14 +20,19 @@ const TournamentsCard = ({
   tournament_deadline,
   images,
   tournamentPoints,
+  canceledTournament,
 }: any) => {
   const { data: session } = useSession();
-  const [buyInEnded, setIsBuyInEnded] = useState(false);
-  const [tournamentEnded, setIsTournamentEnded] = useState(false);
   const timerValues = useTimer();
-
   const router = useRouter();
   const avatars = [AvatarOne, AvatarTwo, AvatarThree];
+
+  const [buyInEnded, setIsBuyInEnded] = useState(false);
+  const [tournamentEnded, setIsTournamentEnded] = useState(false);
+
+  const sortedTournamentPoints = tournamentPoints
+    ? tournamentPoints.sort((a: any, b: any) => a.totalScore - b.totalScore)
+    : [];
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -83,6 +89,16 @@ const TournamentsCard = ({
       </div>
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
+        <div className="tw-flex tw-items-center tw-justify-center">
+          <Image
+            src={PrizeIcon}
+            width={20}
+            height={20}
+            alt="dollar"
+            className="tw-w-5 tw-h-5 tw-mx-1"
+          />
+          <div className="tw-text-white tw-font-bold">${pot}</div>
+        </div>
         {tournamentEnded ? (
           <p className="tw-text-red-600 tw-font-bold">Tournament has ended</p>
         ) : buyInEnded ? (
@@ -104,7 +120,6 @@ const TournamentsCard = ({
             </div>
           </div>
         )}
-
         <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#1A2C3D]">
           {buyInEnded ? (
             <>
@@ -114,8 +129,8 @@ const TournamentsCard = ({
                 </div>
               ) : (
                 <>
-                  {tournamentPoints &&
-                    tournamentPoints
+                  {sortedTournamentPoints &&
+                    sortedTournamentPoints
                       .slice(0, 3)
                       .map((item: any, index: number) => (
                         <div
@@ -138,13 +153,8 @@ const TournamentsCard = ({
                             <div>{item.user.username}</div>
                           </div>
                           <div className="tw-text-[#F2CA16] tw-font-bold">
-                            {Array.isArray(item.auctionScores) &&
-                            item.auctionScores.length > 0
-                              ? `${item.auctionScores.reduce(
-                                  (acc: number, scoreObj: { score: number }) =>
-                                    acc + scoreObj.score,
-                                  0
-                                )} pts.`
+                            {item.auctionScores && item.auctionScores.length > 0
+                              ? `${item.totalScore} pts.`
                               : "0 pts."}
                           </div>
                         </div>
@@ -204,13 +214,29 @@ const TournamentsCard = ({
           )}
         </div>
         <div>
-          <button
-            className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
-            onClick={() => router.push(`/tournaments/${tournament_id}`)}
-          >
-            {/* View Results */}
-            View Tournament
-          </button>
+          {canceledTournament ? (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              Tournament Cancelled
+            </button>
+          ) : tournamentEnded ? (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              View Results
+            </button>
+          ) : (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              {/* View Results */}
+              View Tournament
+            </button>
+          )}
         </div>
       </div>
     </div>
