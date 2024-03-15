@@ -88,11 +88,6 @@ const TournamentsCard = ({
         )}
       </div>
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
-        {canceledTournament ? (
-          <p className="tw-text-[#ff0000] tw-font-bold">
-            Tournament Cancelled
-          </p>
-        ) : null}
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         <div className="tw-flex tw-items-center tw-justify-center">
           <Image
@@ -219,13 +214,29 @@ const TournamentsCard = ({
           )}
         </div>
         <div>
-          <button
-            className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
-            onClick={() => router.push(`/tournaments/${tournament_id}`)}
-          >
-            {/* View Results */}
-            View Tournament
-          </button>
+          {canceledTournament ? (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              Tournament Cancelled
+            </button>
+          ) : tournamentEnded ? (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              View Results
+            </button>
+          ) : (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              {/* View Results */}
+              View Tournament
+            </button>
+          )}
         </div>
       </div>
     </div>
