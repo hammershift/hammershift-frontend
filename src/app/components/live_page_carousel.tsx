@@ -20,6 +20,9 @@ import { TimerProvider, useTimer } from "../_context/TimerContext";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import WagerCycle from "./wager_cycle";
+import { io } from "socket.io-client";
+
+const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
 const LivePageCarousel = () => {
     const [sliderTransform, setSlidertransform] = useState(0);
@@ -122,10 +125,29 @@ export default LivePageCarousel;
 
 const SlideOne = ({ carData }: any) => {
     const [prize, setPrize] = useState(0);
-    const [wagers, setWagers] = useState([]);
+    const [wagers, setWagers] = useState<any>([]);
     const [currentImage, setCurrentImage] = useState(carData.image);
     const timerValues = useTimer();
     const router = useRouter();
+
+    useEffect(() => {
+        const socket = io(WEBSOCKET_SERVER);
+
+        socket.on("connect", () => {
+            console.log(`Connected to server with socket ID: ${socket.id}`);
+        });
+
+        socket.on("addWager", async (wager) => {
+            if (wager.auctionID === carData._id) {
+                setPrize((prev) => prev + wager.wagerAmount * 0.88);
+                setWagers((prev: any) => [...prev, wager]);
+            }
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
     useEffect(() => {
         const imagesSrcList = carData.images_list

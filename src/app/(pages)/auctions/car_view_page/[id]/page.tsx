@@ -30,6 +30,9 @@ import WagerModal from "@/app/components/wager_modal";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
+import { io } from "socket.io-client";
+
+const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
     const urlPath = useParams();
@@ -50,10 +53,24 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [winners, setWinners] = useState([]);
     const [isButtonClicked, setIsButtonClicked] = useState(false);
     const [prize, setPrize] = useState(0);
+    const [newSocket, setNewSocket] = useState<any>();
 
     // const router = useRouter();
 
     const ID = params.id;
+
+    useEffect(() => {
+        const socket = io(WEBSOCKET_SERVER);
+        setNewSocket(socket);
+
+        socket.on("connect", () => {
+            console.log(`Connected to server with socket ID: ${socket.id}`);
+        });
+
+        return () => {
+            socket.disconnect();
+        };
+    }, []);
 
     // TEST IMPLEMENTATION
     useEffect(() => {
@@ -267,6 +284,14 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                 console.error("Failed to place wager");
                 return;
             }
+
+            //websocket
+            newSocket.emit("wager", {
+                ...wagerInputs,
+                wagerAmount: fixedWagerAmount,
+                user: sessionData.user,
+                auctionIdentifierId: carData.auction_id,
+            });
 
             // wallet update and wager placement were both successful
             console.log(
