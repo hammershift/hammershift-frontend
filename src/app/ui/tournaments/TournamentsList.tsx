@@ -81,7 +81,6 @@ const TournamentsList = () => {
   const [tournamentPointsData, setTournamentPointsData] = useState<
     TournamentPoints[]
   >([]);
-  const [canceledTournament, setCanceledTournament] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
@@ -91,7 +90,7 @@ const TournamentsList = () => {
         const tournamentsArray = data.tournaments;
         if (data) {
           setTournamentsData(tournamentsArray);
-          setTotalTournaments(tournamentsArray.total);
+          setTotalTournaments(data?.total);
 
           // Fetch tournament points data for each tournament
           const tournamentPointsPromises = tournamentsArray.map(
