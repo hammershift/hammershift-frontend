@@ -30,10 +30,10 @@ const WagerCycle: React.FC<any> = ({ words }) => {
     }, [currentIndex, words]);
 
     return (
-        <div className="tw-absolute tw-bottom-[21px] tw-left-[16px] tw-text-sm tw-font-light tw-flex tw-flex-col tw-gap-[10px] tw-justify-center">
+        <div className="tw-absolute tw-bottom-[21px] tw-left-[16px] tw-text-sm tw-font-light tw-flex tw-flex-col tw-gap-[10px] tw-justify-center tw-bg-[#24242431] tw-rounded tw-p-2 tw-w-[300px] tw-backdrop-blur-[1px]">
             {currentWords.map((wager: any, index) => (
                 <div
-                    key={wager._id}
+                    key={wager.user._id}
                     className="tw-flex tw-items-center tw-gap-2 wager-cycle"
                 >
                     <Image
