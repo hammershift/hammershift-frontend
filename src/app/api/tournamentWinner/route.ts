@@ -104,6 +104,15 @@ export async function POST(req: NextRequest) {
         .find({ _id: { $in: auctionIDs } })
         .toArray();
 
+      // create a map to store the status of each auction
+      const auctionStatusMap = new Map();
+      auctionDocuments.forEach((doc) => {
+        const statusAttribute = doc.attributes.find((attr: { key: string }) => attr.key === 'status');
+        if (statusAttribute) {
+          auctionStatusMap.set(doc._id.toString(), Number(statusAttribute.value));
+        }
+      });
+
       const auctions: Auction[] = auctionDocuments.map((doc) => ({
         _id: doc._id,
         finalSellingPrice: doc.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0,
@@ -125,13 +134,10 @@ export async function POST(req: NextRequest) {
 
       // save the points to a separate collection
       for (const result of tournamentResults) {
-        const auctionScoresWithAllAuctions = result.auctionScores.map((auctionScore) => {
-          const correspondingAuction = allAuctions.find((auction) => auction._id.toString() === auctionScore.auctionID);
-          return {
-            ...auctionScore,
-            isSuccessful: correspondingAuction ? correspondingAuction.status !== 3 : false,
-          };
-        });
+        const auctionScoresWithAllAuctions = result.auctionScores.map((auctionScore) => ({
+          ...auctionScore,
+          isSuccessful: auctionStatusMap.get(auctionScore.auctionID) !== 3,
+        }));
 
         const filter = {
           tournamentID: tournament._id,
