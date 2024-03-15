@@ -882,10 +882,6 @@ export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
                       <div className='tw-text-sm'>
                         <div className='tw-font-bold'>{session?.user._id === item.user._id ? 'You' : item.user.username}</div>
                       </div>
-                      <Image src={item.user.image ? item.user.image : AvatarOne} width={44} height={44} alt='dollar' className='tw-w-[44px] tw-h-[44px] tw-rounded-full' />
-                      <div className='tw-text-sm'>
-                        <div className='tw-font-bold'>{session?.user._id === item.user._id ? 'You' : item.user.username}</div>
-                      </div>
                     </div>
                     <div className='tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md'>
                       {item.auctionScores && item.auctionScores.length > 0 ? `${item.totalScore} pts.` : '0 pts.'}
