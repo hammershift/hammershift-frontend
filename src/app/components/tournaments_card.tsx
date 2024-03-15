@@ -30,25 +30,7 @@ const TournamentsCard = ({
   const avatars = [AvatarOne, AvatarTwo, AvatarThree];
 
   const sortedTournamentPoints = tournamentPoints
-    ? tournamentPoints.sort((a: any, b: any) => {
-        const aPoints = Array.isArray(a.auctionScores)
-          ? a.auctionScores
-              .filter(
-                (auction: { isSuccessful: boolean }) =>
-                  auction.isSuccessful === true
-              )
-              .reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
-          : 0;
-        const bPoints = Array.isArray(b.auctionScores)
-          ? b.auctionScores
-              .filter(
-                (auction: { isSuccessful: boolean }) =>
-                  auction.isSuccessful === true
-              )
-              .reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
-          : 0;
-        return aPoints - bPoints;
-      })
+    ? tournamentPoints.sort((a: any, b: any) => a.totalScore - b.totalScore)
     : [];
 
   useEffect(() => {
@@ -171,20 +153,8 @@ const TournamentsCard = ({
                             <div>{item.user.username}</div>
                           </div>
                           <div className="tw-text-[#F2CA16] tw-font-bold">
-                            {Array.isArray(item.auctionScores) &&
-                            item.auctionScores.length > 0
-                              ? `${item.auctionScores
-                                  .filter(
-                                    (auction: { isSuccessful: boolean }) =>
-                                      auction.isSuccessful === true
-                                  )
-                                  .reduce(
-                                    (
-                                      acc: number,
-                                      scoreObj: { score: number }
-                                    ) => acc + scoreObj.score,
-                                    0
-                                  )} pts.`
+                            {item.auctionScores && item.auctionScores.length > 0
+                              ? `${item.totalScore} pts.`
                               : "0 pts."}
                           </div>
                         </div>

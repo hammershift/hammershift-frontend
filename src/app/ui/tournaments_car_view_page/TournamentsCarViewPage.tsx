@@ -858,15 +858,7 @@ export const TournamentWinnersSection = ({ winners }: any) => {
 export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
   const { data: session } = useSession();
 
-  const sortedTournamentPointsData = tournamentPointsData.sort((a: any, b: any) => {
-    const aPoints = Array.isArray(a.auctionScores)
-      ? a.auctionScores.filter((auction: { isSuccessful: boolean }) => auction.isSuccessful === true).reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
-      : 0;
-    const bPoints = Array.isArray(b.auctionScores)
-      ? b.auctionScores.filter((auction: { isSuccessful: boolean }) => auction.isSuccessful === true).reduce((acc: number, scoreObj: any) => acc + scoreObj.score, 0)
-      : 0;
-    return aPoints - bPoints;
-  });
+  const sortedTournamentPointsData = tournamentPointsData.sort((a: any, b: any) => a.totalScore - b.totalScore);
 
   return (
     <div>
@@ -890,17 +882,13 @@ export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
                       <div className='tw-text-sm'>
                         <div className='tw-font-bold'>{session?.user._id === item.user._id ? 'You' : item.user.username}</div>
                       </div>
+                      <Image src={item.user.image ? item.user.image : AvatarOne} width={44} height={44} alt='dollar' className='tw-w-[44px] tw-h-[44px] tw-rounded-full' />
+                      <div className='tw-text-sm'>
+                        <div className='tw-font-bold'>{session?.user._id === item.user._id ? 'You' : item.user.username}</div>
+                      </div>
                     </div>
                     <div className='tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md'>
-                      {Array.isArray(item.auctionScores) && item.auctionScores.length > 0
-                        ? item.auctionScores.isSuccessful === false
-                          ? '0 pts.'
-                          : `${item.auctionScores
-                              .filter((auction: { isSuccessful: boolean }) => auction.isSuccessful === true)
-                              .reduce((acc: number, scoreObj: { score: number }) => acc + scoreObj.score, 0)} pts.`
-                        : `${item.auctionScores
-                            .filter((auction: { isSuccessful: boolean }) => auction.isSuccessful === true)
-                            .reduce((acc: number, scoreObj: { score: number }) => acc + scoreObj.score, 0)} pts.`}
+                      {item.auctionScores && item.auctionScores.length > 0 ? `${item.totalScore} pts.` : '0 pts.'}
                     </div>
                   </div>
                 );
