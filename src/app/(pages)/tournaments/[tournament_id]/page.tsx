@@ -6,7 +6,7 @@ import {
   TitleTournamentsList,
   TournamentButtons,
   TournamentInfoSection,
-  TournamentLeadboard,
+  TournamentLeaderboard,
   TournamentWagersSection,
   TournamentWinnersSection,
   TournamentsList,
@@ -137,7 +137,7 @@ const TournamentViewPage = ({
       }
     };
     fetchTournamentsData();
-  }, [ID, toggleTournamentWagerModal]);
+  }, [ID, playerLimit, toggleTournamentWagerModal]);
 
   useEffect(() => {
     const checkIfAlreadyWagered = async () => {
@@ -344,7 +344,9 @@ const TournamentViewPage = ({
             <TournamentWinnersSection winners={winners} />
           ) : null}
           {buyInEnded === true && tournamentPointsData.length !== 0 ? (
-            <TournamentLeadboard tournamentPointsData={tournamentPointsData} />
+            <TournamentLeaderboard
+              tournamentPointsData={tournamentPointsData}
+            />
           ) : null}
           <TournamentWagersSection
             tournamentWagers={tournamentWagers}

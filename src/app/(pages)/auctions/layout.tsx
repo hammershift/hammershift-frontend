@@ -6,7 +6,6 @@ import { LatestNews } from "@/app/components/how_hammeshift_works";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="page-container">
-      <Links />
       {children}
       <LatestNews />
       <SubscribeSmall />

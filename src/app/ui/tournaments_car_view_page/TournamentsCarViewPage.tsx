@@ -1197,25 +1197,11 @@ export const TournamentWinnersSection = ({ winners }: any) => {
   );
 };
 
-export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
+export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
   const { data: session } = useSession();
 
   const sortedTournamentPointsData = tournamentPointsData.sort(
-    (a: any, b: any) => {
-      const aPoints = Array.isArray(a.auctionScores)
-        ? a.auctionScores.reduce(
-            (acc: number, scoreObj: any) => acc + scoreObj.score,
-            0
-          )
-        : 0;
-      const bPoints = Array.isArray(b.auctionScores)
-        ? b.auctionScores.reduce(
-            (acc: number, scoreObj: any) => acc + scoreObj.score,
-            0
-          )
-        : 0;
-      return aPoints - bPoints;
-    }
+    (a: any, b: any) => a.totalScore - b.totalScore
   );
 
   return (
@@ -1263,13 +1249,8 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
                       </div>
                     </div>
                     <div className="tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md">
-                      {Array.isArray(item.auctionScores) &&
-                      item.auctionScores.length > 0
-                        ? `${item.auctionScores.reduce(
-                            (acc: number, scoreObj: { score: number }) =>
-                              acc + scoreObj.score,
-                            0
-                          )} pts.`
+                      {item.auctionScores && item.auctionScores.length > 0
+                        ? `${item.totalScore} pts.`
                         : "0 pts."}
                     </div>
                   </div>
@@ -1277,7 +1258,7 @@ export const TournamentLeadboard = ({ tournamentPointsData }: any) => {
               })}
           </div>
         </div>
-        {/* Background and button*/}
+        {/* Background and button */}
         <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
           <Image
             src={TransitionPattern}
