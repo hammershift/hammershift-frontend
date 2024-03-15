@@ -34,6 +34,7 @@ const DynamicTournamentsCards = dynamic(
 );
 
 export interface Tournaments {
+  status: number;
   _id: string;
   title: string;
   pot: number;
@@ -174,6 +175,7 @@ const TournamentsList = () => {
                     tournament_deadline={tournament.tournamentEndTime}
                     images={imagesForTournament}
                     tournamentPoints={tournamentPoints}
+                    canceledTournament={tournament.status === 3}
                   />
                 </TimerProvider>
               </div>

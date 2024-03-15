@@ -20,14 +20,15 @@ const TournamentsCard = ({
   tournament_deadline,
   images,
   tournamentPoints,
+  canceledTournament,
 }: any) => {
   const { data: session } = useSession();
-  const [buyInEnded, setIsBuyInEnded] = useState(false);
-  const [tournamentEnded, setIsTournamentEnded] = useState(false);
   const timerValues = useTimer();
-
   const router = useRouter();
   const avatars = [AvatarOne, AvatarTwo, AvatarThree];
+
+  const [buyInEnded, setIsBuyInEnded] = useState(false);
+  const [tournamentEnded, setIsTournamentEnded] = useState(false);
 
   const sortedTournamentPoints = tournamentPoints
     ? tournamentPoints.sort((a: any, b: any) => a.totalScore - b.totalScore)
@@ -119,7 +120,6 @@ const TournamentsCard = ({
             </div>
           </div>
         )}
-
         <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#1A2C3D]">
           {buyInEnded ? (
             <>
@@ -214,13 +214,29 @@ const TournamentsCard = ({
           )}
         </div>
         <div>
-          <button
-            className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
-            onClick={() => router.push(`/tournaments/${tournament_id}`)}
-          >
-            {/* View Results */}
-            View Tournament
-          </button>
+          {canceledTournament ? (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              Tournament Cancelled
+            </button>
+          ) : tournamentEnded ? (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              View Results
+            </button>
+          ) : (
+            <button
+              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              onClick={() => router.push(`/tournaments/${tournament_id}`)}
+            >
+              {/* View Results */}
+              View Tournament
+            </button>
+          )}
         </div>
       </div>
     </div>

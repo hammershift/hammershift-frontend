@@ -84,6 +84,7 @@ const SingleViewPage = ({
   const [tournamentImages, setTournamentImages] = useState([]);
   const [prize, setPrize] = useState(0);
   const [winners, setWinners] = useState([]);
+  const [canceledTournament, setCanceledTournament] = useState<boolean>(false)
 
   // const router = useRouter();
 
@@ -360,6 +361,7 @@ const SingleViewPage = ({
               alreadyJoined={alreadyJoined}
               buyInEnded={buyInEnded}
               tournamentEnded={tournamentEnded}
+              canceledTournament={canceledTournament}
             />
           </div>
         </div>
@@ -395,6 +397,7 @@ const SingleViewPage = ({
               alreadyJoined={alreadyJoined}
               buyInEnded={buyInEnded}
               tournamentEnded={tournamentEnded}
+              canceledTournament={canceledTournament}
             />
           </div>
           {carData ? (
