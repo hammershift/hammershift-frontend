@@ -34,6 +34,7 @@ const DynamicTournamentsCards = dynamic(
 );
 
 export interface Tournaments {
+  status: number;
   _id: string;
   title: string;
   pot: number;
@@ -80,6 +81,7 @@ const TournamentsList = () => {
   const [tournamentPointsData, setTournamentPointsData] = useState<
     TournamentPoints[]
   >([]);
+  const [canceledTournament, setCanceledTournament] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTournamentsData = async () => {
@@ -89,7 +91,7 @@ const TournamentsList = () => {
         const tournamentsArray = data.tournaments;
         if (data) {
           setTournamentsData(tournamentsArray);
-          setTotalTournaments(data?.total);
+          setTotalTournaments(tournamentsArray.total);
 
           // Fetch tournament points data for each tournament
           const tournamentPointsPromises = tournamentsArray.map(
@@ -174,6 +176,7 @@ const TournamentsList = () => {
                     tournament_deadline={tournament.tournamentEndTime}
                     images={imagesForTournament}
                     tournamentPoints={tournamentPoints}
+                    canceledTournament={tournament.status === 3}
                   />
                 </TimerProvider>
               </div>

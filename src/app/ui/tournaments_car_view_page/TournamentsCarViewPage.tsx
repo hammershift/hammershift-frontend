@@ -46,6 +46,7 @@ interface TournamentButtonsI {
   tournamentID: string;
   tournamentImages: string[];
   tournamentEnded: boolean;
+  canceledTournament: boolean;
 }
 
 interface TitleSingleCarContainerProps {
@@ -72,6 +73,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
   tournamentID,
   tournamentImages,
   tournamentEnded,
+  canceledTournament,
 }) => {
   const [isWatching, setIsWatching] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -146,7 +148,14 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
         />
         {isWatching ? 'WATCHING' : 'WATCH'}
       </button>
-      {tournamentEnded ? (
+      {canceledTournament ? (
+        <button
+          disabled
+          className="tw-flex tw-items-center tw-px-3.5 tw-py-2.5 tw-gap-2 tw-text-[#0f1923] tw-bg-white tw-font-bold tw-rounded"
+        >
+          Tournament Cancelled
+        </button>
+      ) : tournamentEnded ? (
         <button disabled className='btn-yellow hover:tw-bg-[#f2ca16]'>
           ENDED 🏆
         </button>

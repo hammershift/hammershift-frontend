@@ -86,6 +86,7 @@ const TournamentViewPage = ({
     TournamentPoints[]
   >([]);
   const [playerLimit, setPlayerLimit] = useState(10);
+  const [canceledTournament, setCanceledTournament] = useState<boolean>(false);
 
   const ID = params.tournament_id;
 
@@ -130,6 +131,7 @@ const TournamentViewPage = ({
         setWinners(data?.winners);
         setBuyInEnded(buyInDeadline < currentDate);
         setTournamentEnded(tournamentDeadline < currentDate);
+        setCanceledTournament(data?.status === 3);
         setPrize(totalPrize);
         setTournamentPointsData(tournamentPoints);
       } catch (error) {
@@ -284,6 +286,7 @@ const TournamentViewPage = ({
               buyInEnded={buyInEnded}
               tournamentID={ID}
               tournamentEnded={tournamentEnded}
+              canceledTournament={canceledTournament}
             />
           )}
         </div>
@@ -312,6 +315,7 @@ const TournamentViewPage = ({
                 alreadyJoined={alreadyJoined}
                 buyInEnded={buyInEnded}
                 tournamentEnded={tournamentEnded}
+                canceledTournament={canceledTournament}
               />
             )}
           </div>
@@ -340,7 +344,7 @@ const TournamentViewPage = ({
           <CommentsSection pageID={ID} pageType="tournament" />
         </div>
         <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
-          {winners.length !== 0 ? (
+          {tournamentEnded && winners.length !== 0 ? (
             <TournamentWinnersSection winners={winners} />
           ) : null}
           {buyInEnded === true && tournamentPointsData.length !== 0 ? (

@@ -20,14 +20,15 @@ const TournamentsCard = ({
   tournament_deadline,
   images,
   tournamentPoints,
+  canceledTournament,
 }: any) => {
   const { data: session } = useSession();
-  const [buyInEnded, setIsBuyInEnded] = useState(false);
-  const [tournamentEnded, setIsTournamentEnded] = useState(false);
   const timerValues = useTimer();
-
   const router = useRouter();
   const avatars = [AvatarOne, AvatarTwo, AvatarThree];
+
+  const [buyInEnded, setIsBuyInEnded] = useState(false);
+  const [tournamentEnded, setIsTournamentEnded] = useState(false);
 
   const sortedTournamentPoints = tournamentPoints
     ? tournamentPoints.sort((a: any, b: any) => a.totalScore - b.totalScore)
@@ -87,6 +88,11 @@ const TournamentsCard = ({
         )}
       </div>
       <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
+        {canceledTournament ? (
+          <p className="tw-text-[#ff0000] tw-font-bold">
+            Tournament Cancelled
+          </p>
+        ) : null}
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         <div className="tw-flex tw-items-center tw-justify-center">
           <Image
@@ -119,7 +125,6 @@ const TournamentsCard = ({
             </div>
           </div>
         )}
-
         <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#1A2C3D]">
           {buyInEnded ? (
             <>
