@@ -5,6 +5,7 @@ import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 import {
   TitleTournamentsList,
   TournamentButtons,
+  TournamentDescriptionSection,
   TournamentInfoSection,
   TournamentLeaderboard,
   TournamentWagersSection,
@@ -29,13 +30,12 @@ import { CommentsSection } from "@/app/components/CommentsSection";
 export interface Tournaments {
   _id: string;
   title: string;
+  description?: string;
   pot: number;
   endTime: Date;
   tournamentEndTime: Date;
   cars: number;
   buyInFee: number;
-
-  // Add other properties of the tournament here
 }
 export interface Auction {
   _id: string;
@@ -297,6 +297,7 @@ const TournamentViewPage = ({
             <TimerProvider deadline={tournamentData.endTime}>
               <TitleTournamentsList
                 _id={tournamentData._id}
+                description={tournamentData.description ?? ""}
                 title={tournamentData.title}
                 cars={auctionData.length}
                 pot={prize}
@@ -319,6 +320,9 @@ const TournamentViewPage = ({
               />
             )}
           </div>
+          <TournamentDescriptionSection
+            description={tournamentData?.description ?? ""}
+          />
           <TournamentsList
             buyInFee={tournamentData?.buyInFee}
             toggleTournamentWagerModal={toggleModal}

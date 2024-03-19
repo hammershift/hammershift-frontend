@@ -393,6 +393,7 @@ export const TitleSingleCarContainer: React.FC<
 
 interface Tournaments {
   cars: number;
+  description?: string;
   _id: string;
   title: string;
   pot: number;
@@ -1009,6 +1010,7 @@ export const DetailsSection = (props: any) => {
 
 interface Tournaments {
   _id: string;
+  description?: string;
   title: string;
   pot: number;
   endTime: Date;
@@ -1279,6 +1281,27 @@ export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
           <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#41a0ff62]"></div>
         </div>
       </div>
+    </div>
+  );
+};
+
+interface TournamentDescription
+  extends Required<Pick<Tournaments, "description">> {}
+
+export const TournamentDescriptionSection: React.FC<TournamentDescription> = ({
+  description,
+}) => {
+  return (
+    <div className="tw-flex tw-flex-col tw-mt-8 md:tw-mt-16 tw-w-full tw-gap-16">
+      {!description ? (
+        <div className="tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
+          Description not available for this tournament
+        </div>
+      ) : (
+        <div className="tw-w-full tw-h-[120px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
+          {description}
+        </div>
+      )}
     </div>
   );
 };
