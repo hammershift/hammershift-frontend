@@ -92,7 +92,7 @@ const LivePageCarousel = () => {
                         </div>
                         <div>
                             <button
-                                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-z-50 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D]"
+                                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-z-50 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D] tw-backdrop-blur"
                                 onClick={leftArrowHandler}
                             >
                                 <Image
@@ -103,7 +103,7 @@ const LivePageCarousel = () => {
                                 />
                             </button>
                             <button
-                                className="tw-absolute tw-top-[50%] md:tw-right-11 tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D]"
+                                className="tw-absolute tw-top-[50%] md:tw-right-11 tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] tw-backdrop-blur"
                                 onClick={rightArrowHandler}
                             >
                                 <Image
@@ -195,7 +195,7 @@ const SlideOne = ({ carData }: any) => {
                     href={`/auctions/car_view_page/${carData.auction_id}`}
                     className="tw-relative tw-h-full"
                 >
-                    <span className="tw-animate-pulse tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
+                    <span className="tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
                         LIVE
                     </span>
                     <Image
@@ -206,32 +206,6 @@ const SlideOne = ({ carData }: any) => {
                         className="tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded xl:tw-w-full"
                     />
                     <WagerCycle words={wagers} />
-                    {/* {wagers.slice(0, 3).map((wager: any) => {
-                            return (
-                                <div
-                                    key={wager._id}
-                                    className="tw-flex tw-items-center tw-gap-2"
-                                >
-                                    <Image
-                                        src={
-                                            wager.user.image
-                                                ? wager.user.image
-                                                : AvatarTwo
-                                        }
-                                        alt="avatar one"
-                                        width={24}
-                                        height={24}
-                                        className="tw-rounded-full"
-                                    />
-                                    <div>
-                                        @{wager.user.username} wagered $
-                                        {new Intl.NumberFormat().format(
-                                            wager.priceGuessed
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })} */}
                 </Link>
             </div>
             <div className="tw-py-8 tw-px-4 md:tw-max-w-[392px] xl:tw-pt-0 xl:tw-pl-0 xl:tw-pb-11 xl:tw-pr-14">
