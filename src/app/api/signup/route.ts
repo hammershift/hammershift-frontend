@@ -56,16 +56,19 @@ export async function POST(req: Request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-
-    // create a new user with a balance field
-    await db.collection('users').insertOne({
+    const newUser = {
       email,
       password: hashedPassword,
+      balance: 100,
       isActive: true,
-      balance: 100, // initial wallet balance
-    });
+      isBanned: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
 
-    return NextResponse.json({ message: 'User created with initial balance' }, { status: 201 });
+    const result = await db.collection('users').insertOne(newUser);
+
+    return NextResponse.json({ message: 'User created with initial balance', result }, { status: 201 });
   } catch (error) {
     console.error('Error during registration process:', error);
     return NextResponse.json({ message: 'Server error during registration' }, { status: 500 });
