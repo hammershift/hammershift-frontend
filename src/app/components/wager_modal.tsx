@@ -46,6 +46,7 @@ interface WagerModalProps {
     invalidPrice: boolean;
     invalidWager: boolean;
     isButtonClicked: boolean;
+    closeWagerModal: () => void;
 }
 
 const WagerModal: React.FC<WagerModalProps> = ({
@@ -65,6 +66,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
     invalidPrice,
     invalidWager,
     isButtonClicked,
+    closeWagerModal,
 }) => {
     const router = useRouter();
     const timerValues = useTimer();
@@ -82,6 +84,25 @@ const WagerModal: React.FC<WagerModalProps> = ({
     };
 
     useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const wagerModal = document.getElementById("wager-modal");
+            if (
+                wagerModal &&
+                !wagerModal.contains(e.target as Node) &&
+                wagerModal &&
+                !wagerModal.contains(e.target as Node)
+            ) {
+                closeWagerModal();
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, [closeWagerModal]);
+
+    useEffect(() => {
         if (!session) {
             router.push("/create_account");
         }
@@ -96,6 +117,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                     <form
                         onSubmit={(e) => handleWagerSubmit(e, sessionData)}
                         className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-screen tw-overflow-y-auto md:tw-min-h-[602px] md:tw-max-h-[800px] tw-pt-8 tw-flex tw-flex-col tw-gap-6 tw-rounded-sm"
+                        id="wager-modal"
                     >
                         <div className="tw-flex tw-flex-col md:tw-flex-row md:tw-gap-6 tw-gap-[220px] tw-px-6">
                             <div className="tw-flex md:tw-hidden tw-items-center tw-justify-between md:tw-justify-start tw-w-full">

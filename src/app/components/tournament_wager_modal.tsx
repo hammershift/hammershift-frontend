@@ -31,6 +31,7 @@ interface TournamentWagerI {
     auctionData: Auction[];
     tournamentData: any;
     pot: number;
+    closeModal: () => void;
 }
 
 const TournamentWagerModal: React.FC<TournamentWagerI> = ({
@@ -41,6 +42,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
     auctionData,
     tournamentData,
     pot,
+    closeModal,
 }) => {
     const router = useRouter();
     const { data: session } = useSession();
@@ -58,6 +60,27 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
         console.log(session);
     }, [session]);
 
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const wagerModal = document.getElementById(
+                "tournament-wager-modal"
+            );
+            if (
+                wagerModal &&
+                !wagerModal.contains(e.target as Node) &&
+                wagerModal &&
+                !wagerModal.contains(e.target as Node)
+            ) {
+                closeModal();
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, [closeModal]);
+
     const date = new Date(tournamentData.endTime);
     const formattedDateString = new Intl.DateTimeFormat("en-US", {
         year: "numeric",
@@ -73,6 +96,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
             <form
                 onSubmit={(e) => handleSubmit(e, sessionData)}
                 className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-screen tw-overflow-y-auto md:tw-min-h-[602px] md:tw-max-h-[800px] tw-rounded-sm"
+                id="tournament-wager-modal"
             >
                 <div className="tw-flex tw-items-center tw-mb-6 sm:tw-mb-1 tw-pt-6 tw-px-6 sm:tw-pt-8 sm:tw-px-8">
                     <div className="tw-font-bold tw-text-2xl">
