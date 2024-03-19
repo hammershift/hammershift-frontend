@@ -329,7 +329,7 @@ const Navbar = () => {
                 TOURNAMENTS
               </div>
             </Link>
-            <div className="">
+            <div>
               <div className="tw-flex">
                 <Link
                   onClick={() => {
@@ -567,9 +567,25 @@ const Navbar = () => {
             <Link
               onClick={() => {
                 closeMenu();
+                closeMyAccountMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="tw-hidden sm:tw-block"
+              href="/live"
+            >
+              <div
+                className={`tw-block tw-mx-4 sm:tw-mx-4 ${
+                  pathname === "/live" && "tw-font-bold tw-border-b-2"
+                }`}
+              >
+                LIVE
+              </div>
+            </Link>
+            {/* <Link
+              onClick={() => {
+                closeMenu();
+                closeMyAccountMenu();
+                document.body.classList.remove("stop-scrolling");
+              }}
               href="/discover"
             >
               <div
@@ -579,13 +595,13 @@ const Navbar = () => {
               >
                 DISCOVER
               </div>
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               onClick={() => {
                 closeMenu();
+                closeMyAccountMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="tw-hidden sm:tw-block"
               href="/auctions"
             >
               <div
@@ -595,7 +611,7 @@ const Navbar = () => {
               >
                 AUCTIONS
               </div>
-            </Link>
+            </Link> */}
             <Link
               onClick={() => {
                 closeMenu();
@@ -605,45 +621,87 @@ const Navbar = () => {
               href="/tournaments"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 max-sm:tw-hidden ${
+                className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
                   pathname === "/tournaments" && "tw-font-bold tw-border-b-2"
                 }`}
               >
                 TOURNAMENTS
               </div>
             </Link>
-            <Link
-              onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                document.body.classList.remove("stop-scrolling");
-              }}
-              href="/about_page"
-            >
-              <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 max-md:tw-hidden ${
-                  pathname === "/about_page" && "tw-font-bold tw-border-b-2"
-                }`}
-              >
-                ABOUT
+            <div>
+              <div className="tw-flex">
+                <Link
+                  onClick={() => {
+                    closeMenu();
+                    closeMyAccountMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }}
+                  href="/discover"
+                >
+                  <div
+                    className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
+                      pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                    }`}
+                  >
+                    EXPLORE
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setNavlinkIsOpen(!navlinkIsOpen)}
+                  id="options-menu"
+                >
+                  <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
+                </button>
+                {navlinkIsOpen && (
+                  <div className="tw-absolute tw-z-30 tw-left-[525px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
+                    <div
+                      className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      <Link
+                        href="/auctions"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        role="menuitem"
+                      >
+                        AUCTIONS
+                      </Link>
+                      <Link
+                        href="/about_page"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        role="menuitem"
+                      >
+                        ABOUT
+                      </Link>
+                      <Link
+                        href="/leaderboard"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        role="menuitem"
+                      >
+                        LEADERBOARD
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
-            </Link>
-            <Link
-              onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                document.body.classList.remove("stop-scrolling");
-              }}
-              href="/leaderboard"
-            >
-              <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 sm:tw-mr-4 max-md:tw-hidden ${
-                  pathname === "/leaderboard" && "tw-font-bold tw-border-b-2"
-                }`}
-              >
-                LEADERBOARD
-              </div>
-            </Link>
+            </div>
           </div>
           <div className="tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4">
             <form
