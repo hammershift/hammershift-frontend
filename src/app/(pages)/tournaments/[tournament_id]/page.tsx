@@ -305,6 +305,7 @@ const TournamentViewPage = ({
                         <TimerProvider deadline={tournamentData.endTime}>
                             <TitleTournamentsList
                                 _id={tournamentData._id}
+                                description={tournamentData.description ?? ""}
                                 title={tournamentData.title}
                                 cars={auctionData.length}
                                 pot={prize}
@@ -329,6 +330,9 @@ const TournamentViewPage = ({
                             />
                         )}
                     </div>
+                    <TournamentDescriptionSection
+                        description={tournamentData?.description ?? ""}
+                    />
                     <TournamentsList
                         buyInFee={tournamentData?.buyInFee}
                         toggleTournamentWagerModal={toggleModal}

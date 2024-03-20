@@ -72,6 +72,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                 !wagerModal.contains(e.target as Node)
             ) {
                 closeModal();
+                document.body.classList.remove("stop-scrolling");
             }
         };
 

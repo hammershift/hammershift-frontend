@@ -93,6 +93,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                 !wagerModal.contains(e.target as Node)
             ) {
                 closeWagerModal();
+                document.body.classList.remove("stop-scrolling");
             }
         };
 
