@@ -149,24 +149,24 @@ const SlideOne = ({ carData }: any) => {
         };
     }, []);
 
-    useEffect(() => {
-        const imagesSrcList = carData.images_list
-            .slice(0, 5)
-            .map((imageObj: { src: any }) => imageObj.src);
+    // useEffect(() => {
+    //     const imagesSrcList = carData.images_list
+    //         .slice(0, 5)
+    //         .map((imageObj: { src: any }) => imageObj.src);
 
-        const intervalId = setInterval(() => {
-            setCurrentImage((prevImage: string) => {
-                const currentIndex = imagesSrcList.indexOf(prevImage);
-                if (currentIndex === imagesSrcList.length - 1) {
-                    return carData.image;
-                } else {
-                    return imagesSrcList[currentIndex + 1];
-                }
-            });
-        }, 2000);
+    //     const intervalId = setInterval(() => {
+    //         setCurrentImage((prevImage: string) => {
+    //             const currentIndex = imagesSrcList.indexOf(prevImage);
+    //             if (currentIndex === imagesSrcList.length - 1) {
+    //                 return carData.image;
+    //             } else {
+    //                 return imagesSrcList[currentIndex + 1];
+    //             }
+    //         });
+    //     }, 2000);
 
-        return () => clearInterval(intervalId);
-    }, [carData.image, carData.images_list]);
+    //     return () => clearInterval(intervalId);
+    // }, [carData.image, carData.images_list]);
 
     useEffect(() => {
         const fetchPrize = async () => {
@@ -189,22 +189,41 @@ const SlideOne = ({ carData }: any) => {
     }, []);
 
     return (
-        <div className="section-one xl:tw-items-end md:tw-justify-center tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center">
-            <div className="xl:tw-py-11 xl:tw-px-14 xl:tw-w-full md:tw-h-full">
+        <div className="section-one xl:tw-items-end md:tw-justify-center tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center tw-z-20">
+            <div className="xl:tw-py-11 xl:tw-px-14 md:tw-w-full md:tw-h-full">
                 <Link
                     href={`/auctions/car_view_page/${carData.auction_id}`}
                     className="tw-relative tw-h-full"
                 >
-                    <span className="tw-absolute tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
+                    <span className="tw-absolute tw-z-50 tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
                         LIVE
                     </span>
-                    <Image
-                        src={currentImage}
-                        width={808}
-                        height={538}
-                        alt="dollar"
-                        className="tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded xl:tw-w-full"
-                    />
+                    <div className="tw-relative tw-block tw-rounded-t-[20px] md:tw-rounded-[20px] xl:tw-rounded md:tw-h-[100%] live-page-image-sizing xl:tw-w-full">
+                        {carData.images_list
+                            .slice(0, 5)
+                            .map((image: any, index: number) => {
+                                return (
+                                    <Image
+                                        key={image.src}
+                                        src={
+                                            index === 4
+                                                ? carData.image
+                                                : image.src
+                                        }
+                                        width={808}
+                                        height={538}
+                                        alt="dollar"
+                                        className={`${
+                                            index !== 0
+                                                ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
+                                                : "tw-z-40"
+                                        } tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded pic ${
+                                            "pic" + (5 - index)
+                                        }`}
+                                    />
+                                );
+                            })}
+                    </div>
                     <WagerCycle words={wagers} />
                 </Link>
             </div>
