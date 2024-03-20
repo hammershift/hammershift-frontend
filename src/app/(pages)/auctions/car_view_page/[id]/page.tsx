@@ -174,6 +174,10 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         setToggleWagerModal(!toggleWagerModal);
     };
 
+    const closeWagerModal = () => {
+        setToggleWagerModal(false);
+    };
+
     const [wagerInputs, setWagerInputs] = useState<WagerInputsI>({});
 
     interface WagerInputsI {
@@ -330,6 +334,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         invalidPrice={invalidPrice}
                         invalidWager={invalidWager}
                         isButtonClicked={isButtonClicked}
+                        closeWagerModal={closeWagerModal}
                     />
                 </TimerProvider>
             ) : null}
