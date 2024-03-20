@@ -396,3 +396,63 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
     transform: translateY(0);
   }
 }
+
+.pic {
+  -webkit-animation: fade 10s infinite;
+  animation: fade 10s infinite;
+}
+
+.pic1 {
+  animation-delay: 0s;
+}
+
+.pic2 {
+  animation-delay: 2s;
+}
+
+.pic3 {
+  animation-delay: 4s;
+}
+
+.pic4 {
+  animation-delay: 6s;
+}
+
+.pic5 {
+  animation-delay: 8s;
+}
+
+@-webkit-keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
