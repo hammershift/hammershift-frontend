@@ -87,7 +87,7 @@ const TournamentsCard = ({
           </>
         )}
       </div>
-      <div className="tw-bg-[#1A2C3D] tw-w-auto sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
+      <div className="tw-bg-[#1A2C3D] tw-w-[416px] sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         <div className="tw-flex tw-items-center tw-justify-center">
           <Image
@@ -121,7 +121,48 @@ const TournamentsCard = ({
           </div>
         )}
         <div className="tw-h-40 tw-px-2 tw-py-1 tw-my-3 tw-bg-[#1A2C3D]">
-          {buyInEnded ? (
+          {tournamentEnded ? (
+            tournamentPoints && tournamentPoints.length === 0 ? (
+              <div className="tw-bg-[#1A2C3D] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
+                <div>Tournament has ended, no players joined</div>
+              </div>
+            ) : (
+              <>
+                {sortedTournamentPoints &&
+                  sortedTournamentPoints
+                    .slice(0, 3)
+                    .map((item: any, index: number) => (
+                      <div
+                        key={index}
+                        className="tw-flex tw-items-center tw-justify-between tw-my-3"
+                      >
+                        <div className="tw-flex tw-items-center">
+                          <div>{index + 1}</div>
+                          <Image
+                            src={
+                              item.user.image ? item.user.image : avatars[index]
+                            }
+                            width={40}
+                            height={40}
+                            alt={"avatar"}
+                            className="tw-w-[40px] tw-h-[40px] tw-mx-3 tw-rounded-full"
+                          />
+                          <div>
+                            {sortedTournamentPoints.length > 2 && index === 0
+                              ? item.user.username + " 🎉"
+                              : item.user.username}{" "}
+                          </div>
+                        </div>
+                        <div className="tw-text-[#F2CA16] tw-font-bold">
+                          {item.auctionScores && item.auctionScores.length > 0
+                            ? `${item.totalScore} pts.`
+                            : "0 pts."}
+                        </div>
+                      </div>
+                    ))}
+              </>
+            )
+          ) : buyInEnded ? (
             <>
               {tournamentPoints && tournamentPoints.length === 0 ? (
                 <div className="tw-bg-[#1A2C3D] tw-p-4 tw-h-36 tw-flex tw-justify-center tw-items-center tw-gap-2 tw-rounded-[4px] tw-my-3">
@@ -223,10 +264,10 @@ const TournamentsCard = ({
             </button>
           ) : tournamentEnded ? (
             <button
-              className="tw-text-black tw-bg-white tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
+              className="tw-text-black tw-bg-[#f2ca16] tw-font-bold tw-rounded-md tw-h-10 tw-w-full"
               onClick={() => router.push(`/tournaments/${tournament_id}`)}
             >
-              View Results
+              View Results 🏆
             </button>
           ) : (
             <button

@@ -12,7 +12,6 @@ import React, { useEffect, useRef, useState } from "react";
 const LivePage = () => {
     return (
         <div className="tw-flex tw-flex-col tw-justify-center">
-            <LivePageCarousel />
             <div className="section-container tw-m-auto">
                 <LiveGames />
             </div>
