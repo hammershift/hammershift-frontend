@@ -527,6 +527,106 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
   animation-delay: 16s;
 }
 
+.pic1-5 {
+  animation-delay: 10s;
+}
+
+.pic2-5 {
+  animation-delay: 12s;
+}
+
+.pic3-5 {
+  animation-delay: 14s;
+}
+
+.pic4-5 {
+  animation-delay: 16s;
+}
+
+.pic5-5 {
+  animation-delay: 18s;
+}
+
+.pic1-6 {
+  animation-delay: 12s;
+}
+
+.pic2-6 {
+  animation-delay: 14s;
+}
+
+.pic3-6 {
+  animation-delay: 16s;
+}
+
+.pic4-6 {
+  animation-delay: 18s;
+}
+
+.pic5-6 {
+  animation-delay: 20s;
+}
+
+.pic1-7 {
+  animation-delay: 14s;
+}
+
+.pic2-7 {
+  animation-delay: 16s;
+}
+
+.pic3-7 {
+  animation-delay: 18s;
+}
+
+.pic4-7 {
+  animation-delay: 20s;
+}
+
+.pic5-7 {
+  animation-delay: 22s;
+}
+
+.pic1-8 {
+  animation-delay: 16s;
+}
+
+.pic2-8 {
+  animation-delay: 18s;
+}
+
+.pic3-8 {
+  animation-delay: 20s;
+}
+
+.pic4-8 {
+  animation-delay: 22s;
+}
+
+.pic5-8 {
+  animation-delay: 24s;
+}
+
+.pic1-9 {
+  animation-delay: 18s;
+}
+
+.pic2-9 {
+  animation-delay: 20s;
+}
+
+.pic3-9 {
+  animation-delay: 22s;
+}
+
+.pic4-9 {
+  animation-delay: 24s;
+}
+
+.pic5-9 {
+  animation-delay: 26s;
+}
+
 @-webkit-keyframes fade {
   0% {
     opacity: 1;
