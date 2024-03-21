@@ -149,25 +149,6 @@ const SlideOne = ({ carData }: any) => {
         };
     }, []);
 
-    // useEffect(() => {
-    //     const imagesSrcList = carData.images_list
-    //         .slice(0, 5)
-    //         .map((imageObj: { src: any }) => imageObj.src);
-
-    //     const intervalId = setInterval(() => {
-    //         setCurrentImage((prevImage: string) => {
-    //             const currentIndex = imagesSrcList.indexOf(prevImage);
-    //             if (currentIndex === imagesSrcList.length - 1) {
-    //                 return carData.image;
-    //             } else {
-    //                 return imagesSrcList[currentIndex + 1];
-    //             }
-    //         });
-    //     }, 2000);
-
-    //     return () => clearInterval(intervalId);
-    // }, [carData.image, carData.images_list]);
-
     useEffect(() => {
         const fetchPrize = async () => {
             const transactions = await getAuctionTransactions(carData._id);
