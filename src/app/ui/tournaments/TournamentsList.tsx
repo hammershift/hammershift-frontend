@@ -157,7 +157,7 @@ const TournamentsList = () => {
           </select>
         </div>
       </div>
-      <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
+      <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 tw-pb-20">
         {tournamentsData &&
           tournamentsData.map((tournament, index) => {
             const imagesForTournament =
