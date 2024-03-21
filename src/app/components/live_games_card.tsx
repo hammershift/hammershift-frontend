@@ -22,6 +22,7 @@ const LiveGamesCard: React.FC<any> = ({
     auction_id,
     object_id,
     images_list,
+    parentIndex,
 }) => {
     const [auctionWagers, setAuctionWagers] = useState([]);
     const [currentImage, setCurrentImage] = useState(image);
@@ -60,18 +61,43 @@ const LiveGamesCard: React.FC<any> = ({
             className="tw-w-auto tw-flex tw-flex-row sm:tw-flex-col tw-items-center tw-justify-center hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100"
         >
             <div className="tw-w-[120px] sm:tw-w-[200px] tw-h-[138px] sm:tw-h-[218px] tw-pt-3 tw-relative">
-                <div className="tw-w-[61px] tw-z-20 tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]">
+                <div className="tw-w-[61px] tw-z-50 tw-h-[36px] tw-bg-red-500 tw-rounded-s-full tw-rounded-e-full tw-flex tw-justify-center tw-items-center tw-absolute tw-bottom-0 tw-left-[30px] sm:tw-left-[70px]">
                     LIVE
                 </div>
                 <div className="tw-flex tw-justify-center tw-items-center">
-                    <div className="tw-absolute tw-rounded-full tw-w-[130px] sm:tw-w-[200px] tw-h-[130px] sm:tw-h-[200px] tw-bg-red-500 tw-animate-pulse"></div>
-                    <img
-                        src={currentImage}
-                        width={185}
-                        height={185}
-                        alt="car"
-                        className="tw-w-[120px] sm:tw-w-[185px] tw-h-[120px] sm:tw-h-[185px] tw-rounded-full tw-object-cover tw-z-10"
-                    />
+                    <div className="tw-absolute tw-rounded-full tw-w-[130px] sm:tw-w-[200px] tw-h-[130px] sm:tw-h-[200px] tw-bg-red-500"></div>
+                    <div className="tw-relative tw-w-[120px] sm:tw-w-[185px] tw-h-[120px] sm:tw-h-[185px]">
+                        {images_list
+                            .slice(0, 5)
+                            .map((photo: any, index: number) => {
+                                return (
+                                    <Image
+                                        key={photo.src}
+                                        src={index === 4 ? image : photo.src}
+                                        width={185}
+                                        height={185}
+                                        alt="car"
+                                        className={`${
+                                            index !== 0
+                                                ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
+                                                : "tw-z-40"
+                                        } tw-w-[120px] sm:tw-w-[185px] tw-h-[120px] sm:tw-h-[185px] tw-rounded-full tw-object-cover tw-z-10 pic ${
+                                            "pic" +
+                                            (5 - index) +
+                                            "-" +
+                                            parentIndex
+                                        }`}
+                                    />
+                                );
+                            })}
+                        {/* <Image
+                            src={currentImage}
+                            width={185}
+                            height={185}
+                            alt="car"
+                            className="tw-w-[120px] sm:tw-w-[185px] tw-h-[120px] sm:tw-h-[185px] tw-rounded-full tw-object-cover tw-z-10"
+                        /> */}
+                    </div>
                 </div>
             </div>
             <div className="tw-ml-4 sm:tw-ml-0">
