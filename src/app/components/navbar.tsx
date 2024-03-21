@@ -212,6 +212,10 @@ const Navbar = () => {
     setMenuIsOpen(false);
   };
 
+  const closeNavLinkDropDownMenu = () => {
+    setNavlinkIsOpen(false);
+  };
+
   const clearSearchInputs = () => {
     const searchInput = document.getElementById(
       "search-bar-input"
@@ -245,6 +249,7 @@ const Navbar = () => {
                 onClick={() => {
                   closeMenu();
                   closeMyAccountMenu();
+                  closeNavLinkDropDownMenu();
                   document.body.classList.remove("stop-scrolling");
                 }}
                 href="/"
@@ -269,6 +274,7 @@ const Navbar = () => {
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/live"
@@ -317,6 +323,7 @@ const Navbar = () => {
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/tournaments"
@@ -335,6 +342,7 @@ const Navbar = () => {
                   onClick={() => {
                     closeMenu();
                     closeMyAccountMenu();
+                    closeNavLinkDropDownMenu();
                     document.body.classList.remove("stop-scrolling");
                   }}
                   href="/discover"
@@ -355,7 +363,7 @@ const Navbar = () => {
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
                 {navlinkIsOpen && (
-                  <div className="tw-absolute tw-z-30 tw-left-[525px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
+                  <div className="tw-absolute tw-z-30 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
                     <div
                       className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
                       role="menu"
@@ -367,9 +375,10 @@ const Navbar = () => {
                         onClick={() => {
                           closeMenu();
                           closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
                           document.body.classList.remove("stop-scrolling");
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                         role="menuitem"
                       >
                         AUCTIONS
@@ -379,9 +388,10 @@ const Navbar = () => {
                         onClick={() => {
                           closeMenu();
                           closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
                           document.body.classList.remove("stop-scrolling");
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                         role="menuitem"
                       >
                         ABOUT
@@ -391,9 +401,10 @@ const Navbar = () => {
                         onClick={() => {
                           closeMenu();
                           closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
                           document.body.classList.remove("stop-scrolling");
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                         role="menuitem"
                       >
                         LEADERBOARD
@@ -551,6 +562,8 @@ const Navbar = () => {
               <Link
                 onClick={() => {
                   closeMenu();
+                  closeMyAccountMenu();
+                  closeNavLinkDropDownMenu();
                   document.body.classList.remove("stop-scrolling");
                 }}
                 href="/"
@@ -568,6 +581,7 @@ const Navbar = () => {
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/live"
@@ -616,6 +630,7 @@ const Navbar = () => {
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/tournaments"
@@ -634,6 +649,7 @@ const Navbar = () => {
                   onClick={() => {
                     closeMenu();
                     closeMyAccountMenu();
+                    closeNavLinkDropDownMenu();
                     document.body.classList.remove("stop-scrolling");
                   }}
                   href="/discover"
@@ -654,7 +670,7 @@ const Navbar = () => {
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
                 {navlinkIsOpen && (
-                  <div className="tw-absolute tw-z-30 tw-left-[525px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
+                  <div className="tw-absolute tw-z-30 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
                     <div
                       className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
                       role="menu"
@@ -666,9 +682,10 @@ const Navbar = () => {
                         onClick={() => {
                           closeMenu();
                           closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
                           document.body.classList.remove("stop-scrolling");
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                         role="menuitem"
                       >
                         AUCTIONS
@@ -678,9 +695,10 @@ const Navbar = () => {
                         onClick={() => {
                           closeMenu();
                           closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
                           document.body.classList.remove("stop-scrolling");
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                         role="menuitem"
                       >
                         ABOUT
@@ -690,9 +708,10 @@ const Navbar = () => {
                         onClick={() => {
                           closeMenu();
                           closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
                           document.body.classList.remove("stop-scrolling");
                         }}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                         role="menuitem"
                       >
                         LEADERBOARD
