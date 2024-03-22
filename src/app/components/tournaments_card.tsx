@@ -66,7 +66,9 @@ const TournamentsCard = ({
                 height={90}
                 alt="image"
                 className={`tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%] ${
-                  pathname === "/tournaments" ? "tw-left-[160px]" : null
+                  pathname === "/tournaments"
+                    ? "md:tw-left-[160px] max-sm:tw-w-[90px] max-sm:tw-h-[90px] max-sm:tw-absolute max-sm:tw-object-cover max-sm:tw-rounded-full max-sm:tw-top-[10px]"
+                    : null
                 }`}
               />
             </div>
@@ -86,7 +88,9 @@ const TournamentsCard = ({
                 height={90}
                 alt="image"
                 className={`tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%] ${
-                  pathname === "/tournaments" ? "tw-right-[160px]" : null
+                  pathname === "/tournaments"
+                    ? "sm:tw-right-[160px] max-sm:tw-w-[90px] max-sm:tw-h-[90px] max-sm:tw-absolute max-sm:tw-object-cover max-sm:tw-rounded-full max-sm:tw-top-[10px]"
+                    : null
                 }`}
               />
             </div>
@@ -96,7 +100,7 @@ const TournamentsCard = ({
       <div
         className={`tw-bg-[#1A2C3D] tw-w-[416px] ${
           pathname === "/discover" ? "sm:tw-w-[416px]" : "sm:tw-w-[650px]"
-        } tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20`}
+        } tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20 max-sm:tw-w-[346px]`}
       >
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         <div className="tw-flex tw-items-center tw-justify-center">

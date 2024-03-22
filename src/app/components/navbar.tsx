@@ -357,19 +357,49 @@ const Navbar = () => {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => setNavlinkIsOpen(!navlinkIsOpen)}
+                  onClick={() => {
+                    setNavlinkIsOpen(!navlinkIsOpen);
+                    closeMenu();
+                    closeMyAccountMenu();
+                  }}
                   id="options-menu"
                 >
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
                 {navlinkIsOpen && (
-                  <div className="tw-absolute tw-z-30 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
+                  <div className="slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14">
                     <div
                       className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
                     >
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/tournaments"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        TOURNAMENTS
+                      </Link>
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/discover"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        DISCOVER
+                      </Link>
                       <Link
                         href="/auctions"
                         onClick={() => {
@@ -528,6 +558,7 @@ const Navbar = () => {
               onClick={() => {
                 setMenuIsOpen((prev) => !prev);
                 setMyAccountMenuOpen(false);
+                closeNavLinkDropDownMenu();
                 if (!menuIsOpen) {
                   document.body.classList.add("stop-scrolling");
                 } else {
@@ -664,19 +695,50 @@ const Navbar = () => {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => setNavlinkIsOpen(!navlinkIsOpen)}
+                  onClick={() => {
+                    setNavlinkIsOpen(!navlinkIsOpen);
+                    closeMenu();
+                    closeMyAccountMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }}
                   id="options-menu"
                 >
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
                 {navlinkIsOpen && (
-                  <div className="tw-absolute tw-z-30 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black">
+                  <div className="slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14">
                     <div
                       className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
                     >
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/tournaments"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        TOURNAMENTS
+                      </Link>
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/discover"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        DISCOVER
+                      </Link>
                       <Link
                         href="/auctions"
                         onClick={() => {
@@ -867,32 +929,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   return (
     <div className="drop-down-custom-height slide-in-top tw-absolute tw-z-50 tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full ">
       <div className="tw-relative">
-        <div className="tw-flex tw-justify-evenly tw-py-2 tw-w-full tw-min-w-auto">
-          <Link
-            href="/tournaments"
-            className="tw-ml-4 md:tw-ml-9 tw-text-sm"
-            onClick={closeMenu}
-          >
-            TOURNAMENTS
-          </Link>
-          <Link
-            href="/about_page"
-            className="tw-ml-4 md:tw-ml-9 tw-text-sm"
-            onClick={closeMenu}
-          >
-            ABOUT
-          </Link>
-          {/* <Link href="/" className="tw-ml-4 md:tw-ml-9">
-            HOW IT WORKS
-          </Link> */}
-          <Link
-            href="/leaderboard"
-            className="tw-ml-4 md:tw-ml-9 tw-text-sm"
-            onClick={closeMenu}
-          >
-            LEADERBOARD
-          </Link>
-        </div>
         <form
           autoComplete="off"
           onSubmit={handleSubmit}
@@ -936,67 +972,66 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           />
         )}
       </div>
-      {!isLoggedIn ? (
-        <>
-          <Link
-            href="/discover"
-            onClick={closeMenu}
-            className="tw-flex tw-py-2"
-          >
-            <div>DISCOVER</div>
-          </Link>
-          {/* <Link
-            href="/live"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>LIVE</div>
-          </Link> */}
-          <Link
-            href="/auctions"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>AUCTIONS</div>
-          </Link>
-          <Link
-            href="/tournaments"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>TOURNAMENTS</div>
-          </Link>
-          <Link
-            href="/about_page"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>ABOUT</div>
-          </Link>
-          <Link
-            href="/leaderboard"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>LEADERBOARD</div>
-          </Link>
-        </>
-      ) : (
+      {!isLoggedIn ? // <>
+      //   <Link
+      //     href="/discover"
+      //     onClick={closeMenu}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>DISCOVER</div>
+      //   </Link>
+      //   {/* <Link
+      //     href="/live"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>LIVE</div>
+      //   </Link> */}
+      //   <Link
+      //     href="/auctions"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>AUCTIONS</div>
+      //   </Link>
+      //   <Link
+      //     href="/tournaments"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>TOURNAMENTS</div>
+      //   </Link>
+      //   <Link
+      //     href="/about_page"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>ABOUT</div>
+      //   </Link>
+      //   <Link
+      //     href="/leaderboard"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>LEADERBOARD</div>
+      //   </Link>
+      // </>
+      null : (
         <>
           <button
             onClick={() => setDropWatchlistOrWagers("watchlist")}
@@ -1108,7 +1143,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
   };
 
   return (
-    <div className="slide-in-top tw-absolute tw-z-30 tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto">
+    <div className="slide-in-top tw-absolute tw-z-50 tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto">
       <div className="tw-text-lg tw-font-bold tw-p-1.5">MY ACCOUNT</div>
       {isLoading ? (
         <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
