@@ -542,7 +542,6 @@ const Navbar = () => {
               onClick={() => {
                 setMyAccountMenuOpen((prev) => !prev);
                 setMenuIsOpen(false);
-                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               className="tw-mr-4"
@@ -700,7 +699,6 @@ const Navbar = () => {
                     setNavlinkIsOpen(!navlinkIsOpen);
                     closeMenu();
                     closeMyAccountMenu();
-                    closeNavLinkDropDownMenu();
                     document.body.classList.remove("stop-scrolling");
                   }}
                   id="options-menu"
@@ -974,67 +972,66 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           />
         )}
       </div>
-      {!isLoggedIn ? (
-        <>
-          <Link
-            href="/discover"
-            onClick={closeMenu}
-            className="tw-flex tw-py-2"
-          >
-            <div>DISCOVER</div>
-          </Link>
-          {/* <Link
-            href="/live"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>LIVE</div>
-          </Link> */}
-          <Link
-            href="/auctions"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>AUCTIONS</div>
-          </Link>
-          <Link
-            href="/tournaments"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>TOURNAMENTS</div>
-          </Link>
-          <Link
-            href="/about_page"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>ABOUT</div>
-          </Link>
-          <Link
-            href="/leaderboard"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>LEADERBOARD</div>
-          </Link>
-        </>
-      ) : (
+      {!isLoggedIn ? // <>
+      //   <Link
+      //     href="/discover"
+      //     onClick={closeMenu}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>DISCOVER</div>
+      //   </Link>
+      //   {/* <Link
+      //     href="/live"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>LIVE</div>
+      //   </Link> */}
+      //   <Link
+      //     href="/auctions"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>AUCTIONS</div>
+      //   </Link>
+      //   <Link
+      //     href="/tournaments"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>TOURNAMENTS</div>
+      //   </Link>
+      //   <Link
+      //     href="/about_page"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>ABOUT</div>
+      //   </Link>
+      //   <Link
+      //     href="/leaderboard"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>LEADERBOARD</div>
+      //   </Link>
+      // </>
+      null : (
         <>
           <button
             onClick={() => setDropWatchlistOrWagers("watchlist")}
