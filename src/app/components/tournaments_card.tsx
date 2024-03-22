@@ -11,6 +11,7 @@ import AvatarTwo from "../../../public/images/avatar-two.svg";
 import AvatarThree from "../../../public/images/avatar-three.svg";
 import { useTimer } from "../_context/TimerContext";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 const TournamentsCard = ({
   tournament_id,
@@ -23,6 +24,7 @@ const TournamentsCard = ({
   canceledTournament,
 }: any) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
   const timerValues = useTimer();
   const router = useRouter();
   const avatars = [AvatarOne, AvatarTwo, AvatarThree];
@@ -53,7 +55,7 @@ const TournamentsCard = ({
   }, [deadline, tournament_deadline]);
 
   return (
-    <div className="hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
+    <div className="hover:tw-scale-105 tw-transform tw-transition-all tw-duration-100">
       <div className="tw-relative tw-grid tw-grid-cols-3 tw-gap-4 tw-px-2 sm:tw-px-4 tw-z-10">
         {images && images.length > 0 && (
           <>
@@ -63,7 +65,9 @@ const TournamentsCard = ({
                 width={90}
                 height={90}
                 alt="image"
-                className="tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]"
+                className={`tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%] ${
+                  pathname === "/tournaments" ? "tw-left-[160px]" : null
+                }`}
               />
             </div>
             <div className="tw-flex tw-justify-center">
@@ -81,13 +85,19 @@ const TournamentsCard = ({
                 width={90}
                 height={90}
                 alt="image"
-                className="tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%]"
+                className={`tw-w-[90px] tw-h-[90px] tw-absolute tw-object-cover tw-rounded-full tw-top-[10px] tw-opacity-[50%] ${
+                  pathname === "/tournaments" ? "tw-right-[160px]" : null
+                }`}
               />
             </div>
           </>
         )}
       </div>
-      <div className="tw-bg-[#1A2C3D] tw-w-[416px] sm:tw-w-[416px] tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20">
+      <div
+        className={`tw-bg-[#1A2C3D] tw-w-[416px] ${
+          pathname === "/discover" ? "sm:tw-w-[416px]" : "sm:tw-w-[650px]"
+        } tw-text-center tw-p-4 tw-rounded-lg tw-mt-12 tw-pt-20`}
+      >
         <div className="tw-text-[18px] tw-font-bold">{title}</div>
         <div className="tw-flex tw-items-center tw-justify-center">
           <Image
