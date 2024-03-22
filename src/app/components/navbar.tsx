@@ -22,6 +22,7 @@ import MoneyBagGreen from "../../../public/images/monetization-browser-bag-green
 import MoneyBagBlack from "../../../public/images/money-bag-black.svg";
 import PodiumIcon from "../../../public/images/podium-icon.svg";
 import HammerIcon from "../../../public/images/hammer-icon.svg";
+import ArrowDown from "../../../public/images/arrow-down.svg";
 
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg";
 import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-photo-two.svg";
@@ -62,6 +63,7 @@ const Navbar = () => {
   const [dropMyAccount, setDropMyAccount] = useState(false);
   const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
   const [showClearSearchButton, setShowClearSearchButton] = useState(false);
+  const [navlinkIsOpen, setNavlinkIsOpen] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -210,6 +212,10 @@ const Navbar = () => {
     setMenuIsOpen(false);
   };
 
+  const closeNavLinkDropDownMenu = () => {
+    setNavlinkIsOpen(false);
+  };
+
   const clearSearchInputs = () => {
     const searchInput = document.getElementById(
       "search-bar-input"
@@ -243,6 +249,7 @@ const Navbar = () => {
                 onClick={() => {
                   closeMenu();
                   closeMyAccountMenu();
+                  closeNavLinkDropDownMenu();
                   document.body.classList.remove("stop-scrolling");
                 }}
                 href="/"
@@ -267,6 +274,23 @@ const Navbar = () => {
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
+                document.body.classList.remove("stop-scrolling");
+              }}
+              href="/live"
+            >
+              <div
+                className={`tw-block tw-mx-4 sm:tw-mx-4 ${
+                  pathname === "/live" && "tw-font-bold tw-border-b-2"
+                }`}
+              >
+                LIVE
+              </div>
+            </Link>
+            {/* <Link
+              onClick={() => {
+                closeMenu();
+                closeMyAccountMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/discover"
@@ -278,8 +302,8 @@ const Navbar = () => {
               >
                 DISCOVER
               </div>
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
@@ -294,55 +318,132 @@ const Navbar = () => {
               >
                 AUCTIONS
               </div>
-            </Link>
+            </Link> */}
             <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/tournaments"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 max-sm:tw-hidden ${
+                className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
                   pathname === "/tournaments" && "tw-font-bold tw-border-b-2"
                 }`}
               >
                 TOURNAMENTS
               </div>
             </Link>
-            <Link
-              onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                document.body.classList.remove("stop-scrolling");
-              }}
-              href="/about_page"
-            >
-              <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 max-md:tw-hidden ${
-                  pathname === "/about_page" && "tw-font-bold tw-border-b-2"
-                }`}
-              >
-                ABOUT
+            <div>
+              <div className="tw-flex">
+                <Link
+                  onClick={() => {
+                    closeMenu();
+                    closeMyAccountMenu();
+                    closeNavLinkDropDownMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }}
+                  href="/discover"
+                >
+                  <div
+                    className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
+                      pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                    }`}
+                  >
+                    EXPLORE
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNavlinkIsOpen(!navlinkIsOpen);
+                    closeMenu();
+                    closeMyAccountMenu();
+                  }}
+                  id="options-menu"
+                >
+                  <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
+                </button>
+                {navlinkIsOpen && (
+                  <div className="slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14">
+                    <div
+                      className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/tournaments"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        TOURNAMENTS
+                      </Link>
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/discover"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        DISCOVER
+                      </Link>
+                      <Link
+                        href="/auctions"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        AUCTIONS
+                      </Link>
+                      <Link
+                        href="/about_page"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        ABOUT
+                      </Link>
+                      <Link
+                        href="/leaderboard"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        LEADERBOARD
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
-            </Link>
-            <Link
-              onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                document.body.classList.remove("stop-scrolling");
-              }}
-              href="/leaderboard"
-            >
-              <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 sm:tw-mr-4 max-md:tw-hidden ${
-                  pathname === "/leaderboard" && "tw-font-bold tw-border-b-2"
-                }`}
-              >
-                LEADERBOARD
-              </div>
-            </Link>
+            </div>
           </div>
           <div className="tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block">
             <form
@@ -457,6 +558,7 @@ const Navbar = () => {
               onClick={() => {
                 setMenuIsOpen((prev) => !prev);
                 setMyAccountMenuOpen(false);
+                closeNavLinkDropDownMenu();
                 if (!menuIsOpen) {
                   document.body.classList.add("stop-scrolling");
                 } else {
@@ -491,6 +593,8 @@ const Navbar = () => {
               <Link
                 onClick={() => {
                   closeMenu();
+                  closeMyAccountMenu();
+                  closeNavLinkDropDownMenu();
                   document.body.classList.remove("stop-scrolling");
                 }}
                 href="/"
@@ -507,9 +611,26 @@ const Navbar = () => {
             <Link
               onClick={() => {
                 closeMenu();
+                closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="tw-hidden sm:tw-block"
+              href="/live"
+            >
+              <div
+                className={`tw-block tw-mx-4 sm:tw-mx-4 ${
+                  pathname === "/live" && "tw-font-bold tw-border-b-2"
+                }`}
+              >
+                LIVE
+              </div>
+            </Link>
+            {/* <Link
+              onClick={() => {
+                closeMenu();
+                closeMyAccountMenu();
+                document.body.classList.remove("stop-scrolling");
+              }}
               href="/discover"
             >
               <div
@@ -519,13 +640,13 @@ const Navbar = () => {
               >
                 DISCOVER
               </div>
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               onClick={() => {
                 closeMenu();
+                closeMyAccountMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="tw-hidden sm:tw-block"
               href="/auctions"
             >
               <div
@@ -535,55 +656,133 @@ const Navbar = () => {
               >
                 AUCTIONS
               </div>
-            </Link>
+            </Link> */}
             <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
+                closeNavLinkDropDownMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
               href="/tournaments"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 max-sm:tw-hidden ${
+                className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
                   pathname === "/tournaments" && "tw-font-bold tw-border-b-2"
                 }`}
               >
                 TOURNAMENTS
               </div>
             </Link>
-            <Link
-              onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                document.body.classList.remove("stop-scrolling");
-              }}
-              href="/about_page"
-            >
-              <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 max-md:tw-hidden ${
-                  pathname === "/about_page" && "tw-font-bold tw-border-b-2"
-                }`}
-              >
-                ABOUT
+            <div>
+              <div className="tw-flex">
+                <Link
+                  onClick={() => {
+                    closeMenu();
+                    closeMyAccountMenu();
+                    closeNavLinkDropDownMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }}
+                  href="/discover"
+                >
+                  <div
+                    className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
+                      pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                    }`}
+                  >
+                    EXPLORE
+                  </div>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNavlinkIsOpen(!navlinkIsOpen);
+                    closeMenu();
+                    closeMyAccountMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }}
+                  id="options-menu"
+                >
+                  <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
+                </button>
+                {navlinkIsOpen && (
+                  <div className="slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14">
+                    <div
+                      className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/tournaments"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        TOURNAMENTS
+                      </Link>
+                      <Link
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        href="/discover"
+                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        DISCOVER
+                      </Link>
+                      <Link
+                        href="/auctions"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        AUCTIONS
+                      </Link>
+                      <Link
+                        href="/about_page"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        ABOUT
+                      </Link>
+                      <Link
+                        href="/leaderboard"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        LEADERBOARD
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
-            </Link>
-            <Link
-              onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                document.body.classList.remove("stop-scrolling");
-              }}
-              href="/leaderboard"
-            >
-              <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 sm:tw-mr-4 max-md:tw-hidden ${
-                  pathname === "/leaderboard" && "tw-font-bold tw-border-b-2"
-                }`}
-              >
-                LEADERBOARD
-              </div>
-            </Link>
+            </div>
           </div>
           <div className="tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4">
             <form
@@ -730,32 +929,6 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   return (
     <div className="drop-down-custom-height slide-in-top tw-absolute tw-z-50 tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full ">
       <div className="tw-relative">
-        <div className="tw-flex tw-justify-evenly tw-py-2 tw-w-full tw-min-w-auto">
-          <Link
-            href="/tournaments"
-            className="tw-ml-4 md:tw-ml-9 tw-text-sm"
-            onClick={closeMenu}
-          >
-            TOURNAMENTS
-          </Link>
-          <Link
-            href="/about_page"
-            className="tw-ml-4 md:tw-ml-9 tw-text-sm"
-            onClick={closeMenu}
-          >
-            ABOUT
-          </Link>
-          {/* <Link href="/" className="tw-ml-4 md:tw-ml-9">
-            HOW IT WORKS
-          </Link> */}
-          <Link
-            href="/leaderboard"
-            className="tw-ml-4 md:tw-ml-9 tw-text-sm"
-            onClick={closeMenu}
-          >
-            LEADERBOARD
-          </Link>
-        </div>
         <form
           autoComplete="off"
           onSubmit={handleSubmit}
@@ -799,67 +972,66 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           />
         )}
       </div>
-      {!isLoggedIn ? (
-        <>
-          <Link
-            href="/discover"
-            onClick={closeMenu}
-            className="tw-flex tw-py-2"
-          >
-            <div>DISCOVER</div>
-          </Link>
-          {/* <Link
-            href="/live"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>LIVE</div>
-          </Link> */}
-          <Link
-            href="/auctions"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>AUCTIONS</div>
-          </Link>
-          <Link
-            href="/tournaments"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>TOURNAMENTS</div>
-          </Link>
-          <Link
-            href="/about_page"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>ABOUT</div>
-          </Link>
-          <Link
-            href="/leaderboard"
-            onClick={() => {
-              closeMenu();
-              document.body.classList.remove("stop-scrolling");
-            }}
-            className="tw-flex tw-py-2"
-          >
-            <div>LEADERBOARD</div>
-          </Link>
-        </>
-      ) : (
+      {!isLoggedIn ? // <>
+      //   <Link
+      //     href="/discover"
+      //     onClick={closeMenu}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>DISCOVER</div>
+      //   </Link>
+      //   {/* <Link
+      //     href="/live"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>LIVE</div>
+      //   </Link> */}
+      //   <Link
+      //     href="/auctions"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>AUCTIONS</div>
+      //   </Link>
+      //   <Link
+      //     href="/tournaments"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>TOURNAMENTS</div>
+      //   </Link>
+      //   <Link
+      //     href="/about_page"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>ABOUT</div>
+      //   </Link>
+      //   <Link
+      //     href="/leaderboard"
+      //     onClick={() => {
+      //       closeMenu();
+      //       document.body.classList.remove("stop-scrolling");
+      //     }}
+      //     className="tw-flex tw-py-2"
+      //   >
+      //     <div>LEADERBOARD</div>
+      //   </Link>
+      // </>
+      null : (
         <>
           <button
             onClick={() => setDropWatchlistOrWagers("watchlist")}
@@ -971,7 +1143,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
   };
 
   return (
-    <div className="slide-in-top tw-absolute tw-z-30 tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto">
+    <div className="slide-in-top tw-absolute tw-z-50 tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto">
       <div className="tw-text-lg tw-font-bold tw-p-1.5">MY ACCOUNT</div>
       {isLoading ? (
         <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">

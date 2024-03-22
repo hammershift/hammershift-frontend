@@ -189,7 +189,7 @@ const FiltersAndSort = ({
     <div className="tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]">
       <div className="left-container-marker tw-flex tw-items-center">
         <div>
-          Live Games <span className="tw-opacity-50"> {totalAuctions}</span>
+          Auctions <span className="tw-opacity-50"> {totalAuctions}</span>
         </div>
         <div className="tw-hidden xl:tw-flex">
           {/* Filter Dropdown for regular screens*/}

@@ -396,3 +396,269 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
     transform: translateY(0);
   }
 }
+
+.pic {
+  -webkit-animation: fade 10s infinite;
+  animation: fade 10s infinite;
+}
+
+.pic1 {
+  animation-delay: 0s;
+}
+
+.pic2 {
+  animation-delay: 2s;
+}
+
+.pic3 {
+  animation-delay: 4s;
+}
+
+.pic4 {
+  animation-delay: 6s;
+}
+
+.pic5 {
+  animation-delay: 8s;
+}
+
+.pic-0 {
+  -webkit-animation: fade 10s infinite;
+  animation: fade 10s infinite;
+}
+
+.pic1-0 {
+  animation-delay: 0s;
+}
+
+.pic2-0 {
+  animation-delay: 2s;
+}
+
+.pic3-0 {
+  animation-delay: 4s;
+}
+
+.pic4-0 {
+  animation-delay: 6s;
+}
+
+.pic5-0 {
+  animation-delay: 8s;
+}
+
+.pic1-1 {
+  animation-delay: 2s;
+}
+
+.pic2-1 {
+  animation-delay: 4s;
+}
+
+.pic3-1 {
+  animation-delay: 6s;
+}
+
+.pic4-1 {
+  animation-delay: 8s;
+}
+
+.pic5-1 {
+  animation-delay: 10s;
+}
+
+.pic1-2 {
+  animation-delay: 4s;
+}
+
+.pic2-2 {
+  animation-delay: 6s;
+}
+
+.pic3-2 {
+  animation-delay: 8s;
+}
+
+.pic4-2 {
+  animation-delay: 10s;
+}
+
+.pic5-2 {
+  animation-delay: 12s;
+}
+
+.pic1-3 {
+  animation-delay: 6s;
+}
+
+.pic2-3 {
+  animation-delay: 8s;
+}
+
+.pic3-3 {
+  animation-delay: 10s;
+}
+
+.pic4-3 {
+  animation-delay: 12s;
+}
+
+.pic5-3 {
+  animation-delay: 14s;
+}
+
+.pic1-4 {
+  animation-delay: 8s;
+}
+
+.pic2-4 {
+  animation-delay: 10s;
+}
+
+.pic3-4 {
+  animation-delay: 12s;
+}
+
+.pic4-4 {
+  animation-delay: 14s;
+}
+
+.pic5-4 {
+  animation-delay: 16s;
+}
+
+.pic1-5 {
+  animation-delay: 10s;
+}
+
+.pic2-5 {
+  animation-delay: 12s;
+}
+
+.pic3-5 {
+  animation-delay: 14s;
+}
+
+.pic4-5 {
+  animation-delay: 16s;
+}
+
+.pic5-5 {
+  animation-delay: 18s;
+}
+
+.pic1-6 {
+  animation-delay: 12s;
+}
+
+.pic2-6 {
+  animation-delay: 14s;
+}
+
+.pic3-6 {
+  animation-delay: 16s;
+}
+
+.pic4-6 {
+  animation-delay: 18s;
+}
+
+.pic5-6 {
+  animation-delay: 20s;
+}
+
+.pic1-7 {
+  animation-delay: 14s;
+}
+
+.pic2-7 {
+  animation-delay: 16s;
+}
+
+.pic3-7 {
+  animation-delay: 18s;
+}
+
+.pic4-7 {
+  animation-delay: 20s;
+}
+
+.pic5-7 {
+  animation-delay: 22s;
+}
+
+.pic1-8 {
+  animation-delay: 16s;
+}
+
+.pic2-8 {
+  animation-delay: 18s;
+}
+
+.pic3-8 {
+  animation-delay: 20s;
+}
+
+.pic4-8 {
+  animation-delay: 22s;
+}
+
+.pic5-8 {
+  animation-delay: 24s;
+}
+
+.pic1-9 {
+  animation-delay: 18s;
+}
+
+.pic2-9 {
+  animation-delay: 20s;
+}
+
+.pic3-9 {
+  animation-delay: 22s;
+}
+
+.pic4-9 {
+  animation-delay: 24s;
+}
+
+.pic5-9 {
+  animation-delay: 26s;
+}
+
+@-webkit-keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+

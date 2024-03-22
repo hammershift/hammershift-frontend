@@ -111,6 +111,8 @@ const GamesCard = (props: any) => {
             )}
           </div>
           <CardWagersSection objectID={props.object_id} />
+        </div>
+        <div className="tw-items-end">
           <button
             className="btn-yellow-thin tw-w-full md:tw-w-auto"
             onClick={() =>
@@ -119,8 +121,8 @@ const GamesCard = (props: any) => {
           >
             Play Game
           </button>
+          <hr className="tw-h-px tw-mt-8 sm:tw-mt-16 tw-border-1" />
         </div>
-        <hr className="tw-h-px tw-mt-8 sm:tw-mt-16 tw-border-1" />
       </div>
     </TimerProvider>
   );
