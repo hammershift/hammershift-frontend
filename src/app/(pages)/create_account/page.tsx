@@ -89,30 +89,26 @@ const CreateAccount = () => {
     isEmailUnique: true,
     isUsernameUnique: true,
   });
+  const [submitClicked, setSubmitClicked] = useState(false);
+  const [isSignedInWithGoogle, setIsSignedInWithGoogle] = useState(false);
+  const [googleSignInError, setGoogleSignInError] = useState<string | null>(null);
 
   // session and routing
   const { data: session } = useSession();
-  console.log('User Session: ', session);
   const router = useRouter();
-
-  console.log('Session: ', session);
-  console.log('Session name: ', session?.user.name);
 
   useEffect(() => {
     setCountries(Country.getAllCountries());
-    if (session && !emailExistsError) {
-      setCreateAccountPage('page two'); // check if emailExistsError is false before proceeding
+    if (session && session.user) {
+      if (session.user.provider === 'google') {
+        setIsSignedInWithGoogle(true);
+        setCreateAccountPage('page two');
+      } else if (session.user.provider === 'credentials' && !emailExistsError) {
+        setIsSignedInWithGoogle(false);
+        setCreateAccountPage('page two');
+      }
     }
   }, [session, emailExistsError]);
-
-  // useEffect(() => {
-  //   const redirectToLoginPage = () => {
-  //     if (emailExistsError) {
-  //       setTimeout(() => router.push("/login_page"), 3000);
-  //     }
-  //   };
-  //   redirectToLoginPage();
-  // }, [emailExistsError, router]);
 
   const validateEmail = (email: string): boolean => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
   const validatePassword = (password: string): boolean => password.trim().length >= 8;
@@ -221,6 +217,8 @@ const CreateAccount = () => {
 
   // ACCOUNT CREATION
   const handleAccountCreation = async () => {
+    setSubmitClicked(true); // ignore this
+
     if (!validity.isEmailValid || !validity.isPasswordValid) {
       console.error('Invalid email or password');
       return;
@@ -240,35 +238,42 @@ const CreateAccount = () => {
         }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log('Registration successful:', data.message);
-        const signInResponse = await signIn('credentials', {
-          redirect: false,
-          email: userDetails.email,
-          password: userDetails.password,
-        });
-
-        if (signInResponse?.error) {
-          console.error('Sign-in failed:', signInResponse.error);
-        } else if (!emailExistsError) {
-          setCreateAccountPage('page two');
-        }
-      } else {
-        setEmailExistsError(true);
+      if (!response.ok) {
+        const data = await response.json();
         console.error('Registration failed:', data.message);
+        if (data.message === 'User already exists') {
+          setEmailExistsError(true);
+          setTimeout(() => {
+            router.push('/login_page');
+          }, 2000);
+        }
+        return;
       }
+
+      console.log('Registration successful:', await response.json());
+      const signInResponse = await signIn('credentials', {
+        redirect: false,
+        email: userDetails.email,
+        password: userDetails.password,
+      });
+
+      if (signInResponse?.error) {
+        console.error('Sign-in failed:', signInResponse.error);
+        return;
+      }
+
+      setCreateAccountPage('page two');
     } catch (error) {
       console.error('Error during account creation:', error);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   // PROFILE SUBMISSION
   const handleProfileSubmission = async () => {
     const { isFullNameValid, isUsernameValid, isCountryValid, isStateValid } = validity;
+
     if (!isFullNameValid || !isUsernameValid || !isCountryValid || !isStateValid) {
       console.error('Profile information is invalid');
       setIsLoading(false);
@@ -279,7 +284,7 @@ const CreateAccount = () => {
 
     try {
       const profileData = {
-        fullName: session?.user.name ? session.user.name : userDetails.fullName,
+        fullName: userDetails.fullName,
         username: userDetails.username,
         country: userDetails.country,
         state: userDetails.state,
@@ -311,54 +316,66 @@ const CreateAccount = () => {
   };
 
   // GOOGLE SIGNIN
-  useEffect(() => {
-    const emailExistsParam = new URLSearchParams(window.location.search).get('emailExists');
-    if (emailExistsParam === 'true') {
-      setEmailExistsError(true);
-      setIsLoading(false);
-    }
-  }, []);
-
-  const handleGoogleSignIn = async (provider: string, isCreatingAccount = false) => {
+  const handleGoogleSignIn = async () => {
+    console.log('Google sign-in initiated');
     setIsLoading(true);
+    setGoogleSignInError(null);
+
     try {
-      const result = await signIn(provider, {
-        redirect: false,
-        callbackUrl: isCreatingAccount ? `/create_account` : `${window.location.search}`,
-      });
+      const result = await signIn('google', { redirect: false });
+      console.log('Google sign-in result:', result);
 
       if (result?.error) {
-        if (result.error === 'EmailExistsError') {
-          setEmailExistsError(true);
-        }
-        setIsLoading(false);
-        return;
-      }
-
-      const session = await getSession();
-      if (!session?.user?.email) {
-        setIsLoading(false);
-        return;
-      }
-      if (isCreatingAccount && !emailExistsError) {
-        setCreateAccountPage('page two');
-        router.push('/create_account');
+        console.error('Google sign-in error:', result.error);
+        setGoogleSignInError(result.error);
       } else {
-        router.push('/');
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // test delay
+
+        const session = await getSession();
+        console.log('Session after Google sign-in:', session);
+
+        if (session?.user?.email) {
+          const response = await fetch('/api/checkUserExistence', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: session.user.email }),
+          });
+
+          const data = await response.json();
+          console.log('User existence check response:', data);
+
+          if (data.emailExists) {
+            console.log('Email already exists. Redirecting to login page.');
+            setEmailExistsError(true);
+            setGoogleSignInError('An account with this email already exists. Redirecting to login page...');
+            setTimeout(() => {
+              router.push('/login_page');
+            }, 2000);
+          } else {
+            console.log('Email does not exist. Proceeding to account setup.');
+            setCreateAccountPage('page two');
+          }
+        } else {
+          console.error('No email found in session after Google sign-in');
+          setGoogleSignInError('Failed to retrieve account details. Please try again.');
+        }
       }
     } catch (error) {
-      console.error(`Exception during sign-in with ${provider}:`, error);
+      console.error('An unexpected error occurred during Google sign-in:', error);
+      setGoogleSignInError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const onGoogleSignInClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    handleGoogleSignIn('google', true);
+  const onGoogleSignInClick = () => {
+    handleGoogleSignIn();
   };
 
   // VERIFY LATER
   const handleVerifyLater = async () => {
+    console.log('handleVerifyLater called');
+
     setTouchedFields({
       email: true,
       password: true,
@@ -368,19 +385,35 @@ const CreateAccount = () => {
       state: true,
     });
 
-    const newValidity = {
-      isEmailValid: validateEmail(userDetails.email),
-      isPasswordValid: validatePassword(userDetails.password),
-      isFullNameValid: validateFullName(session?.user.name ? session.user.name : userDetails.fullName),
-      isUsernameValid: validateUsername(userDetails.username),
-      isCountryValid: isCountrySelected(userDetails.country),
-      isStateValid: isStateSelected(userDetails.state),
-    };
+    const newValidity = isSignedInWithGoogle
+      ? {
+          isEmailValid: true,
+          isPasswordValid: true,
+          isFullNameValid: validateFullName(userDetails.fullName),
+          isUsernameValid: validateUsername(userDetails.username),
+          isCountryValid: isCountrySelected(userDetails.country),
+          isStateValid: isStateSelected(userDetails.state),
+        }
+      : {
+          isEmailValid: validateEmail(userDetails.email),
+          isPasswordValid: validatePassword(userDetails.password),
+          isFullNameValid: validateFullName(userDetails.fullName),
+          isUsernameValid: validateUsername(userDetails.username),
+          isCountryValid: isCountrySelected(userDetails.country),
+          isStateValid: isStateSelected(userDetails.state),
+        };
 
+    console.log('New validity state:', newValidity);
     setValidity(newValidity);
 
-    const { isFullNameValid, isUsernameValid, isCountryValid, isStateValid } = validity;
-    if (!isFullNameValid || !isUsernameValid || !isCountryValid || !isStateValid) {
+    if (
+      !newValidity.isEmailValid ||
+      !newValidity.isPasswordValid ||
+      !newValidity.isFullNameValid ||
+      !newValidity.isUsernameValid ||
+      !newValidity.isCountryValid ||
+      !newValidity.isStateValid
+    ) {
       console.error('Profile information is invalid');
       setIsLoading(false);
       return;
@@ -395,7 +428,7 @@ const CreateAccount = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: session?.user.name ? session?.user.name : userDetails.fullName,
+          fullName: userDetails.fullName,
           username: userDetails.username,
           country: userDetails.country,
           state: userDetails.state,
@@ -404,6 +437,8 @@ const CreateAccount = () => {
       });
 
       const data = await response.json();
+      console.log('Response from userInfo API:', data);
+
       if (response.ok) {
         console.log('Profile updated successfully:', data.message);
         await getSession();
@@ -427,7 +462,7 @@ const CreateAccount = () => {
         </div>
       ) : (
         <>
-          {createAccountPage === 'page one' && (
+          {createAccountPage === 'page one' && !isSignedInWithGoogle && (
             <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
               <div>
                 <div className='tw-flex tw-justify-between md:tw-justify-start'>
@@ -453,14 +488,16 @@ const CreateAccount = () => {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     onBlur={() => checkUserExistence('email', userDetails.email)}
                   />
-                  {touchedFields.email && !uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500 tw-flex tw-justify-between'>✕ Email is already in use</div>}
+                  {googleSignInError && <div className='tw-text-sm tw-text-red-500'>{googleSignInError}</div>}
+                  {emailExistsError && (
+                    <div className='text-red-500'>
+                      An account with this email already exists. <span className='tw-text-white'>Redirecting to login page...</span>
+                    </div>
+                  )}
+
+                  {!submitClicked && touchedFields.email && !uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500'>✕ Email is already in use</div>}
                   {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}
                   {touchedFields.email && !validity.isEmailValid && <div className='tw-text-sm tw-text-red-500'>✕ Invalid Email</div>}
-                  {emailExistsError && (
-                    <div className='tw-text-sm tw-text-red-500 tw-flex tw-justify-between'>
-                      ✕ Email is already in use <span className='tw-text-sm tw-text-white tw-italic'>Redirecting to login page...</span>
-                    </div>
-                  )}{' '}
                 </div>
 
                 <div className='tw-flex tw-flex-col tw-gap-2'>
@@ -475,9 +512,11 @@ const CreateAccount = () => {
                 </button>
               </div>
               <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 clickable-icon'>
-                <div onClick={onGoogleSignInClick} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-                  <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
-                </div>
+                {!isSignedInWithGoogle && (
+                  <div onClick={onGoogleSignInClick} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+                    <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
+                  </div>
+                )}
                 <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
                   <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
                 </div>
@@ -488,6 +527,7 @@ const CreateAccount = () => {
                   <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
                 </div>
               </div>
+
               <div className='tw-text-center tw-opacity-50'>{'By creating an account, you agree to HammerShift’s Privacy Policy and Terms of Use.'}</div>
             </div>
           )}
@@ -502,22 +542,12 @@ const CreateAccount = () => {
                 {/* Full Name */}
                 <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
                   <label>Full Name *</label>
-                  {session?.user.name ? (
-                    <input
-                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                      placeholder={session.user.name}
-                      value={session.user.name}
-                      onChange={(e) => handleInputChange('fullName', e.target.value)}
-                      disabled
-                    />
-                  ) : (
-                    <input
-                      className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
-                      placeholder='full name'
-                      value={userDetails.fullName}
-                      onChange={(e) => handleInputChange('fullName', e.target.value)}
-                    />
-                  )}
+                  <input
+                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    placeholder='full name'
+                    value={userDetails.fullName}
+                    onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  />
                   <div className={touchedFields.fullName && !validity.isFullNameValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
                     {touchedFields.fullName && (validity.isFullNameValid ? '✔' : '✕ Full Name is required')}
                   </div>

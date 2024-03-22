@@ -21,6 +21,24 @@ export async function POST(req: NextRequest) {
     const db = client.db();
     const userId = new ObjectId(session.user.id);
 
+    const user = await db.collection('users').findOne({ _id: userId });
+
+    // if the user is created with Google Provider, set default values for missing fields
+    if (user && !user.isActive) {
+      await db.collection('users').updateOne(
+        { _id: userId },
+        {
+          $set: {
+            isActive: true,
+            isBanned: false,
+            balance: user.balance ?? 100,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        }
+      );
+    }
+
     // update the user's profile information
     const updatedUser = await db.collection('users').findOneAndUpdate(
       { _id: userId },
