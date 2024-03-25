@@ -102,13 +102,20 @@ const CreateAccount = () => {
     if (session && session.user) {
       if (session.user.provider === 'google') {
         setIsSignedInWithGoogle(true);
-        setCreateAccountPage('page two');
+        if (session.user.isNewUser) {
+          setCreateAccountPage('page two');
+        } else {
+          setIsLoading(true);
+          setTimeout(() => {
+            router.push('/');
+          }, 2000);
+        }
       } else if (session.user.provider === 'credentials' && !emailExistsError) {
         setIsSignedInWithGoogle(false);
         setCreateAccountPage('page two');
       }
     }
-  }, [session, emailExistsError]);
+  }, [session, emailExistsError, router]);
 
   const validateEmail = (email: string): boolean => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
   const validatePassword = (password: string): boolean => password.trim().length >= 8;
@@ -488,7 +495,7 @@ const CreateAccount = () => {
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     onBlur={() => checkUserExistence('email', userDetails.email)}
                   />
-                  {googleSignInError && <div className='tw-text-sm tw-text-red-500'>{googleSignInError}</div>}
+                  {googleSignInError && <p className='tw-text-red-500'>{googleSignInError}</p>}
                   {emailExistsError && (
                     <div className='text-red-500'>
                       An account with this email already exists. <span className='tw-text-white'>Redirecting to login page...</span>
