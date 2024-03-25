@@ -72,13 +72,17 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.provider = token.provider; // test
+        session.user.isNewUser = token.isNewUser; // test
       }
       return session;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, isNewUser }: any) {
       if (user) {
         token.id = user.id.toString();
         token.provider = account?.provider; // test
+      }
+      if (isNewUser) {
+        token.isNewUser = isNewUser; // test
       }
       return token;
     },
