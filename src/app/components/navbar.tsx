@@ -356,8 +356,7 @@ const Navbar = () => {
                   </div>
                 </Link>
                 <button
-                  type="button"
-                  onClick={() => {
+                  onMouseEnter={() => {
                     setNavlinkIsOpen(!navlinkIsOpen);
                     closeMenu();
                     closeMyAccountMenu();
@@ -367,7 +366,12 @@ const Navbar = () => {
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
                 {navlinkIsOpen && (
-                  <div className="slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14">
+                  <div
+                    onMouseLeave={() => {
+                      closeNavLinkDropDownMenu();
+                    }}
+                    className="max-sm:slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14"
+                  >
                     <div
                       className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
                       role="menu"
@@ -694,19 +698,22 @@ const Navbar = () => {
                   </div>
                 </Link>
                 <button
-                  type="button"
-                  onClick={() => {
+                  onMouseEnter={() => {
                     setNavlinkIsOpen(!navlinkIsOpen);
                     closeMenu();
                     closeMyAccountMenu();
-                    document.body.classList.remove("stop-scrolling");
                   }}
                   id="options-menu"
                 >
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
                 {navlinkIsOpen && (
-                  <div className="slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14">
+                  <div
+                    onMouseLeave={() => {
+                      closeNavLinkDropDownMenu();
+                    }}
+                    className="max-sm:slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14"
+                  >
                     <div
                       className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
                       role="menu"
@@ -972,15 +979,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           />
         )}
       </div>
-      {!isLoggedIn ? // <>
-      //   <Link
-      //     href="/discover"
-      //     onClick={closeMenu}
-      //     className="tw-flex tw-py-2"
-      //   >
-      //     <div>DISCOVER</div>
-      //   </Link>
-      //   {/* <Link
+      {!isLoggedIn ? //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
       //     href="/live"
       //     onClick={() => {
       //       closeMenu();
