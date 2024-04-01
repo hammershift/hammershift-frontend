@@ -23,13 +23,6 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
   return { clientId, clientSecret };
 }
 
-const emailExistsInDatabase = async (email: string): Promise<boolean> => {
-  const client = await clientPromise;
-  const db = client.db();
-  const user = await db.collection<User>('users').findOne({ email: email });
-  return !!user;
-};
-
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
@@ -71,15 +64,58 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.name = token.fullName;
+        session.user.fullName = token.fullName;
+        session.user.username = token.username;
+        session.user.image = token.image;
         session.user.provider = token.provider; // test
+        session.user.isNewUser = token.isNewUser; // test
       }
       return session;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, isNewUser }: any) {
       if (user) {
-        token.id = user.id.toString();
-        token.provider = account?.provider; // test
+        token.fullName = user.name;
+        token.id = user.id;
+        token.email = user.email;
+        token.image = user.image;
+        token.provider = account?.provider;
       }
+      if (isNewUser) {
+        token.isNewUser = isNewUser;
+      }
+
+      // fetching additional user details from the database
+      const client = await clientPromise;
+      const db = client.db();
+      const dbUser = await db.collection('users').findOne({ _id: new ObjectId(token.id) });
+
+      console.log('JWT callback - Fetched User from DB:', dbUser);
+
+      if (dbUser) {
+        token.fullName = dbUser.name;
+        token.username = dbUser.username;
+        token.image = dbUser.image;
+        token.isActive = dbUser.isActive;
+        token.balance = dbUser.balance;
+        token.isBanned = dbUser.isBanned;
+
+        if (!dbUser.createdAt) {
+          const createdAt = new Date();
+          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { createdAt } });
+          token.createdAt = createdAt;
+        } else {
+          token.createdAt = dbUser.createdAt;
+        }
+
+        if (dbUser.isActive === undefined) {
+          dbUser.isActive = true;
+          dbUser.balance = 100;
+          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { isActive: true, balance: 100 } });
+        }
+      }
+
       return token;
     },
   },
