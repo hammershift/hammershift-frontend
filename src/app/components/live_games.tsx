@@ -191,18 +191,23 @@ const LiveGames = () => {
                             <TimerProvider key={index} deadline={deadline}>
                                 <div
                                     className={`${
-                                        pathname === "/"
+                                        pathname === "/" ||
+                                        pathname === "/discover"
                                             ? index < 3
                                                 ? "lg:tw-block"
                                                 : "sm:tw-hidden"
                                             : null
                                     } ${
-                                        pathname === "/" && index === 3
+                                        (pathname === "/" ||
+                                            pathname === "/discover") &&
+                                        index === 3
                                             ? "lg:tw-block"
                                             : null
                                     }
                                     ${
-                                        pathname === "/" && index === 4
+                                        (pathname === "/" ||
+                                            pathname === "/discover") &&
+                                        index === 4
                                             ? "xl:tw-block"
                                             : null
                                     }`}
