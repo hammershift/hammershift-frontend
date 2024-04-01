@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -979,8 +980,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           />
         )}
       </div>
-      {!isLoggedIn ? //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-      //     href="/live"
+      {!isLoggedIn ? //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
       //     onClick={() => {
       //       closeMenu();
       //       document.body.classList.remove("stop-scrolling");
