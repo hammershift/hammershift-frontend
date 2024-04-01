@@ -92,7 +92,7 @@ const LivePageCarousel = () => {
                         </div>
                         <div>
                             <button
-                                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-z-50 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D] tw-backdrop-blur"
+                                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D] tw-backdrop-blur"
                                 onClick={leftArrowHandler}
                             >
                                 <Image
