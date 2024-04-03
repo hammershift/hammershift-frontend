@@ -41,16 +41,17 @@ export async function GET(req: NextRequest) {
         continue;
       }
 
-      const auctionTransactions = await db.collection('transactions').find({
-        auctionID: _id,
-        transactionType: "wager",
-        type: "-"
-      }).toArray();
+      const auctionTransactions = await db
+        .collection('transactions')
+        .find({
+          auctionID: _id,
+          transactionType: 'wager',
+          type: '-',
+        })
+        .toArray();
 
       // get the totalPot for the auction
-      const totalPot = 0.88 * auctionTransactions
-        .map((transaction) => transaction.amount)
-        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      const totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
       const wagers = await db.collection('wagers').find({ auctionID: _id }).toArray();
       if (wagers.length < 3) {
@@ -156,16 +157,17 @@ export async function POST(req: NextRequest) {
 
     let totalPot;
 
-    const auctionTransactions = await db.collection('transactions').find({
-      auctionID: convertedAuctionID,
-      transactionType: "wager",
-      type: "-"
-    }).toArray();
+    const auctionTransactions = await db
+      .collection('transactions')
+      .find({
+        auctionID: convertedAuctionID,
+        transactionType: 'wager',
+        type: '-',
+      })
+      .toArray();
 
     if (auctionTransactions.length > 0) {
-      totalPot = 0.88 * auctionTransactions
-        .map((transaction) => transaction.amount)
-        .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
     }
 
     const auctionStatus = auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value;
