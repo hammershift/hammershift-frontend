@@ -28,9 +28,9 @@ export default function RootLayout({
                     <Navbar />
                     <BetaTesting />
                     {children}
+                    <Analytics />
                 </body>
             </SessionProvider>
-            <Analytics />
         </html>
     );
 }
