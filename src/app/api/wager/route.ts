@@ -45,6 +45,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid auctionID' }, { status: 400 });
     }
 
+    // test for avoiding priceGuessed duplication
+    const existingWagerAmount = await db.collection('wagers').findOne({
+      auctionID: convertedAuctionID,
+      priceGuessed,
+    });
+    if (existingWagerAmount) {
+      return NextResponse.json({ message: 'This wager amount has already been used for this auction' }, { status: 400 });
+    }
+
     // check user's balance before creating a wager
     const userBalance = await db.collection('users').findOne({ _id: new mongoose.Types.ObjectId(user._id) });
     if (!userBalance || userBalance.balance < wagerAmount) {
