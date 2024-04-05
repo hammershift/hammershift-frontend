@@ -4,6 +4,13 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
+import {
+    RegExpMatcher,
+    TextCensor,
+    asteriskCensorStrategy,
+    englishDataset,
+    englishRecommendedTransformers,
+} from "obscenity";
 // images
 import ArrowDown from "../../../public/images/arrow-down.svg";
 import AvatarOne from "../../../public/images/avatar-one.svg";
@@ -26,11 +33,12 @@ import {
     dislikeReply,
 } from "@/lib/data";
 
-
-
-export const CommentsSection = ({ pageID, pageType }: {
-    pageID: string, // auction or tournament ID
-    pageType: "auction" | "tournament" // "auction" or "tournament"
+export const CommentsSection = ({
+    pageID,
+    pageType,
+}: {
+    pageID: string; // auction or tournament ID
+    pageType: "auction" | "tournament"; // "auction" or "tournament"
 }) => {
     const [sort, setSort] = useState("Best"); // "Newest", "Oldest", "Best"
     const [commentsList, setCommentsList] = useState([]);
@@ -91,7 +99,11 @@ export const CommentsSection = ({ pageID, pageType }: {
         } else {
             if (session.data?.user.id) {
                 try {
-                    const response = await createComment(pageID, pageType, comment);
+                    const response = await createComment(
+                        pageID,
+                        pageType,
+                        comment
+                    );
 
                     if (response) {
                         console.log("comment has been posted");
@@ -142,10 +154,11 @@ export const CommentsSection = ({ pageID, pageType }: {
             <div className="tw-flex tw-justify-between">
                 <div className="tw-text-xl md:tw-text-3xl">
                     <span className="tw-font-bold">Comments</span>
-                    {`(${Array.isArray(commentsList) && commentsList.length > 0
-                        ? commentsList.length
-                        : 0
-                        })`}
+                    {`(${
+                        Array.isArray(commentsList) && commentsList.length > 0
+                            ? commentsList.length
+                            : 0
+                    })`}
                 </div>
                 {session.status == "unauthenticated" && (
                     <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
@@ -175,7 +188,7 @@ export const CommentsSection = ({ pageID, pageType }: {
                         type="text"
                         value={comment}
                         placeholder="Add a comment"
-                        className="tw-bg-[#172431] tw-w-full"
+                        className="tw-bg-[#172431] tw-w-full tw-outline-none"
                         name="comment"
                         onChange={(e) => setComment(e.target.value)}
                     />
@@ -196,10 +209,11 @@ export const CommentsSection = ({ pageID, pageType }: {
                     /> */}
                 </div>
                 <button
-                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated"
-                        ? "tw-opacity-50 tw-disabled"
-                        : "btn-white"
-                        }`}
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
+                        session.status == "unauthenticated"
+                            ? "tw-opacity-50 tw-disabled"
+                            : "btn-white"
+                    }`}
                     onClick={handlePostComment}
                 >
                     Comment
@@ -234,22 +248,25 @@ export const CommentsSection = ({ pageID, pageType }: {
                         >
                             <div
                                 onClick={(e) => setSort("Newest")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Newest" ? "tw-bg-white/10" : ""
-                                    }`}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
+                                    sort == "Newest" ? "tw-bg-white/10" : ""
+                                }`}
                             >
                                 Newest
                             </div>
                             <div
                                 onClick={(e) => setSort("Oldest")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Oldest" ? "tw-bg-white/10" : ""
-                                    }`}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
+                                    sort == "Oldest" ? "tw-bg-white/10" : ""
+                                }`}
                             >
                                 Oldest
                             </div>
                             <div
                                 onClick={(e) => setSort("Best")}
-                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${sort == "Best" ? "tw-bg-white/10" : ""
-                                    }`}
+                                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
+                                    sort == "Best" ? "tw-bg-white/10" : ""
+                                }`}
                             >
                                 Best
                             </div>
@@ -338,6 +355,12 @@ export const CommentsCard = ({
     const [replyInput, setReplyInput] = useState(false);
     const [replyDropdown, setReplyDropdown] = useState(false);
     const [repliesData, setRepliesData] = useState([]);
+    const matcher = new RegExpMatcher({
+        ...englishDataset.build(),
+        ...englishRecommendedTransformers,
+    });
+    const censor = new TextCensor().setStrategy(asteriskCensorStrategy());
+    const matches = matcher.getAllMatches(comment);
 
     useEffect(() => {
         function handleClickOutside(event: any) {
@@ -494,7 +517,7 @@ export const CommentsCard = ({
                     )}
                 </div>
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-                    {comment}
+                    {censor.applyTo(comment, matches)}
                 </div>
                 <div className="tw-flex tw-opacity-50 tw-items-center">
                     <div
@@ -593,8 +616,9 @@ export const CommentsCard = ({
                                 alt="camera plus"
                                 className="tw-w-4 tw-h-4 tw-mr-2 "
                             />
-                            {`${replies.length} ${replies.length > 1 ? "Replies" : "Reply"
-                                }`}
+                            {`${replies.length} ${
+                                replies.length > 1 ? "Replies" : "Reply"
+                            }`}
                         </div>
                         {replyDropdown && (
                             <div>
@@ -689,10 +713,11 @@ const ReplyInputDropdown = ({
                     />
                 </div>
                 <button
-                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${session.status == "unauthenticated"
-                        ? "tw-opacity-50 tw-disabled"
-                        : "btn-white"
-                        }`}
+                    className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
+                        session.status == "unauthenticated"
+                            ? "tw-opacity-50 tw-disabled"
+                            : "btn-white"
+                    }`}
                     onClick={handlePostReply}
                 >
                     Reply
