@@ -11,19 +11,22 @@ export async function refundWagers(wagerIDs: ObjectId[]): Promise<void> {
       .collection('wagers')
       .find({ _id: { $in: wagerIDs.map((id) => new ObjectId(id)) } })
       .toArray();
+
     if (wagers.length === 0) {
-      console.log('No wagers found for provided IDs:', wagerIDs);
+      console.log('No wagers found for provided IDs:', JSON.stringify(wagerIDs));
       return;
     }
 
     const userBalanceBulkOps = [];
     const transactionBulkOps = [];
 
+    console.log(`Starting refund process for wagers: ${JSON.stringify(wagerIDs)}`);
+
     for (const wager of wagers) {
       try {
         const user = await db.collection('users').findOne({ _id: wager.user._id });
         if (!user) {
-          console.log(`User not found for wager ${wager._id}, skipping refund.`);
+          console.log(`User not found for Wager: ${wager._id}, skipping refund.`);
           continue;
         }
 
@@ -51,21 +54,33 @@ export async function refundWagers(wagerIDs: ObjectId[]): Promise<void> {
           },
         });
       } catch (error) {
-        console.error(`Error processing refund for wager ${wager._id}:`, error);
+        console.error(`Error processing refund for Wager: ${wager._id}:`, error);
       }
     }
 
+    // if (userBalanceBulkOps.length > 0) {
+    //   await db.collection('users').bulkWrite(userBalanceBulkOps);
+    //   // console.log('User balances updated for refund.');
+    //   console.log(`User balances updated for refunds: ${JSON.stringify(userBalanceBulkOps.map((op) => op.updateOne.filter._id))}`);
+    // }
+
     if (userBalanceBulkOps.length > 0) {
-      await db.collection('users').bulkWrite(userBalanceBulkOps);
-      console.log('User balances updated for refund.');
+      const updateBalancesResult = await db.collection('users').bulkWrite(userBalanceBulkOps);
+      console.log(`User balances updated for refunds: ${updateBalancesResult.modifiedCount} of ${userBalanceBulkOps.length}`);
     }
 
     if (transactionBulkOps.length > 0) {
-      await db.collection('transactions').bulkWrite(transactionBulkOps);
-      console.log('Refund transactions created.');
+      const transactionsResult = await db.collection('transactions').bulkWrite(transactionBulkOps);
+      console.log(`Refund transactions created: ${transactionsResult.insertedCount} of ${transactionBulkOps.length}`);
     }
 
-    console.log(`Refunds processed for wagers: ${wagerIDs}`);
+    // if (transactionBulkOps.length > 0) {
+    //   await db.collection('transactions').bulkWrite(transactionBulkOps);
+    //   // console.log('Refund transactions created.');
+    //   console.log(`Refund transactions created for wagers: ${JSON.stringify(transactionBulkOps.map((op) => op.insertOne.document.wagerID))}`);
+    // }
+
+    console.log(`Completed refunds for wagers: ${JSON.stringify(wagerIDs.map((id) => id.toString()))}`);
   } catch (error) {
     console.error(`Error in refundWagers function:`, error);
   }
