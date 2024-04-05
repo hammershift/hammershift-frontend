@@ -18,6 +18,8 @@ type WagerWithDelta = Wager & {
   delta: number;
 };
 
+// TO-DO: Still no logic for tie-cases
+
 const rankPoints = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
 
 function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot: number): Winner[] {
