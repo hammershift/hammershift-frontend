@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const attributeSchema = new mongoose.Schema({
   key: { type: String, required: true },
@@ -15,19 +15,19 @@ const imageSchema = new mongoose.Schema({
 const winnerSchema = new mongoose.Schema({
   userID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
   },
   objectID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Auction",
+    ref: 'Auction',
   },
   transaction: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Transaction",
+    ref: 'Transaction',
   },
   wager: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Wager",
+    ref: 'Wager',
   },
   auctionID: {
     type: String,
@@ -75,18 +75,18 @@ const carSchema = new mongoose.Schema(
     listing_details: { type: [String], required: true },
     page_url: { type: String, required: true },
     website: { type: String, required: true },
+    isProcessed: { type: Boolean, default: false },
     winners: [winnerSchema],
     wagers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Wager",
+        ref: 'Wager',
       },
     ],
   },
   { timestamps: true }
 );
 
-const Auctions =
-  mongoose.models.auctions || mongoose.model("auctions", carSchema);
+const Auctions = mongoose.models.auctions || mongoose.model('auctions', carSchema);
 
 export default Auctions;

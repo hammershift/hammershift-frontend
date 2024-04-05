@@ -60,9 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     // deduct buy-in amount from the user's wallet
-    const userInfo = await db
-      .collection('users')
-      .findOne({ _id: new mongoose.Types.ObjectId(user._id) });
+    const userInfo = await db.collection('users').findOne({ _id: new mongoose.Types.ObjectId(user._id) });
 
     if (userInfo) {
       if (userInfo.balance < buyInAmount) {
@@ -82,7 +80,6 @@ export async function POST(req: NextRequest) {
 
     const tournamentImages = tournamentAuctions.map((auction) => auction.image);
 
-
     // create the transaction record for the buy-in
     await db.collection('transactions').insertOne({
       userID: new mongoose.Types.ObjectId(user._id),
@@ -98,7 +95,7 @@ export async function POST(req: NextRequest) {
       wagers,
       buyInAmount,
       user,
-      tournamentImages
+      tournamentImages,
     });
 
     await db.collection('tournament_wagers').insertOne(newTournamentWager);
@@ -134,16 +131,18 @@ export async function GET(req: NextRequest) {
       const userWager = await db.collection('tournament_wagers').findOne({
         tournamentID: new ObjectId(tournamentID),
         'user._id': new ObjectId(userID),
-        isActive: true
+        isActive: true,
       });
       return NextResponse.json(userWager);
     }
 
     if (tournamentID) {
-      const wagers = await db.collection('tournament_wagers').find({
-        tournamentID: new ObjectId(tournamentID),
-        isActive: true
-      })
+      const wagers = await db
+        .collection('tournament_wagers')
+        .find({
+          tournamentID: new ObjectId(tournamentID),
+          isActive: true,
+        })
         .sort({ createdAt: -1 })
         .toArray();
       return NextResponse.json(wagers);

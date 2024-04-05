@@ -14,115 +14,167 @@ import { refundWagers } from '@/helpers/refundWagers';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
 
 export async function GET(req: NextRequest) {
-  // const session = await getServerSession(authOptions);
-  // if (!session) {
-  //   return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  // }
-
   try {
     const client = await clientPromise;
     const db = client.db();
 
-    // get all auction IDs that need processing
-    const auctionsToProcess = await db
+    // auctions to process
+    const auctions = await db
       .collection('auctions')
-      .find({ 'attributes.key': 'status', 'attributes.value': 2, pot: { $gt: 0 } })
-      .project({ _id: 1 })
+      .find({
+        pot: { $gt: 0 },
+        isProcessed: { $ne: true },
+        winners: { $exists: false },
+      })
+      .project({ _id: 1, pot: 1, attributes: { $elemMatch: { key: 'status' } } })
       .toArray();
 
-    let auctionsToUpdate = []; // to update to status 3
-    let wagerIDsForRefund = []; // store wagerIDs for refunds
-
-    // loop over all auction IDs
-    for (const { _id } of auctionsToProcess) {
-      const auction = await db.collection('auctions').findOne({ _id });
-      if (!auction) {
-        console.error(`Auction with ID ${_id} not found`);
-        continue;
-      }
-
-      const auctionTransactions = await db
-        .collection('transactions')
-        .find({
-          auctionID: _id,
-          transactionType: 'wager',
-          type: '-',
-        })
-        .toArray();
-
-      // get the totalPot for the auction
-      const totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-      const wagers = await db.collection('wagers').find({ auctionID: _id }).toArray();
-      if (wagers.length < 3) {
-        auctionsToUpdate.push(_id);
-        wagerIDsForRefund.push(...wagers.map((wager) => wager._id));
-        continue;
-      }
-
-      const finalSellingPrice = auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0;
-
-      const formattedWagers = wagers.map((wager) => ({
-        _id: wager._id,
-        userID: wager.user._id,
-        priceGuessed: wager.priceGuessed,
-      }));
-
-      const winners = prizeDistribution(formattedWagers, finalSellingPrice, totalPot);
-
-      for (const winner of winners) {
-        const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
-        if (correspondingWager) {
-          const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize);
-          console.log(`Updating wallet balance for user ${winner.userID} with amount ${winner.prize}`);
-          await updateWinnerWallet(new ObjectId(winner.userID), winner.prize);
-          console.log(`Wallet balance updated for user ${winner.userID}`);
-          await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize);
-
-          winner.transactionID = transactionId;
-        }
-      }
-
-      const winnerObjects = winners.map((winner) => {
-        const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
-
+    const auctionsToProcess = await Promise.all(
+      auctions.map(async (auction) => {
+        const playerCount = await db.collection('wagers').countDocuments({ auctionID: auction._id });
+        const status = auction.attributes[0]?.value;
         return {
-          userID: new mongoose.Types.ObjectId(winner.userID),
-          objectID: _id,
-          wagerID: correspondingWager ? correspondingWager._id : null,
-          transaction: winner.transactionID,
-          auctionID: auction.auction_id,
-          prize: winner.prize,
-          rank: winner.rank,
-          username: correspondingWager ? correspondingWager.user.username : null,
-          userImage: correspondingWager ? correspondingWager.user.image : null,
-          priceGuessed: correspondingWager ? correspondingWager.priceGuessed : null,
-          winningDate: new Date(),
+          _id: auction._id,
+          pot: auction.pot,
+          playerCount,
+          status,
+          attributes: auction.attributes,
         };
-      });
+      })
+    );
 
-      await db.collection('auctions').updateOne(
-        { _id },
-        {
-          $push: { winners: { $each: winnerObjects } },
-          $set: { 'attributes.$[elem].value': 4 },
-        },
-        { arrayFilters: [{ 'elem.key': 'status' }] }
-      );
+    console.log('Auctions to process:', auctionsToProcess.length);
+    console.log('Auctions with placed wagers:', auctionsToProcess);
+
+    for (const auction of auctionsToProcess) {
+      console.log(`Processing auction ${auction._id} with status ${auction.status}`);
+
+      switch (auction.status) {
+        case 1:
+          console.log(`Auction: ${auction._id} is live/ongoing. No action needed at this time`);
+          break;
+
+        case 2:
+          console.log(`Auction: ${auction._id} has ${auction.playerCount} players and status of ${auction.status}`);
+          if (auction.playerCount < 3) {
+            console.log(`Refunding players for auction: ${auction._id} due to insufficient player. Player count: (${auction.playerCount})`);
+
+            // refund
+            const wagersToRefund = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
+            const wagerIDsToRefund = wagersToRefund.map((wager) => wager._id);
+            await refundWagers(wagerIDsToRefund);
+
+            await db.collection('auctions').updateOne(
+              { _id: auction._id, 'attributes.key': 'status' },
+              {
+                $set: {
+                  'attributes.$[elem].value': 3,
+                  isProcessed: true,
+                },
+              },
+              { arrayFilters: [{ 'elem.key': 'status' }] }
+            );
+          } else {
+            console.log(`Processing wiiner for auction: ${auction._id} `);
+
+            // get the totalPot
+            const auctionTransactions = await db
+              .collection('transactions')
+              .find({
+                auctionID: auction._id,
+                transactionType: 'wager',
+                type: '-',
+              })
+              .toArray();
+
+            const totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+            const wagers = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
+
+            const formattedWagers = wagers.map((wager) => ({
+              _id: wager._id,
+              userID: wager.user._id,
+              priceGuessed: wager.priceGuessed,
+            }));
+
+            const finalSellingPrice = auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0;
+
+            const winners = prizeDistribution(formattedWagers, finalSellingPrice, totalPot);
+
+            for (const winner of winners) {
+              const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
+              if (correspondingWager) {
+                const transactionId = await createWinningTransaction(new ObjectId(winner.userID), winner.prize);
+                console.log(`Updating wallet balance for user: ${winner.userID} with amount: ${winner.prize}`);
+
+                const updateResult = await updateWinnerWallet(new ObjectId(winner.userID), winner.prize);
+                console.log(
+                  JSON.stringify({
+                    action: 'Update wallet balance',
+                    userID: winner.userID,
+                    amount: winner.prize,
+                    transactionID: transactionId,
+                    updateResult: updateResult,
+                  })
+                );
+
+                await addWagerWinnings(new ObjectId(winner.wagerID), winner.prize);
+                winner.transactionID = transactionId;
+              }
+            }
+
+            const winnerObjects = winners.map((winner) => {
+              const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
+
+              return {
+                userID: new mongoose.Types.ObjectId(winner.userID),
+                objectID: auction._id,
+                wagerID: correspondingWager ? correspondingWager._id : null,
+                transaction: winner.transactionID,
+                auctionID: auction._id,
+                rank: winner.rank,
+                username: correspondingWager ? correspondingWager.user.username : null,
+                userImage: correspondingWager ? correspondingWager.user.image : null,
+                priceGuessed: correspondingWager ? correspondingWager.priceGuessed : null,
+                winningDate: new Date(),
+              };
+            });
+
+            await db.collection('auctions').updateOne(
+              { _id: auction._id, 'attributes.key': 'status' },
+              {
+                $push: { winners: { $each: winnerObjects } },
+                $set: {
+                  'attributes.$[elem].value': 4,
+                  isProcessed: true,
+                },
+              },
+              { arrayFilters: [{ 'elem.key': 'status' }] }
+            );
+          }
+          console.log(`Case 2 processing for auction: ${auction._id} completed`);
+          break;
+
+        case 3:
+          console.log(`Auction: ${auction._id} is unsuccessful or withdrawn. Refunding all players`);
+
+          // get all the wagers that need to be refunded
+          const wagersToRefund = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
+          if (wagersToRefund.length === 0) {
+            console.log(`No wagers to refund for auction: ${auction._id}`);
+          } else {
+            const wagerIDsToRefund = wagersToRefund.map((wager) => wager._id);
+            await refundWagers(wagerIDsToRefund);
+            console.log(`Refund process intiated for ${wagerIDsToRefund.length} wagers in auction: ${auction._id}`);
+          }
+
+          await db.collection('auctions').updateOne({ _id: auction._id }, { $set: { isProcessed: true } });
+
+          console.log(`Case 3 processing completed for auction: ${auction._id}.`);
+          break;
+      }
     }
 
-    // update status for auctions with insufficient players
-    for (const auctionID of auctionsToUpdate) {
-      await db.collection('auctions').updateOne({ _id: auctionID, 'attributes.key': 'status' }, { $set: { 'attributes.$.value': 3 } });
-    }
-
-    // perform refunds in a batch
-    if (wagerIDsForRefund.length > 0) {
-      await refundWagers(wagerIDsForRefund);
-    }
-
-    const dateNow = new Date();
-    console.log('Auctions processed at:', dateNow);
     return NextResponse.json({ message: 'Auctions processed' }, { status: 200 });
   } catch (error) {
     console.error('Error in POST auctionWinner API:', error);
