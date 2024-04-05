@@ -18,20 +18,20 @@ export async function updateWinnerWallet(userID: ObjectId, amount: number): Prom
       .collection('users')
       .updateOne({ _id: userID }, { $set: { balance: newBalance } }, { session });
 
-    console.log(`Attempted to update wallet balance for userID: ${userID}, Amount: ${amount}`);
-    console.log('Update wallet result:', updateResult);
+    console.log(`Attempting to update wallet balance for user ID: ${userID}, Amount: ${amount}`);
+    console.log(`Update result for user ID: ${userID}: ${JSON.stringify(updateResult)}`);
 
     // if the update was successful, commit the transaction
     if (updateResult.modifiedCount > 0) {
       await session.commitTransaction();
-      console.log(`Transaction committed: Wallet balance updated for user ${userID}.`);
+      console.log(`Transaction committed: Wallet balance successfully updated for user ID: ${userID}. New Balance: ${newBalance}`);
     } else {
       await session.abortTransaction();
-      console.log(`Transaction aborted: No updates made to the wallet for userID: ${userID}.`);
+      console.log(`Transaction aborted: No update made to wallet balance for user ID: ${userID}.`);
     }
   } catch (error) {
     await session.abortTransaction();
-    console.error(`Error updating wallet balance for userID: ${userID}:`, error);
+    console.error(`Failed to update wallet balance for user ID: ${userID}, Error: ${error}`);
   } finally {
     await session.endSession();
   }
