@@ -46,6 +46,7 @@ interface WagerModalProps {
     invalidPrice: boolean;
     invalidWager: boolean;
     isButtonClicked: boolean;
+    wagerAmountAlreadyExists: boolean;
     closeWagerModal: () => void;
 }
 
@@ -67,6 +68,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
     invalidWager,
     isButtonClicked,
     closeWagerModal,
+    wagerAmountAlreadyExists,
 }) => {
     const router = useRouter();
     const timerValues = useTimer();
@@ -289,6 +291,13 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
                                         *Invalid input. Please enter numeric
                                         values only.
+                                    </div>
+                                )}
+                                {wagerAmountAlreadyExists && (
+                                    <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
+                                        *This wager amount has already been used
+                                        for this auction. Please enter a
+                                        different one.
                                     </div>
                                 )}
                             </div>

@@ -218,6 +218,7 @@ export const createWager = async (
     },
     body: JSON.stringify({ ...body }),
   });
+
   return response;
 };
 

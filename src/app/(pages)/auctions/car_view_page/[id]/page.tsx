@@ -54,6 +54,8 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
     const [isButtonClicked, setIsButtonClicked] = useState(false);
     const [prize, setPrize] = useState(0);
     const [newSocket, setNewSocket] = useState<any>();
+    const [wagerAmountAlreadyExists, setWagerAmountAlreadyExists] =
+        useState(false);
 
     // const router = useRouter();
 
@@ -254,6 +256,30 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
         }
 
         try {
+            // the wallet has been successfully updated, place the wager
+            const wagerResponse = await createWager({
+                ...wagerInputs,
+                wagerAmount: fixedWagerAmount,
+                user: sessionData.user,
+                auctionIdentifierId: carData.auction_id,
+            });
+            const data = await wagerResponse.json();
+
+            if (
+                data.message ===
+                "This wager amount has already been used for this auction"
+            ) {
+                setWagerAmountAlreadyExists(true);
+                setIsButtonClicked(false);
+                return;
+            }
+            setWagerAmountAlreadyExists(false);
+
+            if (!wagerResponse.ok) {
+                console.error("Failed to place wager");
+                return;
+            }
+
             // update the prize pool
             await addPrizePool(
                 {
@@ -274,18 +300,6 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             const walletData = await walletResponse.json();
             if (!walletResponse.ok) {
                 console.error("Failed to update wallet balance:", walletData); // if the wallet update was not successful, log the error and stop
-                return;
-            }
-
-            // the wallet has been successfully updated, place the wager
-            const wagerResponse = await createWager({
-                ...wagerInputs,
-                wagerAmount: fixedWagerAmount,
-                user: sessionData.user,
-                auctionIdentifierId: carData.auction_id,
-            });
-            if (!wagerResponse.ok) {
-                console.error("Failed to place wager");
                 return;
             }
 
@@ -335,6 +349,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                         invalidWager={invalidWager}
                         isButtonClicked={isButtonClicked}
                         closeWagerModal={closeWagerModal}
+                        wagerAmountAlreadyExists={wagerAmountAlreadyExists}
                     />
                 </TimerProvider>
             ) : null}
