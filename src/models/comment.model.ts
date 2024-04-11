@@ -13,6 +13,10 @@ const commentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: false,
     },
+    parentID: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+    },
     user: {
         type: Object,
         required: true,
@@ -36,47 +40,6 @@ const commentSchema = new mongoose.Schema({
     },
     dislikes: {
         type: Array
-    },
-    replies: {
-        type: Array,
-        required: false,
-        properties: {
-            _id: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true,
-            },
-            reply: {
-                type: String,
-                required: true,
-            },
-            user: {
-                type: Object,
-                required: true,
-                properties: {
-                    UserId: {
-                        type: String,
-                        required: true,
-                    },
-                    username: {
-                        type: String,
-                        required: true,
-                    },
-                    profilePicture: {
-                        type: String,
-                    },
-                }
-            },
-            likes: {
-                type: Array
-            },
-            dislikes: {
-                type: Array
-            },
-            createdAt: {
-                type: Date,
-                default: Date.now,
-            },
-        }
     },
     createdAt: {
         type: Date,

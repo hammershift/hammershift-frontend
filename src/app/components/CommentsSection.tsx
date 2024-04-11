@@ -11,6 +11,9 @@ import {
     englishDataset,
     englishRecommendedTransformers,
 } from "obscenity";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 // images
 import ArrowDown from "../../../public/images/arrow-down.svg";
 import AvatarOne from "../../../public/images/avatar-one.svg";
@@ -31,6 +34,7 @@ import {
     deleteReply,
     likeReply,
     dislikeReply,
+    getReplies,
 } from "@/lib/data";
 
 export const CommentsSection = ({
@@ -294,9 +298,9 @@ export const CommentsSection = ({
                                     userID={session.data?.user.id}
                                     setReload={setReload}
                                     commenterUserID={item.user.userId}
-                                    replies={item.replies || []}
                                     pageID={pageID}
                                     session={session}
+                                    pageType={pageType}
                                 />
                             </div>
                         ))
@@ -331,9 +335,9 @@ export const CommentsCard = ({
     userID,
     setReload,
     commenterUserID,
-    replies,
     pageID,
     session,
+    pageType,
 }: {
     comment: string;
     username: string;
@@ -344,9 +348,9 @@ export const CommentsCard = ({
     userID: string;
     setReload: any;
     commenterUserID: string;
-    replies: string[];
     pageID: string;
     session: any;
+    pageType: "auction" | "tournament";
 }) => {
     const dropdownRef = useRef<any | null>(null);
     const [dropdown, setDropdown] = useState(false);
@@ -354,13 +358,21 @@ export const CommentsCard = ({
     const [likeDislikeAlert, setLikeDislikeAlert] = useState(false);
     const [replyInput, setReplyInput] = useState(false);
     const [replyDropdown, setReplyDropdown] = useState(false);
-    const [repliesData, setRepliesData] = useState([]);
+    const [replies, setReplies] = useState([]);
     const matcher = new RegExpMatcher({
         ...englishDataset.build(),
         ...englishRecommendedTransformers,
     });
     const censor = new TextCensor().setStrategy(asteriskCensorStrategy());
     const matches = matcher.getAllMatches(comment);
+
+    useEffect(() => {
+        async function fetchReplies() {
+            const replies = await getReplies(commentID);
+            setReplies(replies);
+        }
+        fetchReplies();
+    }, []);
 
     useEffect(() => {
         function handleClickOutside(event: any) {
@@ -377,23 +389,6 @@ export const CommentsCard = ({
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-    const timeSince = (dateString: string) => {
-        const date = new Date(dateString);
-        const now = new Date();
-
-        const diffInMilliseconds = Math.abs(now.getTime() - date.getTime());
-        const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-        const diffInDays = Math.floor(
-            diffInMilliseconds / (1000 * 60 * 60 * 24)
-        );
-
-        if (diffInDays > 0) {
-            return `${diffInDays} day(s) ago`;
-        }
-
-        return `${diffInHours} hour(s) ago`;
-    };
 
     const handleLiking = async (e: any) => {
         e.preventDefault();
@@ -487,7 +482,7 @@ export const CommentsCard = ({
                         <span className="tw-font-bold">{username}</span>
                         <span className="tw-text-[#F2CA16] tw-ml-2">User</span>
                         <span className="tw-opacity-50 tw-ml-2">
-                            {timeSince(createdAt)}
+                            {dayjs(createdAt).fromNow()}
                         </span>
                     </div>
                     <div onClick={(e) => setDropdown((prev) => !prev)}>
@@ -596,6 +591,7 @@ export const CommentsCard = ({
                         setReload={setReload}
                         commentID={commentID}
                         pageID={pageID}
+                        pageType={pageType}
                     />
                 )}
 
@@ -627,7 +623,7 @@ export const CommentsCard = ({
                                     <ReplyCard
                                         key={item._id}
                                         replyID={item._id}
-                                        reply={item.reply}
+                                        reply={item.comment}
                                         replyUserID={item.user?.userId}
                                         username={item.user?.username}
                                         createdAt={item.createdAt}
@@ -652,11 +648,13 @@ const ReplyInputDropdown = ({
     setReload,
     commentID,
     pageID,
+    pageType,
 }: {
     session: any;
     setReload: any;
     commentID: string;
     pageID: string;
+    pageType: "auction" | "tournament";
 }) => {
     const [reply, setReply] = useState("");
     const [replyAlert, setReplyAlert] = useState(false);
@@ -674,8 +672,9 @@ const ReplyInputDropdown = ({
                 try {
                     const response = await createReply(
                         commentID,
-                        reply,
-                        pageID
+                        pageID,
+                        pageType,
+                        reply
                     );
 
                     if (response) {
@@ -758,23 +757,12 @@ const ReplyCard = ({
     const [deleteAlert, setDeleteAlert] = useState(false);
     const [likeDislikeAlert, setLikeDislikeAlert] = useState(false);
     const dropdownRef = useRef<any | null>(null);
-
-    const timeSince = (dateString: string) => {
-        const date = new Date(dateString);
-        const now = new Date();
-
-        const diffInMilliseconds = Math.abs(now.getTime() - date.getTime());
-        const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-        const diffInDays = Math.floor(
-            diffInMilliseconds / (1000 * 60 * 60 * 24)
-        );
-
-        if (diffInDays > 0) {
-            return `${diffInDays} day(s) ago`;
-        }
-
-        return `${diffInHours} hour(s) ago`;
-    };
+    const matcher = new RegExpMatcher({
+        ...englishDataset.build(),
+        ...englishRecommendedTransformers,
+    });
+    const censor = new TextCensor().setStrategy(asteriskCensorStrategy());
+    const matches = matcher.getAllMatches(reply);
 
     const handleDeleteReply = async () => {
         setDropdown(false);
@@ -786,8 +774,7 @@ const ReplyCard = ({
                     const response = await deleteReply(
                         replyID,
                         userID,
-                        replyUserID,
-                        commentID
+                        replyUserID
                     );
 
                     if (response) {
@@ -815,12 +802,7 @@ const ReplyCard = ({
     const handleLiking = async () => {
         if (userID) {
             try {
-                const response = await likeReply(
-                    commentID,
-                    replyID,
-                    userID,
-                    likes
-                );
+                const response = await likeComment(replyID, userID, likes);
                 if (response) {
                     console.log("reply has been liked");
                     setReload((prev: number) => prev + 1);
@@ -839,8 +821,7 @@ const ReplyCard = ({
     const handleDisliking = async () => {
         if (userID) {
             try {
-                const response = await dislikeReply(
-                    commentID,
+                const response = await dislikeComment(
                     replyID,
                     userID,
                     dislikes
@@ -881,7 +862,7 @@ const ReplyCard = ({
                         <span className="tw-font-bold">{username}</span>
                         <span className="tw-text-[#F2CA16] tw-ml-1">User</span>
                         <span className="tw-opacity-50 tw-ml-1">
-                            {timeSince(createdAt)}
+                            {dayjs(createdAt).fromNow()}
                         </span>
                     </div>
                     <div onClick={(e) => setDropdown((prev) => !prev)}>
@@ -911,7 +892,7 @@ const ReplyCard = ({
                     )}
                 </div>
                 <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
-                    {reply}
+                    {censor.applyTo(reply, matches)}
                 </div>
                 <div className="tw-flex tw-opacity-50 tw-items-center">
                     <div

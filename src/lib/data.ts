@@ -655,19 +655,38 @@ export const dislikeComment = async (
   }
 };
 
+//gets replies by parentid
+export const getReplies = async (
+  parentID: string,
+) => {
+  try {
+    const res = await fetch(
+      `/api/comments?parentID=${parentID}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      return data.replies;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return { message: "cannot get comments" };
+  }
+};
+
 // creates reply
 export const createReply = async (
   commentID: string,
-  reply: string,
-  auctionID: string
+  pageID: string,
+  pageType: "auction" | "tournament",
+  comment: string
 ) => {
   try {
-    const res = await fetch("/api/comments/replies", {
+    const res = await fetch("/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ commentID, reply, auctionID }),
+      body: JSON.stringify({ commentID, comment, pageID, pageType }),
     });
     if (res.ok) {
       const data = await res.json();
@@ -684,26 +703,26 @@ export const deleteReply = async (
   replyID: string,
   userID: string,
   replyUserID: string,
-  commentID: string
 ) => {
   if (userID == replyUserID) {
     try {
-      const res = await fetch("/api/comments/replies", {
+      const res = await fetch("/api/comments", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ replyID, commentID }),
+        body: JSON.stringify({ commentID: replyID }),
       });
       if (res.ok) {
-        return res;
+        const data = await res.json();
+        return data;
       }
     } catch (error) {
       console.error("Error:", error);
       throw error;
     }
   } else {
-    console.error("deleter not reply owner");
+    console.log("deleter not comment owner");
   }
 };
 
