@@ -22,11 +22,22 @@ export async function GET(req: NextRequest) {
     const auctions = await db
       .collection('auctions')
       .find({
+        attributes: {
+          $elemMatch: {
+            key: 'status',
+            value: { $in: [2, 3] },
+          },
+        },
         pot: { $gt: 0 },
         isProcessed: { $ne: true },
         winners: { $exists: false },
       })
       .project({ _id: 1, pot: 1, attributes: { $elemMatch: { key: 'status' } } })
+      .toArray();
+
+    const allWagers = await db
+      .collection('wagers')
+      .find({ auctionID: { $in: auctions.map((auction) => auction._id) } })
       .toArray();
 
     const auctionsToProcess = await Promise.all(
@@ -46,8 +57,15 @@ export async function GET(req: NextRequest) {
     console.log('Auctions to process:', auctionsToProcess.length);
     console.log('Auctions with placed wagers:', auctionsToProcess);
 
+    if (auctionsToProcess.length === 0) {
+      console.log('No auctions available for processing that meet the specified criteria.');
+      return NextResponse.json({ message: 'No auctions available for processing that meet the specified criteria.' });
+    }
+
     for (const auction of auctionsToProcess) {
       console.log(`Processing auction ${auction._id} with status ${auction.status}`);
+
+      const wagers = allWagers.filter((wager) => wager.auctionID.toString() === auction._id.toString());
 
       switch (auction.status) {
         case 1:
@@ -60,8 +78,7 @@ export async function GET(req: NextRequest) {
             console.log(`Refunding players for auction: ${auction._id} due to insufficient player. Player count: (${auction.playerCount})`);
 
             // refund
-            const wagersToRefund = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
-            const wagerIDsToRefund = wagersToRefund.map((wager) => wager._id);
+            const wagerIDsToRefund = wagers.map((wager) => wager._id);
             await refundWagers(wagerIDsToRefund);
 
             await db.collection('auctions').updateOne(
@@ -75,7 +92,7 @@ export async function GET(req: NextRequest) {
               { arrayFilters: [{ 'elem.key': 'status' }] }
             );
           } else {
-            console.log(`Processing wiiner for auction: ${auction._id} `);
+            console.log(`Processing winner for auction: ${auction._id} `);
 
             // get the totalPot
             const auctionTransactions = await db
@@ -159,11 +176,10 @@ export async function GET(req: NextRequest) {
           console.log(`Auction: ${auction._id} is unsuccessful or withdrawn. Refunding all players`);
 
           // get all the wagers that need to be refunded
-          const wagersToRefund = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
-          if (wagersToRefund.length === 0) {
+          if (wagers.length === 0) {
             console.log(`No wagers to refund for auction: ${auction._id}`);
           } else {
-            const wagerIDsToRefund = wagersToRefund.map((wager) => wager._id);
+            const wagerIDsToRefund = wagers.map((wager) => wager._id);
             await refundWagers(wagerIDsToRefund);
             console.log(`Refund process intiated for ${wagerIDsToRefund.length} wagers in auction: ${auction._id}`);
           }
