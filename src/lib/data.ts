@@ -701,6 +701,20 @@ export const dislikeComment = async (
   }
 };
 
+//gets replies by parentid
+export const getReplies = async (parentID: string) => {
+  try {
+    const res = await fetch(`/api/comments?parentID=${parentID}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.replies;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    return { message: "cannot get comments" };
+  }
+};
+
 // creates reply
 export const createReply = async (
   commentID: string,
