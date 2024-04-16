@@ -58,23 +58,39 @@ const LiveGames = () => {
         }
 
         if (pathname === "/" || pathname === "/discover") {
-          const liveGamesData = await getLiveAuctionsToDisplay(5);
           setIsLoading(true);
+          let liveGamesData;
+          try {
+            liveGamesData = await getLiveAuctionsToDisplay(5);
+          } catch (error) {
+            console.error("Error fetching liveGamesData:", error);
+          }
 
-          if (liveGamesData && "cars" in liveGamesData) {
+          if (
+            liveGamesData &&
+            "cars" in liveGamesData &&
+            liveGamesData.total > 0
+          ) {
             setLiveGames(liveGamesData.cars);
-            console.log(liveGames)
             setIsLoading(false);
           } else {
-            console.error("Unexpected data structure:", liveGamesData);
+            // If liveGamesData.total is 0, fetch from defaultLiveGamesData
+            const defaultLiveGamesData = await getCarsWithFilter({ limit: 5 });
+            if (defaultLiveGamesData && "cars" in defaultLiveGamesData) {
+              setLiveGames(defaultLiveGamesData.cars);
+            } else {
+              console.error("Unexpected data structure:", defaultLiveGamesData);
+            }
+            setIsLoading(false);
           }
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        setIsLoading(false);
       }
     };
     fetchData();
-  }, []);
+  }, [pathname]);
 
   return (
     <div className="tw-py-8 sm:tw-py-16">
