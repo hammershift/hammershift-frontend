@@ -1,4 +1,4 @@
-import mongoose, { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
 type Wager = {
   userID: string;
@@ -9,6 +9,7 @@ type Wager = {
 type Winner = {
   userID: string;
   prize: number;
+  points: number;
   rank: number;
   wagerID: mongoose.Types.ObjectId;
   transactionID?: mongoose.Types.ObjectId;
@@ -18,8 +19,10 @@ type WagerWithDelta = Wager & {
   delta: number;
 };
 
-function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot: number): Winner[] {
-  // add delta to each wager (diff between guessed price and final selling price)
+const rankPoints = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+
+function prizeAlgorithm(wagers: Wager[], finalSellingPrice: number, totalPot: number): Winner[] {
+  // add delta to each wager (difference between guessed price and final selling price)
   const wagersWithDelta: WagerWithDelta[] = wagers.map((wager) => ({
     ...wager,
     delta: Math.abs(wager.priceGuessed - finalSellingPrice),
@@ -29,54 +32,70 @@ function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot:
   // sort wagers by their delta (closeness to the final selling price)
   const sortedWagers: WagerWithDelta[] = [...wagersWithDelta].sort((a, b) => a.delta - b.delta);
 
-  const winners: Winner[] = [];
   const prizeDistributionPercentages = [0.5, 0.3, 0.2];
+  const winners: Winner[] = [];
 
-  // these variables track the distribution of the prize pool and the ranking of winners
   let prizePercentageIndex = 0;
   let currentRank = 1;
 
+  console.log(`Starting prize distribution for final selling price: $${finalSellingPrice}`);
+
   for (let i = 0; i < sortedWagers.length; i++) {
-    const wager = sortedWagers[i];
+    const currentWager = sortedWagers[i];
+    const tiedWagers = sortedWagers.filter((w) => w.delta === currentWager.delta);
+    console.log(`Found ${tiedWagers.length} wager(s) with delta ${currentWager.delta}` + (tiedWagers.length > 1 ? ', indicating a tie' : ''));
 
-    // this will find all wagers that have the same delta, meaning for tie cases.
-    const tiedWinners = sortedWagers.filter((w) => w.delta === wager.delta);
-
-    let prizePercentageForGroup = 0;
-    for (let j = 0; j < tiedWinners.length; j++) {
-      prizePercentageForGroup += prizeDistributionPercentages[prizePercentageIndex + j] || 0;
-    }
+    // calculate combined points for the tied ranks
+    const totalPointsForTiedRanks =
+      tiedWagers.length > rankPoints.length ? 0 : rankPoints.slice(currentRank - 1, currentRank - 1 + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
+    const pointsPerWinner = totalPointsForTiedRanks / tiedWagers.length;
 
     // calculate the total prize for this group based on the prize/winning percentage
-    // Ex. if the pot is 1000 and that group's % is 80%, total prize is 1000 * .8 = 800
-    const totalPrizeForGroup = totalPot * prizePercentageForGroup;
+    let remainingPrizePercentage = prizeDistributionPercentages.slice(prizePercentageIndex).reduce((acc, cur) => acc + cur, 0);
+    let totalPrizePercentageForGroup = 0;
 
-    // to determine the prize each winner in the group will get
-    const prizePerWinner = totalPrizeForGroup / tiedWinners.length;
+    // if (tiedWagers.length > prizeDistributionPercentages.length) {
+    //   totalPrizePercentageForGroup = remainingPrizePercentage;
+    //   remainingPrizePercentage = 0;
+    // } else {
+    //   totalPrizePercentageForGroup = prizeDistributionPercentages.slice(prizePercentageIndex, prizePercentageIndex + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
+    //   remainingPrizePercentage -= totalPrizePercentageForGroup;
+    // }
 
-    // add each winner to the winners array
-    // Ex. if two tied winners, each gets 800/2 = 400
-    for (const tiedWager of tiedWinners) {
-      if (!winners.some((winner) => winner.userID === tiedWager.userID)) {
-        winners.push({
-          userID: tiedWager.userID,
-          prize: prizePerWinner,
-          rank: currentRank,
-          wagerID: tiedWager._id, // TEST
-        });
-      }
+    if (tiedWagers.length > prizeDistributionPercentages.length - prizePercentageIndex) {
+      totalPrizePercentageForGroup = remainingPrizePercentage;
+      remainingPrizePercentage = 0;
+    } else {
+      totalPrizePercentageForGroup = prizeDistributionPercentages.slice(prizePercentageIndex, prizePercentageIndex + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
+      remainingPrizePercentage -= totalPrizePercentageForGroup;
     }
 
-    // if two winners tied for the first place, the next prize % considered is for the 3rd place
-    prizePercentageIndex += tiedWinners.length;
-    currentRank += tiedWinners.length;
+    const totalPrizeForGroup = totalPot * totalPrizePercentageForGroup;
+    const prizePerWinner = totalPrizeForGroup / tiedWagers.length;
 
-    // skip over the other tied winners in the outer loop
-    i += tiedWinners.length - 1;
+    console.log(`Distributing ${totalPointsForTiedRanks} points and ${totalPrizeForGroup.toFixed(2)} in prize money`);
+
+    // add each winner to the winners array with prize and points
+    tiedWagers.forEach((wager) => {
+      if (!winners.some((winner) => winner.userID === wager.userID)) {
+        winners.push({
+          userID: wager.userID,
+          prize: prizePerWinner,
+          points: pointsPerWinner,
+          rank: currentRank,
+          wagerID: wager._id,
+        });
+        console.log(`Awarded ${wager.userID}: $${prizePerWinner.toFixed(2)} and ${pointsPerWinner} points at rank ${currentRank}`);
+      }
+    });
+
+    // update the indexes for the next iteration
+    prizePercentageIndex += tiedWagers.length;
+    currentRank += tiedWagers.length;
+    i += tiedWagers.length - 1; // skip tied wagers in the next iteration
   }
-  const actualWinners = winners.filter((winner) => winner.prize > 0);
-
-  return actualWinners;
+  console.log('Finished processing all wagers.');
+  return winners.filter((winner, index) => index < 10); // only the top 10 ranks are returned
 }
 
-export default prizeDistribution;
+export default prizeAlgorithm;
