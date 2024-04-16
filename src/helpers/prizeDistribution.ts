@@ -54,14 +54,6 @@ function prizeAlgorithm(wagers: Wager[], finalSellingPrice: number, totalPot: nu
     let remainingPrizePercentage = prizeDistributionPercentages.slice(prizePercentageIndex).reduce((acc, cur) => acc + cur, 0);
     let totalPrizePercentageForGroup = 0;
 
-    // if (tiedWagers.length > prizeDistributionPercentages.length) {
-    //   totalPrizePercentageForGroup = remainingPrizePercentage;
-    //   remainingPrizePercentage = 0;
-    // } else {
-    //   totalPrizePercentageForGroup = prizeDistributionPercentages.slice(prizePercentageIndex, prizePercentageIndex + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
-    //   remainingPrizePercentage -= totalPrizePercentageForGroup;
-    // }
-
     if (tiedWagers.length > prizeDistributionPercentages.length - prizePercentageIndex) {
       totalPrizePercentageForGroup = remainingPrizePercentage;
       remainingPrizePercentage = 0;
