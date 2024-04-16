@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
+import { ObjectId, AnyBulkWriteOperation } from 'mongodb';
 
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -117,6 +117,37 @@ export async function GET(req: NextRequest) {
             const finalSellingPrice = auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0;
 
             const winners = prizeDistribution(formattedWagers, finalSellingPrice, totalPot);
+
+            const bulkOps: AnyBulkWriteOperation[] = winners
+              .map((winner) => {
+                const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
+
+                if (!correspondingWager || !correspondingWager.user) {
+                  console.error(`No corresponding wager found for winner with wager ID: ${winner.wagerID}`);
+                  return null;
+                }
+
+                return {
+                  updateOne: {
+                    filter: { userID: correspondingWager.user._id, auctionID: auction._id },
+                    update: {
+                      $set: {
+                        points: winner.points,
+                        rank: winner.rank,
+                        fullName: correspondingWager.user.fullName,
+                        username: correspondingWager.user.username,
+                        image: correspondingWager.user.image,
+                      },
+                    },
+                    upsert: true,
+                  },
+                };
+              })
+              .filter((op) => op !== null) as AnyBulkWriteOperation[];
+
+            if (bulkOps.length > 0) {
+              await db.collection('auction_points').bulkWrite(bulkOps);
+            }
 
             for (const winner of winners) {
               const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
