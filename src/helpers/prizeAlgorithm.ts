@@ -18,11 +18,9 @@ type WagerWithDelta = Wager & {
   delta: number;
 };
 
-// TO-DO: Still no logic for tie-cases
-
 const rankPoints = [25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
 
-function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot: number): Winner[] {
+function prizeAlgorithm(wagers: Wager[], finalSellingPrice: number, totalPot: number): Winner[] {
   // add delta to each wager (difference between guessed price and final selling price)
   const wagersWithDelta: WagerWithDelta[] = wagers.map((wager) => ({
     ...wager,
@@ -34,25 +32,69 @@ function prizeDistribution(wagers: Wager[], finalSellingPrice: number, totalPot:
   const sortedWagers: WagerWithDelta[] = [...wagersWithDelta].sort((a, b) => a.delta - b.delta);
 
   const prizeDistributionPercentages = [0.5, 0.3, 0.2];
+  const winners: Winner[] = [];
 
-  // create an array of winners including prize money for top 3 closest guesses and points for top 10
-  const winners: Winner[] = sortedWagers.map((wager, index) => {
-    const prize = index < 3 ? totalPot * prizeDistributionPercentages[index] : 0; // monetary prize for top 3
-    const points = index < 10 ? rankPoints[index] : 0; // points for top 10
+  let prizePercentageIndex = 0;
+  let currentRank = 1;
 
-    return {
-      userID: wager.userID,
-      prize: prize,
-      points: points,
-      rank: index + 1,
-      wagerID: wager._id,
-    };
-  });
+  console.log(`Starting prize distribution for final selling price: $${finalSellingPrice}`);
 
-  // filter out the winners to return only those who have a prize or points
-  const actualWinners = winners.filter((winner) => winner.prize > 0 || winner.points > 0);
+  for (let i = 0; i < sortedWagers.length; i++) {
+    const currentWager = sortedWagers[i];
+    const tiedWagers = sortedWagers.filter((w) => w.delta === currentWager.delta);
+    console.log(`Found ${tiedWagers.length} wager(s) with delta ${currentWager.delta}` + (tiedWagers.length > 1 ? ', indicating a tie' : ''));
 
-  return actualWinners;
+    // calculate combined points for the tied ranks
+    const totalPointsForTiedRanks =
+      tiedWagers.length > rankPoints.length ? 0 : rankPoints.slice(currentRank - 1, currentRank - 1 + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
+    const pointsPerWinner = totalPointsForTiedRanks / tiedWagers.length;
+
+    // calculate the total prize for this group based on the prize/winning percentage
+    let remainingPrizePercentage = prizeDistributionPercentages.slice(prizePercentageIndex).reduce((acc, cur) => acc + cur, 0);
+    let totalPrizePercentageForGroup = 0;
+
+    // if (tiedWagers.length > prizeDistributionPercentages.length) {
+    //   totalPrizePercentageForGroup = remainingPrizePercentage;
+    //   remainingPrizePercentage = 0;
+    // } else {
+    //   totalPrizePercentageForGroup = prizeDistributionPercentages.slice(prizePercentageIndex, prizePercentageIndex + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
+    //   remainingPrizePercentage -= totalPrizePercentageForGroup;
+    // }
+
+    if (tiedWagers.length > prizeDistributionPercentages.length - prizePercentageIndex) {
+      totalPrizePercentageForGroup = remainingPrizePercentage;
+      remainingPrizePercentage = 0;
+    } else {
+      totalPrizePercentageForGroup = prizeDistributionPercentages.slice(prizePercentageIndex, prizePercentageIndex + tiedWagers.length).reduce((acc, cur) => acc + cur, 0);
+      remainingPrizePercentage -= totalPrizePercentageForGroup;
+    }
+
+    const totalPrizeForGroup = totalPot * totalPrizePercentageForGroup;
+    const prizePerWinner = totalPrizeForGroup / tiedWagers.length;
+
+    console.log(`Distributing ${totalPointsForTiedRanks} points and ${totalPrizeForGroup.toFixed(2)} in prize money`);
+
+    // add each winner to the winners array with prize and points
+    tiedWagers.forEach((wager) => {
+      if (!winners.some((winner) => winner.userID === wager.userID)) {
+        winners.push({
+          userID: wager.userID,
+          prize: prizePerWinner,
+          points: pointsPerWinner,
+          rank: currentRank,
+          wagerID: wager._id,
+        });
+        console.log(`Awarded ${wager.userID}: $${prizePerWinner.toFixed(2)} and ${pointsPerWinner} points at rank ${currentRank}`);
+      }
+    });
+
+    // update the indexes for the next iteration
+    prizePercentageIndex += tiedWagers.length;
+    currentRank += tiedWagers.length;
+    i += tiedWagers.length - 1; // skip tied wagers in the next iteration
+  }
+  console.log('Finished processing all wagers.');
+  return winners.filter((winner, index) => index < 10); // only the top 10 ranks are returned
 }
 
-export default prizeDistribution;
+export default prizeAlgorithm;
