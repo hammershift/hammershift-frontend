@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db();
+    const limit = Number(req.nextUrl.searchParams.get("limit"));
 
     const leaderboardData = await db
       .collection('auction_points')
@@ -21,6 +22,7 @@ export async function GET(req: NextRequest) {
           },
         },
         { $sort: { totalPoints: -1 } },
+        { $limit: limit }
       ])
       .toArray();
 
@@ -30,6 +32,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
+
 
 export async function PUT(req: NextRequest) {
   try {
