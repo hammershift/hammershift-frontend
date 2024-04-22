@@ -662,3 +662,60 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
   }
 }
 
+
+
+@media screen and (max-width: 768px) {
+  .leaderboard-list {
+    height: calc(100vh - 240px);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .leaderboard {
+    background-image: radial-gradient(circle at 0% 100%, #C21E6D, #184c80 40%);
+  }
+
+  .leaderboard-title {
+    width: calc(100% - 380px);
+  }
+
+  .leaderboard-list {
+    height: calc(100vh - 240px);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .leaderboard-list::-webkit-scrollbar{
+    display: none;
+  }
+
+  .leaderboard-title-skeleton{
+    width: calc(100% - 380px);
+  }
+
+  div.leaderboard-skeleton {
+    height: auto;
+  }
+}
+
+
+@media screen and (min-width: 1024px) {
+  .user1 { grid-area: one; }
+  .user2 { grid-area: two; }
+  .user3 { grid-area: three; }
+
+  .grid-container {
+    grid-template-areas: "one one" "two three";
+    grid-template-rows: 0.5fr 1fr;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .grid-container {
+    grid-template-rows: 0.5fr 1fr;
+  }
+}
+
+.leaderboard-skeleton {
+  height: calc(100vh - 136px);
+}
