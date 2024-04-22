@@ -688,6 +688,14 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
   .leaderboard-list::-webkit-scrollbar{
     display: none;
   }
+
+  .leaderboard-title-skeleton{
+    width: calc(100% - 380px);
+  }
+
+  div.leaderboard-skeleton {
+    height: auto;
+  }
 }
 
 
@@ -706,4 +714,8 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
   .grid-container {
     grid-template-rows: 0.5fr 1fr;
   }
+}
+
+.leaderboard-skeleton {
+  height: calc(100vh - 136px);
 }
