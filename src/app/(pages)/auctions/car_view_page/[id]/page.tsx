@@ -119,9 +119,15 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     data?._id,
                     session?.user.id
                 );
+                console.log(userWager);
+
                 !userWager.length
                     ? setAlreadyWagered(false)
                     : setAlreadyWagered(true);
+
+                if (userWager.length) {
+                    !userWager[0].isActive && setAlreadyWagered(false);
+                }
             }
 
             if (data) {
