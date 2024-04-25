@@ -58,6 +58,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(tournamentTransactions);
     }
 
+    //get total prize from auctions by subtracting the total refund amount to the total wager amount
     if (auctionID) {
       const auctionTransactions = await db.collection('transactions').find({
         auctionID: new ObjectId(auctionID),
@@ -65,7 +66,31 @@ export async function GET(req: NextRequest) {
         type: "-"
       }).toArray();
 
-      return NextResponse.json(auctionTransactions);
+      const auctionRefunds = await db.collection('transactions').find({
+        auctionID: new ObjectId(auctionID),
+        transactionType: "refund",
+        type: "+"
+      }).toArray();
+
+      const wagers = 0.88 * auctionTransactions
+        .map((transaction: any) => transaction.amount)
+        .reduce(
+          (accumulator: any, currentValue: any) =>
+            accumulator + currentValue,
+          0
+        );
+
+      const refunds = 0.88 * auctionRefunds
+        .map((transaction: any) => transaction.amount)
+        .reduce(
+          (accumulator: any, currentValue: any) =>
+            accumulator + currentValue,
+          0
+        );
+
+      const totalPrize = wagers - refunds;
+
+      return NextResponse.json({ totalPrize });
     }
 
     const transactions = await db.collection('transactions').find().toArray();
