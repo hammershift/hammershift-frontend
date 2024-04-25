@@ -131,16 +131,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
             }
 
             if (data) {
-                const transactions = await getAuctionTransactions(data._id);
-                const totalPrize =
-                    0.88 *
-                    transactions
-                        .map((transaction: any) => transaction.amount)
-                        .reduce(
-                            (accumulator: any, currentValue: any) =>
-                                accumulator + currentValue,
-                            0
-                        );
+                const { totalPrize } = await getAuctionTransactions(data._id);
                 setPrize(totalPrize);
             }
 
