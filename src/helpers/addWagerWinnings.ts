@@ -7,7 +7,7 @@ export async function addWagerWinnings(wagerID: ObjectId, prize: number): Promis
     const db = client.db();
 
     if (prize || prize !== 0) {
-      await db.collection('wagers').findOneAndUpdate({ _id: new ObjectId(wagerID) }, { $set: { prize: prize } }, { returnDocument: 'after' });
+      await db.collection('wagers').findOneAndUpdate({ _id: new ObjectId(wagerID), isActive: true }, { $set: { prize: prize } }, { returnDocument: 'after' });
       console.log('wager winners updated');
     }
   } catch (error) {

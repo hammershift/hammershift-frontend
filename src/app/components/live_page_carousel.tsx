@@ -151,16 +151,7 @@ const SlideOne = ({ carData }: any) => {
 
     useEffect(() => {
         const fetchPrize = async () => {
-            const transactions = await getAuctionTransactions(carData._id);
-            const totalPrize =
-                0.88 *
-                transactions
-                    .map((transaction: any) => transaction.amount)
-                    .reduce(
-                        (accumulator: any, currentValue: any) =>
-                            accumulator + currentValue,
-                        0
-                    );
+            const { totalPrize } = await getAuctionTransactions(carData._id);
             setPrize(totalPrize);
 
             const wagers = await getWagers(carData._id);
