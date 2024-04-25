@@ -119,22 +119,19 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
                     data?._id,
                     session?.user.id
                 );
+                console.log(userWager);
+
                 !userWager.length
                     ? setAlreadyWagered(false)
                     : setAlreadyWagered(true);
+
+                if (userWager.length) {
+                    !userWager[0].isActive && setAlreadyWagered(false);
+                }
             }
 
             if (data) {
-                const transactions = await getAuctionTransactions(data._id);
-                const totalPrize =
-                    0.88 *
-                    transactions
-                        .map((transaction: any) => transaction.amount)
-                        .reduce(
-                            (accumulator: any, currentValue: any) =>
-                                accumulator + currentValue,
-                            0
-                        );
+                const { totalPrize } = await getAuctionTransactions(data._id);
                 setPrize(totalPrize);
             }
 
