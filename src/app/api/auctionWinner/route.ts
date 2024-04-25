@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
       .collection('wagers')
       .find({
         auctionID: { $in: auctions.map((auction) => auction._id) },
-        isActive: true
+        isActive: true,
       })
       .toArray();
 
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
       auctions.map(async (auction) => {
         const playerCount = await db.collection('wagers').countDocuments({
           auctionID: auction._id,
-          isActive: true
+          isActive: true,
         });
         const status = auction.attributes[0]?.value;
         return {
@@ -116,40 +116,35 @@ export async function GET(req: NextRequest) {
               .collection('transactions')
               .find({
                 auctionID: new ObjectId(auction._id),
-                transactionType: "wager",
-                type: "-"
-              }).toArray();
+                transactionType: 'wager',
+                type: '-',
+              })
+              .toArray();
 
             const auctionRefunds = await db
               .collection('transactions')
               .find({
                 auctionID: new ObjectId(auction._id),
-                transactionType: "refund",
-                type: "+"
-              }).toArray();
+                transactionType: 'refund',
+                type: '+',
+              })
+              .toArray();
 
-            const totalWagerAmount = 0.88 * auctionTransactions
-              .map((transaction: any) => transaction.amount)
-              .reduce(
-                (accumulator: any, currentValue: any) =>
-                  accumulator + currentValue,
-                0
-              );
+            const totalWagerAmount =
+              0.88 * auctionTransactions.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
 
-            const totalRefundAmount = 0.88 * auctionRefunds
-              .map((transaction: any) => transaction.amount)
-              .reduce(
-                (accumulator: any, currentValue: any) =>
-                  accumulator + currentValue,
-                0
-              );
+            const totalRefundAmount =
+              0.88 * auctionRefunds.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
 
             const totalPot = totalWagerAmount - totalRefundAmount;
 
-            const wagers = await db.collection('wagers').find({
-              auctionID: auction._id,
-              isActive: true
-            }).toArray();
+            const wagers = await db
+              .collection('wagers')
+              .find({
+                auctionID: auction._id,
+                isActive: true,
+              })
+              .toArray();
 
             const formattedWagers = wagers.map((wager) => ({
               _id: wager._id,
@@ -226,6 +221,7 @@ export async function GET(req: NextRequest) {
                 rank: winner.rank,
                 username: correspondingWager ? correspondingWager.user.username : null,
                 userImage: correspondingWager ? correspondingWager.user.image : null,
+                prize: winner.prize,
                 priceGuessed: correspondingWager ? correspondingWager.priceGuessed : null,
                 winningDate: new Date(),
               };
@@ -312,33 +308,24 @@ export async function POST(req: NextRequest) {
       .collection('transactions')
       .find({
         auctionID: convertedAuctionID,
-        transactionType: "wager",
-        type: "-"
-      }).toArray();
+        transactionType: 'wager',
+        type: '-',
+      })
+      .toArray();
 
     const auctionRefunds = await db
       .collection('transactions')
       .find({
         auctionID: convertedAuctionID,
-        transactionType: "refund",
-        type: "+"
-      }).toArray();
+        transactionType: 'refund',
+        type: '+',
+      })
+      .toArray();
 
-    const totalWagerAmount = 0.88 * auctionTransactions
-      .map((transaction: any) => transaction.amount)
-      .reduce(
-        (accumulator: any, currentValue: any) =>
-          accumulator + currentValue,
-        0
-      );
+    const totalWagerAmount =
+      0.88 * auctionTransactions.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
 
-    const totalRefundAmount = 0.88 * auctionRefunds
-      .map((transaction: any) => transaction.amount)
-      .reduce(
-        (accumulator: any, currentValue: any) =>
-          accumulator + currentValue,
-        0
-      );
+    const totalRefundAmount = 0.88 * auctionRefunds.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
 
     if (auctionTransactions.length > 0) {
       totalPot = totalWagerAmount - totalRefundAmount;
@@ -349,10 +336,13 @@ export async function POST(req: NextRequest) {
 
     if (auctionStatus === 2 || (auctionStatus === 3 && hasPot)) {
       // fetch all wagers associated with this auction
-      const wagers = await db.collection('wagers').find({
-        auctionID: convertedAuctionID,
-        isActive: true
-      }).toArray();
+      const wagers = await db
+        .collection('wagers')
+        .find({
+          auctionID: convertedAuctionID,
+          isActive: true,
+        })
+        .toArray();
 
       // testing response
       return NextResponse.json({ wagers }, { status: 200 });
