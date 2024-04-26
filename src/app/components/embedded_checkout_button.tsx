@@ -6,7 +6,10 @@ import {
 } from "@stripe/react-stripe-js";
 import { useCallback, useRef, useState } from "react";
 
-export default function EmbeddedCheckoutButton() {
+export default function EmbeddedCheckoutButton(props: any) {
+  const { priceId } = props;
+  const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
+
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
   );
@@ -20,19 +23,21 @@ export default function EmbeddedCheckoutButton() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId: "price_1P8Y6fAYM7vMibsyZx1H8blI" }),
+      body: JSON.stringify({ priceId: priceId }),
     });
     const data = await res.json();
     const clientSecret = data.client_secret;
-    const clientId = data.id
+    const clientId = data.id;
     console.log("client secret", clientSecret);
     console.log("client id", clientId);
     return clientSecret;
-  }, []);
+  }, [priceId]);
 
   const options = { fetchClientSecret };
 
-  const handleCheckoutClick = () => {
+  const handleCheckoutClick = (priceId: string) => {
+    console.log(selectedPriceId);
+    setSelectedPriceId(priceId);
     setShowCheckout(true);
     modalRef.current?.showModal();
   };
@@ -44,7 +49,7 @@ export default function EmbeddedCheckoutButton() {
 
   return (
     <div id="checkout" className="my-4">
-      <button className="btn" onClick={handleCheckoutClick}>
+      <button className="btn" onClick={() => handleCheckoutClick(priceId)}>
         Open Modal with Embedded Checkout
       </button>
       <dialog ref={modalRef} className="modal">

@@ -26,32 +26,32 @@ const MyWalletPage = () => {
   };
 
   //Trigger stripe hosted payment page
-  const handleAddFundButtonClick = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    priceId: string
-  ) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("api/payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ priceId: priceId }),
-      });
+//   const handleAddFundButtonClick = async (
+//     e: React.MouseEvent<HTMLButtonElement>,
+//     priceId: string
+//   ) => {
+//     e.preventDefault();
+//     try {
+//       const response = await fetch("api/payment", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ priceId: priceId }),
+//       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! status: ${response.status}`);
+//       }
 
-      const data = await response.json();
-      console.log("add funds button clicked ", data);
-      window.location.assign(data);
-      return data;
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+//       const data = await response.json();
+//       console.log("add funds button clicked ", data);
+//       window.location.assign(data);
+//       return data;
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+//   };
 
   return (
     <div className="section-container tw-flex tw-justify-between">
@@ -62,12 +62,13 @@ const MyWalletPage = () => {
             <div key={price.id}>
               <div className="tw-flex tw-justify-between">
                 <p>Add ${price.unit_amount / 100}</p>
-                <button
+                {/* <button
                   className="tw-border-amber-400 tw-border-2"
                   onClick={(e) => handleAddFundButtonClick(e, price.id)}
                 >
                   Add Funds
-                </button>
+                </button> */}
+                 <EmbeddedCheckoutButton priceId={price.id} />
               </div>
             </div>
           ))}
@@ -79,7 +80,6 @@ const MyWalletPage = () => {
           <p>Current balance:</p>
           <p>$10</p>
         </div>
-        <EmbeddedCheckoutButton />
       </div>
     </div>
   );
