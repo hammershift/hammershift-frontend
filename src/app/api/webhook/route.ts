@@ -16,9 +16,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     console.log("event", event.type);
     //event handlers
-    switch(event.type){
+    switch (event.type) {
       case "payment_intent.created":
-        console.log("created payment intent")
     }
     return NextResponse.json({ status: "Success", event: event.type });
   } catch (error) {

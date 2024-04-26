@@ -14,15 +14,17 @@ export default async function CheckoutReturn({ searchParams }: any) {
   console.log(session);
 
   if (session?.status === "open") {
-    return <p>Payment did not work.</p>;
+    return <p>Payment failed.</p>;
   }
 
   if (session?.status === "complete") {
     return (
-      <h3>
-        We appreciate your business! Your Stripe customer ID is:
-        {(session.customer as string)}.
-      </h3>
+      <div className="section-container">
+        <h3>
+          Payment succeeded! Your Stripe customer ID is:
+          {session.customer as string}.
+        </h3>
+      </div>
     );
   }
 

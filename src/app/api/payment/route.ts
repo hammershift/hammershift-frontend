@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       client_secret: session.client_secret,
     });
   } catch (error: any) {
-    console.error(error);
+    console.error("Error creating Stripe Checkout session:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
