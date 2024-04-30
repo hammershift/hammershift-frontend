@@ -1,5 +1,14 @@
 import mongoose from 'mongoose';
 
+const TransactionType = {
+  WAGER: 'wager',
+  DEPOSITS: 'deposit',
+  WITHDRAWALS: 'withdraw',
+  WINNINGS: 'winnings',
+  REFUND: 'refund',
+  TOURNAMENT_BUY_IN: 'tournament buy-in',
+};
+
 const transactionSchema = new mongoose.Schema({
   userID: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +30,8 @@ const transactionSchema = new mongoose.Schema({
   transactionType: {
     type: String,
     required: true,
-    enum: ['wager', 'deposits', 'withdrawals', 'winnings', 'refund', 'tournament buy-in'],
+    // enum: ['wager', 'deposits', 'withdrawals', 'winnings', 'refund', 'tournament buy-in'],
+    enum: Object.values(TransactionType),
   },
   amount: {
     type: Number,

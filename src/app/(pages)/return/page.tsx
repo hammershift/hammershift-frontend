@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -13,15 +13,15 @@ export default async function CheckoutReturn({ searchParams }: any) {
 
   console.log(session);
 
-  if (session?.status === "open") {
+  if (session?.status === 'open') {
     return <p>Payment did not work.</p>;
   }
 
-  if (session?.status === "complete") {
+  if (session?.status === 'complete') {
     return (
       <h3>
         We appreciate your business! Your Stripe customer ID is:
-        {(session.customer as string)}.
+        {session.customer as string}.
       </h3>
     );
   }
