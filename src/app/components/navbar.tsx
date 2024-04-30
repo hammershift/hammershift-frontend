@@ -1055,27 +1055,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     />
                 )}
             </div>
-            {!isLoggedIn ? //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-            //       document.body.classList.remove("stop-scrolling");
-            //     }}
-            //     className="tw-flex tw-py-2"
-            //   >
-            //     <div>LIVE</div>
-            //   </Link> */}
-            //   <Link
-            //     href="/auctions"
-            //     onClick={() => {
-            //       closeMenu();
-            //       document.body.classList.remove("stop-scrolling");
-            //     }}
-            //     className="tw-flex tw-py-2"
-            //   >
-            //     <div>AUCTIONS</div>
-            //   </Link>
-            //   <Link
-            //     href="/tournaments"
-            //     onClick={() => {
-            //       closeMenu();
+            {!isLoggedIn ? //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
             //       document.body.classList.remove("stop-scrolling");
             //     }}
             //     className="tw-flex tw-py-2"
@@ -2660,7 +2640,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             </div>
                         )}
                     </div>
-                    {isActive && (
+                    {isActive && !isRefunded && (
                         <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
                             <div className="tw-flex tw-gap-2 tw-items-center">
                                 <Image
@@ -2683,6 +2663,20 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                           maximumFractionDigits: 2,
                                       })}
                             </div>
+                        </div>
+                    )}
+                    {isActive && isRefunded && (
+                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
+                            <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                                ❌ AUCTION WAGER
+                            </div>
+
+                            <button
+                                disabled
+                                className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                            >
+                                REFUNDED
+                            </button>
                         </div>
                     )}
                     {status === 3 && (
