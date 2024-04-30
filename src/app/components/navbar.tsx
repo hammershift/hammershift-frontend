@@ -2804,7 +2804,7 @@ const MyAccountDropdownMenu = () => {
                 </div>
             ) : typeof walletBalance === "number" ? (
                 <div className="tw-px-6 tw-w-full">
-                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6" onClick={() => router.push("/my_wallet")}>
                         <Image
                             src={Wallet}
                             width={32}
