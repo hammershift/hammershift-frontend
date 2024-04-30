@@ -4,27 +4,7 @@ import { headers } from 'next/headers';
 import clientPromise from '@/lib/mongodb';
 import mongoose from 'mongoose';
 import Transaction from '@/models/transaction';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-// export async function POST(req: NextRequest, res: NextResponse) {
-//   const payload = await req.text();
-//   const signature = req.headers.get('Stripe-Signature');
-
-//   try {
-//     let event = stripe.webhooks.constructEvent(payload, signature!, process.env.STRIPE_WEBHOOK_SECRET!);
-
-//     console.log('event', event.type);
-//     //event handlers
-//     switch (event.type) {
-//       case 'payment_intent.created':
-//         console.log('created payment intent');
-//     }
-//     return NextResponse.json({ status: 'Success', event: event.type });
-//   } catch (error) {
-//     return NextResponse.json({ status: 'Failed', error });
-//   }
-// }
+import { stripe } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
   const signature = headers().get('Stripe-Signature') as string;
