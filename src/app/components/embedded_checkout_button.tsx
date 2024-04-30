@@ -37,16 +37,18 @@ export default function EmbeddedCheckoutButton(props: any) {
     const data = await res.json();
     const clientSecret = data.client_secret;
     const clientId = data.id;
-    console.log('client secret', clientSecret);
-    console.log('client id', clientId);
+
+    console.log('Client Secret: ', clientSecret);
+    console.log('ClientID: ', clientId);
+
     return clientSecret;
   }, [priceId, userId]);
 
   const options = { fetchClientSecret };
 
   const handleCheckoutClick = (priceId: string) => {
-    console.log(selectedPriceId);
     setSelectedPriceId(priceId);
+    console.log('Selected priceID: ', selectedPriceId);
     setShowCheckout(true);
     modalRef.current?.showModal();
   };
@@ -57,26 +59,24 @@ export default function EmbeddedCheckoutButton(props: any) {
   };
 
   return (
-    <div id='checkout' className='my-4'>
-      <button className='btn' onClick={() => handleCheckoutClick(priceId)}>
-        Open Modal with Embedded Checkout
+    <div className='tw-my-4'>
+      <button className='btn-yellow tw-text-xs' onClick={() => handleCheckoutClick(priceId)}>
+        Add Funds
       </button>
-      <dialog ref={modalRef} className='modal'>
-        <div className='modal-box w-100 max-w-screen-2xl'>
-          <h3 className='font-bold text-lg'>Embedded Checkout</h3>
-          <div className='py-4'>
+      {showCheckout && <div className='backdrop' onClick={handleCloseModal}></div>}
+      <dialog ref={modalRef} className='top tw-w-3/4 tw-rounded-lg tw-relative tw-z-10'>
+        <div className='tw-max-w-screen-2xl'>
+          <div className='tw-flex tw-items-end tw-justify-end'>
+            <button className='tw-self-end tw-px-3 tw-text-red-500 tw-font-bold tw-text-xl' onClick={handleCloseModal}>
+              x
+            </button>
+          </div>
+          <div className='tw-w-full'>
             {showCheckout && (
               <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
                 <EmbeddedCheckout />
               </EmbeddedCheckoutProvider>
             )}
-          </div>
-          <div className='modal-action'>
-            <form method='dialog'>
-              <button className='btn' onClick={handleCloseModal}>
-                Close
-              </button>
-            </form>
           </div>
         </div>
       </dialog>

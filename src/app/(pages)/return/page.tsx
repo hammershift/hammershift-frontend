@@ -13,16 +13,30 @@ export default async function CheckoutReturn({ searchParams }: any) {
 
   console.log(session);
 
+<<<<<<< HEAD
   if (session?.status === 'open') {
     return <p>Payment did not work.</p>;
+=======
+  if (session?.status === "open") {
+    return <p>Payment failed.</p>;
+>>>>>>> 56c3f1b77ad65aaaea3e0a8171afae1c6f119e7d
   }
 
   if (session?.status === 'complete') {
     return (
+<<<<<<< HEAD
       <h3>
         We appreciate your business! Your Stripe customer ID is:
         {session.customer as string}.
       </h3>
+=======
+      <div className="section-container">
+        <h3>
+          Payment succeeded! Your Stripe customer ID is:
+          {session.customer as string}.
+        </h3>
+      </div>
+>>>>>>> 56c3f1b77ad65aaaea3e0a8171afae1c6f119e7d
     );
   }
 
