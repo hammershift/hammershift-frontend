@@ -7,7 +7,7 @@ import {
 import { useCallback, useRef, useState } from "react";
 
 export default function EmbeddedCheckoutButton(props: any) {
-  const { priceId, customerEmail } = props;
+  const { priceId, userId } = props;
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
 
   const stripePromise = loadStripe(
@@ -23,7 +23,7 @@ export default function EmbeddedCheckoutButton(props: any) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId: priceId, customerEmail: customerEmail }),
+      body: JSON.stringify({ priceId: priceId, userId: userId }),
     });
     const data = await res.json();
     const clientSecret = data.client_secret;
@@ -31,7 +31,7 @@ export default function EmbeddedCheckoutButton(props: any) {
     console.log("client secret", clientSecret);
     console.log("client id", clientId);
     return clientSecret;
-  }, [priceId, customerEmail]);
+  }, [priceId, userId]);
 
   const options = { fetchClientSecret };
 
