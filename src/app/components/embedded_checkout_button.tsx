@@ -7,7 +7,7 @@ import {
 import { useCallback, useRef, useState } from "react";
 
 export default function EmbeddedCheckoutButton(props: any) {
-  const { priceId } = props;
+  const { priceId, customerEmail } = props;
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
 
   const stripePromise = loadStripe(
@@ -23,7 +23,7 @@ export default function EmbeddedCheckoutButton(props: any) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId: priceId }),
+      body: JSON.stringify({ priceId: priceId, customerEmail: customerEmail }),
     });
     const data = await res.json();
     const clientSecret = data.client_secret;
@@ -31,13 +31,13 @@ export default function EmbeddedCheckoutButton(props: any) {
     console.log("client secret", clientSecret);
     console.log("client id", clientId);
     return clientSecret;
-  }, [priceId]);
+  }, [priceId, customerEmail]);
 
   const options = { fetchClientSecret };
 
   const handleCheckoutClick = (priceId: string) => {
-    console.log(selectedPriceId);
     setSelectedPriceId(priceId);
+    console.log("selected price ID: ", selectedPriceId);
     setShowCheckout(true);
     modalRef.current?.showModal();
   };

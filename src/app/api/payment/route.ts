@@ -21,7 +21,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 // For embedded forms
 export async function POST(request: Request) {
   try {
-    const { priceId } = await request.json();
+    const { priceId, customerEmail } = await request.json();
 
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
@@ -36,6 +36,9 @@ export async function POST(request: Request) {
       return_url: `${request.headers.get(
         "origin"
       )}/return?session_id={CHECKOUT_SESSION_ID}`,
+      metadata: {
+        customer_email: customerEmail,
+      },
     });
 
     return NextResponse.json({
