@@ -103,10 +103,7 @@ const MyWalletPage = () => {
                 >
                   Add Funds
                 </button> */}
-                <EmbeddedCheckoutButton
-                  priceId={price.id}
-                  userId={userId}
-                />
+                <EmbeddedCheckoutButton priceId={price.id} userId={userId} />
               </div>
             </div>
           ))}

@@ -8,20 +8,21 @@ async function getSession(sessionId: string) {
 }
 
 export default async function CheckoutReturn({ searchParams }: any) {
-  const sessionId = searchParams.session_id;
-  const session = await getSession(sessionId);
+  const stripeSessionId = searchParams.session_id;
+  const stripeSession = await getSession(stripeSessionId);
 
-  console.log(session);
+  console.log(stripeSession);
 
-  if (session?.status === 'open') {
-    return <p>Payment failed.</p>;
+  if (stripeSession?.status === 'open') {
+    return <p>Payment did not work.</p>;
   }
 
-  if (session?.status === 'complete') {
+  if (stripeSession?.status === 'complete') {
     return (
-      <div className='section-container'>
-        <h3>Payment succeeded! Your Stripe customer ID is: {session.customer as string}.</h3>
-      </div>
+      <h3>
+        We appreciate your business! Your Stripe customer ID is:
+        {stripeSession.customer as string}.
+      </h3>
     );
   }
 

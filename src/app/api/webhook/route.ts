@@ -1,110 +1,64 @@
 import Stripe from 'stripe';
 import { NextRequest, NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import clientPromise from '@/lib/mongodb';
-import mongoose from 'mongoose';
 import Transaction from '@/models/transaction';
-import { stripe } from '@/lib/stripe';
+import mongoose from 'mongoose';
 
-// export async function POST(req: NextRequest) {
-//   const signature = headers().get('Stripe-Signature') as string;
-//   const payload = await req.text();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-//   let event: Stripe.Event;
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
-//   try {
-//     event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET!);
-//   } catch (err) {
-//     return new NextResponse('Webhook Error: Invalid Signature', { status: 400 });
-//   }
+export async function POST(req: NextRequest, res: NextResponse) {
+  const payload = await req.text();
+  const signature = req.headers.get('Stripe-Signature');
 
-//   if (event.type === 'checkout.session.completed') {
-//     const session = event.data.object as Stripe.Checkout.Session;
-//     if (!session.metadata?.userId || !session.amount_total) {
-//       return new NextResponse('Necessary session data missing', { status: 400 });
-//     }
-
-//     const userId = session.metadata.userId;
-//     const amountPaid = session.amount_total ? session.amount_total / 100 : 0;
-
-//     if (!userId || amountPaid === 0) {
-//       return new NextResponse('Invalid userId or amountPaid', { status: 400 });
-//     }
-
-//     try {
-//       const client = await clientPromise;
-//       const db = client.db();
-
-//       const updateResult = await db.collection('users').updateOne({ _id: new mongoose.Types.ObjectId(userId) }, { $inc: { balance: amountPaid } });
-//       if (updateResult.modifiedCount === 0) {
-//         console.error('User balance update failed');
-//         return new NextResponse('User balance update failed', { status: 400 });
-//       }
-
-//       const transaction = new Transaction({
-//         userID: new mongoose.Types.ObjectId(userId),
-//         transactionType: 'deposit',
-//         amount: amountPaid,
-//         type: '+',
-//         transactionDate: new Date(),
-//       });
-
-//       const result = await db.collection('transactions').insertOne(transaction);
-//       console.log('Transaction inserted with ID:', result.insertedId);
-
-//       return new NextResponse('Success', { status: 200 });
-//     } catch (err: any) {
-//       return new NextResponse(`Processing error: ${err.message}`, { status: 500 });
-//     }
-//   }
-//   return new NextResponse('Unhandled event type', { status: 200 });
-// }
-
-export async function POST(req: NextRequest) {
   try {
-    const signature = headers().get('Stripe-Signature') as string;
-    const payload = await req.text();
+    let event = stripe.webhooks.constructEvent(payload, signature!, process.env.STRIPE_WEBHOOK_SECRET!);
 
-    let event: Stripe.Event;
+    console.log('event', event.type);
 
-    event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+    // Event handlers
+    switch (event.type) {
+      case 'payment_intent.created':
+        console.log('PaymentIntent was created.');
+        break;
+      case 'payment_intent.succeeded':
+        const client = await clientPromise;
+        const db = client.db();
 
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object as Stripe.Checkout.Session;
-      if (!session.metadata?.userId || !session.amount_total) {
-        throw new Error('Necessary session data missing');
-      }
+        const stripeCustomerId = event.data.object.customer;
+        const amountPaid = event.data.object.amount_received / 100;
+        const userId = event.data.object.metadata.userId;
 
-      const userId = session.metadata.userId;
-      const amountPaid = session.amount_total ? session.amount_total / 100 : 0;
+        const updateUserBalance = await db.collection('users').updateOne({ stripeCustomerId: stripeCustomerId }, { $inc: { balance: amountPaid } });
 
-      if (!userId || amountPaid === 0) {
-        throw new Error('Invalid userId or amountPaid');
-      }
+        console.log(`Updated user balance for: ${stripeCustomerId}:`, updateUserBalance);
 
-      const client = await clientPromise;
-      const db = client.db();
+        const depositTransaction = new Transaction({
+          userID: new mongoose.Types.ObjectId(userId),
+          transactionType: 'deposit',
+          amount: amountPaid,
+          type: '+',
+          transactionDate: new Date(),
+        });
 
-      const updateResult = await db.collection('users').updateOne({ _id: new mongoose.Types.ObjectId(userId) }, { $inc: { balance: amountPaid } });
-      if (updateResult.modifiedCount === 0) {
-        throw new Error('User balance update failed');
-      }
+        const createDepositTransaction = await db.collection('transactions').insertOne(depositTransaction);
+        console.log(`Created deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId}:`, createDepositTransaction);
 
-      const transaction = new Transaction({
-        userID: new mongoose.Types.ObjectId(userId),
-        transactionType: 'deposit',
-        amount: amountPaid,
-        type: '+',
-        transactionDate: new Date(),
-      });
-
-      const result = await db.collection('transactions').insertOne(transaction);
-
-      return new NextResponse('Success', { status: 200 });
+        break;
+      case 'payment_intent.payment_failed':
+        console.log('PaymentIntent failed.');
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`);
     }
-    return new NextResponse('Unhandled event type', { status: 200 });
-  } catch (err: any) {
-    console.error(err);
-    return new NextResponse(`Processing error: ${err.message}`, { status: 500 });
+    return NextResponse.json({ status: 'Success', event: event.type });
+  } catch (error) {
+    console.error('Error handling Stripe webhook event:', error);
+    return NextResponse.json({ status: 'Failed', error: error });
   }
 }
