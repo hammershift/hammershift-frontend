@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import EmbeddedCheckoutButton from "@/app/components/embedded_checkout_button";
+import { useSession } from "next-auth/react";
 
 interface ProductPrice {
   unit_amount: number;
@@ -10,10 +11,40 @@ interface ProductPrice {
 
 const MyWalletPage = () => {
   const [prices, setPrices] = useState<ProductPrice[]>([]);
+  const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
+
+  const { data: session } = useSession();
+  const customerEmail = session?.user.email;
 
   useEffect(() => {
     fetchPrices();
+    fetchWalletBalance();
   }, []);
+
+  const fetchWalletBalance = async () => {
+    setLoading(true);
+    if (session) {
+      try {
+        const res = await fetch("/api/wallet", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setWalletBalance(data.balance);
+          setLoading(false);
+        } else {
+          console.error("Failed to fetch wallet balance:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching wallet balance:", error);
+      }
+    }
+  };
 
   const fetchPrices = async () => {
     const res = await fetch("/api/getProducts", { method: "GET" });
@@ -72,7 +103,10 @@ const MyWalletPage = () => {
                 >
                   Add Funds
                 </button> */}
-                <EmbeddedCheckoutButton priceId={price.id} />
+                <EmbeddedCheckoutButton
+                  priceId={price.id}
+                  customerEmail={customerEmail}
+                />
               </div>
             </div>
           ))}
@@ -82,7 +116,7 @@ const MyWalletPage = () => {
         <h2>Wallet Details:</h2>
         <div className="tw-flex tw-justify-between">
           <p>Current balance:</p>
-          <p>$10</p>
+          {loading ? <p>Loading</p> : <p> ${walletBalance.toFixed(2)}</p>}
         </div>
       </div>
     </div>
