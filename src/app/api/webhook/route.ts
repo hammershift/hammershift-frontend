@@ -26,23 +26,25 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const client = await clientPromise;
         const db = client.db();
 
-        const userEmail = event.data.object.metadata.customer_email;
-        const amountPaid = event.data.object.amount_received / 100; 
+        const stripeCustomerId = event.data.object.customer;
+        const amountPaid = event.data.object.amount_received / 100;
 
         // Update the user's balance
-        const updateUserBalance = await db.collection("users").updateOne(
-          { email: userEmail },
-          { $inc: { balance: amountPaid } } 
-        );
+        const updateUserBalance = await db
+          .collection("users")
+          .updateOne(
+            { stripeCustomerId: stripeCustomerId },
+            { $inc: { balance: amountPaid } }
+          );
 
         console.log(
-          `Updated user balance for ${userEmail}:`,
+          `Updated user balance for ${stripeCustomerId}:`,
           updateUserBalance
-        ); 
+        );
         break;
       case "payment_intent.payment_failed":
         console.log("PaymentIntent failed.");
-        
+
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);
