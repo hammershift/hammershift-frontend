@@ -26,44 +26,38 @@ export async function POST(req: NextRequest) {
       return new NextResponse('Necessary session data not found', { status: 400 });
     }
 
-    const userId = session.metadata.userId;
-    console.log('User ID:', userId);
+    const userId = session.metadata?.userId;
+    const amountPaid = session.amount_total ? session.amount_total / 100 : 0;
+
+    if (!userId || amountPaid === 0) {
+      return new NextResponse('Necessary session data not found', { status: 400 });
+    }
 
     const client = await clientPromise;
     const db = client.db();
 
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    console.log('User ObjectID:', userObjectId);
+    // Update the user's balance by user ID
+    const updateUserBalance = await db.collection('users').updateOne({ _id: new mongoose.Types.ObjectId(userId) }, { $inc: { balance: amountPaid } });
 
-    const user = await db.collection('users').findOne({ _id: userObjectId });
-    if (!user) {
-      return new NextResponse('User not found', { status: 404 });
+    console.log('Balance update result:', updateUserBalance);
+
+    try {
+      const transaction = new Transaction({
+        userID: new mongoose.Types.ObjectId(userId),
+        transactionType: 'deposit',
+        amount: session.amount_total / 100,
+        type: '+',
+        transactionDate: new Date(),
+      });
+      await transaction.save();
+      console.log('Transaction saved:', transaction);
+    } catch (err: any) {
+      console.error('Transaction save failed:', err.message);
+      return new NextResponse(`Transaction save failed: ${err.message}`, { status: 500 });
     }
-
-    const amountToAdd = session.amount_total / 100;
-    console.log('Amount to Add:', amountToAdd);
-    const newBalance = user.balance + amountToAdd;
-    console.log('New Balance:', newBalance);
-
-    const updateResult = await db.collection('users').updateOne({ _id: userObjectId }, { $set: { balance: newBalance } });
-    console.log('Balance update result:', updateResult);
-
-    if (updateResult.modifiedCount === 0) {
-      console.error('Balance update failed');
-      return new NextResponse('Balance update failed', { status: 500 });
-    }
-
-    // Record the transaction
-    const transaction = new Transaction({
-      userID: session.metadata.userId,
-      transactionType: 'deposit',
-      amount: session.amount_total / 100,
-      type: '+',
-      transactionDate: new Date(),
-    });
-    console.log(transaction);
-    await transaction.save();
 
     return new NextResponse('Success', { status: 200 });
   }
+
+  return new NextResponse('Unhandled event type', { status: 200 });
 }
