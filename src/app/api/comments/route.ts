@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
     }
 
-    const { comment, pageID, pageType } = await req.json();
+    const { comment, pageID, pageType, commentID } = await req.json();
 
     if (!comment || !pageID || !pageType) {
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
@@ -23,7 +23,36 @@ export async function POST(req: NextRequest) {
         const client = await clientPromise;
         const db = client.db();
         const userId = new ObjectId(session.user.id);
-        // const userId = new ObjectId("65824ed1db2ea85500c815d9");
+
+        if (commentID) {
+            const commentData = await db.collection('comments').insertOne({
+                comment,
+                pageID,
+                pageType,
+                parentID: new ObjectId(commentID),
+                user: {
+                    userId,
+                    username: session.user.username,
+                },
+                likes: [],
+                dislikes: [],
+                createdAt: new Date(),
+            });
+
+            if (!commentData) {
+                return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
+            }
+
+
+
+
+            return NextResponse.json(
+                {
+                    message: "comment posted"
+                },
+                { status: 200 }
+            );
+        }
 
         // create comment 
         const commentData = await db.collection('comments').insertOne({
@@ -36,7 +65,6 @@ export async function POST(req: NextRequest) {
             },
             likes: [],
             dislikes: [],
-            replies: [],
             createdAt: new Date(),
         });
 
@@ -73,9 +101,9 @@ export async function GET(req: NextRequest) {
     const pageType = req.nextUrl.searchParams.get("pageType");
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const pageID = await req.nextUrl.searchParams.get("pageID");
+    const parentID = await req.nextUrl.searchParams.get("parentID");
     let sort: string | SortQuery =
         req.nextUrl.searchParams.get("sort") || "Newest";
-
 
     if (sort) {
         switch (sort) {
@@ -94,22 +122,29 @@ export async function GET(req: NextRequest) {
         }
     }
 
-
-
-    // check if id is present, otherwise return error
-    if (!pageID) {
-        return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
-    }
-
     try {
         const client = await clientPromise;
         const db = client.db();
 
+        if (parentID) {
+            const replies = await db.collection('comments').find({ parentID: new ObjectId(parentID) }).sort({ createdAt: 1 }).toArray();
 
+            return NextResponse.json(
+                {
+                    replies
+                },
+                { status: 200 }
+            );
+        }
+
+        // check if id is present, otherwise return error
+        if (!pageID) {
+            return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+        }
 
 
         // get comment for auction
-        const response = await db.collection('comments').find({ pageID: pageID })
+        const response = await db.collection('comments').find({ pageID: pageID, parentID: { $exists: false } })
             .limit(limit)
             .skip(offset)
             .sort(sort as any);
@@ -217,6 +252,10 @@ export async function DELETE(req: NextRequest) {
 
         const commentData = await db.collection('comments').deleteOne(
             { _id: new ObjectId(commentID) }
+        );
+
+        await db.collection('comments').deleteMany(
+            { parentID: new ObjectId(commentID) }
         );
 
         if (!commentData.deletedCount) {

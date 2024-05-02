@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
+import { ObjectId, AnyBulkWriteOperation } from 'mongodb';
 
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -22,6 +22,12 @@ export async function GET(req: NextRequest) {
     const auctions = await db
       .collection('auctions')
       .find({
+        attributes: {
+          $elemMatch: {
+            key: 'status',
+            value: { $in: [2, 3] },
+          },
+        },
         pot: { $gt: 0 },
         isProcessed: { $ne: true },
         winners: { $exists: false },
@@ -29,9 +35,20 @@ export async function GET(req: NextRequest) {
       .project({ _id: 1, pot: 1, attributes: { $elemMatch: { key: 'status' } } })
       .toArray();
 
+    const allWagers = await db
+      .collection('wagers')
+      .find({
+        auctionID: { $in: auctions.map((auction) => auction._id) },
+        isActive: true,
+      })
+      .toArray();
+
     const auctionsToProcess = await Promise.all(
       auctions.map(async (auction) => {
-        const playerCount = await db.collection('wagers').countDocuments({ auctionID: auction._id });
+        const playerCount = await db.collection('wagers').countDocuments({
+          auctionID: auction._id,
+          isActive: true,
+        });
         const status = auction.attributes[0]?.value;
         return {
           _id: auction._id,
@@ -46,8 +63,15 @@ export async function GET(req: NextRequest) {
     console.log('Auctions to process:', auctionsToProcess.length);
     console.log('Auctions with placed wagers:', auctionsToProcess);
 
+    if (auctionsToProcess.length === 0) {
+      console.log('No auctions available for processing that meet the specified criteria.');
+      return NextResponse.json({ message: 'No auctions available for processing that meet the specified criteria.' });
+    }
+
     for (const auction of auctionsToProcess) {
       console.log(`Processing auction ${auction._id} with status ${auction.status}`);
+
+      const wagers = allWagers.filter((wager) => wager.auctionID.toString() === auction._id.toString());
 
       switch (auction.status) {
         case 1:
@@ -60,8 +84,7 @@ export async function GET(req: NextRequest) {
             console.log(`Refunding players for auction: ${auction._id} due to insufficient player. Player count: (${auction.playerCount})`);
 
             // refund
-            const wagersToRefund = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
-            const wagerIDsToRefund = wagersToRefund.map((wager) => wager._id);
+            const wagerIDsToRefund = wagers.map((wager) => wager._id);
             await refundWagers(wagerIDsToRefund);
 
             await db.collection('auctions').updateOne(
@@ -75,21 +98,53 @@ export async function GET(req: NextRequest) {
               { arrayFilters: [{ 'elem.key': 'status' }] }
             );
           } else {
-            console.log(`Processing wiiner for auction: ${auction._id} `);
+            console.log(`Processing winner for auction: ${auction._id} `);
 
             // get the totalPot
+            // const auctionTransactions = await db
+            //   .collection('transactions')
+            //   .find({
+            //     auctionID: auction._id,
+            //     transactionType: 'wager',
+            //     type: '-',
+            //   })
+            //   .toArray();
+
+            // const totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
             const auctionTransactions = await db
               .collection('transactions')
               .find({
-                auctionID: auction._id,
+                auctionID: new ObjectId(auction._id),
                 transactionType: 'wager',
                 type: '-',
               })
               .toArray();
 
-            const totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            const auctionRefunds = await db
+              .collection('transactions')
+              .find({
+                auctionID: new ObjectId(auction._id),
+                transactionType: 'refund',
+                type: '+',
+              })
+              .toArray();
 
-            const wagers = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
+            const totalWagerAmount =
+              0.88 * auctionTransactions.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+
+            const totalRefundAmount =
+              0.88 * auctionRefunds.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+
+            const totalPot = totalWagerAmount - totalRefundAmount;
+
+            const wagers = await db
+              .collection('wagers')
+              .find({
+                auctionID: auction._id,
+                isActive: true,
+              })
+              .toArray();
 
             const formattedWagers = wagers.map((wager) => ({
               _id: wager._id,
@@ -100,6 +155,37 @@ export async function GET(req: NextRequest) {
             const finalSellingPrice = auction.attributes.find((attr: { key: string }) => attr.key === 'price')?.value || 0;
 
             const winners = prizeDistribution(formattedWagers, finalSellingPrice, totalPot);
+
+            const bulkOps: AnyBulkWriteOperation[] = winners
+              .map((winner) => {
+                const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
+
+                if (!correspondingWager || !correspondingWager.user) {
+                  console.error(`No corresponding wager found for winner with wager ID: ${winner.wagerID}`);
+                  return null;
+                }
+
+                return {
+                  updateOne: {
+                    filter: { userID: correspondingWager.user._id, auctionID: auction._id },
+                    update: {
+                      $set: {
+                        points: winner.points,
+                        rank: winner.rank,
+                        fullName: correspondingWager.user.fullName,
+                        username: correspondingWager.user.username,
+                        image: correspondingWager.user.image,
+                      },
+                    },
+                    upsert: true,
+                  },
+                };
+              })
+              .filter((op) => op !== null) as AnyBulkWriteOperation[];
+
+            if (bulkOps.length > 0) {
+              await db.collection('auction_points').bulkWrite(bulkOps);
+            }
 
             for (const winner of winners) {
               const correspondingWager = wagers.find((wager) => wager._id.toString() === winner.wagerID.toString());
@@ -135,6 +221,7 @@ export async function GET(req: NextRequest) {
                 rank: winner.rank,
                 username: correspondingWager ? correspondingWager.user.username : null,
                 userImage: correspondingWager ? correspondingWager.user.image : null,
+                prize: winner.prize,
                 priceGuessed: correspondingWager ? correspondingWager.priceGuessed : null,
                 winningDate: new Date(),
               };
@@ -159,11 +246,10 @@ export async function GET(req: NextRequest) {
           console.log(`Auction: ${auction._id} is unsuccessful or withdrawn. Refunding all players`);
 
           // get all the wagers that need to be refunded
-          const wagersToRefund = await db.collection('wagers').find({ auctionID: auction._id }).toArray();
-          if (wagersToRefund.length === 0) {
+          if (wagers.length === 0) {
             console.log(`No wagers to refund for auction: ${auction._id}`);
           } else {
-            const wagerIDsToRefund = wagersToRefund.map((wager) => wager._id);
+            const wagerIDsToRefund = wagers.map((wager) => wager._id);
             await refundWagers(wagerIDsToRefund);
             console.log(`Refund process intiated for ${wagerIDsToRefund.length} wagers in auction: ${auction._id}`);
           }
@@ -209,6 +295,15 @@ export async function POST(req: NextRequest) {
 
     let totalPot;
 
+    // const auctionTransactions = await db
+    //   .collection('transactions')
+    //   .find({
+    //     auctionID: convertedAuctionID,
+    //     transactionType: 'wager',
+    //     type: '-',
+    //   })
+    //   .toArray();
+
     const auctionTransactions = await db
       .collection('transactions')
       .find({
@@ -218,8 +313,22 @@ export async function POST(req: NextRequest) {
       })
       .toArray();
 
+    const auctionRefunds = await db
+      .collection('transactions')
+      .find({
+        auctionID: convertedAuctionID,
+        transactionType: 'refund',
+        type: '+',
+      })
+      .toArray();
+
+    const totalWagerAmount =
+      0.88 * auctionTransactions.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+
+    const totalRefundAmount = 0.88 * auctionRefunds.map((transaction: any) => transaction.amount).reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+
     if (auctionTransactions.length > 0) {
-      totalPot = 0.88 * auctionTransactions.map((transaction) => transaction.amount).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      totalPot = totalWagerAmount - totalRefundAmount;
     }
 
     const auctionStatus = auction.attributes.find((attr: { key: string }) => attr.key === 'status')?.value;
@@ -227,7 +336,13 @@ export async function POST(req: NextRequest) {
 
     if (auctionStatus === 2 || (auctionStatus === 3 && hasPot)) {
       // fetch all wagers associated with this auction
-      const wagers = await db.collection('wagers').find({ auctionID: convertedAuctionID }).toArray();
+      const wagers = await db
+        .collection('wagers')
+        .find({
+          auctionID: convertedAuctionID,
+          isActive: true,
+        })
+        .toArray();
 
       // testing response
       return NextResponse.json({ wagers }, { status: 200 });

@@ -1055,8 +1055,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     />
                 )}
             </div>
-            {!isLoggedIn ? //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-            //       closeMenu();
+            {!isLoggedIn ? //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
             //       document.body.classList.remove("stop-scrolling");
             //     }}
             //     className="tw-flex tw-py-2"
@@ -2499,17 +2498,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
     useEffect(() => {
         const fetchPrize = async () => {
-            const transactions = await getAuctionTransactions(objectID);
-
-            const totalPrize =
-                0.88 *
-                transactions
-                    .map((transaction: any) => transaction.amount)
-                    .reduce(
-                        (accumulator: any, currentValue: any) =>
-                            accumulator + currentValue,
-                        0
-                    );
+            const { totalPrize } = await getAuctionTransactions(objectID);
             setPot(totalPrize);
         };
         fetchPrize();
@@ -2821,7 +2810,7 @@ const MyAccountDropdownMenu = () => {
                 </div>
             ) : typeof walletBalance === "number" ? (
                 <div className="tw-px-6 tw-w-full">
-                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6" onClick={() => router.push("/my_wallet")}>
                         <Image
                             src={Wallet}
                             width={32}

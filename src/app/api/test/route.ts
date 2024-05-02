@@ -1,4 +1,4 @@
-import prizeDistribution from '@/helpers/prizeAlgorithm';
+import prizeDistribution from '@/helpers/prizeDistribution';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
