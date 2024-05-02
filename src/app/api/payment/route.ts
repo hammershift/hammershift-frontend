@@ -66,6 +66,11 @@ export async function POST(request: Request) {
         },
       ],
       mode: "payment",
+      payment_intent_data: {
+        metadata: {
+          userId: userId,
+        },
+      },
       return_url: `${request.headers.get(
         "origin"
       )}/return?session_id={CHECKOUT_SESSION_ID}`,

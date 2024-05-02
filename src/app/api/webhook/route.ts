@@ -1,6 +1,8 @@
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
+import Transaction from "@/models/transaction";
+import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -28,8 +30,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         const stripeCustomerId = event.data.object.customer;
         const amountPaid = event.data.object.amount_received / 100;
+        const userId = event.data.object.metadata.userId;
 
-        // Update the user's balance
         const updateUserBalance = await db
           .collection("users")
           .updateOne(
@@ -41,10 +43,26 @@ export async function POST(req: NextRequest, res: NextResponse) {
           `Updated user balance for ${stripeCustomerId}:`,
           updateUserBalance
         );
+
+        const depositTransaction = new Transaction({
+          userID: new mongoose.Types.ObjectId(userId),
+          transactionType: "deposit",
+          amount: amountPaid,
+          type: "+",
+          transactionDate: new Date(),
+        });
+
+        const createDepositTransaction = await db
+          .collection("transactions")
+          .insertOne(depositTransaction);
+        console.log(
+          `Created deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId}:`,
+          createDepositTransaction
+        );
+
         break;
       case "payment_intent.payment_failed":
         console.log("PaymentIntent failed.");
-
         break;
       default:
         console.log(`Unhandled event type ${event.type}`);
