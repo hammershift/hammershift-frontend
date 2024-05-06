@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import Transaction from '@/models/transaction';
 import mongoose from 'mongoose';
+import { sendReceiptEmail } from '@/lib/sendReceiptEmail';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -29,7 +30,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const userId = event.data.object.metadata.userId;
 
         const updateUserBalance = await db.collection('users').updateOne({ stripeCustomerId: stripeCustomerId }, { $inc: { balance: amountPaid } });
-
         console.log(`Updated user balance for ${stripeCustomerId}:`, updateUserBalance);
 
         const depositTransaction = new Transaction({
@@ -42,7 +42,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         const createDepositTransaction = await db.collection('transactions').insertOne(depositTransaction);
         console.log(`Created deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId}:`, createDepositTransaction);
-
         break;
       case 'payment_intent.payment_failed':
         console.log('PaymentIntent failed.');
