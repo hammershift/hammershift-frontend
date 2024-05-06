@@ -470,7 +470,7 @@ const Navbar = () => {
                                                 ABOUT
                                             </Link>
                                             <Link
-                                                href="/leaderboard"
+                                                href="/leaderboards"
                                                 onClick={() => {
                                                     closeMenu();
                                                     closeMyAccountMenu();
@@ -1055,9 +1055,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     />
                 )}
             </div>
-            {!isLoggedIn ? //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-            //       document.body.classList.remove("stop-scrolling");
-            //     }}
+            {!isLoggedIn ? //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
             //     className="tw-flex tw-py-2"
             //   >
             //     <div>TOURNAMENTS</div>
@@ -2804,7 +2802,10 @@ const MyAccountDropdownMenu = () => {
                 </div>
             ) : typeof walletBalance === "number" ? (
                 <div className="tw-px-6 tw-w-full">
-                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6" onClick={() => router.push("/my_wallet")}>
+                    <div
+                        className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6"
+                        onClick={() => router.push("/my_wallet")}
+                    >
                         <Image
                             src={Wallet}
                             width={32}
