@@ -23,7 +23,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 // For embedded forms
 export async function POST(request: Request) {
   try {
-    const { priceId, userId } = await request.json();
+    const { priceId, userId, userEmail } = await request.json();
 
     const client = await clientPromise;
     const db = client.db();
@@ -59,6 +59,7 @@ export async function POST(request: Request) {
       ui_mode: "embedded",
       payment_method_types: ["card"],
       customer: stripeCustomerId,
+      invoice_creation: { enabled: true },
       line_items: [
         {
           price: priceId,
