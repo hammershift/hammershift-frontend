@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import Transaction from '@/models/transaction';
 import mongoose from 'mongoose';
-import { sendReceiptEmail } from '@/lib/sendReceiptEmail';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 

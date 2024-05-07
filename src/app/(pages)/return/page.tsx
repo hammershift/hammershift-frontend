@@ -7,9 +7,24 @@ async function getSession(sessionId: string) {
   return session;
 }
 
+async function getInvoice(invoiceId: string) {
+  const invoice = await stripe.invoices.retrieve(invoiceId);
+  return invoice;
+}
+
 export default async function CheckoutReturn({ searchParams }: any) {
   const stripeSessionId = searchParams.session_id;
   const stripeSession = await getSession(stripeSessionId);
+
+  // Ensure stripeSession.invoice is not null before proceeding
+  if (!stripeSession.invoice) {
+    console.error("Stripe session does not have an invoice.");
+    return <p>Payment did not work.</p>; // Or return a different UI message
+  }
+
+  // Assert that stripeSession.invoice is a string
+  const stripeInvoiceId = stripeSession.invoice as string;
+  const stripeInvoice = await getInvoice(stripeInvoiceId);
 
   console.log(stripeSession);
 
@@ -19,10 +34,19 @@ export default async function CheckoutReturn({ searchParams }: any) {
 
   if (stripeSession?.status === 'complete') {
     return (
-      <h3>
-        We appreciate your business! Your Stripe customer ID is:
-        {stripeSession.customer as string}.
-      </h3>
+      <div className="section-container">
+        <p className="tw">Thank you for your purchase!</p>
+        <p>
+          We appreciate your business Your Stripe customer ID is:
+          {stripeSession.customer as string}.
+        </p>
+        <p>
+          View Receipt Here:
+          <a href={stripeInvoice.hosted_invoice_url ?? ""} target="blank">
+            Stripe Receipt
+          </a>
+        </p>
+      </div>
     );
   }
 
