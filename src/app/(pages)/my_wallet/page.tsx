@@ -16,6 +16,7 @@ const MyWalletPage = () => {
 
   const { data: session } = useSession();
   const userId = session?.user.id;
+  const userEmail = session?.user.email;
 
   useEffect(() => {
     fetchPrices();
@@ -103,7 +104,11 @@ const MyWalletPage = () => {
                 >
                   Add Funds
                 </button> */}
-                <EmbeddedCheckoutButton priceId={price.id} userId={userId} />
+                <EmbeddedCheckoutButton
+                  priceId={price.id}
+                  userId={userId}
+                  userEmail={userEmail}
+                />
               </div>
             </div>
           ))}
