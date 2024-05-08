@@ -1,48 +1,86 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 async function getSession(sessionId: string) {
-  const session = await stripe.checkout.sessions.retrieve(sessionId!);
-  return session;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    return session;
+  } catch (error) {
+    console.error("Failed to retrieve session:", error);
+    throw error;
+  }
 }
 
 async function getInvoice(invoiceId: string) {
-  const invoice = await stripe.invoices.retrieve(invoiceId);
-  return invoice;
+  try {
+    const invoice = await stripe.invoices.retrieve(invoiceId);
+    return invoice;
+  } catch (error) {
+    console.error("Failed to retrieve invoice:", error);
+    throw error;
+  }
 }
 
-export default async function CheckoutReturn({ searchParams }: any) {
+export default function CheckoutReturn({ searchParams }: any) {
   const stripeSessionId = searchParams.session_id;
-  const stripeSession = await getSession(stripeSessionId);
+  const [isLoading, setIsLoading] = useState(true);
+  const [stripeSession, setStripeSession] =
+    useState<Stripe.Checkout.Session | null>(null);
+  const [stripeInvoice, setStripeInvoice] = useState<Stripe.Invoice | null>(
+    null
+  );
 
-  // Ensure stripeSession.invoice is not null before proceeding
-  if (!stripeSession.invoice) {
-    console.error("Stripe session does not have an invoice.");
-    return <p>Payment did not work.</p>; // Or return a different UI message
+  useEffect(() => {
+    const fetchSessionAndInvoice = async () => {
+      try {
+        const session = await getSession(stripeSessionId);
+        setStripeSession(session);
+
+        if (session && session.invoice) {
+          const invoice = await getInvoice(session.invoice as string);
+          setStripeInvoice(invoice);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching session or invoice:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchSessionAndInvoice();
+  }, [stripeSessionId]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
 
-  // Assert that stripeSession.invoice is a string
-  const stripeInvoiceId = stripeSession.invoice as string;
-  const stripeInvoice = await getInvoice(stripeInvoiceId);
-
-  console.log(stripeSession);
-
-  if (stripeSession?.status === "open") {
-    return <p>Payment did not work.</p>;
+  if (!stripeSession || !stripeSession.invoice) {
+    return <p>No invoice found.</p>;
   }
 
-  if (stripeSession?.status === "complete") {
+  if (stripeSession.status === "open") {
+    return <p>Payment did not work. Please try again.</p>;
+  }
+
+  if (stripeSession.status === "complete") {
     return (
       <div className="section-container">
         <p className="tw">Thank you for your purchase!</p>
         <p>
-          We appreciate your business Your Stripe customer ID is:
+          We appreciate your business. Your Stripe customer ID is:{" "}
           {stripeSession.customer as string}.
         </p>
         <p>
           View Receipt Here:
-          <a href={stripeInvoice.hosted_invoice_url ?? ""} target="blank">
+          <a
+            href={stripeInvoice?.hosted_invoice_url ?? ""}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Stripe Receipt
           </a>
         </p>

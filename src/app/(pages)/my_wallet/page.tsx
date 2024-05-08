@@ -19,47 +19,48 @@ const MyWalletPage = () => {
   const userEmail = session?.user.email;
 
   useEffect(() => {
+    const fetchPrices = async () => {
+      const res = await fetch("/api/getProducts", { method: "GET" });
+      if (!res.ok) {
+        throw new Error("Unable to fetch prices");
+      }
+      const data = await res.json();
+      const sortedData = data.sort(
+        (a: { unit_amount: any }, b: { unit_amount: any }) =>
+          a.unit_amount - b.unit_amount
+      );
+      setPrices(sortedData);
+      console.log(data);
+    };
     fetchPrices();
-    fetchWalletBalance();
   }, []);
 
-  const fetchWalletBalance = async () => {
-    setLoading(true);
-    if (session) {
-      try {
-        const res = await fetch("/api/wallet", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+  useEffect(() => {
+    const fetchWalletBalance = async () => {
+      setLoading(true);
+      if (session) {
+        try {
+          const res = await fetch("/api/wallet", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
 
-        const data = await res.json();
-        if (res.ok) {
-          setWalletBalance(data.balance);
-          setLoading(false);
-        } else {
-          console.error("Failed to fetch wallet balance:", data.message);
+          const data = await res.json();
+          if (res.ok) {
+            setWalletBalance(data.balance);
+            setLoading(false);
+          } else {
+            console.error("Failed to fetch wallet balance:", data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching wallet balance:", error);
         }
-      } catch (error) {
-        console.error("Error fetching wallet balance:", error);
       }
-    }
-  };
-
-  const fetchPrices = async () => {
-    const res = await fetch("/api/getProducts", { method: "GET" });
-    if (!res.ok) {
-      throw new Error("Unable to fetch prices");
-    }
-    const data = await res.json();
-    const sortedData = data.sort(
-      (a: { unit_amount: any }, b: { unit_amount: any }) =>
-        a.unit_amount - b.unit_amount
-    );
-    setPrices(sortedData);
-    console.log(data);
-  };
+    };
+    fetchWalletBalance();
+  }, [session]);
 
   //Trigger stripe hosted payment page
   //   const handleAddFundButtonClick = async (
@@ -90,7 +91,7 @@ const MyWalletPage = () => {
   //   };
 
   return (
-    <div className="section-container tw-flex tw-justify-between">
+    <div className="section-container tw-flex tw-justify-evenly">
       <div className="tw-w-1/3">
         <h1 className="tw-text-2xl tw-p-3">ADD FUNDS TO YOUR WALLET </h1>
         <div className="tw-p-2 tw-flex tw-flex-col tw-gap-1">
@@ -115,8 +116,8 @@ const MyWalletPage = () => {
         </div>
       </div>
       <div className="tw-w-1/3">
-        <h2>Wallet Details:</h2>
-        <div className="tw-flex tw-justify-between">
+        <h2 className="tw-text-2xl tw-p-3">WALLET DETAILS:</h2>
+        <div className="tw-flex tw-p-4 tw-mt-1 tw-justify-between tw-items-center tw-bg-sky-950 tw-rounded-md">
           <p>Current balance:</p>
           {loading ? <p>Loading</p> : <p> ${walletBalance.toFixed(2)}</p>}
         </div>
