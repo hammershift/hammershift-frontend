@@ -482,7 +482,22 @@ const Navbar = () => {
                                                 className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                                                 role="menuitem"
                                             >
-                                                LEADERBOARD
+                                                LEADERBOARDS
+                                            </Link>
+                                            <Link
+                                                href="/how_it_works"
+                                                onClick={() => {
+                                                    closeMenu();
+                                                    closeMyAccountMenu();
+                                                    closeNavLinkDropDownMenu();
+                                                    document.body.classList.remove(
+                                                        "stop-scrolling"
+                                                    );
+                                                }}
+                                                className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                                                role="menuitem"
+                                            >
+                                                HOW IT WORKS
                                             </Link>
                                         </div>
                                     </div>
@@ -1055,9 +1070,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     />
                 )}
             </div>
-            {!isLoggedIn ? //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-            //     className="tw-flex tw-py-2"
-            //   >
+            {!isLoggedIn ? //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
             //     <div>TOURNAMENTS</div>
             //   </Link>
             //   <Link
