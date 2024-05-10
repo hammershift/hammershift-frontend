@@ -1,8 +1,10 @@
 export default function HowItWorksPage() {
     return (
         <div className="section-container tw-mx-auto">
-            <div>
-                <h2>How It Works: HammerShift</h2>
+            <div className=" tw-mb-4">
+                <h2 className="tw-text-4xl tw-font-bold tw-mb-5">
+                    How It Works: HammerShift
+                </h2>
                 <p>
                     Welcome to HammerShift, where the excitement of car auctions
                     meets the thrill of strategic prediction. Here&apos;s a
@@ -11,8 +13,10 @@ export default function HowItWorksPage() {
                     engaging platform for car enthusiasts and predictors alike.
                 </p>
             </div>
-            <div>
-                <h3>Step 1: Joining HammerShift</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 1: Joining HammerShift
+                </h3>
                 <p>
                     To get started, simply visit our website and sign up.
                     Registration is quick and allows you immediate access to our
@@ -20,8 +24,10 @@ export default function HowItWorksPage() {
                     ready to dive into the world of auction predictions.
                 </p>
             </div>
-            <div>
-                <h3>Step 2: Understanding the Auctions</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 2: Understanding the Auctions
+                </h3>
                 <p>
                     HammerShift collaborates with Bring a Trailer (BaT) to bring
                     you live auction feeds. Users can browse through ongoing
@@ -30,8 +36,10 @@ export default function HowItWorksPage() {
                     them an edge in predictions.
                 </p>
             </div>
-            <div>
-                <h3>Step 3: Making Predictions</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 3: Making Predictions
+                </h3>
                 <p>
                     Once you&apos;ve selected an auction, it&apos;s time to
                     place your wager on the outcome. Predict the final selling
@@ -41,8 +49,10 @@ export default function HowItWorksPage() {
                     your knowledge and intuition.
                 </p>
             </div>
-            <div>
-                <h3>Step 4: Watching the Auction</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 4: Watching the Auction
+                </h3>
                 <p>
                     As the auction progresses, you can watch in real time as
                     bids are placed. Engage with other members of the
@@ -51,8 +61,10 @@ export default function HowItWorksPage() {
                     unfolds.
                 </p>
             </div>
-            <div>
-                <h3>Step 5: Scoring and Rewards</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 5: Scoring and Rewards
+                </h3>
                 <p>
                     After the auction concludes, predictions are tallied and
                     winners are determined based on the accuracy of their
@@ -61,8 +73,10 @@ export default function HowItWorksPage() {
                     points to climb the leaderboards and earn rewards.
                 </p>
             </div>
-            <div>
-                <h3>Step 6: Learning and Improving</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 6: Learning and Improving
+                </h3>
                 <p>
                     Whether you win or lose, each auction is a learning
                     opportunity. Review the outcomes and your predictions to
@@ -71,8 +85,10 @@ export default function HowItWorksPage() {
                     market trends.
                 </p>
             </div>
-            <div>
-                <h3>Step 7: Community and Competitions</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Step 7: Community and Competitions
+                </h3>
                 <p>
                     HammerShift is more than just a prediction platform;
                     it&apos;s a community of car enthusiasts and skilled
@@ -81,8 +97,10 @@ export default function HowItWorksPage() {
                     with like-minded individuals.
                 </p>
             </div>
-            <div>
-                <h3>Fees and Charges</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Fees and Charges
+                </h3>
                 <p>
                     There are no fees to join HammerShift. Users can participate
                     in a certain number of free predictions monthly. For more
@@ -91,8 +109,10 @@ export default function HowItWorksPage() {
                     exclusive community features.
                 </p>
             </div>
-            <div>
-                <h3>Customer Support</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Customer Support
+                </h3>
                 <p>
                     Our dedicated support team is available to help with any
                     questions or issues you may encounter. Whether you need help
@@ -100,8 +120,10 @@ export default function HowItWorksPage() {
                     feedback, we&apos;re here to assist you.
                 </p>
             </div>
-            <div>
-                <h3>Privacy and Security</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Privacy and Security
+                </h3>
                 <p>
                     At HammerShift, we prioritize your privacy and security. All
                     personal information is securely stored and protected. We
@@ -109,8 +131,10 @@ export default function HowItWorksPage() {
                     your information is safe with us.
                 </p>
             </div>
-            <div>
-                <h3>Join the Revolution</h3>
+            <div className="tw-mb-4">
+                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+                    Join the Revolution
+                </h3>
                 <p>
                     HammerShift offers a unique blend of excitement,
                     competition, and learning. Whether you&apos;re a seasoned
