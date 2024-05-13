@@ -142,7 +142,9 @@ export const LatestNews = () => {
         <div className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center">
             <div className=" section-container tw-py-16 md:tw-py-[120px]">
                 <header>
-                    <h1 className="tw-text-3xl tw-font-bold">Latest News</h1>
+                    <h1 className="tw-text-3xl tw-font-bold">
+                        How HammerShift Works
+                    </h1>
                 </header>
 
                 <section className="tw-mt-8">
@@ -151,15 +153,16 @@ export const LatestNews = () => {
                             <div className="tw-flex tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px]  tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8">
                                 <div>
                                     <div className="tw-text-[#53944F] tw-font-bold">
-                                        Topic
+                                        Registration and Access
                                     </div>
                                     <div>
-                                        Quam temere in vitiis, legem sancimus
-                                        haerentia.
+                                        Quick sign-up process for immediate
+                                        access to the auction prediction
+                                        platform
                                     </div>
                                 </div>
                                 <Image
-                                    src={articleImageOne}
+                                    src={UserCheckIcon2}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -173,15 +176,16 @@ export const LatestNews = () => {
                             <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8">
                                 <div>
                                     <div className="tw-text-[#53944F] tw-font-bold">
-                                        Topic
+                                        Live Auction Collaboration
                                     </div>
                                     <div>
-                                        Quam temere in vitiis, legem sancimus
-                                        haerentia.
+                                        Partnership with Bring a Trailer (BaT)
+                                        for live auction feeds, allowing users
+                                        to select and predict auction outcomes.
                                     </div>
                                 </div>
                                 <Image
-                                    src={articleImageTwo}
+                                    src={GavelIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -197,15 +201,17 @@ export const LatestNews = () => {
                             <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 ">
                                 <div>
                                     <div className="tw-text-[#53944F] tw-font-bold">
-                                        Topic
+                                        Prediction and Strategy
                                     </div>
                                     <div>
-                                        Quam temere in vitiis, legem sancimus
-                                        haerentia.
+                                        Users make informed predictions on car
+                                        auction outcomes, testing their
+                                        knowledge against market trends and
+                                        historical data.
                                     </div>
                                 </div>
                                 <Image
-                                    src={articleImageThree}
+                                    src={ChartIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -219,15 +225,17 @@ export const LatestNews = () => {
                             <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 ">
                                 <div>
                                     <div className="tw-text-[#53944F] tw-font-bold">
-                                        Topic
+                                        Community Engagement and Learning
                                     </div>
                                     <div>
-                                        Quam temere in vitiis, legem sancimus
-                                        haerentia.
+                                        HammerShift is a community platform for
+                                        learning, with tools for performance
+                                        analysis and opportunities for
+                                        competition and discussion.
                                     </div>
                                 </div>
                                 <Image
-                                    src={articleImageFour}
+                                    src={PeopleIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
