@@ -1,4 +1,5 @@
 "use client";
+
 import { loadStripe } from "@stripe/stripe-js";
 import {
   EmbeddedCheckoutProvider,
