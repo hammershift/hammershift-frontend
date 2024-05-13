@@ -22,15 +22,15 @@ export default async function CheckoutReturn({ searchParams }: any) {
   if (!stripeSession.invoice || typeof stripeSession.invoice !== "string") {
     console.error("Stripe session does not have a valid invoice ID.");
     return (
-      <div className="section-container tw-flex tw-flex-col tw-justify-center tw-items-center">
-        <p className="tw">Thank you for your purchase!</p>
-        <p className="tw">
-          A receipt with your transaction ID has been emailed to{" "}
-          {stripeSession.customer_details?.email}
-        </p>
-        <p className="tw">
-          You can also refresh this page to view your receipt
-        </p>
+      <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
+        <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
+          <p className="">Thank you for your purchase!</p>
+          <p>
+            A receipt with your transaction ID has been emailed to:
+            {stripeSession.customer_details?.email}.
+          </p>
+          <p>You may also refresh this page to view your receipt.</p>
+        </div>
       </div>
     );
   }
@@ -41,26 +41,34 @@ export default async function CheckoutReturn({ searchParams }: any) {
 
     if (stripeSession?.status === "open") {
       return (
-        <div className="section-container tw-flex tw-flex-col tw-justify-center tw-items-center">
-          <p className="tw">Payment Failed</p>
+        <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
+          <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
+            <p className="">Payment failed!</p>
+          </div>
         </div>
       );
     }
 
     if (stripeSession?.status === "complete") {
       return (
-        <div className="section-container tw-flex tw-flex-col tw-justify-center tw-items-center">
-          <p className="tw">Thank you for your purchase!</p>
-          <p>
-            We appreciate your business Your Stripe customer ID is:{" "}
-            {stripeSession.customer as string}.
-          </p>
-          <p>
-            View Receipt Here:{" "}
-            <a href={stripeInvoice.hosted_invoice_url ?? ""} target="blank">
-              Stripe Receipt
-            </a>
-          </p>
+        <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
+          <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
+            <p className="">Thank you for your purchase!</p>
+            <p>
+              We appreciate your business, your Stripe customer ID is:{" "}
+              {stripeSession.customer as string}.
+            </p>
+            <p>
+              View Receipt{" "}
+              <a
+                className="tw-underline"
+                href={stripeInvoice.hosted_invoice_url ?? ""}
+                target="blank"
+              >
+                Here
+              </a>
+            </p>
+          </div>
         </div>
       );
     }

@@ -92,7 +92,7 @@ const MyWalletPage = () => {
 
   return (
     <div className="section-container tw-flex tw-justify-evenly">
-      <div className="tw-w-1/3">
+      <div className="tw-w-1/2">
         <h1 className="tw-text-2xl tw-p-3">ADD FUNDS TO YOUR WALLET </h1>
         <div className="tw-p-2 tw-flex tw-flex-col tw-gap-1">
           {prices.map((price) => (
@@ -115,11 +115,18 @@ const MyWalletPage = () => {
           ))}
         </div>
       </div>
-      <div className="tw-w-1/3">
-        <h2 className="tw-text-2xl tw-p-3">WALLET DETAILS:</h2>
-        <div className="tw-flex tw-p-4 tw-mt-1 tw-justify-between tw-items-center tw-bg-sky-950 tw-rounded-md">
-          <p>Current balance:</p>
-          {loading ? <p>Loading</p> : <p> ${walletBalance.toFixed(2)}</p>}
+      <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-1/3 tw-bg-sky-950 tw-rounded-md ">
+        <h2 className="tw-text-xl tw-p-4">MY WALLET</h2>
+        <div className="tw-px-4 tw-pb-4 tw-flex tw-flex-col tw-gap-1">
+          <div className="tw-flex tw-justify-between tw-items-center tw-bg-sky-950 tw-rounded-md">
+            {" "}
+            <p>Your current balance is:</p>
+            {loading ? (
+              <p className="tw-text-xl">Loading</p>
+            ) : (
+              <p className="tw-text-xl"> ${walletBalance.toFixed(2)}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
