@@ -3,28 +3,16 @@
 import { loadStripe } from '@stripe/stripe-js';
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from '@stripe/react-stripe-js';
 import { useCallback, useRef, useState } from 'react';
-import { useSession } from 'next-auth/react';
 
 export default function EmbeddedCheckoutButton(props: any) {
-  const { data: session } = useSession();
-  const userId = session?.user?.id;
-
-  if (!userId) {
-    console.log('User ID is undefined. Session:', session);
-  }
-
-  const { priceId } = props;
+  const { priceId, userId } = props;
   const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
 
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
   const [showCheckout, setShowCheckout] = useState(false);
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  console.log('priceId at button click:', priceId);
-
   const fetchClientSecret = useCallback(async () => {
-    console.log('Fetching with priceId:', priceId, 'and userId:', userId);
-
     // Create a Checkout Session
     const res = await fetch('/api/payment', {
       method: 'POST',
@@ -33,14 +21,11 @@ export default function EmbeddedCheckoutButton(props: any) {
       },
       body: JSON.stringify({ priceId: priceId, userId: userId }),
     });
-
     const data = await res.json();
     const clientSecret = data.client_secret;
     const clientId = data.id;
-
-    console.log('Client Secret: ', clientSecret);
-    console.log('ClientID: ', clientId);
-
+    console.log('client secret', clientSecret);
+    console.log('client id', clientId);
     return clientSecret;
   }, [priceId, userId]);
 
@@ -48,7 +33,7 @@ export default function EmbeddedCheckoutButton(props: any) {
 
   const handleCheckoutClick = (priceId: string) => {
     setSelectedPriceId(priceId);
-    console.log('Selected priceID: ', selectedPriceId);
+    console.log('selected price ID: ', selectedPriceId);
     setShowCheckout(true);
     modalRef.current?.showModal();
   };
