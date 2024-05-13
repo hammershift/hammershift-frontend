@@ -1,4 +1,5 @@
 "use client";
+
 import { loadStripe } from "@stripe/stripe-js";
 import {
   EmbeddedCheckoutProvider,
@@ -58,10 +59,7 @@ export default function EmbeddedCheckoutButton(props: any) {
       {showCheckout && (
         <div className="backdrop" onClick={handleCloseModal}></div>
       )}
-      <dialog
-        ref={modalRef}
-        className="top tw-w-3/4 tw-rounded-lg tw-relative tw-z-10"
-      >
+      <dialog ref={modalRef} className="top tw-w-3/4 tw-rounded-lg tw-relative">
         <div className="tw-max-w-screen-2xl">
           <div className="tw-flex tw-items-end tw-justify-end">
             <button
