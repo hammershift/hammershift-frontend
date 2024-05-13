@@ -31,6 +31,7 @@ import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { set } from "mongoose";
 import { io } from "socket.io-client";
+import AuctionHero from "@/app/components/auction_hero";
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
@@ -326,6 +327,7 @@ const CarViewPage = ({ params }: { params: { id: string } }) => {
 
     return (
         <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
+            <AuctionHero />
             {toggleWagerModal ? (
                 <TimerProvider deadline={carData.deadline}>
                     <WagerModal
