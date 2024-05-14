@@ -28,6 +28,7 @@ const PaymentForm = (props: any) => {
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
   // const [errorValidating, setErrorValidating] = useState(false)
   const [priceId, setPriceId] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState(0);
   const errorValidating = false;
   // To test loading
   useEffect(() => {
@@ -294,10 +295,13 @@ const PaymentForm = (props: any) => {
                   {prices.map((price: any) => (
                     <li
                       className={`tw-bg-white/5 tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
-                        priceId === price.id ? "tw-bg-green-800" : ""
+                        selectedPrice === price.unit_amount
+                          ? "tw-bg-green-700"
+                          : ""
                       }`}
                       key={price.id}
                       onClick={() => {
+                        setSelectedPrice(price.unit_amount);
                         setPriceId(price.id);
                       }}
                     >
