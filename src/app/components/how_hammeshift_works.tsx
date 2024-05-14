@@ -47,7 +47,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/user-check-icon.png"
+                                    src={UserCheckIcon2}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -70,7 +70,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/gavel-icon.png"
+                                    src={GavelIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -96,7 +96,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/chart-icon.png"
+                                    src={ChartIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -120,7 +120,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/people-icon.png"
+                                    src={PeopleIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -139,10 +139,13 @@ export default HowHammerShiftWorks;
 
 export const LatestNews = () => {
     return (
-        <div className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center">
-            <div className=" section-container tw-py-16 md:tw-py-[120px]">
+        <div
+            className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center"
+            id="how-hammershift-works"
+        >
+            <div className="section-container tw-py-16 md:tw-py-[120px]">
                 <header>
-                    <h1 className="tw-text-3xl tw-font-bold">
+                    <h1 className="tw-text-5xl tw-font-bold">
                         How HammerShift Works
                     </h1>
                 </header>
@@ -162,7 +165,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/user-check-icon.png"
+                                    src={UserCheckIcon2}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -185,7 +188,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/gavel-icon.png"
+                                    src={GavelIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -211,7 +214,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/chart-icon.png"
+                                    src={ChartIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -235,7 +238,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src="/images/people-icon.png"
+                                    src={PeopleIcon}
                                     width={80}
                                     height={80}
                                     alt="car"
