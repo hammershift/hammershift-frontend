@@ -47,7 +47,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={UserCheckIcon2}
+                                    src="/images/user-check-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -70,7 +70,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={GavelIcon}
+                                    src="/images/gavel-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -96,7 +96,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={ChartIcon}
+                                    src="/images/chart-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -120,7 +120,7 @@ const HowHammerShiftWorks = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={PeopleIcon}
+                                    src="/images/people-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -162,7 +162,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={UserCheckIcon2}
+                                    src="/images/user-check-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -185,7 +185,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={GavelIcon}
+                                    src="/images/gavel-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -211,7 +211,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={ChartIcon}
+                                    src="/images/chart-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"
@@ -235,7 +235,7 @@ export const LatestNews = () => {
                                     </div>
                                 </div>
                                 <Image
-                                    src={PeopleIcon}
+                                    src="/images/people-icon.png"
                                     width={80}
                                     height={80}
                                     alt="car"

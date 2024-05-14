@@ -44,7 +44,6 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/otp-generator": "^4.0.2",
-    "file-loader": "^6.2.0"
+    "@types/otp-generator": "^4.0.2"
   }
 }

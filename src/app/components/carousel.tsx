@@ -47,16 +47,33 @@ const Carousel = () => {
                 >
                     <SlideOne />
                     <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                        <Image src={BannerAdOne} alt="banner ad" className="" />
-                    </div>
-                    <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                        <Image src={BannerAdTwo} alt="banner ad" className="" />
+                        <Image
+                            src="/images/Banner_Ad.jpg"
+                            alt="banner ad"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "100%", height: "auto" }}
+                        />
                     </div>
                     <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
                         <Image
-                            src={BannerAdThree}
+                            src="/images/Banner_Ad2.jpg"
                             alt="banner ad"
-                            className=""
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "100%", height: "auto" }}
+                        />
+                    </div>
+                    <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+                        <Image
+                            src="/images/Banner_Ad3.jpg"
+                            alt="banner ad"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            style={{ width: "100%", height: "auto" }}
                         />
                     </div>
                     <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
