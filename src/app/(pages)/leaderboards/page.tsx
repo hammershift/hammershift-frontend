@@ -141,7 +141,7 @@ export default function LeaderBoardPage() {
                         </div>
                     </div>
                     <div className="leaderboard-list tw-overflow-y-auto tw-px-6 md:tw-w-[380px] md:tw-relative">
-                        <div className="tw-hidden md:tw-block tw-text-xl tw-font-bold tw-sticky tw-top-0 tw-bg-[#184c80] tw-pb-3 tw-z-50 tw-text-center">
+                        <div className="tw-hidden md:tw-block tw-text-xl tw-font-bold tw-sticky tw-top-0 tw-bg-[#184c80] tw-pb-3 tw-z-10 tw-text-center">
                             Total Scores
                         </div>
                         {[...auctionPoints, ...array.slice(0, 13)].map(
