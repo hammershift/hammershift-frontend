@@ -4,10 +4,10 @@ import articleImageOne from "../../../public/images/howhammershiftworks/article-
 import articleImageTwo from "../../../public/images/howhammershiftworks/article-image-two.svg";
 import articleImageThree from "../../../public/images/howhammershiftworks/article-image-three.svg";
 import articleImageFour from "../../../public/images/howhammershiftworks/article-image-four.svg";
-import GavelIcon from "@/../public/images/gavel-icon.png";
-import UserCheckIcon2 from "@/../public/images/user-check-icon.png";
-import ChartIcon from "@/../public/images/chart-icon.png";
-import PeopleIcon from "@/../public/images/people-icon.png";
+import GavelIcon from "../../../public/images/gavel-icon.svg";
+import UserCheckIcon2 from "../../../public/images/user-check-icon.svg";
+import ChartIcon from "../../../public/images/chart-icon.svg";
+import PeopleIcon from "../../../public/images/people-icon.svg";
 
 // interface ArticleData {
 //     id: string;
@@ -139,10 +139,13 @@ export default HowHammerShiftWorks;
 
 export const LatestNews = () => {
     return (
-        <div className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center">
-            <div className=" section-container tw-py-16 md:tw-py-[120px]">
+        <div
+            className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center"
+            id="how-hammershift-works"
+        >
+            <div className="section-container tw-py-16 md:tw-py-[120px]">
                 <header>
-                    <h1 className="tw-text-3xl tw-font-bold">
+                    <h1 className="tw-text-5xl tw-font-bold">
                         How HammerShift Works
                     </h1>
                 </header>
