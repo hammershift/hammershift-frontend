@@ -4,10 +4,10 @@ import articleImageOne from "../../../public/images/howhammershiftworks/article-
 import articleImageTwo from "../../../public/images/howhammershiftworks/article-image-two.svg";
 import articleImageThree from "../../../public/images/howhammershiftworks/article-image-three.svg";
 import articleImageFour from "../../../public/images/howhammershiftworks/article-image-four.svg";
-import GavelIcon from "@/../public/images/gavel-icon.png";
-import UserCheckIcon2 from "@/../public/images/user-check-icon.png";
-import ChartIcon from "@/../public/images/chart-icon.png";
-import PeopleIcon from "@/../public/images/people-icon.png";
+import GavelIcon from "../../../public/images/gavel-icon.png";
+import UserCheckIcon2 from "../../../public/images/user-check-icon.png";
+import ChartIcon from "../../../public/images/chart-icon.png";
+import PeopleIcon from "../../../public/images/people-icon.png";
 
 // interface ArticleData {
 //     id: string;
