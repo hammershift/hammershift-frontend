@@ -470,7 +470,7 @@ const Navbar = () => {
                                                 ABOUT
                                             </Link>
                                             <Link
-                                                href="/leaderboard"
+                                                href="/leaderboards"
                                                 onClick={() => {
                                                     closeMenu();
                                                     closeMyAccountMenu();
@@ -482,7 +482,22 @@ const Navbar = () => {
                                                 className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
                                                 role="menuitem"
                                             >
-                                                LEADERBOARD
+                                                LEADERBOARDS
+                                            </Link>
+                                            <Link
+                                                href="/how_it_works"
+                                                onClick={() => {
+                                                    closeMenu();
+                                                    closeMyAccountMenu();
+                                                    closeNavLinkDropDownMenu();
+                                                    document.body.classList.remove(
+                                                        "stop-scrolling"
+                                                    );
+                                                }}
+                                                className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                                                role="menuitem"
+                                            >
+                                                HOW IT WORKS
                                             </Link>
                                         </div>
                                     </div>
@@ -1055,32 +1070,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     />
                 )}
             </div>
-            {!isLoggedIn ? //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-            //       document.body.classList.remove("stop-scrolling");
-            //     }}
-            //     className="tw-flex tw-py-2"
-            //   >
-            //     <div>LIVE</div>
-            //   </Link> */}
-            //   <Link
-            //     href="/auctions"
-            //     onClick={() => {
-            //       closeMenu();
-            //       document.body.classList.remove("stop-scrolling");
-            //     }}
-            //     className="tw-flex tw-py-2"
-            //   >
-            //     <div>AUCTIONS</div>
-            //   </Link>
-            //   <Link
-            //     href="/tournaments"
-            //     onClick={() => {
-            //       closeMenu();
-            //       document.body.classList.remove("stop-scrolling");
-            //     }}
-            //     className="tw-flex tw-py-2"
-            //   >
-            //     <div>TOURNAMENTS</div>
+            {!isLoggedIn ? //     <div>TOURNAMENTS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
             //   </Link>
             //   <Link
             //     href="/about_page"
@@ -2660,7 +2650,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                             </div>
                         )}
                     </div>
-                    {isActive && (
+                    {isActive && !isRefunded && (
                         <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
                             <div className="tw-flex tw-gap-2 tw-items-center">
                                 <Image
@@ -2683,6 +2673,20 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                           maximumFractionDigits: 2,
                                       })}
                             </div>
+                        </div>
+                    )}
+                    {isActive && isRefunded && (
+                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
+                            <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                                ❌ AUCTION WAGER
+                            </div>
+
+                            <button
+                                disabled
+                                className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                            >
+                                REFUNDED
+                            </button>
                         </div>
                     )}
                     {status === 3 && (
@@ -2810,7 +2814,10 @@ const MyAccountDropdownMenu = () => {
                 </div>
             ) : typeof walletBalance === "number" ? (
                 <div className="tw-px-6 tw-w-full">
-                    <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6" onClick={() => router.push("/my_wallet")}>
+                    <div
+                        className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6"
+                        onClick={() => router.push("/my_wallet")}
+                    >
                         <Image
                             src={Wallet}
                             width={32}
