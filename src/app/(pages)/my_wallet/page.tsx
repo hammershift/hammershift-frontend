@@ -10,6 +10,7 @@ interface ProductPrice {
 
 const MyWalletPage = () => {
   const [prices, setPrices] = useState<ProductPrice[]>([]);
+  const [userTransactions, setUserTransactions] = useState({});
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -34,6 +35,23 @@ const MyWalletPage = () => {
     };
     fetchPrices();
   }, []);
+
+  useEffect(() => {
+    const fetchUserTransactions = async () => {
+      if (!userId) {
+        console.error("User ID is undefined");
+        return;
+      }
+      const res = await fetch(`/api/transaction?userID=${userId}`, { method: "GET" });
+      if (!res.ok) {
+        throw new Error("Unable to fetch user transactions");
+      }
+      const data = await res.json();
+      setUserTransactions(data);
+    };
+    fetchUserTransactions();
+  }, [userId]);
+  console.log("user transactions: ", userTransactions);
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
