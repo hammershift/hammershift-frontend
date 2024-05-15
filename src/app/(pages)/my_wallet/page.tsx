@@ -246,6 +246,28 @@ const MyWalletPage = () => {
                     </p>
                   </div>
                 )}
+                {transaction.transactionType === "tournament buy-in" && (
+                  <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
+                    <div className="tw-flex tw-items-center tw-m-2">
+                      {" "}
+                      <Image alt="deposit" src={WithdrawalIcon} />
+                      <div className="tw-px-4">
+                        <p className="tw-text-md">Tournament Buy-in</p>
+                        <p className="tw-text-sm tw-text-white/50">
+                          Placed buy-in for Tournament [Tournament ID]
+                        </p>
+                        <p className="tw-text-sm tw-text-white/50">
+                          {new Date(
+                            transaction.transactionDate
+                          ).toLocaleTimeString()}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="tw-text-xl">
+                      {transaction.type}${transaction.amount}
+                    </p>
+                  </div>
+                )}
                 {transaction.transactionType === "winnings" && (
                   <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
                     <div className="tw-flex tw-items-center tw-m-2">
