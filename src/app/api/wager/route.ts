@@ -131,10 +131,7 @@ export async function GET(req: NextRequest) {
     // api/wager?auction_id=656e95bc8727754b7cb5ec6b to get all wagers with the same auctionID
     if (id) {
       const auctionWagers = await Wager.find({
-        $and: [
-          { auctionID: new ObjectId(id) },
-          { isActive: true }
-        ]
+        $and: [{ auctionID: new ObjectId(id) }, { isActive: true }],
       }).sort({ createdAt: -1 });
 
       return NextResponse.json(auctionWagers);
@@ -142,10 +139,7 @@ export async function GET(req: NextRequest) {
 
     if (user) {
       const userWagers = await Wager.find({
-        $and: [
-          { 'user._id': new ObjectId(user) },
-          { isActive: true }
-        ]
+        $and: [{ 'user._id': new ObjectId(user) }, { isActive: true }],
       });
 
       return NextResponse.json(userWagers);
