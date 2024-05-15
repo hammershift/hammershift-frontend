@@ -295,14 +295,12 @@ const PaymentForm = (props: any) => {
                   {prices.map((price: any) => (
                     <li
                       className={`tw-bg-white/5 tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
-                        selectedPrice === price.unit_amount
-                          ? "tw-bg-green-700"
-                          : ""
+                        priceId === price.id ? "tw-bg-green-700" : ""
                       }`}
                       key={price.id}
                       onClick={() => {
-                        setSelectedPrice(price.unit_amount);
                         setPriceId(price.id);
+                        console.log(price.id);
                       }}
                     >
                       ${price.unit_amount / 100}
