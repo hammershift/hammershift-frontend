@@ -15,7 +15,7 @@ import UserImage from '../../../../public/images/user-single-neutral-male--close
 import Passport from '../../../../public/images/passport.svg';
 import IDCard from '../../../../public/images/single-neutral-id-card-1.svg';
 import { signIn, useSession, getSession } from 'next-auth/react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ICountry, IState, Country, State } from 'country-state-city';
 import PasswordInput from '@/app/components/password_input';
 
@@ -31,6 +31,7 @@ interface UserDetails {
   country: string;
   state: string;
   aboutMe: string;
+  provider: string;
 }
 
 interface ValidityState {
@@ -62,6 +63,7 @@ const CreateAccount = () => {
     country: '',
     state: '',
     aboutMe: '',
+    provider: 'credentials', // default to credentials
   });
   const [validity, setValidity] = useState<ValidityState>({
     isEmailValid: true,
@@ -92,29 +94,57 @@ const CreateAccount = () => {
   const [submitClicked, setSubmitClicked] = useState(false);
   const [isSignedInWithGoogle, setIsSignedInWithGoogle] = useState(false);
   const [googleSignInError, setGoogleSignInError] = useState<string | null>(null);
+  const [facebookSignInError, setFacebookSignInError] = useState<string | null>(null); //test
 
   // session and routing
   const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    setCountries(Country.getAllCountries());
-    if (session && session.user) {
-      if (session.user.provider === 'google') {
-        setIsSignedInWithGoogle(true);
+    const fetchCountries = () => {
+      setCountries(Country.getAllCountries());
+    };
+
+    const handleSession = async () => {
+      if (!session || !session.user) {
+        console.log('No session user found or session user is invalid.');
+        return;
+      }
+
+      const provider = session.user.provider;
+      console.log('Session user data:', session.user);
+
+      if (provider === 'credentials' && !emailExistsError) {
+        console.log('Credentials provider and no email error. Redirecting to account setup.');
+        setCreateAccountPage('page two');
+        return;
+      }
+
+      if (provider === 'google' || provider === 'facebook') {
+        console.log(`Provider: ${provider}`);
         if (session.user.isNewUser) {
+          console.log('User is new. Redirecting to account setup.');
           setCreateAccountPage('page two');
         } else {
+          console.log('User is not new. Redirecting to home.');
           setIsLoading(true);
           setTimeout(() => {
             router.push('/');
           }, 2000);
         }
-      } else if (session.user.provider === 'credentials' && !emailExistsError) {
-        setIsSignedInWithGoogle(false);
-        setCreateAccountPage('page two');
+        return;
       }
-    }
+
+      console.log('Unhandled provider type or condition.');
+    };
+
+    const checkSession = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500)); // test delay
+      await handleSession();
+    };
+
+    fetchCountries();
+    checkSession();
   }, [session, emailExistsError, router]);
 
   const validateEmail = (email: string): boolean => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(email);
@@ -242,6 +272,7 @@ const CreateAccount = () => {
         body: JSON.stringify({
           email: userDetails.email,
           password: userDetails.password,
+          provider: userDetails.provider,
         }),
       });
 
@@ -376,7 +407,65 @@ const CreateAccount = () => {
   };
 
   const onGoogleSignInClick = () => {
+    setUserDetails({ ...userDetails, provider: 'google' }); // set provider to google
     handleGoogleSignIn();
+  };
+
+  // FACEBOOK SIGN-IN
+  const handleFacebookSignIn = async () => {
+    console.log('Facebook sign-in initiated');
+    setIsLoading(true);
+    setFacebookSignInError(null);
+
+    try {
+      const result = await signIn('facebook', { redirect: false });
+      console.log('Facebook sign-in result:', result);
+
+      if (result?.error) {
+        console.error('Facebook sign-in error:', result.error);
+        setFacebookSignInError(result.error);
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // test delay
+
+        const session = await getSession();
+        console.log('Session after Facebook sign-in:', session);
+
+        if (session?.user?.email) {
+          const response = await fetch('/api/checkUserExistence', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: session.user.email }),
+          });
+
+          const data = await response.json();
+          console.log('User existence check response:', data);
+
+          if (data.emailExists) {
+            console.log('Email already exists. Redirecting to login page.');
+            setEmailExistsError(true);
+            setTimeout(() => {
+              router.push('/login_page');
+            }, 2000);
+          } else {
+            console.log('Email does not exist. Proceeding to account setup.');
+            setCreateAccountPage('page two');
+          }
+        } else {
+          console.error('No email found in session after Facebook sign-in');
+          // setFacebookSignInError('Failed to retrieve account details. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred during Facebook sign-in:', error);
+      setFacebookSignInError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onFacebookSignInClick = () => {
+    setUserDetails({ ...userDetails, provider: 'facebook' }); // set provider to facebook
+    handleFacebookSignIn();
   };
 
   // VERIFY LATER
@@ -392,23 +481,22 @@ const CreateAccount = () => {
       state: true,
     });
 
-    const newValidity = isSignedInWithGoogle
-      ? {
-          isEmailValid: true,
-          isPasswordValid: true,
-          isFullNameValid: validateFullName(userDetails.fullName),
-          isUsernameValid: validateUsername(userDetails.username),
-          isCountryValid: isCountrySelected(userDetails.country),
-          isStateValid: isStateSelected(userDetails.state),
-        }
-      : {
-          isEmailValid: validateEmail(userDetails.email),
-          isPasswordValid: validatePassword(userDetails.password),
-          isFullNameValid: validateFullName(userDetails.fullName),
-          isUsernameValid: validateUsername(userDetails.username),
-          isCountryValid: isCountrySelected(userDetails.country),
-          isStateValid: isStateSelected(userDetails.state),
-        };
+    const provider = session?.user?.provider || 'credentials';
+
+    const emailToValidate = userDetails.email || session?.user?.email || '';
+    const passwordToValidate = userDetails.password || '';
+
+    console.log('Email to validate:', emailToValidate);
+    console.log('Password to validate:', passwordToValidate);
+
+    const newValidity = {
+      isEmailValid: validateEmail(emailToValidate),
+      isPasswordValid: provider === 'credentials' ? validatePassword(passwordToValidate) : true,
+      isFullNameValid: validateFullName(userDetails.fullName),
+      isUsernameValid: validateUsername(userDetails.username),
+      isCountryValid: isCountrySelected(userDetails.country),
+      isStateValid: isStateSelected(userDetails.state),
+    };
 
     console.log('New validity state:', newValidity);
     setValidity(newValidity);
@@ -496,6 +584,7 @@ const CreateAccount = () => {
                     onBlur={() => checkUserExistence('email', userDetails.email)}
                   />
                   {googleSignInError && <p className='tw-text-red-500'>{googleSignInError}</p>}
+                  {facebookSignInError && <p className='tw-text-red-500'>{facebookSignInError}</p>}
                   {emailExistsError && (
                     <div className='text-red-500'>
                       An account with this email already exists. <span className='tw-text-white'>Redirecting to login page...</span>
@@ -524,9 +613,11 @@ const CreateAccount = () => {
                     <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
                   </div>
                 )}
-                <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
-                  <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
-                </div>
+                {!isSignedInWithGoogle && (
+                  <div onClick={onFacebookSignInClick} className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
+                    <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
+                  </div>
+                )}
                 <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
                   <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
                 </div>

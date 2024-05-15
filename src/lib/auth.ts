@@ -7,6 +7,7 @@ import { ObjectId } from 'mongodb';
 
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import FacebookProvider from 'next-auth/providers/facebook';
 
 // Google providers
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
@@ -18,6 +19,20 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
 
   if (!clientSecret || clientSecret.length === 0) {
     throw new Error('Missing GOOGLE_CLIENT_SECRET');
+  }
+
+  return { clientId, clientSecret };
+}
+
+function getFacebookCredentials(): { clientId: string; clientSecret: string } {
+  const clientId = process.env.FACEBOOK_CLIENT_ID;
+  const clientSecret = process.env.FACEBOOK_CLIENT_SECRET;
+  if (!clientId || clientId.length === 0) {
+    throw new Error('Missing FACEBOOK_CLIENT_ID');
+  }
+
+  if (!clientSecret || clientSecret.length === 0) {
+    throw new Error('Missing FACEBOOK_CLIENT_SECRET');
   }
 
   return { clientId, clientSecret };
@@ -58,6 +73,33 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: getGoogleCredentials().clientId,
       clientSecret: getGoogleCredentials().clientSecret,
+    }),
+    FacebookProvider({
+      clientId: getFacebookCredentials().clientId,
+      clientSecret: getFacebookCredentials().clientSecret,
+      allowDangerousEmailAccountLinking: true,
+      userinfo: {
+        url: 'https://graph.facebook.com/v19.0/me',
+        params: {
+          fields: 'id,name,email,first_name,last_name',
+        },
+        async request({ tokens, client, provider }) {
+          // eslint-disable-next-line
+          return await client.userinfo(tokens.access_token!, {
+            // @ts-expect-error
+            params: provider.userinfo?.params,
+          });
+        },
+      },
+      profile: (_profile) => {
+        return {
+          id: _profile.id,
+          firstName: _profile.first_name,
+          lastName: _profile.last_name,
+          email: _profile.email,
+          registrationType: 'facebook',
+        };
+      },
     }),
   ],
   callbacks: {
