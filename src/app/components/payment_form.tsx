@@ -296,7 +296,7 @@ const PaymentForm = (props: any) => {
                     <li
                       className={`tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
                         priceId === price.id
-                          ? "tw-bg-green-700"
+                          ? "tw-bg-[#53944F]"
                           : "tw-bg-white/5"
                       }`}
                       key={price.id}
