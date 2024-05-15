@@ -48,7 +48,7 @@ export async function POST(request: Request) {
           userId: userId,
         },
       },
-      return_url: `${request.headers.get('origin')}/return?session_id={CHECKOUT_SESSION_ID}`,
+      return_url: `${request.headers.get('origin')}/my_wallet`,
     });
 
     console.log(session);
