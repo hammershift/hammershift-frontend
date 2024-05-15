@@ -53,10 +53,23 @@ export async function GET(req: NextRequest) {
 
   const tournamentID = req.nextUrl.searchParams.get("tournamentID");
   const auctionID = req.nextUrl.searchParams.get("auctionID");
+  const userID = req.nextUrl.searchParams.get("userID");
 
   try {
     const client = await clientPromise;
     const db = client.db();
+
+    //fetch all user transactions
+    if (userID) {
+      const userTransactions = await db
+        .collection("transactions")
+        .find({
+          userID: new ObjectId(userID),
+        })
+        .toArray();
+
+      return NextResponse.json(userTransactions);
+    }
 
     //fetch buy in transaction from a specific tournament
     if (tournamentID) {

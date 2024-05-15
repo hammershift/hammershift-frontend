@@ -1084,4 +1084,4 @@ export const getAuctionPoints = async (limit: number) => {
   const res = await fetch(`/api/auctionPoints?limit=${limit}`);
   const data = await res.json();
   return data;
-}
+};
