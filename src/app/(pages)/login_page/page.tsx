@@ -98,6 +98,18 @@ const CreateAccount = () => {
     }
   };
 
+  // for Facebook sign-in
+  const handleFacebookSignIn = async (provider: string) => {
+    try {
+      const result = await signIn('facebook', { callbackUrl: '/' });
+      if (result?.url) {
+        window.location.href = result.url;
+      }
+    } catch (error) {
+      console.error('Error during Facebook sign in:', error);
+    }
+  };
+
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {/* Loading */}
@@ -159,7 +171,7 @@ const CreateAccount = () => {
             <div onClick={() => handleGoogleSignIn('google')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-cursor-auto tw-opacity-30 tw-disabled'>
+            <div onClick={() => handleFacebookSignIn('facebook')} className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
             </div>
             <div
