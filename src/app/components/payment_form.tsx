@@ -21,7 +21,6 @@ import EmbeddedCheckoutButton from "@/app/components/embedded_checkout_button";
 const PaymentForm = (props: any) => {
   const { handleClosePaymentModal, prices, userId, userEmail } = props;
 
-  const router = useRouter();
   const cardSaved = true;
   const [paymentChoice, setPaymentChoice] = useState<string | null>(null); //null, Credit Card, Paypal, Apple Pay, Google Pay
   const [isLoading, setIsLoading] = useState(false);
@@ -296,7 +295,7 @@ const PaymentForm = (props: any) => {
                     <li
                       className={`tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
                         priceId === price.id
-                          ? "tw-bg-green-700"
+                          ? "tw-bg-[#53944F]"
                           : "tw-bg-white/5"
                       }`}
                       key={price.id}
