@@ -254,7 +254,7 @@ const CreateAccount = () => {
 
   // ACCOUNT CREATION
   const handleAccountCreation = async () => {
-    setSubmitClicked(true); // ignore this
+    setSubmitClicked(true); // ignore
 
     if (!validity.isEmailValid || !validity.isPasswordValid) {
       console.error('Invalid email or password');
