@@ -68,12 +68,19 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Invalid credentials');
         }
 
-        return { id: user._id.toString(), email: user.email };
+        return { id: user._id.toString(), email: user.email, registrationType: 'credentials' };
       },
     }),
     GoogleProvider({
       clientId: getGoogleCredentials().clientId,
       clientSecret: getGoogleCredentials().clientSecret,
+      profile: (profile) => ({
+        id: profile.sub,
+        name: profile.name,
+        email: profile.email,
+        image: profile.picture,
+        registrationType: 'google',
+      }),
     }),
     FacebookProvider({
       clientId: getFacebookCredentials().clientId,
@@ -114,6 +121,7 @@ export const authOptions: NextAuthOptions = {
         session.user.image = token.image;
         session.user.provider = token.provider; // test
         session.user.isNewUser = token.isNewUser; // test
+        session.user.registrationType = token.registrationType; // test
       }
       return session;
     },
@@ -124,6 +132,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.image = user.image;
         token.provider = account?.provider;
+        token.registrationType = user.registrationType; // test
       }
       if (isNewUser) {
         token.isNewUser = isNewUser;
