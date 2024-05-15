@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       provider: provider,
     };
 
-    // Only hash password and add it to newUser if provider is credentials
+    // only hash password and add it to newUser if provider is credentials
     if (provider === 'credentials') {
       const hashedPassword = await bcrypt.hash(password, 12);
       newUser = { ...newUser, password: hashedPassword } as typeof newUser & { password: string };
