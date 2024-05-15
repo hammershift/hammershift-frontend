@@ -27,8 +27,8 @@ const PaymentForm = (props: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
   // const [errorValidating, setErrorValidating] = useState(false)
-  const [priceId, setPriceId] = useState("");
-  const [selectedPrice, setSelectedPrice] = useState(0);
+  const [priceId, setPriceId] = useState<string | null>(null);
+
   const errorValidating = false;
   // To test loading
   useEffect(() => {
@@ -294,8 +294,10 @@ const PaymentForm = (props: any) => {
                 <ul className="tw-grid tw-grid-cols-2 tw-gap-2">
                   {prices.map((price: any) => (
                     <li
-                      className={`tw-bg-white/5 tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
-                        priceId === price.id ? "tw-bg-green-700" : ""
+                      className={`tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
+                        priceId === price.id
+                          ? "tw-bg-green-700"
+                          : "tw-bg-white/5"
                       }`}
                       key={price.id}
                       onClick={() => {
