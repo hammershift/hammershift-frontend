@@ -110,6 +110,18 @@ const CreateAccount = () => {
     }
   };
 
+  // for Twitter sign-in
+  const handleTwitterSignIn = async (provider: string) => {
+    try {
+      const result = await signIn('twitter', { callbackUrl: '/' });
+      if (result?.url) {
+        window.location.href = result.url;
+      }
+    } catch (error) {
+      console.error('Error during Twitter sign in:', error);
+    }
+  };
+
   return (
     <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
       {/* Loading */}
@@ -180,10 +192,7 @@ const CreateAccount = () => {
             >
               <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
             </div>
-            <div
-              className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
-            tw-cursor-auto tw-opacity-30 tw-disabled'
-            >
+            <div onClick={() => handleTwitterSignIn('twitter')} className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
               <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
             </div>
           </div>
