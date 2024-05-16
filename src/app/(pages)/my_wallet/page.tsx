@@ -10,6 +10,7 @@ import WithdrawalIcon from "../../../../public/images/arrow-down-2.svg";
 import PlusIcon from "../../../../public/images/load-icon.svg";
 import ArrowDownIcon from "../../../../public/images/withdraw-icon.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
+import Link from "next/link";
 
 interface ProductPrice {
   unit_amount: number;
@@ -23,6 +24,8 @@ interface UserTransaction {
   transactionDate: Date;
   type: string;
   invoiceId?: string;
+  auctionID?: string;
+  tournamentID?: string;
 }
 
 const MyWalletPage = () => {
@@ -254,7 +257,12 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Tournament Buy-in</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Placed buy-in for Tournament [Tournament ID]
+                          Placed buy-in for Tournament{" "}
+                          <Link
+                            href={`/tournaments/${transaction.tournamentID}`}
+                          >
+                            [{transaction.tournamentID}]
+                          </Link>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
