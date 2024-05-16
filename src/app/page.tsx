@@ -10,10 +10,15 @@ import Subscribe from "@/app/components/subscribe";
 import { getCarsWithMostPot } from "@/lib/data";
 import React, { useEffect, useRef, useState } from "react";
 import Carousel from "./components/carousel";
+import AuctionHero from "./components/auction_hero";
 
 const LivePage = () => {
   return (
     <div className="tw-flex tw-flex-col tw-justify-center">
+      <div className="section-container tw-m-auto">
+        {" "}
+        <AuctionHero />
+      </div>
       <LivePageCarousel />
       <div className="section-container tw-m-auto">
         <LiveGames />

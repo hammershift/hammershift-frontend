@@ -94,7 +94,8 @@ const CreateAccount = () => {
   const [submitClicked, setSubmitClicked] = useState(false);
   const [isSignedInWithGoogle, setIsSignedInWithGoogle] = useState(false);
   const [googleSignInError, setGoogleSignInError] = useState<string | null>(null);
-  const [facebookSignInError, setFacebookSignInError] = useState<string | null>(null); //test
+  const [facebookSignInError, setFacebookSignInError] = useState<string | null>(null); // test
+  const [twitterSignInError, setTwitterSignInError] = useState<string | null>(null); // test
 
   // session and routing
   const { data: session } = useSession();
@@ -112,7 +113,12 @@ const CreateAccount = () => {
       }
 
       const provider = session.user.provider;
+      const isNewUser = session.user.isNewUser;
+      const emailExists = session.user.emailExists;
+
       console.log('Session user data:', session.user);
+      console.log('Email Exists:', emailExists);
+      console.log('Is New User:', isNewUser);
 
       if (provider === 'credentials' && !emailExistsError) {
         console.log('Credentials provider and no email error. Redirecting to account setup.');
@@ -120,17 +126,20 @@ const CreateAccount = () => {
         return;
       }
 
-      if (provider === 'google' || provider === 'facebook') {
+      if (provider === 'google' || provider === 'facebook' || provider === 'twitter') {
         console.log(`Provider: ${provider}`);
-        if (session.user.isNewUser) {
-          console.log('User is new. Redirecting to account setup.');
-          setCreateAccountPage('page two');
-        } else {
-          console.log('User is not new. Redirecting to home.');
+        if (emailExists && !isNewUser) {
+          console.log('User already exists. Redirecting to home.');
           setIsLoading(true);
           setTimeout(() => {
             router.push('/');
           }, 2000);
+        } else if (isNewUser) {
+          console.log('User is new. Redirecting to account setup.');
+          setCreateAccountPage('page two');
+        } else {
+          console.log('Email does not exist. Proceeding to account setup.');
+          setCreateAccountPage('page two');
         }
         return;
       }
@@ -468,6 +477,64 @@ const CreateAccount = () => {
     handleFacebookSignIn();
   };
 
+  // TWITTER SIGNIN
+  const handleTwitterSignIn = async () => {
+    console.log('Twitter sign-in initiated');
+    setIsLoading(true);
+    setTwitterSignInError(null);
+
+    try {
+      const result = await signIn('twitter', { redirect: false });
+      console.log('Twitter sign-in result:', result);
+
+      if (result?.error) {
+        console.error('Twitter sign-in error:', result.error);
+        setTwitterSignInError(result.error);
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // test delay
+
+        const session = await getSession();
+        console.log('Session after Twitter sign-in:', session);
+
+        if (session?.user?.email) {
+          const response = await fetch('/api/checkUserExistence', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: session.user.email }),
+          });
+
+          const data = await response.json();
+          console.log('User existence check response:', data);
+
+          if (data.emailExists) {
+            console.log('Email already exists. Redirecting to login page.');
+            setEmailExistsError(true);
+            setTwitterSignInError('An account with this email already exists. Redirecting to login page...');
+            setTimeout(() => {
+              router.push('/login_page');
+            }, 2000);
+          } else {
+            console.log('Email does not exist. Proceeding to account setup.');
+            setCreateAccountPage('page two');
+          }
+        } else {
+          console.error('No email found in session after Twitter sign-in');
+          setTwitterSignInError('Failed to retrieve account details. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred during Twitter sign-in:', error);
+      setTwitterSignInError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const onTwitterSignInClick = () => {
+    setUserDetails({ ...userDetails, provider: 'twitter' }); // set provider to twitter
+    handleTwitterSignIn();
+  };
+
   // VERIFY LATER
   const handleVerifyLater = async () => {
     console.log('handleVerifyLater called');
@@ -584,6 +651,7 @@ const CreateAccount = () => {
                   />
                   {googleSignInError && <p className='tw-text-red-500'>{googleSignInError}</p>}
                   {facebookSignInError && <p className='tw-text-red-500'>{facebookSignInError}</p>}
+                  {twitterSignInError && <p className='tw-text-red-500'>{twitterSignInError}</p>}
                   {emailExistsError && (
                     <div className='text-red-500'>
                       An account with this email already exists. <span className='tw-text-white'>Redirecting to login page...</span>
@@ -620,7 +688,7 @@ const CreateAccount = () => {
                 <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
                   <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
                 </div>
-                <div className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
+                <div onClick={onTwitterSignInClick} className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
                   <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
                 </div>
               </div>
