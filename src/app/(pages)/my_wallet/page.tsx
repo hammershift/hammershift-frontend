@@ -26,6 +26,7 @@ interface UserTransaction {
   invoiceId?: string;
   auctionID?: string;
   tournamentID?: string;
+  auction_id?: string;
 }
 
 const MyWalletPage = () => {
@@ -235,7 +236,13 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Wager</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Placed wager on [Auction ID]
+                          Placed wager on Auction{" "}
+                          <Link
+                            target="blank"
+                            href={`/auctions/car_view_page/${transaction.auction_id}`}
+                          >
+                            [{transaction.auction_id}]
+                          </Link>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -259,6 +266,7 @@ const MyWalletPage = () => {
                         <p className="tw-text-sm tw-text-white/50">
                           Placed buy-in for Tournament{" "}
                           <Link
+                            target="blank"
                             href={`/tournaments/${transaction.tournamentID}`}
                           >
                             [{transaction.tournamentID}]
@@ -284,7 +292,12 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Winnings</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Winnings from [Auction ID]
+                          Winnings from  <Link
+                            target="blank"
+                            href={`/auctions/car_view_page/${transaction.auction_id}`}
+                          >
+                            [{transaction.auction_id}]
+                          </Link>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -306,7 +319,7 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Refund</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Refunded from cancelled auction [Auction ID]
+                          Refunded from cancelled game
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(

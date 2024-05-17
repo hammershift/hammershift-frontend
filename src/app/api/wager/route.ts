@@ -79,6 +79,7 @@ export async function POST(req: NextRequest) {
       amount: wagerAmount,
       type: '-',
       transactionDate: new Date(),
+      auction_id: auctionIdentifierId,
     });
 
     await transaction.save({ session: mongoSession });

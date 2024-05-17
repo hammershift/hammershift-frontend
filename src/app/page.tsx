@@ -11,12 +11,15 @@ import { getCarsWithMostPot } from "@/lib/data";
 import React, { useEffect, useRef, useState } from "react";
 import Carousel from "./components/carousel";
 import AuctionHero from "./components/auction_hero";
+import Image from "next/image";
+import HammershiftLogo from "../../public/images/hammershift-logo.svg"
 
 const LivePage = () => {
   return (
     <div className="tw-flex tw-flex-col tw-justify-center">
-      <div className="section-container tw-m-auto">
+      <div className="section-container tw-m-auto tw-flex tw-flex-col tw-items-center tw-gap-5">
         {" "}
+        <Image alt="hammershift-logo" src={HammershiftLogo} width={800}></Image>
         <AuctionHero />
       </div>
       <LivePageCarousel />
