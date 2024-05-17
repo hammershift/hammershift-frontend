@@ -152,6 +152,7 @@ export const authOptions: NextAuthOptions = {
         session.user.provider = token.provider;
         session.user.isNewUser = token.isNewUser;
         session.user.emailExists = token.emailExists;
+        session.user.stripeCustomerId = token.stripeCustomerId
       }
       return session;
     },
@@ -162,6 +163,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.image = user.image;
         token.provider = account.provider;
+        token.stripeCustomerId = user.stripeCustomerId
       }
 
       const existingUser = await doesEmailExist(token.email);
@@ -190,6 +192,7 @@ export const authOptions: NextAuthOptions = {
         token.image = dbUser.image;
         token.isActive = dbUser.isActive;
         token.balance = dbUser.balance;
+        token.stripeCustomerId = dbUser.stripeCustomerId
         token.isBanned = dbUser.isBanned;
 
         if (!dbUser.createdAt) {

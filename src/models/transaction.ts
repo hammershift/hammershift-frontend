@@ -58,6 +58,12 @@ const transactionSchema = new mongoose.Schema({
   auction_id: {
     type: String,
   },
+  invoice_id: {
+    type: String,
+  },
+  invoice_url: {
+    type: String,
+  },
 });
 
 const Transaction =

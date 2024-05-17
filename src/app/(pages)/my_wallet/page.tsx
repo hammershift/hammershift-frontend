@@ -37,10 +37,12 @@ const MyWalletPage = () => {
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [invoices, setInvoices] = useState([]);
 
   const { data: session } = useSession();
   const userId = session?.user.id;
   const userEmail = session?.user.email;
+  const userStripeId = session?.user.stripeCustomerId;
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -292,7 +294,8 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Winnings</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Winnings from  <Link
+                          Winnings from{" "}
+                          <Link
                             target="blank"
                             href={`/auctions/car_view_page/${transaction.auction_id}`}
                           >
