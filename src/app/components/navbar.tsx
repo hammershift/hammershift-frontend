@@ -523,7 +523,10 @@ const Navbar = () => {
             <button
               id="watchlist-button"
               className="tw-relative"
-              onClick={() => setDropWatchlist((prev) => !prev)}
+              onClick={() => {setDropWatchlist((prev) => !prev);
+                setDropMyAccount(false)
+                setDropMyWagers(false)
+              }}
             >
               <Image
                 src={WatchlistIcon}
@@ -536,7 +539,10 @@ const Navbar = () => {
             {dropWatchlist && <MyWatchlistDropdownMenu />}
             <button
               id="mywagers-button"
-              onClick={() => setDropMyWagers((prev) => !prev)}
+              onClick={() => {setDropMyWagers((prev) => !prev);
+                setDropMyAccount(false)
+                setDropWatchlist(false)
+              }}
             >
               <Image
                 src={WagersIcon}
@@ -550,7 +556,11 @@ const Navbar = () => {
             <button
               id="myaccount-button"
               className="tw-relative"
-              onClick={() => setDropMyAccount((prev) => !prev)}
+              onClick={() => {setDropMyAccount((prev) => !prev);
+                setDropWatchlist(false)
+                setDropMyWagers(false)
+              }
+              }
             >
               <Image
                 src={AccountIcon}
