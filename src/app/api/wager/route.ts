@@ -75,6 +75,7 @@ export async function POST(req: NextRequest) {
       userID: new mongoose.Types.ObjectId(user._id),
       wagerID: newWager._id,
       auctionID: convertedAuctionID,
+      auction_id: auctionIdentifierId,
       transactionType: 'wager',
       amount: wagerAmount,
       type: '-',
