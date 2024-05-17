@@ -10,6 +10,7 @@ import WithdrawalIcon from "../../../../public/images/arrow-down-2.svg";
 import PlusIcon from "../../../../public/images/load-icon.svg";
 import ArrowDownIcon from "../../../../public/images/withdraw-icon.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
+import Link from "next/link";
 
 interface ProductPrice {
   unit_amount: number;
@@ -23,6 +24,9 @@ interface UserTransaction {
   transactionDate: Date;
   type: string;
   invoiceId?: string;
+  auctionID?: string;
+  tournamentID?: string;
+  auction_id?: string;
 }
 
 const MyWalletPage = () => {
@@ -33,10 +37,12 @@ const MyWalletPage = () => {
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [invoices, setInvoices] = useState([]);
 
   const { data: session } = useSession();
   const userId = session?.user.id;
   const userEmail = session?.user.email;
+  const userStripeId = session?.user.stripeCustomerId;
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -232,7 +238,13 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Wager</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Placed wager on [Auction ID]
+                          Placed wager on Auction{" "}
+                          <Link
+                            target="blank"
+                            href={`/auctions/car_view_page/${transaction.auction_id}`}
+                          >
+                            [{transaction.auction_id}]
+                          </Link>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -254,7 +266,13 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Tournament Buy-in</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Placed buy-in for Tournament [Tournament ID]
+                          Placed buy-in for Tournament{" "}
+                          <Link
+                            target="blank"
+                            href={`/tournaments/${transaction.tournamentID}`}
+                          >
+                            [{transaction.tournamentID}]
+                          </Link>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -276,7 +294,13 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Winnings</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Winnings from [Auction ID]
+                          Winnings from{" "}
+                          <Link
+                            target="blank"
+                            href={`/auctions/car_view_page/${transaction.auction_id}`}
+                          >
+                            [{transaction.auction_id}]
+                          </Link>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -298,7 +322,7 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Refund</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Refunded from cancelled auction [Auction ID]
+                          Refunded from cancelled game
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
