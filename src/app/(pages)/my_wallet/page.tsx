@@ -27,6 +27,8 @@ interface UserTransaction {
   auctionID?: string;
   tournamentID?: string;
   auction_id?: string;
+  invoice_url?: string;
+  invoice_id?: string;
 }
 
 const MyWalletPage = () => {
@@ -196,7 +198,14 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Credit</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Loaded from Stripe
+                          Loaded from{" "}
+                          <a
+                            target="blank"
+                            href={transaction.invoice_url}
+                            className="tw-underline"
+                          >
+                            Stripe
+                          </a>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -242,6 +251,7 @@ const MyWalletPage = () => {
                           <Link
                             target="blank"
                             href={`/auctions/car_view_page/${transaction.auction_id}`}
+                            className="tw-underline"
                           >
                             [{transaction.auction_id}]
                           </Link>
@@ -270,6 +280,7 @@ const MyWalletPage = () => {
                           <Link
                             target="blank"
                             href={`/tournaments/${transaction.tournamentID}`}
+                            className="tw-underline"
                           >
                             [{transaction.tournamentID}]
                           </Link>
@@ -298,6 +309,7 @@ const MyWalletPage = () => {
                           <Link
                             target="blank"
                             href={`/auctions/car_view_page/${transaction.auction_id}`}
+                            className="tw-underline"
                           >
                             [{transaction.auction_id}]
                           </Link>
