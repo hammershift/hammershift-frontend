@@ -11,6 +11,7 @@ import PlusIcon from "../../../../public/images/load-icon.svg";
 import ArrowDownIcon from "../../../../public/images/withdraw-icon.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 import Link from "next/link";
+import WithdrawForm from "@/app/components/withdraw_form";
 
 interface ProductPrice {
   unit_amount: number;
@@ -39,6 +40,7 @@ const MyWalletPage = () => {
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [invoices, setInvoices] = useState([]);
 
   const { data: session } = useSession();
@@ -154,7 +156,12 @@ const MyWalletPage = () => {
               <button className="tw-p-1 tw-m-1 tw-border-2 tw-rounded-md tw-border-yellow-500">
                 <div className="tw-flex tw-p-1">
                   <Image alt="arrow-down" src={ArrowDownIcon} />{" "}
-                  <p className="tw-text-[#F2CA16] tw-pl-2">WITHDRAW</p>
+                  <p
+                    className="tw-text-[#F2CA16] tw-pl-2"
+                    onClick={() => setIsWithdrawModalOpen(true)}
+                  >
+                    WITHDRAW
+                  </p>
                 </div>
               </button>
               <button
@@ -180,6 +187,7 @@ const MyWalletPage = () => {
           />
         )}
       </div>
+      <div>{isWithdrawModalOpen && <WithdrawForm />}</div>
       <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md">
         {Object.entries(groupedTransactions).map(([date, transactions]) => (
           <div key={date} className="tw-p-4 tw-mt-4">
