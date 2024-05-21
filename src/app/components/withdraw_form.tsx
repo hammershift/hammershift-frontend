@@ -5,8 +5,8 @@ import Image from "next/image";
 
 import CancelIcon from "../../../public/images/x-icon.svg";
 
-const WithdrawForm = (props:any) => {
-    const {handleCloseWithdrawModal} = props
+const WithdrawForm = (props: any) => {
+  const { handleCloseWithdrawModal } = props;
 
   return (
     <div className="tw-bg-black/80 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-absolute tw-top-0 tw-left-0">
@@ -30,10 +30,13 @@ const WithdrawForm = (props:any) => {
         <form className="tw-flex tw-flex-col tw-gap-5 tw-my-5">
           <div className="tw-flex tw-flex-col tw-gap-2">
             <label>Amount *</label>
-            <input
-              placeholder="$"
-              className="tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full"
-            ></input>
+            <div className="tw-flex">
+              {" "}
+              <span className="tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2">
+                $
+              </span>{" "}
+              <input className="tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full"></input>
+            </div>
           </div>
           <hr className="tw-border-white/5" />
           <div className="tw-flex tw-flex-col tw-gap-2">
