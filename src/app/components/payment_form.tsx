@@ -180,8 +180,8 @@ const PaymentForm = (props: any) => {
         )}
         {paymentChoice === "Credit Card" && (
           <div>
-            <div className="tw-bg-[#172431] tw-p-4 tw-rounded tw-flex tw-flex-col tw-gap-4">
-              <div className=" tw-h-[60px] tw-w-full tw-flex tw-items-center tw-flex-col sm:tw-flex-row sm:tw-justify-between tw-gap-2 tw-rounded">
+            <div className="tw-rounded tw-flex tw-flex-col tw-gap-4">
+              <div className="tw-bg-[#172431] tw-p-5 tw-h-[60px] tw-w-full tw-flex tw-items-center tw-flex-col sm:tw-flex-row sm:tw-justify-between tw-gap-2 tw-rounded">
                 <div className="">Credit or Debit Card</div>
                 <div className="tw-grid tw-grid-cols-4 tw-gap-2">
                   <Image
@@ -219,9 +219,7 @@ const PaymentForm = (props: any) => {
                   There was an error in validating your payment. Please try
                   again
                 </div>
-              ) : (
-                <hr className="tw-border-white tw-mt-3" />
-              )}
+              ) : null}
               {/* inputs */}
 
               <div>
@@ -287,56 +285,57 @@ const PaymentForm = (props: any) => {
                     <input className="tw-bg-transparent tw-ml-2 tw-w-full" />
                   </div>
                 </div> */}
-                <p className="tw-p-2">
-                  How much do you want to load into your wallet?
-                </p>
-                <ul className="tw-grid tw-grid-cols-2 tw-gap-2">
-                  {prices.map((price: any) => (
-                    <li
-                      className={`tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
-                        priceId === price.id
-                          ? "tw-bg-[#53944F]"
-                          : "tw-bg-white/5"
-                      }`}
-                      key={price.id}
-                      onClick={() => {
-                        setPriceId(price.id);
-                        console.log(price.id);
-                      }}
-                    >
-                      ${price.unit_amount / 100}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {errorValidating ? (
-                <div className="tw-text-sm tw-text-[#C2451E] tw-pt-2">
-                  Delete Payment Method
+                <div className="tw-bg-[#172431] tw-p-4 tw-rounded tw-flex tw-flex-col tw-gap-4">
+                  {" "}
+                  <p className="tw-p-2">
+                    How much do you want to load into your wallet?
+                  </p>
+                  <ul className="tw-grid tw-grid-cols-2 tw-gap-2">
+                    {prices.map((price: any) => (
+                      <li
+                        className={`tw-p-[16px] tw-rounded-md hover:tw-cursor-pointer ${
+                          priceId === price.id
+                            ? "tw-bg-[#53944F]"
+                            : "tw-bg-white/5"
+                        }`}
+                        key={price.id}
+                        onClick={() => {
+                          setPriceId(price.id);
+                          console.log(price.id);
+                        }}
+                      >
+                        ${price.unit_amount / 100}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              ) : (
-                <hr className="tw-border-white tw-hidden sm:tw-block" />
-              )}
-              <div className="tw-py-4 tw-hidden sm:tw-flex tw-justify-end ">
-                <EmbeddedCheckoutButton
-                  priceId={priceId}
-                  userId={userId}
-                  userEmail={userEmail}
-                />
+                {errorValidating ? (
+                  <div className="tw-text-sm tw-text-[#C2451E] tw-pt-2">
+                    Delete Payment Method
+                  </div>
+                ) : null}
+                <div className="tw-py-4 tw-hidden sm:tw-flex tw-justify-end ">
+                  <EmbeddedCheckoutButton
+                    priceId={priceId}
+                    userId={userId}
+                    userEmail={userEmail}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="tw-py-4 tw-grid tw-grid-cols-2 sm:tw-hidden tw-mt-6">
-              <button
-                className="btn-transparent-white"
-                onClick={() => setPaymentChoice((prev) => null)}
-              >
-                CANCEL
-              </button>
-              <button
-                className="btn-yellow tw-ml-4"
-                onClick={() => setIsLoading((prev) => true)}
-              >
-                CONTINUE
-              </button>
+              <div className="tw-py-4 tw-grid tw-grid-cols-2 sm:tw-hidden tw-mt-6">
+                <button
+                  className="btn-transparent-white"
+                  onClick={() => setPaymentChoice((prev) => null)}
+                >
+                  CANCEL
+                </button>
+                <button
+                  className="btn-yellow tw-ml-4"
+                  onClick={() => setIsLoading((prev) => true)}
+                >
+                  CONTINUE
+                </button>
+              </div>
             </div>
           </div>
         )}
