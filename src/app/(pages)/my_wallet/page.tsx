@@ -11,6 +11,7 @@ import PlusIcon from "../../../../public/images/load-icon.svg";
 import ArrowDownIcon from "../../../../public/images/withdraw-icon.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 import Link from "next/link";
+import WithdrawForm from "@/app/components/withdraw_form";
 
 interface ProductPrice {
   unit_amount: number;
@@ -27,6 +28,8 @@ interface UserTransaction {
   auctionID?: string;
   tournamentID?: string;
   auction_id?: string;
+  invoice_url?: string;
+  invoice_id?: string;
 }
 
 const MyWalletPage = () => {
@@ -37,6 +40,7 @@ const MyWalletPage = () => {
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [invoices, setInvoices] = useState([]);
 
   const { data: session } = useSession();
@@ -109,6 +113,11 @@ const MyWalletPage = () => {
     setIsPaymentModalOpen(false);
   };
 
+  const handleCloseWithdrawModal = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsWithdrawModalOpen(false);
+  };
+
   const groupAndSortTransactionsByDate = (transactions: UserTransaction[]) => {
     transactions.sort(
       (a, b) =>
@@ -152,7 +161,12 @@ const MyWalletPage = () => {
               <button className="tw-p-1 tw-m-1 tw-border-2 tw-rounded-md tw-border-yellow-500">
                 <div className="tw-flex tw-p-1">
                   <Image alt="arrow-down" src={ArrowDownIcon} />{" "}
-                  <p className="tw-text-[#F2CA16] tw-pl-2">WITHDRAW</p>
+                  <p
+                    className="tw-text-[#F2CA16] tw-pl-2"
+                    onClick={() => setIsWithdrawModalOpen(true)}
+                  >
+                    WITHDRAW
+                  </p>
                 </div>
               </button>
               <button
@@ -178,6 +192,11 @@ const MyWalletPage = () => {
           />
         )}
       </div>
+      <div>
+        {isWithdrawModalOpen && (
+          <WithdrawForm handleCloseWithdrawModal={handleCloseWithdrawModal} />
+        )}
+      </div>
       <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md">
         {Object.entries(groupedTransactions).map(([date, transactions]) => (
           <div key={date} className="tw-p-4 tw-mt-4">
@@ -196,7 +215,14 @@ const MyWalletPage = () => {
                       <div className="tw-px-4">
                         <p className="tw-text-md">Credit</p>
                         <p className="tw-text-sm tw-text-white/50">
-                          Loaded from Stripe
+                          Loaded from{" "}
+                          <a
+                            target="blank"
+                            href={transaction.invoice_url}
+                            className="tw-underline"
+                          >
+                            Stripe
+                          </a>
                         </p>
                         <p className="tw-text-sm tw-text-white/50">
                           {new Date(
@@ -242,6 +268,7 @@ const MyWalletPage = () => {
                           <Link
                             target="blank"
                             href={`/auctions/car_view_page/${transaction.auction_id}`}
+                            className="tw-underline"
                           >
                             [{transaction.auction_id}]
                           </Link>
@@ -270,6 +297,7 @@ const MyWalletPage = () => {
                           <Link
                             target="blank"
                             href={`/tournaments/${transaction.tournamentID}`}
+                            className="tw-underline"
                           >
                             [{transaction.tournamentID}]
                           </Link>
@@ -298,6 +326,7 @@ const MyWalletPage = () => {
                           <Link
                             target="blank"
                             href={`/auctions/car_view_page/${transaction.auction_id}`}
+                            className="tw-underline"
                           >
                             [{transaction.auction_id}]
                           </Link>
