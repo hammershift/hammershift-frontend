@@ -113,6 +113,11 @@ const MyWalletPage = () => {
     setIsPaymentModalOpen(false);
   };
 
+  const handleCloseWithdrawModal = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsWithdrawModalOpen(false);
+  };
+
   const groupAndSortTransactionsByDate = (transactions: UserTransaction[]) => {
     transactions.sort(
       (a, b) =>
@@ -187,7 +192,11 @@ const MyWalletPage = () => {
           />
         )}
       </div>
-      <div>{isWithdrawModalOpen && <WithdrawForm />}</div>
+      <div>
+        {isWithdrawModalOpen && (
+          <WithdrawForm handleCloseWithdrawModal={handleCloseWithdrawModal} />
+        )}
+      </div>
       <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md">
         {Object.entries(groupedTransactions).map(([date, transactions]) => (
           <div key={date} className="tw-p-4 tw-mt-4">
