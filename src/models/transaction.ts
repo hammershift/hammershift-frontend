@@ -24,9 +24,6 @@ const transactionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Auction",
   },
-  auction_id: {
-    type: String,
-  },
   tournamentID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tournament",
