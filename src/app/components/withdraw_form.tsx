@@ -32,7 +32,7 @@ const WithdrawForm = (props: any) => {
             <label>Amount *</label>
             <div className="tw-flex">
               {" "}
-              <span className="tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2">
+              <span className="tw-rounded-sm tw-text-white/60 tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2">
                 $
               </span>{" "}
               <input className="tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full"></input>
