@@ -314,7 +314,7 @@ const PaymentForm = (props: any) => {
                     Delete Payment Method
                   </div>
                 ) : null}
-                <div className="tw-py-4 tw-hidden sm:tw-flex tw-justify-end ">
+                <div className="tw-py-4 sm:tw-flex tw-justify-end ">
                   <EmbeddedCheckoutButton
                     priceId={priceId}
                     userId={userId}

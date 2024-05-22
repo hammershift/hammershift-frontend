@@ -11,8 +11,15 @@ export async function POST(req: NextRequest) {
   try {
     console.log('Starting transaction...');
 
-    const { amount, accountName, accountNumber, bankName, routingNumber, userId } = await req.json();
-    console.log('Request data:', { amount, accountName, accountNumber, bankName, routingNumber, userId });
+    const { amount, accountName, accountNumber, bankName, wireRoutingNumber, userId } = await req.json();
+    console.log('Request data:', {
+      amount,
+      accountName,
+      accountNumber,
+      bankName,
+      wireRoutingNumber,
+      userId,
+    });
 
     const userID = new ObjectId(userId);
     const client = await clientPromise;
@@ -48,7 +55,7 @@ export async function POST(req: NextRequest) {
       accountName: accountName,
       accountNumber: accountNumber,
       bankName: bankName,
-      routingNumber: routingNumber,
+      wireRoutingNumber: wireRoutingNumber,
     });
 
     console.log('Transaction object before save:', transaction);

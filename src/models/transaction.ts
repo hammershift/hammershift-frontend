@@ -54,7 +54,7 @@ const transactionSchema = new mongoose.Schema({
   bankName: {
     type: String,
   },
-  routingNumber: {
+  wireRoutingNumber: {
     type: String,
   },
 });

@@ -405,6 +405,7 @@ interface UserTransaction {
   auction_id?: string;
   invoice_url?: string;
   invoice_id?: string;
+  accountNumber?: string;
 }
 
 const MyWalletPage = () => {
@@ -414,7 +415,10 @@ const MyWalletPage = () => {
   const [loading, setLoading] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [invoices, setInvoices] = useState([]);
+  const [showSuccessfulWithdrawNotification, setShowSuccessfulWithdrawNotification] = useState(false);
+  const [showFailedWithdrawNotification, setShowFailedWithdrawNotification] = useState(false);
+  const [showSuccessfulLoadNotification, setShowSuccessfulLoadNotification] = useState(false);
+  const [showFailedLoadNotification, setShowFailedLoadNotification] = useState(false);
 
   const { data: session } = useSession();
   const userId = session?.user.id;
@@ -515,6 +519,14 @@ const MyWalletPage = () => {
 
   const groupedTransactions = groupAndSortTransactionsByDate(userTransactions);
 
+  const showNotification = (setShowNotification: React.Dispatch<React.SetStateAction<boolean>>) => {
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+      window.location.reload();
+    }, 5000);
+  };
+
   return (
     <div className='section-container tw-flex tw-flex-col tw-justify-evenly'>
       <div className='tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md '>
@@ -546,8 +558,26 @@ const MyWalletPage = () => {
           </div>
         </div>
       </div>
-      <div>{isPaymentModalOpen && <PaymentForm handleClosePaymentModal={handleClosePaymentModal} prices={prices} userId={userId} userEmail={userEmail} />}</div>
-      <div>{isWithdrawModalOpen && <WithdrawForm handleCloseWithdrawModal={handleCloseWithdrawModalWithSuccess} />}</div>
+      <div>
+        {isPaymentModalOpen && (
+          <PaymentForm
+            handleClosePaymentModal={handleClosePaymentModal}
+            prices={prices}
+            userId={userId}
+            userEmail={userEmail}
+            setShowSuccessfulLoadNotification={() => showNotification(setShowSuccessfulLoadNotification)}
+          />
+        )}
+      </div>
+      <div>
+        {isWithdrawModalOpen && (
+          <WithdrawForm
+            handleCloseWithdrawModal={handleCloseWithdrawModal}
+            setShowSuccessfulWithdrawNotification={() => showNotification(setShowSuccessfulWithdrawNotification)}
+            setShowFailedWithdrawNotification={() => showNotification(setShowFailedWithdrawNotification)}
+          />
+        )}
+      </div>
       <div className='tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md'>
         {Object.entries(groupedTransactions).map(([date, transactions]) => (
           <div key={date} className='tw-p-4 tw-mt-4'>
@@ -576,10 +606,11 @@ const MyWalletPage = () => {
                 {transaction.transactionType === 'withdraw' && (
                   <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
                     <div className='tw-flex tw-items-center tw-m-2'>
+                      {' '}
                       <Image alt='deposit' src={WithdrawalIcon} />
                       <div className='tw-px-4'>
                         <p className='tw-text-md'>Withdrawal</p>
-                        <p className='tw-text-sm tw-text-white/50'>Bank account ending 3456</p>
+                        <p className='tw-text-sm tw-text-white/50'>Bank account ending {transaction.accountNumber?.slice(-4)}</p>
                         <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
@@ -666,6 +697,26 @@ const MyWalletPage = () => {
           </div>
         ))}
       </div>
+      {showSuccessfulWithdrawNotification && (
+        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#2b7926]'>
+          <p>Withdrawal Request Completed</p>
+        </div>
+      )}
+      {showFailedWithdrawNotification && (
+        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-red-700'>
+          <p>Withdrawal Request Failed</p>
+        </div>
+      )}
+      {showSuccessfulLoadNotification && (
+        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#2b7926]'>
+          <p>Wallet Successfully Loaded</p>
+        </div>
+      )}
+      {showFailedLoadNotification && (
+        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-red-700'>
+          <p>Wallet Top-up Failed</p>
+        </div>
+      )}
     </div>
   );
 };
