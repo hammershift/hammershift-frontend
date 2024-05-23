@@ -64,6 +64,22 @@ const transactionSchema = new mongoose.Schema({
   invoice_url: {
     type: String,
   },
+  accountName: {
+    type: String,
+  },
+  accountNumber: {
+    type: String,
+  },
+  bankName: {
+    type: String,
+  },
+  wireRoutingNumber: {
+    type: String,
+  },
+  status: {
+    type: String,
+    enum: ["success", "failed"],
+  },
 });
 
 const Transaction =

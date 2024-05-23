@@ -49,13 +49,8 @@ export default function EmbeddedCheckoutButton(props: any) {
   };
 
   return (
-    <div className="tw-my-4">
-      <button
-        className="btn-yellow tw-text-xs"
-        onClick={() => handleCheckoutClick(priceId)}
-      >
-        Add Funds
-      </button>
+    <div className="tw-my-4 tw-w-full tw-text-center btn-yellow">
+      <button onClick={() => handleCheckoutClick(priceId)}>Add Funds</button>
       {showCheckout && (
         <div className="backdrop" onClick={handleCloseModal}></div>
       )}
