@@ -9,6 +9,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export async function POST(req: NextRequest, res: NextResponse) {
   const payload = await req.text();
   const signature = req.headers.get("Stripe-Signature");
+  const client = await clientPromise;
+  const db = client.db();
+
+  let stripeCustomerId;
+  let amountPaid;
+  let userId;
 
   try {
     let event = stripe.webhooks.constructEvent(
@@ -31,15 +37,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
         break;
 
       case "invoice.payment_succeeded":
-        const client = await clientPromise;
-        const db = client.db();
-
         const invoice = event.data.object;
-        const stripeCustomerId = invoice.customer;
-        const amountPaid = invoice.amount_paid / 100;
-        const userId = invoice.metadata?.userId;
         const invoiceId = invoice.id;
         const invoiceURL = invoice.hosted_invoice_url;
+
+        stripeCustomerId = invoice.customer;
+        amountPaid = invoice.amount_paid / 100;
+        userId = invoice.metadata?.userId;
 
         const updateUserBalance = await db
           .collection("users")
@@ -52,7 +56,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           updateUserBalance
         );
 
-        const depositTransaction = new Transaction({
+        const successfulDepositTransaction = new Transaction({
           userID: new mongoose.Types.ObjectId(userId),
           transactionType: "deposit",
           amount: amountPaid,
@@ -60,19 +64,41 @@ export async function POST(req: NextRequest, res: NextResponse) {
           transactionDate: new Date(),
           invoice_id: invoiceId,
           invoice_url: invoiceURL,
+          status: "success",
         });
 
-        const createDepositTransaction = await db
+        const createSuccessfulDepositTransaction = await db
           .collection("transactions")
-          .insertOne(depositTransaction);
+          .insertOne(successfulDepositTransaction);
         console.log(
-          `Created deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId} and invoice ID: ${invoiceId}:`,
-          createDepositTransaction
+          `Created successful deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId} and invoice ID: ${invoiceId}:`,
+          createSuccessfulDepositTransaction
         );
         break;
 
       case "payment_intent.payment_failed":
-        console.log("PaymentIntent failed.");
+        const paymentIntent = event.data.object;
+        stripeCustomerId = paymentIntent.customer;
+        amountPaid = paymentIntent.amount;
+        userId = paymentIntent.metadata?.userId;
+
+        const failedDepositTransaction = new Transaction({
+          userID: new mongoose.Types.ObjectId(userId),
+          transactionType: "deposit",
+          amount: amountPaid,
+          type: "+",
+          transactionDate: new Date(),
+          status: "failed",
+        });
+
+        const createFailedDepositTransaction = await db
+          .collection("transactions")
+          .insertOne(failedDepositTransaction);
+        console.log(
+          `Created failed deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId}:`,
+          createFailedDepositTransaction
+        );
+
         break;
 
       default:

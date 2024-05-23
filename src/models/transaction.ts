@@ -76,6 +76,7 @@ const transactionSchema = new mongoose.Schema({
   wireRoutingNumber: {
     type: String,
   },
+  status: { type: String, enum: ["success", "failed"] },
 });
 
 const Transaction =
