@@ -9,6 +9,7 @@ import DepositIcon from "../../../../public/images/arrow-up.svg";
 import WithdrawalIcon from "../../../../public/images/arrow-down-2.svg";
 import PlusIcon from "../../../../public/images/load-icon.svg";
 import ArrowDownIcon from "../../../../public/images/withdraw-icon.svg";
+import DeniedIcon from "../../../../public/images/denied.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 import Link from "next/link";
 import WithdrawForm from "@/app/components/withdraw_form";
@@ -272,7 +273,7 @@ const MyWalletPage = () => {
                     <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
                       <div className="tw-flex tw-items-center tw-m-2">
                         {" "}
-                        <Image alt="deposit" src={DepositIcon} />
+                        <Image alt="deposit" src={DeniedIcon} />
                         <div className="tw-px-4">
                           <p className="tw-text-md">Denied Transaction</p>
                           <p className="tw-text-sm tw-text-white/50">
