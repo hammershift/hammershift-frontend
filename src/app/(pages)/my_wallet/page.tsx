@@ -239,35 +239,35 @@ const MyWalletPage = () => {
                 key={transaction._id}
                 className="tw-flex tw-justify-between tw-items"
               >
-                {transaction.transactionType === "deposit" &&
-                  transaction.status === "success" && (
-                    <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
-                      <div className="tw-flex tw-items-center tw-m-2">
-                        {" "}
-                        <Image alt="deposit" src={DepositIcon} />
-                        <div className="tw-px-4">
-                          <p className="tw-text-md">Credit</p>
-                          <p className="tw-text-sm tw-text-white/50">
-                            Loaded from{" "}
-                            <a
-                              target="blank"
-                              href={transaction.invoice_url}
-                              className="tw-underline"
-                            >
-                              Stripe
-                            </a>
-                          </p>
-                          <p className="tw-text-sm tw-text-white/50">
-                            {new Date(
-                              transaction.transactionDate
-                            ).toLocaleTimeString()}
-                          </p>
-                        </div>
+                {transaction.transactionType === "deposit" && 
+                 transaction.status === "success" && (
+                  <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
+                    <div className="tw-flex tw-items-center tw-m-2">
+                      {" "}
+                      <Image alt="deposit" src={DepositIcon} />
+                      <div className="tw-px-4">
+                        <p className="tw-text-md">Credit</p>
+                        <p className="tw-text-sm tw-text-white/50">
+                          Loaded from{" "}
+                          <a
+                            target="blank"
+                            href={transaction.invoice_url}
+                            className="tw-underline"
+                          >
+                            Stripe
+                          </a>
+                        </p>
+                        <p className="tw-text-sm tw-text-white/50">
+                          {new Date(
+                            transaction.transactionDate
+                          ).toLocaleTimeString()}
+                        </p>
                       </div>
-                      <p className="tw-text-xl">${transaction.amount}</p>
                     </div>
-                  )}
-                   {transaction.transactionType === "deposit" &&
+                    <p className="tw-text-xl">${transaction.amount}</p>
+                  </div>
+                )}
+                {transaction.transactionType === "deposit" &&
                   transaction.status === "failed" && (
                     <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
                       <div className="tw-flex tw-items-center tw-m-2">
@@ -276,7 +276,7 @@ const MyWalletPage = () => {
                         <div className="tw-px-4">
                           <p className="tw-text-md">Denied Transaction</p>
                           <p className="tw-text-sm tw-text-white/50">
-                           Failed to add funds
+                            Failed to add funds
                           </p>
                           <p className="tw-text-sm tw-text-white/50">
                             {new Date(

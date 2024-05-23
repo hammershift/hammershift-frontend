@@ -79,7 +79,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       case "payment_intent.payment_failed":
         const paymentIntent = event.data.object;
         stripeCustomerId = paymentIntent.customer;
-        amountPaid = paymentIntent.amount;
+        amountPaid = paymentIntent.amount / 100;
         userId = paymentIntent.metadata?.userId;
 
         const failedDepositTransaction = new Transaction({
