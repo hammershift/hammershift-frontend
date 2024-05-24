@@ -41,7 +41,7 @@ const PaymentForm = (props: any) => {
   }, [isLoading]);
 
   return (
-    <div className="tw-bg-black/80 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-absolute tw-top-0 tw-left-0">
+    <div className="tw-bg-black/80 tw-w-full tw-h-full tw-flex tw-justify-center tw-items-start md:tw-items-center tw-absolute tw-top-0 tw-left-0">
       <div className="tw-relative tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6">
         {/* title */}
         <div className="tw-flex tw-justify-between tw-mb-12">

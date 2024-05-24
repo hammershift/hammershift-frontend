@@ -85,12 +85,12 @@ const LoadWallet = () => {
   };
 
   return (
-    <div>
+    <div className="max-md:tw-hidden">
       {!session ? null : pathname === "/my_wallet" ? null : isLoading ? (
         <BeatLoader color="#696969" size={10} />
       ) : (
         <div
-          className="tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw-w-1/5 tw hover:tw-cursor-pointer"
+          className="tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw hover:tw-cursor-pointer max-md:tw-hidden lg:tw-w-1/3 xl:tw-w-1/5"
           onClick={() => setIsPaymentModalOpen(true)}
         >
           <div className="tw-bg-[#49C74233] tw-backdrop-blur-md  tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">

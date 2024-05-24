@@ -58,7 +58,7 @@ export async function POST(request: Request) {
           userId: userId,
         },
       },
-      return_url: `${request.headers.get("origin")}/my_wallet`,
+      return_url: `${request.headers.get("origin")}/my_wallet?success=true`,
     });
 
     console.log("Session: ", session);
