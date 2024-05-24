@@ -25,6 +25,7 @@ import PodiumIcon from "../../../public/images/podium-icon.svg";
 import HammerIcon from "../../../public/images/hammer-icon.svg";
 import ArrowDown from "../../../public/images/arrow-down.svg";
 import DropdownArrow from "../../../public/images/dropdown.svg";
+import ArrowRight from "../../../public/images/arrow-right.svg"
 
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg";
 import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-photo-two.svg";
@@ -2678,8 +2679,15 @@ const MyAccountDropdownMenu = () => {
               <span className="tw-font-bold tw-text-xl tw-py-1">
                 ${walletBalance.toFixed(2)}
               </span>
-              <span className="tw-text-[#49C742]">Withdraw</span>
+              <span className="tw-text-[#49C742]">My Wallet</span>
             </div>
+            <Image
+            src={ArrowRight}
+            width={32}
+            height={32}
+            alt="wallet icon"
+            className="tw-w-8 tw-h-8"
+          />
           </div>
         </div>
       ) : (

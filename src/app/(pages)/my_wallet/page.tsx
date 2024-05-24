@@ -14,7 +14,7 @@ import WalletIcon from "../../../../public/images/wallet--money-payment-finance-
 import Link from "next/link";
 import WithdrawForm from "@/app/components/withdraw_form";
 
-interface ProductPrice {
+export interface ProductPrice {
   unit_amount: number;
   id: string;
 }
