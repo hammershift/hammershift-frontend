@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import PaymentForm from "@/app/components/payment_form";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 
 import DepositIcon from "../../../../public/images/arrow-up.svg";
 import WithdrawalIcon from "../../../../public/images/arrow-down-2.svg";
@@ -49,6 +49,7 @@ const MyWalletPage = () => {
     showSuccessfulWithdrawNotification,
     setShowSuccessfulWithdrawNotification,
   ] = useState(false);
+  const [latestDepositTransaction, setLatestDepositTransaction] = useState({});
   const [showFailedWithdrawNotification, setShowFailedWithdrawNotification] =
     useState(false);
   const [showSuccessfulLoadNotification, setShowSuccessfulLoadNotification] =
@@ -62,6 +63,8 @@ const MyWalletPage = () => {
   const userStripeId = session?.user.stripeCustomerId;
 
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const success = searchParams.get("success");
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -163,6 +166,7 @@ const MyWalletPage = () => {
 
   const groupedTransactions = groupAndSortTransactionsByDate(userTransactions);
 
+  // remove notif and refresh page after successful/failed withdrawal
   const showNotification = (
     setShowNotification: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
@@ -170,8 +174,19 @@ const MyWalletPage = () => {
     setTimeout(() => {
       setShowNotification(false);
       window.location.reload();
-    }, 5000);
+    }, 3000);
   };
+
+  // remove notif and refresh page when stripe payment is successful
+  useEffect(() => {
+    if (success === "true") {
+      const timeoutId = setTimeout(() => {
+        window.location.href = "/my_wallet";
+      }, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [success]);
 
   return (
     <div className="section-container tw-flex tw-flex-col tw-justify-evenly">
@@ -263,13 +278,13 @@ const MyWalletPage = () => {
                         <div className="tw-px-4">
                           <p className="tw-text-md">Credit</p>
                           <p className="tw-text-sm tw-text-white/50">
-                            Loaded from{" "}
+                            Loaded from Stripe | Invoice ID:{" "}
                             <a
                               target="blank"
                               href={transaction.invoice_url}
                               className="tw-underline"
                             >
-                              Stripe
+                              {transaction.invoice_id}
                             </a>
                           </p>
                           <p className="tw-text-sm tw-text-white/50">
@@ -448,7 +463,7 @@ const MyWalletPage = () => {
           <p>Withdrawal Request Failed</p>
         </div>
       )}
-      {showSuccessfulLoadNotification && (
+      {success === "true" && (
         <div className="tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#2b7926]">
           <p>Wallet Successfully Loaded</p>
         </div>
