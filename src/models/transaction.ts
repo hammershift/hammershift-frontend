@@ -1,46 +1,27 @@
-import mongoose from "mongoose";
-
-const TransactionType = {
-  WAGER: "wager",
-  DEPOSIT: "deposit",
-  WITHDRAWAL: "withdrawal",
-  WINNINGS: "winnings",
-  REFUND: "refund",
-  TOURNAMENT_BUY_IN: "tournament buy-in",
-  PROCESSING_FEE: "processing fee",
-};
+import mongoose from 'mongoose';
 
 const transactionSchema = new mongoose.Schema({
   userID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   wagerID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Wager",
+    ref: 'Wager',
   },
   auctionID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Auction",
+    ref: 'Auction',
   },
   tournamentID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Tournament",
+    ref: 'Tournament',
   },
   transactionType: {
     type: String,
     required: true,
-    enum: [
-      "wager",
-      "deposit",
-      "withdraw",
-      "winnings",
-      "refund",
-      "tournament buy-in",
-      "processing_fee",
-    ],
-    // enum: Object.values(TransactionType),
+    enum: ['wager', 'deposit', 'withdraw', 'winnings', 'refund', 'tournament buy-in', 'processing_fee'],
   },
   amount: {
     type: Number,
@@ -49,7 +30,7 @@ const transactionSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ["+", "-"],
+    enum: ['+', '-'],
   },
   transactionDate: {
     type: Date,
@@ -82,8 +63,6 @@ const transactionSchema = new mongoose.Schema({
   },
 });
 
-const Transaction =
-  mongoose.models.Transaction ||
-  mongoose.model("Transaction", transactionSchema);
+const Transaction = mongoose.models.Transaction || mongoose.model('Transaction', transactionSchema);
 
 export default Transaction;

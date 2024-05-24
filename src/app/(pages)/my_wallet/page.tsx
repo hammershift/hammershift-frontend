@@ -14,7 +14,7 @@ import WalletIcon from "../../../../public/images/wallet--money-payment-finance-
 import Link from "next/link";
 import WithdrawForm from "@/app/components/withdraw_form";
 
-interface ProductPrice {
+export interface ProductPrice {
   unit_amount: number;
   id: string;
 }
@@ -119,6 +119,17 @@ const MyWalletPage = () => {
     };
     fetchWalletBalance();
   }, [session]);
+
+  useEffect(() => {
+    if (isPaymentModalOpen || isWithdrawModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isPaymentModalOpen, isWithdrawModalOpen]);
 
   const handleClosePaymentModal = (e: { preventDefault: () => void }) => {
     e.preventDefault();
