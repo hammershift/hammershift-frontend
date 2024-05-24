@@ -22,14 +22,13 @@ export default async function CheckoutReturn({ searchParams }: any) {
   if (!stripeSession.invoice || typeof stripeSession.invoice !== "string") {
     console.error("Stripe session does not have a valid invoice ID.");
     return (
-      <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
+      <div className="tw-w-1/2 tw-mt-24 tw-flex tw-justify-center tw-items-center">
         <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
           <p className="">Thank you for your purchase!</p>
           <p>
             A receipt with your transaction ID has been emailed to:
             {stripeSession.customer_details?.email}.
           </p>
-          <p>You may also refresh this page to view your receipt.</p>
         </div>
       </div>
     );
@@ -54,10 +53,7 @@ export default async function CheckoutReturn({ searchParams }: any) {
         <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
           <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
             <p className="">Thank you for your purchase!</p>
-            <p>
-              We appreciate your business, your Stripe customer ID is:{" "}
-              {stripeSession.customer as string}.
-            </p>
+            <p>Total Amount Purchased: ${stripeInvoice.amount_paid / 100}</p>
             <p>
               View Receipt{" "}
               <a
