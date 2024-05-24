@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import PaymentForm from "@/app/components/payment_form";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import DepositIcon from "../../../../public/images/arrow-up.svg";
 import WithdrawalIcon from "../../../../public/images/arrow-down-2.svg";
@@ -59,6 +60,8 @@ const MyWalletPage = () => {
   const userId = session?.user.id;
   const userEmail = session?.user.email;
   const userStripeId = session?.user.stripeCustomerId;
+
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchPrices = async () => {
