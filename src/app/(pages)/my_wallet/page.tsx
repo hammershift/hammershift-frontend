@@ -189,11 +189,11 @@ const MyWalletPage = () => {
   }, [success]);
 
   return (
-    <div className="section-container tw-flex tw-flex-col tw-justify-evenly">
-      <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md ">
+    <div className="section-container tw-flex tw-flex-col tw-justify-evenly max-sm:tw-w-full">
+      <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md max-sm:tw-w-full">
         <h2 className="tw-p-4 tw-text-3xl tw-font-bold">My Wallet</h2>
         <div className="tw-p-4 tw-flex tw-flex-col tw-gap-1 tw-bg-[#49C74233] tw-rounded-md">
-          <div className="tw-flex tw-justify-between tw-items-center tw-rounded-md">
+          <div className="tw-flex tw-justify-between tw-items-center tw-rounded-md max-sm:tw-flex-col">
             <div className="tw-flex">
               <Image alt="wallet" src={WalletIcon} />
               <div className="tw-px-4">
@@ -259,16 +259,13 @@ const MyWalletPage = () => {
           />
         )}
       </div>
-      <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md">
+      <div className="tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md max-sm:tw-w-full">
         {Object.entries(groupedTransactions).map(([date, transactions]) => (
-          <div key={date} className="tw-p-4 tw-mt-4">
+          <div key={date} className="tw-p-4 tw-mt-4 max-sm:tw-p-1">
             <h3 className="tw-py-1">{date}</h3>
             <hr className="tw-p-[1px] tw-mb-4 tw-border-0 tw-bg-white/5" />
             {transactions.map((transaction) => (
-              <div
-                key={transaction._id}
-                className="tw-flex tw-justify-between tw-items"
-              >
+              <div key={transaction._id} className="tw-flex tw-justify-between">
                 {transaction.transactionType === "deposit" &&
                   transaction.status === "success" && (
                     <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
@@ -454,7 +451,7 @@ const MyWalletPage = () => {
         ))}
       </div>
       {showSuccessfulWithdrawNotification && (
-        <div className="tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#2b7926]">
+        <div className="tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#49C74233] tw-backdrop-blur-xl">
           <p>Withdrawal Request Completed</p>
         </div>
       )}
@@ -464,7 +461,7 @@ const MyWalletPage = () => {
         </div>
       )}
       {success === "true" && (
-        <div className="tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#2b7926]">
+        <div className="tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#49C74233] tw-backdrop-blur-xl">
           <p>Wallet Successfully Loaded</p>
         </div>
       )}
