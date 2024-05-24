@@ -8,6 +8,7 @@ import Navbar from "./components/navbar";
 import { SessionProvider } from "next-auth/react";
 import BetaTesting from "./components/beta_testing";
 import { Analytics } from "@vercel/analytics/react";
+import LoadWallet from "./components/load_wallet";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
                     <BetaTesting />
                     {children}
                     <Analytics />
+                    <LoadWallet/>
                 </body>
             </SessionProvider>
         </html>
