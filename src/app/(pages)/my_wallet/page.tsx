@@ -174,7 +174,7 @@ const MyWalletPage = () => {
     setTimeout(() => {
       setShowNotification(false);
       window.location.reload();
-    }, 3000);
+    }, 5000);
   };
 
   // remove notif and refresh page when stripe payment is successful
@@ -182,7 +182,7 @@ const MyWalletPage = () => {
     if (success === "true") {
       const timeoutId = setTimeout(() => {
         window.location.href = "/my_wallet";
-      }, 3000);
+      }, 5000);
 
       return () => clearTimeout(timeoutId);
     }
