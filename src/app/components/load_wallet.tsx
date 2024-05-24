@@ -86,7 +86,7 @@ const LoadWallet = () => {
 
   return (
     <div>
-      {pathname === "/my_wallet" ? null : isLoading ? (
+      {!session ? null : pathname === "/my_wallet" ? null : isLoading ? (
         <BeatLoader color="#696969" size={10} />
       ) : (
         <div
