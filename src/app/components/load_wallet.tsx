@@ -68,6 +68,17 @@ const LoadWallet = () => {
     fetchWalletBalance();
   }, [session]);
 
+  useEffect(() => {
+    if (isPaymentModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isPaymentModalOpen]);
+
   const handleClosePaymentModal = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsPaymentModalOpen(false);
