@@ -272,6 +272,8 @@ const MyWalletPage = () => {
                         <p className='tw-text-sm tw-text-white/50'>
                           Bank account ending {transaction.accountNumber?.slice(-4)}
                           {transaction.status === 'processing' ? ' (Processing)' : ''}
+                          {transaction.status === 'successful' ? ' (Successful)' : ''}
+                          {transaction.status === 'failed' ? ' (Failed)' : ''}
                         </p>
                         <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
