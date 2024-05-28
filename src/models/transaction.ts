@@ -59,7 +59,7 @@ const transactionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["success", "failed"],
+    enum: ['success', 'failed', 'processing'],
   },
 });
 

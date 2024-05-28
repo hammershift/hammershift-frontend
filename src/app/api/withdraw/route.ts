@@ -34,16 +34,11 @@ export async function POST(req: NextRequest) {
 
     // check for wallet balance
     if (user.balance < amount) {
+      console.error('Insufficient balance:', user.balance);
       throw new Error('Insufficient balance');
     }
 
     console.log('Sufficient balance available');
-
-    // update user's balance
-    const newBalance = user.balance - amount;
-    await db.collection('users').updateOne({ _id: userID }, { $set: { balance: newBalance } }, { session });
-
-    console.log('User balance updated:', newBalance);
 
     // create a transaction record
     const transaction = new Transaction({
@@ -56,8 +51,8 @@ export async function POST(req: NextRequest) {
       accountNumber: accountNumber,
       bankName: bankName,
       wireRoutingNumber: wireRoutingNumber,
+      status: 'processing',
     });
-
     console.log('Transaction object before save:', transaction);
 
     await transaction.save({ session });
@@ -69,7 +64,7 @@ export async function POST(req: NextRequest) {
 
     console.log('Transaction committed');
 
-    return NextResponse.json({ success: true, balance: newBalance });
+    return NextResponse.json({ success: true });
   } catch (error: any) {
     await session.abortTransaction();
     session.endSession();
