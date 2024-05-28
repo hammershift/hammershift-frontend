@@ -40,12 +40,6 @@ export async function POST(req: NextRequest) {
 
     console.log('Sufficient balance available');
 
-    // update user's balance
-    // const newBalance = user.balance - amount;
-    // await db.collection('users').updateOne({ _id: userID }, { $set: { balance: newBalance } }, { session });
-
-    // console.log('User balance updated:', newBalance);
-
     // create a transaction record
     const transaction = new Transaction({
       userID: userID,
