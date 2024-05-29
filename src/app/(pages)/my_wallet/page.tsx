@@ -330,7 +330,7 @@ const MyWalletPage = () => {
                     <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
                       <div className="tw-flex tw-items-center tw-m-2">
                         {" "}
-                        <Image alt="deposit" src={DeniedIcon} />
+                        <Image alt="denied" src={DeniedIcon} />
                         <div className="tw-px-4">
                           <p className="tw-text-md">Denied Transaction</p>
                           <p className="tw-text-sm tw-text-white/50">
@@ -349,7 +349,14 @@ const MyWalletPage = () => {
                 {transaction.transactionType === "withdraw" && (
                   <div className="tw-flex tw-w-full tw-justify-between tw-items-center">
                     <div className="tw-flex tw-items-center tw-m-2">
-                      <Image alt="deposit" src={WithdrawalIcon} />
+                      <Image
+                        alt="deposit"
+                        src={
+                          transaction.status === "failed"
+                            ? DeniedIcon
+                            : WithdrawalIcon
+                        }
+                      />
                       <div className="tw-px-4">
                         <p className="tw-text-md">Withdrawal</p>
                         <p className="tw-text-sm tw-text-white/50">
