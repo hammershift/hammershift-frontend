@@ -50,6 +50,8 @@ const MyWalletPage = () => {
   const [showSuccessfulLoadNotification, setShowSuccessfulLoadNotification] = useState(false);
   const [showFailedLoadNotification, setShowFailedLoadNotification] = useState(false);
 
+  const isDisabled = process.env.DISABLE_DEPOSIT;
+
   const { data: session } = useSession();
   const userId = session?.user.id;
   const userEmail = session?.user.email;
@@ -214,20 +216,23 @@ const MyWalletPage = () => {
                   </p>
                 </div>
               </button>
-              {isWalletDepositEnabled ? (
-                <button className='tw-p-1 tw-px-3 tw-m-1 tw-bg-[#F2CA16] tw-text-black tw-font-bold tw-rounded-md' onClick={() => setIsPaymentModalOpen(true)}>
+              {isDisabled === 'true' ? (
+                <button
+                  className='tw-p-1 tw-px-3 tw-m-1 tw-bg-[#929292] tw-text-black tw-font-bold tw-rounded-md'
+                  onClick={() => setIsPaymentModalOpen(true)}
+                  disabled
+                  title='Temporarily disabled'
+                >
                   <div className='tw-flex tw-p-1'>
                     <Image alt='deposit' src={PlusIcon} /> <p className='tw-pl-2'>LOAD</p>
                   </div>
                 </button>
               ) : (
-                <Tooltip message='Deposits are currently disabled'>
-                  <button className='tw-p-1 tw-px-3 tw-m-1 tw-bg-[#F2CA16] tw-text-black tw-font-bold tw-rounded-md' disabled={!isWalletDepositEnabled}>
-                    <div className='tw-flex tw-p-1'>
-                      <Image alt='deposit' src={PlusIcon} /> <p className='tw-pl-2'>LOAD</p>
-                    </div>
-                  </button>
-                </Tooltip>
+                <button className='tw-p-1 tw-px-3 tw-m-1 tw-bg-[#F2CA16] tw-text-black tw-font-bold tw-rounded-md' onClick={() => setIsPaymentModalOpen(true)}>
+                  <div className='tw-flex tw-p-1'>
+                    <Image alt='deposit' src={PlusIcon} /> <p className='tw-pl-2'>LOAD</p>
+                  </div>
+                </button>
               )}
             </div>
           </div>
