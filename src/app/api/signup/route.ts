@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     let newUser = {
       email,
-      balance: 100,
+      balance: 500,
       isActive: true,
       isBanned: false,
       createdAt: new Date(),
