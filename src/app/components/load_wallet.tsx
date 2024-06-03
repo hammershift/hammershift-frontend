@@ -17,6 +17,8 @@ const LoadWallet = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [prices, setPrices] = useState<ProductPrice[]>([]);
 
+  const isDisabled = process.env.NEXT_PUBLIC_DISABLE_DEPOSIT;
+
   const { data: session } = useSession();
   const userId = session?.user.id;
   const userEmail = session?.user.email;
@@ -88,8 +90,38 @@ const LoadWallet = () => {
     <div className="max-md:tw-hidden">
       {!session ? null : pathname === "/my_wallet" ? null : isLoading ? (
         <BeatLoader color="#696969" size={10} />
+      ) : isDisabled ? (
+        <button
+          className="tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw hover:tw-cursor-pointer max-md:tw-hidden lg:tw-w-1/3 xl:tw-w-1/5"
+          onClick={() => setIsPaymentModalOpen(true)}
+          title="Temporarily disabled"
+          disabled
+        >
+          <div className="tw-bg-[#49C74233] tw-backdrop-blur-md  tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+            <Image
+              src={Wallet}
+              width={32}
+              height={32}
+              alt="wallet icon"
+              className="tw-w-8 tw-h-8"
+            />
+            <div className="tw-flex tw-flex-col tw-items-start tw-grow">
+              <span className="tw-font-bold tw-text-xl tw-py-1">
+                ${walletBalance.toFixed(2)}
+              </span>
+              <span className="tw-text-[#49C742]">Load Wallet Now</span>
+            </div>
+            <Image
+              src={ArrowRight}
+              width={32}
+              height={32}
+              alt="wallet icon"
+              className="tw-w-8 tw-h-8"
+            />
+          </div>
+        </button>
       ) : (
-        <div
+        <button
           className="tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw hover:tw-cursor-pointer max-md:tw-hidden lg:tw-w-1/3 xl:tw-w-1/5"
           onClick={() => setIsPaymentModalOpen(true)}
         >
@@ -115,7 +147,7 @@ const LoadWallet = () => {
               className="tw-w-8 tw-h-8"
             />
           </div>
-        </div>
+        </button>
       )}
       {isPaymentModalOpen && (
         <PaymentForm
