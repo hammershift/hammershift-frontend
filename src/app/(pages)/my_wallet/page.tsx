@@ -14,7 +14,6 @@ import DeniedIcon from '../../../../public/images/denied.svg';
 import WalletIcon from '../../../../public/images/wallet--money-payment-finance-wallet.svg';
 import Link from 'next/link';
 import WithdrawForm from '@/app/components/withdraw_form';
-import Tooltip from '@/app/components/tooltip';
 
 export interface ProductPrice {
   unit_amount: number;
@@ -60,10 +59,6 @@ const MyWalletPage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const success = searchParams.get('success');
-
-  // TEST
-  const isWalletDepositEnabled = process.env.NEXT_PUBLIC_WALLET_DEPOSIT_ENABLED === 'true';
-  console.log('NEXT_PUBLIC_WALLET_DEPOSIT_ENABLED:', process.env.NEXT_PUBLIC_WALLET_DEPOSIT_ENABLED);
 
   useEffect(() => {
     const fetchPrices = async () => {

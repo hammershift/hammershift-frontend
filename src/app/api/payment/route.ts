@@ -6,9 +6,9 @@ import { stripe } from '@/lib/stripe';
 
 export async function POST(request: Request) {
   // testing
-  if (process.env.NEXT_PUBLIC_WALLET_DEPOSIT_ENABLED !== 'true') {
+  if (process.env.DISABLE_DEPOSIT !== 'true') {
     console.log('Deposits are currently disabled');
-    console.log('NEXT_PUBLIC_WALLET_DEPOSIT_ENABLED:', process.env.NEXT_PUBLIC_WALLET_DEPOSIT_ENABLED);
+    console.log('DISABLE_DEPOSIT:', process.env.DISABLE_DEPOSIT);
     return NextResponse.json({ message: 'Deposits are currently disabled' }, { status: 403 });
   }
 
