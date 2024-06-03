@@ -57,7 +57,7 @@ const MyWalletPage = () => {
   const [showFailedLoadNotification, setShowFailedLoadNotification] =
     useState(false);
 
-  const isDisabled = process.env.DISABLE_DEPOSIT;
+  const isDisabled = process.env.NEXT_PUBLIC_DISABLE_DEPOSIT;
 
   const { data: session } = useSession();
   const userId = session?.user.id;
