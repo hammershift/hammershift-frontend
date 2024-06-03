@@ -152,7 +152,7 @@ export const authOptions: NextAuthOptions = {
         session.user.provider = token.provider;
         session.user.isNewUser = token.isNewUser;
         session.user.emailExists = token.emailExists;
-        session.user.stripeCustomerId = token.stripeCustomerId
+        session.user.stripeCustomerId = token.stripeCustomerId;
       }
       return session;
     },
@@ -163,7 +163,7 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.image = user.image;
         token.provider = account.provider;
-        token.stripeCustomerId = user.stripeCustomerId
+        token.stripeCustomerId = user.stripeCustomerId;
       }
 
       const existingUser = await doesEmailExist(token.email);
@@ -192,7 +192,7 @@ export const authOptions: NextAuthOptions = {
         token.image = dbUser.image;
         token.isActive = dbUser.isActive;
         token.balance = dbUser.balance;
-        token.stripeCustomerId = dbUser.stripeCustomerId
+        token.stripeCustomerId = dbUser.stripeCustomerId;
         token.isBanned = dbUser.isBanned;
 
         if (!dbUser.createdAt) {
@@ -205,8 +205,8 @@ export const authOptions: NextAuthOptions = {
 
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
-          dbUser.balance = 100;
-          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { isActive: true, balance: 100 } });
+          dbUser.balance = 500;
+          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { isActive: true, balance: 500 } });
         }
       }
 
