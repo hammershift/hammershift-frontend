@@ -18,11 +18,11 @@ const companyList = [
 const productList = [
   { title: "DISCOVER", link: "/discover" },
   { title: "AUCTIONS", link: "/auctions" },
-  { title: "NEWLY LISTED", link: "/explore" },
-  { title: "MOST EXPENSIVE", link: "/explore" },
-  { title: "MOST BIDS", link: "/explore" },
-  { title: "ENDING SOON", link: "/explore" },
-  { title: "MOST WAGERS", link: "/explore" },
+  { title: "NEWLY LISTED", link: "/discover" },
+  { title: "MOST EXPENSIVE", link: "/discover" },
+  { title: "MOST BIDS", link: "/discover" },
+  { title: "ENDING SOON", link: "/discover" },
+  { title: "MOST WAGERS", link: "/discover" },
 ];
 const vehiclesList = ["MAKE", "TYPE", "ERA", "LOCATION"];
 

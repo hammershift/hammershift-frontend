@@ -26,7 +26,7 @@ const PrivacyPolicyPage = () => {
           <p className="tw-px-2">
             We collect the following types of information:
           </p>
-          <ul className="tw-px-2">
+          <ul className="tw-px-10 tw-list-disc">
             <li>
               Personal Information: Name, email address, and payment information
               when you create an account and participate in wagering activities.
@@ -44,7 +44,7 @@ const PrivacyPolicyPage = () => {
           <p className="tw-px-2">
             We use the collected information for the following purposes:
           </p>
-          <ul className="tw-px-2">
+          <ul className="tw-px-10 tw-list-disc">
             <li>To provide and maintain the Service.</li>
             <li>To process wagers and manage your account.</li>
             <li>
