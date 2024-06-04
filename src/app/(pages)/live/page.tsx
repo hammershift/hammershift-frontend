@@ -10,19 +10,19 @@ import { getCarsWithMostPot } from "@/lib/data";
 import React, { useEffect, useRef, useState } from "react";
 
 const LivePage = () => {
-    return (
-        <div className="tw-flex tw-flex-col tw-justify-center">
-            <div className="section-container tw-m-auto">
-                <LiveGames />
-            </div>
-            <NewEraWagering />
-            <HowHammerShiftWorks />
-            <Subscribe />
-            <div className="tw-m-auto">
-                <Footer />
-            </div>
-        </div>
-    );
+  return (
+    <div className="tw-flex tw-flex-col tw-justify-center">
+      <div className="section-container tw-m-auto">
+        <LiveGames />
+      </div>
+      <NewEraWagering />
+      <HowHammerShiftWorks />
+      <Subscribe />
+      <div className="tw-m-auto">
+        <Footer />
+      </div>
+    </div>
+  );
 };
 
 export default LivePage;
