@@ -185,10 +185,10 @@ export const getCarsWithMostPot = async (limit: number) => {
   }
 };
 
-export const getLiveAuctionsToDisplay = async (limit: number) => {
+export const getLiveAuctionsToDisplay = async (limit: number, offset: number) => {
   try {
     const response = await fetch(
-      `/api/cars/filter?display=true&limit=${limit}`
+      `/api/cars/filter?display=true&limit=${limit}&offset=${offset}`
     );
 
     if (response.ok) {

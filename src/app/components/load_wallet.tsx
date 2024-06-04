@@ -90,7 +90,7 @@ const LoadWallet = () => {
     <div className="max-md:tw-hidden">
       {!session ? null : pathname === "/my_wallet" ? null : isLoading ? (
         <BeatLoader color="#696969" size={10} />
-      ) : isDisabled ? (
+      ) : isDisabled === "true" ? (
         <button
           className="tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw hover:tw-cursor-pointer max-md:tw-hidden lg:tw-w-1/3 xl:tw-w-1/5"
           onClick={() => setIsPaymentModalOpen(true)}
