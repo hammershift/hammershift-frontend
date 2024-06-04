@@ -232,7 +232,7 @@ const DynamicSkillStrategyAndStakes = withDynamicImport(
 );
 const DynamicNewGames = withDynamicImport("new_games", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div id="newly_listed" className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-items-center">
@@ -338,7 +338,7 @@ const DynamicWhatsTrending = withDynamicImport("whats_trending", {
 });
 const DynamicMostExpensiveCars = withDynamicImport("most_expensive_cars", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div id="most_expensive" className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-items-center">
@@ -391,7 +391,7 @@ const DynamicMostExpensiveCars = withDynamicImport("most_expensive_cars", {
 });
 const DynamicMostBids = withDynamicImport("most_bids", {
   loading: () => (
-    <div className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
+    <div id="most_bids" className="section-container tw-h-auto tw-bg-gray-800 tw-py-8 sm:tw-py-16">
       <div className="tw-flex tw-flex-col">
         <div className="tw-flex tw-justify-between">
           <div className="tw-flex tw-items-center">

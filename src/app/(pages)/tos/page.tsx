@@ -21,7 +21,7 @@ const TermsOfServicePage = () => {
         </div>
         <div className="section-container">
           <h3 className="tw-text-xl tw-py-2 tw-font-bold">Definitions</h3>
-          <ul className="tw-px-2">
+          <ul className="tw-px-6 tw-list-disc">
             <li>Service: The HammerShift game and related services.</li>
             <li>User: Any individual who uses the Service.</li>
             <li>Account: The user account created to access the Service</li>
