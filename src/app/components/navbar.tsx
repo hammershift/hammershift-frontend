@@ -465,6 +465,32 @@ const Navbar = () => {
                       >
                         HOW IT WORKS
                       </Link>
+                      <Link
+                        href="/tos"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        TERMS OF SERVICE
+                      </Link>
+                      <Link
+                        href="/privacy_policy"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        PRIVACY POLICY
+                      </Link>
                     </div>
                   </div>
                 )}
