@@ -12,7 +12,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Carousel from "./components/carousel";
 import AuctionHero from "./components/auction_hero";
 import Image from "next/image";
-import HammershiftLogo from "../../public/images/hammershift-logo.svg"
+import HammershiftLogo from "../../public/images/hammershift-logo.svg";
 import MiniLeaderboard from "./components/mini_leaderboard";
 
 const LivePage = () => {
@@ -24,9 +24,9 @@ const LivePage = () => {
         <AuctionHero />
       </div>
       <LivePageCarousel />
-      <div className="section-container tw-flex tw-justify-between tw-m-auto max-md:tw-flex-col">
+      <div className="section-container tw-flex tw-justify-between tw-m-auto max-lg:tw-flex-col">
         <LiveGames />
-        <MiniLeaderboard/>
+        <MiniLeaderboard />
       </div>
       <div className="section-container tw-mx-auto tw-mb-10">
         <Carousel />

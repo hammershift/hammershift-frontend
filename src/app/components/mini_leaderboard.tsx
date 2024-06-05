@@ -27,7 +27,7 @@ const MiniLeaderboard = () => {
   }, []);
 
   return (
-    <div className="sm:tw-w-full md:tw-w-1/3 md:tw-my-24 md:tw-mx-12 ">
+    <div className="sm:tw-w-full md:tw-w-full md:tw-my-24 md:tw-mx-12 lg:tw-w-1/3">
       <div className="tw-relative tw-pb-8 sm:tw-pb-0 tw-min-h-[180px]">
         <div className="tw-p-6 tw-w-full tw-h-auto">
           <div className="tw-mb-6">

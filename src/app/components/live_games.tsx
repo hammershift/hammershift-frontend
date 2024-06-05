@@ -122,7 +122,7 @@ const LiveGames = () => {
   return (
     <div
       className={`md:tw-overflow-hidden tw-py-8 sm:tw-py-16 ${
-        pathname === "/" ? "tw-w-1/2 max-md:tw-w-full" : null
+        pathname === "/" ? "tw-w-1/2 max-lg:tw-w-full" : null
       }`}
     >
       <header className="tw-flex tw-justify-between">
@@ -146,7 +146,7 @@ const LiveGames = () => {
             </div>
           )}
         </div>
-        <div className="tw-flex">
+        <div className="tw-flex max-md:tw-hidden">
           <Image
             src={ArrowLeft}
             width={32}
