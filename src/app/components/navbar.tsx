@@ -25,7 +25,7 @@ import PodiumIcon from "../../../public/images/podium-icon.svg";
 import HammerIcon from "../../../public/images/hammer-icon.svg";
 import ArrowDown from "../../../public/images/arrow-down.svg";
 import DropdownArrow from "../../../public/images/dropdown.svg";
-import ArrowRight from "../../../public/images/arrow-right.svg"
+import ArrowRight from "../../../public/images/arrow-right.svg";
 
 import MyWagerPhotoOne from "../../../public/images/my-wagers-navbar/my-wager-photo-one.svg";
 import MyWagerPhotoTwo from "../../../public/images/my-wagers-navbar/my-wager-photo-two.svg";
@@ -296,6 +296,7 @@ const Navbar = () => {
                 LIVE
               </div>
             </Link>
+
             {/* <Link
               onClick={() => {
                 closeMenu();
@@ -374,6 +375,23 @@ const Navbar = () => {
                 >
                   <Image src={ArrowDown} alt="arrow-down" width={18}></Image>
                 </button>
+                <Link
+                  onClick={() => {
+                    closeMenu();
+                    closeMyAccountMenu();
+                    closeNavLinkDropDownMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }}
+                  href="/feedback"
+                >
+                  <div
+                    className={`tw-block tw-mx-4 sm:tw-mx-4 ${
+                      pathname === "/feedback" && "tw-font-bold tw-border-b-2"
+                    }`}
+                  >
+                    FEEDBACK
+                  </div>
+                </Link>
                 {navlinkIsOpen && (
                   <div
                     onMouseLeave={() => {
@@ -550,9 +568,10 @@ const Navbar = () => {
             <button
               id="watchlist-button"
               className="tw-relative"
-              onClick={() => {setDropWatchlist((prev) => !prev);
-                setDropMyAccount(false)
-                setDropMyWagers(false)
+              onClick={() => {
+                setDropWatchlist((prev) => !prev);
+                setDropMyAccount(false);
+                setDropMyWagers(false);
               }}
             >
               <Image
@@ -566,9 +585,10 @@ const Navbar = () => {
             {dropWatchlist && <MyWatchlistDropdownMenu />}
             <button
               id="mywagers-button"
-              onClick={() => {setDropMyWagers((prev) => !prev);
-                setDropMyAccount(false)
-                setDropWatchlist(false)
+              onClick={() => {
+                setDropMyWagers((prev) => !prev);
+                setDropMyAccount(false);
+                setDropWatchlist(false);
               }}
             >
               <Image
@@ -583,11 +603,11 @@ const Navbar = () => {
             <button
               id="myaccount-button"
               className="tw-relative"
-              onClick={() => {setDropMyAccount((prev) => !prev);
-                setDropWatchlist(false)
-                setDropMyWagers(false)
-              }
-              }
+              onClick={() => {
+                setDropMyAccount((prev) => !prev);
+                setDropWatchlist(false);
+                setDropMyWagers(false);
+              }}
             >
               <Image
                 src={AccountIcon}
@@ -649,7 +669,7 @@ const Navbar = () => {
           </div>
         </div>
       ) : (
-        <div className=" tw-flex tw-px-4 md:tw-px-16 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
+        <div className=" tw-flex tw-px-4 md:tw-px-6 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
           <div className=" tw-flex tw-items-center tw-justify-between">
             <div className="tw-pr-4">
               <Link
@@ -843,6 +863,45 @@ const Navbar = () => {
                       >
                         LEADERBOARD
                       </Link>
+                      <Link
+                        href="/how_it_works"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        HOW IT WORKS
+                      </Link>
+                      <Link
+                        href="/tos"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        TERMS OF SERVICE
+                      </Link>
+                      <Link
+                        href="/privacy_policy"
+                        onClick={() => {
+                          closeMenu();
+                          closeMyAccountMenu();
+                          closeNavLinkDropDownMenu();
+                          document.body.classList.remove("stop-scrolling");
+                        }}
+                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        role="menuitem"
+                      >
+                        PRIVACY POLICY
+                      </Link>
                     </div>
                   </div>
                 )}
@@ -898,9 +957,14 @@ const Navbar = () => {
             )}
           </div>
           <div className="tw-flex tw-items-center">
+            <Link href="/login_page">
+              <button className="btn-white tw-mx-2  hover:tw-bg-gold-200 tw-hidden md:tw-block ">
+                LOGIN
+              </button>
+            </Link>
             <Link href="/create_account">
               <button className="btn-white  hover:tw-bg-gold-200 tw-hidden md:tw-block ">
-                CREATE ACCOUNT
+                SIGN UP
               </button>
             </Link>
             <button
@@ -1037,14 +1101,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           />
         )}
       </div>
-      {!isLoggedIn ? //   </Link> //     <div>TOURNAMENTS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-      //   <Link
-      //     href="/about_page"
-      //     onClick={() => {
-      //       closeMenu();
-      //       document.body.classList.remove("stop-scrolling");
-      //     }}
-      //     className="tw-flex tw-py-2"
+      {!isLoggedIn ? //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/about_page" //   <Link //   </Link> //     <div>TOURNAMENTS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
       //   >
       //     <div>ABOUT</div>
       //   </Link>
@@ -1101,16 +1158,28 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       )}
       <div className="tw-mt-4">
         {!isLoggedIn && (
-          <button
-            onClick={() => {
-              router.push("/create_account");
-              document.body.classList.remove("stop-scrolling");
-              closeMenu();
-            }}
-            className="btn-white tw-w-full"
-          >
-            CREATE ACCOUNT
-          </button>
+          <>
+            <button
+              onClick={() => {
+                router.push("/login_page");
+                document.body.classList.remove("stop-scrolling");
+                closeMenu();
+              }}
+              className="btn-white tw-w-full tw-my-2"
+            >
+              LOGIN
+            </button>
+            <button
+              onClick={() => {
+                router.push("/create_account");
+                document.body.classList.remove("stop-scrolling");
+                closeMenu();
+              }}
+              className="btn-white tw-w-full"
+            >
+              CREATE ACCOUNT
+            </button>
+          </>
         )}
       </div>
     </div>
@@ -2708,12 +2777,12 @@ const MyAccountDropdownMenu = () => {
               <span className="tw-text-[#49C742]">My Wallet</span>
             </div>
             <Image
-            src={ArrowRight}
-            width={32}
-            height={32}
-            alt="wallet icon"
-            className="tw-w-8 tw-h-8"
-          />
+              src={ArrowRight}
+              width={32}
+              height={32}
+              alt="wallet icon"
+              className="tw-w-8 tw-h-8"
+            />
           </div>
         </div>
       ) : (

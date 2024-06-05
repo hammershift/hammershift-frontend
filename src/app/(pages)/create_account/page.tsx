@@ -163,52 +163,110 @@ const CreateAccount = () => {
   const isCountrySelected = (country: string): boolean => country !== '';
   const isStateSelected = (state: string): boolean => state !== '';
 
+  // const handleInputChange = (field: keyof UserDetails, value: string) => {
+  //   setUserDetails({ ...userDetails, [field]: value });
+  //   setTouchedFields({ ...touchedFields, [field]: value });
+
+  //   switch (field) {
+  //     case 'email':
+  //       setEmailExistsError(false);
+  //       setValidity({
+  //         ...validity,
+  //         isEmailValid: validateEmail(value),
+  //       });
+  //       if (validateEmail(value)) {
+  //         checkUserExistence('email', value);
+  //       }
+  //       break;
+  //     case 'password':
+  //       setValidity({
+  //         ...validity,
+  //         isPasswordValid: validatePassword(value),
+  //       });
+  //       break;
+  //     case 'fullName':
+  //       setValidity({
+  //         ...validity,
+  //         isFullNameValid: validateFullName(value),
+  //       });
+  //       break;
+  //     case 'username':
+  //       setValidity({
+  //         ...validity,
+  //         isUsernameValid: validateUsername(value),
+  //       });
+  //       if (validateUsername(value)) {
+  //         checkUserExistence('username', value);
+  //       }
+  //       break;
+  //     case 'country':
+  //       setValidity({
+  //         ...validity,
+  //         isCountryValid: isCountrySelected(value),
+  //       });
+  //       break;
+  //     case 'state':
+  //       setValidity({
+  //         ...validity,
+  //         isStateValid: isStateSelected(value),
+  //       });
+  //       break;
+  //   }
+  // };
+
   const handleInputChange = (field: keyof UserDetails, value: string) => {
-    setUserDetails({ ...userDetails, [field]: value });
-    setTouchedFields({ ...touchedFields, [field]: value });
+    let updatedValue = value;
+
+    // force email and password to be lowercase
+    if (field === 'email' || field === 'password') {
+      updatedValue = value.toLowerCase();
+    }
+
+    setUserDetails({ ...userDetails, [field]: updatedValue });
+    setTouchedFields({ ...touchedFields, [field]: true });
 
     switch (field) {
       case 'email':
         setEmailExistsError(false);
         setValidity({
           ...validity,
-          isEmailValid: validateEmail(value),
+          isEmailValid: validateEmail(updatedValue),
         });
-        if (validateEmail(value)) {
-          checkUserExistence('email', value);
+        if (validateEmail(updatedValue)) {
+          checkUserExistence('email', updatedValue);
         }
         break;
       case 'password':
         setValidity({
           ...validity,
-          isPasswordValid: validatePassword(value),
+          isPasswordValid: validatePassword(updatedValue),
         });
         break;
       case 'fullName':
         setValidity({
           ...validity,
-          isFullNameValid: validateFullName(value),
+          isFullNameValid: validateFullName(updatedValue),
         });
         break;
       case 'username':
         setValidity({
           ...validity,
-          isUsernameValid: validateUsername(value),
+          isUsernameValid: validateUsername(updatedValue),
         });
-        if (validateUsername(value)) {
-          checkUserExistence('username', value);
+        if (validateUsername(updatedValue)) {
+          checkUserExistence('username', updatedValue);
         }
         break;
       case 'country':
         setValidity({
           ...validity,
-          isCountryValid: isCountrySelected(value),
+          isCountryValid: isCountrySelected(updatedValue),
         });
         break;
       case 'state':
         setValidity({
           ...validity,
-          isStateValid: isStateSelected(value),
+          isStateValid: isStateSelected(updatedValue),
         });
         break;
     }
