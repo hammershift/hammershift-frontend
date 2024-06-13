@@ -233,7 +233,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                         className="tw-w-5 tw-h-5 tw-text-white"
                     />
                     <div>
-                        Comments:{" "}
+                        Comments on Auction:{" "}
                         <span className="tw-font-bold">
                             {comments
                                 ? new Intl.NumberFormat().format(comments)
