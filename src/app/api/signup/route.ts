@@ -7,11 +7,10 @@ export async function POST(req: NextRequest) {
   const { email, password, provider } = data;
 
   const lowerCaseEmail = email.toLowerCase();
-  const lowerCasePassword = password.toLowerCase();
 
   // validation based on provider
   const isEmailValid = lowerCaseEmail && lowerCaseEmail.includes('@');
-  const isPasswordValid = provider === 'credentials' ? lowerCasePassword && lowerCasePassword.trim().length >= 7 : true;
+  const isPasswordValid = provider === 'credentials' ? password && password.trim().length >= 7 : true;
   if (!isEmailValid || !isPasswordValid) {
     return NextResponse.json({ message: 'Invalid input' }, { status: 422 });
   }
@@ -20,7 +19,7 @@ export async function POST(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
 
-    const existingUser = await db.collection('users').findOne({ email });
+    const existingUser = await db.collection('users').findOne({ email: lowerCaseEmail });
     if (existingUser) {
       return NextResponse.json({ message: 'User already exists' }, { status: 422 });
     }
