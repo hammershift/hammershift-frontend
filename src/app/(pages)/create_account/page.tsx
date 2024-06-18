@@ -218,7 +218,7 @@ const CreateAccount = () => {
     let updatedValue = value;
 
     // force email and password to be lowercase
-    if (field === 'email' || field === 'password') {
+    if (field === 'email') {
       updatedValue = value.toLowerCase();
     }
 
