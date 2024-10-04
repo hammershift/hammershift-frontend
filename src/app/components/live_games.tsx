@@ -248,7 +248,7 @@ const LiveGames = () => {
             return (
               <TimerProvider key={index} deadline={deadline}>
                 <DynamicLiveGamesCard
-                  parentIndex={index}
+                  parentIndex={index >= 10 ? index - 10 : index}
                   object_id={_id}
                   image={image}
                   year={year}
