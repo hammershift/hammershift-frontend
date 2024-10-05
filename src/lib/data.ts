@@ -142,7 +142,7 @@ export const getCarsWithFilter = async (props: getCarsWithFilterProps) => {
 export const getCarsWithMostPot = async (limit: number) => {
   try {
     const response = await fetch(
-      `/api/cars/filter?sort=Most%20Pot&limit=${limit}`
+      `/api/cars/filter?sort=Most%20Pot&limit=${limit}&completed=false`
     );
 
     if (response.ok) {
