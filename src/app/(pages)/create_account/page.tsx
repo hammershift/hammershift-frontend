@@ -1,23 +1,23 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-import GoogleSocial from '../../../../public/images/social-google-logo.svg';
-import FacebookSocial from '../../../../public/images/social-facebook-logo.svg';
-import TwitterSocial from '../../../../public/images/social-twitter-logo.svg';
-import AppleSocial from '../../../../public/images/social-apple-logo.svg';
-import CancelIcon from '../../../../public/images/x-icon.svg';
+import PasswordInput from '@/app/components/password_input';
+import { Country, ICountry, IState, State } from 'country-state-city';
+import { getSession, signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Onfido from '../../../../public/images/onfido.svg';
-import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
-import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import Passport from '../../../../public/images/passport.svg';
 import IDCard from '../../../../public/images/single-neutral-id-card-1.svg';
-import { signIn, useSession, getSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { ICountry, IState, Country, State } from 'country-state-city';
-import PasswordInput from '@/app/components/password_input';
+import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
+import AppleSocial from '../../../../public/images/social-apple-logo.svg';
+import FacebookSocial from '../../../../public/images/social-facebook-logo.svg';
+import GoogleSocial from '../../../../public/images/social-google-logo.svg';
+import TwitterSocial from '../../../../public/images/social-twitter-logo.svg';
+import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
+import CancelIcon from '../../../../public/images/x-icon.svg';
 
 import { BounceLoader } from 'react-spinners';
 
@@ -856,7 +856,7 @@ const CreateAccount = () => {
             <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
               <div>
                 <div className='tw-font-bold tw-text-4xl sm:tw-text-[44px] tw-py-1'>Select document to upload</div>
-                <div>We need your identification to lorem ipsum dolor sit amet. Data is processed securely.</div>
+                <div>We need your identification. Data is processed securely.</div>
               </div>
               <div className='tw-flex tw-gap-2 tw-items-center'>
                 <span>Powered by</span>

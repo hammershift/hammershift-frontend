@@ -1,13 +1,11 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 
+import { usePathname, useRouter } from "next/navigation";
+import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
 import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
 import TeamBattlesIcon from "../../../public/images/team-battles-icon.svg";
-import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
-import TransitionPattern2 from "../../../public/images/transition-pattern-2.svg";
-import { useRouter, usePathname } from "next/navigation";
 
 const NewEraWagering = () => {
     const router = useRouter();
@@ -77,7 +75,8 @@ const NewEraWagering = () => {
                         >
                             Sign up to win
                         </button>
-                        <button className="btn-transparent tw-mt-4 sm:tw-mt-0 sm:tw-ml-4">
+                        <button className="btn-transparent tw-mt-4 sm:tw-mt-0 sm:tw-ml-4"
+                            onClick={(e) => router.push('/about_page')}>
                             About HammerShift
                         </button>
                     </div>

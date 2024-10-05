@@ -1,13 +1,12 @@
 "use client";
-import React from "react";
 import Image from "next/image";
+import Footer from "../../components/footer";
 import HowHammerShiftWorks from "../../components/how_hammeshift_works";
 import { SubscribeSmall } from "../../components/subscribe";
-import Footer from "../../components/footer";
 
 import AboutImage from "../../../../public/images/about-image.svg";
-import RyanTurri from "../../../../public/images/ryan-turri.svg";
 import RickDeacon from "../../../../public/images/rick-deacon.svg";
+import RyanTurri from "../../../../public/images/ryan-turri.svg";
 
 const AboutPage = () => {
     return (
@@ -19,10 +18,10 @@ const AboutPage = () => {
                     <span className="tw-text-[#F2CA16]">car enthusiasts</span>
                 </div>
                 <div className="tw-w-full md:tw-w-[528px] tw-opacity-80 tw-self-end">
-                    Esse Lorem velit sunt magna duis qui cupidatat nostrud id
-                    nulla mollit ea nisi. Non elit exercitation tempor veniam
-                    Lorem. Officia amet ea labore consequat irure excepteur
-                    labore reprehenderit dolore.
+                    Whether you&apos;re passionate about classic cars,
+                    modern sports cars, or anything in between,
+                    our platform is the perfect place to connect with like-minded individuals.
+                    Join us and fuel your passion for cars!
                 </div>
             </div>
             <Image

@@ -1,25 +1,24 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import dayjs from 'dayjs';
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
 
+import { TimerProvider } from "@/app/_context/TimerContext";
+import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
+import { getMyWagers, getMyWatchlist, getUserInfo } from "@/lib/data";
+import { useRouter } from "next/navigation";
+import { PulseLoader } from "react-spinners";
 import AvatarOne from "../../../../public/images/avatar-one.svg";
-import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
-import DollarIcon from "../../../../public/images/dollar.svg";
+import { default as Dollar, default as DollarIcon } from "../../../../public/images/dollar.svg";
+import Globe from "../../../../public/images/earth11.svg";
 import HourglassIcon from "../../../../public/images/hour-glass.svg";
+import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
+import Pin from "../../../../public/images/pin1.svg";
 import IDIcon from "../../../../public/images/single-neutral-id-card-3.svg";
 import TransitionPattern from "../../../../public/images/transition-pattern.svg";
 import Twitter from "../../../../public/images/twitter-social.svg";
-import Globe from "../../../../public/images/earth11.svg";
-import Pin from "../../../../public/images/pin1.svg";
-import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
-import { getMyWagers, getMyWatchlist, getUserInfo, refundWager } from "@/lib/data";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import { MyWagersCard, MyWatchlistCard } from "@/app/components/navbar";
-import { useRouter } from "next/navigation";
-import { BeatLoader, PulseLoader } from "react-spinners";
-import Dollar from "../../../../public/images/dollar.svg";
+import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 
 
 interface Props { }
@@ -203,7 +202,7 @@ function Profile(props: Props) {
                     <div className="tw-leading-7">
                         {userInfo && userInfo.aboutMe
                             ? userInfo.aboutMe
-                            : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud."}
+                            : "Join us and fuel your passion for cars!"}
                     </div>
                     <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-2 sm:tw-gap-6 tw-text-sm sm:tw-text-lg tw-font-light tw-leading-7">
                         <div className="tw-flex tw-items-center tw-gap-2">
