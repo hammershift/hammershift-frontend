@@ -16,6 +16,22 @@ import HammershiftLogo from "../../public/images/hammershift-logo.svg";
 import MiniLeaderboard from "./components/mini_leaderboard";
 
 const LivePage = () => {
+  const [screenWidth, setScreenWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    handleResize(); // Check on initial render
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const NUM_DISPLAY = screenWidth < 1400 && screenWidth > 996 ? 2 : 3;
   return (
     <div className="tw-flex tw-flex-col tw-justify-center">
       <div className="section-container tw-m-auto tw-flex tw-flex-col tw-items-center tw-gap-5">
@@ -25,7 +41,7 @@ const LivePage = () => {
       </div>
       <LivePageCarousel />
       <div className="section-container tw-flex tw-justify-between tw-m-auto max-lg:tw-flex-col">
-        <LiveGames numberToDisplay={3} numberOfRows={1} />
+        <LiveGames numberToDisplay={NUM_DISPLAY} numberOfRows={1} />
         <MiniLeaderboard />
       </div>
       <div className="section-container tw-mx-auto tw-mb-10">
