@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import SwiperCore from 'swiper';
 
 import YellowSportsCarFull from '../../../public/images/yellow-sportscar-full.svg';
 // import ArrowRight from '../../../public/images/arrow-right.svg';
@@ -17,15 +18,31 @@ import DiagonalLinesCarousel from '../../../public/images/diagonal-lines-carouse
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+
 const Carousel: React.FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
+
+  const swiperRef = useRef<SwiperCore>();
 
   const handleSignUpWagerClick = () => {
     if (session) {
       router.push('/authenticated');
     } else {
       router.push('/create_account');
+    }
+  };
+
+  const handleLeftArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleRightArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
     }
   };
 
@@ -40,7 +57,9 @@ const Carousel: React.FC = () => {
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={50}
             slidesPerView={1}
-            navigation
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
             pagination={{ clickable: true }}
             style={{
               '--swiper-navigation-color': '#fff',
@@ -74,6 +93,10 @@ const Carousel: React.FC = () => {
               </div>
             </SwiperSlide>
           </Swiper>
+          <div onClick={handleLeftArrow} className='swiper-button-prev' style={{ color: 'white' }}>
+          </div>
+          <div onClick={handleRightArrow} className='swiper-button-next' style={{ color: 'white' }}>
+          </div>
 
         </div>
       </div>
