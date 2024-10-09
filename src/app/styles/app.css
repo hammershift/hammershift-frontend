@@ -734,3 +734,17 @@ tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
 .leaderboard-skeleton {
   height: calc(100vh - 136px);
 }
+
+.swiper-pagination-bullet {
+  background-color: white;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: white;
+}
+.swiper-slide {
+  width: 100%;
+  height: 100%;
+}
+
+
