@@ -7,20 +7,21 @@ import { usePathname } from "next/navigation";
 import { TimerProvider } from "../_context/TimerContext";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { Navigation, Pagination, Scrollbar, A11y, Grid } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import 'swiper/element/css/grid';
 import SwiperCore from 'swiper';
 
 import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
 
-SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Grid]);
 
-const LiveGames = ({ numberToDisplay = 3 }: { numberToDisplay: number }) => {
+const LiveGames = ({ numberToDisplay = 3, numberOfRows = 1 }: { numberToDisplay: number; numberOfRows: number }) => {
   const [liveGames, setLiveGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sliderTransform, setSlidertransform] = useState(0);
@@ -288,6 +289,9 @@ const LiveGames = ({ numberToDisplay = 3 }: { numberToDisplay: number }) => {
               modules={[Navigation, Pagination, Scrollbar, A11y]}
               spaceBetween={25}
               slidesPerView={numberToDisplay}
+              grid={{
+                rows: numberOfRows,
+              }}
               onSwiper={(swiper) => {
                 swiperRef.current = swiper;
               }}
