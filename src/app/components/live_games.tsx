@@ -21,7 +21,7 @@ import ArrowLeft from "../../../public/images/arrow-left.svg";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Grid]);
 
-const LiveGames = ({ numberToDisplay = 3, numberOfRows = 1 }: { numberToDisplay: number; numberOfRows: number }) => {
+const LiveGames = ({ numberToDisplay, numberOfRows }: { numberToDisplay: number; numberOfRows: number }) => {
   const [liveGames, setLiveGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sliderTransform, setSlidertransform] = useState(0);
@@ -286,7 +286,7 @@ const LiveGames = ({ numberToDisplay = 3, numberOfRows = 1 }: { numberToDisplay:
             </div>
           ) : (
             <Swiper
-              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              modules={[Navigation, Pagination, Scrollbar, A11y, Grid]}
               spaceBetween={25}
               slidesPerView={numberToDisplay}
               grid={{
