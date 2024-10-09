@@ -55,7 +55,6 @@ const LivePageCarousel = () => {
         <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
           <div className="tw-w-full tw-overflow-hidden">
             <Swiper
-              // install Swiper modules
               modules={[Navigation, Pagination, Scrollbar, A11y]}
               spaceBetween={50}
               slidesPerView={1}
