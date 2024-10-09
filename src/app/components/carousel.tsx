@@ -65,9 +65,14 @@ const Carousel: React.FC = () => {
             slidesPerView={1}
             navigation
             pagination={{ clickable: true }}
-            scrollbar={{ draggable: true }}
             onSwiper={(swiper) => console.log(swiper)}
             onSlideChange={() => console.log('slide change')}
+            style={{
+              '--swiper-navigation-color': '#fff',
+              '--swiper-pagination-color': '#fff',
+              '--swiper-pagination-bullet-inactive-color': '#fff',
+              '--swiper-pagination-bullet-inactive-opacity': '0.2'
+            } as React.CSSProperties}
           >
             <SwiperSlide >
               <SlideOne onClick={handleSignUpWagerClick} />
