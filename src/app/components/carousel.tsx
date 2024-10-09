@@ -18,7 +18,6 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const Carousel: React.FC = () => {
-  const [sliderTransform, setSliderTransform] = useState(0);
   const { data: session } = useSession();
   const router = useRouter();
 
