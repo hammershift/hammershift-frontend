@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-// import ArrowRight from "../../../public/images/arrow-right.svg";
-// import ArrowLeft from "../../../public/images/arrow-left.svg";
+import ArrowRight from "../../../public/images/arrow-right.svg";
+import ArrowLeft from "../../../public/images/arrow-left.svg";
 import RedHourGlass from "../../../public/images/red-hour-glass.svg";
 import DollarSign from "../../../public/images/dollar.svg";
 // import AvatarOne from "../../../public/images/avatar-one.svg";
@@ -27,12 +27,29 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import SwiperCore from 'swiper';
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
+
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const LivePageCarousel = () => {
   const [carWithMostPot, setCarWithMostPot] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const swiperRef = useRef<SwiperCore>();
+
+  const handleLeftArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleRightArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,10 +75,13 @@ const LivePageCarousel = () => {
               modules={[Navigation, Pagination, Scrollbar, A11y]}
               spaceBetween={50}
               slidesPerView={1}
-              navigation
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
               style={{
                 '--swiper-navigation-color': '#fff',
               } as React.CSSProperties}
+
             >
               <SwiperSlide className="scroll-item">
                 {carWithMostPot.length > 0 ? (
@@ -91,6 +111,12 @@ const LivePageCarousel = () => {
                 </div>
               </SwiperSlide>
             </Swiper>
+            <div onClick={handleLeftArrow} className='swiper-button-prev' style={{ color: 'white' }}>
+
+            </div>
+            <div onClick={handleRightArrow} className='swiper-button-next' style={{ color: 'white' }}>
+
+            </div>
           </div>
         </div>
       )}
