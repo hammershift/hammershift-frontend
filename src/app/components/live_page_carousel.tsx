@@ -77,6 +77,9 @@ const LivePageCarousel = () => {
               navigation
               onSwiper={(swiper) => console.log(swiper)}
               onSlideChange={() => console.log('slide change')}
+              style={{
+                '--swiper-navigation-color': '#fff',
+              } as React.CSSProperties}
             >
               <SwiperSlide className="scroll-item">
                 {carWithMostPot.length > 0 ? (
