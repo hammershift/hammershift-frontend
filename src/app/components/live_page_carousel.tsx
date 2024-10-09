@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-import ArrowRight from "../../../public/images/arrow-right.svg";
-import ArrowLeft from "../../../public/images/arrow-left.svg";
+// import ArrowRight from "../../../public/images/arrow-right.svg";
+// import ArrowLeft from "../../../public/images/arrow-left.svg";
 import RedHourGlass from "../../../public/images/red-hour-glass.svg";
 import DollarSign from "../../../public/images/dollar.svg";
-import AvatarOne from "../../../public/images/avatar-one.svg";
-import AvatarTwo from "../../../public/images/avatar-two.svg";
-import AvatarFour from "../../../public/images/avatar-four.svg";
+// import AvatarOne from "../../../public/images/avatar-one.svg";
+// import AvatarTwo from "../../../public/images/avatar-two.svg";
+// import AvatarFour from "../../../public/images/avatar-four.svg";
 import TransitionPattern from "../../../public/images/transition-pattern-3.svg";
 import {
   getAuctionTransactions,
@@ -46,20 +46,6 @@ const LivePageCarousel = () => {
     fetchData();
   }, []);
 
-  // const rightArrowHandler = () => {
-  //   if (sliderTransform === -80) {
-  //     setSlidertransform(0);
-  //   } else {
-  //     setSlidertransform((prev) => prev - 20);
-  //   }
-  // };
-  // const leftArrowHandler = () => {
-  //   if (sliderTransform === 0) {
-  //     setSlidertransform(-80);
-  //   } else {
-  //     setSlidertransform((prev) => prev + 20);
-  //   }
-  // };
 
   return (
     <>
@@ -106,30 +92,6 @@ const LivePageCarousel = () => {
                 </div>
               </SwiperSlide>
             </Swiper>
-            {/* <div>
-              <button
-                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D] tw-backdrop-blur"
-                onClick={leftArrowHandler}
-              >
-                <Image
-                  src={ArrowLeft}
-                  alt="arrow left"
-                  width={20}
-                  height={20}
-                />
-              </button>
-              <button
-                className="tw-absolute tw-top-[50%] md:tw-right-11 tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] tw-backdrop-blur"
-                onClick={rightArrowHandler}
-              >
-                <Image
-                  src={ArrowRight}
-                  alt="arrow left"
-                  width={20}
-                  height={20}
-                />
-              </button>
-            </div> */}
           </div>
         </div>
       )}
@@ -197,13 +159,11 @@ const SlideOne = ({ carData }: any) => {
                     width={808}
                     height={538}
                     alt="dollar"
-                    className={`${
-                      index !== 0
-                        ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
-                        : "tw-z-40"
-                    } tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded pic ${
-                      "pic" + (5 - index)
-                    }`}
+                    className={`${index !== 0
+                      ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
+                      : "tw-z-40"
+                      } tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded pic ${"pic" + (5 - index)
+                      }`}
                   />
                 );
               })}
@@ -236,9 +196,9 @@ const SlideOne = ({ carData }: any) => {
             {prize % 1 === 0
               ? prize.toLocaleString()
               : prize.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
           </div>
           <button
             onClick={(e) =>
