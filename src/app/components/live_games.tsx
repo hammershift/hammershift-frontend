@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { getCarsWithFilter, getLiveAuctionsToDisplay } from "@/lib/data";
 
@@ -6,9 +6,19 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { TimerProvider } from "../_context/TimerContext";
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import SwiperCore from 'swiper';
+
 import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
+
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const LiveGames = () => {
   const [liveGames, setLiveGames] = useState([]);
@@ -16,6 +26,34 @@ const LiveGames = () => {
   const [sliderTransform, setSlidertransform] = useState(0);
   const [offset, setOffset] = useState(0);
   const pathname = usePathname();
+  const [isMobile, setIsMobile] = useState(false);
+
+  const swiperRef = useRef<SwiperCore>();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Check on initial render
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleLeftArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleRightArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
 
   const DynamicLiveGamesCard = dynamic(
     () => import("@/app/components/live_games_card"),
@@ -104,26 +142,12 @@ const LiveGames = () => {
     fetchData();
   }, [offset, pathname]);
 
-  const rightArrowHandler = () => {
-    if (sliderTransform === -60) {
-      setSlidertransform(0);
-    } else {
-      setSlidertransform((prev) => prev - 30);
-    }
-  };
-  const leftArrowHandler = () => {
-    if (sliderTransform === 0) {
-      setSlidertransform(-60);
-    } else {
-      setSlidertransform((prev) => prev + 30);
-    }
-  };
+
 
   return (
     <div
-      className={`md:tw-overflow-hidden tw-py-8 sm:tw-py-16 ${
-        pathname === "/" ? "tw-w-1/2 max-lg:tw-w-full" : null
-      }`}
+      className={`md:tw-overflow-hidden tw-py-8 sm:tw-py-16 ${pathname === "/" ? "tw-w-1/2 max-lg:tw-w-full" : null
+        }`}
     >
       <header className="tw-flex tw-justify-between">
         <div className="tw-flex tw-items-center">
@@ -153,7 +177,7 @@ const LiveGames = () => {
             height={32}
             alt="arrow left"
             className="tw-w-8 tw-h-8"
-            onClick={leftArrowHandler}
+            onClick={handleLeftArrow}
           />
           <Image
             src={ArrowRight}
@@ -161,7 +185,7 @@ const LiveGames = () => {
             height={32}
             alt="arrow right"
             className="tw-w-8 tw-h-8 tw-ml-4"
-            onClick={rightArrowHandler}
+            onClick={handleRightArrow}
           />
         </div>
       </header>
@@ -222,47 +246,93 @@ const LiveGames = () => {
           </div>
         </div>
       ) : (
-        <section
-          className={`sm:tw-w-auto md:tw-w-[2200px] tw-mt-12 tw-grid tw-gap-y-8 md:tw-gap-y-16 md:tw-transition md:tw-duration-[2000ms] tw-overflow-hidden  ${
-            pathname === "/"
-              ? "md:tw-grid-cols-10 max-sm:tw-grid-cols-1"
-              : "sm:tw-grid-cols-1 md:tw-grid-cols-10 lg:tw-grid-cols-10 xl:tw-grid-cols-10 tw-gap-x-4 md:tw-gap-x-6"
-          }`}
-          style={{
-            transform: `translate(${sliderTransform}%)`,
-          }}
-        >
-          {liveGames.map((auctions, index) => {
-            const {
-              image,
-              year,
-              make,
-              model,
-              description,
-              deadline,
-              auction_id,
-              price,
-              _id,
-              images_list,
-            } = auctions;
-            return (
-              <TimerProvider key={index} deadline={deadline}>
-                <DynamicLiveGamesCard
-                  parentIndex={index >= 10 ? index - 10 : index}
-                  object_id={_id}
-                  image={image}
-                  year={year}
-                  make={make}
-                  model={model}
-                  description={description}
-                  deadline={deadline}
-                  auction_id={auction_id}
-                  price={price}
-                  images_list={images_list}
-                />
-              </TimerProvider>
-            );
-          })}
+        <section className="tw-mt-6">
+          {isMobile ? (
+            <div className="tw-flex tw-flex-col tw-items-center">
+              {liveGames.map((auctions, index) => {
+                const {
+                  image,
+                  year,
+                  make,
+                  model,
+                  description,
+                  deadline,
+                  auction_id,
+                  price,
+                  _id,
+                  images_list,
+                } = auctions;
+                return (
+                  <div key={index} className="tw-mb-4">
+                    <TimerProvider deadline={deadline}>
+                      <DynamicLiveGamesCard
+                        parentIndex={index >= 10 ? index - 10 : index}
+                        object_id={_id}
+                        image={image}
+                        year={year}
+                        make={make}
+                        model={model}
+                        description={description}
+                        deadline={deadline}
+                        auction_id={auction_id}
+                        price={price}
+                        images_list={images_list}
+                      />
+                    </TimerProvider>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              spaceBetween={25}
+              slidesPerView={3}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              style={{
+                '--swiper-navigation-color': '#fff',
+                '--swiper-pagination-color': '#fff',
+                '--swiper-pagination-bullet-inactive-color': '#fff',
+                '--swiper-pagination-bullet-inactive-opacity': '0.2',
+              } as React.CSSProperties}
+            >
+              {liveGames.map((auctions, index) => {
+                const {
+                  image,
+                  year,
+                  make,
+                  model,
+                  description,
+                  deadline,
+                  auction_id,
+                  price,
+                  _id,
+                  images_list,
+                } = auctions;
+                return (
+                  <SwiperSlide key={index}>
+                    <TimerProvider deadline={deadline}>
+                      <DynamicLiveGamesCard
+                        parentIndex={index >= 10 ? index - 10 : index}
+                        object_id={_id}
+                        image={image}
+                        year={year}
+                        make={make}
+                        model={model}
+                        description={description}
+                        deadline={deadline}
+                        auction_id={auction_id}
+                        price={price}
+                        images_list={images_list}
+                      />
+                    </TimerProvider>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          )}
         </section>
       )}
     </div>
