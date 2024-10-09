@@ -10,10 +10,27 @@ import { getCarsWithMostPot } from "@/lib/data";
 import React, { useEffect, useRef, useState } from "react";
 
 const LivePage = () => {
+  const [screenWidth, setScreenWidth] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    handleResize(); // Check on initial render
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const NUM_DISPLAY = screenWidth < 1200 ? 3 : 5;
+
   return (
     <div className="tw-flex tw-flex-col tw-justify-center">
       <div className="section-container tw-m-auto">
-        <LiveGames />
+        <LiveGames numberToDisplay={NUM_DISPLAY} />
       </div>
       <NewEraWagering />
       <HowHammerShiftWorks />

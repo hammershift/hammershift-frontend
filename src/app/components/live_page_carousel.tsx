@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
 import RedHourGlass from "../../../public/images/red-hour-glass.svg";
 import DollarSign from "../../../public/images/dollar.svg";
-import AvatarOne from "../../../public/images/avatar-one.svg";
-import AvatarTwo from "../../../public/images/avatar-two.svg";
-import AvatarFour from "../../../public/images/avatar-four.svg";
+// import AvatarOne from "../../../public/images/avatar-one.svg";
+// import AvatarTwo from "../../../public/images/avatar-two.svg";
+// import AvatarFour from "../../../public/images/avatar-four.svg";
 import TransitionPattern from "../../../public/images/transition-pattern-3.svg";
 import {
   getAuctionTransactions,
@@ -21,13 +21,35 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import WagerCycle from "./wager_cycle";
 import { io } from "socket.io-client";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import SwiperCore from 'swiper';
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+
 const LivePageCarousel = () => {
-  const [sliderTransform, setSlidertransform] = useState(0);
   const [carWithMostPot, setCarWithMostPot] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const swiperRef = useRef<SwiperCore>();
+
+  const handleLeftArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleRightArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,20 +63,6 @@ const LivePageCarousel = () => {
     fetchData();
   }, []);
 
-  const rightArrowHandler = () => {
-    if (sliderTransform === -80) {
-      setSlidertransform(0);
-    } else {
-      setSlidertransform((prev) => prev - 20);
-    }
-  };
-  const leftArrowHandler = () => {
-    if (sliderTransform === 0) {
-      setSlidertransform(-80);
-    } else {
-      setSlidertransform((prev) => prev + 20);
-    }
-  };
 
   return (
     <>
@@ -63,54 +71,51 @@ const LivePageCarousel = () => {
       ) : (
         <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
           <div className="tw-w-full tw-overflow-hidden">
-            <div
-              className="tw-transition tw-duration-[2000ms] tw-flex"
-              style={{
-                transform: `translate(${sliderTransform}%)`,
-                width: "500%",
+            <Swiper
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              spaceBetween={50}
+              slidesPerView={1}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
               }}
+              style={{
+                '--swiper-navigation-color': '#fff',
+              } as React.CSSProperties}
+
             >
-              {carWithMostPot.length > 0 ? (
-                <TimerProvider deadline={carWithMostPot[0].deadline}>
-                  <SlideOne carData={carWithMostPot[0]} />
-                </TimerProvider>
-              ) : null}
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 2
-              </div>
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 3
-              </div>
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 4
-              </div>
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 5
-              </div>
+              <SwiperSlide className="scroll-item">
+                {carWithMostPot.length > 0 ? (
+                  <TimerProvider deadline={carWithMostPot[0].deadline}>
+                    <SlideOne carData={carWithMostPot[0]} />
+                  </TimerProvider>
+                ) : null}
+              </SwiperSlide>
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 2
+                </div>
+              </SwiperSlide>
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 3
+                </div>
+              </SwiperSlide>
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 4
+                </div>
+              </SwiperSlide>
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 5
+                </div>
+              </SwiperSlide>
+            </Swiper>
+            <div onClick={handleLeftArrow} className='swiper-button-prev' style={{ color: 'white' }}>
+
             </div>
-            <div>
-              <button
-                className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D] tw-backdrop-blur"
-                onClick={leftArrowHandler}
-              >
-                <Image
-                  src={ArrowLeft}
-                  alt="arrow left"
-                  width={20}
-                  height={20}
-                />
-              </button>
-              <button
-                className="tw-absolute tw-top-[50%] md:tw-right-11 tw-right-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] tw-backdrop-blur"
-                onClick={rightArrowHandler}
-              >
-                <Image
-                  src={ArrowRight}
-                  alt="arrow left"
-                  width={20}
-                  height={20}
-                />
-              </button>
+            <div onClick={handleRightArrow} className='swiper-button-next' style={{ color: 'white' }}>
+
             </div>
           </div>
         </div>
@@ -179,13 +184,11 @@ const SlideOne = ({ carData }: any) => {
                     width={808}
                     height={538}
                     alt="dollar"
-                    className={`${
-                      index !== 0
-                        ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
-                        : "tw-z-40"
-                    } tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded pic ${
-                      "pic" + (5 - index)
-                    }`}
+                    className={`${index !== 0
+                      ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
+                      : "tw-z-40"
+                      } tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded pic ${"pic" + (5 - index)
+                      }`}
                   />
                 );
               })}
@@ -218,9 +221,9 @@ const SlideOne = ({ carData }: any) => {
             {prize % 1 === 0
               ? prize.toLocaleString()
               : prize.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
           </div>
           <button
             onClick={(e) =>
