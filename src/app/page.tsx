@@ -41,7 +41,7 @@ const LivePage = () => {
       </div>
       <LivePageCarousel />
       <div className="section-container tw-flex tw-justify-between tw-m-auto max-lg:tw-flex-col">
-        <LiveGames numberToDisplay={NUM_DISPLAY} numberOfRows={1} />
+        <LiveGames numberToDisplay={NUM_DISPLAY} />
         <MiniLeaderboard />
       </div>
       <div className="section-container tw-mx-auto tw-mb-10">
