@@ -13,7 +13,7 @@ const LivePage = () => {
   return (
     <div className="tw-flex tw-flex-col tw-justify-center">
       <div className="section-container tw-m-auto">
-        <LiveGames />
+        <LiveGames numberToDisplay={5} />
       </div>
       <NewEraWagering />
       <HowHammerShiftWorks />
