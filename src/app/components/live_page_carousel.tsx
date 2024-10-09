@@ -21,6 +21,12 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import WagerCycle from "./wager_cycle";
 import { io } from "socket.io-client";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
@@ -63,32 +69,36 @@ const LivePageCarousel = () => {
       ) : (
         <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
           <div className="tw-w-full tw-overflow-hidden">
-            <div
-              className="tw-transition tw-duration-[2000ms] tw-flex"
-              style={{
-                transform: `translate(${sliderTransform}%)`,
-                width: "500%",
-              }}
+            <Swiper
+              // install Swiper modules
+              modules={[Navigation, Pagination, Scrollbar, A11y]}
+              spaceBetween={50}
+              slidesPerView={1}
+              navigation
+              onSwiper={(swiper) => console.log(swiper)}
+              onSlideChange={() => console.log('slide change')}
             >
-              {carWithMostPot.length > 0 ? (
-                <TimerProvider deadline={carWithMostPot[0].deadline}>
-                  <SlideOne carData={carWithMostPot[0]} />
-                </TimerProvider>
-              ) : null}
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+              <SwiperSlide className="scroll-item">
+                {carWithMostPot.length > 0 ? (
+                  <TimerProvider deadline={carWithMostPot[0].deadline}>
+                    <SlideOne carData={carWithMostPot[0]} />
+                  </TimerProvider>
+                ) : null}
+              </SwiperSlide>
+              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
                 Section 2
-              </div>
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+              </SwiperSlide>
+              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
                 Section 3
-              </div>
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+              </SwiperSlide>
+              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
                 Section 4
-              </div>
-              <div className="tw-basis-full tw-flex tw-justify-center tw-items-center">
+              </SwiperSlide>
+              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
                 Section 5
-              </div>
-            </div>
-            <div>
+              </SwiperSlide>
+            </Swiper>
+            {/* <div>
               <button
                 className="tw-absolute tw-top-[50%] md:tw-left-11 tw-left-0 tw-rounded-full tw-p-[10px] tw-bg-[#FFFFFF4D] md:tw-bg-[#FFFFFF4D] tw-backdrop-blur"
                 onClick={leftArrowHandler}
@@ -111,7 +121,7 @@ const LivePageCarousel = () => {
                   height={20}
                 />
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}
