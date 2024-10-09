@@ -65,31 +65,36 @@ const Carousel: React.FC = () => {
             slidesPerView={1}
             navigation
             pagination={{ clickable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log('slide change')}
             style={{
               '--swiper-navigation-color': '#fff',
               '--swiper-pagination-color': '#fff',
               '--swiper-pagination-bullet-inactive-color': '#fff',
-              '--swiper-pagination-bullet-inactive-opacity': '0.2'
+              '--swiper-pagination-bullet-inactive-opacity': '0.2',
             } as React.CSSProperties}
+
           >
-            <SwiperSlide >
+            <SwiperSlide>
               <SlideOne onClick={handleSignUpWagerClick} />
             </SwiperSlide>
-            <SwiperSlide >
-
-              <img src='/images/Banner_Ad.jpg' alt='car' />
-
+            <SwiperSlide  >
+              <div className='carousel-slide'>
+                <img src='/images/Banner_Ad.jpg' alt='car' />
+              </div>
             </SwiperSlide>
             <SwiperSlide >
-              <img src='/images/Banner_Ad2.jpg' alt='car' />
+              <div className='carousel-slide'>
+                <img src='/images/Banner_Ad2.jpg' alt='car' />
+              </div>
             </SwiperSlide>
             <SwiperSlide >
-              <img src='/images/Banner_Ad3.jpg' alt='car' />
+              <div className='carousel-slide'>
+                <img src='/images/Banner_Ad3.jpg' alt='car' />
+              </div>
             </SwiperSlide>
             <SwiperSlide >
-              Section 5
+              <div className='carousel-slide'>
+                Section 5
+              </div>
             </SwiperSlide>
           </Swiper>
 
