@@ -31,7 +31,6 @@ import 'swiper/css/scrollbar';
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
 const LivePageCarousel = () => {
-  const [sliderTransform, setSlidertransform] = useState(0);
   const [carWithMostPot, setCarWithMostPot] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -47,20 +46,20 @@ const LivePageCarousel = () => {
     fetchData();
   }, []);
 
-  const rightArrowHandler = () => {
-    if (sliderTransform === -80) {
-      setSlidertransform(0);
-    } else {
-      setSlidertransform((prev) => prev - 20);
-    }
-  };
-  const leftArrowHandler = () => {
-    if (sliderTransform === 0) {
-      setSlidertransform(-80);
-    } else {
-      setSlidertransform((prev) => prev + 20);
-    }
-  };
+  // const rightArrowHandler = () => {
+  //   if (sliderTransform === -80) {
+  //     setSlidertransform(0);
+  //   } else {
+  //     setSlidertransform((prev) => prev - 20);
+  //   }
+  // };
+  // const leftArrowHandler = () => {
+  //   if (sliderTransform === 0) {
+  //     setSlidertransform(-80);
+  //   } else {
+  //     setSlidertransform((prev) => prev + 20);
+  //   }
+  // };
 
   return (
     <>
@@ -75,8 +74,6 @@ const LivePageCarousel = () => {
               spaceBetween={50}
               slidesPerView={1}
               navigation
-              onSwiper={(swiper) => console.log(swiper)}
-              onSlideChange={() => console.log('slide change')}
               style={{
                 '--swiper-navigation-color': '#fff',
               } as React.CSSProperties}
@@ -88,17 +85,25 @@ const LivePageCarousel = () => {
                   </TimerProvider>
                 ) : null}
               </SwiperSlide>
-              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 2
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 2
+                </div>
               </SwiperSlide>
-              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 3
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 3
+                </div>
               </SwiperSlide>
-              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 4
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 4
+                </div>
               </SwiperSlide>
-              <SwiperSlide className="scroll-item tw-basis-full tw-flex tw-justify-center tw-items-center">
-                Section 5
+              <SwiperSlide >
+                <div className='live-carousel-slide'>
+                  Section 5
+                </div>
               </SwiperSlide>
             </Swiper>
             {/* <div>
