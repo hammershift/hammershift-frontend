@@ -1,7 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 import YellowSportsCarFull from '../../../public/images/yellow-sportscar-full.svg';
 import ArrowRight from '../../../public/images/arrow-right.svg';
@@ -12,7 +18,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const Carousel: React.FC = () => {
-  const [sliderTransform, setSlidertransform] = useState(0);
+  const [sliderTransform, setSliderTransform] = useState(0);
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -24,85 +30,77 @@ const Carousel: React.FC = () => {
     }
   };
 
-  const rightArrowHandler = () => {
-    if (sliderTransform === -80) {
-      setSlidertransform(0);
-    } else {
-      setSlidertransform((prev) => prev - 20);
-    }
-  };
-  const leftArrowHandler = () => {
-    if (sliderTransform === 0) {
-      setSlidertransform(-80);
-    } else {
-      setSlidertransform((prev) => prev + 20);
-    }
-  };
-  const sliderButtonsData = [
-    { id: 'slide1', transform: 0 },
-    { id: 'slide2', transform: -20 },
-    { id: 'slide3', transform: -40 },
-    { id: 'slide4', transform: -60 },
-    { id: 'slide5', transform: -80 },
-  ];
+  // const rightArrowHandler = () => {
+  //   if (sliderTransform === -80) {
+  //     setSliderTransform(0);
+  //   } else {
+  //     setSliderTransform((prev) => prev - 20);
+  //   }
+  // };
+  // const leftArrowHandler = () => {
+  //   if (sliderTransform === 0) {
+  //     setSliderTransform(-80);
+  //   } else {
+  //     setSliderTransform((prev) => prev + 20);
+  //   }
+  // };
+  // const sliderButtonsData = [
+  //   { id: 'slide1', transform: 0 },
+  //   { id: 'slide2', transform: -20 },
+  //   { id: 'slide3', transform: -40 },
+  //   { id: 'slide4', transform: -60 },
+  //   { id: 'slide5', transform: -80 },
+  // ];
+
   return (
     <div className='tw-relative tw-pt-8 tw-h-[344px] tw-overflow-hidden'>
       <div className='carousel-container tw-relative tw-w-full tw-h-[280px] tw-overflow-hidden'>
         <div
-          className='slider-container tw-transition tw-duration-[2000ms] tw-flex tw-h-[280px]'
-          style={{
-            transform: `translate(${sliderTransform}%)`,
-            width: '500%',
-          }}
+          className='card-wrapper tw-h-[280px]'
+
         >
-          <SlideOne onClick={handleSignUpWagerClick} />
-          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>
-            {/* <Image
-                            src="/images/Banner_Ad.jpg"
-                            alt="banner ad"
-                            width={0}
-                            height={0}
-                            sizes="100vw"
-                            style={{ width: "100%", height: "auto" }}
-                        /> */}
-            <img src='/images/Banner_Ad.jpg' alt='car' />
-          </div>
-          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>
-            {/* <Image
-                            src="/images/Banner_Ad2.jpg"
-                            alt="banner ad"
-                            width={0}
-                            height={0}
-                            sizes="100vw"
-                            style={{ width: "100%", height: "auto" }}
-                        /> */}
-            <img src='/images/Banner_Ad2.jpg' alt='car' />
-          </div>
-          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>
-            {/* <Image
-                            src="/images/Banner_Ad3.jpg"
-                            alt="banner ad"
-                            width={0}
-                            height={0}
-                            sizes="100vw"
-                            style={{ width: "100%", height: "auto" }}
-                        /> */}
-            <img src='/images/Banner_Ad3.jpg' alt='car' />
-          </div>
-          <div className='tw-basis-full tw-flex tw-justify-center tw-items-center'>Section 5</div>
+          <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            spaceBetween={50}
+            slidesPerView={1}
+            navigation
+            pagination={{ clickable: true }}
+            scrollbar={{ draggable: true }}
+            onSwiper={(swiper) => console.log(swiper)}
+            onSlideChange={() => console.log('slide change')}
+          >
+            <SwiperSlide >
+              <SlideOne onClick={handleSignUpWagerClick} />
+            </SwiperSlide>
+            <SwiperSlide >
+
+              <img src='/images/Banner_Ad.jpg' alt='car' />
+
+            </SwiperSlide>
+            <SwiperSlide >
+              <img src='/images/Banner_Ad2.jpg' alt='car' />
+            </SwiperSlide>
+            <SwiperSlide >
+              <img src='/images/Banner_Ad3.jpg' alt='car' />
+            </SwiperSlide>
+            <SwiperSlide >
+              Section 5
+            </SwiperSlide>
+          </Swiper>
+
         </div>
-        <div className='controller-container'>
-          <button onClick={leftArrowHandler}>
+        {/* <div className='controller-container'>
+          <button onClick={leftArrowHandler} className='scroll-button'>
             <Image src={ArrowLeft} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] arrow-slider tw-rounded-full' />
           </button>
-          <button onClick={rightArrowHandler}>
+          <button onClick={rightArrowHandler} className='scroll-button'>
             <Image src={ArrowRight} alt='arrow left' width={40} height={40} className='tw-absolute tw-top-[115px] tw-right-0 arrow-slider tw-rounded-full' />
           </button>
           <ul className='tw-w-[72px] tw-flex tw-justify-between tw-items-end tw-absolute tw-bottom-[6px] sm:tw-bottom-[16px] tw-left-1/2 tw-translate-x-[-50%]'>
             {sliderButtonsData.map((slide) => {
               return (
                 <li key={slide.id}>
-                  <button onClick={() => setSlidertransform(slide.transform)}>
+                  <button onClick={() => setSliderTransform(slide.transform)}>
                     <div
                       className='tw-w-[7px] tw-h-[7px] tw-bg-white tw-rounded-full'
                       style={{
@@ -114,7 +112,7 @@ const Carousel: React.FC = () => {
               );
             })}
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );
