@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
@@ -14,6 +14,16 @@ import {
   getTournaments,
 } from "@/lib/data";
 import { TimerProvider } from "../_context/TimerContext";
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+import SwiperCore from 'swiper';
+
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 interface Tournaments {
   buyInFee: number;
@@ -49,10 +59,43 @@ const Tournaments = () => {
     TournamentPoints[]
   >([]);
 
+  const [screenWidth, setScreenWidth] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const swiperRef = useRef<SwiperCore>();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+      setIsMobile(window.innerWidth < 900);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const NUM_TO_DISPLAY = screenWidth < 1450 ? 2 : 3;
+
+  const handleLeftArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  };
+
+  const handleRightArrow = () => {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  };
+
+
   useEffect(() => {
     const fetchTournamentsData = async () => {
       try {
-        const res = await getLimitedTournaments(3);
+        const res = await getLimitedTournaments(5);
         const tournamentsArray = res.tournaments;
         setTournamentsData(tournamentsArray);
 
@@ -104,13 +147,14 @@ const Tournaments = () => {
             Tournaments
           </div>
         </div>
-        <div className="tw-flex">
+        <div className={` ${isMobile ? 'tw-hidden' : 'tw-flex'} `}>
           <Image
             src={ArrowLeft}
             width={32}
             height={32}
             alt="arrow left"
             className="tw-w-8 tw-h-8"
+            onClick={handleLeftArrow}
           />
           <Image
             src={ArrowRight}
@@ -118,31 +162,72 @@ const Tournaments = () => {
             height={32}
             alt="arrow right"
             className="tw-w-8 tw-h-8 tw-ml-4"
+            onClick={handleRightArrow}
           />
         </div>
       </header>
-      <section className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-auto sm:tw-flex-row sm:tw-w-full tw-gap-4 sm:tw-gap-8 tw-mt-8 tw-overflow-scroll">
-        {tournamentsData &&
-          tournamentsData.map((tournament, index) => {
-            const imagesForTournament =
-              auctionData[tournament._id]?.map((auction) => auction.image) ||
-              [];
-            const tournamentPoints = tournamentPointsData[index];
-            return (
-              <div key={tournament._id}>
-                <TimerProvider deadline={tournament.endTime}>
-                  <TournamentsCard
-                    tournament_id={tournament._id}
-                    pot={tournament.pot}
-                    title={tournament.title}
-                    deadline={tournament.endTime}
-                    images={imagesForTournament}
-                    tournamentPoints={tournamentPoints}
-                  />
-                </TimerProvider>
-              </div>
-            );
-          })}
+      <section className="tw-my-6">
+        {isMobile ? (
+          <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-auto tw-gap-4 tw-mt-8 ">
+            {tournamentsData &&
+              tournamentsData.map((tournament, index) => {
+                const imagesForTournament =
+                  auctionData[tournament._id]?.map((auction) => auction.image) ||
+                  [];
+                const tournamentPoints = tournamentPointsData[index];
+                return (
+                  <div key={tournament._id}>
+                    <TimerProvider deadline={tournament.endTime}>
+                      <TournamentsCard
+                        tournament_id={tournament._id}
+                        pot={tournament.pot}
+                        title={tournament.title}
+                        deadline={tournament.endTime}
+                        images={imagesForTournament}
+                        tournamentPoints={tournamentPoints}
+                      />
+                    </TimerProvider>
+                  </div>
+                );
+              })}
+          </div>
+        ) : (
+          <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
+            spaceBetween={25}
+            slidesPerView={NUM_TO_DISPLAY}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            style={{
+              '--swiper-navigation-color': '#fff',
+              '--swiper-pagination-color': '#fff',
+            } as React.CSSProperties}
+          >
+            {tournamentsData &&
+              tournamentsData.map((tournament, index) => {
+                const imagesForTournament =
+                  auctionData[tournament._id]?.map((auction) => auction.image) ||
+                  [];
+                const tournamentPoints = tournamentPointsData[index];
+                return (
+                  <SwiperSlide key={tournament._id}>
+                    <TimerProvider deadline={tournament.endTime}>
+                      <TournamentsCard
+                        tournament_id={tournament._id}
+                        pot={tournament.pot}
+                        title={tournament.title}
+                        deadline={tournament.endTime}
+                        images={imagesForTournament}
+                        tournamentPoints={tournamentPoints}
+                      />
+                    </TimerProvider>
+                  </SwiperSlide>
+                );
+              })}
+          </Swiper>
+
+        )}
       </section>
     </div>
   );
