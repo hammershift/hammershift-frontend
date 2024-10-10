@@ -12,6 +12,9 @@ import AvatarThree from "../../../public/images/avatar-three.svg";
 import { useTimer } from "../_context/TimerContext";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import DefaultOne from "../../../public/images/tournament-wager/sedan-photo-one.svg";
+import DefaultTwo from "../../../public/images/tournament-wager/sedan-photo-two.svg";
+import DefaultThree from "../../../public/images/tournament-wager/sedan-photo-three.svg";
 
 const TournamentsCard = ({
   tournament_id,
@@ -54,6 +57,7 @@ const TournamentsCard = ({
     return () => clearInterval(intervalId);
   }, [deadline, tournament_deadline]);
 
+
   return (
     <div className="tw-w-full tw-flex tw-justify-center tw-items-center tw-mt-4">
       <div className="hover:tw-scale-105 tw-transform tw-transition-all tw-duration-100">
@@ -62,7 +66,7 @@ const TournamentsCard = ({
             <>
               <div className="tw-flex tw-justify-end ">
                 <Image
-                  src={images[0]}
+                  src={images[0] === undefined ? DefaultOne : images[0]}
                   width={90}
                   height={90}
                   alt="image"
@@ -74,7 +78,7 @@ const TournamentsCard = ({
               </div>
               <div className="tw-flex tw-justify-center">
                 <Image
-                  src={images[1]}
+                  src={images[1] === undefined ? DefaultTwo : images[1]}
                   width={100}
                   height={100}
                   alt="image"
@@ -83,7 +87,7 @@ const TournamentsCard = ({
               </div>
               <div className="tw-flex tw-justify-start">
                 <Image
-                  src={images[2]}
+                  src={images[2] === undefined ? DefaultThree : images[2]}
                   width={90}
                   height={90}
                   alt="image"
