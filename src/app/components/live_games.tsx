@@ -146,7 +146,7 @@ const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {
 
   return (
     <div
-      className={`md:tw-overflow-hidden tw-py-8 sm:tw-py-16 ${pathname === "/" ? "tw-w-1/2 max-lg:tw-w-full" : null
+      className={` tw-py-8 sm:tw-py-16 ${pathname === "/" ? "tw-w-3/5 max-lg:tw-w-full" : null
         }`}
     >
       <header className="tw-flex tw-justify-between">
