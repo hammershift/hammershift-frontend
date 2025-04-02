@@ -26,6 +26,7 @@
     "dayjs": "^1.11.10",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
+    "lucide-react": "^0.487.0",
     "mongodb": "^5.9.1",
     "mongoose": "^7.6.6",
     "next": "^13.5.6",
