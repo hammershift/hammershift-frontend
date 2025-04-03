@@ -35,27 +35,36 @@ const buttonVariants = cva(
 
 interface IProps {
   className: string;
-  variant:
+  type?: "button" | "submit" | "reset";
+  variant?:
   | "default"
   | "destructive"
   | "outline"
   | "secondary"
   | "ghost"
   | "link";
-  size: "default" | "sm" | "lg" | "icon";
-  children: React.ReactNode;
+  size?: "default" | "sm" | "lg" | "icon";
+  disabled?: boolean;
+  children?: React.ReactNode;
+  onClick?: () => void;
 }
 export const Button = ({
   className,
+  type = "button",
   variant = "default",
   size = "default",
+  disabled = false,
   children,
+  onClick,
 }: IProps) => {
   return (
     <button
       className={cn(
         buttonVariants({ variant: variant, size: size, className })
       )}
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
     >
       {children}
     </button>

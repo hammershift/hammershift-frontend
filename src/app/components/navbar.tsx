@@ -42,6 +42,7 @@ import {
 } from "@/lib/data";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { BeatLoader, BounceLoader } from "react-spinners";
+import { createPageUrl } from "./utils";
 
 // export interface NavbarProps {
 //     isLoggedIn: boolean;
@@ -68,6 +69,12 @@ const Navbar = () => {
   const [showClearSearchButton, setShowClearSearchButton] = useState(false);
   const [navlinkIsOpen, setNavlinkIsOpen] = useState(false);
 
+  const navBarList = [
+    { title: "Home", urlString: "" },
+    { title: "Free Play", urlString: "Free Play" },
+    { title: "Tournaments", urlString: "Tournaments" },
+    { title: "Guess the Hammer", urlString: "Price Is Right" },
+  ]
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const searchBox = document.getElementById("search-box");
@@ -910,30 +917,17 @@ const Navbar = () => {
           </div>
           <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4 justify-between">
             <nav className="flex items-center justify-between space-x-8">
-              <Link
-                href="/"
-                className="hover:text-[#F2CA16] transition-colors"
-              >
-                HOME
-              </Link>
-              <Link
-                href="/"
-                className="hover:text-[#F2CA16] transition-colors"
-              >
-                FREE PLAY
-              </Link>
-              <Link
-                href="/"
-                className="hover:text-[#F2CA16] transition-colors"
-              >
-                TOURNAMENTS
-              </Link>
-              <Link
-                href="/"
-                className="hover:text-[#F2CA16] transition-colors"
-              >
-                GUESS THE HAMMER
-              </Link>
+              {
+                navBarList.map((data, index) => (
+                  <Link
+                    key={index}
+                    href={createPageUrl(data.urlString)}
+                    className="hover:text-[#F2CA16] transition-colors"
+                  >
+                    {data.title.toUpperCase()}
+                  </Link>
+                ))
+              }
             </nav>
           </div>
           {/* <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4">

@@ -2,9 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { PropagateLoader } from "react-spinners";
-import { isNonNullExpression } from "typescript";
-import Links from "@/app/components/links";
 // import useIntersectionObserver from "./api/intersectionObserver/intersectionObserver";
 
 const withDynamicImport = (componentPath: string, options = {}) => {

@@ -2,7 +2,6 @@
 
 import "./styles/app.css";
 import Footer from "@/app/components/footer";
-import HowHammerShiftWorks from "@/app/components/how_hammeshift_works";
 import LiveGames from "@/app/components/live_games";
 import LivePageCarousel from "@/app/components/live_page_carousel";
 import NewEraWagering from "@/app/components/new_era_wagering";
@@ -48,11 +47,7 @@ const LivePage = () => {
         <Carousel />
       </div>
       <NewEraWagering />
-      <HowHammerShiftWorks />
       <Subscribe />
-      <div>
-        <Footer />
-      </div>
     </div>
   );
 };

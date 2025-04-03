@@ -34,14 +34,9 @@ import {
 import { TimerProvider } from "@/app/_context/TimerContext";
 import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { set } from "mongoose";
-import WatchListIcon from "../../../../../../public/images/watchlist-icon.svg";
-
-import { carDataThree } from "../../../../../sample_data";
 
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
-import Image from "next/image";
-import Links from "@/app/components/links";
+
 import { Auction } from "../page";
 
 export interface Tournaments {

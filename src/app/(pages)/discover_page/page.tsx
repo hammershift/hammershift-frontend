@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import Links from "../../components/links";
 
 import FeaturedPhoto from "../../../../public/images/featured-photo.svg";
 import DollarIcon from "../../../../public/images/dollar.svg";
