@@ -189,43 +189,43 @@ const MyWalletPage = () => {
   }, []);
 
   return (
-    <div className='section-container tw-flex tw-flex-col tw-justify-evenly max-sm:tw-w-full'>
-      <div className='tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md max-sm:tw-w-full'>
-        <h2 className='tw-p-4 tw-text-3xl tw-font-bold'>My Wallet</h2>
-        <div className='tw-p-4 tw-flex tw-flex-col tw-gap-1 tw-bg-[#49C74233] tw-rounded-md'>
-          <div className='tw-flex tw-justify-between tw-items-center tw-rounded-md max-sm:tw-flex-col'>
-            <div className='tw-flex max-sm:tw-self-start'>
+    <div className='section-container flex flex-col justify-evenly max-sm:w-full'>
+      <div className='flex flex-col justify-center self-center w-2/3 rounded-md max-sm:w-full'>
+        <h2 className='p-4 text-3xl font-bold'>My Wallet</h2>
+        <div className='p-4 flex flex-col gap-1 bg-[#49C74233] rounded-md'>
+          <div className='flex justify-between items-center rounded-md max-sm:flex-col'>
+            <div className='flex max-sm:self-start'>
               <Image alt='wallet' src={WalletIcon} />
-              <div className='tw-px-4'>
+              <div className='px-4'>
                 {' '}
-                {loading ? <p className='tw-text-xl'>Loading</p> : <p className='tw-text-xl tw-font-bold'>${walletBalance.toFixed(2)}</p>}
-                <p className='tw-text-sm tw-text-white/70'>Balance</p>
+                {loading ? <p className='text-xl'>Loading</p> : <p className='text-xl font-bold'>${walletBalance.toFixed(2)}</p>}
+                <p className='text-sm text-white/70'>Balance</p>
               </div>
             </div>
             <div>
-              <button className='tw-p-1 tw-m-1 tw-border-2 tw-rounded-md tw-border-yellow-500'>
-                <div className='tw-flex tw-p-1'>
+              <button className='p-1 m-1 border-2 rounded-md border-yellow-500'>
+                <div className='flex p-1'>
                   <Image alt='arrow-down' src={ArrowDownIcon} />{' '}
-                  <p className='tw-text-[#F2CA16] tw-pl-2' onClick={() => setIsWithdrawModalOpen(true)}>
+                  <p className='text-[#F2CA16] pl-2' onClick={() => setIsWithdrawModalOpen(true)}>
                     WITHDRAW
                   </p>
                 </div>
               </button>
               {isDisabled === 'true' ? (
                 <button
-                  className='tw-p-1 tw-px-3 tw-m-1 tw-bg-[#929292] tw-text-black tw-font-bold tw-rounded-md'
+                  className='p-1 px-3 m-1 bg-[#929292] text-black font-bold rounded-md'
                   onClick={() => setIsPaymentModalOpen(true)}
                   disabled
                   title='Temporarily disabled'
                 >
-                  <div className='tw-flex tw-p-1'>
-                    <Image alt='deposit' src={PlusIcon} /> <p className='tw-pl-2'>LOAD</p>
+                  <div className='flex p-1'>
+                    <Image alt='deposit' src={PlusIcon} /> <p className='pl-2'>LOAD</p>
                   </div>
                 </button>
               ) : (
-                <button className='tw-p-1 tw-px-3 tw-m-1 tw-bg-[#F2CA16] tw-text-black tw-font-bold tw-rounded-md' onClick={() => setIsPaymentModalOpen(true)}>
-                  <div className='tw-flex tw-p-1'>
-                    <Image alt='deposit' src={PlusIcon} /> <p className='tw-pl-2'>LOAD</p>
+                <button className='p-1 px-3 m-1 bg-[#F2CA16] text-black font-bold rounded-md' onClick={() => setIsPaymentModalOpen(true)}>
+                  <div className='flex p-1'>
+                    <Image alt='deposit' src={PlusIcon} /> <p className='pl-2'>LOAD</p>
                   </div>
                 </button>
               )}
@@ -253,24 +253,24 @@ const MyWalletPage = () => {
           />
         )}
       </div>
-      <div className='tw-flex tw-flex-col tw-justify-center tw-self-center tw-w-2/3 tw-rounded-md max-sm:tw-w-full'>
+      <div className='flex flex-col justify-center self-center w-2/3 rounded-md max-sm:w-full'>
         {Object.entries(groupedTransactions).map(([date, transactions]) => (
-          <div key={date} className='tw-p-4 tw-mt-4 max-sm:tw-p-1'>
-            <h3 className='tw-py-1'>{date}</h3>
-            <hr className='tw-p-[1px] tw-mb-4 tw-border-0 tw-bg-white/5' />
+          <div key={date} className='p-4 mt-4 max-sm:p-1'>
+            <h3 className='py-1'>{date}</h3>
+            <hr className='p-[1px] mb-4 border-0 bg-white/5' />
             {transactions.map((transaction) => (
-              <div key={transaction._id} className='tw-flex tw-justify-between'>
+              <div key={transaction._id} className='flex justify-between'>
                 {transaction.transactionType === 'deposit' && transaction.status === 'success' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       {' '}
                       <Image alt='deposit' src={DepositIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Credit</p>
-                        <p className='tw-text-sm tw-text-white/50'>
+                      <div className='px-4'>
+                        <p className='text-md'>Credit</p>
+                        <p className='text-sm text-white/50'>
                           Loaded from{' '}
                           {isSmallScreen ? (
-                            <a target='blank' href={transaction.invoice_url} className='tw-underline'>
+                            <a target='blank' href={transaction.invoice_url} className='underline'>
                               Stripe
                             </a>
                           ) : (
@@ -279,127 +279,127 @@ const MyWalletPage = () => {
                           {!isSmallScreen && (
                             <>
                               {' | Invoice ID: '}
-                              <a target='blank' href={transaction.invoice_url} className='tw-underline'>
+                              <a target='blank' href={transaction.invoice_url} className='underline'>
                                 {transaction.invoice_id}
                               </a>
                             </>
                           )}
                         </p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className='tw-text-xl'>${transaction.amount}</p>
+                    <p className='text-xl'>${transaction.amount}</p>
                   </div>
                 )}
                 {transaction.transactionType === 'deposit' && transaction.status === 'failed' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       {' '}
                       <Image alt='denied' src={DeniedIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Denied Transaction</p>
-                        <p className='tw-text-sm tw-text-white/50'>Failed to add funds</p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                      <div className='px-4'>
+                        <p className='text-md'>Denied Transaction</p>
+                        <p className='text-sm text-white/50'>Failed to add funds</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className='tw-text-xl'>${transaction.amount}</p>
+                    <p className='text-xl'>${transaction.amount}</p>
                   </div>
                 )}
                 {transaction.transactionType === 'withdraw' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       <Image alt='deposit' src={transaction.status === 'failed' ? DeniedIcon : WithdrawalIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Withdrawal</p>
-                        <p className='tw-text-sm tw-text-white/50'>
+                      <div className='px-4'>
+                        <p className='text-md'>Withdrawal</p>
+                        <p className='text-sm text-white/50'>
                           Bank account ending {transaction.accountNumber?.slice(-4)}
                           {transaction.status === 'processing' ? ' (Processing)' : ''}
                           {transaction.status === 'successful' ? ' (Successful)' : ''}
                           {transaction.status === 'failed' ? ' (Failed)' : ''}
                         </p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className={`tw-text-xl ${transaction.status === 'successful' ? '' : 'tw-text-muted-foreground'}`}>
+                    <p className={`text-xl ${transaction.status === 'successful' ? '' : 'text-muted-foreground'}`}>
                       {transaction.type}${transaction.amount}
                     </p>
                   </div>
                 )}
                 {transaction.transactionType === 'wager' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       {' '}
                       <Image alt='deposit' src={WithdrawalIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Wager</p>
-                        <p className='tw-text-sm tw-text-white/50'>
+                      <div className='px-4'>
+                        <p className='text-md'>Wager</p>
+                        <p className='text-sm text-white/50'>
                           Placed wager on Auction{' '}
-                          <Link target='blank' href={`/auctions/car_view_page/${transaction.auction_id}`} className='tw-underline'>
+                          <Link target='blank' href={`/auctions/car_view_page/${transaction.auction_id}`} className='underline'>
                             [{transaction.auction_id}]
                           </Link>
                         </p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className='tw-text-xl'>
+                    <p className='text-xl'>
                       {transaction.type}${transaction.amount}
                     </p>
                   </div>
                 )}
                 {transaction.transactionType === 'tournament buy-in' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       {' '}
                       <Image alt='deposit' src={WithdrawalIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Tournament Buy-in</p>
-                        <p className='tw-text-sm tw-text-white/50'>
+                      <div className='px-4'>
+                        <p className='text-md'>Tournament Buy-in</p>
+                        <p className='text-sm text-white/50'>
                           Placed buy-in for Tournament{' '}
-                          <Link target='blank' href={`/tournaments/${transaction.tournamentID}`} className='tw-underline'>
+                          <Link target='blank' href={`/tournaments/${transaction.tournamentID}`} className='underline'>
                             [{transaction.tournamentID}]
                           </Link>
                         </p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className='tw-text-xl'>
+                    <p className='text-xl'>
                       {transaction.type}${transaction.amount}
                     </p>
                   </div>
                 )}
                 {transaction.transactionType === 'winnings' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       {' '}
                       <Image alt='deposit' src={DepositIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Winnings</p>
-                        <p className='tw-text-sm tw-text-white/50'>
+                      <div className='px-4'>
+                        <p className='text-md'>Winnings</p>
+                        <p className='text-sm text-white/50'>
                           Winnings from{' '}
-                          <Link target='blank' href={`/auctions/car_view_page/${transaction.auction_id}`} className='tw-underline'>
+                          <Link target='blank' href={`/auctions/car_view_page/${transaction.auction_id}`} className='underline'>
                             [{transaction.auction_id}]
                           </Link>
                         </p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className='tw-text-xl'>
+                    <p className='text-xl'>
                       {transaction.type}${Math.round(transaction.amount)}
                     </p>
                   </div>
                 )}
                 {transaction.transactionType === 'refund' && (
-                  <div className='tw-flex tw-w-full tw-justify-between tw-items-center'>
-                    <div className='tw-flex tw-items-center tw-m-2'>
+                  <div className='flex w-full justify-between items-center'>
+                    <div className='flex items-center m-2'>
                       {' '}
                       <Image alt='deposit' src={DepositIcon} />
-                      <div className='tw-px-4'>
-                        <p className='tw-text-md'>Refund</p>
-                        <p className='tw-text-sm tw-text-white/50'>Refunded from cancelled game</p>
-                        <p className='tw-text-sm tw-text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
+                      <div className='px-4'>
+                        <p className='text-md'>Refund</p>
+                        <p className='text-sm text-white/50'>Refunded from cancelled game</p>
+                        <p className='text-sm text-white/50'>{new Date(transaction.transactionDate).toLocaleTimeString()}</p>
                       </div>
                     </div>
-                    <p className='tw-text-xl'>${transaction.amount}</p>
+                    <p className='text-xl'>${transaction.amount}</p>
                   </div>
                 )}
               </div>
@@ -408,22 +408,22 @@ const MyWalletPage = () => {
         ))}
       </div>
       {showSuccessfulWithdrawNotification && (
-        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#49C74233] tw-backdrop-blur-xl'>
+        <div className='fixed p-4 left-1/2 rounded-md text-sm top-5 z-40 bg-[#49C74233] backdrop-blur-xl'>
           <p>Withdrawal Request Completed</p>
         </div>
       )}
       {showFailedWithdrawNotification && (
-        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-red-700'>
+        <div className='fixed p-4 left-1/2 rounded-md text-sm top-5 z-40 bg-red-700'>
           <p>Withdrawal Request Failed</p>
         </div>
       )}
       {success === 'true' && (
-        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-[#49C74233] tw-backdrop-blur-xl'>
+        <div className='fixed p-4 left-1/2 rounded-md text-sm top-5 z-40 bg-[#49C74233] backdrop-blur-xl'>
           <p>Wallet Successfully Loaded</p>
         </div>
       )}
       {showFailedLoadNotification && (
-        <div className='tw-fixed tw-p-4 tw-left-1/2 tw-rounded-md tw-text-sm tw-top-5 tw-z-40 tw-bg-red-700'>
+        <div className='fixed p-4 left-1/2 rounded-md text-sm top-5 z-40 bg-red-700'>
           <p>Wallet Top-up Failed</p>
         </div>
       )}

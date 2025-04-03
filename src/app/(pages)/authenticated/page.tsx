@@ -33,15 +33,15 @@ const Authenticated: React.FC = () => {
   }, [session, showLoader, router]);
 
   return (
-    <div className='tw-h-screen tw-flex tw-flex-col tw-items-center tw-justify-start tw-pt-16'>
+    <div className='h-screen flex flex-col items-center justify-start pt-16'>
       {showLoader ? (
-        <div className='tw-flex tw-grow tw-items-center tw-justify-center'>
+        <div className='flex grow items-center justify-center'>
           <BounceLoader color='gray' />
         </div>
       ) : (
-        <div className='tw-text-center'>
-          <h1 className='tw-text-2xl tw-font-bold'>You are already logged in</h1>
-          <p className='tw-text-muted-foreground tw-mt-2'>Redirecting you to homepage...</p>
+        <div className='text-center'>
+          <h1 className='text-2xl font-bold'>You are already logged in</h1>
+          <p className='text-muted-foreground mt-2'>Redirecting you to homepage...</p>
         </div>
       )}
     </div>

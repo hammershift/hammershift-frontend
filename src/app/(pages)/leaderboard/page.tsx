@@ -29,33 +29,32 @@ const LeaderBoardPage = () => {
 
   return (
     <div className="page-container">
-      <div className="section-container tw-grid tw-gap-8 tw-pb-16">
-        <div className="tw-font-bold tw-text-3xl md:tw-text-5xl">
+      <div className="section-container grid gap-8 pb-16">
+        <div className="font-bold text-3xl md:text-5xl">
           Top Winners
         </div>
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <table className="tw-w-full md:tw-table-fixed">
-            <thead className="tw-text-xl md:tw-text-2xl tw-text-black tw-bg-[#F2CA16]">
-              <tr className="tw-leading-10">
-                <th className="sm:tw-w-1/3">RANK</th>
-                <th className="sm:tw-w-1/3">USER</th>
-                <th className="sm:tw-w-1/3">WINS</th>
+          <table className="w-full md:table-fixed">
+            <thead className="text-xl md:text-2xl text-black bg-[#F2CA16]">
+              <tr className="leading-10">
+                <th className="sm:w-1/3">RANK</th>
+                <th className="sm:w-1/3">USER</th>
+                <th className="sm:w-1/3">WINS</th>
               </tr>
             </thead>
-            <tbody className="tw-text-center tw-space-y-1">
+            <tbody className="text-center space-y-1">
               {data.length > 0 &&
                 (data as DataItem[]).map((item, index) => (
                   <tr
                     key={index + "LDB"}
-                    className={`tw-leading-10 ${
-                      index % 2 === 1 ? "tw-bg-white/5" : ""
-                    }`}
+                    className={`leading-10 ${index % 2 === 1 ? "bg-white/5" : ""
+                      }`}
                   >
-                    <td className="sm:tw-w-1/3">{item.rank}</td>
-                    <td className="sm:tw-w-1/3">{item.user}</td>
-                    <td className="sm:tw-w-1/3">{item.numberOfWinnings}</td>
+                    <td className="sm:w-1/3">{item.rank}</td>
+                    <td className="sm:w-1/3">{item.user}</td>
+                    <td className="sm:w-1/3">{item.numberOfWinnings}</td>
                   </tr>
                 ))}
             </tbody>
@@ -73,7 +72,7 @@ export default LeaderBoardPage;
 
 const LoadingSpinner = () => {
   return (
-    <div className="tw-flex tw-justify-center tw-items-center tw-h-[50vh]">
+    <div className="flex justify-center items-center h-[50vh]">
       <BounceLoader color="#F2CA16" />
     </div>
   );

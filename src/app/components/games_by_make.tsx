@@ -38,38 +38,38 @@ const GamesByMake = () => {
   ];
 
   return (
-    <div className="tw-py-8 md:tw-py-[120px]">
-      <header className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
+    <div className="py-8 md:py-[120px]">
+      <header className="flex justify-between">
+        <div className="flex items-center">
           <Image
             src={GamesByMakeIcon}
             width={40}
             height={40}
             alt="dollar"
-            className="tw-w-10 tw-h-10"
+            className="w-10 h-10"
           />
-          <div className="tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4">
+          <div className="font-bold text-2xl sm:text-3xl ml-4">
             Games by Make
           </div>
         </div>
-        <div className="tw-flex">
+        <div className="flex">
           <Image
             src={ArrowLeft}
             width={32}
             height={32}
             alt="arrow left"
-            className="tw-w-8 tw-h-8 "
+            className="w-8 h-8 "
           />
           <Image
             src={ArrowRight}
             width={32}
             height={32}
             alt="arrow right"
-            className="tw-w-8 tw-h-8 tw-ml-4"
+            className="w-8 h-8 ml-4"
           />
         </div>
       </header>
-      <section className="tw-grid tw-grid-cols-3 sm:tw-grid-cols-2 md:tw-grid-cols-5 tw-gap-8 tw-mt-16">
+      <section className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-5 gap-8 mt-16">
         {carList.map((car) => {
           return (
             <div key={car.name}>
@@ -78,7 +78,7 @@ const GamesByMake = () => {
                 onClick={(e) =>
                   router.push(`/auctions?make=${car.make}&sort=Newly+Listed`)
                 }
-                className="tw-cursor-pointer hover:tw-scale-125 tw-transform tw-transition-all tw-duration-100"
+                className="cursor-pointer hover:scale-125 transform transition-all duration-100"
               >
                 <Image
                   src={car.name}
@@ -86,7 +86,7 @@ const GamesByMake = () => {
                   height={100}
                   alt={car.name}
                   style={{ width: car.width, height: "100px" }}
-                  className="tw-block tw-mx-auto"
+                  className="block mx-auto"
                 />
               </div>
               {/* </Link> */}

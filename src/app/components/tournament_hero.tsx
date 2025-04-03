@@ -1,12 +1,12 @@
 export default function TournamentHero() {
     return (
         <div className="section-container">
-            <div className=" tw-p-6 tw-bg-[#172431] tw-rounded">
-                <div className=" tw-mb-5">
-                    <h3 className=" tw-text-4xl tw-font-bold tw-mb-2">
+            <div className=" p-6 bg-[#172431] rounded">
+                <div className=" mb-5">
+                    <h3 className=" text-4xl font-bold mb-2">
                         HammerShift Tournaments: Compete, Predict, Win!
                     </h3>
-                    <h4 className=" tw-text-xl tw-font-bold tw-mb-2">
+                    <h4 className=" text-xl font-bold mb-2">
                         Welcome to the thrilling world of HammerShift
                         Tournaments!
                     </h4>
@@ -20,10 +20,10 @@ export default function TournamentHero() {
                         car enthusiasts and strategic thinkers alike.
                     </p>
                 </div>
-                <div className=" tw-text-2xl tw-font-bold tw-mb-2">
+                <div className=" text-2xl font-bold mb-2">
                     How It Works:
                 </div>
-                <ul className=" tw-list-disc tw-pl-5">
+                <ul className=" list-disc pl-5">
                     <li>
                         <strong>Join a Tournament:</strong> Start by selecting a
                         tournament with an entry fee (buy-in) that suits your

@@ -10,14 +10,14 @@ import RyanTurri from "../../../../public/images/ryan-turri.svg";
 
 const AboutPage = () => {
     return (
-        <div className="page-container tw-pt-16 tw-gap-16">
-            <div className="section-container tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-pb-8 tw-gap-6">
-                <div className="tw-w-full md:tw-w-[640px] tw-text-5xl md:tw-text-6xl tw-font-bold">
+        <div className="page-container pt-16 gap-16">
+            <div className="section-container flex flex-col sm:flex-row justify-between pb-8 gap-6">
+                <div className="w-full md:w-[640px] text-5xl md:text-6xl font-bold">
                     We are building a<br />
                     vibrant community for{" "}
-                    <span className="tw-text-[#F2CA16]">car enthusiasts</span>
+                    <span className="text-[#F2CA16]">car enthusiasts</span>
                 </div>
-                <div className="tw-w-full md:tw-w-[528px] tw-opacity-80 tw-self-end">
+                <div className="w-full md:w-[528px] opacity-80 self-end">
                     Whether you&apos;re passionate about classic cars,
                     modern sports cars, or anything in between,
                     our platform is the perfect place to connect with like-minded individuals.
@@ -29,19 +29,19 @@ const AboutPage = () => {
                 width={1440}
                 height={495}
                 alt="smiling people"
-                className="sm:tw-w-[1440px] tw-h-[495px] tw-object-cover"
+                className="sm:w-[1440px] h-[495px] object-cover"
             />
-            <div className="section-container tw-pt-8 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-6">
-                <div className="tw-font-bold tw-text-5xl">
+            <div className="section-container pt-8 flex flex-col sm:flex-row justify-between gap-6">
+                <div className="font-bold text-5xl">
                     Passion for <br />
                     automobiles
                 </div>
-                <div className=" tw-text-2xl tw-max-w-[752px]">
-                    <div className="tw-font-bold ">
+                <div className=" text-2xl max-w-[752px]">
+                    <div className="font-bold ">
                         Founded by experienced entrepreneurs{" "}
-                        <span className="tw-text-[#F2CA16]">Rick Deacon</span>{" "}
+                        <span className="text-[#F2CA16]">Rick Deacon</span>{" "}
                         and{" "}
-                        <span className="tw-text-[#F2CA16]">Ryan Turri</span>,
+                        <span className="text-[#F2CA16]">Ryan Turri</span>,
                         Hammershift is not just a company; {"it's"} a vibrant
                         community for car enthusiasts.
                     </div>
@@ -56,18 +56,18 @@ const AboutPage = () => {
                     </div>
                 </div>
             </div>
-            <div className="tw-w-screen xl:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] tw-flex tw-flex-col sm:tw-flex-row tw-gap-16 tw-pt-8">
+            <div className="w-screen xl:px-16 pt-8 md:pt-16 2xl:w-[1440px] flex flex-col sm:flex-row gap-16 pt-8">
                 <div>
                     <Image
                         src={RyanTurri}
                         width={624}
                         height={640}
                         alt="ryan turri"
-                        className="tw-w-[624px] tw-h-[360px] md:tw-h-[480px] xl:tw-h-[640px] tw-object-cover"
+                        className="w-[624px] h-[360px] md:h-[480px] xl:h-[640px] object-cover"
                     />
-                    <div className="tw-ml-4 xl:tw-ml-0">
-                        <div className="tw-text-xl tw-mt-6">Ryan Turri</div>
-                        <div className="tw-text-lg tw-opacity-80">
+                    <div className="ml-4 xl:ml-0">
+                        <div className="text-xl mt-6">Ryan Turri</div>
+                        <div className="text-lg opacity-80">
                             Designation
                         </div>
                     </div>
@@ -78,23 +78,23 @@ const AboutPage = () => {
                         width={624}
                         height={640}
                         alt="rick deacon"
-                        className="tw-w-[624px] tw-h-[360px] md:tw-h-[480px] xl:tw-h-[640px] tw-object-cover"
+                        className="w-[624px] h-[360px] md:h-[480px] xl:h-[640px] object-cover"
                     />
-                    <div className="tw-ml-4 xl:tw-ml-0">
-                        <div className="tw-text-xl tw-mt-6">Rick Deacon</div>
-                        <div className="tw-text-lg tw-opacity-80">
+                    <div className="ml-4 xl:ml-0">
+                        <div className="text-xl mt-6">Rick Deacon</div>
+                        <div className="text-lg opacity-80">
                             Designation
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="section-container tw-pt-8 tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-6">
-                <div className="tw-font-bold tw-text-5xl">
+            <div className="section-container pt-8 flex flex-col sm:flex-row justify-between gap-6">
+                <div className="font-bold text-5xl">
                     Passion for <br />
                     automobiles
                 </div>
-                <div className=" tw-text-2xl tw-max-w-[752px]">
-                    <div className="tw-font-bold">
+                <div className=" text-2xl max-w-[752px]">
+                    <div className="font-bold">
                         We believe in empowering individuals to be part of the
                         dynamic world of car auctions, regardless of their
                         budget.
@@ -120,7 +120,7 @@ const AboutPage = () => {
                     <br />
                 </div>
             </div>
-            <div className="tw-w-full">
+            <div className="w-full">
                 <HowHammerShiftWorks />
                 <SubscribeSmall />
             </div>

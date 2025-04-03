@@ -15,63 +15,63 @@ const AuctionsListCard = (props: any) => {
 
   return (
     <TimerProvider deadline={new Date()}>
-      <div className="tw-flex tw-flex-row tw-gap-4 sm:tw-gap-8 tw-w-full tw-max-w-[944px] ">
-        <div className="tw-max-w-[156px] sm:tw-max-w-[416px] tw-w-full tw-min-w-[156px] tw-h-auto tw-h-[147px] sm:tw-h-[240px]">
+      <div className="flex flex-row gap-4 sm:gap-8 w-full max-w-[944px] ">
+        <div className="max-w-[156px] sm:max-w-[416px] w-full min-w-[156px] h-auto h-[147px] sm:h-[240px]">
           <img
             src={props.image}
             width={416}
             height={240}
             alt={props.make}
-            className="tw-max-w-[156px] sm:tw-max-w-[416px] tw-w-full tw-min-w-[156px] tw-h-auto  tw-min-h-[147px] xl:tw-h-[240px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+            className="max-w-[156px] sm:max-w-[416px] w-full min-w-[156px] h-auto  min-h-[147px] xl:h-[240px] rounded object-cover aspect-auto hover:cursor-pointer"
             onClick={() =>
               router.push(`/auctions/car_view_page/${props.auction_id}`)
             }
           />
         </div>
-        <div className="tw-flex tw-flex-col tw-w-auto tw-flex-grow">
+        <div className="flex flex-col w-auto flex-grow">
           <div
-            className=" tw-font-bold tw-text-[18px] sm:tw-text-[24px] hover:tw-cursor-pointer "
+            className=" font-bold text-[18px] sm:text-[24px] hover:cursor-pointer "
             onClick={() =>
               router.push(`/auctions/car_view_page/${props.auction_id}`)
             }
           >
             {props.year} {props.make} {props.model}
           </div>
-          <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-4 sm:tw-gap-8 tw-mt-3 sm:tw-mt-4">
-            <div className="tw-flex tw-gap-2">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-3 sm:mt-4">
+            <div className="flex gap-2">
               <Image
                 src={Dollar}
                 width={20}
                 height={20}
                 alt="dollar"
-                className="tw-w-5 tw-h-5"
+                className="w-5 h-5"
               />
-              {/* <div className="tw-px-2 tw-hidden sm:tw-block">Current Bid:</div> */}
-              <div className="tw-text-[#49C742] tw-font-bold">
+              {/* <div className="px-2 hidden sm:block">Current Bid:</div> */}
+              <div className="text-[#49C742] font-bold">
                 ${currencyString}
               </div>
             </div>
-            <div className="tw-flex tw-gap-2">
+            <div className="flex gap-2">
               <Image
                 src={HourGlass}
                 width={20}
                 height={20}
                 alt="dollar"
-                className="tw-w-5 tw-h-5"
+                className="w-5 h-5"
               />
-              {/* <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div> */}
-              <div className="tw-text-[#C2451E] tw-font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+              {/* <div className="px-2 hidden sm:block">Time Left:</div> */}
+              <div className="text-[#C2451E] font-bold">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
             </div>
           </div>
-          {/* <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
+          {/* <p className="h-[60px] sm:h-[72px] w-full line-clamp-3 overflow-hidden text-[14px] sm:text-[16px]">
               {props.description[0]}
             </p> */}
-          <div className="tw-hidden lg:tw-flex tw-flex-col tw-w-auto tw-flex-grow ">
+          <div className="hidden lg:flex flex-col w-auto flex-grow ">
             <CardWagersSection objectID={props.object_id} />
           </div>
           {/* <div>
               <button
-                className="btn-yellow-thin tw-w-full tw-mt-4 md:tw-w-auto"
+                className="btn-yellow-thin w-full mt-4 md:w-auto"
                 onClick={() =>
                   router.push(`/auctions/car_view_page/${props.auction_id}`)
                 }

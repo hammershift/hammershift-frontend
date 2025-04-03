@@ -44,20 +44,20 @@ const FeedbackForm: React.FC = () => {
   };
 
   return (
-    <div className='tw-h-screen tw-flex tw-flex-col tw-items-center tw-justify-start tw-pt-16'>
-      <div className='tw-w-full tw-max-w-4xl tw-px-8 tw-py-10 sm:tw-px-12 lg:tw-px-16 lg:tw-py-14 tw-mx-auto'>
-        <div className='tw-mx-auto tw-max-w-2xl'>
-          <div className='tw-text-center'>
-            <h2 className='tw-text-xl tw-text-white tw-font-bold sm:tw-text-3xl'>We Value Your Feedback</h2>
-            <p className='tw-text-muted-foreground tw-mt-2'>
+    <div className='h-screen flex flex-col items-center justify-start pt-16'>
+      <div className='w-full max-w-4xl px-8 py-10 sm:px-12 lg:px-16 lg:py-14 mx-auto'>
+        <div className='mx-auto max-w-2xl'>
+          <div className='text-center'>
+            <h2 className='text-xl text-white font-bold sm:text-3xl'>We Value Your Feedback</h2>
+            <p className='text-muted-foreground mt-2'>
               Help us improve our application by providing your valuable feedback. As we are in beta testing, your input is crucial for us to make the necessary enhancements.
             </p>
           </div>
 
-          <div className='tw-mt-5 tw-p-6 tw-relative tw-z-10 tw-border tw-border-gray-500 tw-rounded-xl sm:tw-mt-10 md:tw-p-10'>
+          <div className='mt-5 p-6 relative z-10 border border-gray-500 rounded-xl sm:mt-10 md:p-10'>
             <form onSubmit={handleSubmit}>
-              <div className='tw-mb-4 sm:tw-mb-8'>
-                <label htmlFor='name' className='tw-block tw-mb-2 tw-text-sm tw-font-medium tw-text-white'>
+              <div className='mb-4 sm:mb-8'>
+                <label htmlFor='name' className='block mb-2 text-sm font-medium text-white'>
                   Full name
                 </label>
                 <input
@@ -65,13 +65,13 @@ const FeedbackForm: React.FC = () => {
                   id='name'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className='tw-py-3 tw-px-4 tw-block tw-w-full tw-border-gray-200 tw-rounded-lg tw-text-sm tw-text-white tw-bg-gray-800 focus:tw-border-blue-500 focus:tw-ring-blue-500'
+                  className='py-3 px-4 block w-full border-gray-200 rounded-lg text-sm text-white bg-gray-800 focus:border-blue-500 focus:ring-blue-500'
                   placeholder='Full name'
                 />
               </div>
 
-              <div className='tw-mb-4 sm:tw-mb-8'>
-                <label htmlFor='email' className='tw-block tw-mb-2 tw-text-sm tw-font-medium tw-text-white'>
+              <div className='mb-4 sm:mb-8'>
+                <label htmlFor='email' className='block mb-2 text-sm font-medium text-white'>
                   Email address
                 </label>
                 <input
@@ -79,40 +79,40 @@ const FeedbackForm: React.FC = () => {
                   id='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className='tw-py-3 tw-px-4 tw-block tw-w-full tw-border-gray-200 tw-rounded-lg tw-text-sm tw-text-white tw-bg-gray-800 focus:tw-border-blue-500 focus:tw-ring-blue-500'
+                  className='py-3 px-4 block w-full border-gray-200 rounded-lg text-sm text-white bg-gray-800 focus:border-blue-500 focus:ring-blue-500'
                   placeholder='Email address'
                 />
               </div>
 
               <div>
-                <label htmlFor='comment' className='tw-block tw-mb-2 tw-text-sm tw-font-medium tw-text-white'>
+                <label htmlFor='comment' className='block mb-2 text-sm font-medium text-white'>
                   Comment
                 </label>
-                <div className='tw-mt-1'>
+                <div className='mt-1'>
                   <textarea
                     id='comment'
                     name='comment'
                     rows={5}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    className='tw-py-3 tw-px-4 tw-block tw-w-full tw-border-gray-200 tw-rounded-lg tw-text-sm tw-text-white tw-bg-gray-800 focus:tw-border-blue-500 focus:tw-ring-blue-500'
+                    className='py-3 px-4 block w-full border-gray-200 rounded-lg text-sm text-white bg-gray-800 focus:border-blue-500 focus:ring-blue-500'
                     placeholder='Leave your comment here...'
                     required
                   ></textarea>
                 </div>
               </div>
 
-              <div className='tw-mt-6 tw-grid'>
+              <div className='mt-6 grid'>
                 <button
                   type='submit'
-                  className='tw-w-full tw-py-3 tw-px-4 tw-inline-flex tw-justify-center tw-items-center tw-gap-x-2 tw-text-sm tw-font-semibold tw-rounded-lg tw-border tw-border-transparent tw-bg-yellow-500 tw-text-black hover:tw-bg-yellow-600'
+                  className='w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-black hover:bg-yellow-600'
                 >
                   {loading ? 'Submitting...' : 'Submit'}
                 </button>
               </div>
               {message && (
-                <div className='tw-mt-4 tw-text-center'>
-                  <p className='tw-text-sm tw-font-medium tw-text-white'>{message}</p>
+                <div className='mt-4 text-center'>
+                  <p className='text-sm font-medium text-white'>{message}</p>
                 </div>
               )}
             </form>

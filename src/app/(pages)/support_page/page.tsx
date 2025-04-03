@@ -22,17 +22,17 @@ const Support_Page = () => {
     const [cancelWager, setCancelWager] = useState(false);
     const [auctionTransactions, setAuctionTransactions] = useState(false);
     return (
-        <div className="tw-w-full tw-flex tw-flex-col tw-items-center">
-            <div className="tw-py-16 tw-w-full md:tw-w-[640px] tw-px-6 md:tw-px-0">
-                <div className="tw-text-center tw-flex tw-flex-col tw-gap-4">
-                    <div className="tw-text-5xl tw-font-bold">Get Support</div>
-                    <div className="tw-opacity-80">
+        <div className="w-full flex flex-col items-center">
+            <div className="py-16 w-full md:w-[640px] px-6 md:px-0">
+                <div className="text-center flex flex-col gap-4">
+                    <div className="text-5xl font-bold">Get Support</div>
+                    <div className="opacity-80">
                         Qui ipsorum lingua Celtae, nostra Galli appellantur.
                         Vivamus sagittis lacus vel augue laoreet rutrum
                         faucibus. A communi observantia non est recedendum.
                     </div>
                 </div>
-                <div className="tw-flex tw-gap-4 tw-mt-8 tw-flex-col sm:tw-flex-row tw-justify-center">
+                <div className="flex gap-4 mt-8 flex-col sm:flex-row justify-center">
                     <button className="btn-yellow">
                         FREQUENTLY ASKED QUESTONS
                     </button>
@@ -41,21 +41,21 @@ const Support_Page = () => {
                     </button>
                 </div>
             </div>
-            <div className="tw-bg-[#1A2C3D] tw-w-full tw-flex tw-justify-center">
-                <div className="section-container tw-py-[120px] tw-px-16">
+            <div className="bg-[#1A2C3D] w-full flex justify-center">
+                <div className="section-container py-[120px] px-16">
                     <div>
-                        <div className="tw-text-4xl tw-font-bold">
+                        <div className="text-4xl font-bold">
                             Frequently asked questions
                         </div>
-                        <div className="tw-text-lg tw-opacity-80">
+                        <div className="text-lg opacity-80">
                             Excepteur sint obcaecat cupiditat non proident
                             culpa. At nos hinc posthac, sitientis piros afros.
                         </div>
                     </div>
-                    <div className="tw-mt-16">
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                    <div className="mt-16">
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     How does the car auction guessing and
                                     wagering system work?
                                 </span>
@@ -70,7 +70,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -78,23 +78,23 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {howDoesItWork && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <hr className="tw-opacity-10" />
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                        <hr className="opacity-10" />
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     Can anyone participate in the car auctions,
                                     or are there any eligibility requirements?
                                 </span>
@@ -111,7 +111,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -119,23 +119,23 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {eligibilityRequirement && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <hr className="tw-opacity-10" />
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                        <hr className="opacity-10" />
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     What happens if multiple users guess the
                                     same amount for a particular car auction?
                                 </span>
@@ -150,7 +150,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -158,23 +158,23 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {multipleUsers && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <hr className="tw-opacity-10" />
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                        <hr className="opacity-10" />
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     Is there a limit to the number of wagers I
                                     can place on different car auctions?
                                 </span>
@@ -189,7 +189,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -197,23 +197,23 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {limitedNumbers && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <hr className="tw-opacity-10" />
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                        <hr className="opacity-10" />
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     How are the winners determined in the car
                                     auctions?
                                 </span>
@@ -230,7 +230,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -238,23 +238,23 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {howWinnersAreDetermined && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <hr className="tw-opacity-10" />
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                        <hr className="opacity-10" />
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     {
                                         "Can I change or cancel my wager once it's been placed?"
                                     }
@@ -270,7 +270,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -278,23 +278,23 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {cancelWager && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <hr className="tw-opacity-10" />
-                        <div className="tw-py-8">
-                            <div className="tw-flex tw-justify-between">
-                                <span className="tw-text-xl">
+                        <hr className="opacity-10" />
+                        <div className="py-8">
+                            <div className="flex justify-between">
+                                <span className="text-xl">
                                     What are the different payment methods
                                     accepted for wagers and auction
                                     transactions?
@@ -310,7 +310,7 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="plus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     ) : (
                                         <Image
@@ -318,30 +318,30 @@ const Support_Page = () => {
                                             width={20}
                                             height={20}
                                             alt="minus sign"
-                                            className="tw-w-[20px] tw-h-[20px]"
+                                            className="w-[20px] h-[20px]"
                                         />
                                     )}
                                 </button>
                             </div>
                             {auctionTransactions && (
-                                <div className="tw-opacity-80 tw-mt-4">
+                                <div className="opacity-80 mt-4">
                                     Excepteur sint obcaecat cupiditat non
                                     proident culpa. At nos hinc posthac,
                                     sitientis piros afros.
                                 </div>
                             )}
                         </div>
-                        <button className="btn-transparent-white tw-w-full">
+                        <button className="btn-transparent-white w-full">
                             LOAD MORE
                         </button>
                     </div>
                 </div>
             </div>
             {/* ContactUs */}
-            <div className="tw-py-[120px] tw-flex tw-justify-center">
-                <div className="tw-w-full md:tw-w-[640px] tw-px-6 md:tw-px-0">
-                    <div className="tw-grid tw-gap-2">
-                        <span className="tw-text-4xl tw-font-bold">
+            <div className="py-[120px] flex justify-center">
+                <div className="w-full md:w-[640px] px-6 md:px-0">
+                    <div className="grid gap-2">
+                        <span className="text-4xl font-bold">
                             Contact Us
                         </span>
                         <span>
@@ -350,95 +350,95 @@ const Support_Page = () => {
                             }
                         </span>
                     </div>
-                    <div className="tw-grid tw-gap-6 tw-text-sm tw-mt-12">
-                        <div className="tw-flex tw-flex-col">
+                    <div className="grid gap-6 text-sm mt-12">
+                        <div className="flex flex-col">
                             <label>Name</label>
                             <input
                                 placeholder="Full name"
-                                className="tw-bg-[#172431] tw-mt-2 tw-py-2.5 tw-px-3"
+                                className="bg-[#172431] mt-2 py-2.5 px-3"
                             />
                         </div>
-                        <div className="tw-flex tw-flex-col">
+                        <div className="flex flex-col">
                             <label>Email</label>
                             <input
                                 placeholder="you@email.com"
-                                className="tw-bg-[#172431] tw-mt-2 tw-py-2.5 tw-px-3"
+                                className="bg-[#172431] mt-2 py-2.5 px-3"
                             />
                         </div>
-                        <div className="tw-flex tw-flex-col">
+                        <div className="flex flex-col">
                             <label>Message</label>
                             <textarea
-                                className="tw-bg-[#172431] tw-mt-2 tw-py-2.5 tw-px-3"
+                                className="bg-[#172431] mt-2 py-2.5 px-3"
                                 rows={5}
                             />
                         </div>
                     </div>
-                    <button className="btn-yellow tw-w-full tw-mt-8">
+                    <button className="btn-yellow w-full mt-8">
                         SEND MESSAGE
                     </button>
                 </div>
             </div>
-            <div className="section-container tw-mb-[120px]">
-                <div className="tw-w-full tw-bg-[#1A2C3D] tw-py-16 tw-px-8 tw-rounded-lg tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-8">
-                    <div className="tw-flex tw-flex-col tw-items-center tw-gap-5">
-                        <div className="tw-bg-[#53944F] tw-w-16 tw-h-16 tw-rounded-full tw-flex tw-justify-center tw-items-center">
+            <div className="section-container mb-[120px]">
+                <div className="w-full bg-[#1A2C3D] py-16 px-8 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="flex flex-col items-center gap-5">
+                        <div className="bg-[#53944F] w-16 h-16 rounded-full flex justify-center items-center">
                             <Image
                                 src={Mail}
                                 width={24}
                                 height={24}
                                 alt=""
-                                className="tw-w-[24px] tw-h-[24px]"
+                                className="w-[24px] h-[24px]"
                             />
                         </div>
-                        <div className="tw-text-center">
-                            <div className="tw-font-bold tw-text-lg">Email</div>
-                            <div className="tw-opacity-50">
+                        <div className="text-center">
+                            <div className="font-bold text-lg">Email</div>
+                            <div className="opacity-50">
                                 Our friendly team is here to help.
                             </div>
                         </div>
-                        <div className="tw-text-[#53944F] tw-font-bold">
+                        <div className="text-[#53944F] font-bold">
                             support@hammershift.com
                         </div>
                     </div>
-                    <div className="tw-flex tw-flex-col tw-items-center tw-gap-5">
-                        <div className="tw-bg-[#53944F] tw-w-16 tw-h-16 tw-rounded-full tw-flex tw-justify-center tw-items-center">
+                    <div className="flex flex-col items-center gap-5">
+                        <div className="bg-[#53944F] w-16 h-16 rounded-full flex justify-center items-center">
                             <Image
                                 src={Marker}
                                 width={24}
                                 height={24}
                                 alt=""
-                                className="tw-w-[24px] tw-h-[24px]"
+                                className="w-[24px] h-[24px]"
                             />
                         </div>
-                        <div className="tw-text-center">
-                            <div className="tw-font-bold tw-text-lg">
+                        <div className="text-center">
+                            <div className="font-bold text-lg">
                                 Office
                             </div>
-                            <div className="tw-opacity-50">Our HQ</div>
+                            <div className="opacity-50">Our HQ</div>
                         </div>
-                        <div className="tw-text-[#53944F] tw-font-bold tw-text-center">
+                        <div className="text-[#53944F] font-bold text-center">
                             100 Smith Street
                             <br />
                             Collingwood VIC 3066 NJ
                         </div>
                     </div>
-                    <div className="tw-flex tw-flex-col tw-items-center tw-gap-5">
-                        <div className="tw-bg-[#53944F] tw-w-16 tw-h-16 tw-rounded-full tw-flex tw-justify-center tw-items-center">
+                    <div className="flex flex-col items-center gap-5">
+                        <div className="bg-[#53944F] w-16 h-16 rounded-full flex justify-center items-center">
                             <Image
                                 src={Phone}
                                 width={24}
                                 height={24}
                                 alt=""
-                                className="tw-w-[24px] tw-h-[24px]"
+                                className="w-[24px] h-[24px]"
                             />
                         </div>
-                        <div className="tw-text-center">
-                            <div className="tw-font-bold tw-text-lg">Phone</div>
-                            <div className="tw-opacity-50">
+                        <div className="text-center">
+                            <div className="font-bold text-lg">Phone</div>
+                            <div className="opacity-50">
                                 Mon-Fri from 8am to 5pm.
                             </div>
                         </div>
-                        <div className="tw-text-[#53944F] tw-font-bold">
+                        <div className="text-[#53944F] font-bold">
                             +1 (555) 000-0000
                         </div>
                     </div>

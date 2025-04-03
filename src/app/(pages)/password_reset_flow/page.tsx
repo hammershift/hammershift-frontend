@@ -205,33 +205,33 @@ const PasswordResetFlow = () => {
   };
 
   const getInputStyle = () => {
-    let baseStyle = 'tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full';
+    let baseStyle = 'py-2.5 px-3 bg-[#172431] w-full';
     let borderColorStyle = '';
 
     if (isOtpLengthValid) {
-      borderColorStyle = 'tw-border-green-500';
+      borderColorStyle = 'border-green-500';
     } else if (error) {
-      borderColorStyle = 'tw-border-red-500';
+      borderColorStyle = 'border-red-500';
     }
 
     return `${baseStyle} ${borderColorStyle}`;
   };
 
   return (
-    <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+    <div className='w-screen md:h-screen absolute top-0 z-[-1] flex justify-center items-center mt-16 md:mt-0'>
       {/* Loading */}
       {isLoading ? (
-        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+        <div className='flex justify-center items-center h-full'>
           <BounceLoader color='#696969' loading={isLoading} />
         </div>
       ) : (
         <>
           {resetPage === 'enter otp' && (
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-2 tw-pt-6'>
-              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Verification Code</div>
-              {!otpExpired && <div className='tw-text-sm tw-mb-2 tw-ml-2'>Time Remaining: {formatTime()}</div>}
+            <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-2 pt-6'>
+              <div className='font-bold text-2xl md:text-4xl'>Verification Code</div>
+              {!otpExpired && <div className='text-sm mb-2 ml-2'>Time Remaining: {formatTime()}</div>}
               <form onSubmit={handleAction}>
-                <div className='tw-flex tw-flex-col tw-gap-6'>
+                <div className='flex flex-col gap-6'>
                   <input
                     className={getInputStyle()}
                     type='text'
@@ -241,8 +241,8 @@ const PasswordResetFlow = () => {
                     required
                     disabled={otpExpired || isLoading}
                   />
-                  {error && <p className='tw-text-sm tw-ml-2 tw-text-red-500'>{error}</p>}
-                  <button type='submit' className='btn-yellow tw-w-full' disabled={isLoading}>
+                  {error && <p className='text-sm ml-2 text-red-500'>{error}</p>}
+                  <button type='submit' className='btn-yellow w-full' disabled={isLoading}>
                     {isLoading ? <BounceLoader size={20} color='#ffffff' /> : otpExpired ? 'Resend Code' : 'Verify Code'}
                   </button>
                 </div>
@@ -251,15 +251,15 @@ const PasswordResetFlow = () => {
           )}
 
           {resetPage === 'reset password' && (
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
-              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
+            <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-8 pt-6'>
+              <div className='font-bold text-2xl md:text-4xl'>Reset Password</div>
               <form onSubmit={handlePasswordReset}>
-                <div className='tw-flex tw-flex-col tw-gap-6'>
+                <div className='flex flex-col gap-6'>
                   <PasswordInput value={newPassword} onChange={setNewPassword} />
                   <PasswordInput value={confirmPassword} onChange={setConfirmPassword} />
-                  {passwordMatch && <p className='tw-text-green-500 tw-text-sm'>Passwords match!</p>}
-                  {!passwordMatch && passwordError && <p className='tw-text-red-500 tw-text-sm'>{passwordError}</p>}
-                  <button type='submit' className='btn-yellow tw-w-full' disabled={isLoading}>
+                  {passwordMatch && <p className='text-green-500 text-sm'>Passwords match!</p>}
+                  {!passwordMatch && passwordError && <p className='text-red-500 text-sm'>{passwordError}</p>}
+                  <button type='submit' className='btn-yellow w-full' disabled={isLoading}>
                     {isLoading ? <BounceLoader size={20} color='#ffffff' /> : 'Reset Password'}
                   </button>
                 </div>

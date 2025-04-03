@@ -69,8 +69,8 @@ const LivePageCarousel = () => {
       {isLoading ? (
         <LoadingLivePageCarousel />
       ) : (
-        <div className="tw-relative section-container tw-max-w-[1440px] tw-overflow-hidden tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px]">
-          <div className="tw-w-full tw-overflow-hidden">
+        <div className="relative section-container max-w-[1440px] overflow-hidden m-auto mt-4 md:mt-6 md:mb-[58px]">
+          <div className="w-full overflow-hidden">
             <Swiper
               modules={[Navigation, Pagination, Scrollbar, A11y]}
               spaceBetween={50}
@@ -164,16 +164,16 @@ const SlideOne = ({ carData }: any) => {
   }, []);
 
   return (
-    <div className="section-one xl:tw-items-end md:tw-justify-center tw-w-full tw-rounded-[20px] md:tw-flex md:tw-items-center tw-z-20">
-      <div className="xl:tw-py-11 xl:tw-px-14 md:tw-w-full md:tw-h-full">
+    <div className="section-one xl:items-end md:justify-center w-full rounded-[20px] md:flex md:items-center z-20">
+      <div className="xl:py-11 xl:px-14 md:w-full md:h-full">
         <Link
           href={`/auctions/car_view_page/${carData.auction_id}`}
-          className="tw-relative tw-h-full"
+          className="relative h-full"
         >
-          <span className="tw-absolute tw-z-50 tw-text-sm tw-font-bold tw-bg-[#c2451e] tw-py-2 tw-px-[15px] tw-rounded-full tw-top-[12px] tw-left-[12px]">
+          <span className="absolute z-50 text-sm font-bold bg-[#c2451e] py-2 px-[15px] rounded-full top-[12px] left-[12px]">
             LIVE
           </span>
-          <div className="tw-relative tw-block tw-rounded-t-[20px] md:tw-rounded-[20px] xl:tw-rounded md:tw-h-[100%] live-page-image-sizing xl:tw-w-full">
+          <div className="relative block rounded-t-[20px] md:rounded-[20px] xl:rounded md:h-[100%] live-page-image-sizing xl:w-full">
             {carData.images_list
               .slice(0, 5)
               .map((image: any, index: number) => {
@@ -185,9 +185,9 @@ const SlideOne = ({ carData }: any) => {
                     height={538}
                     alt="dollar"
                     className={`${index !== 0
-                      ? "tw-absolute tw-top-0 tw-left-0 tw-z-30 tw-bottom-0"
-                      : "tw-z-40"
-                      } tw-object-cover tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-[100%] live-page-image-sizing md xl:tw-rounded pic ${"pic" + (5 - index)
+                      ? "absolute top-0 left-0 z-30 bottom-0"
+                      : "z-40"
+                      } object-cover rounded-t-[20px] md:rounded-[20px] md:h-[100%] live-page-image-sizing md xl:rounded pic ${"pic" + (5 - index)
                       }`}
                   />
                 );
@@ -196,27 +196,27 @@ const SlideOne = ({ carData }: any) => {
           <WagerCycle words={wagers} />
         </Link>
       </div>
-      <div className="tw-py-8 tw-px-4 md:tw-max-w-[392px] xl:tw-pt-0 xl:tw-pl-0 xl:tw-pb-11 xl:tw-pr-14">
+      <div className="py-8 px-4 md:max-w-[392px] xl:pt-0 xl:pl-0 xl:pb-11 xl:pr-14">
         <button
           disabled
-          className="tw-text-sm tw-text-[#ff4308] tw-flex tw-gap-1 tw-bg-[#5f3530] tw-py-[3px] tw-px-2 tw-items-center tw-rounded-full tw-mb-3"
+          className="text-sm text-[#ff4308] flex gap-1 bg-[#5f3530] py-[3px] px-2 items-center rounded-full mb-3"
         >
           <Image src={RedHourGlass} alt="hour glass" width={8} height={8} />
           <div>Time Left:</div>
           <div>{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
         </button>
-        <div className="tw-font-bold tw-text-xl tw-mb-1">
+        <div className="font-bold text-xl mb-1">
           {carData.year} {carData.make} {carData.model}
         </div>
-        <div className="tw-opacity-80 tw-text-sm tw-mb-8 tw-line-clamp-3">
+        <div className="opacity-80 text-sm mb-8 line-clamp-3">
           {carData.description[0]}
         </div>
 
-        <div className="tw-relative tw-p-6 tw-bg-[#FFFFFF1A] tw-rounded-lg live-page-shadow tw-z-[1]">
-          <span className="tw-font-bold tw-text-sm tw-text-black tw-bg-[#49c742] tw-py-1 tw-px-[10px] tw-rounded">
+        <div className="relative p-6 bg-[#FFFFFF1A] rounded-lg live-page-shadow z-[1]">
+          <span className="font-bold text-sm text-black bg-[#49c742] py-1 px-[10px] rounded">
             PRIZE POOL
           </span>
-          <div className="tw-mt-4 tw-mb-6 tw-font-bold tw-text-5xl">
+          <div className="mt-4 mb-6 font-bold text-5xl">
             $
             {prize % 1 === 0
               ? prize.toLocaleString()
@@ -229,22 +229,22 @@ const SlideOne = ({ carData }: any) => {
             onClick={(e) =>
               router.push(`/auctions/car_view_page/${carData.auction_id}`)
             }
-            className="tw-font-bold tw-text-black tw-bg-[#f2ca16] tw-py-[10px] tw-w-full tw-rounded tw-mb-3"
+            className="font-bold text-black bg-[#f2ca16] py-[10px] w-full rounded mb-3"
           >
             BUY IN FOR $10
           </button>
-          <div className="tw-text-sm tw-flex tw-items-center tw-gap-2">
+          <div className="text-sm flex items-center gap-2">
             <Image src={DollarSign} alt="hour glass" width={14} height={14} />
             <div>Current Bid:</div>
-            <div className="tw-text-[#49c742] tw-font-bold">
+            <div className="text-[#49c742] font-bold">
               ${new Intl.NumberFormat().format(carData.price)}
             </div>
           </div>
-          <div className="tw-absolute tw-top-0 tw-left-0 -tw-z-[1] tw-w-full">
+          <div className="absolute top-0 left-0 -z-[1] w-full">
             <Image
               src={TransitionPattern}
               alt="pattern"
-              className="tw-rounded-lg tw-object-cover tw-w-full"
+              className="rounded-lg object-cover w-full"
             />
           </div>
         </div>
@@ -255,18 +255,18 @@ const SlideOne = ({ carData }: any) => {
 
 const LoadingLivePageCarousel = () => {
   return (
-    <div className="section-container tw-max-w-[1440px] tw-m-auto tw-mt-4 md:tw-mt-6 md:tw-mb-[58px] md:tw-h-[462px] xl:tw-h-[520px] 2xl:tw-h-[627px]">
-      <div className="tw-bg-gray-800 tw-rounded-t-[20px] md:tw-rounded-[20px] tw-rounded-[20px] md:tw-flex md:tw-items-center xl:tw-items-end tw-h-full">
-        <div className="xl:tw-py-11 xl:tw-px-14 xl:tw-w-full md:tw-h-full load-image-sizing">
-          <div className="tw-bg-gray-700 md:tw-w-full tw-animate-pulse tw-rounded-t-[20px] md:tw-rounded-[20px] md:tw-h-full live-page-image-sizing md xl:tw-rounded"></div>
+    <div className="section-container max-w-[1440px] m-auto mt-4 md:mt-6 md:mb-[58px] md:h-[462px] xl:h-[520px] 2xl:h-[627px]">
+      <div className="bg-gray-800 rounded-t-[20px] md:rounded-[20px] rounded-[20px] md:flex md:items-center xl:items-end h-full">
+        <div className="xl:py-11 xl:px-14 xl:w-full md:h-full load-image-sizing">
+          <div className="bg-gray-700 md:w-full animate-pulse rounded-t-[20px] md:rounded-[20px] md:h-full live-page-image-sizing md xl:rounded"></div>
         </div>
-        <div className="tw-h-[462px] tw-py-8 tw-px-4 md:tw-w-[392px] xl:tw-pt-0 xl:tw-pl-0 xl:tw-pb-11 xl:tw-pr-14">
-          <div className="tw-animate-pulse tw-bg-gray-700 tw-w-[175px] tw-h-[26px] tw-rounded-full tw-mb-3"></div>
-          <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[28px] tw-rounded tw-mb-2"></div>
-          <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[20px] tw-rounded tw-mb-1"></div>
-          <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[20px] tw-rounded tw-mb-1"></div>
-          <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[20px] tw-rounded tw-mb-[32px]"></div>
-          <div className="tw-animate-pulse tw-bg-gray-700 tw-w-full tw-h-[236px] tw-rounded"></div>
+        <div className="h-[462px] py-8 px-4 md:w-[392px] xl:pt-0 xl:pl-0 xl:pb-11 xl:pr-14">
+          <div className="animate-pulse bg-gray-700 w-[175px] h-[26px] rounded-full mb-3"></div>
+          <div className="animate-pulse bg-gray-700 w-full h-[28px] rounded mb-2"></div>
+          <div className="animate-pulse bg-gray-700 w-full h-[20px] rounded mb-1"></div>
+          <div className="animate-pulse bg-gray-700 w-full h-[20px] rounded mb-1"></div>
+          <div className="animate-pulse bg-gray-700 w-full h-[20px] rounded mb-[32px]"></div>
+          <div className="animate-pulse bg-gray-700 w-full h-[236px] rounded"></div>
         </div>
       </div>
     </div>

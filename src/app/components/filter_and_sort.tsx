@@ -186,20 +186,20 @@ const FiltersAndSort = ({
   ]);
 
   return (
-    <div className="tw-flex tw-justify-between tw-w-screen tw-my-4 xl:tw-my-8 tw-px-4 md:tw-px-16 2xl:tw-w-[1440px]">
-      <div className="left-container-marker tw-flex tw-items-center">
+    <div className="flex justify-between w-screen my-4 xl:my-8 px-4 md:px-16 2xl:w-[1440px]">
+      <div className="left-container-marker flex items-center">
         <div>
-          Auctions <span className="tw-opacity-50"> {totalAuctions}</span>
+          Auctions <span className="opacity-50"> {totalAuctions}</span>
         </div>
-        <div className="tw-hidden xl:tw-flex">
+        <div className="hidden xl:flex">
           {/* Filter Dropdown for regular screens*/}
           {/* Dropdown for Make filter*/}
-          <div className=" tw-relative tw-inline-block tw-text-left tw-mx-2">
+          <div className=" relative inline-block text-left mx-2">
             <div>
               <button
                 id="filter-make-button"
                 type="button"
-                className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
                 style={makeDropdown ? { backgroundColor: "#1A2C3D" } : {}}
                 onClick={() => setMakeDropdown((prev) => !prev)}
               >
@@ -211,19 +211,19 @@ const FiltersAndSort = ({
                   width={12}
                   height={12}
                   alt="dropdown arrow"
-                  className="tw-w-[12px] tw-h-[12px]"
+                  className="w-[12px] h-[12px]"
                 />
               </button>
             </div>
             {makeDropdown && <MakeDropdown filters={filters} />}
           </div>
           {/* Dropdown for Category filter*/}
-          <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+          <div className="relative inline-block text-left mx-2">
             <div>
               <button
                 type="button"
                 id="filter-category-button"
-                className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
                 style={categoryDropdown ? { backgroundColor: "#1A2C3D" } : {}}
                 onClick={() => setCategoryDropdown((prev) => !prev)}
               >
@@ -235,19 +235,19 @@ const FiltersAndSort = ({
                   width={12}
                   height={12}
                   alt="dropdown arrow"
-                  className="tw-w-[12px] tw-h-[12px]"
+                  className="w-[12px] h-[12px]"
                 />
               </button>
             </div>
             {categoryDropdown && <CategoryDropdown filters={filters} />}
           </div>
           {/* Dropdown for Era filter*/}
-          <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+          <div className="relative inline-block text-left mx-2">
             <div>
               <button
                 type="button"
                 id="filter-era-button"
-                className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
                 style={eraDropdown ? { backgroundColor: "#1A2C3D" } : {}}
                 onClick={() => setEraDropdown((prev) => !prev)}
               >
@@ -259,19 +259,19 @@ const FiltersAndSort = ({
                   width={12}
                   height={12}
                   alt="dropdown arrow"
-                  className="tw-w-[12px] tw-h-[12px]"
+                  className="w-[12px] h-[12px]"
                 />
               </button>
             </div>
             {eraDropdown && <EraDropdown filters={filters} />}
           </div>
           {/* Dropdown for Location filter*/}
-          <div className="tw-relative tw-inline-block tw-text-left tw-mx-2">
+          <div className="relative inline-block text-left mx-2">
             <div>
               <button
                 id="filter-location-button"
                 type="button"
-                className="tw-w-[140px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
                 style={locationDropdown ? { backgroundColor: "#1A2C3D" } : {}}
                 onClick={() => setLocationDropdown((prev) => !prev)}
               >
@@ -283,7 +283,7 @@ const FiltersAndSort = ({
                   width={12}
                   height={12}
                   alt="dropdown arrow"
-                  className="tw-w-[12px] tw-h-[12px]"
+                  className="w-[12px] h-[12px]"
                 />
               </button>
             </div>
@@ -291,13 +291,12 @@ const FiltersAndSort = ({
           </div>
         </div>
       </div>
-      <div className="right-container-marker tw-flex tw-items-center tw-hidden xl:tw-flex tw-gap-6">
+      <div className="right-container-marker flex items-center hidden xl:flex gap-6">
         {/* TODO: */}
-        <div className="tw-flex tw-gap-6">
+        <div className="flex gap-6">
           <div
-            className={`tw-p-2 tw-rounded tw-cursor-pointer ${
-              isGridView ? "tw-bg-[#172431]" : ""
-            }`}
+            className={`p-2 rounded cursor-pointer ${isGridView ? "bg-[#172431]" : ""
+              }`}
             onClick={(e) => setIsGridView(true)}
           >
             <Image
@@ -305,13 +304,12 @@ const FiltersAndSort = ({
               alt="grid view"
               width={24}
               height={24}
-              className={`tw-w-[24px] tw-h-[24px]`}
+              className={`w-[24px] h-[24px]`}
             />
           </div>
           <div
-            className={`tw-p-2 tw-rounded tw-cursor-pointer ${
-              !isGridView ? "tw-bg-[#172431]" : ""
-            }`}
+            className={`p-2 rounded cursor-pointer ${!isGridView ? "bg-[#172431]" : ""
+              }`}
             onClick={(e) => setIsGridView(false)}
           >
             <Image
@@ -319,18 +317,18 @@ const FiltersAndSort = ({
               alt="grid view"
               width={24}
               height={24}
-              className={`tw-w-[24px] tw-h-[24px]  `}
+              className={`w-[24px] h-[24px]  `}
             />
           </div>
         </div>
 
         {/* Dropdown for Sort*/}
-        <div className="tw-relative tw-text-left tw-mx-2">
+        <div className="relative text-left mx-2">
           <div>
             <button
               id="sort-auctions-button"
               type="button"
-              className="tw-w-[240px] tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5 tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+              className="w-[240px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
               style={
                 dropdownMenuRegular === "Sort"
                   ? { backgroundColor: "#1A2C3D" }
@@ -351,21 +349,21 @@ const FiltersAndSort = ({
                 width={12}
                 height={12}
                 alt="dropdown arrow"
-                className="tw-w-[12px] tw-h-[12px]"
+                className="w-[12px] h-[12px]"
               />
             </button>
           </div>
           {dropdownMenuRegular === "Sort" && <SortDropdown filters={filters} />}
         </div>
       </div>
-      <div className="tw-flex xl:tw-hidden">
+      <div className="flex xl:hidden">
         <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
           <Image
             src={FilterFunnel}
             width={24}
             height={24}
             alt="gift icon"
-            className="tw-w-[24px] tw-h-[24px]"
+            className="w-[24px] h-[24px]"
           />
         </button>
         <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
@@ -374,14 +372,14 @@ const FiltersAndSort = ({
             width={24}
             height={24}
             alt="gift icon"
-            className="tw-w-[24px] tw-h-[24px] tw-ml-6"
+            className="w-[24px] h-[24px] ml-6"
           />
         </button>
       </div>
       {/* Filter Dropdown for small screens*/}
       {filterDropdownOpen && (
-        <div className="slide-in-top tw-w-screen tw-h-screen tw-fixed tw-z-40 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4">
-          <div className="tw-flex tw-justify-between">
+        <div className="slide-in-top w-screen h-screen fixed z-40 top-0 left-0 bg-[#1A2C3D] p-4">
+          <div className="flex justify-between">
             <div>FILTER</div>
             <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
               <Image
@@ -389,27 +387,27 @@ const FiltersAndSort = ({
                 width={24}
                 height={24}
                 alt="magnifying glass"
-                className="tw-w-6 tw-h-6"
+                className="w-6 h-6"
               />
             </button>
           </div>
-          <div className="tw-bg-shade-100 tw-flex tw-p-2 tw-rounded tw-mt-8">
+          <div className="bg-shade-100 flex p-2 rounded mt-8">
             <Image
               src={MagnifyingGlass}
               width={15}
               height={15}
               alt="magnifying glass"
-              className="tw-w-auto tw-h-auto"
+              className="w-auto h-auto"
             />
             <input
-              className="tw-ml-2 tw-bg-shade-100 "
+              className="ml-2 bg-shade-100 "
               placeholder="Search make, model, year..."
             ></input>
           </div>
           <div>
             {/* Dropdown for MAKE */}
             <button
-              className="tw-flex tw-justify-between tw-mt-4 tw-w-full"
+              className="flex justify-between mt-4 w-full"
               onClick={() =>
                 setDropdownMenuSmall((prev) => {
                   if (prev === "Make") return null;
@@ -417,23 +415,23 @@ const FiltersAndSort = ({
                 })
               }
             >
-              <div className="tw-font-bold">Make</div>
+              <div className="font-bold">Make</div>
               <Image
                 src={ArrowDown}
                 width={32}
                 height={32}
                 alt="magnifying glass"
-                className="tw-w-8 tw-h-8"
+                className="w-8 h-8"
               />
             </button>
             {dropdownMenuSmall === "Make" && (
-              <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-4/5 tw-overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-4/5 overflow-y-auto">
                 <MakeContent columns={1} filters={filters} />
               </div>
             )}
             {/* Dropdown for CATEGORY */}
             <button
-              className="tw-flex tw-justify-between tw-mt-4 tw-w-full"
+              className="flex justify-between mt-4 w-full"
               onClick={() =>
                 setDropdownMenuSmall((prev) => {
                   if (prev === "Category") return null;
@@ -441,23 +439,23 @@ const FiltersAndSort = ({
                 })
               }
             >
-              <div className="tw-font-bold">Category</div>
+              <div className="font-bold">Category</div>
               <Image
                 src={ArrowDown}
                 width={32}
                 height={32}
                 alt="magnifying glass"
-                className="tw-w-8 tw-h-8"
+                className="w-8 h-8"
               />
             </button>
             {dropdownMenuSmall === "Category" && (
-              <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-3/5 overflow-y-auto">
                 <CategoryContent columns={1} filters={filters} />
               </div>
             )}
             {/* Dropdown for ERA */}
             <button
-              className="tw-flex tw-justify-between tw-mt-4 tw-w-full"
+              className="flex justify-between mt-4 w-full"
               onClick={() =>
                 setDropdownMenuSmall((prev) => {
                   if (prev === "Era") return null;
@@ -465,23 +463,23 @@ const FiltersAndSort = ({
                 })
               }
             >
-              <div className="tw-font-bold">Era</div>
+              <div className="font-bold">Era</div>
               <Image
                 src={ArrowDown}
                 width={32}
                 height={32}
                 alt="magnifying glass"
-                className="tw-w-8 tw-h-8"
+                className="w-8 h-8"
               />
             </button>
             {dropdownMenuSmall === "Era" && (
-              <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-3/5 tw-overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-3/5 overflow-y-auto">
                 <EraContent columns={1} filters={filters} />
               </div>
             )}
             {/* Dropdown for LOCATION */}
             <button
-              className="tw-flex tw-justify-between tw-mt-4 tw-w-full"
+              className="flex justify-between mt-4 w-full"
               onClick={() =>
                 setDropdownMenuSmall((prev) => {
                   if (prev === "Location") return null;
@@ -489,17 +487,17 @@ const FiltersAndSort = ({
                 })
               }
             >
-              <div className="tw-font-bold">Location</div>
+              <div className="font-bold">Location</div>
               <Image
                 src={ArrowDown}
                 width={32}
                 height={32}
                 alt="magnifying glass"
-                className="tw-w-8 tw-h-8"
+                className="w-8 h-8"
               />
             </button>
             {dropdownMenuSmall === "Location" && (
-              <div className="tw-absolute tw-left-0 tw-z-50  tw-w-screen tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-p-4 tw-h-1/2 tw-overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-1/2 overflow-y-auto">
                 <LocationContent columns={1} filters={filters} />
               </div>
             )}
@@ -508,8 +506,8 @@ const FiltersAndSort = ({
       )}
       {/* Sort Dropdown */}
       {sortDropdownOpen && (
-        <div className="slide-in-top tw-w-screen tw-h-screen tw-fixed tw-z-50 tw-top-0 tw-left-0 tw-bg-[#1A2C3D] tw-p-4">
-          <div className="tw-flex tw-justify-between tw-py-4">
+        <div className="slide-in-top w-screen h-screen fixed z-50 top-0 left-0 bg-[#1A2C3D] p-4">
+          <div className="flex justify-between py-4">
             <div>SORT</div>
             <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
               <Image
@@ -517,7 +515,7 @@ const FiltersAndSort = ({
                 width={24}
                 height={24}
                 alt="magnifying glass"
-                className="tw-w-6 tw-h-6"
+                className="w-6 h-6"
               />
             </button>
           </div>
@@ -637,25 +635,25 @@ const MakeDropdownContent = [
 
 const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
-    <div className="tw-absolute tw-left-0 tw-z-10 tw-mt-2 tw-w-[640px] tw-h-[362px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg">
-      <div className="tw-p-4" role="none">
-        <div className="tw-flex tw-items-center tw-bg-white/5 tw-rounded tw-py-2 tw-px-3">
+    <div className="absolute left-0 z-10 mt-2 w-[640px] h-[362px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg">
+      <div className="p-4" role="none">
+        <div className="flex items-center bg-white/5 rounded py-2 px-3">
           <Image
             src={MagnifyingGlass}
             width={20}
             height={20}
             alt="dropdown arrow"
-            className="tw-w-[20px] tw-h-[20px] tw-mr-2"
+            className="w-[20px] h-[20px] mr-2"
           />
           <input
             id="make-searchbar"
-            className="tw-bg-transparent tw-w-full tw-outline-none"
+            className="bg-transparent w-full outline-none"
             placeholder="Search"
           />
         </div>
         <div
           id="make-dropdown"
-          className="tw-mt-2 tw-h-[280px] tw-overflow-y-auto"
+          className="mt-2 h-[280px] overflow-y-auto"
         >
           <MakeContent columns={3} filters={filters} />
         </div>
@@ -674,34 +672,32 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
 
   return (
     <div
-      className={`tw-h-fit tw-px-2 tw-grid tw-grid-cols-${columns} tw-grid-rows-${
-        columns === 1 ? 39 : 13
-      }`}
+      className={`h-fit px-2 grid grid-cols-${columns} grid-rows-${columns === 1 ? 39 : 13
+        }`}
     >
       {MakeDropdownContent.map((value) => (
-        <div className="tw-flex tw-relative tw-items-center tw-p-2" key={value}>
+        <div className="flex relative items-center p-2" key={value}>
           <div onClick={() => addToFilters(value, "make", filters, router)}>
             <input
               type="checkbox"
-              className={` ${
-                filters["make"].includes(value)
-                  ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                  : "tw-bg-white/5 tw-border-white/10"
-              } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity make-checkbox`}
+              className={` ${filters["make"].includes(value)
+                  ? "bg-[#f2ca16] border-[#f2ca16]"
+                  : "bg-white/5 border-white/10"
+                } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity make-checkbox`}
             />
             {filters["make"].includes(value) && (
-              <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+              <div className="pointer-events-none absolute top-5 left-[22px] -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity opacity-100">
                 <Image
                   src={CheckIcon}
                   width={10}
                   height={7}
                   alt="dropdown arrow"
-                  className="tw-w-[10px] tw-h-[7px] tw-mr-2"
+                  className="w-[10px] h-[7px] mr-2"
                 />
               </div>
             )}
           </div>
-          <label className="tw-pl-3">{value}</label>
+          <label className="pl-3">{value}</label>
           <br />
         </div>
       ))}
@@ -729,7 +725,7 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
     <>
       <div
-        className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg "
+        className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg "
         role="menu"
         aria-labelledby="menu-button"
         tabIndex={-1}
@@ -746,31 +742,30 @@ const CategoryContent: React.FC<FiltersContentProps> = ({
 }) => {
   const router = useRouter();
   return (
-    <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
+    <div className={`px-2 grid grid-cols-${columns}`}>
       {CategoryDropdownContent.map((value) => (
-        <div className="tw-flex tw-relative tw-items-center tw-p-2" key={value}>
+        <div className="flex relative items-center p-2" key={value}>
           <div onClick={() => addToFilters(value, "category", filters, router)}>
             <input
               type="checkbox"
-              className={` ${
-                filters["category"].includes(value)
-                  ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                  : "tw-bg-white/5 tw-border-white/10"
-              } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity category-checkbox`}
+              className={` ${filters["category"].includes(value)
+                  ? "bg-[#f2ca16] border-[#f2ca16]"
+                  : "bg-white/5 border-white/10"
+                } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity category-checkbox`}
             />
             {filters["category"].includes(value) && (
-              <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+              <div className="pointer-events-none absolute top-5 left-[22px] -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity opacity-100">
                 <Image
                   src={CheckIcon}
                   width={10}
                   height={7}
                   alt="dropdown arrow"
-                  className="tw-w-[10px] tw-h-[7px] tw-mr-2"
+                  className="w-[10px] h-[7px] mr-2"
                 />
               </div>
             )}
           </div>
-          <label className="tw-pl-3">{value}</label>
+          <label className="pl-3">{value}</label>
           <br />
         </div>
       ))}
@@ -799,7 +794,7 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
     <div>
       <div
-        className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg "
+        className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg "
         role="menu"
         aria-labelledby="menu-button"
         tabIndex={-1}
@@ -813,31 +808,30 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
 const EraContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
   const router = useRouter();
   return (
-    <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
+    <div className={`px-2 grid grid-cols-${columns}`}>
       {EraDropdownContent.map((value) => (
-        <div className="tw-flex tw-relative tw-items-center tw-p-2" key={value}>
+        <div className="flex relative items-center p-2" key={value}>
           <div onClick={() => addToFilters(value, "era", filters, router)}>
             <input
               type="checkbox"
-              className={` ${
-                filters["era"].includes(value)
-                  ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                  : "tw-bg-white/5 tw-border-white/10"
-              } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity era-checkbox`}
+              className={` ${filters["era"].includes(value)
+                  ? "bg-[#f2ca16] border-[#f2ca16]"
+                  : "bg-white/5 border-white/10"
+                } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity era-checkbox`}
             />
             {filters["era"].includes(value) && (
-              <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+              <div className="pointer-events-none absolute top-5 left-[22px] -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity opacity-100">
                 <Image
                   src={CheckIcon}
                   width={10}
                   height={7}
                   alt="dropdown arrow"
-                  className="tw-w-[10px] tw-h-[7px] tw-mr-2"
+                  className="w-[10px] h-[7px] mr-2"
                 />
               </div>
             )}
           </div>
-          <label className="tw-pl-3">{value}</label>
+          <label className="pl-3">{value}</label>
           <br />
         </div>
       ))}
@@ -865,7 +859,7 @@ const LocationDropdownContent = [
 const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
     <div>
-      <div className="tw-absolute tw-p-4 tw-left-0 tw-z-10 tw-mt-2 tw-w-[400px] tw-h-[312px] tw-origin-top-right tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
+      <div className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg ">
         <LocationContent columns={2} filters={filters} />
       </div>
     </div>
@@ -878,11 +872,11 @@ const LocationContent: React.FC<FiltersContentProps> = ({
 }) => {
   const router = useRouter();
   return (
-    <div className={`tw-px-2 tw-grid tw-grid-cols-${columns}`}>
+    <div className={`px-2 grid grid-cols-${columns}`}>
       {LocationDropdownContent.map((value) => {
         return (
           <div
-            className="tw-flex tw-relative tw-items-center tw-p-2"
+            className="flex relative items-center p-2"
             key={value}
           >
             <div
@@ -890,25 +884,24 @@ const LocationContent: React.FC<FiltersContentProps> = ({
             >
               <input
                 type="checkbox"
-                className={` ${
-                  filters["location"].includes(value)
-                    ? "tw-bg-[#f2ca16] tw-border-[#f2ca16]"
-                    : "tw-bg-white/5 tw-border-white/10"
-                } tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-transition-opacity location-checkbox`}
+                className={` ${filters["location"].includes(value)
+                    ? "bg-[#f2ca16] border-[#f2ca16]"
+                    : "bg-white/5 border-white/10"
+                  } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity location-checkbox`}
               />
               {filters["location"].includes(value) && (
-                <div className="tw-pointer-events-none tw-absolute tw-top-5 tw-left-[22px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity tw-opacity-100">
+                <div className="pointer-events-none absolute top-5 left-[22px] -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity opacity-100">
                   <Image
                     src={CheckIcon}
                     width={10}
                     height={7}
                     alt="dropdown arrow"
-                    className="tw-w-[10px] tw-h-[7px] tw-mr-2"
+                    className="w-[10px] h-[7px] mr-2"
                   />
                 </div>
               )}
             </div>
-            <label className="tw-pl-3">{value}</label>
+            <label className="pl-3">{value}</label>
             <br />
           </div>
         );
@@ -957,8 +950,8 @@ const addSortToFilters = (
 
 const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
-    <div className="tw-absolute tw-right-0 tw-z-10 tw-mt-2 tw-w-[320px] tw-h-[312px]  tw-rounded-md tw-bg-[#1A2C3D] tw-text-white tw-shadow-lg ">
-      <div className="tw-p-4">
+    <div className="absolute right-0 z-10 mt-2 w-[320px] h-[312px]  rounded-md bg-[#1A2C3D] text-white shadow-lg ">
+      <div className="p-4">
         <SortContent filters={filters} />
       </div>
     </div>
@@ -982,9 +975,8 @@ const SortContent: React.FC<FiltersContentProps> = ({ filters }) => {
       {SortList.map((value) => {
         return (
           <button
-            className={`${
-              filters["sort"] === value ? "tw-bg-white/10" : ""
-            } hover:tw-bg-white/5 tw-rounded tw-p-2 tw-block tw-w-full tw-text-left`}
+            className={`${filters["sort"] === value ? "bg-white/10" : ""
+              } hover:bg-white/5 rounded p-2 block w-full text-left`}
             key={value}
             onClick={() => addSortToFilters(value, filters, route)}
           >

@@ -52,7 +52,7 @@ const GamesCard = (props: any) => {
 
   return (
     <TimerProvider deadline={new Date()}>
-      <div className="tw-flex tw-flex-col tw-justify-between tw-place-items-stretch tw-h-full tw-divide-slate-700">
+      <div className="flex flex-col justify-between place-items-stretch h-full divide-slate-700">
         <div>
           <Link
             target="_blank"
@@ -64,7 +64,7 @@ const GamesCard = (props: any) => {
               width={416}
               height={219}
               alt={props.make}
-              className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+              className="w-full 2xl:w-[416px] h-auto 2xl:h-[219px] rounded object-cover aspect-auto hover:cursor-pointer"
               onMouseEnter={handleOnHover}
               onMouseLeave={handleOnLeave}
             />
@@ -73,55 +73,55 @@ const GamesCard = (props: any) => {
             target="_blank"
             rel="noopener noreferrer"
             href={`/auctions/car_view_page/${props.auction_id}`}
-            className="tw-font-bold tw-text-[24px] tw-py-[12px] hover:tw-cursor-pointer tw-inline-block"
+            className="font-bold text-[24px] py-[12px] hover:cursor-pointer inline-block"
           >
             {props.year} {props.make} {props.model}
           </Link>
-          <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
+          <p className="h-[60px] sm:h-[72px] w-full line-clamp-3 overflow-hidden text-[14px] sm:text-[16px]">
             {props.description[0]}
           </p>
-          <div className="tw-flex tw-mt-3">
+          <div className="flex mt-3">
             <Image
               src={Dollar}
               width={20}
               height={20}
               alt="dollar"
-              className="tw-w-5 tw-h-5"
+              className="w-5 h-5"
             />
-            <div className="tw-px-2 tw-hidden sm:tw-block">Current Bid:</div>
-            <div className="tw-text-[#49C742] tw-font-bold">
+            <div className="px-2 hidden sm:block">Current Bid:</div>
+            <div className="text-[#49C742] font-bold">
               ${currencyString}
             </div>
           </div>
-          <div className="tw-flex">
+          <div className="flex">
             <Image
               src={HourGlass}
               width={20}
               height={20}
               alt="dollar"
-              className="tw-w-5 tw-h-5"
+              className="w-5 h-5"
             />
-            <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
+            <div className="px-2 hidden sm:block">Time Left:</div>
             {new Date(props.deadline) < new Date() ? (
-              <div className="tw-font-bold tw-text-[#C2451E]">
+              <div className="font-bold text-[#C2451E]">
                 Ended {dayjs(props.deadline).fromNow()}
               </div>
             ) : (
-              <div className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+              <div className="font-bold text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
             )}
           </div>
           <CardWagersSection objectID={props.object_id} />
         </div>
-        <div className="tw-items-end">
+        <div className="items-end">
           <button
-            className="btn-yellow-thin tw-w-full md:tw-w-auto"
+            className="btn-yellow-thin w-full md:w-auto"
             onClick={() =>
               router.push(`/auctions/car_view_page/${props.auction_id}`)
             }
           >
             Play Game
           </button>
-          <hr className="tw-h-px tw-mt-8 sm:tw-mt-16 tw-border-1" />
+          <hr className="h-px mt-8 sm:mt-16 border-1" />
         </div>
       </div>
     </TimerProvider>

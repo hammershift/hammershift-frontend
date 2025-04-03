@@ -27,50 +27,50 @@ const DiscoveryPageData = {
 const DiscoverPage = () => {
   return (
     <div className="page-container ">
-      <div className="section-container tw-flex tw-flex-col lg:tw-flex-row-reverse tw-items-end tw-gap-8 md:tw-gap-16 lg:tw-gap-24 xl:tw-gap-36 md:tw-mt-12 tw-mb-20">
-        <div className="tw-basis-2/3 tw-h-auto">
+      <div className="section-container flex flex-col lg:flex-row-reverse items-end gap-8 md:gap-16 lg:gap-24 xl:gap-36 md:mt-12 mb-20">
+        <div className="basis-2/3 h-auto">
           <Carousel imageList={DiscoveryPageData.photos} />
         </div>
-        <div className="tw-basis-1/3 tw-mt-4 lg:tw-mt-0">
-          <div className="tw-text-[#49C742] tw-font-bold">FEATURE</div>
-          <div className="tw-text-3xl xl:tw-text-4xl 2xl:tw-text-5xl tw-font-bold tw-mt-4">
+        <div className="basis-1/3 mt-4 lg:mt-0">
+          <div className="text-[#49C742] font-bold">FEATURE</div>
+          <div className="text-3xl xl:text-4xl 2xl:text-5xl font-bold mt-4">
             {DiscoveryPageData.title}
           </div>
-          <div className="tw-opacity-80 tw-h-[120px] tw-ellipsis tw-overflow-hidden tw-mt-4 tw-text-sm sm:tw-text-base">
+          <div className="opacity-80 h-[120px] ellipsis overflow-hidden mt-4 text-sm sm:text-base">
             {DiscoveryPageData.description}
           </div>
-          <div className="tw-mt-4 tw-text-sm sm:tw-text-base">
-            <div className="tw-flex">
+          <div className="mt-4 text-sm sm:text-base">
+            <div className="flex">
               <Image
                 src={DollarIcon}
                 width={20}
                 height={20}
                 alt="dollar icon"
-                className="tw-w-5 tw-h-5 "
+                className="w-5 h-5 "
               />
-              <span className="tw-opacity-80 tw-ml-2">Current Bid:</span>
-              <span className="tw-text-[#F2CA16] tw-ml-2 tw-font-bold">
+              <span className="opacity-80 ml-2">Current Bid:</span>
+              <span className="text-[#F2CA16] ml-2 font-bold">
                 {DiscoveryPageData.current_bid}
               </span>
-              <span className="tw-opacity-50 tw-ml-2">{`${DiscoveryPageData.bids} bids`}</span>
+              <span className="opacity-50 ml-2">{`${DiscoveryPageData.bids} bids`}</span>
             </div>
-            <div className="tw-flex tw-mt-2">
+            <div className="flex mt-2">
               <Image
                 src={HourGlass}
                 width={20}
                 height={20}
                 alt="dollar icon"
-                className="tw-w-5 tw-h-5 "
+                className="w-5 h-5 "
               />
-              <span className="tw-opacity-80 tw-ml-2 ">Time Left:</span>
-              <span className=" tw-ml-2  tw-font-bold">
+              <span className="opacity-80 ml-2 ">Time Left:</span>
+              <span className=" ml-2  font-bold">
                 {DiscoveryPageData.current_bid}
               </span>
             </div>
           </div>
-          <div className="tw-mt-8">
+          <div className="mt-8">
             <button className="btn-yellow">PLACE MY WAGER</button>
-            <span className="tw-ml-4 tw-opacity-50">{`${DiscoveryPageData.wagers} wagers`}</span>
+            <span className="ml-4 opacity-50">{`${DiscoveryPageData.wagers} wagers`}</span>
           </div>
         </div>
       </div>
@@ -107,23 +107,23 @@ const Carousel: React.FC<CarouselProps> = ({ imageList }) => {
   };
 
   return (
-    <div className=" tw-relative tw-pt-8 md:tw-pt-16 tw-h-auto">
-      <div className="carousel-container tw-relative tw-w-full tw-h-auto tw-overflow-hidden">
+    <div className=" relative pt-8 md:pt-16 h-auto">
+      <div className="carousel-container relative w-full h-auto overflow-hidden">
         <div
-          className="slider-container tw-transition tw-duration-[2000ms] tw-flex tw-h-auto tw-w-full"
+          className="slider-container transition duration-[2000ms] flex h-auto w-full"
           style={{
             transform: `translate(${sliderTransform}%)`,
             width: `${wholeWidth}%`,
           }}
         >
           {imageList.map((photo) => (
-            <div key={photo.id} className="tw-w-full">
+            <div key={photo.id} className="w-full">
               <Image
                 src={photo.url}
                 width={752}
                 height={540}
                 alt="feature car"
-                className="tw-w-full tw-h-auto tw-object-cover tw-aspect-auto"
+                className="w-full h-auto object-cover aspect-auto"
                 priority={true}
               />
             </div>
@@ -131,23 +131,23 @@ const Carousel: React.FC<CarouselProps> = ({ imageList }) => {
         </div>
       </div>
       {/* Controller arrows */}
-      <div className="tw-absolute tw-mt-4 tw-z-50 tw-bottom-[-48px] tw-right-0">
+      <div className="absolute mt-4 z-50 bottom-[-48px] right-0">
         <button onClick={leftArrowHandler}>
           <Image
             src={ArrowLeft}
             alt="arrow left"
             width={32}
             height={32}
-            className="tw-w-auto tw-h-auto arrow-slider tw-rounded-full"
+            className="w-auto h-auto arrow-slider rounded-full"
           />
         </button>
-        <button onClick={rightArrowHandler} className="tw-ml-4">
+        <button onClick={rightArrowHandler} className="ml-4">
           <Image
             src={ArrowRight}
             alt="arrow left"
             width={32}
             height={32}
-            className="tw-w-auto tw-h-auto arrow-slider tw-rounded-full"
+            className="w-auto h-auto arrow-slider rounded-full"
           />
         </button>
       </div>

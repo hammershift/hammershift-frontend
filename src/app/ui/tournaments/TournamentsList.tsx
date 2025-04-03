@@ -20,13 +20,13 @@ const DynamicTournamentsCards = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="tw-flex tw-mt-8 tw-justify-evenly tw-bg-gray-600 tw-rounded-lg tw-animate-pulse">
-                <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-m-2">
-                    <div className="tw-w-96 tw-mb-2 tw-h-48 tw-bg-gray-700"></div>
-                    <div className="tw-w-3/5 tw-h-6 tw-mb-2 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                    <div className="tw-w-3/5 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                    <div className="tw-w-3/5 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                    <div className="tw-w-full tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+            <div className="flex mt-8 justify-evenly bg-gray-600 rounded-lg animate-pulse">
+                <div className="flex flex-col justify-center items-center m-2">
+                    <div className="w-96 mb-2 h-48 bg-gray-700"></div>
+                    <div className="w-3/5 h-6 mb-2 bg-gray-700 rounded-lg animate-pulse"></div>
+                    <div className="w-3/5 mb-2 h-6 bg-gray-700 rounded-lg animate-pulse"></div>
+                    <div className="w-3/5 mb-2 h-6 bg-gray-700 rounded-lg animate-pulse"></div>
+                    <div className="w-full mb-2 h-10 bg-gray-700 rounded-lg animate-pulse"></div>
                 </div>
             </div>
         ),
@@ -148,14 +148,14 @@ const TournamentsList = () => {
 
     return (
         <div>
-            <div className="tw-mt-5">
-                <div className="tw-flex tw-justify-between tw-items-center">
+            <div className="mt-5">
+                <div className="flex justify-between items-center">
                     {" "}
-                    <div className="tw-font-bold tw-text-3xl md:tw-text-5xl">
+                    <div className="font-bold text-3xl md:text-5xl">
                         Tournaments
                     </div>
                     <select
-                        className="tw-inline-flex tw-justify-between tw-items-center tw-gap-x-1.5 tw-rounded-md tw-px-3 tw-py-2.5  tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#1A2C3D] tw-truncate"
+                        className="inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
                         onChange={handleSortChange}
                     >
                         <option value="newest">Newly Listed</option>
@@ -163,7 +163,7 @@ const TournamentsList = () => {
                     </select>
                 </div>
             </div>
-            <div className="tw-grid tw-grid-cols-2 max-sm:tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-x-4 md:tw-gap-x-[64px] tw-gap-y-8 md:tw-gap-y-16 tw-pb-20 tw-mt-12">
+            <div className="grid grid-cols-2 max-sm:grid-cols-1 md:grid-cols-2 gap-x-4 md:gap-x-[64px] gap-y-8 md:gap-y-16 pb-20 mt-12">
                 {tournamentsData &&
                     tournamentsData.map((tournament, index) => {
                         const imagesForTournament =
@@ -194,13 +194,13 @@ const TournamentsList = () => {
                     })}
             </div>
             <div>
-                <div className="tw-text-[18px] tw-opacity-50 tw-text-center tw-mb-4">
+                <div className="text-[18px] opacity-50 text-center mb-4">
                     {tournamentLimit < totalTournaments
                         ? `Showing ${tournamentLimit} of ${totalTournaments} tournaments`
                         : `Showing ${totalTournaments} of ${totalTournaments} tournaments`}
                 </div>
                 <button
-                    className={`btn-transparent-white tw-w-full tw-text-[18px] tw-mb-8`}
+                    className={`btn-transparent-white w-full text-[18px] mb-8`}
                     onClick={handleLoadMore}
                 >
                     Load More

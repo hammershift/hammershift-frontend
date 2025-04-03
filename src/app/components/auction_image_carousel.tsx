@@ -26,9 +26,9 @@ function AuctionImageCarousel({ images }: AuctionImageCarouselProps) {
     };
 
     return (
-        <div className="tw-flex tw-items-center tw-justify-evenly tw-relative">
+        <div className="flex items-center justify-evenly relative">
             <button
-                className="lg:tw-static tw-absolute tw-left-0"
+                className="lg:static absolute left-0"
                 onClick={handlePrevClick}
             >
                 <Image src={ArrowLeft} width={60} height={60} alt="arrow" />
@@ -40,7 +40,7 @@ function AuctionImageCarousel({ images }: AuctionImageCarouselProps) {
                 alt="Auction Image"
             />
             <button
-                className="lg:tw-static tw-absolute tw-right-0"
+                className="lg:static absolute right-0"
                 onClick={handleNextClick}
             >
                 <Image src={ArrowRight} width={60} height={60} alt="arrow" />

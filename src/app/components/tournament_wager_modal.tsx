@@ -93,14 +93,14 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
     }).format(date);
 
     return (
-        <div className="tw-bg-black md:tw-bg-black/90 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-fixed tw-top-0 tw-left-0 tw-z-50">
+        <div className="bg-black md:bg-black/90 w-screen h-screen flex justify-center items-start md:items-center fixed top-0 left-0 z-50">
             <form
                 onSubmit={(e) => handleSubmit(e, sessionData)}
-                className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-screen tw-overflow-y-auto md:tw-min-h-[602px] md:tw-max-h-[800px] tw-rounded-sm"
+                className="relative bg-[#0F1923] w-[864px] h-screen overflow-y-auto md:min-h-[602px] md:max-h-[800px] rounded-sm"
                 id="tournament-wager-modal"
             >
-                <div className="tw-flex tw-items-center tw-mb-6 sm:tw-mb-1 tw-pt-6 tw-px-6 sm:tw-pt-8 sm:tw-px-8">
-                    <div className="tw-font-bold tw-text-2xl">
+                <div className="flex items-center mb-6 sm:mb-1 pt-6 px-6 sm:pt-8 sm:px-8">
+                    <div className="font-bold text-2xl">
                         {tournamentData.title}
                     </div>
                     <button
@@ -116,59 +116,59 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                             width={24}
                             height={24}
                             alt="sedan"
-                            className="tw-w-[24px] tw-h-[24px] tw-m-3 sm:tw-hidden"
+                            className="w-[24px] h-[24px] m-3 sm:hidden"
                         />
                     </button>
                 </div>
-                <div className="tw-text-base tw-font-normal tw-mb-6 tw-px-6 sm:tw-px-8">
+                <div className="text-base font-normal mb-6 px-6 sm:px-8">
                     Get more points the closer you are to the hammer price of a
                     curated set of car auctions. Guess the price for each of the
                     cars listed below and buy-in to lock in your wagers.{" "}
-                    <span className="tw-text-[#49C742]">Learn more</span>
+                    <span className="text-[#49C742]">Learn more</span>
                 </div>
-                <div className="tw-bg-[#49C74233] tw-text-[#49C742] tw-font-bold tw-rounded tw-px-4 tw-py-3 tw-mb-6 sm:tw-flex sm:tw-items-center tw-mx-6 sm:tw-mx-8">
-                    <div className="tw-flex tw-items-center tw-gap-2 tw-mb-4 sm:tw-mb-0 sm:tw-w-1/2">
+                <div className="bg-[#49C74233] text-[#49C742] font-bold rounded px-4 py-3 mb-6 sm:flex sm:items-center mx-6 sm:mx-8">
+                    <div className="flex items-center gap-2 mb-4 sm:mb-0 sm:w-1/2">
                         <Image
                             src={MoneyBag}
                             width={32}
                             height={32}
                             alt="sedan"
-                            className="tw-w-[32px] tw-h-[32px]"
+                            className="w-[32px] h-[32px]"
                         />
                         <div>
-                            <div className="tw-text-xs tw-tracking-widest tw-text-[#40ab3d] tw-font-semibold">
+                            <div className="text-xs tracking-widest text-[#40ab3d] font-semibold">
                                 POTENTIAL PRIZE
                             </div>
-                            <div className="tw-text-lg">
+                            <div className="text-lg">
                                 $
                                 {pot % 1 === 0
                                     ? pot.toLocaleString()
                                     : pot.toLocaleString(undefined, {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                      })}
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}
                             </div>
                         </div>
                     </div>
-                    <div className="tw-flex tw-items-center tw-gap-2 sm:tw-w-1/2">
+                    <div className="flex items-center gap-2 sm:w-1/2">
                         <Image
                             src={CalendarGreen}
                             width={32}
                             height={32}
                             alt="sedan"
-                            className="tw-w-[32px] tw-h-[32px]"
+                            className="w-[32px] h-[32px]"
                         />
                         <div>
-                            <div className="tw-text-xs tw-tracking-widest tw-text-[#40ab3d] tw-font-semibold">
+                            <div className="text-xs tracking-widest text-[#40ab3d] font-semibold">
                                 TOURNAMENT ENDS
                             </div>
-                            <div className="tw-text-lg">
+                            <div className="text-lg">
                                 {formattedDateString}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="tw-mb-[94px] sm:tw-mb-0 sm:tw-max-h-[488px] sm:tw-overflow-y-auto tw-px-6 sm:tw-px-8">
+                <div className="mb-[94px] sm:mb-0 sm:max-h-[488px] sm:overflow-y-auto px-6 sm:px-8">
                     {auctionData.map((auction, index: number) => {
                         return (
                             <TimerProvider
@@ -185,7 +185,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                         );
                     })}
                 </div>
-                <div className="tw-py-4 tw-px-8 tw-bg-[#172431] tw-fixed sm:tw-static tw-w-full tw-bottom-0 tw-z-30 sm:tw-flex sm:tw-justify-between">
+                <div className="py-4 px-8 bg-[#172431] fixed sm:static w-full bottom-0 z-30 sm:flex sm:justify-between">
                     <button
                         onClick={(e) => {
                             e.preventDefault();
@@ -193,14 +193,14 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
                             toggleTournamentWagerModal();
                         }}
                         type="button"
-                        className="tw-hidden sm:tw-block"
+                        className="hidden sm:block"
                     >
                         CANCEL
                     </button>
                     <button
                         type="submit"
                         disabled={isButtonClicked}
-                        className="tw-font-bold tw-p-3 tw-px-[43px] tw-text-center tw-w-full sm:tw-w-auto tw-bg-[#f2ca16] tw-text-[#0f1923] tw-rounded"
+                        className="font-bold p-3 px-[43px] text-center w-full sm:w-auto bg-[#f2ca16] text-[#0f1923] rounded"
                     >
                         BUY-IN FOR ${tournamentData.buyInFee}
                     </button>
@@ -230,56 +230,56 @@ export const TournamentModalCard: React.FC<TournamentCardI> = ({
     return (
         <div
             key={auction._id}
-            className="sm:tw-flex sm:tw-justify-between sm:tw-pb-4"
+            className="sm:flex sm:justify-between sm:pb-4"
         >
             <Link
                 target="_blank"
                 rel="noopener noreferrer"
                 href={`/tournaments/${tournamentID}/${auction.auction_id}`}
-                className="tw-flex tw-items-center tw-gap-4 tw-mb-2 sm:tw-mb-0"
+                className="flex items-center gap-4 mb-2 sm:mb-0"
             >
                 <Image
                     src={auction.image}
                     width={100}
                     height={100}
                     alt="sedan"
-                    className="tw-w-[100px] tw-h-[100px] tw-rounded tw-object-cover"
+                    className="w-[100px] h-[100px] rounded object-cover"
                 />
                 <div>
-                    <div className="tw-mb-1 tw-font-bold">
+                    <div className="mb-1 font-bold">
                         {`${auction.attributes[1].value} ${auction.attributes[2].value} ${auction.attributes[3].value}`}
                     </div>
-                    <div className="tw-flex tw-text-sm tw-items-center tw-gap-1">
+                    <div className="flex text-sm items-center gap-1">
                         <Image
                             src={Dollar}
                             width={14}
                             height={14}
                             alt="sedan"
-                            className="tw-w-[14px] tw-h-[14px]"
+                            className="w-[14px] h-[14px]"
                         />
-                        <div className="tw-text-[#cfd1d3]">Current Bid:</div>
-                        <div className="tw-font-bold tw-text-[#49C742]">
+                        <div className="text-[#cfd1d3]">Current Bid:</div>
+                        <div className="font-bold text-[#49C742]">
                             $
                             {new Intl.NumberFormat().format(
                                 auction.attributes[0].value
                             )}
                         </div>
                     </div>
-                    <div className="tw-flex tw-text-sm tw-items-center tw-gap-1">
+                    <div className="flex text-sm items-center gap-1">
                         <Image
                             src={HourGlass}
                             width={14}
                             height={14}
                             alt="sedan"
-                            className="tw-w-[14px] tw-h-[14px]"
+                            className="w-[14px] h-[14px]"
                         />
-                        <div className="tw-text-[#cfd1d3]">Time Left:</div>
+                        <div className="text-[#cfd1d3]">Time Left:</div>
                         <div>{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
                     </div>
                 </div>
             </Link>
-            <div className="tw-relative tw-flex tw-items-center tw-rounded tw-mb-4 sm:tw-mb-0">
-                <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
+            <div className="relative flex items-center rounded mb-4 sm:mb-0">
+                <div className="w-lg h-auto top-[50%] -translate-y-[50%] left-3 absolute text-gray-500 z-20">
                     $
                 </div>
                 <input
@@ -302,7 +302,7 @@ export const TournamentModalCard: React.FC<TournamentCardI> = ({
                     required
                     name={`auction_${String(index + 1)}`}
                     type="number"
-                    className="tw-bg-[#172431] focus:tw-outline sm:tw-outline-[6px] tw-outline-[3px] tw-outline-[#273039] tw-p-3 tw-pl-8 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
+                    className="bg-[#172431] focus:outline sm:outline-[6px] outline-[3px] outline-[#273039] p-3 pl-8 w-full focus:bg-white focus:text-black focus:border-white/10 rounded"
                 />
             </div>
         </div>

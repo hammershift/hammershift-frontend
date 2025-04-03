@@ -65,7 +65,7 @@ const Card: React.FC<any> = ({
 
   return (
     <TimerProvider deadline={new Date(deadline)}>
-      <div className="tw-flex tw-flex-col tw-justify-between tw-h-auto">
+      <div className="flex flex-col justify-between h-auto">
         <div>
           <Link
             target="_blank"
@@ -77,7 +77,7 @@ const Card: React.FC<any> = ({
               width={416}
               height={219}
               alt={make}
-              className="tw-w-full 2xl:tw-w-[416px] tw-h-auto 2xl:tw-h-[219px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"
+              className="w-full 2xl:w-[416px] h-auto 2xl:h-[219px] rounded object-cover aspect-auto hover:cursor-pointer"
               onMouseEnter={handleOnHover}
               onMouseLeave={handleOnLeave}
             />
@@ -86,48 +86,48 @@ const Card: React.FC<any> = ({
             target="_blank"
             rel="noopener noreferrer"
             href={`/auctions/car_view_page/${auction_id}`}
-            className="tw-font-bold tw-text-[24px] tw-py-[12px] hover:tw-cursor-pointer tw-inline-block"
+            className="font-bold text-[24px] py-[12px] hover:cursor-pointer inline-block"
           >
             {year} {make} {model}
           </Link>
-          <p className="tw-h-[60px] sm:tw-h-[72px] tw-w-full tw-line-clamp-3 tw-overflow-hidden tw-text-[14px] sm:tw-text-[16px]">
+          <p className="h-[60px] sm:h-[72px] w-full line-clamp-3 overflow-hidden text-[14px] sm:text-[16px]">
             {description}
           </p>
-          <div className="tw-flex tw-mt-3">
+          <div className="flex mt-3">
             <Image
               src={Dollar}
               width={20}
               height={20}
               alt="dollar"
-              className="tw-w-5 tw-h-5"
+              className="w-5 h-5"
             />
-            <div className="tw-px-2 tw-hidden sm:tw-block">Current Bid:</div>
-            <div className="tw-text-[#49C742] tw-font-bold">
+            <div className="px-2 hidden sm:block">Current Bid:</div>
+            <div className="text-[#49C742] font-bold">
               ${new Intl.NumberFormat().format(price)}
             </div>
           </div>
-          <div className="tw-flex">
+          <div className="flex">
             <Image
               src={HourGlass}
               width={20}
               height={20}
               alt="dollar"
-              className="tw-w-5 tw-h-5"
+              className="w-5 h-5"
             />
-            <div className="tw-px-2 tw-hidden sm:tw-block">Time Left:</div>
+            <div className="px-2 hidden sm:block">Time Left:</div>
             {new Date(deadline) < new Date() ? (
-              <div className="tw-font-bold tw-text-[#C2451E]">
+              <div className="font-bold text-[#C2451E]">
                 Ended {dayjs(deadline).fromNow()}
               </div>
             ) : (
-              <div className="tw-font-bold tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
+              <div className="font-bold text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</div>
             )}
           </div>
           <CardWagersSection objectID={object_id} />
         </div>
         <div>
           <button
-            className="btn-yellow-thin tw-w-full tw-mt-4 sm:tw-w-auto"
+            className="btn-yellow-thin w-full mt-4 sm:w-auto"
             onClick={() => router.push(`/auctions/car_view_page/${auction_id}`)}
           >
             Play Game
@@ -156,43 +156,42 @@ export const CardWagersSection = ({ objectID }: any) => {
   return (
     <>
       {auctionWagers.length === 0 && (
-        <div className="tw-bg-[#172431] tw-p-4 tw-flex tw-gap-2 tw-rounded-[4px] tw-my-4">
+        <div className="bg-[#172431] p-4 flex gap-2 rounded-[4px] my-4">
           <Image
             src={AvatarFour}
             width={24}
             height={24}
             alt="dollar"
-            className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
+            className="w-[24px] h-[24px] rounded-full"
           />
           <div>Be the first to wager a price</div>
         </div>
       )}
       {auctionWagers.length !== 0 && (
-        <div className="tw-gap-2 tw-bg-[#172431] tw-p-2 sm:tw-p-4 tw-my-4 tw-text-[14px] sm:tw-text-[16px] tw-rounded-[4px]">
+        <div className="gap-2 bg-[#172431] p-2 sm:p-4 my-4 text-[14px] sm:text-[16px] rounded-[4px]">
           <div
-            className={`tw-flex tw-flex-col tw-gap-2 ${
-              auctionWagers.length >= 3 && "tw-mb-3"
-            }`}
+            className={`flex flex-col gap-2 ${auctionWagers.length >= 3 && "mb-3"
+              }`}
           >
             {auctionWagers.slice(0, 2).map((wager: any) => {
               return (
                 <div
                   key={wager.auctionObjectId}
-                  className="tw-flex  tw-items-center tw-gap-2"
+                  className="flex  items-center gap-2"
                 >
                   <Image
                     src={wager.user?.image ? wager.user.image : AvatarTwo}
                     width={24}
                     height={24}
                     alt="dollar"
-                    className="tw-w-[24px] tw-h-[24px] tw-rounded-full"
+                    className="w-[24px] h-[24px] rounded-full"
                   />
-                  <div className="tw-flex tw-flex-col sm:tw-flex-row tw-text-sm tw-gap-1 sm:tw-items-center">
-                    <div className="tw-text-[#42A0FF]">{`@${wager.user.username}`}</div>
+                  <div className="flex flex-col sm:flex-row text-sm gap-1 sm:items-center">
+                    <div className="text-[#42A0FF]">{`@${wager.user.username}`}</div>
                     <div>{`wagered $${new Intl.NumberFormat().format(
                       wager.priceGuessed
                     )}`}</div>
-                    <div className="tw-text-[#DCE0D9]">
+                    <div className="text-[#DCE0D9]">
                       {dayjs(wager.createdAt).fromNow()}
                     </div>
                   </div>
@@ -201,10 +200,10 @@ export const CardWagersSection = ({ objectID }: any) => {
             })}
           </div>
           {auctionWagers.length >= 3 && (
-            <div className="tw-relative tw-flex tw-items-center">
+            <div className="relative flex items-center">
               {/* avatar images - hidden for screens smaller than sm */}
-              <div className="tw-flex tw-items-center tw-gap-2">
-                <div className=" tw-w-auto tw-hidden xl:tw-flex">
+              <div className="flex items-center gap-2">
+                <div className=" w-auto hidden xl:flex">
                   <Image
                     src={
                       (auctionWagers[2] as any).user.image
@@ -214,12 +213,12 @@ export const CardWagersSection = ({ objectID }: any) => {
                     width={32}
                     height={32}
                     alt="avatar"
-                    className="tw-w-8 tw-h-8 tw-rounded-full"
+                    className="w-8 h-8 rounded-full"
                     style={{
                       border: "1px solid black",
                     }}
                   />
-                  <div className="tw-flex">
+                  <div className="flex">
                     {auctionWagers
                       .slice(3, 8)
                       .map((wager: any, index: number) => {
@@ -240,7 +239,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                               width={32}
                               height={32}
                               alt="avatar"
-                              className="tw-w-8 tw-h-8 tw-rounded-full"
+                              className="w-8 h-8 rounded-full"
                               style={{
                                 border: "1px solid black",
                               }}
@@ -251,41 +250,41 @@ export const CardWagersSection = ({ objectID }: any) => {
                   </div>
                 </div>
                 {auctionWagers.length - 2 == 1 && (
-                  <div className={`xl:tw-block tw-hidden tw-text-sm`}>
+                  <div className={`xl:block hidden text-sm`}>
                     {`and ${auctionWagers.length - 2} more player to join`}
                   </div>
                 )}
                 {auctionWagers.length - 2 == 2 && (
                   <div
-                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[10px]`}
+                    className={`xl:block hidden text-sm -ml-[10px]`}
                   >
                     {`and ${auctionWagers.length - 2} more players to join`}
                   </div>
                 )}
                 {auctionWagers.length - 2 == 3 && (
                   <div
-                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[20px]`}
+                    className={`xl:block hidden text-sm -ml-[20px]`}
                   >
                     {`and ${auctionWagers.length - 2} more players to join`}
                   </div>
                 )}
                 {auctionWagers.length - 2 == 4 && (
                   <div
-                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[30px]`}
+                    className={`xl:block hidden text-sm -ml-[30px]`}
                   >
                     {`and ${auctionWagers.length - 2} more players to join`}
                   </div>
                 )}
                 {auctionWagers.length - 2 >= 5 && (
                   <div
-                    className={`xl:tw-block tw-hidden tw-text-sm -tw-ml-[40px]`}
+                    className={`xl:block hidden text-sm -ml-[40px]`}
                   >
                     {`and ${auctionWagers.length - 2} more players to join`}
                   </div>
                 )}
               </div>
               {/* avatar images - hidden for screens bigger than sm */}
-              <div className="tw-flex tw-w-auto xl:tw-hidden">
+              <div className="flex w-auto xl:hidden">
                 <Image
                   src={
                     (auctionWagers[2] as any).user.image
@@ -295,12 +294,12 @@ export const CardWagersSection = ({ objectID }: any) => {
                   width={32}
                   height={32}
                   alt="avatar"
-                  className="tw-w-8 tw-h-8 tw-rounded-full"
+                  className="w-8 h-8 rounded-full"
                   style={{
                     border: "1px solid black",
                   }}
                 />
-                <div className="tw-flex">
+                <div className="flex">
                   {auctionWagers
                     .slice(3, 8)
                     .map((wager: any, index: number) => {
@@ -319,7 +318,7 @@ export const CardWagersSection = ({ objectID }: any) => {
                             width={32}
                             height={32}
                             alt="avatar"
-                            className="tw-w-8 tw-h-8 tw-rounded-full"
+                            className="w-8 h-8 rounded-full"
                             style={{
                               border: "1px solid black",
                             }}
@@ -329,9 +328,8 @@ export const CardWagersSection = ({ objectID }: any) => {
                     })}
                 </div>
               </div>
-              <div className="tw-ml-1 tw--translate-x-1 tw-block xl:tw-hidden tw-text-sm">{`${
-                auctionWagers.length - 2
-              } players`}</div>
+              <div className="ml-1 -translate-x-1 block xl:hidden text-sm">{`${auctionWagers.length - 2
+                } players`}</div>
             </div>
           )}
         </div>
@@ -363,27 +361,27 @@ export const TournamentsListCard = (props: any) => {
   }, [deadline]);
 
   return (
-    <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-8 tw-mt-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
       <Image
         src={img}
         width={416}
         height={240}
         alt="car"
-        className="tw-w-full tw-h-auto tw-object-cover tw-aspect-auto"
+        className="w-full h-auto object-cover aspect-auto"
       />
       <div>
-        <div className="tw-opacity-30 tw-text-2xl tw-font-bold">
+        <div className="opacity-30 text-2xl font-bold">
           {index + 1}
         </div>
-        <div className="tw-text-2xl tw-font-bold tw-mt-4">
+        <div className="text-2xl font-bold mt-4">
           {year} {make} {model}
         </div>
-        <div className="tw-h-[72px] tw-ellipsis tw-overflow-hidden">
+        <div className="h-[72px] ellipsis overflow-hidden">
           {description}
         </div>
-        <div className="tw-flex tw-mt-4">
+        <div className="flex mt-4">
           {auctionEnded ? (
-            <span className="tw-text-black tw-bg-yellow-400 tw-rounded-md tw-px-2 tw-py-1 tw-font-bold">
+            <span className="text-black bg-yellow-400 rounded-md px-2 py-1 font-bold">
               Hammer Price: $
               {hammer_price
                 ? new Intl.NumberFormat().format(hammer_price)
@@ -396,9 +394,9 @@ export const TournamentsListCard = (props: any) => {
                 width={20}
                 height={20}
                 alt="car"
-                className="tw-w-5 tw-h-5"
+                className="w-5 h-5"
               />
-              <span className="tw-text-[#F2CA16] tw-font-bold tw-ml-2">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+              <span className="text-[#F2CA16] font-bold ml-2">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
             </>
           )}
         </div>

@@ -47,10 +47,10 @@ const Carousel: React.FC = () => {
   };
 
   return (
-    <div className='tw-relative tw-pt-8 tw-h-[344px] tw-overflow-hidden'>
-      <div className='carousel-container tw-relative tw-w-full tw-h-[280px] tw-overflow-hidden'>
+    <div className='relative pt-8 h-[344px] overflow-hidden'>
+      <div className='carousel-container relative w-full h-[280px] overflow-hidden'>
         <div
-          className='card-wrapper tw-h-[280px]'
+          className='card-wrapper h-[280px]'
 
         >
           <Swiper
@@ -112,14 +112,14 @@ type SlideOneProps = {
 
 const SlideOne: React.FC<SlideOneProps> = ({ onClick }) => {
   return (
-    <div className='tw-relative tw-bg-[#1A2C3D] tw-flex tw-justify-between tw-h-[280px] tw-w-full sm:tw-items-center tw-overflow-hidden'>
-      <div className='tw-w-full tw-mt-12 lg:tw-mt-0 tw-py-4 lg:tw-py-8 tw-px-6 sm:tw-px-8 tw-z-[1]'>
-        <div className='tw-text-xs tw-text-[#F2CA16] tw-pb-2'>NEW PLAYERS</div>
-        <div className='tw-font-euro tw-text-[32px] tw-w-[280px] md:tw-w-4/6 md:tw-text-[40px] tw-leading-none'>
+    <div className='relative bg-[#1A2C3D] flex justify-between h-[280px] w-full sm:items-center overflow-hidden'>
+      <div className='w-full mt-12 lg:mt-0 py-4 lg:py-8 px-6 sm:px-8 z-[1]'>
+        <div className='text-xs text-[#F2CA16] pb-2'>NEW PLAYERS</div>
+        <div className='font-euro text-[32px] w-[280px] md:w-4/6 md:text-[40px] leading-none'>
           500 WELCOME <br />
           CREDITS
         </div>
-        <button onClick={onClick} className='btn-yellow tw-mt-4 sm:tw-mt-6 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100'>
+        <button onClick={onClick} className='btn-yellow mt-4 sm:mt-6 hover:scale-110 transform transition-all duration-100'>
           SIGN UP & WAGER
         </button>
       </div>
@@ -128,14 +128,14 @@ const SlideOne: React.FC<SlideOneProps> = ({ onClick }) => {
         width={569}
         height={213}
         alt='dollar'
-        className='tw-w-auto tw-h-[93px] sm:tw-h-[150px] lg:tw-h-[213px] tw-top-6 sm:tw-top-10 sm:tw-right-[-40px] tw-absolute sm:tw-block tw-right-[-32px] sm:tw-right-0 tw-z-[1]'
+        className='w-auto h-[93px] sm:h-[150px] lg:h-[213px] top-6 sm:top-10 sm:right-[-40px] absolute sm:block right-[-32px] sm:right-0 z-[1]'
       />
       <Image
         src={DiagonalLinesCarousel}
         width={733}
         height={664}
         alt='dollar'
-        className='tw-w-auto tw-h-[300px] tw-absolute tw-top-0 tw-right-0 sm:tw-right-4 md:tw-right-8 lg:tw-right-36'
+        className='w-auto h-[300px] absolute top-0 right-0 sm:right-4 md:right-8 lg:right-36'
       />
     </div>
   );

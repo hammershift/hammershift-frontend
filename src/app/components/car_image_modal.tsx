@@ -20,10 +20,10 @@ const CarImageModal: React.FC<CarImageModalProps> = ({
     return null;
   }
   return (
-    <div className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-25 tw-backdrop-blur-sm tw-flex tw-justify-center tw-items-center tw-w-full tw-z-30">
-      <div className="tw-w-800 tw-flex tw-flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center w-full z-30">
+      <div className="w-800 flex flex-col">
         <button
-          className="tw-text-white tw-text-xl tw-place-self-end tw-rounded-full tw-border-2 tw-w-8 hover:tw-bg-yellow-400"
+          className="text-white text-xl place-self-end rounded-full border-2 w-8 hover:bg-yellow-400"
           onClick={() => onClose()}
         >
           ✕

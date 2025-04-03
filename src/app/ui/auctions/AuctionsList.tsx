@@ -8,21 +8,21 @@ const DynamicAuctionsListCard = dynamic(
   {
     ssr: false,
     loading: () => (
-<div className="tw-flex tw-flex-row tw-gap-4">
-  <div className="tw-mb-5 tw-bg-gray-700 tw-max-w-[156px] sm:tw-max-w-[416px] tw-w-full tw-min-w-[156px] tw-h-auto  tw-min-h-[147px] xl:tw-h-[240px] tw-rounded tw-object-cover tw-aspect-auto hover:tw-cursor-pointer"></div>
-  <div className="tw-flex tw-flex-col tw-w-auto tw-flex-grow tw-gap-2">
-    <div className="tw-w-2/3 tw-mb-2 tw-h-8 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-    <div className="tw-w-2/3 tw-mb-2 tw-h-6 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-    <div className="tw-w-2/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-  </div>
-</div>
+      <div className="flex flex-row gap-4">
+        <div className="mb-5 bg-gray-700 max-w-[156px] sm:max-w-[416px] w-full min-w-[156px] h-auto  min-h-[147px] xl:h-[240px] rounded object-cover aspect-auto hover:cursor-pointer"></div>
+        <div className="flex flex-col w-auto flex-grow gap-2">
+          <div className="w-2/3 mb-2 h-8 bg-gray-700 rounded-lg animate-pulse"></div>
+          <div className="w-2/3 mb-2 h-6 bg-gray-700 rounded-lg animate-pulse"></div>
+          <div className="w-2/3 mb-2 h-10 bg-gray-700 rounded-lg animate-pulse"></div>
+        </div>
+      </div>
     ),
   }
 );
 
 const AuctionsList = ({ listing }: { listing: any }) => {
   return (
-    <div className="tw-flex tw-flex-col tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
+    <div className="flex flex-col gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-16 mt-12 ">
       {listing.length != 0 &&
         listing.map((car: any, index: number) => (
           <div key={car._id ? car._id : index + "gamesCard"}>
