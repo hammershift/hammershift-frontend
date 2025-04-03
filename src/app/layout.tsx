@@ -18,21 +18,21 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 
 export default function RootLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return (
-        <html lang="en">
-            <SessionProvider>
-                <body className={inter.className}>
-                    <Navbar />
-                    <BetaTesting />
-                    {children}
-                    <Analytics />
-                    <LoadWallet/>
-                </body>
-            </SessionProvider>
-        </html>
-    );
+  return (
+    <html lang="en">
+      <SessionProvider>
+        <body className={inter.className}>
+          <Navbar />
+          {/* <BetaTesting /> */}
+          {children}
+          <Analytics />
+          <LoadWallet />
+        </body>
+      </SessionProvider>
+    </html>
+  );
 }

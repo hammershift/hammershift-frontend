@@ -145,43 +145,42 @@ export const CommentsSection = ({
   }, []);
 
   return (
-    <div className="tw-mt-16 tw-max-w-[832px] tw-mb-8 md:tw-mb-16 sm:tw-mb-0">
-      <div className="tw-flex tw-justify-between">
-        <div className="tw-text-xl md:tw-text-3xl">
-          <span className="tw-font-bold">Comments</span>
-          {`(${
-            Array.isArray(commentsList) && commentsList.length > 0
+    <div className="mt-16 max-w-[832px] mb-8 md:mb-16 sm:mb-0">
+      <div className="flex justify-between">
+        <div className="text-xl md:text-3xl">
+          <span className="font-bold">Comments</span>
+          {`(${Array.isArray(commentsList) && commentsList.length > 0
               ? commentsList.length
               : 0
-          })`}
+            })`}
         </div>
         {session.status == "unauthenticated" && (
-          <div className="tw-flex tw-items-center tw-text-sm sm:tw-text-base">
+          <div className="flex items-center text-sm sm:text-base">
             {/* <Image
                             src={BellIcon}
                             width={16}
                             height={16}
                             alt="Bell"
-                            className="tw-w-4 tw-h-4"
+                            className="w-4 h-4"
                         /> */}
             <Link href="/login_page">
-              <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">Log in</div>
+              <div className="text-[14px] opacity-50 ml-4">Log in</div>
             </Link>
             <Link href="/create_account">
-              <div className="tw-text-[14px] tw-opacity-50 tw-ml-4">
+              <div className="text-[14px] opacity-50 ml-4">
                 Sign Up
               </div>
             </Link>
           </div>
         )}
       </div>
-      <div className="tw-flex tw-my-3">
-        <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
+      <div className="flex my-3">
+        <div className="relative flex w-full items-center bg-[#172431] py-2.5 px-3 rounded">
           <input
             type="text"
             value={comment}
             placeholder="Add a comment"
-            className="tw-bg-[#172431] tw-w-full tw-outline-none"
+            className="bg-[#172431] w-full outline-none"
             name="comment"
             onChange={(e) => setComment(e.target.value)}
           />
@@ -191,22 +190,21 @@ export const CommentsSection = ({
                         width={20}
                         height={20}
                         alt="camera plus"
-                        className="tw-w-5 tw-h-5"
+                        className="w-5 h-5"
                     />
                     <Image
                         src={GifIcon}
                         width={20}
                         height={20}
                         alt="gif"
-                        className="tw-w-5 tw-h-5 tw-ml-2"
+                        className="w-5 h-5 ml-2"
                     /> */}
         </div>
         <button
-          className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
-            session.status == "unauthenticated"
-              ? "tw-opacity-50 tw-disabled"
+          className={`ml-2 rounded bg-white/20 px-4 ${session.status == "unauthenticated"
+              ? "opacity-50 disabled"
               : "btn-white"
-          }`}
+            }`}
           onClick={handlePostComment}
         >
           Comment
@@ -216,50 +214,47 @@ export const CommentsSection = ({
         <AlertMessage message="Please login before commenting" />
       )}
       {inputAlert && <AlertMessage message="Input is empty" />}
-      <div className=" tw-mt-2 tw-flex tw-items-center tw-text-sm sm:tw-text-base">
+      <div className=" mt-2 flex items-center text-sm sm:text-base">
         <div>Sort by</div>
         <div
-          className="tw-font-bold tw-ml-2 tw-cursor-pointer"
+          className="font-bold ml-2 cursor-pointer"
           onClick={(e) => setSortDropdown((prev) => !prev)}
         >
           {sort}
         </div>
-        <div className="tw-relative">
+        <div className="relative">
           <button onClick={(e) => setSortDropdown((prev) => !prev)}>
             <Image
               src={ArrowDown}
               width={14}
               height={14}
               alt="arrow down"
-              className="tw-w-[14px] tw-h-[14px] tw-ml-2"
+              className="w-[14px] h-[14px] ml-2"
             />
           </button>
           {sortDropdown && (
             <div
               ref={dropdownRef}
-              className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-py-2 tw-px-2 tw-bg-[#172431] tw-z-10"
+              className="absolute grid rounded top-8 right-0 py-2 px-2 bg-[#172431] z-10"
             >
               <div
                 onClick={(e) => setSort("Newest")}
-                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
-                  sort == "Newest" ? "tw-bg-white/10" : ""
-                }`}
+                className={`cursor-pointer py-2 px-3 text-center ${sort == "Newest" ? "bg-white/10" : ""
+                  }`}
               >
                 Newest
               </div>
               <div
                 onClick={(e) => setSort("Oldest")}
-                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
-                  sort == "Oldest" ? "tw-bg-white/10" : ""
-                }`}
+                className={`cursor-pointer py-2 px-3 text-center ${sort == "Oldest" ? "bg-white/10" : ""
+                  }`}
               >
                 Oldest
               </div>
               <div
                 onClick={(e) => setSort("Best")}
-                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center ${
-                  sort == "Best" ? "tw-bg-white/10" : ""
-                }`}
+                className={`cursor-pointer py-2 px-3 text-center ${sort == "Best" ? "bg-white/10" : ""
+                  }`}
               >
                 Best
               </div>
@@ -269,7 +264,7 @@ export const CommentsSection = ({
       </div>
       <section>
         {isLoading ? (
-          <div className="tw-flex tw-w-full tw-justify-center tw-h-12 tw-items-center">
+          <div className="flex w-full justify-center h-12 items-center">
             <BeatLoader color="#f2ca16" />
           </div>
         ) : Array.isArray(commentsList) && commentsList.length > 0 ? (
@@ -294,13 +289,13 @@ export const CommentsSection = ({
               </div>
             ))
         ) : (
-          <div className="tw-w-full tw-h-12 tw-flex tw-justify-center tw-items-center">
+          <div className="w-full h-12 flex justify-center items-center">
             No Comments Yet
           </div>
         )}
         {commentsDisplayed < commentsList.length && (
           <button
-            className="btn-transparent-white tw-w-full tw-mt-8 tw-text-sm"
+            className="btn-transparent-white w-full mt-8 text-sm"
             onClick={handleLoadComments}
           >
             {`Load ${Math.min(
@@ -450,20 +445,20 @@ export const CommentsCard = ({
   };
 
   return (
-    <div className="tw-flex tw-mt-8 tw-text-[14px]">
+    <div className="flex mt-8 text-[14px]">
       <Image
         src={AvatarOne}
         width={40}
         height={40}
         alt="camera plus"
-        className="tw-w-10 tw-h-10 tw-ml-2"
+        className="w-10 h-10 ml-2"
       />
-      <div className="tw-ml-4">
-        <div className="tw-relative tw-flex tw-justify-between">
+      <div className="ml-4">
+        <div className="relative flex justify-between">
           <div>
-            <span className="tw-font-bold">{username}</span>
-            <span className="tw-text-[#F2CA16] tw-ml-2">User</span>
-            <span className="tw-opacity-50 tw-ml-2">
+            <span className="font-bold">{username}</span>
+            <span className="text-[#F2CA16] ml-2">User</span>
+            <span className="opacity-50 ml-2">
               {dayjs(createdAt).fromNow()}
             </span>
           </div>
@@ -473,17 +468,17 @@ export const CommentsCard = ({
               width={16}
               height={16}
               alt="dots"
-              className="tw-w-4 tw-h-4 tw-ml-4"
+              className="w-4 h-4 ml-4"
             />
           </div>
           {dropdown && (
             <div
               ref={dropdownRef}
-              className="tw-absolute tw-grid tw-rounded tw-top-8 tw-right-0 tw-bg-[#172431] tw-z-10"
+              className="absolute grid rounded top-8 right-0 bg-[#172431] z-10"
             >
               <div
                 onClick={handleDeleteComment}
-                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center`}
+                className={`cursor-pointer py-2 px-3 text-center`}
               >
                 Delete
               </div>
@@ -493,27 +488,27 @@ export const CommentsCard = ({
             <AlertMessage message="Please login before deleting" />
           )}
         </div>
-        <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
+        <div className=" my-3 h-max-[100px] md:h-auto ellipsis overflow-hidden">
           {censor.applyTo(comment, matches)}
         </div>
-        <div className="tw-flex tw-opacity-50 tw-items-center">
+        <div className="flex opacity-50 items-center">
           <div
             onClick={(e) => setReplyInput((prev) => !prev)}
-            className="tw-cursor-pointer"
+            className="cursor-pointer"
           >
             Reply
           </div>
-          <span className="tw-ml-4">·</span>
+          <span className="ml-4">·</span>
 
-          <div className="tw-flex tw-items-center" onClick={handleLiking}>
+          <div className="flex items-center" onClick={handleLiking}>
             {likes.includes(userID) ? (
-              <div className="tw-ml-4">
+              <div className="ml-4">
                 <Image
                   src={BlueThumbUp}
                   alt="thumbs up"
                   width={20}
                   height={20}
-                  className="tw-w-5 tw-h-5"
+                  className="w-5 h-5"
                 />
               </div>
             ) : (
@@ -522,22 +517,22 @@ export const CommentsCard = ({
                   src={ThumbsUp}
                   width={16}
                   height={16}
-                  alt="thumbs commentID: string, reply: string, auctionID: string, reply: stringtring-h-4 tw-ml-4"
+                  alt="thumbs commentID: string, reply: string, auctionID: string, reply: stringtring-h-4 ml-4"
                 />
               </div>
             )}
-            {likes.length > 0 && <div className="tw-ml-1">{likes.length}</div>}
+            {likes.length > 0 && <div className="ml-1">{likes.length}</div>}
             <div></div>
           </div>
-          <div className="tw-flex tw-items-center" onClick={handleDisliking}>
+          <div className="flex items-center" onClick={handleDisliking}>
             {dislikes.includes(userID) ? (
-              <div className="tw-ml-4">
+              <div className="ml-4">
                 <Image
                   src={BlueThumbsDown}
                   alt="thumbs down"
                   width={20}
                   height={20}
-                  className="tw-w-5 tw-h-5"
+                  className="w-5 h-5"
                 />
               </div>
             ) : (
@@ -547,12 +542,12 @@ export const CommentsCard = ({
                   width={16}
                   height={16}
                   alt="thumbs down"
-                  className="tw-w-4 tw-h-4 tw-ml-4"
+                  className="w-4 h-4 ml-4"
                 />
               </div>
             )}
             {dislikes.length > 0 && (
-              <div className="tw-ml-1">{dislikes.length}</div>
+              <div className="ml-1">{dislikes.length}</div>
             )}
             <div></div>
           </div>
@@ -575,7 +570,7 @@ export const CommentsCard = ({
         {replies.length > 0 && (
           <div>
             <div
-              className="tw-text-[#42A0FF] tw-mt-3 tw-flex tw-cursor-pointer"
+              className="text-[#42A0FF] mt-3 flex cursor-pointer"
               onClick={(e) => setReplyDropdown((prev) => !prev)}
             >
               <Image
@@ -583,13 +578,13 @@ export const CommentsCard = ({
                 width={16}
                 height={16}
                 alt="camera plus"
-                className="tw-w-4 tw-h-4 tw-mr-2 "
+                className="w-4 h-4 mr-2 "
               />
               {`${replies.length} ${replies.length > 1 ? "Replies" : "Reply"}`}
             </div>
             {replyDropdown && (
               <div>
-                <div className="tw-h-[1px] tw-w-full tw-mt-3 tw-bg-white/10"></div>
+                <div className="h-[1px] w-full mt-3 bg-white/10"></div>
                 {replies.map((item: any, index: any) => (
                   <ReplyCard
                     key={item._id}
@@ -665,24 +660,23 @@ const ReplyInputDropdown = ({
   };
 
   return (
-    <div className="tw-relative">
-      <div className="tw-relative tw-flex tw-my-3">
-        <div className="tw-relative tw-flex tw-w-full tw-items-center tw-bg-[#172431] tw-py-2.5 tw-px-3 tw-rounded">
+    <div className="relative">
+      <div className="relative flex my-3">
+        <div className="relative flex w-full items-center bg-[#172431] py-2.5 px-3 rounded">
           <input
             type="text"
             value={reply}
             placeholder="Add a reply"
-            className="tw-bg-[#172431] tw-w-full"
+            className="bg-[#172431] w-full"
             name="comment"
             onChange={(e) => setReply(e.target.value)}
           />
         </div>
         <button
-          className={`tw-ml-2 tw-rounded tw-bg-white/20 tw-px-4 ${
-            session.status == "unauthenticated"
-              ? "tw-opacity-50 tw-disabled"
+          className={`ml-2 rounded bg-white/20 px-4 ${session.status == "unauthenticated"
+              ? "opacity-50 disabled"
               : "btn-white"
-          }`}
+            }`}
           onClick={handlePostReply}
         >
           Reply
@@ -807,20 +801,20 @@ const ReplyCard = ({
   };
 
   return (
-    <div className="tw-flex tw-mt-4 tw-text-xs tw-text-[14px]">
+    <div className="flex mt-4 text-xs text-[14px]">
       <Image
         src={AvatarOne}
         width={24}
         height={24}
         alt="camera plus"
-        className="tw-w-6 tw-h-6 tw-ml-2"
+        className="w-6 h-6 ml-2"
       />
-      <div className="tw-ml-4">
-        <div className="tw-relative tw-flex tw-justify-between">
+      <div className="ml-4">
+        <div className="relative flex justify-between">
           <div>
-            <span className="tw-font-bold">{username}</span>
-            <span className="tw-text-[#F2CA16] tw-ml-1">User</span>
-            <span className="tw-opacity-50 tw-ml-1">
+            <span className="font-bold">{username}</span>
+            <span className="text-[#F2CA16] ml-1">User</span>
+            <span className="opacity-50 ml-1">
               {dayjs(createdAt).fromNow()}
             </span>
           </div>
@@ -830,17 +824,17 @@ const ReplyCard = ({
               width={16}
               height={16}
               alt="dots"
-              className="tw-w-4 tw-h-4 tw-ml-4"
+              className="w-4 h-4 ml-4"
             />
           </div>
           {dropdown && (
             <div
               ref={dropdownRef}
-              className="tw-absolute tw-grid tw-rounded tw-top-6 tw-right-0 tw-bg-[#172431] tw-z-10 hover:tw-bg-white/10"
+              className="absolute grid rounded top-6 right-0 bg-[#172431] z-10 hover:bg-white/10"
             >
               <div
                 onClick={handleDeleteReply}
-                className={`tw-cursor-pointer tw-py-2 tw-px-3 tw-text-center `}
+                className={`cursor-pointer py-2 px-3 text-center `}
               >
                 Delete
               </div>
@@ -850,11 +844,11 @@ const ReplyCard = ({
             <AlertMessage message="Please login before deleting" />
           )}
         </div>
-        <div className=" tw-my-3 tw-h-max-[100px] md:tw-h-auto tw-ellipsis tw-overflow-hidden">
+        <div className=" my-3 h-max-[100px] md:h-auto ellipsis overflow-hidden">
           {censor.applyTo(reply, matches)}
         </div>
-        <div className="tw-flex tw-opacity-50 tw-items-center">
-          <div className="tw-flex tw-items-center" onClick={handleLiking}>
+        <div className="flex opacity-50 items-center">
+          <div className="flex items-center" onClick={handleLiking}>
             {likes.includes(userID) ? (
               <div>
                 <Image
@@ -862,7 +856,7 @@ const ReplyCard = ({
                   alt="thumbs up"
                   width={20}
                   height={20}
-                  className="tw-w-5 tw-h-5"
+                  className="w-5 h-5"
                 />
               </div>
             ) : (
@@ -872,22 +866,22 @@ const ReplyCard = ({
                   width={16}
                   height={16}
                   alt="thumbs up"
-                  className="tw-w-4 tw-h-4"
+                  className="w-4 h-4"
                 />
               </div>
             )}
-            {likes.length > 0 && <div className="tw-ml-1">{likes.length}</div>}
+            {likes.length > 0 && <div className="ml-1">{likes.length}</div>}
             <div></div>
           </div>
-          <div className="tw-flex tw-items-center" onClick={handleDisliking}>
+          <div className="flex items-center" onClick={handleDisliking}>
             {dislikes.includes(userID) ? (
-              <div className="tw-ml-4">
+              <div className="ml-4">
                 <Image
                   src={BlueThumbsDown}
                   alt="thumbs down"
                   width={20}
                   height={20}
-                  className="tw-w-5 tw-h-5"
+                  className="w-5 h-5"
                 />
               </div>
             ) : (
@@ -897,12 +891,12 @@ const ReplyCard = ({
                   width={16}
                   height={16}
                   alt="thumbs down"
-                  className="tw-w-4 tw-h-4 tw-ml-4"
+                  className="w-4 h-4 ml-4"
                 />
               </div>
             )}
             {dislikes.length > 0 && (
-              <div className="tw-ml-1">{dislikes.length}</div>
+              <div className="ml-1">{dislikes.length}</div>
             )}
             <div></div>
           </div>
@@ -917,7 +911,7 @@ const ReplyCard = ({
 
 const AlertMessage = ({ message }: { message: string }) => {
   return (
-    <div className="tw-flex tw-justify-center tw-items-center tw-text-sm tw-text-black tw-bg-[#F2CA16] tw-py-2 tw-px-4 tw-rounded">
+    <div className="flex justify-center items-center text-sm text-black bg-[#F2CA16] py-2 px-4 rounded">
       {message}
     </div>
   );

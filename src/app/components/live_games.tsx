@@ -60,14 +60,14 @@ const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {
     {
       ssr: false,
       loading: () => (
-        <div className="tw-flex tw-w-auto tw-mt-8 tw-justify-center tw-items-center max-sm:tw-flex-col">
-          <div className="tw-flex tw-flex-col tw-w-full max-sm:tw-flex-row tw-justify-evenly tw-items-center">
-            <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700 max-md:tw-w-36 max-md:tw-h-36"></div>
-            <div className="tw-flex tw-flex-col tw-w-2/3 max-md:tw-w-1/2">
-              <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-              <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-              <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-              <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="flex w-auto mt-8 justify-center items-center max-sm:flex-col">
+          <div className="flex flex-col w-full max-sm:flex-row justify-evenly items-center">
+            <div className="w-48 mb-5 h-48 rounded-full bg-gray-700 max-md:w-36 max-md:h-36"></div>
+            <div className="flex flex-col w-2/3 max-md:w-1/2">
+              <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
             </div>
           </div>
         </div>
@@ -146,37 +146,37 @@ const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {
 
   return (
     <div
-      className={` tw-py-8 sm:tw-py-16 ${pathname === "/" ? "tw-w-3/5 max-lg:tw-w-full" : null
+      className={` py-8 sm:py-16 ${pathname === "/" ? "w-3/5 max-lg:w-full" : null
         }`}
     >
-      <header className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
+      <header className="flex justify-between">
+        <div className="flex items-center">
           {pathname === "/live" ? null : (
             <Image
               src={LiveGamesIcon}
               width={40}
               height={40}
               alt="dollar"
-              className={`tw-w-10 tw-h-10`}
+              className={`w-10 h-10`}
             />
           )}
           {pathname === "/live" ? (
-            <div className="tw-font-bold tw-text-xl sm:tw-text-5xl tw-ml-4">
+            <div className="font-bold text-xl sm:text-5xl ml-4">
               Live Games
             </div>
           ) : (
-            <div className="tw-font-bold tw-text-xl sm:tw-text-3xl tw-ml-4">
+            <div className="font-bold text-xl sm:text-3xl ml-4">
               {pathname === "/" && "More "}Live Games
             </div>
           )}
         </div>
-        <div className="tw-flex max-md:tw-hidden">
+        <div className="flex max-md:hidden">
           <Image
             src={ArrowLeft}
             width={32}
             height={32}
             alt="arrow left"
-            className="tw-w-8 tw-h-8"
+            className="w-8 h-8"
             onClick={handleLeftArrow}
           />
           <Image
@@ -184,60 +184,60 @@ const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {
             width={32}
             height={32}
             alt="arrow right"
-            className="tw-w-8 tw-h-8 tw-ml-4"
+            className="w-8 h-8 ml-4"
             onClick={handleRightArrow}
           />
         </div>
       </header>
       {isLoading ? (
-        <div className="tw-p-4 sm:tw-py-16">
-          <div className="tw-flex tw-flex-col">
-            <div className="tw-flex tw-w-full tw-mt-8 tw-justify-center tw-items-center max-sm:tw-flex-col">
-              <div className="tw-flex tw-flex-col tw-w-full max-sm:tw-flex-row tw-justify-evenly tw-items-center">
-                <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700 max-md:tw-w-36 max-md:tw-h-36"></div>
-                <div className="tw-flex tw-flex-col tw-w-2/3 max-md:tw-w-1/2">
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+        <div className="p-4 sm:py-16">
+          <div className="flex flex-col">
+            <div className="flex w-full mt-8 justify-center items-center max-sm:flex-col">
+              <div className="flex flex-col w-full max-sm:flex-row justify-evenly items-center">
+                <div className="w-48 mb-5 h-48 rounded-full bg-gray-700 max-md:w-36 max-md:h-36"></div>
+                <div className="flex flex-col w-2/3 max-md:w-1/2">
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
                 </div>
               </div>
-              <div className="tw-flex tw-flex-col tw-w-full max-sm:tw-flex-row tw-justify-evenly tw-items-center">
-                <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700 max-md:tw-w-36 max-md:tw-h-36"></div>
-                <div className="tw-flex tw-flex-col tw-w-2/3 max-md:tw-w-1/2">
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+              <div className="flex flex-col w-full max-sm:flex-row justify-evenly items-center">
+                <div className="w-48 mb-5 h-48 rounded-full bg-gray-700 max-md:w-36 max-md:h-36"></div>
+                <div className="flex flex-col w-2/3 max-md:w-1/2">
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
                 </div>
               </div>
-              <div className="tw-flex tw-flex-col tw-w-full max-sm:tw-flex-row tw-justify-evenly tw-items-center">
-                <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700 max-md:tw-w-36 max-md:tw-h-36"></div>
-                <div className="tw-flex tw-flex-col tw-w-2/3 max-md:tw-w-1/2">
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                  <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+              <div className="flex flex-col w-full max-sm:flex-row justify-evenly items-center">
+                <div className="w-48 mb-5 h-48 rounded-full bg-gray-700 max-md:w-36 max-md:h-36"></div>
+                <div className="flex flex-col w-2/3 max-md:w-1/2">
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                  <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
                 </div>
               </div>
               {pathname === "/discover" || pathname === "/live" ? (
                 <>
-                  <div className="tw-flex tw-flex-col tw-w-full max-sm:tw-flex-row tw-justify-evenly tw-items-center">
-                    <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700 max-md:tw-w-36 max-md:tw-h-36"></div>
-                    <div className="tw-flex tw-flex-col tw-w-2/3 max-md:tw-w-1/2">
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+                  <div className="flex flex-col w-full max-sm:flex-row justify-evenly items-center">
+                    <div className="w-48 mb-5 h-48 rounded-full bg-gray-700 max-md:w-36 max-md:h-36"></div>
+                    <div className="flex flex-col w-2/3 max-md:w-1/2">
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
                     </div>
                   </div>
-                  <div className="tw-flex tw-flex-col tw-w-full max-sm:tw-flex-row tw-justify-evenly tw-items-center">
-                    <div className="tw-w-48 tw-mb-5 tw-h-48 tw-rounded-full tw-bg-gray-700 max-md:tw-w-36 max-md:tw-h-36"></div>
-                    <div className="tw-flex tw-flex-col tw-w-2/3 max-md:tw-w-1/2">
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-                      <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+                  <div className="flex flex-col w-full max-sm:flex-row justify-evenly items-center">
+                    <div className="w-48 mb-5 h-48 rounded-full bg-gray-700 max-md:w-36 max-md:h-36"></div>
+                    <div className="flex flex-col w-2/3 max-md:w-1/2">
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+                      <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
                     </div>
                   </div>
                 </>
@@ -246,9 +246,9 @@ const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {
           </div>
         </div>
       ) : (
-        <section className="tw-mt-6">
+        <section className="mt-6">
           {isMobile ? (
-            <div className="tw-flex tw-flex-col tw-items-center">
+            <div className="flex flex-col items-center">
               {liveGames.map((auctions, index) => {
                 const {
                   image,
@@ -263,7 +263,7 @@ const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {
                   images_list,
                 } = auctions;
                 return (
-                  <div key={index} className="tw-mb-4">
+                  <div key={index} className="mb-4">
                     <TimerProvider deadline={deadline}>
                       <DynamicLiveGamesCard
                         parentIndex={index >= 10 ? index - 10 : index}

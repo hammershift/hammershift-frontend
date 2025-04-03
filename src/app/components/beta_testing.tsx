@@ -3,7 +3,7 @@ import "../styles/app.css";
 
 const BetaTesting = () => {
   return (
-    <div className="tw-sticky -tw-top-2 tw-z-40 tw-bg-yellow-400 tw-text-center tw-rounded-sm tw-p-2 tw-pt-4 tw-text-xs tw- tw-w-40 tw-text-slate-950 tw-ml-40 tw-font-bold clip-path max-sm:tw-ml-5">
+    <div className="sticky -top-2 z-40 bg-yellow-400 text-center rounded-sm p-2 pt-4 text-xs  w-40 text-slate-950 ml-40 font-bold clip-path max-sm:ml-5">
       Beta Testing in Progress
     </div>
   );

@@ -22,8 +22,8 @@ export default async function CheckoutReturn({ searchParams }: any) {
   if (!stripeSession.invoice || typeof stripeSession.invoice !== "string") {
     console.error("Stripe session does not have a valid invoice ID.");
     return (
-      <div className="tw-w-1/2 tw-mt-24 tw-flex tw-justify-center tw-items-center">
-        <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
+      <div className="w-1/2 mt-24 flex justify-center items-center">
+        <div className=" bg-sky-950 w-1/2 p-4 gap-2 rounded-md flex flex-col justify-center items-center">
           <p className="">Thank you for your purchase!</p>
           <p>
             A receipt with your transaction ID has been emailed to:
@@ -40,8 +40,8 @@ export default async function CheckoutReturn({ searchParams }: any) {
 
     if (stripeSession?.status === "open") {
       return (
-        <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
-          <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
+        <div className="w-full mt-24 flex justify-center items-center">
+          <div className=" bg-sky-950 w-1/2 p-4 gap-2 rounded-md flex flex-col justify-center items-center">
             <p className="">Payment failed!</p>
           </div>
         </div>
@@ -50,14 +50,14 @@ export default async function CheckoutReturn({ searchParams }: any) {
 
     if (stripeSession?.status === "complete") {
       return (
-        <div className="tw-w-full tw-mt-24 tw-flex tw-justify-center tw-items-center">
-          <div className=" tw-bg-sky-950 tw-w-1/2 tw-p-4 tw-gap-2 tw-rounded-md tw-flex tw-flex-col tw-justify-center tw-items-center">
+        <div className="w-full mt-24 flex justify-center items-center">
+          <div className=" bg-sky-950 w-1/2 p-4 gap-2 rounded-md flex flex-col justify-center items-center">
             <p className="">Thank you for your purchase!</p>
             <p>Total Amount Purchased: ${stripeInvoice.amount_paid / 100}</p>
             <p>
               View Receipt{" "}
               <a
-                className="tw-underline"
+                className="underline"
                 href={stripeInvoice.hosted_invoice_url ?? ""}
                 target="blank"
               >

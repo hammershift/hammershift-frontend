@@ -5,17 +5,17 @@ import dynamic from "next/dynamic";
 const DynamicGamesCard = dynamic(() => import("../../components/games_card"), {
   ssr: false,
   loading: () => (
-    <div className="tw-flex tw-mt-8 tw-justify-evenly">
-      <div className="tw-flex tw-flex-col tw-m-2">
-        <div className="tw-w-96 tw-mb-5 tw-h-48 tw-bg-gray-700 tw-rounded-md"></div>
-        <div className="tw-w-4/5 tw-h-10 tw-mb-5 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-full tw-mb-5 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-full tw-mb-2 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-full tw-mb-10 tw-h-3 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
-        <div className="tw-w-1/3 tw-mb-2 tw-h-10 tw-bg-gray-700 tw-rounded-lg tw-animate-pulse"></div>
+    <div className="flex mt-8 justify-evenly">
+      <div className="flex flex-col m-2">
+        <div className="w-96 mb-5 h-48 bg-gray-700 rounded-md"></div>
+        <div className="w-4/5 h-10 mb-5 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-full mb-5 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-full mb-2 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-full mb-10 h-3 bg-gray-700 rounded-lg animate-pulse"></div>
+        <div className="w-1/3 mb-2 h-10 bg-gray-700 rounded-lg animate-pulse"></div>
       </div>
     </div>
   ),
@@ -23,7 +23,7 @@ const DynamicGamesCard = dynamic(() => import("../../components/games_card"), {
 
 const AuctionsGrid = ({ listing }: { listing: any }) => {
   return (
-    <div className=" tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-x-4 md:tw-gap-x-6 tw-gap-y-8 md:tw-gap-y-16 tw-mt-12 ">
+    <div className=" grid grid-cols-1 md:grid-cols-3 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-16 mt-12 ">
       {listing.length != 0 &&
         listing.map((car: any, index: number) => {
           return (

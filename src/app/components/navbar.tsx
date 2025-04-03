@@ -251,9 +251,9 @@ const Navbar = () => {
   return (
     <div>
       {isLoggedIn ? (
-        <div className=" tw-flex tw-px-4 md:tw-px-16 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
-          <div className=" tw-flex tw-items-center tw-justify-between">
-            <div className="tw-pr-4">
+        <div className=" flex px-4 md:px-16 w-full justify-between py-3 border-b-[1px] border-b-[#1b252e]">
+          <div className=" flex items-center justify-between">
+            <div className="pr-4">
               <Link
                 onClick={() => {
                   closeMenu();
@@ -268,34 +268,34 @@ const Navbar = () => {
                   width={176}
                   height={64}
                   alt="logo"
-                  className="tw-hidden sm:tw-block tw-w-auto tw-h-auto"
+                  className="hidden sm:block w-auto h-auto"
                 />
                 <Image
                   src={LogoSmall}
                   width={32}
                   height={32}
                   alt="logo"
-                  className=" tw-block sm:tw-hidden tw-w-auto tw-h-auto"
+                  className=" block sm:hidden w-auto h-auto"
                 />
               </Link>
             </div>
-            <Link
+            {/* <Link
               onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                closeNavLinkDropDownMenu();
-                document.body.classList.remove("stop-scrolling");
+                closeMenu()
+                closeMyAccountMenu()
+                closeNavLinkDropDownMenu()
+                document.body.classList.remove('stop-scrolling')
               }}
               href="/live"
             >
               <div
-                className={`tw-block tw-mx-4 sm:tw-mx-4 ${
-                  pathname === "/live" && "tw-font-bold tw-border-b-2"
+                className={`block mx-4 sm:mx-4 ${
+                  pathname === '/live' && 'font-bold border-b-2'
                 }`}
               >
                 LIVE
               </div>
-            </Link>
+            </Link> */}
 
             {/* <Link
               onClick={() => {
@@ -306,8 +306,8 @@ const Navbar = () => {
               href="/discover"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 ${
-                  pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                className={`block mx-2 sm:mx-2 ${
+                  pathname === "/discover" && "font-bold border-b-2"
                 }`}
               >
                 DISCOVER
@@ -322,44 +322,44 @@ const Navbar = () => {
               href="/auctions"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 ${
-                  pathname === "/auctions" && "tw-font-bold tw-border-b-2"
+                className={`block mx-2 sm:mx-2 ${
+                  pathname === "/auctions" && "font-bold border-b-2"
                 }`}
               >
                 AUCTIONS
               </div>
             </Link> */}
-            <Link
+            {/* <Link
               onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                closeNavLinkDropDownMenu();
-                document.body.classList.remove("stop-scrolling");
+                closeMenu()
+                closeMyAccountMenu()
+                closeNavLinkDropDownMenu()
+                document.body.classList.remove('stop-scrolling')
               }}
               href="/tournaments"
             >
               <div
-                className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
-                  pathname === "/tournaments" && "tw-font-bold tw-border-b-2"
+                className={`block mx-4 sm:mx-4 max-sm:hidden ${
+                  pathname === '/tournaments' && 'font-bold border-b-2'
                 }`}
               >
                 TOURNAMENTS
               </div>
-            </Link>
-            <div>
-              <div className="tw-flex">
+            </Link> */}
+            {/* <div>
+              <div className="flex">
                 <Link
                   onClick={() => {
-                    closeMenu();
-                    closeMyAccountMenu();
-                    closeNavLinkDropDownMenu();
-                    document.body.classList.remove("stop-scrolling");
+                    closeMenu()
+                    closeMyAccountMenu()
+                    closeNavLinkDropDownMenu()
+                    document.body.classList.remove('stop-scrolling')
                   }}
                   href="/discover"
                 >
                   <div
-                    className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
-                      pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                    className={`block mx-4 sm:mx-4 max-sm:hidden ${
+                      pathname === '/discover' && 'font-bold border-b-2'
                     }`}
                   >
                     EXPLORE
@@ -367,9 +367,9 @@ const Navbar = () => {
                 </Link>
                 <button
                   onMouseEnter={() => {
-                    setNavlinkIsOpen(!navlinkIsOpen);
-                    closeMenu();
-                    closeMyAccountMenu();
+                    setNavlinkIsOpen(!navlinkIsOpen)
+                    closeMenu()
+                    closeMyAccountMenu()
                   }}
                   id="options-menu"
                 >
@@ -377,16 +377,16 @@ const Navbar = () => {
                 </button>
                 <Link
                   onClick={() => {
-                    closeMenu();
-                    closeMyAccountMenu();
-                    closeNavLinkDropDownMenu();
-                    document.body.classList.remove("stop-scrolling");
+                    closeMenu()
+                    closeMyAccountMenu()
+                    closeNavLinkDropDownMenu()
+                    document.body.classList.remove('stop-scrolling')
                   }}
                   href="/feedback"
                 >
                   <div
-                    className={`tw-block tw-mx-4 sm:tw-mx-4 ${
-                      pathname === "/feedback" && "tw-font-bold tw-border-b-2"
+                    className={`block mx-4 sm:mx-4 ${
+                      pathname === '/feedback' && 'font-bold border-b-2'
                     }`}
                   >
                     FEEDBACK
@@ -395,38 +395,38 @@ const Navbar = () => {
                 {navlinkIsOpen && (
                   <div
                     onMouseLeave={() => {
-                      closeNavLinkDropDownMenu();
+                      closeNavLinkDropDownMenu()
                     }}
-                    className="max-sm:slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14"
+                    className="max-sm:slide-in-top absolute z-50 left-[580px] top-16 w-auto max-h-[784px] overflow-auto bg-[#0F1923] rounded pt-2 p-2 shadow-xl shadow-black max-sm:w-full max-sm:left-0 max-sm:top-14"
                   >
                     <div
-                      className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
+                      className="flex flex-col px-1 gap-2"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
                     >
                       <Link
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
                         href="/tournaments"
-                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="sm:hidden p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         TOURNAMENTS
                       </Link>
                       <Link
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
                         href="/discover"
-                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="sm:hidden p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         DISCOVER
@@ -434,12 +434,12 @@ const Navbar = () => {
                       <Link
                         href="/auctions"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         AUCTIONS
@@ -447,12 +447,12 @@ const Navbar = () => {
                       <Link
                         href="/about_page"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         ABOUT
@@ -460,12 +460,12 @@ const Navbar = () => {
                       <Link
                         href="/leaderboards"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         LEADERBOARDS
@@ -473,12 +473,12 @@ const Navbar = () => {
                       <Link
                         href="/how_it_works"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         HOW IT WORKS
@@ -486,12 +486,12 @@ const Navbar = () => {
                       <Link
                         href="/tos"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         TERMS OF SERVICE
@@ -499,12 +499,12 @@ const Navbar = () => {
                       <Link
                         href="/privacy_policy"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         PRIVACY POLICY
@@ -513,19 +513,19 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
-          <div className="tw-relative tw-max-w-[535px] tw-w-full tw-hidden lg:tw-block">
+          {/* <div className="relative max-w-[535px] w-full hidden lg:block">
             <form
               onSubmit={handleSumbit}
               autoComplete="off"
-              className="tw-w-full tw-flex tw-items-center"
+              className="w-full flex items-center"
             >
               <div
                 className={
                   searchBoxDropDown
-                    ? "tw-bg-shade-50 tw-flex tw-py-2 tw-px-3 tw-grow tw-rounded-t"
-                    : "tw-bg-shade-50 tw-flex tw-py-2 tw-px-3 tw-grow tw-rounded"
+                    ? 'bg-shade-50 flex py-2 px-3 grow rounded-t'
+                    : 'bg-shade-50 flex py-2 px-3 grow rounded'
                 }
               >
                 <Image
@@ -533,13 +533,13 @@ const Navbar = () => {
                   width={15}
                   height={15}
                   alt="magnifying glass"
-                  className="tw-w-auto tw-h-auto"
+                  className="w-auto h-auto"
                 />
                 <input
                   id="search-bar-input"
                   name="search"
                   type="text"
-                  className="tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none"
+                  className="ml-2 bg-shade-50 w-full outline-none border-none"
                   placeholder="Search make, model, year..."
                   onClick={handleInputClick}
                   onChange={handleChange}
@@ -550,7 +550,7 @@ const Navbar = () => {
                     width={25}
                     height={25}
                     alt="magnifying glass"
-                    className="tw-w-[] tw-h-auto tw-cursor-pointer"
+                    className="w-[] h-auto cursor-pointer"
                     onClick={clearSearchInputs}
                   />
                 )}
@@ -562,12 +562,12 @@ const Navbar = () => {
                 onSearchClick={handleSearchClick}
               />
             )}
-          </div>
+          </div> */}
           {/* Buttons for logged in accounts */}
-          <div className="tw-hidden sm:tw-flex tw-justify-between tw-items-center tw-w-[136px] md:tw-visible tw-relative">
+          <div className="hidden sm:flex justify-between items-center w-[136px] md:visible relative">
             <button
               id="watchlist-button"
-              className="tw-relative"
+              className="relative"
               onClick={() => {
                 setDropWatchlist((prev) => !prev);
                 setDropMyAccount(false);
@@ -579,7 +579,7 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="watchlist"
-                className="tw-w-[24px] tw-h-[24px]"
+                className="w-[24px] h-[24px]"
               />
             </button>
             {dropWatchlist && <MyWatchlistDropdownMenu />}
@@ -596,13 +596,13 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="wagers"
-                className="tw-w-[24px] tw-h-[24px]"
+                className="w-[24px] h-[24px]"
               />
             </button>
             {dropMyWagers && <MyWagersDropdownMenu />}
             <button
               id="myaccount-button"
-              className="tw-relative"
+              className="relative"
               onClick={() => {
                 setDropMyAccount((prev) => !prev);
                 setDropWatchlist(false);
@@ -614,26 +614,26 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="account"
-                className="tw-w-[24px] tw-h-[24px]"
+                className="w-[24px] h-[24px]"
               />
               {dropMyAccount && <MyAccountDropdownMenu />}
             </button>
           </div>
-          <div className="sm:tw-hidden">
+          <div className="sm:hidden">
             <button
               onClick={() => {
                 setMyAccountMenuOpen((prev) => !prev);
                 setMenuIsOpen(false);
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="tw-mr-4"
+              className="mr-4"
             >
               <Image
                 src={AccountIcon}
                 width={24}
                 height={24}
                 alt="account"
-                className="tw-w-[24px] tw-h-[24px]"
+                className="w-[24px] h-[24px]"
               />
             </button>
             <button
@@ -654,7 +654,7 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className=" tw-w-auto tw-h-auto"
+                  className=" w-auto h-auto"
                 />
               ) : (
                 <Image
@@ -662,16 +662,16 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className=" tw-w-auto tw-h-auto"
+                  className=" w-auto h-auto"
                 />
               )}
             </button>
           </div>
         </div>
       ) : (
-        <div className=" tw-flex tw-px-4 md:tw-px-6 2xl:tw-px-36 tw-w-full tw-justify-between tw-py-3 tw-border-b-[1px] tw-border-b-[#1b252e]">
-          <div className=" tw-flex tw-items-center tw-justify-between">
-            <div className="tw-pr-4">
+        <div className=" flex px-4 md:px-6 2xl:px-36 w-full justify-between py-3 border-b-[1px] border-b-[#1b252e]">
+          <div className=" flex items-center justify-between">
+            <div className="pr-4">
               <Link
                 onClick={() => {
                   closeMenu();
@@ -683,30 +683,30 @@ const Navbar = () => {
               >
                 <Image
                   src={Logo}
-                  width={176}
+                  width={352}
                   height={64}
                   alt="logo"
-                  className="tw-block tw-w-auto tw-h-auto"
+                  className="block w-auto h-auto"
                 />
               </Link>
             </div>
-            <Link
+            {/* <Link
               onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                closeNavLinkDropDownMenu();
-                document.body.classList.remove("stop-scrolling");
+                closeMenu()
+                closeMyAccountMenu()
+                closeNavLinkDropDownMenu()
+                document.body.classList.remove('stop-scrolling')
               }}
               href="/live"
             >
               <div
-                className={`tw-block tw-mx-4 sm:tw-mx-4 ${
-                  pathname === "/live" && "tw-font-bold tw-border-b-2"
+                className={`block mx-4 sm:mx-4 ${
+                  pathname === '/live' && 'font-bold border-b-2'
                 }`}
               >
                 LIVE
               </div>
-            </Link>
+            </Link> */}
             {/* <Link
               onClick={() => {
                 closeMenu();
@@ -716,8 +716,8 @@ const Navbar = () => {
               href="/discover"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 ${
-                  pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                className={`block mx-2 sm:mx-2 ${
+                  pathname === "/discover" && "font-bold border-b-2"
                 }`}
               >
                 DISCOVER
@@ -732,44 +732,44 @@ const Navbar = () => {
               href="/auctions"
             >
               <div
-                className={`tw-block tw-mx-2 sm:tw-mx-2 ${
-                  pathname === "/auctions" && "tw-font-bold tw-border-b-2"
+                className={`block mx-2 sm:mx-2 ${
+                  pathname === "/auctions" && "font-bold border-b-2"
                 }`}
               >
                 AUCTIONS
               </div>
             </Link> */}
-            <Link
+            {/* <Link
               onClick={() => {
-                closeMenu();
-                closeMyAccountMenu();
-                closeNavLinkDropDownMenu();
-                document.body.classList.remove("stop-scrolling");
+                closeMenu()
+                closeMyAccountMenu()
+                closeNavLinkDropDownMenu()
+                document.body.classList.remove('stop-scrolling')
               }}
               href="/tournaments"
             >
               <div
-                className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
-                  pathname === "/tournaments" && "tw-font-bold tw-border-b-2"
+                className={`block mx-4 sm:mx-4 max-sm:hidden ${
+                  pathname === '/tournaments' && 'font-bold border-b-2'
                 }`}
               >
                 TOURNAMENTS
               </div>
-            </Link>
-            <div>
-              <div className="tw-flex">
+            </Link> */}
+            {/* <div>
+              <div className="flex">
                 <Link
                   onClick={() => {
-                    closeMenu();
-                    closeMyAccountMenu();
-                    closeNavLinkDropDownMenu();
-                    document.body.classList.remove("stop-scrolling");
+                    closeMenu()
+                    closeMyAccountMenu()
+                    closeNavLinkDropDownMenu()
+                    document.body.classList.remove('stop-scrolling')
                   }}
                   href="/discover"
                 >
                   <div
-                    className={`tw-block tw-mx-4 sm:tw-mx-4 max-sm:tw-hidden ${
-                      pathname === "/discover" && "tw-font-bold tw-border-b-2"
+                    className={`block mx-4 sm:mx-4 max-sm:hidden ${
+                      pathname === '/discover' && 'font-bold border-b-2'
                     }`}
                   >
                     EXPLORE
@@ -777,9 +777,9 @@ const Navbar = () => {
                 </Link>
                 <button
                   onMouseEnter={() => {
-                    setNavlinkIsOpen(!navlinkIsOpen);
-                    closeMenu();
-                    closeMyAccountMenu();
+                    setNavlinkIsOpen(!navlinkIsOpen)
+                    closeMenu()
+                    closeMyAccountMenu()
                   }}
                   id="options-menu"
                 >
@@ -788,38 +788,38 @@ const Navbar = () => {
                 {navlinkIsOpen && (
                   <div
                     onMouseLeave={() => {
-                      closeNavLinkDropDownMenu();
+                      closeNavLinkDropDownMenu()
                     }}
-                    className="max-sm:slide-in-top tw-absolute tw-z-50 tw-left-[580px] tw-top-16 tw-w-auto tw-max-h-[784px] tw-overflow-auto tw-bg-[#0F1923] tw-rounded tw-pt-2 tw-p-2 tw-shadow-xl tw-shadow-black max-sm:tw-w-full max-sm:tw-left-0 max-sm:tw-top-14"
+                    className="max-sm:slide-in-top absolute z-50 left-[580px] top-16 w-auto max-h-[784px] overflow-auto bg-[#0F1923] rounded pt-2 p-2 shadow-xl shadow-black max-sm:w-full max-sm:left-0 max-sm:top-14"
                   >
                     <div
-                      className="tw-flex tw-flex-col tw-px-1 tw-gap-2"
+                      className="flex flex-col px-1 gap-2"
                       role="menu"
                       aria-orientation="vertical"
                       aria-labelledby="options-menu"
                     >
                       <Link
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
                         href="/tournaments"
-                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="sm:hidden p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         TOURNAMENTS
                       </Link>
                       <Link
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
                         href="/discover"
-                        className="sm:tw-hidden tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="sm:hidden p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         DISCOVER
@@ -827,12 +827,12 @@ const Navbar = () => {
                       <Link
                         href="/auctions"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         AUCTIONS
@@ -840,12 +840,12 @@ const Navbar = () => {
                       <Link
                         href="/about_page"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         ABOUT
@@ -853,12 +853,12 @@ const Navbar = () => {
                       <Link
                         href="/leaderboards"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         LEADERBOARD
@@ -866,12 +866,12 @@ const Navbar = () => {
                       <Link
                         href="/how_it_works"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         HOW IT WORKS
@@ -879,12 +879,12 @@ const Navbar = () => {
                       <Link
                         href="/tos"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         TERMS OF SERVICE
@@ -892,12 +892,12 @@ const Navbar = () => {
                       <Link
                         href="/privacy_policy"
                         onClick={() => {
-                          closeMenu();
-                          closeMyAccountMenu();
-                          closeNavLinkDropDownMenu();
-                          document.body.classList.remove("stop-scrolling");
+                          closeMenu()
+                          closeMyAccountMenu()
+                          closeNavLinkDropDownMenu()
+                          document.body.classList.remove('stop-scrolling')
                         }}
-                        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+                        className="p-1.5 hover:bg-white/5 w-full"
                         role="menuitem"
                       >
                         PRIVACY POLICY
@@ -906,64 +906,92 @@ const Navbar = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
-          <div className="tw-relative tw-max-w-[535px] xl:tw-w-full tw-flex-1 tw-hidden lg:tw-flex tw-mr-4">
-            <form
-              onSubmit={handleSumbit}
-              autoComplete="off"
-              className="tw-w-full tw-flex tw-items-center"
-            >
-              <div
-                className={
-                  searchBoxDropDown
-                    ? "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded-t"
-                    : "tw-bg-shade-50 tw-flex tw-p-2 tw-grow tw-rounded"
-                }
+          <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4 justify-between">
+            <nav className="flex items-center justify-between space-x-8">
+              <Link
+                href="/"
+                className="hover:text-[#F2CA16] transition-colors"
               >
-                <Image
-                  src={MagnifyingGlass}
-                  width={15}
-                  height={15}
-                  alt="magnifying glass"
-                  className="tw-w-auto tw-h-auto"
-                />
-                <input
-                  id="search-bar-input"
-                  name="search"
-                  type="text"
-                  className="tw-ml-2 tw-bg-shade-50 tw-w-full tw-outline-none tw-border-none"
-                  placeholder="Search make, model, year..."
-                  onClick={handleInputClick}
-                  onChange={handleChange}
-                ></input>
-                {showClearSearchButton && (
-                  <Image
-                    src={CloseIcon}
-                    width={25}
-                    height={25}
-                    alt="magnifying glass"
-                    className="tw-w-[] tw-h-auto tw-cursor-pointer"
-                    onClick={clearSearchInputs}
-                  />
-                )}
-              </div>
-            </form>
-            {searchBoxDropDown && (
-              <SearchDropDown
-                searchedData={searchedData}
-                onSearchClick={handleSearchClick}
-              />
-            )}
+                HOME
+              </Link>
+              <Link
+                href="/"
+                className="hover:text-[#F2CA16] transition-colors"
+              >
+                FREE PLAY
+              </Link>
+              <Link
+                href="/"
+                className="hover:text-[#F2CA16] transition-colors"
+              >
+                TOURNAMENTS
+              </Link>
+              <Link
+                href="/"
+                className="hover:text-[#F2CA16] transition-colors"
+              >
+                GUESS THE HAMMER
+              </Link>
+            </nav>
           </div>
-          <div className="tw-flex tw-items-center">
+          {/* <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4">
+                        <form
+                            onSubmit={handleSumbit}
+                            autoComplete="off"
+                            className="w-full flex items-center"
+                        >
+                            <div
+                                className={
+                                    searchBoxDropDown
+                                        ? 'bg-shade-50 flex p-2 grow rounded-t'
+                                        : 'bg-shade-50 flex p-2 grow rounded'
+                                }
+                            >
+                                <Image
+                                    src={MagnifyingGlass}
+                                    width={15}
+                                    height={15}
+                                    alt="magnifying glass"
+                                    className="w-auto h-auto"
+                                />
+                                <input
+                                    id="search-bar-input"
+                                    name="search"
+                                    type="text"
+                                    className="ml-2 bg-shade-50 w-full outline-none border-none"
+                                    placeholder="Search make, model, year..."
+                                    onClick={handleInputClick}
+                                    onChange={handleChange}
+                                ></input>
+                                {showClearSearchButton && (
+                                    <Image
+                                        src={CloseIcon}
+                                        width={25}
+                                        height={25}
+                                        alt="magnifying glass"
+                                        className="w-[] h-auto cursor-pointer"
+                                        onClick={clearSearchInputs}
+                                    />
+                                )}
+                            </div>
+                        </form>
+                        {searchBoxDropDown && (
+                            <SearchDropDown
+                                searchedData={searchedData}
+                                onSearchClick={handleSearchClick}
+                            />
+                        )}
+                    </div> */}
+          <div className="flex items-center">
             <Link href="/login_page">
-              <button className="btn-white tw-mx-2  hover:tw-bg-gold-200 tw-hidden md:tw-block ">
+              <button className="btn-white mx-2  hover:bg-gold-200 hidden md:block ">
                 LOGIN
               </button>
             </Link>
             <Link href="/create_account">
-              <button className="btn-white  hover:tw-bg-gold-200 tw-hidden md:tw-block ">
+              <button className="btn-white  hover:bg-gold-200 hidden md:block ">
                 SIGN UP
               </button>
             </Link>
@@ -984,7 +1012,7 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className="md:tw-hidden tw-w-auto tw-h-auto"
+                  className="md:hidden w-auto h-auto"
                 />
               ) : (
                 <Image
@@ -992,7 +1020,7 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className="md:tw-hidden tw-w-auto tw-h-auto"
+                  className="md:hidden w-auto h-auto"
                 />
               )}
             </button>
@@ -1056,107 +1084,90 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   const [dropWatchlistOrWagers, setDropWatchlistOrWagers] = useState("");
 
   return (
-    <div className="drop-down-custom-height slide-in-top tw-absolute tw-z-50 tw-flex-col tw-text-white tw-bg-[#0F1923] tw-p-4 tw-w-full ">
-      <div className="tw-relative">
-        <form
-          autoComplete="off"
-          onSubmit={handleSubmit}
-          className="tw-bg-shade-100 tw-flex tw-justify-between tw-p-2 tw-rounded tw-my-4"
-        >
-          <div className="tw-flex tw-w-full">
-            <Image
-              src={MagnifyingGlass}
-              width={15}
-              height={15}
-              alt="magnifying glass"
-              className="tw-w-auto tw-h-auto"
-            />
-            <input
-              id="dropdown-search-bar"
-              className="tw-ml-2 tw-bg-shade-100 tw-outline-none tw-w-full"
-              placeholder="Search make, model, year..."
-              name="search"
-              type="text"
-              onChange={handleChange}
-              onClick={() => {
-                setSearchBoxDropDown(true);
-              }}
-            ></input>
-          </div>
-          {showClearSearchButton && (
-            <Image
-              src={CloseIcon}
-              width={20}
-              height={20}
-              alt="magnifying glass"
-              className="tw-h-auto tw-cursor-pointer"
-              onClick={clearSearchInputs}
-            />
-          )}
-        </form>
-        {searchBoxDropDown && (
-          <SearchDropDown
-            searchedData={searchedData}
-            onSearchClick={onSearchClick}
-          />
-        )}
+    <div className="drop-down-custom-height slide-in-top absolute z-50 flex-col text-white bg-[#0F1923] p-4 w-full ">
+      <div className="relative">
+        {/* <form
+                    autoComplete="off"
+                    onSubmit={handleSubmit}
+                    className="bg-shade-100 flex justify-between p-2 rounded my-4"
+                >
+                    <div className="flex w-full">
+                        <Image
+                            src={MagnifyingGlass}
+                            width={15}
+                            height={15}
+                            alt="magnifying glass"
+                            className="w-auto h-auto"
+                        />
+                        <input
+                            id="dropdown-search-bar"
+                            className="ml-2 bg-shade-100 outline-none w-full"
+                            placeholder="Search make, model, year..."
+                            name="search"
+                            type="text"
+                            onChange={handleChange}
+                            onClick={() => {
+                                setSearchBoxDropDown(true)
+                            }}
+                        ></input>
+                    </div>
+                    {showClearSearchButton && (
+                        <Image
+                            src={CloseIcon}
+                            width={20}
+                            height={20}
+                            alt="magnifying glass"
+                            className="h-auto cursor-pointer"
+                            onClick={clearSearchInputs}
+                        />
+                    )}
+                </form> */}
+        {/* {searchBoxDropDown && (
+                    <SearchDropDown
+                        searchedData={searchedData}
+                        onSearchClick={onSearchClick}
+                    />
+                )} */}
       </div>
-      {!isLoggedIn ? //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/about_page" //   <Link //   </Link> //     <div>TOURNAMENTS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="tw-flex tw-py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="tw-flex tw-py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-      //   >
-      //     <div>ABOUT</div>
-      //   </Link>
-      //   <Link
-      //     href="/leaderboard"
-      //     onClick={() => {
-      //       closeMenu();
-      //       document.body.classList.remove("stop-scrolling");
-      //     }}
-      //     className="tw-flex tw-py-2"
-      //   >
-      //     <div>LEADERBOARD</div>
-      //   </Link>
-      // </>
-      null : (
+      {!isLoggedIn ? null : ( // </> //   </Link> //     <div>LEADERBOARD</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/leaderboard" //   <Link //   </Link> //     <div>ABOUT</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/about_page" //   <Link //   </Link> //     <div>TOURNAMENTS</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="flex py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
         <>
           <button
             onClick={() => setDropWatchlistOrWagers("watchlist")}
-            className={`tw-flex tw-py-2 tw-w-full ${
-              dropWatchlistOrWagers === "watchlist" && "tw-font-bold"
-            }`}
+            className={`flex py-2 w-full ${dropWatchlistOrWagers === "watchlist" && "font-bold"
+              }`}
           >
             <Image
               src={WatchlistIcon}
               width={24}
               height={24}
               alt="watchlist"
-              className="tw-w-[24px] tw-h-[24px]"
+              className="w-[24px] h-[24px]"
             />
-            <div className="tw-ml-4">MY WATCHLIST</div>
+            <div className="ml-4">MY WATCHLIST</div>
           </button>
           {dropWatchlistOrWagers === "watchlist" ? (
             <MobileMyWatchlist closeMenu={closeMenu} />
           ) : null}
           <button
             onClick={() => setDropWatchlistOrWagers("wagers")}
-            className={`tw-flex tw-py-2 tw-w-full ${
-              dropWatchlistOrWagers === "wagers" && "tw-font-bold"
-            }`}
+            className={`flex py-2 w-full ${dropWatchlistOrWagers === "wagers" && "font-bold"
+              }`}
           >
             <Image
               src={WagersIcon}
               width={24}
               height={24}
               alt="watchlist"
-              className="tw-w-[24px] tw-h-[24px]"
+              className="w-[24px] h-[24px]"
             />
-            <div className="tw-ml-4">MY WAGERS</div>
+            <div className="ml-4">MY WAGERS</div>
           </button>
           {dropWatchlistOrWagers === "wagers" ? (
             <MobileMyWagers closeMenu={closeMenu} />
           ) : null}
         </>
       )}
-      <div className="tw-mt-4">
+      <div className="mt-4">
         {!isLoggedIn && (
           <>
             <button
@@ -1165,7 +1176,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 document.body.classList.remove("stop-scrolling");
                 closeMenu();
               }}
-              className="btn-white tw-w-full tw-my-2"
+              className="btn-white w-full my-2"
             >
               LOGIN
             </button>
@@ -1175,7 +1186,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 document.body.classList.remove("stop-scrolling");
                 closeMenu();
               }}
-              className="btn-white tw-w-full"
+              className="btn-white w-full"
             >
               CREATE ACCOUNT
             </button>
@@ -1240,43 +1251,43 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
   };
 
   return (
-    <div className="slide-in-top tw-absolute tw-z-50 tw-flex tw-flex-col tw-text-white tw-bg-[#1A2C3D] tw-p-4 tw-w-full tw-h-auto">
-      <div className="tw-text-lg tw-font-bold tw-p-1.5">MY ACCOUNT</div>
+    <div className="slide-in-top absolute z-50 flex flex-col text-white bg-[#1A2C3D] p-4 w-full h-auto">
+      <div className="text-lg font-bold p-1.5">MY ACCOUNT</div>
       {isLoading ? (
-        <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
+        <div className="px-6 w-full flex justify-center items-center">
           <BeatLoader color="#696969" size={10} />
         </div>
       ) : typeof walletBalance === "number" ? (
-        <div className="tw-w-full">
-          <div className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6">
+        <div className="w-full">
+          <div className="bg-[#49C74233] w-full px-6 py-4 rounded flex items-center gap-6">
             <Image
               src={Wallet}
               width={32}
               height={32}
               alt="wallet icon"
-              className="tw-w-8 tw-h-8"
+              className="w-8 h-8"
             />
-            <div className="tw-flex tw-flex-col tw-items-start tw-grow">
-              <span className="tw-font-bold tw-text-xl tw-py-1">
+            <div className="flex flex-col items-start grow">
+              <span className="font-bold text-xl py-1">
                 ${walletBalance.toFixed(2)}
               </span>
-              <span className="tw-text-[#49C742]">Withdraw</span>
+              <span className="text-[#49C742]">Withdraw</span>
             </div>
           </div>
         </div>
       ) : (
-        <div className="tw-px-6 tw-w-full">Error fetching wallet balance</div>
+        <div className="px-6 w-full">Error fetching wallet balance</div>
       )}
       <Link
         href="/profile"
-        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+        className="p-1.5 hover:bg-white/5 w-full"
         onClick={closeMyAccountMenu}
       >
         Profile
       </Link>
       <Link
         href="/profile"
-        className="tw-p-1.5 hover:tw-bg-white/5 tw-w-full"
+        className="p-1.5 hover:bg-white/5 w-full"
         onClick={closeMyAccountMenu}
       >
         Settings
@@ -1286,7 +1297,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
           handleSignOut();
           closeMyAccountMenu();
         }}
-        className="tw-p-1.5 tw-text-left hover:tw-bg-white/5 tw-w-full"
+        className="p-1.5 text-left hover:bg-white/5 w-full"
       >
         Logout
       </button>
@@ -1354,36 +1365,36 @@ const MyWatchlistDropdownMenu = () => {
   };
 
   return (
-    <div className="watchlist-menu tw-absolute tw-z-30 tw-right-[112px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-6 tw-pb-2 tw-shadow-xl tw-shadow-black">
-      <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
-        <div className="tw-flex tw-justify-between">
-          <div className="tw-font-bold tw-text-lg tw-text-left">
+    <div className="watchlist-menu absolute z-30 right-[112px] top-10 w-[512px] max-h-[784px] overflow-auto bg-[#1A2C3D] rounded pt-6 pb-2 shadow-xl shadow-black">
+      <div className="px-6 flex flex-col gap-4">
+        <div className="flex justify-between">
+          <div className="font-bold text-lg text-left">
             MY WATCHLIST
           </div>
           {(activeWatchlist.length !== 0 ||
             completedWatchlist.length !== 0 ||
             activeTournamentWatchlist.length !== 0 ||
             completedTournamentWatchlist.length !== 0) && (
-            <button
-              id="myWatchlist-sort"
-              type="button"
-              className="tw-rounded-sm tw-w-[140px] tw-text-center tw-px-2 tw-py-1.5 tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#0f1923] tw-truncate"
-              onClick={handleClick}
-            >
-              {wagerSort}
-            </button>
-          )}
+              <button
+                id="myWatchlist-sort"
+                type="button"
+                className="rounded-sm w-[140px] text-center px-2 py-1.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#0f1923] truncate"
+                onClick={handleClick}
+              >
+                {wagerSort}
+              </button>
+            )}
         </div>
-        <div className="tw-flex">
+        <div className="flex">
           <button
             id="active-watchlist-button"
             onClick={() => setActiveOrCompleted("active")}
-            className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white tw-flex tw-justify-center tw-items-center tw-gap-2"
+            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white flex justify-center items-center gap-2"
             autoFocus
           >
             <div>ACTIVE </div>
             {!isLoading && (
-              <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+              <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
                 {activeWatchlist.length + activeTournamentWatchlist.length}
               </span>
             )}
@@ -1391,21 +1402,21 @@ const MyWatchlistDropdownMenu = () => {
           <button
             id="completed-watchlist-button"
             onClick={() => setActiveOrCompleted("completed")}
-            className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white"
           >
             COMPLETED
           </button>
         </div>
       </div>
       {isLoading && (
-        <div className="tw-pb-[50px] tw-pt-[74px] tw-flex tw-justify-center">
+        <div className="pb-[50px] pt-[74px] flex justify-center">
           <BounceLoader color="#696969" loading={true} />
         </div>
       )}
       {activeOrCompleted === "active" &&
-      (activeWatchlist.length !== 0 ||
-        activeTournamentWatchlist.length !== 0) ? (
-        <div className="tw-w-full">
+        (activeWatchlist.length !== 0 ||
+          activeTournamentWatchlist.length !== 0) ? (
+        <div className="w-full">
           {wagerSort !== "TOURNAMENTS" &&
             activeWatchlist.map((watchlist: any, index: number) => (
               <div key={watchlist._id}>
@@ -1438,9 +1449,9 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {activeOrCompleted === "completed" &&
-      (completedWatchlist.length !== 0 ||
-        completedTournamentWatchlist.length !== 0) ? (
-        <div className="tw-w-full">
+        (completedWatchlist.length !== 0 ||
+          completedTournamentWatchlist.length !== 0) ? (
+        <div className="w-full">
           {wagerSort !== "TOURNAMENTS" &&
             completedWatchlist.map((watchlist: any, index: number) => (
               <div key={watchlist._id}>
@@ -1473,22 +1484,22 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "active" &&
-      activeWatchlist.length === 0 &&
-      activeTournamentWatchlist.length === 0 ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "active" &&
+        activeWatchlist.length === 0 &&
+        activeTournamentWatchlist.length === 0 ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No active wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1501,22 +1512,22 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "completed" &&
-      completedWatchlist.length === 0 &&
-      completedTournamentWatchlist.length === 0 ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "completed" &&
+        completedWatchlist.length === 0 &&
+        completedTournamentWatchlist.length === 0 ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No completed wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1529,22 +1540,22 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "completed" &&
-      completedWatchlist.length === 0 &&
-      wagerSort === "AUCTIONS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "completed" &&
+        completedWatchlist.length === 0 &&
+        wagerSort === "AUCTIONS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No completed wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1557,22 +1568,22 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "completed" &&
-      completedTournamentWatchlist.length === 0 &&
-      wagerSort === "TOURNAMENTS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "completed" &&
+        completedTournamentWatchlist.length === 0 &&
+        wagerSort === "TOURNAMENTS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No completed wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1585,22 +1596,22 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "active" &&
-      activeWatchlist.length === 0 &&
-      wagerSort === "AUCTIONS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "active" &&
+        activeWatchlist.length === 0 &&
+        wagerSort === "AUCTIONS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No active wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1613,22 +1624,22 @@ const MyWatchlistDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "active" &&
-      activeTournamentWatchlist.length === 0 &&
-      wagerSort === "TOURNAMENTS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "active" &&
+        activeTournamentWatchlist.length === 0 &&
+        wagerSort === "TOURNAMENTS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No active wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1664,12 +1675,12 @@ export const MyWatchlistTournamentCard = ({
 
   return (
     <div
-      className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 tw-border-t-[1px] tw-border-[#253747]`}
+      className={`sm:px-6 px-5 w-full py-4 border-t-[1px] border-[#253747]`}
     >
-      <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
+      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
         <Link
           href={`/tournaments/${watchlist.tournamentID}`}
-          className="tw-grid tw-gap-[2px] tw-grid-cols-2 sm:tw-w-[100px] tw-w-[50px] tw-pt-2 sm:tw-p-0"
+          className="grid gap-[2px] grid-cols-2 sm:w-[100px] w-[50px] pt-2 sm:p-0"
           onClick={() => closeMenu && closeMenu()}
         >
           {watchlist.tournamentImages
@@ -1682,39 +1693,39 @@ export const MyWatchlistTournamentCard = ({
                   alt="car image"
                   width={49}
                   height={49}
-                  className="tw-rounded tw-w-[24.5px] tw-h-[24.5px] sm:tw-h-[49px] sm:tw-w-[49px] tw-object-cover"
+                  className="rounded w-[24.5px] h-[24.5px] sm:h-[49px] sm:w-[49px] object-cover"
                 />
               );
             })}
         </Link>
-        <div className="tw-flex tw-flex-col tw-items-start sm:tw-max-w-[323px] tw-max-w-[230px]">
+        <div className="flex flex-col items-start sm:max-w-[323px] max-w-[230px]">
           <Link
             href={`/tournaments/${watchlist.tournamentID}`}
-            className="tw-self-start"
+            className="self-start"
             onClick={() => closeMenu && closeMenu()}
           >
-            <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base sm:tw-py-1 tw-text-left tw-line-clamp-1">
+            <div className="w-full font-bold sm:text-lg text-base sm:py-1 text-left line-clamp-1">
               {watchlist.title}
             </div>
           </Link>
           {!isActive && (
-            <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+            <div className="text-xs sm:mb-2 opacity-80">
               Ended {formattedDateString}
             </div>
           )}
-          <div className="tw-w-full tw-mt-1 tw-text-sm">
+          <div className="w-full mt-1 text-sm">
             {isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+              <div className="flex items-center gap-2 w-full">
                 <Image
                   src={Hourglass}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Time Left:</span>
+                <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
-                  <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 ) : (
                   <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 )}
@@ -1762,82 +1773,81 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 
   return (
     <div
-      className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
-        index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
-      }`}
+      className={`sm:px-6 px-5 w-full py-4 ${index === 0 ? "" : "border-t-[1px] border-[#253747]"
+        }`}
     >
-      <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
+      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
         <Link
           href={`/auctions/car_view_page/${id}`}
           onClick={() => closeMenu && closeMenu()}
-          className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[50px] tw-h-[50px] tw-pt-2 sm:tw-pt-0"
+          className="self-start sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] pt-2 sm:pt-0"
         >
           <Image
             src={img}
             width={100}
             height={100}
             alt="wallet icon"
-            className="sm:tw-w-[100px] tw-w-[50px] tw-h-[50px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
+            className="sm:w-[100px] w-[50px] h-[50px] sm:h-[100px] object-cover rounded-[4px]"
           />
         </Link>
-        <div className="tw-flex tw-flex-col tw-items-start sm:tw-max-w-[323px] tw-max-w-[230px]">
+        <div className="flex flex-col items-start sm:max-w-[323px] max-w-[230px]">
           <Link
             href={`/auctions/car_view_page/${id}`}
-            className="tw-self-start"
+            className="self-start"
             onClick={() => closeMenu && closeMenu()}
           >
-            <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base sm:tw-py-1 tw-text-left tw-line-clamp-1">
+            <div className="w-full font-bold sm:text-lg text-base sm:py-1 text-left line-clamp-1">
               {title}
             </div>
           </Link>
           {!isActive && (
-            <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+            <div className="text-xs sm:mb-2 opacity-80">
               Ended {formattedDateString}
             </div>
           )}
-          <div className="tw-w-full tw-mt-1 tw-text-sm">
+          <div className="w-full mt-1 text-sm">
             {!isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+              <div className="flex items-center gap-2 w-full">
                 <Image
                   src={HammerIcon}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Hammer Price:</span>
-                <span className="tw-text-[#49C742] tw-font-bold">
+                <span className="opacity-80">Hammer Price:</span>
+                <span className="text-[#49C742] font-bold">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             )}
             {isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+              <div className="flex items-center gap-2 w-full">
                 <Image
                   src={Dollar}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Current Bid:</span>
-                <span className="tw-text-[#49C742] tw-font-bold">
+                <span className="opacity-80">Current Bid:</span>
+                <span className="text-[#49C742] font-bold">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             )}
             {isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2 tw-w-full">
+              <div className="flex items-center gap-2 w-full">
                 <Image
                   src={Hourglass}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Time Left:</span>
+                <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
-                  <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 ) : (
                   <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 )}
@@ -1909,34 +1919,34 @@ const MyWagersDropdownMenu = () => {
   };
 
   return (
-    <div className="my-wagers-menu tw-absolute tw-z-30 tw-right-[56px] tw-top-10 tw-w-[512px] tw-max-h-[784px] tw-overflow-auto tw-bg-[#1A2C3D] tw-rounded tw-pt-6 tw-pb-2 tw-shadow-xl tw-shadow-black">
-      <div className="tw-px-6 tw-flex tw-flex-col tw-gap-4">
-        <div className="tw-flex tw-justify-between">
-          <div className="tw-font-bold tw-text-lg tw-text-left">MY WAGERS</div>
+    <div className="my-wagers-menu absolute z-30 right-[56px] top-10 w-[512px] max-h-[784px] overflow-auto bg-[#1A2C3D] rounded pt-6 pb-2 shadow-xl shadow-black">
+      <div className="px-6 flex flex-col gap-4">
+        <div className="flex justify-between">
+          <div className="font-bold text-lg text-left">MY WAGERS</div>
           {(activeWagers.length !== 0 ||
             completedWagers.length !== 0 ||
             activeTournamentWagers.length !== 0 ||
             completedTournamentWagers.length !== 0) && (
-            <button
-              id="myWagers-sort"
-              type="button"
-              className="tw-rounded-sm tw-w-[140px] tw-text-center tw-px-2 tw-py-1.5 tw-text-white-900 tw-shadow-sm tw-bg-[#172431] hover:tw-bg-[#0f1923] tw-truncate"
-              onClick={handleClick}
-            >
-              {wagerSort}
-            </button>
-          )}
+              <button
+                id="myWagers-sort"
+                type="button"
+                className="rounded-sm w-[140px] text-center px-2 py-1.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#0f1923] truncate"
+                onClick={handleClick}
+              >
+                {wagerSort}
+              </button>
+            )}
         </div>
-        <div className="tw-flex">
+        <div className="flex">
           <button
             id="active-mywagers-button"
             onClick={() => setActiveOrCompleted("active")}
-            className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white tw-flex tw-justify-center tw-items-center tw-gap-2"
+            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white flex justify-center items-center gap-2"
             autoFocus
           >
             <div>ACTIVE </div>
             {!isLoading && (
-              <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+              <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
                 {activeWagers.length + activeTournamentWagers.length}
               </span>
             )}
@@ -1944,20 +1954,20 @@ const MyWagersDropdownMenu = () => {
           <button
             id="completed-mywagers-button"
             onClick={() => setActiveOrCompleted("completed")}
-            className="tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white"
           >
             COMPLETED
           </button>
         </div>
       </div>
       {isLoading && (
-        <div className="tw-pb-[66px] tw-pt-[74px] tw-flex tw-justify-center">
+        <div className="pb-[66px] pt-[74px] flex justify-center">
           <BounceLoader color="#696969" loading={true} />
         </div>
       )}
       {activeOrCompleted === "active" &&
-      (activeWagers.length !== 0 || activeTournamentWagers.length !== 0) ? (
-        <div className="tw-w-full">
+        (activeWagers.length !== 0 || activeTournamentWagers.length !== 0) ? (
+        <div className="w-full">
           {wagerSort !== "TOURNAMENTS" &&
             activeWagers.map((wager: any, index: number) => (
               <div key={wager._id}>
@@ -1996,9 +2006,9 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {activeOrCompleted === "completed" &&
-      (completedWagers.length !== 0 ||
-        completedTournamentWagers.length !== 0) ? (
-        <div className="tw-w-full">
+        (completedWagers.length !== 0 ||
+          completedTournamentWagers.length !== 0) ? (
+        <div className="w-full">
           {wagerSort !== "TOURNAMENTS" &&
             completedWagers.map((wager: any, index: number) => (
               <div key={wager._id}>
@@ -2037,22 +2047,22 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "active" &&
-      activeWagers.length === 0 &&
-      activeTournamentWagers.length === 0 ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "active" &&
+        activeWagers.length === 0 &&
+        activeTournamentWagers.length === 0 ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No active wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2065,22 +2075,22 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "completed" &&
-      completedWagers.length === 0 &&
-      completedTournamentWagers.length === 0 ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "completed" &&
+        completedWagers.length === 0 &&
+        completedTournamentWagers.length === 0 ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No completed wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2093,22 +2103,22 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "completed" &&
-      completedWagers.length === 0 &&
-      wagerSort === "AUCTIONS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "completed" &&
+        completedWagers.length === 0 &&
+        wagerSort === "AUCTIONS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No completed wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2121,22 +2131,22 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "completed" &&
-      completedTournamentWagers.length === 0 &&
-      wagerSort === "TOURNAMENTS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "completed" &&
+        completedTournamentWagers.length === 0 &&
+        wagerSort === "TOURNAMENTS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No completed wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2149,22 +2159,22 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "active" &&
-      activeWagers.length === 0 &&
-      wagerSort === "AUCTIONS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "active" &&
+        activeWagers.length === 0 &&
+        wagerSort === "AUCTIONS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No active wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2177,22 +2187,22 @@ const MyWagersDropdownMenu = () => {
         </div>
       ) : null}
       {isLoading === false &&
-      activeOrCompleted === "active" &&
-      activeTournamentWagers.length === 0 &&
-      wagerSort === "TOURNAMENTS" ? (
-        <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+        activeOrCompleted === "active" &&
+        activeTournamentWagers.length === 0 &&
+        wagerSort === "TOURNAMENTS" ? (
+        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="tw-w-[80px] tw-h-[80px]"
+            className="w-[80px] h-[80px]"
           />
           <div className="">
-            <div className="tw-font-bold tw-text-xl tw-text-center">
+            <div className="font-bold text-xl text-center">
               No active wagers
             </div>
-            <div className="tw-opacity-70 tw-text-center">
+            <div className="opacity-70 text-center">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2274,11 +2284,11 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
   }, []);
 
   return (
-    <div className="sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 tw-border-t-[1px] tw-border-[#253747]">
-      <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-start tw-gap-6">
+    <div className="sm:px-6 px-5 w-full py-4 border-t-[1px] border-[#253747]">
+      <div className=" w-full sm:py-3 rounded flex items-start gap-6">
         <Link
           href={`/tournaments/${wager._id}`}
-          className="tw-grid tw-gap-[2px] tw-grid-cols-2 sm:tw-w-[100px] tw-w-[50px] tw-pt-2 sm:tw-p-0"
+          className="grid gap-[2px] grid-cols-2 sm:w-[100px] w-[50px] pt-2 sm:p-0"
           onClick={() => closeMenu && closeMenu()}
         >
           {wager.tournamentImages
@@ -2291,41 +2301,40 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                   alt="car image"
                   width={49}
                   height={49}
-                  className="tw-rounded tw-w-[24.5px] tw-h-[24.5px] sm:tw-h-[49px] sm:tw-w-[49px] tw-object-cover"
+                  className="rounded w-[24.5px] h-[24.5px] sm:h-[49px] sm:w-[49px] object-cover"
                 />
               );
             })}
         </Link>
-        <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px] tw-max-w-[230px]">
+        <div className="flex flex-col items-start grow w-auto sm:max-w-[323px] max-w-[230px]">
           <Link
             href={`/tournaments/${wager._id}`}
-            className="tw-self-start"
+            className="self-start"
             onClick={() => closeMenu && closeMenu()}
           >
             <div
-              className={`tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-text-left tw-line-clamp-1 ${
-                isActive ? "sm:tw-mt-[14px]" : "sm:tw-mt-[5px]"
-              }`}
+              className={`w-full font-bold sm:text-lg text-base text-left line-clamp-1 ${isActive ? "sm:mt-[14px]" : "sm:mt-[5px]"
+                }`}
             >
               {wager.tournamentTitle}
             </div>
           </Link>
           {!isActive && (
-            <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+            <div className="text-xs sm:mb-2 opacity-80">
               Ended {formattedDateString}
             </div>
           )}
-          <div className="tw-w-full tw-mt-1 tw-text-sm">
-            <div className="tw-flex tw-items-center tw-gap-2">
+          <div className="w-full mt-1 text-sm">
+            <div className="flex items-center gap-2">
               <Image
                 src={PodiumIcon}
                 width={14}
                 height={14}
                 alt="wallet icon"
-                className="tw-w-[14px] tw-h-[14px]"
+                className="w-[14px] h-[14px]"
               />
-              <span className="tw-opacity-80">Place:</span>
-              <span className="tw-text-[#F2CA16] tw-font-bold">
+              <span className="opacity-80">Place:</span>
+              <span className="text-[#F2CA16] font-bold">
                 {isActive ? "Current: " : null}
                 {pointsAndPlacing.placing
                   ? addNumberSuffix(pointsAndPlacing.placing)
@@ -2334,15 +2343,15 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
               </span>
             </div>
             {!isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2">
+              <div className="flex items-center gap-2">
                 <Image
                   src={ThreeStars}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Points:</span>{" "}
+                <span className="opacity-80">Points:</span>{" "}
                 {pointsAndPlacing.totalScore
                   ? new Intl.NumberFormat().format(pointsAndPlacing.totalScore)
                   : "-"}{" "}
@@ -2350,14 +2359,14 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
               </div>
             )}
             {wager.prize && (
-              <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
-                <div className="tw-flex tw-gap-2">
+              <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
+                <div className="flex gap-2">
                   <Image
                     src={MoneyBagBlack}
                     width={20}
                     height={20}
                     alt="money bag"
-                    className="tw-w-[20px] tw-h-[20px]"
+                    className="w-[20px] h-[20px]"
                   />
                   <div>WINNINGS</div>
                 </div>
@@ -2366,25 +2375,25 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                   {wager.prize % 1 === 0
                     ? wager.prize.toLocaleString()
                     : wager.prize.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
                   🎉
                 </div>
               </div>
             )}
             {isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2">
+              <div className="flex items-center gap-2">
                 <Image
                   src={Hourglass}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Time Left:</span>
+                <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
-                  <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 ) : (
                   <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 )}
@@ -2392,20 +2401,20 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
             )}
           </div>
           {isActive && (
-            <div className="sm:tw-mt-[30px] tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
-              <div className="tw-flex tw-gap-2 tw-items-center">
+            <div className="sm:mt-[30px] mt-2 w-full sm:p-2 p-1 items-center flex justify-between sm:gap-4 bg-[#49C74233] rounded sm:text-sm text-xs">
+              <div className="flex gap-2 items-center">
                 <Image
                   src={MoneyBagGreen}
                   width={20}
                   height={20}
                   alt="money bag"
-                  className="tw-w-[20px] tw-h-[20px]"
+                  className="w-[20px] h-[20px]"
                 />
-                <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
+                <div className="text-[#49C742] font-bold text-left grow-[1]">
                   POTENTIAL PRIZE
                 </div>
               </div>
-              <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
+              <div className="text-[#49C742] font-bold text-left">
                 {prize ? `$${new Intl.NumberFormat().format(prize)}` : " --"}
               </div>
             </div>
@@ -2492,92 +2501,91 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
   return (
     <div
-      className={`sm:tw-px-6 tw-px-5 tw-w-full tw-py-4 ${
-        index === 0 ? "" : "tw-border-t-[1px] tw-border-[#253747]"
-      }`}
+      className={`sm:px-6 px-5 w-full py-4 ${index === 0 ? "" : "border-t-[1px] border-[#253747]"
+        }`}
     >
-      <div className=" tw-w-full sm:tw-py-3 tw-rounded tw-flex tw-items-center tw-gap-6">
+      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
         <Link
           href={`/auctions/car_view_page/${id}`}
           onClick={() => closeMenu && closeMenu()}
-          className="tw-self-start sm:tw-w-[100px] sm:tw-h-[100px] tw-w-[50px] tw-h-[50px] sm:tw-pt-0 tw-pt-2"
+          className="self-start sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] sm:pt-0 pt-2"
         >
           <Image
             src={img}
             width={100}
             height={100}
             alt="wallet icon"
-            className="sm:tw-w-[100px] tw-w-[50px] tw-h-[50px] sm:tw-h-[100px] tw-object-cover tw-rounded-[4px]"
+            className="sm:w-[100px] w-[50px] h-[50px] sm:h-[100px] object-cover rounded-[4px]"
           />
         </Link>
-        <div className="tw-flex tw-flex-col tw-items-start tw-grow tw-w-auto sm:tw-max-w-[323px] tw-max-w-[230px]">
+        <div className="flex flex-col items-start grow w-auto sm:max-w-[323px] max-w-[230px]">
           <Link
             href={`/auctions/car_view_page/${id}`}
             onClick={() => closeMenu && closeMenu()}
-            className="tw-self-start"
+            className="self-start"
           >
-            <div className="tw-w-full tw-font-bold sm:tw-text-lg tw-text-base tw-text-left tw-line-clamp-1">
+            <div className="w-full font-bold sm:text-lg text-base text-left line-clamp-1">
               {title}
             </div>
           </Link>
           {status === 2 || status === 4 ? (
-            <div className="tw-text-xs sm:tw-mb-2 tw-opacity-80">
+            <div className="text-xs sm:mb-2 opacity-80">
               Ended {formattedDateString}
             </div>
           ) : null}
-          <div className="tw-w-full tw-mt-1 tw-text-sm">
-            <div className="tw-flex tw-items-center tw-gap-2">
+          <div className="w-full mt-1 text-sm">
+            <div className="flex items-center gap-2">
               <Image
                 src={WalletSmall}
                 width={14}
                 height={14}
                 alt="wallet icon"
-                className="tw-w-[14px] tw-h-[14px]"
+                className="w-[14px] h-[14px]"
               />
-              <span className="tw-opacity-80">My Wager:</span>
-              <span className="tw-text-[#F2CA16] tw-font-bold">
+              <span className="opacity-80">My Wager:</span>
+              <span className="text-[#F2CA16] font-bold">
                 ${new Intl.NumberFormat().format(my_wager)}
               </span>
             </div>
             {prize ? (
-              <div className="tw-flex tw-items-center tw-gap-2">
+              <div className="flex items-center gap-2">
                 <Image
                   src={HammerIcon}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Hammer Price:</span>
-                <span className="tw-text-[#49C742] tw-font-bold">
+                <span className="opacity-80">Hammer Price:</span>
+                <span className="text-[#49C742] font-bold">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             ) : (
-              <div className="tw-flex tw-items-center tw-gap-2">
+              <div className="flex items-center gap-2">
                 <Image
                   src={Dollar}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Current Bid:</span>
-                <span className="tw-text-[#49C742] tw-font-bold">
+                <span className="opacity-80">Current Bid:</span>
+                <span className="text-[#49C742] font-bold">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             )}
 
             {prize && (
-              <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
-                <div className="tw-flex tw-gap-2">
+              <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
+                <div className="flex gap-2">
                   <Image
                     src={MoneyBagBlack}
                     width={20}
                     height={20}
                     alt="money bag"
-                    className="tw-w-[20px] tw-h-[20px]"
+                    className="w-[20px] h-[20px]"
                   />
                   <div>WINNINGS</div>
                 </div>
@@ -2586,25 +2594,25 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                   {prize % 1 === 0
                     ? prize.toLocaleString()
                     : prize.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}{" "}
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
                   🎉
                 </div>
               </div>
             )}
             {isActive && (
-              <div className="tw-flex tw-items-center tw-gap-2">
+              <div className="flex items-center gap-2">
                 <Image
                   src={Hourglass}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Time Left:</span>
+                <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
-                  <span className="tw-text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 ) : (
                   <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
                 )}
@@ -2612,39 +2620,39 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
             )}
           </div>
           {isActive && !isRefunded && (
-            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex tw-justify-between sm:tw-gap-4 tw-bg-[#49C74233] tw-rounded sm:tw-text-sm tw-text-xs">
-              <div className="tw-flex tw-gap-2 tw-items-center">
+            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex justify-between sm:gap-4 bg-[#49C74233] rounded sm:text-sm text-xs">
+              <div className="flex gap-2 items-center">
                 <Image
                   src={MoneyBagGreen}
                   width={20}
                   height={20}
                   alt="money bag"
-                  className="tw-w-[20px] tw-h-[20px]"
+                  className="w-[20px] h-[20px]"
                 />
-                <div className="tw-text-[#49C742] tw-font-bold tw-text-left tw-grow-[1]">
+                <div className="text-[#49C742] font-bold text-left grow-[1]">
                   POTENTIAL PRIZE
                 </div>
               </div>
-              <div className="tw-text-[#49C742] tw-font-bold tw-text-left">
+              <div className="text-[#49C742] font-bold text-left">
                 $
                 {pot % 1 === 0
                   ? pot.toLocaleString()
                   : pot.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
               </div>
             </div>
           )}
           {isActive && isRefunded && (
-            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
-              <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
+              <div className="text-[#f92f60] font-bold text-left grow-[1]">
                 ❌ AUCTION WAGER
               </div>
 
               <button
                 disabled
-                className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                className="bg-[white] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
               >
                 REFUNDED
               </button>
@@ -2652,42 +2660,42 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
           )}
           {status === 3 && (
             <>
-              <div className="tw-flex tw-items-center tw-gap-2 tw-w-full tw-text-sm">
+              <div className="flex items-center gap-2 w-full text-sm">
                 <Image
                   src={Dollar}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="tw-w-[14px] tw-h-[14px]"
+                  className="w-[14px] h-[14px]"
                 />
-                <span className="tw-opacity-80">Wager Amount:</span>
-                <span className="tw-text-[#f92f60] tw-font-bold">
+                <span className="opacity-80">Wager Amount:</span>
+                <span className="text-[#f92f60] font-bold">
                   ${new Intl.NumberFormat().format(wagerAmount)}
                 </span>
               </div>
-              <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
-                <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+              <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
+                <div className="text-[#f92f60] font-bold text-left grow-[1]">
                   ❌ UNSUCCESSFUL{" "}
-                  <span className="tw-hidden sm:tw-inline-block">AUCTION</span>
+                  <span className="hidden sm:inline-block">AUCTION</span>
                 </div>
                 {refunded ? (
                   <button
                     disabled
-                    className="tw-bg-[white] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                    className="bg-[white] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
                   >
                     REFUNDED
                   </button>
                 ) : (
                   <button
                     onClick={() => handleRefund(objectID, wagerID)}
-                    className="claim-button hover:tw-bg-[#ebcb48] tw-bg-[#facc15] tw-text-[black] tw-text-[12px] tw-font-bold tw-text-left tw-px-2 tw-rounded-sm"
+                    className="claim-button hover:bg-[#ebcb48] bg-[#facc15] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
                   >
                     {loading && (
-                      <div className="tw-px-[14px]">
+                      <div className="px-[14px]">
                         <BeatLoader size={8} />
                       </div>
                     )}
-                    <span className={`${loading && "tw-hidden"}`}>
+                    <span className={`${loading && "hidden"}`}>
                       REFUND
                       {/* CLAIM $
                                         {new Intl.NumberFormat().format(
@@ -2751,16 +2759,16 @@ const MyAccountDropdownMenu = () => {
   };
 
   return (
-    <div className="tw-absolute tw-z-10 tw-right-0 tw-top-8 tw-w-[320px] tw-h-auto tw-bg-[#1A2C3D] tw-rounded tw-py-6 tw-flex tw-flex-col tw-items-start tw-gap-4 tw-shadow-xl tw-shadow-black">
-      <div className="tw-px-6 tw-font-bold tw-text-lg">MY ACCOUNT</div>
+    <div className="absolute z-10 right-0 top-8 w-[320px] h-auto bg-[#1A2C3D] rounded py-6 flex flex-col items-start gap-4 shadow-xl shadow-black">
+      <div className="px-6 font-bold text-lg">MY ACCOUNT</div>
       {isLoading ? (
-        <div className="tw-px-6 tw-w-full tw-flex tw-justify-center tw-items-center">
+        <div className="px-6 w-full flex justify-center items-center">
           <BeatLoader color="#696969" size={10} />
         </div>
       ) : typeof walletBalance === "number" ? (
-        <div className="tw-px-6 tw-w-full">
+        <div className="px-6 w-full">
           <div
-            className="tw-bg-[#49C74233] tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6"
+            className="bg-[#49C74233] w-full px-6 py-4 rounded flex items-center gap-6"
             onClick={() => router.push("/my_wallet")}
           >
             <Image
@@ -2768,39 +2776,39 @@ const MyAccountDropdownMenu = () => {
               width={32}
               height={32}
               alt="wallet icon"
-              className="tw-w-8 tw-h-8"
+              className="w-8 h-8"
             />
-            <div className="tw-flex tw-flex-col tw-items-start tw-grow">
-              <span className="tw-font-bold tw-text-xl tw-py-1">
+            <div className="flex flex-col items-start grow">
+              <span className="font-bold text-xl py-1">
                 ${walletBalance.toFixed(2)}
               </span>
-              <span className="tw-text-[#49C742]">My Wallet</span>
+              <span className="text-[#49C742]">My Wallet</span>
             </div>
             <Image
               src={ArrowRight}
               width={32}
               height={32}
               alt="wallet icon"
-              className="tw-w-8 tw-h-8"
+              className="w-8 h-8"
             />
           </div>
         </div>
       ) : (
-        <div className="tw-px-6 tw-w-full">Error fetching wallet balance</div>
+        <div className="px-6 w-full">Error fetching wallet balance</div>
       )}
-      <div className="tw-px-6 tw-flex tw-flex-col tw-items-start tw-w-full">
+      <div className="px-6 flex flex-col items-start w-full">
         <Link
           href="/profile"
-          className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full"
+          className="text-left p-2 hover:bg-white/5 rounded w-full"
         >
           Profile
         </Link>
-        <button className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full">
+        <button className="text-left p-2 hover:bg-white/5 rounded w-full">
           Settings
         </button>
         <button
           onClick={handleSignOut}
-          className="tw-text-left tw-p-2 hover:tw-bg-white/5 tw-rounded tw-w-full"
+          className="text-left p-2 hover:bg-white/5 rounded w-full"
         >
           Logout
         </button>
@@ -2816,7 +2824,7 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({
   return (
     <div
       id="search-box"
-      className="tw-bg-shade-100 tw-absolute tw-top-10 tw-left-0 tw-right-0 sm:tw-bg-shade-50 tw-max-h-[344px] tw-overflow-y-scroll tw-z-10 tw-rounded-b tw-px-1 tw-border-t-[1px] tw-border-t-[#1b252e]"
+      className="bg-shade-100 absolute top-10 left-0 right-0 sm:bg-shade-50 max-h-[344px] overflow-y-scroll z-10 rounded-b px-1 border-t-[1px] border-t-[#1b252e]"
     >
       {Array.isArray(searchedData) &&
         searchedData &&
@@ -2831,7 +2839,7 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({
                   `${carData.auction_id}`
                 )
               }
-              className="tw-p-2 hover:tw-bg-shade-25 hover:tw-cursor-pointer hover:tw-rounded"
+              className="p-2 hover:bg-shade-25 hover:cursor-pointer hover:rounded"
             >
               {carData.make} {carData.model}
             </div>
@@ -2919,50 +2927,50 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
   };
 
   return (
-    <div className="tw-relative">
+    <div className="relative">
       {(activeWatchlist.length !== 0 ||
         completedWatchlist.length !== 0 ||
         activeTournamentWatchlist.length !== 0 ||
         completedTournamentWatchlist.length !== 0) && (
-        <button
-          id="myWatchlist-sort"
-          type="button"
-          className="tw-rounded-sm tw-w-[110px] tw-font-bold tw-text-center tw-px-2 tw-py-1.5 tw-text-white-900 tw-bg-[#172431] tw-text-[12px] tw-absolute tw-right-0 -tw-top-[34px]"
-          onClick={handleClick}
-        >
-          {wagerSort}
-        </button>
-      )}
-      <div className="tw-flex">
+          <button
+            id="myWatchlist-sort"
+            type="button"
+            className="rounded-sm w-[110px] font-bold text-center px-2 py-1.5 text-white-900 bg-[#172431] text-[12px] absolute right-0 -top-[34px]"
+            onClick={handleClick}
+          >
+            {wagerSort}
+          </button>
+        )}
+      <div className="flex">
         <button
           autoFocus
           onClick={() => setActiveOrCompleted("active")}
-          className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
         >
           ACTIVE
           {!isLoading && (
-            <span className="tw-ml-1 tw-px-1 tw-text-xs tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+            <span className="ml-1 px-1 text-xs bg-[#f2ca16] rounded font-bold text-[#0f1923]">
               {activeWatchlist.length + activeTournamentWatchlist.length}
             </span>
           )}
         </button>
         <button
           onClick={() => setActiveOrCompleted("completed")}
-          className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
         >
           COMPLETED
         </button>
       </div>
-      <div className="tw-mb-4 watchlist-custom-height tw-overflow-y-auto">
+      <div className="mb-4 watchlist-custom-height overflow-y-auto">
         {isLoading && (
-          <div className="tw-pb-[50px] tw-pt-[74px] tw-flex tw-justify-center">
+          <div className="pb-[50px] pt-[74px] flex justify-center">
             <BounceLoader color="#696969" loading={true} />
           </div>
         )}
         {activeOrCompleted === "active" &&
-        (activeWatchlist.length !== 0 ||
-          activeTournamentWatchlist.length !== 0) ? (
-          <div className="tw-w-full">
+          (activeWatchlist.length !== 0 ||
+            activeTournamentWatchlist.length !== 0) ? (
+          <div className="w-full">
             {wagerSort !== "TOURNAMENTS" &&
               activeWatchlist.map((watchlist: any, index: number) => (
                 <div key={watchlist._id}>
@@ -2997,9 +3005,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {activeOrCompleted === "completed" &&
-        (completedWatchlist.length !== 0 ||
-          completedTournamentWatchlist.length !== 0) ? (
-          <div className="tw-w-full">
+          (completedWatchlist.length !== 0 ||
+            completedTournamentWatchlist.length !== 0) ? (
+          <div className="w-full">
             {wagerSort !== "TOURNAMENTS" &&
               completedWatchlist.map((watchlist: any, index: number) => (
                 <div key={watchlist._id}>
@@ -3034,22 +3042,22 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWatchlist.length === 0 &&
-        activeTournamentWatchlist.length === 0 ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "active" &&
+          activeWatchlist.length === 0 &&
+          activeTournamentWatchlist.length === 0 ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No active wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3062,22 +3070,22 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWatchlist.length === 0 &&
-        completedTournamentWatchlist.length === 0 ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "completed" &&
+          completedWatchlist.length === 0 &&
+          completedTournamentWatchlist.length === 0 ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No completed wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3090,22 +3098,22 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWatchlist.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "completed" &&
+          completedWatchlist.length === 0 &&
+          wagerSort === "AUCTIONS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No completed wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3118,22 +3126,22 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedTournamentWatchlist.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "completed" &&
+          completedTournamentWatchlist.length === 0 &&
+          wagerSort === "TOURNAMENTS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No completed wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3146,22 +3154,22 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWatchlist.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "active" &&
+          activeWatchlist.length === 0 &&
+          wagerSort === "AUCTIONS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No active wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3174,22 +3182,22 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeTournamentWatchlist.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "active" &&
+          activeTournamentWatchlist.length === 0 &&
+          wagerSort === "TOURNAMENTS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No active wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3265,49 +3273,49 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
   };
 
   return (
-    <div className="tw-relative">
+    <div className="relative">
       {(activeWagers.length !== 0 ||
         completedWagers.length !== 0 ||
         activeTournamentWagers.length !== 0 ||
         completedTournamentWagers.length !== 0) && (
-        <button
-          id="myWatchlist-sort"
-          type="button"
-          className="tw-rounded-sm tw-w-[110px] tw-font-bold tw-text-center tw-px-2 tw-py-1.5 tw-text-white-900 tw-bg-[#172431] tw-text-[12px] tw-absolute tw-right-0 -tw-top-[34px]"
-          onClick={handleClick}
-        >
-          {wagerSort}
-        </button>
-      )}
-      <div className="tw-flex">
+          <button
+            id="myWatchlist-sort"
+            type="button"
+            className="rounded-sm w-[110px] font-bold text-center px-2 py-1.5 text-white-900 bg-[#172431] text-[12px] absolute right-0 -top-[34px]"
+            onClick={handleClick}
+          >
+            {wagerSort}
+          </button>
+        )}
+      <div className="flex">
         <button
           autoFocus
           onClick={() => setActiveOrCompleted("active")}
-          className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
         >
           ACTIVE
           {!isLoading && (
-            <span className="tw-ml-1 tw-px-1 tw-text-xs tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+            <span className="ml-1 px-1 text-xs bg-[#f2ca16] rounded font-bold text-[#0f1923]">
               {activeWagers.length + activeTournamentWagers.length}
             </span>
           )}
         </button>
         <button
           onClick={() => setActiveOrCompleted("completed")}
-          className="tw-py-2 tw-w-1/2 tw-text-center tw-text-sm tw-border-b-2 tw-border-[#314150] focus:tw-font-bold focus:tw-border-white"
+          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
         >
           COMPLETED
         </button>
       </div>
-      <div className="tw-mb-4 watchlist-custom-height tw-overflow-y-auto">
+      <div className="mb-4 watchlist-custom-height overflow-y-auto">
         {isLoading && (
-          <div className="tw-pb-[50px] tw-pt-[74px] tw-flex tw-justify-center">
+          <div className="pb-[50px] pt-[74px] flex justify-center">
             <BounceLoader color="#696969" loading={true} />
           </div>
         )}
         {activeOrCompleted === "active" &&
-        (activeWagers.length !== 0 || activeTournamentWagers.length !== 0) ? (
-          <div className="tw-w-full">
+          (activeWagers.length !== 0 || activeTournamentWagers.length !== 0) ? (
+          <div className="w-full">
             {wagerSort !== "TOURNAMENTS" &&
               activeWagers.map((wager: any, index: number) => (
                 <div key={wager._id}>
@@ -3352,9 +3360,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         ) : null}
 
         {activeOrCompleted === "completed" &&
-        (completedWagers.length !== 0 ||
-          completedTournamentWagers.length !== 0) ? (
-          <div className="tw-w-full">
+          (completedWagers.length !== 0 ||
+            completedTournamentWagers.length !== 0) ? (
+          <div className="w-full">
             {wagerSort !== "TOURNAMENTS" &&
               completedWagers.map((wager: any, index: number) => (
                 <div key={wager._id}>
@@ -3398,22 +3406,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWagers.length === 0 &&
-        activeTournamentWagers.length === 0 ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "active" &&
+          activeWagers.length === 0 &&
+          activeTournamentWagers.length === 0 ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No active wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3426,22 +3434,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWagers.length === 0 &&
-        completedTournamentWagers.length === 0 ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "completed" &&
+          completedWagers.length === 0 &&
+          completedTournamentWagers.length === 0 ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No completed wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3454,22 +3462,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWagers.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "completed" &&
+          completedWagers.length === 0 &&
+          wagerSort === "AUCTIONS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No completed wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3482,22 +3490,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedTournamentWagers.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "completed" &&
+          completedTournamentWagers.length === 0 &&
+          wagerSort === "TOURNAMENTS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No completed wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3510,22 +3518,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWagers.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "active" &&
+          activeWagers.length === 0 &&
+          wagerSort === "AUCTIONS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No active wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3538,22 +3546,22 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
           </div>
         ) : null}
         {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeTournamentWagers.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-          <div className="tw-px-6 tw-py-16 tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-full tw-gap-4">
+          activeOrCompleted === "active" &&
+          activeTournamentWagers.length === 0 &&
+          wagerSort === "TOURNAMENTS" ? (
+          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="tw-w-[80px] tw-h-[80px]"
+              className="w-[80px] h-[80px]"
             />
             <div className="">
-              <div className="tw-font-bold tw-text-xl tw-text-center">
+              <div className="font-bold text-xl text-center">
                 No active wagers
               </div>
-              <div className="tw-opacity-70 tw-text-center">
+              <div className="opacity-70 text-center">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>

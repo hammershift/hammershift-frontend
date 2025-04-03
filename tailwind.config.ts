@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-radial': 'radial-gradient(var(--gradient-stops))',
         'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+          'conic-gradient(from 180deg at 50% 50%, var(--gradient-stops))',
       },
       colors: {
         gold: {
@@ -48,7 +48,6 @@ const config: Config = {
       // => @media (min-width: 1440px) { ... }
     }
   },
-  prefix: 'tw-',
   plugins: [],
 }
 export default config

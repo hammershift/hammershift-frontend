@@ -4,7 +4,7 @@ import TournamentHero from "@/app/components/tournament_hero";
 
 const TournamentsPage = () => {
     return (
-        <div className=" tw-relative tw-flex tw-flex-col tw-items-center">
+        <div className=" relative flex flex-col items-center">
             <TournamentHero />
             <TournamentsList />
         </div>

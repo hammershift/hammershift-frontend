@@ -13,148 +13,148 @@ import Link from "next/link";
 
 const WagerByCategory = () => {
   return (
-    <div className="tw-w-full tw-bg-[#1A2C3D] tw-flex tw-flex-col tw-items-center">
-      <div className="section-container md:tw-py-[120px]">
+    <div className="w-full bg-[#1A2C3D] flex flex-col items-center">
+      <div className="section-container md:py-[120px]">
         <header>
-          <div className="tw-flex tw-items-center">
+          <div className="flex items-center">
             <Image
               src={GamesByMakeIcon}
               width={40}
               height={40}
               alt="dollar"
-              className="tw-w-10 tw-h-10"
+              className="w-10 h-10"
             />
-            <div className="tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4">
+            <div className="font-bold text-2xl sm:text-3xl ml-4">
               Wager by Category
             </div>
           </div>
         </header>
         <section>
-          <div className="first-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
+          <div className="first-row mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link href="/auctions?category=Sedans&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
-                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
-                  <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+              <div className="h-[280px] grid grid-cols-2 bg-[#FFFFFF]/5 hover:scale-110 transform transition-all duration-100">
+                <div className="flex flex-col justify-end pl-6 pb-6">
+                  <div className="text-[30px] font-bold x-auto">
                     Sedans
                   </div>
-                  <div className="tw-my-4 ">
+                  <div className="my-4 ">
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="tw-font-bold tw-text-[#F2CA16]">
+                  <div className="font-bold text-[#F2CA16]">
                     Explore Sedans
                   </div>
                 </div>
-                <div className="tw-relative">
+                <div className="relative">
                   <Image
                     src={WhiteCar}
                     width={511}
                     height={255}
                     alt="white car"
-                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                    className="w-auto h-auto absolute right-0"
                   />
                 </div>
               </div>
             </Link>
             <Link href="/auctions?category=SUVs&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
-                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6">
-                  <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+              <div className="h-[280px] grid grid-cols-2 bg-[#FFFFFF]/5 hover:scale-110 transform transition-all duration-100">
+                <div className="flex flex-col justify-end pl-6 pb-6">
+                  <div className="text-[30px] font-bold x-auto">
                     SUVs
                   </div>
-                  <div className="tw-my-4">
+                  <div className="my-4">
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="tw-font-bold tw-text-[#F2CA16]">
+                  <div className="font-bold text-[#F2CA16]">
                     Explore SUVs
                   </div>
                 </div>
-                <div className="tw-relative">
+                <div className="relative">
                   <Image
                     src={SilverSUV}
                     width={511}
                     height={255}
                     alt="silver suv"
-                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                    className="w-auto h-auto absolute right-0"
                   />
                 </div>
               </div>
             </Link>
           </div>
 
-          <div className="second-row tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6">
+          <div className="second-row mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link href="/auctions?category=EVs+and+Hybrids&sort=Newly+Listed">
-              <div className="tw-relative tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
-                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
-                  <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+              <div className="relative h-[280px] grid grid-cols-2 bg-[#FFFFFF]/5 hover:scale-110 transform transition-all duration-100">
+                <div className="flex flex-col justify-end pl-6 pb-6 h-[288px]">
+                  <div className="text-[30px] font-bold x-auto">
                     EVs & Hybrids
                   </div>
-                  <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
+                  <div className="my-4 text-ellipsis overflow-hidden">
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="tw-font-bold tw-text-[#F2CA16]">
+                  <div className="font-bold text-[#F2CA16]">
                     Explore EVs & Hybrids
                   </div>
                 </div>
-                <div className="tw-relative">
+                <div className="relative">
                   <Image
                     src={RedCar}
                     width={511}
                     height={255}
                     alt="red sportscar"
-                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                    className="w-auto h-auto absolute right-0"
                   />
                 </div>
               </div>
             </Link>
             <Link href="/auctions?category=Luxury+Cars&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
-                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
-                  <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+              <div className="h-[280px] grid grid-cols-2 bg-[#FFFFFF]/5 hover:scale-110 transform transition-all duration-100">
+                <div className="flex flex-col justify-end pl-6 pb-6 h-[288px]">
+                  <div className="text-[30px] font-bold x-auto">
                     Luxury
                   </div>
-                  <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
+                  <div className="my-4 text-ellipsis overflow-hidden">
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="tw-font-bold tw-text-[#F2CA16]">
+                  <div className="font-bold text-[#F2CA16]">
                     Explore Luxury
                   </div>
                 </div>
-                <div className="tw-relative">
+                <div className="relative">
                   <Image
                     src={YellowSportsCar}
                     width={511}
                     height={255}
                     alt="yellow sportcar"
-                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                    className="w-auto h-auto absolute right-0"
                   />
                 </div>
               </div>
             </Link>
             <Link href="/auctions?category=Pickup+Trucks&sort=Newly+Listed">
-              <div className="tw-h-[280px] tw-grid tw-grid-cols-2 tw-bg-[#FFFFFF]/5 hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
-                <div className="tw-flex tw-flex-col tw-justify-end tw-pl-6 tw-pb-6 tw-h-[288px]">
-                  <div className="tw-text-[30px] tw-font-bold tw-x-auto">
+              <div className="h-[280px] grid grid-cols-2 bg-[#FFFFFF]/5 hover:scale-110 transform transition-all duration-100">
+                <div className="flex flex-col justify-end pl-6 pb-6 h-[288px]">
+                  <div className="text-[30px] font-bold x-auto">
                     Pickup Trucks
                   </div>
-                  <div className="tw-my-4 tw-text-ellipsis tw-overflow-hidden">
+                  <div className="my-4 text-ellipsis overflow-hidden">
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="tw-font-bold tw-text-[#F2CA16]">
+                  <div className="font-bold text-[#F2CA16]">
                     Explore Pickup Trucks
                   </div>
                 </div>
-                <div className="tw-relative">
+                <div className="relative">
                   <Image
                     src={SilverPickup}
                     width={511}
                     height={255}
                     alt="silver pickup"
-                    className="tw-w-auto tw-h-auto tw-absolute tw-right-0"
+                    className="w-auto h-auto absolute right-0"
                   />
                 </div>
               </div>

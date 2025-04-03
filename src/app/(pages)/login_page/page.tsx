@@ -127,51 +127,51 @@ const CreateAccount = () => {
   };
 
   return (
-    <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+    <div className='w-screen md:h-screen absolute top-0 z-[-1] flex justify-center items-center mt-16 md:mt-0'>
       {/* Loading */}
       {isLoading ? (
-        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+        <div className='flex justify-center items-center h-full'>
           <BounceLoader color='#696969' loading={isLoading} />
         </div>
       ) : (
-        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+        <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-8 pt-6'>
           <div>
-            <div className='tw-flex tw-justify-between md:tw-justify-start'>
-              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Sign In</div>
-              <Image onClick={() => router.push('/')} src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
+            <div className='flex justify-between md:justify-start'>
+              <div className='font-bold text-2xl md:text-4xl'>Sign In</div>
+              <Image onClick={() => router.push('/')} src={CancelIcon} width={20} height={20} alt='' className='w-[20px] h-[20px] sm:hidden' />
             </div>
-            <div className='tw-mt-1'>
+            <div className='mt-1'>
               {"Don't have an account?"}
-              <Link href={'/create_account'} className='tw-text-[#F2CA16] tw-ml-2 underline'>
+              <Link href={'/create_account'} className='text-[#F2CA16] ml-2 underline'>
                 Create an account here
               </Link>
             </div>
           </div>
-          <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
-            <div className='tw-flex tw-flex-col tw-gap-2'>
+          <div className='flex flex-col gap-6 text-sm'>
+            <div className='flex flex-col gap-2'>
               <label>Email</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
-              {error && <div className='tw-text-sm tw-text-red-500'>{error}</div>}
+              <input className='py-2.5 px-3 bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
+              {error && <div className='text-sm text-red-500'>{error}</div>}
             </div>
-            <div className='tw-flex tw-flex-col tw-gap-2'>
+            <div className='flex flex-col gap-2'>
               <label>Password</label>
               <PasswordInput value={password} onChange={setPassword} />
             </div>
           </div>
-          <div className='tw-flex tw-justify-between tw-text-sm sm:tw-text-base'>
-            <div className='tw-relative tw-flex tw-items-center tw-gap-2'>
+          <div className='flex justify-between text-sm sm:text-base'>
+            <div className='relative flex items-center gap-2'>
               <input
                 type='checkbox'
-                className='tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-md tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]'
+                className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
                 value='All'
               />
-              <div className='tw-pointer-events-none tw-absolute tw-top-3 tw-left-[14px] tw--translate-y-2/4 tw--translate-x-2/4 tw-text-white tw-opacity-0 tw-transition-opacity peer-checked:tw-opacity-100'>
-                <Image src={CheckIcon} width={12} height={7} alt='dropdown arrow' className='tw-w-[10px] tw-h-[7px] tw-mr-2' />
+              <div className='pointer-events-none absolute top-3 left-[14px] -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100'>
+                <Image src={CheckIcon} width={12} height={7} alt='dropdown arrow' className='w-[10px] h-[7px] mr-2' />
               </div>
               <label>Keep me logged in</label>
             </div>
             <button
-              className='tw-appearance-none tw-text-[#F2CA16] underline'
+              className='appearance-none text-[#F2CA16] underline'
               onClick={() => {
                 setCreateAccountPage('reset password');
               }}
@@ -183,38 +183,38 @@ const CreateAccount = () => {
             Sign In
           </button>
 
-          <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 tw-mt-8 clickable-icon'>
-            <div onClick={() => handleGoogleSignIn('google')} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-              <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
+          <div className='w-full grid grid-cols-4 gap-2 mt-8 clickable-icon'>
+            <div onClick={() => handleGoogleSignIn('google')} className='bg-white flex justify-center items-center rounded h-[48px]'>
+              <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='w-6 h-6' />
             </div>
-            <div onClick={() => handleFacebookSignIn('facebook')} className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-              <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
+            <div onClick={() => handleFacebookSignIn('facebook')} className='bg-[#1877F2] flex justify-center items-center rounded h-[48px]'>
+              <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='w-6 h-6' />
             </div>
             <div
-              className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]
-            tw-cursor-auto tw-opacity-30 tw-disabled'
+              className='bg-white flex justify-center items-center rounded h-[48px]
+            cursor-auto opacity-30 disabled'
             >
-              <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
+              <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='w-6 h-6' />
             </div>
-            <div onClick={() => handleTwitterSignIn('twitter')} className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-              <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
+            <div onClick={() => handleTwitterSignIn('twitter')} className='bg-[#1DA1F2] flex justify-center items-center rounded h-[48px]'>
+              <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='w-6 h-6' />
             </div>
           </div>
-          <div className='tw-text-center tw-opacity-50'>{'By logging in, you agree to HammerShift’s Privacy Policy and Terms of Use.'}</div>
+          <div className='text-center opacity-50'>{'By logging in, you agree to HammerShift’s Privacy Policy and Terms of Use.'}</div>
         </div>
       )}
       {createAccountPage === 'reset password' && (
-        <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+        <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-8 pt-6'>
           <div>
-            <div className='tw-flex tw-justify-between md:tw-justify-start'>
-              <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Reset Password</div>
+            <div className='flex justify-between md:justify-start'>
+              <div className='font-bold text-2xl md:text-4xl'>Reset Password</div>
             </div>
-            <div className='tw-mt-1'>Enter your email to receive instructions on how to reset your password.</div>
+            <div className='mt-1'>Enter your email to receive instructions on how to reset your password.</div>
           </div>
-          <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
-            <div className='tw-flex tw-flex-col tw-gap-2'>
+          <div className='flex flex-col gap-6 text-sm'>
+            <div className='flex flex-col gap-2'>
               <label>Email</label>
-              <input className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' placeholder='you@email.com' value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} />
+              <input className='py-2.5 px-3 bg-[#172431]' placeholder='you@email.com' value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} />
             </div>
           </div>
           {isResetPasswordLoading ? (
@@ -229,7 +229,7 @@ const CreateAccount = () => {
           <div>
             Or return to
             <button
-              className='tw-appearance-none tw-text-[#F2CA16] tw-ml-2 underline'
+              className='appearance-none text-[#F2CA16] ml-2 underline'
               onClick={() => {
                 setCreateAccountPage('sign in');
               }}

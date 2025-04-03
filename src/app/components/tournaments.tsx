@@ -133,27 +133,27 @@ const Tournaments = () => {
   }, [tournamentsData]);
 
   return (
-    <div className="tw-py-8 sm:tw-py-16">
-      <header className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
+    <div className="py-8 sm:py-16">
+      <header className="flex justify-between">
+        <div className="flex items-center">
           <Image
             src={TournamentsIcon}
             width={40}
             height={40}
             alt="dollar"
-            className="tw-w-10 tw-h-10"
+            className="w-10 h-10"
           />
-          <div className="tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4">
+          <div className="font-bold text-2xl sm:text-3xl ml-4">
             Tournaments
           </div>
         </div>
-        <div className={` ${isMobile ? 'tw-hidden' : 'tw-flex'} `}>
+        <div className={` ${isMobile ? 'hidden' : 'flex'} `}>
           <Image
             src={ArrowLeft}
             width={32}
             height={32}
             alt="arrow left"
-            className="tw-w-8 tw-h-8"
+            className="w-8 h-8"
             onClick={handleLeftArrow}
           />
           <Image
@@ -161,14 +161,14 @@ const Tournaments = () => {
             width={32}
             height={32}
             alt="arrow right"
-            className="tw-w-8 tw-h-8 tw-ml-4"
+            className="w-8 h-8 ml-4"
             onClick={handleRightArrow}
           />
         </div>
       </header>
-      <section className="tw-my-6">
+      <section className="my-6">
         {isMobile ? (
-          <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-w-auto tw-gap-4 tw-mt-8 ">
+          <div className="flex flex-col justify-center items-center w-auto gap-4 mt-8 ">
             {tournamentsData &&
               tournamentsData.map((tournament, index) => {
                 const imagesForTournament =

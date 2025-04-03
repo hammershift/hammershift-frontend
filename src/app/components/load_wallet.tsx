@@ -86,37 +86,37 @@ const LoadWallet = () => {
   };
 
   return (
-    <div className='max-md:tw-hidden'>
+    <div className='max-md:hidden'>
       {!session ? null : pathname === '/my_wallet' ? null : isLoading ? (
         <BeatLoader color='#696969' size={10} />
       ) : isDisabled === 'true' ? (
         <button
-          className='tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw hover:tw-cursor-pointer max-md:tw-hidden lg:tw-w-1/3 xl:tw-w-1/5'
+          className='fixed bottom-5 right-16 px-6 tw hover:cursor-pointer max-md:hidden lg:w-1/3 xl:w-1/5'
           onClick={() => setIsPaymentModalOpen(true)}
           title='Temporarily disabled'
           disabled
         >
-          <div className='tw-bg-[#49C74233] tw-backdrop-blur-md  tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6'>
-            <Image src={Wallet} width={32} height={32} alt='wallet icon' className='tw-w-8 tw-h-8' />
-            <div className='tw-flex tw-flex-col tw-items-start tw-grow'>
-              <span className='tw-font-bold tw-text-xl tw-py-1'>${walletBalance.toFixed(2)}</span>
-              <span className='tw-text-[#49C742]'>Load Wallet Now</span>
+          <div className='bg-[#49C74233] backdrop-blur-md  w-full px-6 py-4 rounded flex items-center gap-6'>
+            <Image src={Wallet} width={32} height={32} alt='wallet icon' className='w-8 h-8' />
+            <div className='flex flex-col items-start grow'>
+              <span className='font-bold text-xl py-1'>${walletBalance.toFixed(2)}</span>
+              <span className='text-[#49C742]'>Load Wallet Now</span>
             </div>
-            <Image src={ArrowRight} width={32} height={32} alt='wallet icon' className='tw-w-8 tw-h-8' />
+            <Image src={ArrowRight} width={32} height={32} alt='wallet icon' className='w-8 h-8' />
           </div>
         </button>
       ) : (
         <button
-          className='tw-fixed tw-bottom-5 tw-right-16 tw-px-6 tw hover:tw-cursor-pointer max-md:tw-hidden lg:tw-w-1/3 xl:tw-w-1/5'
+          className='fixed bottom-5 right-16 px-6 tw hover:cursor-pointer max-md:hidden lg:w-1/3 xl:w-1/5'
           onClick={() => setIsPaymentModalOpen(true)}
         >
-          <div className='tw-bg-[#49C74233] tw-backdrop-blur-md  tw-w-full tw-px-6 tw-py-4 tw-rounded tw-flex tw-items-center tw-gap-6'>
-            <Image src={Wallet} width={32} height={32} alt='wallet icon' className='tw-w-8 tw-h-8' />
-            <div className='tw-flex tw-flex-col tw-items-start tw-grow'>
-              <span className='tw-font-bold tw-text-xl tw-py-1'>${walletBalance.toFixed(2)}</span>
-              <span className='tw-text-[#49C742]'>Load Wallet Now</span>
+          <div className='bg-[#49C74233] backdrop-blur-md  w-full px-6 py-4 rounded flex items-center gap-6'>
+            <Image src={Wallet} width={32} height={32} alt='wallet icon' className='w-8 h-8' />
+            <div className='flex flex-col items-start grow'>
+              <span className='font-bold text-xl py-1'>${walletBalance.toFixed(2)}</span>
+              <span className='text-[#49C742]'>Load Wallet Now</span>
             </div>
-            <Image src={ArrowRight} width={32} height={32} alt='wallet icon' className='tw-w-8 tw-h-8' />
+            <Image src={ArrowRight} width={32} height={32} alt='wallet icon' className='w-8 h-8' />
           </div>
         </button>
       )}

@@ -28,14 +28,14 @@ const LivePage = () => {
   const NUM_DISPLAY = screenWidth < 1200 ? 3 : 5;
 
   return (
-    <div className="tw-flex tw-flex-col tw-justify-center">
-      <div className="section-container tw-m-auto">
+    <div className="flex flex-col justify-center">
+      <div className="section-container m-auto">
         <LiveGames numberToDisplay={NUM_DISPLAY} />
       </div>
       <NewEraWagering />
       <HowHammerShiftWorks />
       <Subscribe />
-      <div className="tw-m-auto">
+      <div className="m-auto">
         <Footer />
       </div>
     </div>
