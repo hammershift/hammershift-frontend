@@ -67,7 +67,8 @@ const Navbar = () => {
   const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
   const [showClearSearchButton, setShowClearSearchButton] = useState(false);
   const [navlinkIsOpen, setNavlinkIsOpen] = useState(false);
-
+  const logoUrl =
+    "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const searchBox = document.getElementById("search-box");
@@ -249,10 +250,10 @@ const Navbar = () => {
   const isLoggedIn = !!session;
 
   return (
-    <div>
+    <div className="section-container mx-auto flex items-center justify-center">
       {isLoggedIn ? (
-        <div className=" flex px-4 md:px-16 w-full justify-between py-3 border-b-[1px] border-b-[#1b252e]">
-          <div className=" flex items-center justify-between">
+        <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
+          <div className="flex items-center justify-between">
             <div className="pr-4">
               <Link
                 onClick={() => {
@@ -264,19 +265,19 @@ const Navbar = () => {
                 href="/"
               >
                 <Image
-                  src={Logo}
-                  width={176}
-                  height={64}
-                  alt="logo"
-                  className="hidden sm:block w-auto h-auto"
+                  src={logoUrl}
+                  width={330}
+                  height={32}
+                  alt="Velocity Markets"
+                  className="h-auto w-auto sm:block"
                 />
-                <Image
+                {/* <Image
                   src={LogoSmall}
                   width={32}
                   height={32}
                   alt="logo"
                   className=" block sm:hidden w-auto h-auto"
-                />
+                /> */}
               </Link>
             </div>
             {/* <Link
@@ -564,7 +565,7 @@ const Navbar = () => {
             )}
           </div> */}
           {/* Buttons for logged in accounts */}
-          <div className="hidden sm:flex justify-between items-center w-[136px] md:visible relative">
+          <div className="relative hidden w-[136px] items-center justify-between sm:flex md:visible">
             <button
               id="watchlist-button"
               className="relative"
@@ -579,7 +580,7 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="watchlist"
-                className="w-[24px] h-[24px]"
+                className="h-[24px] w-[24px]"
               />
             </button>
             {dropWatchlist && <MyWatchlistDropdownMenu />}
@@ -596,7 +597,7 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="wagers"
-                className="w-[24px] h-[24px]"
+                className="h-[24px] w-[24px]"
               />
             </button>
             {dropMyWagers && <MyWagersDropdownMenu />}
@@ -614,7 +615,7 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="account"
-                className="w-[24px] h-[24px]"
+                className="h-[24px] w-[24px]"
               />
               {dropMyAccount && <MyAccountDropdownMenu />}
             </button>
@@ -633,7 +634,7 @@ const Navbar = () => {
                 width={24}
                 height={24}
                 alt="account"
-                className="w-[24px] h-[24px]"
+                className="h-[24px] w-[24px]"
               />
             </button>
             <button
@@ -654,7 +655,7 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className=" w-auto h-auto"
+                  className="h-auto w-auto"
                 />
               ) : (
                 <Image
@@ -662,15 +663,15 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className=" w-auto h-auto"
+                  className="h-auto w-auto"
                 />
               )}
             </button>
           </div>
         </div>
       ) : (
-        <div className=" flex px-4 md:px-6 2xl:px-36 w-full justify-between py-3 border-b-[1px] border-b-[#1b252e]">
-          <div className=" flex items-center justify-between">
+        <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] py-3">
+          <div className="flex items-center justify-between">
             <div className="pr-4">
               <Link
                 onClick={() => {
@@ -682,11 +683,11 @@ const Navbar = () => {
                 href="/"
               >
                 <Image
-                  src={Logo}
-                  width={352}
-                  height={64}
-                  alt="logo"
-                  className="block w-auto h-auto"
+                  src={logoUrl}
+                  width={330}
+                  height={32}
+                  alt="Velocity Markets"
+                  className="h-auto w-auto sm:block"
                 />
               </Link>
             </div>
@@ -908,18 +909,18 @@ const Navbar = () => {
               </div>
             </div> */}
           </div>
-          <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4 justify-between">
+          <div className="relative mr-4 hidden max-w-[535px] flex-1 justify-between lg:flex xl:w-full">
             <nav className="flex items-center justify-between space-x-8">
-              <Link href="/" className="hover:text-[#F2CA16] transition-colors">
+              <Link href="/" className="transition-colors hover:text-[#F2CA16]">
                 HOME
               </Link>
-              <Link href="/" className="hover:text-[#F2CA16] transition-colors">
+              <Link href="/" className="transition-colors hover:text-[#F2CA16]">
                 FREE PLAY
               </Link>
-              <Link href="/" className="hover:text-[#F2CA16] transition-colors">
+              <Link href="/" className="transition-colors hover:text-[#F2CA16]">
                 TOURNAMENTS
               </Link>
-              <Link href="/" className="hover:text-[#F2CA16] transition-colors">
+              <Link href="/" className="transition-colors hover:text-[#F2CA16]">
                 GUESS THE HAMMER
               </Link>
             </nav>
@@ -974,12 +975,12 @@ const Navbar = () => {
                     </div> */}
           <div className="flex items-center">
             <Link href="/login_page">
-              <button className="btn-white mx-2  hover:bg-gold-200 hidden md:block ">
+              <button className="btn-white mx-2 hidden hover:bg-gold-200 md:block">
                 LOGIN
               </button>
             </Link>
             <Link href="/create_account">
-              <button className="btn-white  hover:bg-gold-200 hidden md:block ">
+              <button className="btn-white hidden hover:bg-gold-200 md:block">
                 SIGN UP
               </button>
             </Link>
@@ -1000,7 +1001,7 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className="md:hidden w-auto h-auto"
+                  className="h-auto w-auto md:hidden"
                 />
               ) : (
                 <Image
@@ -1008,7 +1009,7 @@ const Navbar = () => {
                   width={24}
                   height={24}
                   alt="menu"
-                  className="md:hidden w-auto h-auto"
+                  className="h-auto w-auto md:hidden"
                 />
               )}
             </button>
@@ -1072,7 +1073,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   const [dropWatchlistOrWagers, setDropWatchlistOrWagers] = useState("");
 
   return (
-    <div className="drop-down-custom-height slide-in-top absolute z-50 flex-col text-white bg-[#0F1923] p-4 w-full ">
+    <div className="drop-down-custom-height slide-in-top absolute z-50 w-full flex-col bg-[#0F1923] p-4 text-white">
       <div className="relative">
         {/* <form
                     autoComplete="off"
@@ -1121,7 +1122,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
         <>
           <button
             onClick={() => setDropWatchlistOrWagers("watchlist")}
-            className={`flex py-2 w-full ${
+            className={`flex w-full py-2 ${
               dropWatchlistOrWagers === "watchlist" && "font-bold"
             }`}
           >
@@ -1130,7 +1131,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               width={24}
               height={24}
               alt="watchlist"
-              className="w-[24px] h-[24px]"
+              className="h-[24px] w-[24px]"
             />
             <div className="ml-4">MY WATCHLIST</div>
           </button>
@@ -1139,7 +1140,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           ) : null}
           <button
             onClick={() => setDropWatchlistOrWagers("wagers")}
-            className={`flex py-2 w-full ${
+            className={`flex w-full py-2 ${
               dropWatchlistOrWagers === "wagers" && "font-bold"
             }`}
           >
@@ -1148,7 +1149,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
               width={24}
               height={24}
               alt="watchlist"
-              className="w-[24px] h-[24px]"
+              className="h-[24px] w-[24px]"
             />
             <div className="ml-4">MY WAGERS</div>
           </button>
@@ -1166,7 +1167,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 document.body.classList.remove("stop-scrolling");
                 closeMenu();
               }}
-              className="btn-white w-full my-2"
+              className="btn-white my-2 w-full"
             >
               LOGIN
             </button>
@@ -1241,24 +1242,24 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
   };
 
   return (
-    <div className="slide-in-top absolute z-50 flex flex-col text-white bg-[#1A2C3D] p-4 w-full h-auto">
-      <div className="text-lg font-bold p-1.5">MY ACCOUNT</div>
+    <div className="slide-in-top absolute z-50 flex h-auto w-full flex-col bg-[#1A2C3D] p-4 text-white">
+      <div className="p-1.5 text-lg font-bold">MY ACCOUNT</div>
       {isLoading ? (
-        <div className="px-6 w-full flex justify-center items-center">
+        <div className="flex w-full items-center justify-center px-6">
           <BeatLoader color="#696969" size={10} />
         </div>
       ) : typeof walletBalance === "number" ? (
         <div className="w-full">
-          <div className="bg-[#49C74233] w-full px-6 py-4 rounded flex items-center gap-6">
+          <div className="flex w-full items-center gap-6 rounded bg-[#49C74233] px-6 py-4">
             <Image
               src={Wallet}
               width={32}
               height={32}
               alt="wallet icon"
-              className="w-8 h-8"
+              className="h-8 w-8"
             />
-            <div className="flex flex-col items-start grow">
-              <span className="font-bold text-xl py-1">
+            <div className="flex grow flex-col items-start">
+              <span className="py-1 text-xl font-bold">
                 ${walletBalance.toFixed(2)}
               </span>
               <span className="text-[#49C742]">Withdraw</span>
@@ -1266,18 +1267,18 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
           </div>
         </div>
       ) : (
-        <div className="px-6 w-full">Error fetching wallet balance</div>
+        <div className="w-full px-6">Error fetching wallet balance</div>
       )}
       <Link
         href="/profile"
-        className="p-1.5 hover:bg-white/5 w-full"
+        className="w-full p-1.5 hover:bg-white/5"
         onClick={closeMyAccountMenu}
       >
         Profile
       </Link>
       <Link
         href="/profile"
-        className="p-1.5 hover:bg-white/5 w-full"
+        className="w-full p-1.5 hover:bg-white/5"
         onClick={closeMyAccountMenu}
       >
         Settings
@@ -1287,7 +1288,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
           handleSignOut();
           closeMyAccountMenu();
         }}
-        className="p-1.5 text-left hover:bg-white/5 w-full"
+        className="w-full p-1.5 text-left hover:bg-white/5"
       >
         Logout
       </button>
@@ -1355,10 +1356,10 @@ const MyWatchlistDropdownMenu = () => {
   };
 
   return (
-    <div className="watchlist-menu absolute z-30 right-[112px] top-10 w-[512px] max-h-[784px] overflow-auto bg-[#1A2C3D] rounded pt-6 pb-2 shadow-xl shadow-black">
-      <div className="px-6 flex flex-col gap-4">
+    <div className="watchlist-menu absolute right-[112px] top-10 z-30 max-h-[784px] w-[512px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black">
+      <div className="flex flex-col gap-4 px-6">
         <div className="flex justify-between">
-          <div className="font-bold text-lg text-left">MY WATCHLIST</div>
+          <div className="text-left text-lg font-bold">MY WATCHLIST</div>
           {(activeWatchlist.length !== 0 ||
             completedWatchlist.length !== 0 ||
             activeTournamentWatchlist.length !== 0 ||
@@ -1366,7 +1367,7 @@ const MyWatchlistDropdownMenu = () => {
             <button
               id="myWatchlist-sort"
               type="button"
-              className="rounded-sm w-[140px] text-center px-2 py-1.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#0f1923] truncate"
+              className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
               onClick={handleClick}
             >
               {wagerSort}
@@ -1377,12 +1378,12 @@ const MyWatchlistDropdownMenu = () => {
           <button
             id="active-watchlist-button"
             onClick={() => setActiveOrCompleted("active")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white flex justify-center items-center gap-2"
+            className="flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
             autoFocus
           >
             <div>ACTIVE </div>
             {!isLoading && (
-              <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
+              <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
                 {activeWatchlist.length + activeTournamentWatchlist.length}
               </span>
             )}
@@ -1390,14 +1391,14 @@ const MyWatchlistDropdownMenu = () => {
           <button
             id="completed-watchlist-button"
             onClick={() => setActiveOrCompleted("completed")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white"
+            className="w-1/2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
           >
             COMPLETED
           </button>
         </div>
       </div>
       {isLoading && (
-        <div className="pb-[50px] pt-[74px] flex justify-center">
+        <div className="flex justify-center pb-[50px] pt-[74px]">
           <BounceLoader color="#696969" loading={true} />
         </div>
       )}
@@ -1475,19 +1476,19 @@ const MyWatchlistDropdownMenu = () => {
       activeOrCompleted === "active" &&
       activeWatchlist.length === 0 &&
       activeTournamentWatchlist.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No active wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1503,19 +1504,19 @@ const MyWatchlistDropdownMenu = () => {
       activeOrCompleted === "completed" &&
       completedWatchlist.length === 0 &&
       completedTournamentWatchlist.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No completed wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1531,19 +1532,19 @@ const MyWatchlistDropdownMenu = () => {
       activeOrCompleted === "completed" &&
       completedWatchlist.length === 0 &&
       wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No completed wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1559,19 +1560,19 @@ const MyWatchlistDropdownMenu = () => {
       activeOrCompleted === "completed" &&
       completedTournamentWatchlist.length === 0 &&
       wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No completed wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1587,19 +1588,19 @@ const MyWatchlistDropdownMenu = () => {
       activeOrCompleted === "active" &&
       activeWatchlist.length === 0 &&
       wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No active wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1615,19 +1616,19 @@ const MyWatchlistDropdownMenu = () => {
       activeOrCompleted === "active" &&
       activeTournamentWatchlist.length === 0 &&
       wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No active wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -1662,11 +1663,11 @@ export const MyWatchlistTournamentCard = ({
   }
 
   return (
-    <div className={`sm:px-6 px-5 w-full py-4 border-t-[1px] border-[#253747]`}>
-      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
+    <div className={`w-full border-t-[1px] border-[#253747] px-5 py-4 sm:px-6`}>
+      <div className="flex w-full items-center gap-6 rounded sm:py-3">
         <Link
           href={`/tournaments/${watchlist.tournamentID}`}
-          className="grid gap-[2px] grid-cols-2 sm:w-[100px] w-[50px] pt-2 sm:p-0"
+          className="grid w-[50px] grid-cols-2 gap-[2px] pt-2 sm:w-[100px] sm:p-0"
           onClick={() => closeMenu && closeMenu()}
         >
           {watchlist.tournamentImages
@@ -1679,35 +1680,35 @@ export const MyWatchlistTournamentCard = ({
                   alt="car image"
                   width={49}
                   height={49}
-                  className="rounded w-[24.5px] h-[24.5px] sm:h-[49px] sm:w-[49px] object-cover"
+                  className="h-[24.5px] w-[24.5px] rounded object-cover sm:h-[49px] sm:w-[49px]"
                 />
               );
             })}
         </Link>
-        <div className="flex flex-col items-start sm:max-w-[323px] max-w-[230px]">
+        <div className="flex max-w-[230px] flex-col items-start sm:max-w-[323px]">
           <Link
             href={`/tournaments/${watchlist.tournamentID}`}
             className="self-start"
             onClick={() => closeMenu && closeMenu()}
           >
-            <div className="w-full font-bold sm:text-lg text-base sm:py-1 text-left line-clamp-1">
+            <div className="line-clamp-1 w-full text-left text-base font-bold sm:py-1 sm:text-lg">
               {watchlist.title}
             </div>
           </Link>
           {!isActive && (
-            <div className="text-xs sm:mb-2 opacity-80">
+            <div className="text-xs opacity-80 sm:mb-2">
               Ended {formattedDateString}
             </div>
           )}
-          <div className="w-full mt-1 text-sm">
+          <div className="mt-1 w-full text-sm">
             {isActive && (
-              <div className="flex items-center gap-2 w-full">
+              <div className="flex w-full items-center gap-2">
                 <Image
                   src={Hourglass}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
@@ -1759,78 +1760,78 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 
   return (
     <div
-      className={`sm:px-6 px-5 w-full py-4 ${
+      className={`w-full px-5 py-4 sm:px-6 ${
         index === 0 ? "" : "border-t-[1px] border-[#253747]"
       }`}
     >
-      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
+      <div className="flex w-full items-center gap-6 rounded sm:py-3">
         <Link
           href={`/auctions/car_view_page/${id}`}
           onClick={() => closeMenu && closeMenu()}
-          className="self-start sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] pt-2 sm:pt-0"
+          className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
         >
           <Image
             src={img}
             width={100}
             height={100}
             alt="wallet icon"
-            className="sm:w-[100px] w-[50px] h-[50px] sm:h-[100px] object-cover rounded-[4px]"
+            className="h-[50px] w-[50px] rounded-[4px] object-cover sm:h-[100px] sm:w-[100px]"
           />
         </Link>
-        <div className="flex flex-col items-start sm:max-w-[323px] max-w-[230px]">
+        <div className="flex max-w-[230px] flex-col items-start sm:max-w-[323px]">
           <Link
             href={`/auctions/car_view_page/${id}`}
             className="self-start"
             onClick={() => closeMenu && closeMenu()}
           >
-            <div className="w-full font-bold sm:text-lg text-base sm:py-1 text-left line-clamp-1">
+            <div className="line-clamp-1 w-full text-left text-base font-bold sm:py-1 sm:text-lg">
               {title}
             </div>
           </Link>
           {!isActive && (
-            <div className="text-xs sm:mb-2 opacity-80">
+            <div className="text-xs opacity-80 sm:mb-2">
               Ended {formattedDateString}
             </div>
           )}
-          <div className="w-full mt-1 text-sm">
+          <div className="mt-1 w-full text-sm">
             {!isActive && (
-              <div className="flex items-center gap-2 w-full">
+              <div className="flex w-full items-center gap-2">
                 <Image
                   src={HammerIcon}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Hammer Price:</span>
-                <span className="text-[#49C742] font-bold">
+                <span className="font-bold text-[#49C742]">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             )}
             {isActive && (
-              <div className="flex items-center gap-2 w-full">
+              <div className="flex w-full items-center gap-2">
                 <Image
                   src={Dollar}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Current Bid:</span>
-                <span className="text-[#49C742] font-bold">
+                <span className="font-bold text-[#49C742]">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             )}
             {isActive && (
-              <div className="flex items-center gap-2 w-full">
+              <div className="flex w-full items-center gap-2">
                 <Image
                   src={Hourglass}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
@@ -1906,10 +1907,10 @@ const MyWagersDropdownMenu = () => {
   };
 
   return (
-    <div className="my-wagers-menu absolute z-30 right-[56px] top-10 w-[512px] max-h-[784px] overflow-auto bg-[#1A2C3D] rounded pt-6 pb-2 shadow-xl shadow-black">
-      <div className="px-6 flex flex-col gap-4">
+    <div className="my-wagers-menu absolute right-[56px] top-10 z-30 max-h-[784px] w-[512px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black">
+      <div className="flex flex-col gap-4 px-6">
         <div className="flex justify-between">
-          <div className="font-bold text-lg text-left">MY WAGERS</div>
+          <div className="text-left text-lg font-bold">MY WAGERS</div>
           {(activeWagers.length !== 0 ||
             completedWagers.length !== 0 ||
             activeTournamentWagers.length !== 0 ||
@@ -1917,7 +1918,7 @@ const MyWagersDropdownMenu = () => {
             <button
               id="myWagers-sort"
               type="button"
-              className="rounded-sm w-[140px] text-center px-2 py-1.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#0f1923] truncate"
+              className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
               onClick={handleClick}
             >
               {wagerSort}
@@ -1928,12 +1929,12 @@ const MyWagersDropdownMenu = () => {
           <button
             id="active-mywagers-button"
             onClick={() => setActiveOrCompleted("active")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white flex justify-center items-center gap-2"
+            className="flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
             autoFocus
           >
             <div>ACTIVE </div>
             {!isLoading && (
-              <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
+              <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
                 {activeWagers.length + activeTournamentWagers.length}
               </span>
             )}
@@ -1941,14 +1942,14 @@ const MyWagersDropdownMenu = () => {
           <button
             id="completed-mywagers-button"
             onClick={() => setActiveOrCompleted("completed")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white"
+            className="w-1/2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
           >
             COMPLETED
           </button>
         </div>
       </div>
       {isLoading && (
-        <div className="pb-[66px] pt-[74px] flex justify-center">
+        <div className="flex justify-center pb-[66px] pt-[74px]">
           <BounceLoader color="#696969" loading={true} />
         </div>
       )}
@@ -2037,19 +2038,19 @@ const MyWagersDropdownMenu = () => {
       activeOrCompleted === "active" &&
       activeWagers.length === 0 &&
       activeTournamentWagers.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No active wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2065,19 +2066,19 @@ const MyWagersDropdownMenu = () => {
       activeOrCompleted === "completed" &&
       completedWagers.length === 0 &&
       completedTournamentWagers.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No completed wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2093,19 +2094,19 @@ const MyWagersDropdownMenu = () => {
       activeOrCompleted === "completed" &&
       completedWagers.length === 0 &&
       wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No completed wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2121,19 +2122,19 @@ const MyWagersDropdownMenu = () => {
       activeOrCompleted === "completed" &&
       completedTournamentWagers.length === 0 &&
       wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No completed wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2149,19 +2150,19 @@ const MyWagersDropdownMenu = () => {
       activeOrCompleted === "active" &&
       activeWagers.length === 0 &&
       wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No active wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2177,19 +2178,19 @@ const MyWagersDropdownMenu = () => {
       activeOrCompleted === "active" &&
       activeTournamentWagers.length === 0 &&
       wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+        <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
           <Image
             src={MoneyBag}
             width={80}
             height={80}
             alt="watchlist icon"
-            className="w-[80px] h-[80px]"
+            className="h-[80px] w-[80px]"
           />
           <div className="">
-            <div className="font-bold text-xl text-center">
+            <div className="text-center text-xl font-bold">
               No active wagers
             </div>
-            <div className="opacity-70 text-center">
+            <div className="text-center opacity-70">
               Quam temere in vitiis, legem sancimus haerentia
             </div>
           </div>
@@ -2271,11 +2272,11 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
   }, []);
 
   return (
-    <div className="sm:px-6 px-5 w-full py-4 border-t-[1px] border-[#253747]">
-      <div className=" w-full sm:py-3 rounded flex items-start gap-6">
+    <div className="w-full border-t-[1px] border-[#253747] px-5 py-4 sm:px-6">
+      <div className="flex w-full items-start gap-6 rounded sm:py-3">
         <Link
           href={`/tournaments/${wager._id}`}
-          className="grid gap-[2px] grid-cols-2 sm:w-[100px] w-[50px] pt-2 sm:p-0"
+          className="grid w-[50px] grid-cols-2 gap-[2px] pt-2 sm:w-[100px] sm:p-0"
           onClick={() => closeMenu && closeMenu()}
         >
           {wager.tournamentImages
@@ -2288,19 +2289,19 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                   alt="car image"
                   width={49}
                   height={49}
-                  className="rounded w-[24.5px] h-[24.5px] sm:h-[49px] sm:w-[49px] object-cover"
+                  className="h-[24.5px] w-[24.5px] rounded object-cover sm:h-[49px] sm:w-[49px]"
                 />
               );
             })}
         </Link>
-        <div className="flex flex-col items-start grow w-auto sm:max-w-[323px] max-w-[230px]">
+        <div className="flex w-auto max-w-[230px] grow flex-col items-start sm:max-w-[323px]">
           <Link
             href={`/tournaments/${wager._id}`}
             className="self-start"
             onClick={() => closeMenu && closeMenu()}
           >
             <div
-              className={`w-full font-bold sm:text-lg text-base text-left line-clamp-1 ${
+              className={`line-clamp-1 w-full text-left text-base font-bold sm:text-lg ${
                 isActive ? "sm:mt-[14px]" : "sm:mt-[5px]"
               }`}
             >
@@ -2308,21 +2309,21 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
             </div>
           </Link>
           {!isActive && (
-            <div className="text-xs sm:mb-2 opacity-80">
+            <div className="text-xs opacity-80 sm:mb-2">
               Ended {formattedDateString}
             </div>
           )}
-          <div className="w-full mt-1 text-sm">
+          <div className="mt-1 w-full text-sm">
             <div className="flex items-center gap-2">
               <Image
                 src={PodiumIcon}
                 width={14}
                 height={14}
                 alt="wallet icon"
-                className="w-[14px] h-[14px]"
+                className="h-[14px] w-[14px]"
               />
               <span className="opacity-80">Place:</span>
-              <span className="text-[#F2CA16] font-bold">
+              <span className="font-bold text-[#F2CA16]">
                 {isActive ? "Current: " : null}
                 {pointsAndPlacing.placing
                   ? addNumberSuffix(pointsAndPlacing.placing)
@@ -2337,7 +2338,7 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Points:</span>{" "}
                 {pointsAndPlacing.totalScore
@@ -2347,14 +2348,14 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
               </div>
             )}
             {wager.prize && (
-              <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
+              <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
                 <div className="flex gap-2">
                   <Image
                     src={MoneyBagBlack}
                     width={20}
                     height={20}
                     alt="money bag"
-                    className="w-[20px] h-[20px]"
+                    className="h-[20px] w-[20px]"
                   />
                   <div>WINNINGS</div>
                 </div>
@@ -2377,7 +2378,7 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
@@ -2389,20 +2390,20 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
             )}
           </div>
           {isActive && (
-            <div className="sm:mt-[30px] mt-2 w-full sm:p-2 p-1 items-center flex justify-between sm:gap-4 bg-[#49C74233] rounded sm:text-sm text-xs">
-              <div className="flex gap-2 items-center">
+            <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49C74233] p-1 text-xs sm:mt-[30px] sm:gap-4 sm:p-2 sm:text-sm">
+              <div className="flex items-center gap-2">
                 <Image
                   src={MoneyBagGreen}
                   width={20}
                   height={20}
                   alt="money bag"
-                  className="w-[20px] h-[20px]"
+                  className="h-[20px] w-[20px]"
                 />
-                <div className="text-[#49C742] font-bold text-left grow-[1]">
+                <div className="grow-[1] text-left font-bold text-[#49C742]">
                   POTENTIAL PRIZE
                 </div>
               </div>
-              <div className="text-[#49C742] font-bold text-left">
+              <div className="text-left font-bold text-[#49C742]">
                 {prize ? `$${new Intl.NumberFormat().format(prize)}` : " --"}
               </div>
             </div>
@@ -2489,50 +2490,50 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
   return (
     <div
-      className={`sm:px-6 px-5 w-full py-4 ${
+      className={`w-full px-5 py-4 sm:px-6 ${
         index === 0 ? "" : "border-t-[1px] border-[#253747]"
       }`}
     >
-      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
+      <div className="flex w-full items-center gap-6 rounded sm:py-3">
         <Link
           href={`/auctions/car_view_page/${id}`}
           onClick={() => closeMenu && closeMenu()}
-          className="self-start sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] sm:pt-0 pt-2"
+          className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
         >
           <Image
             src={img}
             width={100}
             height={100}
             alt="wallet icon"
-            className="sm:w-[100px] w-[50px] h-[50px] sm:h-[100px] object-cover rounded-[4px]"
+            className="h-[50px] w-[50px] rounded-[4px] object-cover sm:h-[100px] sm:w-[100px]"
           />
         </Link>
-        <div className="flex flex-col items-start grow w-auto sm:max-w-[323px] max-w-[230px]">
+        <div className="flex w-auto max-w-[230px] grow flex-col items-start sm:max-w-[323px]">
           <Link
             href={`/auctions/car_view_page/${id}`}
             onClick={() => closeMenu && closeMenu()}
             className="self-start"
           >
-            <div className="w-full font-bold sm:text-lg text-base text-left line-clamp-1">
+            <div className="line-clamp-1 w-full text-left text-base font-bold sm:text-lg">
               {title}
             </div>
           </Link>
           {status === 2 || status === 4 ? (
-            <div className="text-xs sm:mb-2 opacity-80">
+            <div className="text-xs opacity-80 sm:mb-2">
               Ended {formattedDateString}
             </div>
           ) : null}
-          <div className="w-full mt-1 text-sm">
+          <div className="mt-1 w-full text-sm">
             <div className="flex items-center gap-2">
               <Image
                 src={WalletSmall}
                 width={14}
                 height={14}
                 alt="wallet icon"
-                className="w-[14px] h-[14px]"
+                className="h-[14px] w-[14px]"
               />
               <span className="opacity-80">My Wager:</span>
-              <span className="text-[#F2CA16] font-bold">
+              <span className="font-bold text-[#F2CA16]">
                 ${new Intl.NumberFormat().format(my_wager)}
               </span>
             </div>
@@ -2543,10 +2544,10 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Hammer Price:</span>
-                <span className="text-[#49C742] font-bold">
+                <span className="font-bold text-[#49C742]">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
@@ -2557,24 +2558,24 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Current Bid:</span>
-                <span className="text-[#49C742] font-bold">
+                <span className="font-bold text-[#49C742]">
                   ${new Intl.NumberFormat().format(current_bid)}
                 </span>
               </div>
             )}
 
             {prize && (
-              <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
+              <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
                 <div className="flex gap-2">
                   <Image
                     src={MoneyBagBlack}
                     width={20}
                     height={20}
                     alt="money bag"
-                    className="w-[20px] h-[20px]"
+                    className="h-[20px] w-[20px]"
                   />
                   <div>WINNINGS</div>
                 </div>
@@ -2597,7 +2598,7 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Time Left:</span>
                 {Number(days) < 1 ? (
@@ -2609,20 +2610,20 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
             )}
           </div>
           {isActive && !isRefunded && (
-            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex justify-between sm:gap-4 bg-[#49C74233] rounded sm:text-sm text-xs">
-              <div className="flex gap-2 items-center">
+            <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49C74233] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+              <div className="flex items-center gap-2">
                 <Image
                   src={MoneyBagGreen}
                   width={20}
                   height={20}
                   alt="money bag"
-                  className="w-[20px] h-[20px]"
+                  className="h-[20px] w-[20px]"
                 />
-                <div className="text-[#49C742] font-bold text-left grow-[1]">
+                <div className="grow-[1] text-left font-bold text-[#49C742]">
                   POTENTIAL PRIZE
                 </div>
               </div>
-              <div className="text-[#49C742] font-bold text-left">
+              <div className="text-left font-bold text-[#49C742]">
                 $
                 {pot % 1 === 0
                   ? pot.toLocaleString()
@@ -2634,14 +2635,14 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
             </div>
           )}
           {isActive && isRefunded && (
-            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
-              <div className="text-[#f92f60] font-bold text-left grow-[1]">
+            <div className="mt-2 flex w-full items-center gap-2 rounded bg-[#4b2330] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+              <div className="grow-[1] text-left font-bold text-[#f92f60]">
                 ❌ AUCTION WAGER
               </div>
 
               <button
                 disabled
-                className="bg-[white] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
+                className="rounded-sm bg-[white] px-2 text-left text-[12px] font-bold text-[black]"
               >
                 REFUNDED
               </button>
@@ -2649,35 +2650,35 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
           )}
           {status === 3 && (
             <>
-              <div className="flex items-center gap-2 w-full text-sm">
+              <div className="flex w-full items-center gap-2 text-sm">
                 <Image
                   src={Dollar}
                   width={14}
                   height={14}
                   alt="wallet icon"
-                  className="w-[14px] h-[14px]"
+                  className="h-[14px] w-[14px]"
                 />
                 <span className="opacity-80">Wager Amount:</span>
-                <span className="text-[#f92f60] font-bold">
+                <span className="font-bold text-[#f92f60]">
                   ${new Intl.NumberFormat().format(wagerAmount)}
                 </span>
               </div>
-              <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
-                <div className="text-[#f92f60] font-bold text-left grow-[1]">
+              <div className="mt-2 flex w-full items-center gap-2 rounded bg-[#4b2330] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+                <div className="grow-[1] text-left font-bold text-[#f92f60]">
                   ❌ UNSUCCESSFUL{" "}
                   <span className="hidden sm:inline-block">AUCTION</span>
                 </div>
                 {refunded ? (
                   <button
                     disabled
-                    className="bg-[white] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
+                    className="rounded-sm bg-[white] px-2 text-left text-[12px] font-bold text-[black]"
                   >
                     REFUNDED
                   </button>
                 ) : (
                   <button
                     onClick={() => handleRefund(objectID, wagerID)}
-                    className="claim-button hover:bg-[#ebcb48] bg-[#facc15] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
+                    className="claim-button rounded-sm bg-[#facc15] px-2 text-left text-[12px] font-bold text-[black] hover:bg-[#ebcb48]"
                   >
                     {loading && (
                       <div className="px-[14px]">
@@ -2748,16 +2749,16 @@ const MyAccountDropdownMenu = () => {
   };
 
   return (
-    <div className="absolute z-10 right-0 top-8 w-[320px] h-auto bg-[#1A2C3D] rounded py-6 flex flex-col items-start gap-4 shadow-xl shadow-black">
-      <div className="px-6 font-bold text-lg">MY ACCOUNT</div>
+    <div className="absolute right-0 top-8 z-10 flex h-auto w-[320px] flex-col items-start gap-4 rounded bg-[#1A2C3D] py-6 shadow-xl shadow-black">
+      <div className="px-6 text-lg font-bold">MY ACCOUNT</div>
       {isLoading ? (
-        <div className="px-6 w-full flex justify-center items-center">
+        <div className="flex w-full items-center justify-center px-6">
           <BeatLoader color="#696969" size={10} />
         </div>
       ) : typeof walletBalance === "number" ? (
-        <div className="px-6 w-full">
+        <div className="w-full px-6">
           <div
-            className="bg-[#49C74233] w-full px-6 py-4 rounded flex items-center gap-6"
+            className="flex w-full items-center gap-6 rounded bg-[#49C74233] px-6 py-4"
             onClick={() => router.push("/my_wallet")}
           >
             <Image
@@ -2765,10 +2766,10 @@ const MyAccountDropdownMenu = () => {
               width={32}
               height={32}
               alt="wallet icon"
-              className="w-8 h-8"
+              className="h-8 w-8"
             />
-            <div className="flex flex-col items-start grow">
-              <span className="font-bold text-xl py-1">
+            <div className="flex grow flex-col items-start">
+              <span className="py-1 text-xl font-bold">
                 ${walletBalance.toFixed(2)}
               </span>
               <span className="text-[#49C742]">My Wallet</span>
@@ -2778,26 +2779,26 @@ const MyAccountDropdownMenu = () => {
               width={32}
               height={32}
               alt="wallet icon"
-              className="w-8 h-8"
+              className="h-8 w-8"
             />
           </div>
         </div>
       ) : (
-        <div className="px-6 w-full">Error fetching wallet balance</div>
+        <div className="w-full px-6">Error fetching wallet balance</div>
       )}
-      <div className="px-6 flex flex-col items-start w-full">
+      <div className="flex w-full flex-col items-start px-6">
         <Link
           href="/profile"
-          className="text-left p-2 hover:bg-white/5 rounded w-full"
+          className="w-full rounded p-2 text-left hover:bg-white/5"
         >
           Profile
         </Link>
-        <button className="text-left p-2 hover:bg-white/5 rounded w-full">
+        <button className="w-full rounded p-2 text-left hover:bg-white/5">
           Settings
         </button>
         <button
           onClick={handleSignOut}
-          className="text-left p-2 hover:bg-white/5 rounded w-full"
+          className="w-full rounded p-2 text-left hover:bg-white/5"
         >
           Logout
         </button>
@@ -2813,7 +2814,7 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({
   return (
     <div
       id="search-box"
-      className="bg-shade-100 absolute top-10 left-0 right-0 sm:bg-shade-50 max-h-[344px] overflow-y-scroll z-10 rounded-b px-1 border-t-[1px] border-t-[#1b252e]"
+      className="absolute left-0 right-0 top-10 z-10 max-h-[344px] overflow-y-scroll rounded-b border-t-[1px] border-t-[#1b252e] bg-shade-100 px-1 sm:bg-shade-50"
     >
       {Array.isArray(searchedData) &&
         searchedData &&
@@ -2828,7 +2829,7 @@ const SearchDropDown: React.FC<SearchDropDownProps> = ({
                   `${carData.auction_id}`
                 )
               }
-              className="p-2 hover:bg-shade-25 hover:cursor-pointer hover:rounded"
+              className="p-2 hover:cursor-pointer hover:rounded hover:bg-shade-25"
             >
               {carData.make} {carData.model}
             </div>
@@ -2924,7 +2925,7 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         <button
           id="myWatchlist-sort"
           type="button"
-          className="rounded-sm w-[110px] font-bold text-center px-2 py-1.5 text-white-900 bg-[#172431] text-[12px] absolute right-0 -top-[34px]"
+          className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
           onClick={handleClick}
         >
           {wagerSort}
@@ -2934,25 +2935,25 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         <button
           autoFocus
           onClick={() => setActiveOrCompleted("active")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
+          className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
         >
           ACTIVE
           {!isLoading && (
-            <span className="ml-1 px-1 text-xs bg-[#f2ca16] rounded font-bold text-[#0f1923]">
+            <span className="ml-1 rounded bg-[#f2ca16] px-1 text-xs font-bold text-[#0f1923]">
               {activeWatchlist.length + activeTournamentWatchlist.length}
             </span>
           )}
         </button>
         <button
           onClick={() => setActiveOrCompleted("completed")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
+          className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
         >
           COMPLETED
         </button>
       </div>
-      <div className="mb-4 watchlist-custom-height overflow-y-auto">
+      <div className="watchlist-custom-height mb-4 overflow-y-auto">
         {isLoading && (
-          <div className="pb-[50px] pt-[74px] flex justify-center">
+          <div className="flex justify-center pb-[50px] pt-[74px]">
             <BounceLoader color="#696969" loading={true} />
           </div>
         )}
@@ -3034,19 +3035,19 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "active" &&
         activeWatchlist.length === 0 &&
         activeTournamentWatchlist.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No active wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3062,19 +3063,19 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "completed" &&
         completedWatchlist.length === 0 &&
         completedTournamentWatchlist.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No completed wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3090,19 +3091,19 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "completed" &&
         completedWatchlist.length === 0 &&
         wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No completed wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3118,19 +3119,19 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "completed" &&
         completedTournamentWatchlist.length === 0 &&
         wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No completed wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3146,19 +3147,19 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "active" &&
         activeWatchlist.length === 0 &&
         wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No active wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3174,19 +3175,19 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "active" &&
         activeTournamentWatchlist.length === 0 &&
         wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No active wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3270,7 +3271,7 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         <button
           id="myWatchlist-sort"
           type="button"
-          className="rounded-sm w-[110px] font-bold text-center px-2 py-1.5 text-white-900 bg-[#172431] text-[12px] absolute right-0 -top-[34px]"
+          className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
           onClick={handleClick}
         >
           {wagerSort}
@@ -3280,25 +3281,25 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         <button
           autoFocus
           onClick={() => setActiveOrCompleted("active")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
+          className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
         >
           ACTIVE
           {!isLoading && (
-            <span className="ml-1 px-1 text-xs bg-[#f2ca16] rounded font-bold text-[#0f1923]">
+            <span className="ml-1 rounded bg-[#f2ca16] px-1 text-xs font-bold text-[#0f1923]">
               {activeWagers.length + activeTournamentWagers.length}
             </span>
           )}
         </button>
         <button
           onClick={() => setActiveOrCompleted("completed")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
+          className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
         >
           COMPLETED
         </button>
       </div>
-      <div className="mb-4 watchlist-custom-height overflow-y-auto">
+      <div className="watchlist-custom-height mb-4 overflow-y-auto">
         {isLoading && (
-          <div className="pb-[50px] pt-[74px] flex justify-center">
+          <div className="flex justify-center pb-[50px] pt-[74px]">
             <BounceLoader color="#696969" loading={true} />
           </div>
         )}
@@ -3398,19 +3399,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "active" &&
         activeWagers.length === 0 &&
         activeTournamentWagers.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No active wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3426,19 +3427,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "completed" &&
         completedWagers.length === 0 &&
         completedTournamentWagers.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No completed wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3454,19 +3455,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "completed" &&
         completedWagers.length === 0 &&
         wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No completed wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3482,19 +3483,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "completed" &&
         completedTournamentWagers.length === 0 &&
         wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No completed wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3510,19 +3511,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "active" &&
         activeWagers.length === 0 &&
         wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No active wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>
@@ -3538,19 +3539,19 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
         activeOrCompleted === "active" &&
         activeTournamentWagers.length === 0 &&
         wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
+          <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
             <Image
               src={MoneyBag}
               width={80}
               height={80}
               alt="watchlist icon"
-              className="w-[80px] h-[80px]"
+              className="h-[80px] w-[80px]"
             />
             <div className="">
-              <div className="font-bold text-xl text-center">
+              <div className="text-center text-xl font-bold">
                 No active wagers
               </div>
-              <div className="opacity-70 text-center">
+              <div className="text-center opacity-70">
                 Quam temere in vitiis, legem sancimus haerentia
               </div>
             </div>

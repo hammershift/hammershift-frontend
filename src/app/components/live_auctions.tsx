@@ -15,6 +15,30 @@ export const LiveAuctions = () => {
     {
       id: 2,
     },
+    {
+      id: 3,
+    },
+    {
+      id: 4,
+    },
+    {
+      id: 5,
+    },
+    {
+      id: 6,
+    },
+    {
+      id: 7,
+    },
+    {
+      id: 8,
+    },
+    {
+      id: 9,
+    },
+    {
+      id: 10,
+    },
   ]);
   const [loading, setLoading] = useState<boolean>(true);
   const scrollContainerRef = useRef(null);
@@ -44,14 +68,16 @@ export const LiveAuctions = () => {
   };
 
   return (
-    <section className="section-container mx-auto px-4 py-12">
-      <div className="mb-8 flex items-center justify-end">
+    <section className="py-0">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-2xl font-bold">LIVE AUCTIONS</h2>
         <Button
           variant="outline"
           className="border-[#F2CA16] text-[#F2CA16]"
           onClick={() => setCurrentIndex(0)}
         >
-          <RefreshCcw className="mr-2 h-4 w-4">Refresh</RefreshCcw>
+          <RefreshCcw className="mr-2 h-4 w-4" />
+          Refresh
         </Button>
       </div>
       <div className="relative">

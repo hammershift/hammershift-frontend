@@ -2,9 +2,9 @@ import { GameModeCard } from "./game_mode_card";
 import { PlayCircle, Trophy, DollarSign } from "lucide-react";
 export const GameModes = () => {
   return (
-    <section className="section-container mx-auto px-4 py-12">
-      <h2 className="text-3xl font-bold text-center mb-8">GAME MODES</h2>
-      <div className="grid md:grid-cols-3 gap-6">
+    <section className="mx-auto w-full py-12">
+      <h2 className="mb-8 text-center text-3xl font-bold">GAME MODES</h2>
+      <div className="grid gap-6 md:grid-cols-3">
         <GameModeCard
           title="FREE PLAY MODE"
           description="Practice with AI-powered insights"
@@ -28,7 +28,7 @@ export const GameModes = () => {
           link={"/"}
         />
       </div>
-      <p className="text-sm text-gray-300 mt-4 text-center">
+      <p className="mt-4 text-center text-sm text-gray-300">
         All game results are based on prediction and are for entertainment
         purposes only.
       </p>
