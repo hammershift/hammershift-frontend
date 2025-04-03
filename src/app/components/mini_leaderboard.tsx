@@ -27,12 +27,12 @@ const MiniLeaderboard = () => {
   }, []);
 
   return (
-    <div className="sm:tw-w-full md:tw-w-full md:tw-my-24 md:tw-mx-6 lg:tw-w-1/3">
-      <div className="tw-relative tw-pb-8 sm:tw-pb-0 tw-min-h-[180px]">
-        <div className="tw-p-6 tw-w-full tw-h-auto">
-          <div className="tw-mb-6">
-            <div className="tw-flex tw-justify-between">
-              <div className="tw-font-bold tw-text-[18px]">
+    <div className="sm:w-full md:w-full md:my-24 md:mx-6 lg:w-1/3">
+      <div className="relative pb-8 sm:pb-0 min-h-[180px]">
+        <div className="p-6 w-full h-auto">
+          <div className="mb-6">
+            <div className="flex justify-between">
+              <div className="font-bold text-[18px]">
                 AUCTIONS LEADERBOARD
               </div>
               <Image
@@ -40,7 +40,7 @@ const MiniLeaderboard = () => {
                 width={20}
                 height={20}
                 alt="arrow down"
-                className="tw-w-5 tw-h-5 hover:tw-cursor-pointer"
+                className="w-5 h-5 hover:cursor-pointer"
                 onClick={() => router.push("/leaderboards")}
               />
             </div>
@@ -51,10 +51,10 @@ const MiniLeaderboard = () => {
                 return (
                   <div
                     key={item._id}
-                    className="tw-flex tw-justify-between tw-items-center tw-py-2"
+                    className="flex justify-between items-center py-2"
                   >
-                    <div className="tw-flex tw-justify-between tw-items-center tw-gap-4">
-                      <div className="tw-text-lg tw-opacity-30">
+                    <div className="flex justify-between items-center gap-4">
+                      <div className="text-lg opacity-30">
                         {index + 1}
                       </div>
                       <Image
@@ -62,17 +62,17 @@ const MiniLeaderboard = () => {
                         width={44}
                         height={44}
                         alt="dollar"
-                        className="tw-w-[44px] tw-h-[44px] tw-rounded-full"
+                        className="w-[44px] h-[44px] rounded-full"
                       />
-                      <div className="tw-text-sm">
-                        <div className="tw-font-bold">
+                      <div className="text-sm">
+                        <div className="font-bold">
                           {session?.user._id === item._id
                             ? "You"
                             : item.username}
                         </div>
                       </div>
                     </div>
-                    <div className="tw-w-auto tw-px-6 tw-py-1 tw-text-sm tw-font-bold tw-text-black tw-h-auto tw-bg-yellow-400 tw-rounded-md">
+                    <div className="w-auto px-6 py-1 text-sm font-bold text-black h-auto bg-yellow-400 rounded-md">
                       {item.totalPoints ? `${item.totalPoints} pts.` : "0 pts."}
                     </div>
                   </div>
@@ -81,15 +81,15 @@ const MiniLeaderboard = () => {
           </div>
         </div>
         {/* Background and button */}
-        <div className="tw-absolute tw-top-0 tw-bottom-0 tw-z-[-1] tw-w-full">
+        <div className="absolute top-0 bottom-0 z-[-1] w-full">
           <Image
             src={TransitionPattern}
             width={288}
             height={356}
             alt="pattern"
-            className="tw-w-full tw-h-auto tw-rounded-lg tw-mr-1 tw-object-cover"
+            className="w-full h-auto rounded-lg mr-1 object-cover"
           />
-          <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#41a0ff62]"></div>
+          <div className="w-full h-full rounded-lg absolute top-0 bg-[#41a0ff62]"></div>
         </div>
       </div>
     </div>

@@ -264,7 +264,7 @@ const TournamentViewPage = ({
   };
 
   return (
-    <div className="page-container tw-relative">
+    <div className="page-container relative">
       {toggleTournamentWagerModal ? (
         <TournamentWagerModal
           pot={prize}
@@ -277,11 +277,11 @@ const TournamentViewPage = ({
           closeModal={closeModal}
         />
       ) : null}
-      <div className="section-container tw-flex tw-justify-between tw-items-center tw-mt-4 md:tw-mt-8">
-        <div className="tw-w-auto tw-h-[28px] tw-flex tw-items-center tw-bg-[#184C80] tw-font-bold tw-rounded-full tw-px-2.5 tw-py-2 tw-text-[14px]">
+      <div className="section-container flex justify-between items-center mt-4 md:mt-8">
+        <div className="w-auto h-[28px] flex items-center bg-[#184C80] font-bold rounded-full px-2.5 py-2 text-[14px]">
           TOURNAMENT
         </div>
-        <div className="tw-hidden sm:tw-block">
+        <div className="hidden sm:block">
           {tournamentData && (
             <TournamentButtons
               tournamentImages={tournamentImages}
@@ -296,8 +296,8 @@ const TournamentViewPage = ({
           )}
         </div>
       </div>
-      <div className="section-container tw-w-full tw-mt-4 md:tw-mt-8 tw-flex tw-flex-col lg:tw-flex-row">
-        <div className="left-container-marker tw-w-full tw-basis-2/3 tw-pl-0 lg:tw-pr-8">
+      <div className="section-container w-full mt-4 md:mt-8 flex flex-col lg:flex-row">
+        <div className="left-container-marker w-full basis-2/3 pl-0 lg:pr-8">
           {tournamentData && (
             <TimerProvider deadline={tournamentData.endTime}>
               <TitleTournamentsList
@@ -311,7 +311,7 @@ const TournamentViewPage = ({
               />
             </TimerProvider>
           )}
-          <div className="sm:tw-hidden tw-mt-4">
+          <div className="sm:hidden mt-4">
             {tournamentData && (
               <TournamentButtons
                 tournamentImages={tournamentImages}
@@ -336,12 +336,12 @@ const TournamentViewPage = ({
             tournamentEnded={buyInEnded}
             tournamentID={ID}
           />
-          <div className="tw-block sm:tw-hidden tw-mt-8">
+          <div className="block sm:hidden mt-8">
             {winners.length !== 0 ? (
               <TournamentWinnersSection winners={winners} />
             ) : null}
           </div>
-          <div className="sm:tw-hidden tw-my-8">
+          <div className="sm:hidden my-8">
             <TournamentWagersSection
               tournamentWagers={tournamentWagers}
               toggleTournamentWagerModal={toggleModal}
@@ -352,7 +352,7 @@ const TournamentViewPage = ({
           </div>
           <CommentsSection pageID={ID} pageType="tournament" />
         </div>
-        <div className="right-container-marker tw-w-full tw-basis-1/3 tw-pl-0 lg:tw-pl-8 tw-hidden lg:tw-flex lg:tw-flex-col lg:tw-gap-8">
+        <div className="right-container-marker w-full basis-1/3 pl-0 lg:pl-8 hidden lg:flex lg:flex-col lg:gap-8">
           {tournamentEnded && winners.length !== 0 ? (
             <TournamentWinnersSection winners={winners} />
           ) : null}
@@ -373,7 +373,7 @@ const TournamentViewPage = ({
       {/* TODO: Check if working*/}
       {/* <TournamentWagerPage /> */}
       {isWagerMenuOpen && (
-        <div className="tw-bg-black tw-w-screen tw-h-full"></div>
+        <div className="bg-black w-screen h-full"></div>
       )}
       <TournamentsYouMightLike />
     </div>

@@ -142,76 +142,76 @@ function Profile(props: Props) {
 
 
     return (
-        <div className="tw-bg-[#1A2C3D] tw-pb-[60px] tw-flex tw-justify-center">
+        <div className="bg-[#1A2C3D] pb-[60px] flex justify-center">
             <Image
                 src={TransitionPattern}
-                className="black-filter tw-absolute tw-max-h-[280px] tw-object-cover tw-object-bottom"
+                className="black-filter absolute max-h-[280px] object-cover object-bottom"
                 alt=""
             />
-            <div className="tw-max-w-[862px] tw-w-full sm:tw-mt-[200px] tw-mt-[120px] tw-z-[1]">
-                <div className="tw-px-6 sm:tw-flex sm:tw-px-0 sm:tw-justify-between">
-                    <div className="sm:tw-flex sm:tw-items-center sm:tw-gap-6">
+            <div className="max-w-[862px] w-full sm:mt-[200px] mt-[120px] z-[1]">
+                <div className="px-6 sm:flex sm:px-0 sm:justify-between">
+                    <div className="sm:flex sm:items-center sm:gap-6">
                         <Image
                             src={AvatarOne}
                             alt=""
-                            className="tw-rounded-full tw-w-[100px] sm:tw-w-[200px]"
+                            className="rounded-full w-[100px] sm:w-[200px]"
                         />
-                        <div className="tw-mt-6 sm:tw-mt-0">
-                            <div className="tw-text-4xl tw-font-bold">
+                        <div className="mt-6 sm:mt-0">
+                            <div className="text-4xl font-bold">
                                 {name}
                             </div>
-                            <div className="tw-text-lg tw-text-[#d1d5d8]">
+                            <div className="text-lg text-[#d1d5d8]">
                                 {`Joined ${joinedDate}`}
                             </div>
-                            <div className="tw-flex tw-text-base tw-gap-6 tw-text-[#487f4b]">
+                            <div className="flex text-base gap-6 text-[#487f4b]">
                                 <div>@{username}</div>
                                 <div>{totalWagersAndWatchlist} wagers</div>
                                 <div>{winsNum} wins</div>
                             </div>
                         </div>
                     </div>
-                    <button className="tw-text-base tw-font-medium tw-text-[#f2ca16] tw-border-[1px] tw-border-[#f2ca16] tw-py-2 tw-px-3 tw-rounded tw-mt-4 sm:tw-mt-[50px] tw-h-[44px]  tw-cursor-pointer "
+                    <button className="text-base font-medium text-[#f2ca16] border-[1px] border-[#f2ca16] py-2 px-3 rounded mt-4 sm:mt-[50px] h-[44px]  cursor-pointer "
                         onClick={e => router.push("/profile/edit")}>
                         Edit Profile
                     </button>
                 </div>
-                <div className="tw-flex tw-items-center tw-gap-6 tw-bg-[#184c80] tw-mx-6 tw-mt-[80px] tw-px-6 tw-py-4 tw-rounded-lg md:tw-mx-0">
+                <div className="flex items-center gap-6 bg-[#184c80] mx-6 mt-[80px] px-6 py-4 rounded-lg md:mx-0">
                     <Image
                         src={IDIcon}
                         alt=""
-                        className="tw-w-8 yellow-filter"
+                        className="w-8 yellow-filter"
                         style={{ fill: "#53944f" }}
                     />
                     <div>
-                        <div className="tw-text-base tw-font-bold tw-leading-6">
+                        <div className="text-base font-bold leading-6">
                             Verify your identity
                         </div>
-                        <div className="tw-text-[#bac9d9] tw-text-sm tw-leading-5">
+                        <div className="text-[#bac9d9] text-sm leading-5">
                             To wager on car auctions, you need to verify your
                             identity
                         </div>
-                        <div className="tw-text-[#f2ca16] tw-text-base tw-font-medium tw-leading-6">
+                        <div className="text-[#f2ca16] text-base font-medium leading-6">
                             Verify now
                         </div>
                     </div>
                 </div>
-                <div className="tw-flex tw-flex-col tw-gap-4 tw-p-6 tw-bg-[#172431] tw-mt-8 tw-rounded">
-                    <div className="tw-text-lg tw-font-bold tw-text-[#f2ca16] tw-leading-7">
+                <div className="flex flex-col gap-4 p-6 bg-[#172431] mt-8 rounded">
+                    <div className="text-lg font-bold text-[#f2ca16] leading-7">
                         ABOUT
                     </div>
-                    <div className="tw-leading-7">
+                    <div className="leading-7">
                         {userInfo && userInfo.aboutMe
                             ? userInfo.aboutMe
                             : "Join us and fuel your passion for cars!"}
                     </div>
-                    <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-2 sm:tw-gap-6 tw-text-sm sm:tw-text-lg tw-font-light tw-leading-7">
-                        <div className="tw-flex tw-items-center tw-gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm sm:text-lg font-light leading-7">
+                        <div className="flex items-center gap-2">
                             <Image
                                 src={Pin}
                                 width={24}
                                 height={24}
                                 alt="pin"
-                                className="tw-h-6 tw-h-6"
+                                className="h-6 h-6"
                             />
                             <div>
                                 {userInfo
@@ -219,44 +219,44 @@ function Profile(props: Props) {
                                     : "--"}
                             </div>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2">
+                        <div className="flex items-center gap-2">
                             <Image
                                 src={Twitter}
                                 width={24}
                                 height={24}
                                 alt="twitter"
-                                className="tw-h-6 tw-h-6 tw-opacity-20"
+                                className="h-6 h-6 opacity-20"
                             />
-                            <div className="tw-opacity-20">Twitter</div>
+                            <div className="opacity-20">Twitter</div>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2">
+                        <div className="flex items-center gap-2">
                             <Image
                                 src={Globe}
                                 width={24}
                                 height={24}
                                 alt="globe"
-                                className="tw-h-6 tw-h-6 tw-opacity-20"
+                                className="h-6 h-6 opacity-20"
                             />
-                            <div className="tw-opacity-20">Website</div>
+                            <div className="opacity-20">Website</div>
                         </div>
                     </div>
                 </div>
-                <div className="tw-flex tw-flex-col tw-gap-4 tw-p-6 tw-bg-[#172431] tw-mt-8 tw-rounded">
-                    <div className="tw-text-lg tw-font-bold tw-text-[#f2ca16] tw-leading-7">
+                <div className="flex flex-col gap-4 p-6 bg-[#172431] mt-8 rounded">
+                    <div className="text-lg font-bold text-[#f2ca16] leading-7">
                         WAGERS
                     </div>
-                    <div className="tw-flex">
+                    <div className="flex">
                         <button
                             id="active-watchlist-button"
                             onClick={() => setIsActiveWager(true)}
-                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] tw-flex tw-justify-center tw-items-center tw-gap-2 ${isActiveWager == true
-                                ? "tw-font-bold tw-text-lg tw-border-white"
+                            className={`border-b-2 w-1/2 py-2 border-[#314150] flex justify-center items-center gap-2 ${isActiveWager == true
+                                ? "font-bold text-lg border-white"
                                 : ""
                                 }`}
                         >
                             <div>ACTIVE </div>
                             {!dataIsLoading && (
-                                <span className="tw-px-1 tw-text-sm tw-bg-[#f2ca16] tw-rounded tw-font-bold tw-text-[#0f1923]">
+                                <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
                                     {activeWagers.length}
                                 </span>
                             )}
@@ -264,8 +264,8 @@ function Profile(props: Props) {
                         <button
                             id="completed-watchlist-button"
                             onClick={() => setIsActiveWager(false)}
-                            className={`tw-border-b-2 tw-w-1/2 tw-py-2 tw-border-[#314150] ${isActiveWager == false
-                                ? "tw-font-bold tw-text-lg tw-border-white"
+                            className={`border-b-2 w-1/2 py-2 border-[#314150] ${isActiveWager == false
+                                ? "font-bold text-lg border-white"
                                 : ""
                                 }`}
                         >
@@ -274,12 +274,12 @@ function Profile(props: Props) {
                     </div>
                     <div>
                         {dataIsLoading ? (
-                            <div className="tw-w-full tw-h-[100px] tw-flex tw-justify-center tw-items-center">
+                            <div className="w-full h-[100px] flex justify-center items-center">
                                 <PulseLoader color="#f2ca16" />
                             </div>
                         ) : isActiveWager == true ? (
                             activeWagers.length == 0 ? (
-                                <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Active Wagers</div>
+                                <div className="w-full py-4 flex justify-center">No Active Wagers</div>
                             ) : (
                                 activeWagers.map((wager: any) => (
                                     <div key={wager._id + "active"}>
@@ -308,7 +308,7 @@ function Profile(props: Props) {
                                 ))
                             )
                         ) : (completedWagers.length == 0 ? (
-                            <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Completed Wagers</div>
+                            <div className="w-full py-4 flex justify-center">No Completed Wagers</div>
                         ) : (
                             completedWagers.map((wager: any) => (
                                 <div key={wager._id + "completed"}>
@@ -335,18 +335,18 @@ function Profile(props: Props) {
                     </div>
                     {/* <UserWagerList /> */}
                 </div>
-                <div className="tw-flex tw-flex-col tw-gap-4 tw-p-6 tw-bg-[#172431] tw-mt-8 tw-rounded">
-                    <div className="tw-text-lg tw-font-bold tw-text-[#f2ca16] tw-leading-7">
+                <div className="flex flex-col gap-4 p-6 bg-[#172431] mt-8 rounded">
+                    <div className="text-lg font-bold text-[#f2ca16] leading-7">
                         WATCHLIST
                     </div>
                     <div>
                         {dataIsLoading ? (
-                            <div className="tw-w-full tw-h-[100px] tw-flex tw-justify-center tw-items-center">
+                            <div className="w-full h-[100px] flex justify-center items-center">
                                 <PulseLoader color="#f2ca16" />
                             </div>
                         ) : (
                             activeWatchlist.length === 0 ? (
-                                <div className="tw-w-full tw-py-4 tw-flex tw-justify-center">No Active Watchlist</div>
+                                <div className="w-full py-4 flex justify-center">No Active Watchlist</div>
                             ) : (
                                 activeWatchlist.map((watchlist: any) => (
                                     <div key={watchlist._id}>
@@ -435,76 +435,76 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
 
     return (
         <div>
-            <div className="tw-flex tw-gap-6 tw-py-6 tw-px-6">
+            <div className="flex gap-6 py-6 px-6">
                 <Image
                     src={img}
                     width={100}
                     height={100}
                     alt={title}
-                    className="tw-rounded tw-w-[100px] tw-h-[100px] tw-object-cover"
+                    className="rounded w-[100px] h-[100px] object-cover"
                 />
-                <div className="tw-flex tw-flex-col tw-flex-auto tw-gap-1.5">
-                    <div className="tw-font-bold tw-text-xl tw-leading-7">
+                <div className="flex flex-col flex-auto gap-1.5">
+                    <div className="font-bold text-xl leading-7">
                         {title}
                     </div>
                     <div>
-                        <div className="tw-flex tw-gap-2 tw-leading-5">
+                        <div className="flex gap-2 leading-5">
                             <Image
                                 src={WalletIcon}
                                 alt=""
-                                className="tw-text-[#d1d3d6] tw-w-3.5"
+                                className="text-[#d1d3d6] w-3.5"
                             />
-                            <div className="tw-text-[#d1d3d6]">Your Price Guess:</div>
-                            <div className="tw-text-[#f2ca16] tw-font-bold">
+                            <div className="text-[#d1d3d6]">Your Price Guess:</div>
+                            <div className="text-[#f2ca16] font-bold">
                                 ${currencyMyWager}
                             </div>
                         </div>
-                        <div className="tw-flex tw-gap-2 tw-text-sm">
+                        <div className="flex gap-2 text-sm">
                             <Image
                                 src={DollarIcon}
                                 alt=""
-                                className="tw-text-[#d1d3d6] tw-w-3.5"
+                                className="text-[#d1d3d6] w-3.5"
                             />
-                            <div className="tw-text-[#d1d3d6]">
+                            <div className="text-[#d1d3d6]">
                                 Final Price:
                             </div>
-                            <div className="tw-text-[#49c742] tw-font-bold">
+                            <div className="text-[#49c742] font-bold">
                                 ${currencyFinalPrice}
                             </div>
                         </div>
-                        <div className="tw-flex tw-items-center tw-gap-2 tw-w-full tw-text-sm">
+                        <div className="flex items-center gap-2 w-full text-sm">
                             <Image
                                 src={Dollar}
                                 width={14}
                                 height={14}
                                 alt="wallet icon"
-                                className="tw-w-[14px] tw-h-[14px]"
+                                className="w-[14px] h-[14px]"
                             />
-                            <span className="tw-opacity-80">
+                            <span className="opacity-80">
                                 Wager Amount:
                             </span>
-                            <span className=" tw-font-bold">
+                            <span className=" font-bold">
                                 $
                                 {currencyWagerAmount}
                             </span>
                         </div>
-                        <div className="tw-flex tw-gap-2 tw-text-sm tw-items-center">
+                        <div className="flex gap-2 text-sm items-center">
                             <Image
                                 src={HourglassIcon}
                                 alt=""
-                                className="tw-text-[#d1d3d6] tw-w-3.5 tw-h-3.5"
+                                className="text-[#d1d3d6] w-3.5 h-3.5"
                             />
-                            <div className="tw-text-[#d1d3d6]">Status:</div>
+                            <div className="text-[#d1d3d6]">Status:</div>
                             <div>{auctionStatus}</div>
                         </div>
                     </div>
                     {status === 3 && (
                         <>
 
-                            <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-p-1 tw-items-center tw-flex sm:tw-gap-4 tw-gap-2 tw-bg-[#4b2330] tw-rounded sm:tw-text-sm tw-text-xs">
-                                <div className="tw-text-[#f92f60] tw-font-bold tw-text-left tw-grow-[1]">
+                            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
+                                <div className="text-[#f92f60] font-bold text-left grow-[1]">
                                     ❌ UNSUCCESSFUL{" "}
-                                    <span className="tw-hidden sm:tw-inline-block">
+                                    <span className="hidden sm:inline-block">
                                         AUCTION
                                     </span>
                                 </div>
@@ -513,14 +513,14 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                         </>
                     )}
                     {status == 4 && prize && (
-                        <div className="sm:tw-mt-4 tw-mt-2 tw-w-full sm:tw-p-2 tw-font-bold tw-p-1 tw-justify-between tw-items-center tw-flex sm:tw-gap-4 tw-bg-[#49c742] tw-text-[#0f1923] tw-rounded sm:tw-text-sm tw-text-xs">
-                            <div className="tw-flex tw-gap-2">
+                        <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
+                            <div className="flex gap-2">
                                 <Image
                                     src={MoneyBagBlack}
                                     width={20}
                                     height={20}
                                     alt="money bag"
-                                    className="tw-w-[20px] tw-h-[20px]"
+                                    className="w-[20px] h-[20px]"
                                 />
                                 <div>WINNINGS</div>
                             </div>
@@ -538,41 +538,41 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                     )}
                 </div>
             </div>
-            <div className="tw-h-[2px] tw-bg-white/10"></div>
+            <div className="h-[2px] bg-white/10"></div>
         </div>
     );
 };
 
 // function UserWatchList() {
 //     return (
-//         <div className="tw-flex tw-gap-4 tw-py-3 tw-items-center">
+//         <div className="flex gap-4 py-3 items-center">
 //             <Image
 //                 src={WagerPhotoOne}
 //                 alt=""
-//                 className="tw-rounded tw-w-[100px]"
+//                 className="rounded w-[100px]"
 //             />
 //             <div>
-//                 <div className="tw-font-bold sm:text-lg tw-leading-7">
+//                 <div className="font-bold sm:text-lg leading-7">
 //                     620-Mile 2019 Ford GT
 //                 </div>
-//                 <div className="tw-flex tw-gap-2 tw-text-sm tw-leading-5">
+//                 <div className="flex gap-2 text-sm leading-5">
 //                     <Image
 //                         src={DollarIcon}
 //                         alt=""
-//                         className="tw-text-[#d1d3d6] tw-w-3.5"
+//                         className="text-[#d1d3d6] w-3.5"
 //                     />
-//                     <div className="tw-text-[#d1d3d6]">Current Bid:</div>
-//                     <div className="tw-text-[#49c742] tw-font-bold">
+//                     <div className="text-[#d1d3d6]">Current Bid:</div>
+//                     <div className="text-[#49c742] font-bold">
 //                         $904,000
 //                     </div>
 //                 </div>
-//                 <div className="tw-flex tw-gap-2 tw-text-sm tw-items-center">
+//                 <div className="flex gap-2 text-sm items-center">
 //                     <Image
 //                         src={HourglassIcon}
 //                         alt=""
-//                         className="tw-text-[#d1d3d6] tw-w-3.5 tw-h-3.5"
+//                         className="text-[#d1d3d6] w-3.5 h-3.5"
 //                     />
-//                     <div className="tw-text-[#d1d3d6]">Time Left:</div>
+//                     <div className="text-[#d1d3d6]">Time Left:</div>
 //                     <div>12:17:00</div>
 //                 </div>
 //             </div>

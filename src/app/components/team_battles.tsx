@@ -43,84 +43,84 @@ const TeamBattles = () => {
     },
   ];
   return (
-    <div className="tw-py-8 sm:tw-py-16">
-      <header className="tw-flex tw-justify-between">
-        <div className="tw-flex tw-items-center">
+    <div className="py-8 sm:py-16">
+      <header className="flex justify-between">
+        <div className="flex items-center">
           <Image
             src={TeamBattlesIcon}
             width={40}
             height={40}
             alt="dollar"
-            className="tw-w-10 tw-h-10"
+            className="w-10 h-10"
           />
-          <div className="tw-font-bold tw-text-2xl sm:tw-text-3xl tw-ml-4">
+          <div className="font-bold text-2xl sm:text-3xl ml-4">
             Team Battles (Coming Soon)
           </div>
         </div>
-        <div className="tw-flex">
+        <div className="flex">
           <Image
             src={ArrowLeft}
             width={32}
             height={32}
             alt="arrow left"
-            className="tw-w-8 tw-h-8 "
+            className="w-8 h-8 "
           />
           <Image
             src={ArrowRight}
             width={32}
             height={32}
             alt="arrow right"
-            className="tw-w-8 tw-h-8 tw-ml-4"
+            className="w-8 h-8 ml-4"
           />
         </div>
       </header>
-      <section className="left-container tw-grid tw-grid-cols-1 lg:tw-grid-cols-2 tw-gap-8 md:tw-gap-16 tw-mt-8 sm:tw-mt-16">
+      <section className="left-container grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 mt-8 sm:mt-16">
         <div
           style={{
             backgroundImage: `url(https://images4.alphacoders.com/110/1103803.jpg)`,
           }}
-          className="tw-h-[388px] tw-w-auto tw-bg-cover tw-rounded-lg tw-p-4 tw-flex tw-flex-col tw-justify-end"
+          className="h-[388px] w-auto bg-cover rounded-lg p-4 flex flex-col justify-end"
         >
-          <div className="tw-text-2xl tw-font-medium">
+          <div className="text-2xl font-medium">
             1954 Siata 300BC Convertible by Motto
           </div>
-          <div className="tw-flex tw-items-center">
+          <div className="flex items-center">
             <Image
               src={HourGlassIcon}
               width={12}
               height={14}
               alt="hour glass"
-              className="tw-w-[12px] tw-h-[14px] tw-mr-1 "
+              className="w-[12px] h-[14px] mr-1 "
             />
             <div>12:17:00</div>
           </div>
         </div>
-        <div className="right-container tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-16 xl:tw-gap-16 tw-w-auto tw-h-auto">
+        <div className="right-container grid grid-cols-1 sm:grid-cols-2 gap-16 xl:gap-16 w-auto h-auto">
           {/* Team A */}
-          <div className="tw-relative">
-            <div className="tw-px-5 tw-w-full tw-h-[356px]">
+          <div className="relative">
+            <div className="px-5 w-full h-[356px]">
               <Image
                 src={TrophyIconGreen}
                 width={52}
                 height={52}
                 alt="dollar"
-                className="tw-w-[52px] tw-h-[52px] "
+                className="w-[52px] h-[52px] "
               />
-              <div className="tw-font-bold tw-text-[18px]">Team A</div>
-              <div className="tw-text-[14px]">11 Players</div>
-              <div className="tw-relative tw-mt-4">
+              <div className="font-bold text-[18px]">Team A</div>
+              <div className="text-[14px]">11 Players</div>
+              <div className="relative mt-4">
                 {teamPlayers.map((player) => {
                   return (
-                    <div key={player.id} className="tw-mb-4 tw-flex">
+                    <div key={player.id} className="mb-4 flex">
                       <Image
                         src={player.avatar}
                         width={40}
                         height={40}
                         alt="dollar"
-                        className="tw-w-[40px] tw-h-[40px] tw-mr-4"
+                        className="w-[40px] h-[40px] mr-4"
                       />
-                      <div className="tw-text-sm ">
-                        <div className="tw-font-bold">{player.amount}</div>
+                      <div className="text-sm ">
+                        <div className="font-bold">{player.amount}</div>
                         <div>{player.username}</div>
                       </div>
                     </div>
@@ -129,17 +129,17 @@ const TeamBattles = () => {
               </div>
             </div>
             {/* Background and button*/}
-            <div className="tw-absolute tw-top-[26px] tw-h-[362px] tw-z-[-1]">
+            <div className="absolute top-[26px] h-[362px] z-[-1]">
               <Image
                 src={TransitionPattern}
                 width={288}
                 height={356}
                 alt="pattern"
-                className="tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover"
+                className="w-auto h-[288px]  rounded-lg mr-1 object-cover"
               />
-              <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#49C74233]"></div>
+              <div className="w-full h-full rounded-lg absolute top-0 bg-[#49C74233]"></div>
               <button
-                className="btn-green tw-absolute tw-bottom-[-20px] tw-right-[16px]"
+                className="btn-green absolute bottom-[-20px] right-[16px]"
                 disabled
               >
                 Wager on Team B
@@ -148,30 +148,30 @@ const TeamBattles = () => {
           </div>
 
           {/* Team B */}
-          <div className="tw-relative tw-pb-8 sm:tw-pb-0">
-            <div className="tw-px-5 tw-w-full tw-h-[356px]">
+          <div className="relative pb-8 sm:pb-0">
+            <div className="px-5 w-full h-[356px]">
               <Image
                 src={TrophyIconBlue}
                 width={52}
                 height={52}
                 alt="dollar"
-                className="tw-w-[52px] tw-h-[52px] "
+                className="w-[52px] h-[52px] "
               />
-              <div className="tw-font-bold tw-text-[18px]">Team B</div>
-              <div className="tw-text-[14px]">10 Players</div>
-              <div className="tw-relative tw-mt-4">
+              <div className="font-bold text-[18px]">Team B</div>
+              <div className="text-[14px]">10 Players</div>
+              <div className="relative mt-4">
                 {teamPlayers.map((player) => {
                   return (
-                    <div key={player.id} className="tw-mb-4 tw-flex">
+                    <div key={player.id} className="mb-4 flex">
                       <Image
                         src={player.avatar}
                         width={40}
                         height={40}
                         alt="dollar"
-                        className="tw-w-[40px] tw-h-[40px] tw-mr-4"
+                        className="w-[40px] h-[40px] mr-4"
                       />
-                      <div className="tw-text-sm ">
-                        <div className="tw-font-bold">{player.amount}</div>
+                      <div className="text-sm ">
+                        <div className="font-bold">{player.amount}</div>
                         <div>{player.username}</div>
                       </div>
                     </div>
@@ -180,17 +180,17 @@ const TeamBattles = () => {
               </div>
             </div>
             {/* Background and button*/}
-            <div className="tw-absolute tw-top-[26px] tw-h-[362px] tw-z-[-1]">
+            <div className="absolute top-[26px] h-[362px] z-[-1]">
               <Image
                 src={TransitionPattern}
                 width={288}
                 height={356}
                 alt="pattern"
-                className="tw-w-auto tw-h-[288px]  tw-rounded-lg tw-mr-1 tw-object-cover"
+                className="w-auto h-[288px]  rounded-lg mr-1 object-cover"
               />
-              <div className="tw-w-full tw-h-full tw-rounded-lg tw-absolute tw-top-0 tw-bg-[#156CC333]"></div>
+              <div className="w-full h-full rounded-lg absolute top-0 bg-[#156CC333]"></div>
               <button
-                className="btn-blue tw-absolute tw-bottom-[-20px] tw-right-[16px]"
+                className="btn-blue absolute bottom-[-20px] right-[16px]"
                 disabled
               >
                 Wager on Team B

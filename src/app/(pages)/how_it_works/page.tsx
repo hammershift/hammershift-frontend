@@ -1,8 +1,8 @@
 export default function HowItWorksPage() {
     return (
-        <div className="section-container tw-mx-auto">
-            <div className=" tw-mb-4">
-                <h2 className="tw-text-4xl tw-font-bold tw-mb-5">
+        <div className="section-container mx-auto">
+            <div className=" mb-4">
+                <h2 className="text-4xl font-bold mb-5">
                     How It Works: HammerShift
                 </h2>
                 <p>
@@ -13,8 +13,8 @@ export default function HowItWorksPage() {
                     engaging platform for car enthusiasts and predictors alike.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 1: Joining HammerShift
                 </h3>
                 <p>
@@ -24,8 +24,8 @@ export default function HowItWorksPage() {
                     ready to dive into the world of auction predictions.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 2: Understanding the Auctions
                 </h3>
                 <p>
@@ -36,8 +36,8 @@ export default function HowItWorksPage() {
                     them an edge in predictions.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 3: Making Predictions
                 </h3>
                 <p>
@@ -49,8 +49,8 @@ export default function HowItWorksPage() {
                     your knowledge and intuition.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 4: Watching the Auction
                 </h3>
                 <p>
@@ -61,8 +61,8 @@ export default function HowItWorksPage() {
                     unfolds.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 5: Scoring and Rewards
                 </h3>
                 <p>
@@ -73,8 +73,8 @@ export default function HowItWorksPage() {
                     points to climb the leaderboards and earn rewards.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 6: Learning and Improving
                 </h3>
                 <p>
@@ -85,8 +85,8 @@ export default function HowItWorksPage() {
                     market trends.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Step 7: Community and Competitions
                 </h3>
                 <p>
@@ -97,8 +97,8 @@ export default function HowItWorksPage() {
                     with like-minded individuals.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Fees and Charges
                 </h3>
                 <p>
@@ -109,8 +109,8 @@ export default function HowItWorksPage() {
                     exclusive community features.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Customer Support
                 </h3>
                 <p>
@@ -120,8 +120,8 @@ export default function HowItWorksPage() {
                     feedback, we&apos;re here to assist you.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Privacy and Security
                 </h3>
                 <p>
@@ -131,8 +131,8 @@ export default function HowItWorksPage() {
                     your information is safe with us.
                 </p>
             </div>
-            <div className="tw-mb-4">
-                <h3 className="tw-text-2xl tw-font-bold tw-mb-2">
+            <div className="mb-4">
+                <h3 className="text-2xl font-bold mb-2">
                     Join the Revolution
                 </h3>
                 <p>

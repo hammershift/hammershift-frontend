@@ -33,24 +33,24 @@ const LivePage = () => {
 
   const NUM_DISPLAY = screenWidth < 1400 && screenWidth > 996 ? 2 : 3;
   return (
-    <div className="tw-flex tw-flex-col tw-justify-center">
-      <div className="section-container tw-m-auto tw-flex tw-flex-col tw-items-center tw-gap-5">
+    <div className="flex flex-col justify-center">
+      <div className="section-container m-auto flex flex-col items-center gap-5">
         {" "}
         <Image alt="hammershift-logo" src={HammershiftLogo} width={800}></Image>
         <AuctionHero />
       </div>
       <LivePageCarousel />
-      <div className="section-container tw-flex tw-justify-between tw-m-auto max-lg:tw-flex-col">
+      <div className="section-container flex justify-between m-auto max-lg:flex-col">
         <LiveGames numberToDisplay={NUM_DISPLAY} />
         <MiniLeaderboard />
       </div>
-      <div className="section-container tw-mx-auto tw-mb-10">
+      <div className="section-container mx-auto mb-10">
         <Carousel />
       </div>
       <NewEraWagering />
       <HowHammerShiftWorks />
       <Subscribe />
-      <div className="tw-m-auto">
+      <div>
         <Footer />
       </div>
     </div>

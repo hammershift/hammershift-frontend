@@ -674,57 +674,57 @@ const CreateAccount = () => {
   };
 
   return (
-    <div className='tw-w-screen md:tw-h-screen tw-absolute tw-top-0 tw-z-[-1] tw-flex tw-justify-center tw-items-center tw-mt-16 md:tw-mt-0'>
+    <div className='w-screen md:h-screen absolute top-0 z-[-1] flex justify-center items-center mt-16 md:mt-0'>
       {isLoading ? (
-        <div className='tw-flex tw-justify-center tw-items-center tw-h-full'>
+        <div className='flex justify-center items-center h-full'>
           <BounceLoader color='#696969' loading={isLoading} />
         </div>
       ) : (
         <>
           {createAccountPage === 'page one' && !isSignedInWithGoogle && (
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-h-[505px] tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+            <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-8 pt-6'>
               <div>
-                <div className='tw-flex tw-justify-between md:tw-justify-start'>
-                  <div className='tw-font-bold tw-text-2xl md:tw-text-4xl'>Create Account</div>
-                  <Image onClick={() => router.push('/')} src={CancelIcon} width={20} height={20} alt='' className='tw-w-[20px] tw-h-[20px] sm:tw-hidden' />
+                <div className='flex justify-between md:justify-start'>
+                  <div className='font-bold text-2xl md:text-4xl'>Create Account</div>
+                  <Image onClick={() => router.push('/')} src={CancelIcon} width={20} height={20} alt='' className='w-[20px] h-[20px] sm:hidden' />
                 </div>
-                <div className='tw-mt-1'>
+                <div className='mt-1'>
                   Already a member?
-                  <Link href={'/login_page'} className='tw-text-[#F2CA16] tw-ml-2 underline'>
+                  <Link href={'/login_page'} className='text-[#F2CA16] ml-2 underline'>
                     Login Here
                   </Link>
                 </div>
               </div>
-              <div className='tw-flex tw-flex-col tw-gap-6 tw-text-sm'>
-                <div className='tw-flex tw-flex-col tw-gap-2'>
+              <div className='flex flex-col gap-6 text-sm'>
+                <div className='flex flex-col gap-2'>
                   <label>Email</label>
                   <input
                     id='email'
                     type='email'
-                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    className='py-2.5 px-3 bg-[#172431]'
                     placeholder='you@email.com'
                     value={userDetails.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
                     onBlur={() => checkUserExistence('email', userDetails.email)}
                   />
-                  {googleSignInError && <p className='tw-text-red-500'>{googleSignInError}</p>}
-                  {facebookSignInError && <p className='tw-text-red-500'>{facebookSignInError}</p>}
-                  {twitterSignInError && <p className='tw-text-red-500'>{twitterSignInError}</p>}
+                  {googleSignInError && <p className='text-red-500'>{googleSignInError}</p>}
+                  {facebookSignInError && <p className='text-red-500'>{facebookSignInError}</p>}
+                  {twitterSignInError && <p className='text-red-500'>{twitterSignInError}</p>}
                   {emailExistsError && (
                     <div className='text-red-500'>
-                      An account with this email already exists. <span className='tw-text-white'>Redirecting to login page...</span>
+                      An account with this email already exists. <span className='text-white'>Redirecting to login page...</span>
                     </div>
                   )}
 
-                  {!submitClicked && touchedFields.email && !uniqueFields.isEmailUnique && <div className='tw-text-sm tw-text-red-500'>✕ Email is already in use</div>}
-                  {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}
-                  {touchedFields.email && !validity.isEmailValid && <div className='tw-text-sm tw-text-red-500'>✕ Invalid Email</div>}
+                  {!submitClicked && touchedFields.email && !uniqueFields.isEmailUnique && <div className='text-sm text-red-500'>✕ Email is already in use</div>}
+                  {touchedFields.email && uniqueFields.isEmailUnique && validity.isEmailValid && <div className='text-sm text-green-500'>✔</div>}
+                  {touchedFields.email && !validity.isEmailValid && <div className='text-sm text-red-500'>✕ Invalid Email</div>}
                 </div>
 
-                <div className='tw-flex tw-flex-col tw-gap-2'>
+                <div className='flex flex-col gap-2'>
                   <label htmlFor='password'>Password</label>
                   <PasswordInput value={userDetails.password} onChange={(value) => handleInputChange('password', value)} />
-                  <div className={touchedFields.password && !validity.isPasswordValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
+                  <div className={touchedFields.password && !validity.isPasswordValid ? 'text-sm text-red-500' : 'text-sm text-green-500'}>
                     {touchedFields.password && (validity.isPasswordValid ? '✔' : '✕ Password must be at least 8 characters')}
                   </div>
                 </div>
@@ -732,70 +732,70 @@ const CreateAccount = () => {
                   CREATE ACCOUNT
                 </button>
               </div>
-              <div className='tw-w-full tw-grid tw-grid-cols-4 tw-gap-2 clickable-icon'>
+              <div className='w-full grid grid-cols-4 gap-2 clickable-icon'>
                 {!isSignedInWithGoogle && (
-                  <div onClick={onGoogleSignInClick} className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-                    <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='tw-w-6 tw-h-6' />
+                  <div onClick={onGoogleSignInClick} className='bg-white flex justify-center items-center rounded h-[48px]'>
+                    <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='w-6 h-6' />
                   </div>
                 )}
                 {!isSignedInWithGoogle && (
-                  <div onClick={onFacebookSignInClick} className='tw-bg-[#1877F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-                    <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='tw-w-6 tw-h-6' />
+                  <div onClick={onFacebookSignInClick} className='bg-[#1877F2] flex justify-center items-center rounded h-[48px]'>
+                    <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='w-6 h-6' />
                   </div>
                 )}
-                <div className='tw-bg-white tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px] tw-opacity-30 tw-disabled tw-cursor-default'>
-                  <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='tw-w-6 tw-h-6' />
+                <div className='bg-white flex justify-center items-center rounded h-[48px] opacity-30 disabled cursor-default'>
+                  <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='w-6 h-6' />
                 </div>
-                <div onClick={onTwitterSignInClick} className='tw-bg-[#1DA1F2] tw-flex tw-justify-center tw-items-center tw-rounded tw-h-[48px]'>
-                  <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='tw-w-6 tw-h-6' />
+                <div onClick={onTwitterSignInClick} className='bg-[#1DA1F2] flex justify-center items-center rounded h-[48px]'>
+                  <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='w-6 h-6' />
                 </div>
               </div>
 
-              <div className='tw-text-center tw-opacity-50'>{'By creating an account, you agree to HammerShift’s Privacy Policy and Terms of Use.'}</div>
+              <div className='text-center opacity-50'>{'By creating an account, you agree to HammerShift’s Privacy Policy and Terms of Use.'}</div>
             </div>
           )}
           {createAccountPage === 'page two' && (
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
-              <div className='tw-font-bold tw-text-4xl sm:tw-text-[44px]'>Setup your profile</div>
-              <div className='tw-flex tw-flex-col sm:tw-flex-row tw-gap-6'>
+            <div className='w-screen md:w-[640px] px-6 flex flex-col gap-8 pt-6'>
+              <div className='font-bold text-4xl sm:text-[44px]'>Setup your profile</div>
+              <div className='flex flex-col sm:flex-row gap-6'>
                 {/* Profile picture */}
-                <div className='tw-bg-[#F2CA16] tw-rounded-full tw-w-[120px] tw-h-[120px] tw-flex tw-justify-center tw-items-center'>
-                  <Image src={UserImage} width={52} height={52} alt='user profile' className='tw-w-[52px] tw-h-[52px]' />
+                <div className='bg-[#F2CA16] rounded-full w-[120px] h-[120px] flex justify-center items-center'>
+                  <Image src={UserImage} width={52} height={52} alt='user profile' className='w-[52px] h-[52px]' />
                 </div>
                 {/* Full Name */}
-                <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2 tw-grow'>
+                <div className='flex flex-col justify-center gap-2 grow'>
                   <label>Full Name *</label>
                   <input
-                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    className='py-2.5 px-3 bg-[#172431]'
                     placeholder='full name'
                     value={userDetails.fullName}
                     onChange={(e) => handleInputChange('fullName', e.target.value)}
                   />
-                  <div className={touchedFields.fullName && !validity.isFullNameValid ? 'tw-text-sm tw-text-red-500' : 'tw-text-sm tw-text-green-500'}>
+                  <div className={touchedFields.fullName && !validity.isFullNameValid ? 'text-sm text-red-500' : 'text-sm text-green-500'}>
                     {touchedFields.fullName && (validity.isFullNameValid ? '✔' : '✕ Full Name is required')}
                   </div>
                 </div>
               </div>
               {/* Username */}
-              <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2'>
+              <div className='flex flex-col justify-center gap-2'>
                 <label>Username *</label>
                 <input
-                  className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                  className='py-2.5 px-3 bg-[#172431]'
                   value={userDetails.username}
                   onChange={(e) => handleInputChange('username', e.target.value)}
                   onBlur={() => checkUserExistence('username', userDetails.username)}
                 />
-                {touchedFields.username && !uniqueFields.isUsernameUnique && <div className='tw-text-sm tw-text-red-500'>Username is already taken</div>}
-                {touchedFields.username && validity.isUsernameValid && uniqueFields.isUsernameUnique && <div className='tw-text-sm tw-text-green-500'>✔ Username is available</div>}
-                {touchedFields.username && !validity.isUsernameValid && <div className='tw-text-sm tw-text-red-500'>✕ Must be at least 3 characters</div>}
+                {touchedFields.username && !uniqueFields.isUsernameUnique && <div className='text-sm text-red-500'>Username is already taken</div>}
+                {touchedFields.username && validity.isUsernameValid && uniqueFields.isUsernameUnique && <div className='text-sm text-green-500'>✔ Username is available</div>}
+                {touchedFields.username && !validity.isUsernameValid && <div className='text-sm text-red-500'>✕ Must be at least 3 characters</div>}
               </div>
 
               {/* Country and State Selection */}
-              <div className='tw-grid tw-grid-cols-2 tw-gap-5'>
+              <div className='grid grid-cols-2 gap-5'>
                 {/* Country */}
-                <div className='tw-flex tw-flex-col tw-gap-2'>
+                <div className='flex flex-col gap-2'>
                   <label>Country *</label>
-                  <select className='tw-py-2.5 tw-px-3 tw-bg-[#172431]' value={selectedCountry?.isoCode || ''} onChange={(e) => handleCountrySelect(e.target.value)}>
+                  <select className='py-2.5 px-3 bg-[#172431]' value={selectedCountry?.isoCode || ''} onChange={(e) => handleCountrySelect(e.target.value)}>
                     <option value=''>Select Country</option>
                     {countries.map((country) => (
                       <option key={country.isoCode} value={country.isoCode}>
@@ -803,14 +803,14 @@ const CreateAccount = () => {
                       </option>
                     ))}
                   </select>
-                  {touchedFields.country && !validity.isCountryValid && <div className='tw-text-sm tw-text-red-500'>✕ Country is required</div>}
-                  {touchedFields.country && validity.isCountryValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}{' '}
+                  {touchedFields.country && !validity.isCountryValid && <div className='text-sm text-red-500'>✕ Country is required</div>}
+                  {touchedFields.country && validity.isCountryValid && <div className='text-sm text-green-500'>✔</div>}{' '}
                 </div>
                 {/* State */}
-                <div className='tw-flex tw-flex-col tw-gap-2'>
+                <div className='flex flex-col gap-2'>
                   <label>State *</label>
                   <select
-                    className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                    className='py-2.5 px-3 bg-[#172431]'
                     value={selectedState?.isoCode || ''}
                     onChange={(e) => handleStateSelect(e.target.value)}
                     disabled={!selectedCountry}
@@ -822,16 +822,16 @@ const CreateAccount = () => {
                       </option>
                     ))}
                   </select>
-                  {touchedFields.state && !validity.isStateValid && <div className='tw-text-sm tw-text-red-500'>✕ State is required</div>}
-                  {touchedFields.state && validity.isStateValid && <div className='tw-text-sm tw-text-green-500'>✔</div>}{' '}
+                  {touchedFields.state && !validity.isStateValid && <div className='text-sm text-red-500'>✕ State is required</div>}
+                  {touchedFields.state && validity.isStateValid && <div className='text-sm text-green-500'>✔</div>}{' '}
                 </div>
               </div>
 
               {/* About Me */}
-              <div className='tw-flex tw-flex-col tw-justify-center tw-gap-2'>
+              <div className='flex flex-col justify-center gap-2'>
                 <label>About Me</label>
                 <textarea
-                  className='tw-py-2.5 tw-px-3 tw-bg-[#172431]'
+                  className='py-2.5 px-3 bg-[#172431]'
                   placeholder='Tell the community about yourself'
                   rows={8}
                   value={userDetails.aboutMe}
@@ -839,8 +839,8 @@ const CreateAccount = () => {
                 />
               </div>
               {/* Buttons */}
-              <div className='tw-flex tw-flex-col tw-gap-2'>
-                <button className='tw-cursor-auto btn-yellow tw-disabled tw-opacity-40' onClick={handleProfileSubmission}>
+              <div className='flex flex-col gap-2'>
+                <button className='cursor-auto btn-yellow disabled opacity-40' onClick={handleProfileSubmission}>
                   Proceed to Account Verification
                 </button>
                 <button className='btn-transparent-yellow' onClick={handleVerifyLater}>
@@ -853,52 +853,52 @@ const CreateAccount = () => {
           {createAccountPage === 'page three' && (
             //Account Verification
             // TODO: Integrate Onfido for user verification process
-            <div className='tw-w-screen md:tw-w-[640px] tw-px-6 tw-flex tw-flex-col tw-gap-8 tw-pt-6'>
+            <div className='w-screen md:w-[640px] px-6 flex flex-col gap-8 pt-6'>
               <div>
-                <div className='tw-font-bold tw-text-4xl sm:tw-text-[44px] tw-py-1'>Select document to upload</div>
+                <div className='font-bold text-4xl sm:text-[44px] py-1'>Select document to upload</div>
                 <div>We need your identification. Data is processed securely.</div>
               </div>
-              <div className='tw-flex tw-gap-2 tw-items-center'>
+              <div className='flex gap-2 items-center'>
                 <span>Powered by</span>
-                <Image src={Onfido} width={107} height={24} alt='user profile' className='tw-w-[107px] tw-h-[24px]' />
+                <Image src={Onfido} width={107} height={24} alt='user profile' className='w-[107px] h-[24px]' />
               </div>
-              <div className='tw-grid tw-gap-4'>
-                <div className='tw-flex tw-justify-between tw-bg-[#172431] tw-p-4 tw-items-center'>
-                  <div className='tw-flex tw-items-center tw-gap-4  tw-rounded'>
-                    <div className='tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center'>
-                      <Image src={SingleNeutral} width={36} height={36} alt='user profile' className='tw-w-[36px] tw-h-[36px]' />
+              <div className='grid gap-4'>
+                <div className='flex justify-between bg-[#172431] p-4 items-center'>
+                  <div className='flex items-center gap-4  rounded'>
+                    <div className='w-14 h-14 bg-[#184C80] rounded flex justify-center items-center'>
+                      <Image src={SingleNeutral} width={36} height={36} alt='user profile' className='w-[36px] h-[36px]' />
                     </div>
                     <div>{"Driver's License"}</div>
                   </div>
                   <input
                     type='radio'
-                    className='tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-full tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]'
+                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
                     value='All'
                   />
                 </div>
-                <div className='tw-flex tw-justify-between tw-bg-[#172431] tw-p-4 tw-items-center'>
-                  <div className='tw-flex tw-items-center tw-gap-4  tw-rounded'>
-                    <div className='tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center'>
-                      <Image src={Passport} width={36} height={36} alt='user profile' className='tw-w-[36px] tw-h-[36px]' />
+                <div className='flex justify-between bg-[#172431] p-4 items-center'>
+                  <div className='flex items-center gap-4  rounded'>
+                    <div className='w-14 h-14 bg-[#184C80] rounded flex justify-center items-center'>
+                      <Image src={Passport} width={36} height={36} alt='user profile' className='w-[36px] h-[36px]' />
                     </div>
                     <div>Passport</div>
                   </div>
                   <input
                     type='radio'
-                    className='tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-full tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]'
+                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
                     value='All'
                   />
                 </div>
-                <div className='tw-flex tw-justify-between tw-bg-[#172431] tw-p-4 tw-items-center'>
-                  <div className='tw-flex tw-items-center tw-gap-4  tw-rounded'>
-                    <div className='tw-w-14 tw-h-14 tw-bg-[#184C80] tw-rounded tw-flex tw-justify-center tw-items-center'>
-                      <Image src={IDCard} width={36} height={36} alt='user profile' className='tw-w-[36px] tw-h-[36px]' />
+                <div className='flex justify-between bg-[#172431] p-4 items-center'>
+                  <div className='flex items-center gap-4  rounded'>
+                    <div className='w-14 h-14 bg-[#184C80] rounded flex justify-center items-center'>
+                      <Image src={IDCard} width={36} height={36} alt='user profile' className='w-[36px] h-[36px]' />
                     </div>
                     <div>Identity Card</div>
                   </div>
                   <input
                     type='radio'
-                    className='tw-relative tw-peer tw-h-5 tw-w-5 tw-cursor-pointer tw-appearance-none tw-rounded-full tw-border tw-border-white/10 tw-bg-white/5 tw-transition-opacity checked:tw-border-[#F2CA16] checked:tw-bg-[#F2CA16]'
+                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
                     value='All'
                   />
                 </div>

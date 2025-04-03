@@ -115,16 +115,16 @@ const WagerModal: React.FC<WagerModalProps> = ({
     return (
         <>
             {session ? (
-                <div className="tw-bg-black md:tw-bg-black/90 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-fixed tw-top-0 tw-left-0 tw-z-50">
+                <div className="bg-black md:bg-black/90 w-screen h-screen flex justify-center items-start md:items-center fixed top-0 left-0 z-50">
                     {/* Content */}
                     <form
                         onSubmit={(e) => handleWagerSubmit(e, sessionData)}
-                        className="tw-relative tw-bg-[#0F1923] tw-w-[864px] tw-h-screen tw-overflow-y-auto md:tw-min-h-[602px] md:tw-max-h-[800px] tw-pt-8 tw-flex tw-flex-col tw-gap-6 tw-rounded-sm"
+                        className="relative bg-[#0F1923] w-[864px] h-screen overflow-y-auto md:min-h-[602px] md:max-h-[800px] pt-8 flex flex-col gap-6 rounded-sm"
                         id="wager-modal"
                     >
-                        <div className="tw-flex tw-flex-col md:tw-flex-row md:tw-gap-6 tw-gap-[220px] tw-px-6">
-                            <div className="tw-flex md:tw-hidden tw-items-center tw-justify-between md:tw-justify-start tw-w-full">
-                                <div className="tw-text-2xl sm:tw-text-4xl tw-font-bold">
+                        <div className="flex flex-col md:flex-row md:gap-6 gap-[220px] px-6">
+                            <div className="flex md:hidden items-center justify-between md:justify-start w-full">
+                                <div className="text-2xl sm:text-4xl font-bold">
                                     Guess the Price
                                 </div>
                                 <button onClick={showWagerModal}>
@@ -133,7 +133,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                         width={20}
                                         height={20}
                                         alt=""
-                                        className="tw-w-[20px] tw-h-[20px] "
+                                        className="w-[20px] h-[20px] "
                                     />
                                 </button>
                             </div>
@@ -142,120 +142,120 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                 width={360}
                                 height={173}
                                 alt="fray car"
-                                className="tw-w-full md:tw-w-[136px] tw-absolute tw-top-[90px] tw-left-0 tw-right-0 md:tw-static tw-h-[172px] md:tw-h-[136px] tw-object-cover tw-aspect-3/4 md:tw-aspect-auto"
+                                className="w-full md:w-[136px] absolute top-[90px] left-0 right-0 md:static h-[172px] md:h-[136px] object-cover aspect-3/4 md:aspect-auto"
                             />
-                            <div className="md:tw-ml-6 md:tw-mt-0 tw-text-3xl">
-                                <div className="tw-font-bold">
+                            <div className="md:ml-6 md:mt-0 text-3xl">
+                                <div className="font-bold">
                                     {make} {model}
                                 </div>
-                                <div className="tw-grid tw-gap-2 tw-mt-4">
-                                    <div className="tw-grid tw-grids-cols-1 md:tw-grid-cols-2 tw-text-sm tw-gap-2">
-                                        <div className="tw-flex tw-items-center">
+                                <div className="grid gap-2 mt-4">
+                                    <div className="grid grids-cols-1 md:grid-cols-2 text-sm gap-2">
+                                        <div className="flex items-center">
                                             <Image
                                                 src={DollarIcon}
                                                 width={14}
                                                 height={14}
                                                 alt=""
-                                                className="tw-w-[14px] tw-h-[14px]"
+                                                className="w-[14px] h-[14px]"
                                             />
-                                            <div className="tw-text-sm tw-ml-2 tw-flex tw-flex-row tw-gap-2">
-                                                <span className="tw-opacity-80">
+                                            <div className="text-sm ml-2 flex flex-row gap-2">
+                                                <span className="opacity-80">
                                                     Current Bid:
                                                 </span>
-                                                <span className="tw-text-[#49C742] tw-font-bold">
+                                                <span className="text-[#49C742] font-bold">
                                                     ${price}
                                                 </span>
-                                                <span className="md:tw-hidden">{`(${bids} bids)`}</span>
+                                                <span className="md:hidden">{`(${bids} bids)`}</span>
                                             </div>
                                         </div>
-                                        <div className="tw-hidden md:tw-flex tw-items-center ">
+                                        <div className="hidden md:flex items-center ">
                                             <Image
                                                 src={HashtagIcon}
                                                 width={14}
                                                 height={14}
                                                 alt=""
-                                                className="tw-w-[14px] tw-h-[14px]"
+                                                className="w-[14px] h-[14px]"
                                             />
-                                            <div className="tw-text-sm tw-ml-2">
-                                                <span className="tw-opacity-80">
+                                            <div className="text-sm ml-2">
+                                                <span className="opacity-80">
                                                     Bids:
                                                 </span>
-                                                <span className=" tw-font-bold tw-ml-2">
+                                                <span className=" font-bold ml-2">
                                                     {bids}
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-2 tw-text-sm">
-                                        <div className="tw-flex tw-items-center">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                        <div className="flex items-center">
                                             <Image
                                                 src={CalendarIcon}
                                                 width={14}
                                                 height={14}
                                                 alt=""
-                                                className="tw-w-[14px] tw-h-[14px]"
+                                                className="w-[14px] h-[14px]"
                                             />
-                                            <div className="tw-text-sm tw-ml-2">
-                                                <span className="tw-opacity-80">
+                                            <div className="text-sm ml-2">
+                                                <span className="opacity-80">
                                                     Ending:
                                                 </span>
-                                                <span className="tw-font-bold tw-ml-2">
+                                                <span className="font-bold ml-2">
                                                     {ending}
                                                 </span>
                                             </div>
                                         </div>
-                                        <div className="tw-flex tw-items-center">
+                                        <div className="flex items-center">
                                             <Image
                                                 src={HourGlassIcon}
                                                 width={14}
                                                 height={14}
                                                 alt=""
-                                                className="tw-w-[14px] tw-h-[14px]"
+                                                className="w-[14px] h-[14px]"
                                             />
-                                            <div className="tw-text-sm tw-ml-2">
-                                                <span className="tw-opacity-80">
+                                            <div className="text-sm ml-2">
+                                                <span className="opacity-80">
                                                     Time Left:
                                                 </span>
-                                                <span className=" tw-font-bold tw-ml-2 tw-text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+                                                <span className=" font-bold ml-2 text-[#C2451E]">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="tw-flex tw-items-center">
+                                    <div className="flex items-center">
                                         <Image
                                             src={Wallet}
                                             width={14}
                                             height={14}
                                             alt="wallet icon"
-                                            className="tw-w-3.5 tw-h-3.5"
+                                            className="w-3.5 h-3.5"
                                         />
-                                        <div className="tw-text-sm tw-ml-2">
-                                            <span className="tw-opacity-80">
+                                        <div className="text-sm ml-2">
+                                            <span className="opacity-80">
                                                 Wallet Balance:
                                             </span>
-                                            <span className="tw-font-bold tw-ml-2">
+                                            <span className="font-bold ml-2">
                                                 $
                                                 {walletBalance % 1 === 0
                                                     ? walletBalance.toLocaleString()
                                                     : walletBalance.toLocaleString(
-                                                          undefined,
-                                                          {
-                                                              minimumFractionDigits: 2,
-                                                              maximumFractionDigits: 2,
-                                                          }
-                                                      )}
+                                                        undefined,
+                                                        {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                        }
+                                                    )}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <hr className="tw-border-t-[#1b252e]" />
-                        <div className=" tw-flex tw-flex-col tw-gap-3 tw-px-6">
-                            <label className="tw-text-lg">
+                        <hr className="border-t-[#1b252e]" />
+                        <div className=" flex flex-col gap-3 px-6">
+                            <label className="text-lg">
                                 How much will this sell for?
                             </label>
-                            <div className="tw-relative tw-flex tw-items-center tw-rounded ">
-                                <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
+                            <div className="relative flex items-center rounded ">
+                                <div className="w-lg h-auto top-[50%] -translate-y-[50%] left-3 absolute text-gray-500 z-20">
                                     $
                                 </div>
                                 <input
@@ -284,17 +284,17 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     required
                                     name="price-guessed"
                                     type="number"
-                                    className="tw-bg-white/5 focus:tw-outline tw-outline-[6px] tw-outline-[#273039] tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded"
+                                    className="bg-white/5 focus:outline outline-[6px] outline-[#273039] py-3 pl-8 pr-3 w-full focus:bg-white focus:text-black focus:border-white/10 rounded"
                                     onChange={handleWagerInputChange}
                                 />
                                 {invalidPrice && (
-                                    <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
+                                    <div className="absolute text-sm text-red-500 font-medium -bottom-5">
                                         *Invalid input. Please enter numeric
                                         values only.
                                     </div>
                                 )}
                                 {wagerAmountAlreadyExists && (
-                                    <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
+                                    <div className="absolute text-sm text-red-500 font-medium -bottom-5">
                                         *This wager amount has already been used
                                         for this auction. Please enter a
                                         different one.
@@ -302,10 +302,10 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                 )}
                             </div>
                         </div>
-                        <div className="tw-flex tw-flex-col tw-gap-3 tw-px-6">
-                            <label className="tw-text-lg">Wager</label>
-                            <div className="tw-relative tw-flex tw-items-center tw-rounded ">
-                                <div className="tw-w-lg tw-h-auto tw-top-[50%] tw--translate-y-[50%] tw-left-3 tw-absolute tw-text-gray-500 tw-z-20">
+                        <div className="flex flex-col gap-3 px-6">
+                            <label className="text-lg">Wager</label>
+                            <div className="relative flex items-center rounded ">
+                                <div className="w-lg h-auto top-[50%] -translate-y-[50%] left-3 absolute text-gray-500 z-20">
                                     $
                                 </div>
                                 <input
@@ -335,77 +335,77 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                     value={10}
                                     name="wager-amount"
                                     type="number"
-                                    className="tw-bg-white/5 focus:tw-outline tw-opacity-50 tw-outline-[6px] tw-outline-[#273039] tw-py-3 tw-pl-8 tw-pr-3 tw-w-full focus:tw-bg-white focus:tw-text-black focus:tw-border-white/10 tw-rounded tw-outline-[#273039]"
+                                    className="bg-white/5 focus:outline opacity-50 outline-[6px] outline-[#273039] py-3 pl-8 pr-3 w-full focus:bg-white focus:text-black focus:border-white/10 rounded outline-[#273039]"
                                     onChange={handleWagerInputChange}
                                 />
                                 {invalidWager && (
-                                    <div className="tw-absolute tw-text-sm tw-text-red-500 tw-font-medium -tw-bottom-5">
+                                    <div className="absolute text-sm text-red-500 font-medium -bottom-5">
                                         *Invalid input. Please enter numeric
                                         values only.
                                     </div>
                                 )}
                             </div>
                             {!isWagerValid && (
-                                <div className="tw-text-red-500 tw-mt-2 tw-text-sm">
+                                <div className="text-red-500 mt-2 text-sm">
                                     {wagerErrorMessage}
                                     <Link href="/payment">
-                                        <a className="tw-text-white hover:tw-underline">
+                                        <a className="text-white hover:underline">
                                             Top-up your wallet
                                         </a>
                                     </Link>
                                 </div>
                             )}
                         </div>
-                        <div className="tw-text-[#49C742] tw-text-lg  tw-py-3 tw-px-4 tw-bg-[#49C74233] tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4 tw-mx-6 tw-px-6 tw-rounded">
-                            <div className="tw-flex tw-items-center tw-gap-2">
+                        <div className="text-[#49C742] text-lg  py-3 px-4 bg-[#49C74233] grid grid-cols-1 md:grid-cols-2 gap-4 mx-6 px-6 rounded">
+                            <div className="flex items-center gap-2">
                                 <Image
                                     src={MoneyBag}
                                     width={32}
                                     height={32}
                                     alt="money bag"
-                                    className="tw-w-[32px] tw-h-[32px]"
+                                    className="w-[32px] h-[32px]"
                                 />
                                 <div className="">
-                                    <div className="tw-text-xs">
+                                    <div className="text-xs">
                                         POTENTIAL PRIZE
                                     </div>
-                                    <div className="tw-font-bold">
+                                    <div className="font-bold">
                                         $
                                         {prize
                                             ? new Intl.NumberFormat().format(
-                                                  prize
-                                              )
+                                                prize
+                                            )
                                             : " --"}
                                     </div>
                                 </div>
                             </div>
-                            <div className="tw-flex tw-items-center tw-gap-2">
+                            <div className="flex items-center gap-2">
                                 <Image
                                     src={Players}
                                     width={32}
                                     height={32}
                                     alt="money bag"
-                                    className="tw-w-[32px] tw-h-[32px]"
+                                    className="w-[32px] h-[32px]"
                                 />
                                 <div className="">
-                                    <div className="tw-text-xs">PLAYERS</div>
-                                    <div className="tw-font-bold">
+                                    <div className="text-xs">PLAYERS</div>
+                                    <div className="font-bold">
                                         {players_num}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="md:tw-absolute tw-relative md:tw-bottom-0 tw-flex-col md:tw-flex-row md:tw-left-0 tw-items-center tw-flex tw-justify-between tw-h-auto tw-w-full tw-px-6 tw-pt-8 tw-pb-6 tw-bg-white/5">
+                        <div className="md:absolute relative md:bottom-0 flex-col md:flex-row md:left-0 items-center flex justify-between h-auto w-full px-6 pt-8 pb-6 bg-white/5">
                             <button
-                                className="tw-hidden md:tw-block"
+                                className="hidden md:block"
                                 onClick={showWagerModal}
                                 type="button"
                             >
                                 CANCEL
                             </button>
                             {insufficientFunds && (
-                                <div className="md:tw-text-base tw-text-sm tw-text-red-500 tw-font-medium tw-absolute md:tw-static tw-top-2">
-                                    <span className="tw-hidden md:tw-inline-block">
+                                <div className="md:text-base text-sm text-red-500 font-medium absolute md:static top-2">
+                                    <span className="hidden md:inline-block">
                                         ✕
                                     </span>{" "}
                                     Insufficient funds. Top up your wallet to
@@ -413,7 +413,7 @@ const WagerModal: React.FC<WagerModalProps> = ({
                                 </div>
                             )}
                             <button
-                                className="btn-yellow tw-h-[48px] tw-w-full md:tw-w-auto"
+                                className="btn-yellow h-[48px] w-full md:w-auto"
                                 type="submit"
                                 disabled={isButtonClicked}
                             >

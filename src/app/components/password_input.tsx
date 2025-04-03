@@ -14,15 +14,15 @@ const PasswordInput: FC<PasswordInputProps> = ({ value, onChange }) => {
   };
 
   return (
-    <div className='tw-relative tw-flex tw-flex-col tw-gap-2'>
+    <div className='relative flex flex-col gap-2'>
       <input
         type={showPassword ? 'text' : 'password'}
-        className='tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-w-full'
+        className='py-2.5 px-3 bg-[#172431] w-full'
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder='Password'
       />
-      <button onClick={togglePasswordVisibility} className='tw-absolute tw-inset-y-0 tw-right-0 tw-pr-3 tw-flex tw-items-center'>
+      <button onClick={togglePasswordVisibility} className='absolute inset-y-0 right-0 pr-3 flex items-center'>
         {showPassword ? (
           <Image src='/images/eye-on.svg' alt='Hide password' width={20} height={20} />
         ) : (

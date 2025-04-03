@@ -64,40 +64,40 @@ function EditProfile() {
     };
 
     return (
-        <div className="sm:tw-flex sm:tw-justify-center">
+        <div className="sm:flex sm:justify-center">
             <form
                 onSubmit={saveEdits}
-                className="tw-px-6 lg:tw-px-0 tw-text-sm sm:tw-w-[862px]"
+                className="px-6 lg:px-0 text-sm sm:w-[862px]"
             >
-                <div className="tw-py-8 sm:tw-pt-[80px] tw-border-b-[1px] tw-border-b-[#1b252e]">
-                    <div className="tw-flex tw-justify-between">
-                        <div className="tw-text-4xl tw-font-bold">
+                <div className="py-8 sm:pt-[80px] border-b-[1px] border-b-[#1b252e]">
+                    <div className="flex justify-between">
+                        <div className="text-4xl font-bold">
                             My Details
                         </div>
                         {saved ? (
-                            <button className="tw-text-black tw-bg-white tw-text-base tw-font-bold tw-px-3.5 tw-py-2.5 tw-rounded">
+                            <button className="text-black bg-white text-base font-bold px-3.5 py-2.5 rounded">
                                 SAVED
                             </button>
                         ) : (
-                            <button className="tw-text-[#0f1923] tw-bg-[#f2ca16] tw-text-base tw-font-bold tw-px-3.5 tw-py-2.5 tw-rounded">
+                            <button className="text-[#0f1923] bg-[#f2ca16] text-base font-bold px-3.5 py-2.5 rounded">
                                 SAVE
                             </button>
                         )}
                     </div>
                     <div>
-                        <div className="sm:tw-flex sm:tw-gap-6 sm:tw-mt-8 sm:tw-mb-6 sm:tw-items-center">
+                        <div className="sm:flex sm:gap-6 sm:mt-8 sm:mb-6 sm:items-center">
                             <Image
                                 src={AvatarOne}
                                 alt=""
-                                className="tw-rounded-full tw-w-[100px] sm:tw-w-[120px] tw-mb-6 tw-mt-8 sm:tw-m-0"
+                                className="rounded-full w-[100px] sm:w-[120px] mb-6 mt-8 sm:m-0"
                             />
-                            <div className="sm:tw-w-[82%]">
+                            <div className="sm:w-[82%]">
                                 <label htmlFor="fullName">Full Name *</label>
                                 <input
                                     type="text"
                                     name="fullName"
                                     defaultValue={data?.user.fullName}
-                                    className="tw-block tw-w-full tw-mt-2 tw-mb-6 sm:tw-mb-0 tw-outline-none tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded"
+                                    className="block w-full mt-2 mb-6 sm:mb-0 outline-none py-2.5 px-3 bg-[#172431] rounded"
                                     onChange={(e) =>
                                         setEdits({
                                             ...edits,
@@ -112,7 +112,7 @@ function EditProfile() {
                             type="text"
                             name="username"
                             defaultValue={data?.user.username}
-                            className="tw-block tw-w-full tw-mt-2 tw-mb-6 tw-outline-none tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded"
+                            className="block w-full mt-2 mb-6 outline-none py-2.5 px-3 bg-[#172431] rounded"
                             onChange={(e) =>
                                 setEdits({
                                     ...edits,
@@ -125,7 +125,7 @@ function EditProfile() {
                             name="aboutMe"
                             placeholder="Tell the community about yourself"
                             defaultValue={userInfo.user?.aboutMe}
-                            className="tw-block tw-w-full tw-mt-2 tw-mb-5 tw-outline-none tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-resize-none"
+                            className="block w-full mt-2 mb-5 outline-none py-2.5 px-3 bg-[#172431] rounded resize-none"
                             rows={10}
                             onChange={(e) =>
                                 setEdits({
@@ -134,11 +134,11 @@ function EditProfile() {
                                 })
                             }
                         ></textarea>
-                        <div className="tw-flex tw-gap-5 tw-justify-between">
-                            <div className="tw-w-1/2">
+                        <div className="flex gap-5 justify-between">
+                            <div className="w-1/2">
                                 <label htmlFor="country">Country *</label>
                                 <select
-                                    className="tw-block tw-mt-2 tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-w-full tw-outline-none"
+                                    className="block mt-2 py-2.5 px-3 bg-[#172431] rounded w-full outline-none"
                                     onChange={(e) =>
                                         handleCountrySelect(e.target.value)
                                     }
@@ -158,10 +158,10 @@ function EditProfile() {
                                     ))}
                                 </select>
                             </div>
-                            <div className="tw-w-1/2">
+                            <div className="w-1/2">
                                 <label htmlFor="state">State *</label>
                                 <select
-                                    className="tw-block tw-mt-2 tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-w-full tw-outline-none"
+                                    className="block mt-2 py-2.5 px-3 bg-[#172431] rounded w-full outline-none"
                                     onChange={(e) =>
                                         setEdits({
                                             ...edits,
@@ -186,169 +186,169 @@ function EditProfile() {
                         </div>
                     </div>
                 </div>
-                <div className="tw-py-8 tw-border-b-[1px] tw-border-b-[#1b252e]">
-                    <div className="tw-text-2xl tw-font-bold tw-mb-6">
+                <div className="py-8 border-b-[1px] border-b-[#1b252e]">
+                    <div className="text-2xl font-bold mb-6">
                         Links
                     </div>
                     <div>
-                        <div className="sm:tw-flex tw-gap-4">
+                        <div className="sm:flex gap-4">
                             <label
                                 htmlFor="twitterLink"
-                                className="sm:tw-w-[23%]"
+                                className="sm:w-[23%]"
                             >
-                                <div className="tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded">
+                                <div className="py-2.5 px-3 bg-[#172431] rounded">
                                     Twitter
                                 </div>
                             </label>
-                            <div className="tw-flex tw-gap-4 tw-mb-4 sm:tw-w-[95%]">
+                            <div className="flex gap-4 mb-4 sm:w-[95%]">
                                 <input
                                     type="url"
                                     name="twitterLink"
                                     placeholder="https://"
-                                    className="tw-block tw-w-full tw-mt-2 sm:tw-mt-0 tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-outline-none"
+                                    className="block w-full mt-2 sm:mt-0 py-2.5 px-3 bg-[#172431] rounded outline-none"
                                 ></input>
                                 <button>
                                     <Image
                                         src={DeleteIcon}
                                         alt=""
-                                        className="tw-w-[25px]"
+                                        className="w-[25px]"
                                     />
                                 </button>
                             </div>
                         </div>
-                        <div className="sm:tw-flex tw-gap-4">
+                        <div className="sm:flex gap-4">
                             <label
                                 htmlFor="twitterLink"
-                                className="sm:tw-w-[23%]"
+                                className="sm:w-[23%]"
                             >
-                                <div className="tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded">
+                                <div className="py-2.5 px-3 bg-[#172431] rounded">
                                     Website
                                 </div>
                             </label>
-                            <div className="tw-flex tw-gap-4 tw-mb-4 sm:tw-w-[95%]">
+                            <div className="flex gap-4 mb-4 sm:w-[95%]">
                                 <input
                                     type="url"
                                     name="websiteLink"
                                     placeholder="https://"
-                                    className="tw-block tw-w-full tw-mt-2 sm:tw-mt-0 tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-outline-none"
+                                    className="block w-full mt-2 sm:mt-0 py-2.5 px-3 bg-[#172431] rounded outline-none"
                                 ></input>
                                 <button>
                                     <Image
                                         src={DeleteIcon}
                                         alt=""
-                                        className="tw-w-[25px]"
+                                        className="w-[25px]"
                                     />
                                 </button>
                             </div>
                         </div>
-                        <div className="sm:tw-flex tw-gap-4">
+                        <div className="sm:flex gap-4">
                             <label
                                 htmlFor="twitterLink"
-                                className="sm:tw-w-[23%]"
+                                className="sm:w-[23%]"
                             >
-                                <div className="tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded">
+                                <div className="py-2.5 px-3 bg-[#172431] rounded">
                                     LinkedIn
                                 </div>
                             </label>
-                            <div className="tw-flex tw-gap-4 tw-mb-4 sm:tw-w-[95%]">
+                            <div className="flex gap-4 mb-4 sm:w-[95%]">
                                 <input
                                     type="url"
                                     name="linkedinLink"
                                     placeholder="https://"
-                                    className="tw-block tw-w-full tw-mt-2 sm:tw-mt-0 tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-outline-none"
+                                    className="block w-full mt-2 sm:mt-0 py-2.5 px-3 bg-[#172431] rounded outline-none"
                                 ></input>
                                 <button>
                                     <Image
                                         src={DeleteIcon}
                                         alt=""
-                                        className="tw-w-[25px]"
+                                        className="w-[25px]"
                                     />
                                 </button>
                             </div>
                         </div>
-                        <div className="sm:tw-flex tw-gap-4">
+                        <div className="sm:flex gap-4">
                             <label
                                 htmlFor="twitterLink"
-                                className="sm:tw-w-[23%]"
+                                className="sm:w-[23%]"
                             >
-                                <div className="tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded">
+                                <div className="py-2.5 px-3 bg-[#172431] rounded">
                                     BringaTrailer
                                 </div>
                             </label>
-                            <div className="tw-flex tw-gap-4 tw-mb-4 sm:tw-w-[95%]">
+                            <div className="flex gap-4 mb-4 sm:w-[95%]">
                                 <input
                                     type="url"
                                     name="bringATrailerLink"
                                     placeholder="https://"
-                                    className="tw-block tw-w-full tw-mt-2 sm:tw-mt-0 tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded tw-outline-none"
+                                    className="block w-full mt-2 sm:mt-0 py-2.5 px-3 bg-[#172431] rounded outline-none"
                                 ></input>
                                 <button>
                                     <Image
                                         src={DeleteIcon}
                                         alt=""
-                                        className="tw-w-[25px]"
+                                        className="w-[25px]"
                                     />
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="tw-py-8 tw-border-b-[1px] tw-border-b-[#1b252e]">
-                    <div className="tw-text-2xl tw-font-bold tw-mb-6">
+                <div className="py-8 border-b-[1px] border-b-[#1b252e]">
+                    <div className="text-2xl font-bold mb-6">
                         Account
                     </div>
-                    <div className="tw-flex tw-flex-col tw-gap-2 sm:tw-flex-row">
-                        <div className="tw-py-2.5 tw-px-3 tw-bg-[#172431] tw-rounded sm:tw-w-[252px]">
+                    <div className="flex flex-col gap-2 sm:flex-row">
+                        <div className="py-2.5 px-3 bg-[#172431] rounded sm:w-[252px]">
                             {userInfo.user?.email}
                         </div>
                         <button
-                            className="tw-bg-white tw-text-[#0f1923] tw-font-bold tw-py-2.5 tw-rounded tw-text-base sm:tw-py-2.5 sm:tw-px-3"
+                            className="bg-white text-[#0f1923] font-bold py-2.5 rounded text-base sm:py-2.5 sm:px-3"
                             type="button"
                         >
                             Save Email
                         </button>
                     </div>
                     <button
-                        className="tw-w-full tw-py-2.5 tw-mt-4 tw-border-[1px] tw-rounded tw-text-base sm:tw-px-3 sm:tw-w-auto"
+                        className="w-full py-2.5 mt-4 border-[1px] rounded text-base sm:px-3 sm:w-auto"
                         type="button"
                     >
                         Reset Password
                     </button>
                 </div>
-                <div className="tw-py-8 sm:tw-pb-[80px]">
-                    <div className="tw-text-2xl tw-font-bold tw-mb-6">
+                <div className="py-8 sm:pb-[80px]">
+                    <div className="text-2xl font-bold mb-6">
                         Notification
                     </div>
                     <input type="checkbox" name="account" />
-                    <label htmlFor="account" className="tw-font-bold tw-ml-2">
+                    <label htmlFor="account" className="font-bold ml-2">
                         Account
                     </label>
-                    <div className="tw-pl-[21px] tw-text-[#b7babd] tw-mb-4">
+                    <div className="pl-[21px] text-[#b7babd] mb-4">
                         Excepteur sint obcaecat cupiditat non proident culpa
                     </div>
                     <input type="checkbox" name="wagers" />
-                    <label htmlFor="wagers" className="tw-font-bold tw-ml-2">
+                    <label htmlFor="wagers" className="font-bold ml-2">
                         Wagers
                     </label>
-                    <div className="tw-pl-[21px] tw-text-[#b7babd] tw-mb-4">
+                    <div className="pl-[21px] text-[#b7babd] mb-4">
                         Inmensae subtilitatis, obscuris et malesuada fames.
                     </div>
                     <input type="checkbox" name="watchlist" />
-                    <label htmlFor="watchlist" className="tw-font-bold tw-ml-2">
+                    <label htmlFor="watchlist" className="font-bold ml-2">
                         Watchlist
                     </label>
-                    <div className="tw-pl-[21px] tw-text-[#b7babd] tw-mb-4">
+                    <div className="pl-[21px] text-[#b7babd] mb-4">
                         Cras mattis iudicium purus sit amet fermentum.
                     </div>
                     <input type="checkbox" name="marketing" />
-                    <label htmlFor="marketing" className="tw-font-bold tw-ml-2">
+                    <label htmlFor="marketing" className="font-bold ml-2">
                         Marketing
                     </label>
-                    <div className="tw-pl-[21px] tw-text-[#b7babd] tw-mb-6">
+                    <div className="pl-[21px] text-[#b7babd] mb-6">
                         Gallia est omnis divisa in partes tres, quarum.
                     </div>
                     <button
-                        className="tw-w-full sm:tw-w-auto tw-text-[#c2451e] tw-border-[1px] tw-border-[#c2451e] tw-rounded tw-px-3.5 tw-py-2.5 tw-text-base"
+                        className="w-full sm:w-auto text-[#c2451e] border-[1px] border-[#c2451e] rounded px-3.5 py-2.5 text-base"
                         type="button"
                     >
                         Delete My Account

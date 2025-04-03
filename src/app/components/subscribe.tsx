@@ -74,14 +74,14 @@ const Subscribe = () => {
     };
 
     return (
-        <div className="tw-relative tw-text-[#0F1923] tw-bg-[#F2CA16] tw-h-auto md:tw-max-h-[664px] tw-flex  tw-justify-center tw-w-full tw-mt-[-1px] tw-overflow-hidden">
-            <div className="tw-relative tw-mt-[350px] md:tw-mt-0 tw-px-4 md:tw-px-16 tw-w-full 2xl:tw-w-[1440px] tw-py-16 md:tw-py-[174px] tw-z-50 ">
-                <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 ">
+        <div className="relative text-[#0F1923] bg-[#F2CA16] h-auto md:max-h-[664px] flex  justify-center w-full mt-[-1px] overflow-hidden">
+            <div className="relative mt-[350px] md:mt-0 px-4 md:px-16 w-full 2xl:w-[1440px] py-16 md:py-[174px] z-50 ">
+                <div className="grid grid-cols-1 md:grid-cols-2 ">
                     <div>
-                        <h1 className="tw-text-6xl tw-font-bold">
+                        <h1 className="text-6xl font-bold">
                             Stay in the Fast Lane
                         </h1>
-                        <p className="tw-my-10 tw-max-h-[100px] tw-ellispis tw-overflow-hidden">
+                        <p className="my-10 max-h-[100px] ellispis overflow-hidden">
                             Are you ready to dive deeper into the captivating
                             world of car auction wagering? Join the exclusive
                             HammerShift newsletter to get access to a treasure
@@ -89,7 +89,7 @@ const Subscribe = () => {
                             captivating insights that will elevate your wagering
                             game.
                         </p>
-                        <div className="tw-flex tw-flex-col sm:tw-flex-row tw-w-auto">
+                        <div className="flex flex-col sm:flex-row w-auto">
                             <input
                                 placeholder={
                                     emailError
@@ -99,7 +99,7 @@ const Subscribe = () => {
                                 value={newEmail}
                                 onChange={handleChange}
                                 className={
-                                    "tw-px-6 tw-py-4 tw-grow tw-rounded tw-font-bold"
+                                    "px-6 py-4 grow rounded font-bold"
                                 }
                                 style={{
                                     color: emailError ? "#F44336" : "#000000",
@@ -107,7 +107,7 @@ const Subscribe = () => {
                             />
                             <button
                                 onClick={handleSubscribeButtonClick}
-                                className="btn-dark sm:tw-ml-3 tw-mt-4 sm:tw-mt-0 tw-w-auto"
+                                className="btn-dark sm:ml-3 mt-4 sm:mt-0 w-auto"
                             >
                                 Subscribe
                             </button>
@@ -118,7 +118,7 @@ const Subscribe = () => {
             </div>
 
             <div>
-                <div className="tw-absolute tw-top-0 tw-right-0 md:tw-right-[-200px] lg:tw-right-0 tw-w-full sm:tw-w-auto tw-h-auto">
+                <div className="absolute top-0 right-0 md:right-[-200px] lg:right-0 w-full sm:w-auto h-auto">
                     <div
                         style={{
                             transform: "skew(-28deg)",
@@ -128,35 +128,35 @@ const Subscribe = () => {
                             // borderBottom: '664px solid transparent',
                             // borderLeft: '360px solid #fff'
                         }}
-                        className="tw-absolute tw-h-[664px] tw-w-[400px] md:tw-width tw-right-[400px] sm:tw-right-[542px] "
+                        className="absolute h-[664px] w-[400px] md:width right-[400px] sm:right-[542px] "
                     ></div>
                     <div
                         style={{
                             transform: "skew(-28deg)",
                             borderRight: "20px solid #F2CA16",
                         }}
-                        className="tw-absolute tw-h-[644px] tw-w-[300px] tw-top-0 tw-right-[280px] sm:tw-right-[250px]"
+                        className="absolute h-[644px] w-[300px] top-0 right-[280px] sm:right-[250px]"
                     ></div>
                     <div
                         style={{
                             transform: "skew(-28deg)",
                             borderRight: "20px solid #F2CA16",
                         }}
-                        className="tw-absolute tw-w-[300px] tw-h-[644px] tw-top-0 tw-right-[180px] sm:tw-right-[390px]"
+                        className="absolute w-[300px] h-[644px] top-0 right-[180px] sm:right-[390px]"
                     ></div>
                     <div
                         style={{
                             borderTop: "664px solid transparent",
                             borderRight: "360px solid #F2CA16",
                         }}
-                        className="tw-absolute tw-w-[997px] tw-h-[644px] w-top-[2px] tw-right-[-80px] sm:tw-right-[-60px]"
+                        className="absolute w-[997px] h-[644px] w-top-[2px] right-[-80px] sm:right-[-60px]"
                     ></div>
                     <Image
                         src={CarDesign}
                         width={997}
                         height={644}
                         alt="design"
-                        className="tw-w-[640px] md:tw-w-auto tw-h-[350px] md:tw-h-auto tw-z-[-1] tw-object-cover"
+                        className="w-[640px] md:w-auto h-[350px] md:h-auto z-[-1] object-cover"
                     />
                 </div>
             </div>
@@ -168,10 +168,10 @@ export default Subscribe;
 
 export const SubscribeSmall = () => {
     return (
-        <div className="tw-w-full tw-h-auto  tw-bg-[#F2CA16] tw-flex tw-justify-center">
-            <div className="section-container tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-center tw-text-[#0F1923] tw-py-[60px]">
+        <div className="w-full h-auto  bg-[#F2CA16] flex justify-center">
+            <div className="section-container flex flex-col md:flex-row justify-between items-center text-[#0F1923] py-[60px]">
                 <div>
-                    <div className="tw-text-[20px] tw-font-bold">
+                    <div className="text-[20px] font-bold">
                         Stay in the Fast Lane
                     </div>
                     <div>
@@ -179,12 +179,12 @@ export const SubscribeSmall = () => {
                         to insider knowledge
                     </div>
                 </div>
-                <div className="tw-flex tw-mt-6 md:tw-mt-0 tw-flex-col sm:tw-flex-row tw-w-full md:tw-w-auto">
+                <div className="flex mt-6 md:mt-0 flex-col sm:flex-row w-full md:w-auto">
                     <input
                         placeholder="Email Address"
-                        className="tw-w-full md:tw-w-[299px] tw-px-6 tw-py-4 tw-rounded"
+                        className="w-full md:w-[299px] px-6 py-4 rounded"
                     />
-                    <button className="btn-dark tw-w-full sm:tw-w-auto tw-ml-0 sm:tw-ml-3 tw-mt-3 sm:tw-mt-0">
+                    <button className="btn-dark w-full sm:w-auto ml-0 sm:ml-3 mt-3 sm:mt-0">
                         Subscribe
                     </button>
                 </div>

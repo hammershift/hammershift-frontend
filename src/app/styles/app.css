@@ -16,7 +16,7 @@
   z-index: 10000; /* Higher than the backdrop */
 }
 
-.tw-text-muted-foreground {
+.text-muted-foreground {
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -28,7 +28,7 @@
   transition: border-color 0.3s ease;
 }
 
-.btn-transparent-white.tw-border-green-500 {
+.btn-transparent-white.border-green-500 {
   border-color: #22c55e;
 }
 
@@ -370,7 +370,7 @@ svg {
 
 /* 
 SECTION-CONTAINER
-tw-w-screen tw-px-4 md:tw-px-16 tw-pt-8 md:tw-pt-16 2xl:tw-w-[1440px] */
+w-screen px-4 md:px-16 pt-8 md:pt-16 2xl:w-[1440px] */
 
 .live-page-shadow {
   box-shadow: 0px 8px 8px 0px #0000001f;

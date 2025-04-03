@@ -8,23 +8,23 @@ import Link from "next/link";
 
 const SkillStrategyAndStakes = () => {
   return (
-    <div className="tw-w-screen 2xl:tw-w-[1440px] tw-mt-[-1px] tw-flex tw-justify-center">
+    <div className="w-screen 2xl:w-[1440px] mt-[-1px] flex justify-center">
       <Image
         src={TransitionPattern}
         width={288}
         height={356}
         alt="pattern"
-        className="tw-absolute tw-z-[-1] tw-w-full tw-h-auto tw-object-cover"
+        className="absolute z-[-1] w-full h-auto object-cover"
       />
-      <div className=" tw-px-4 md:tw-px-16 tw-w-screen 2xl:tw-w-[1440px] tw-pt-8 tw-pb-16">
+      <div className=" px-4 md:px-16 w-screen 2xl:w-[1440px] pt-8 pb-16">
         <header>
-          <h1 className="tw-pt-16 tw-w-auto tw-text-5xl md:tw-text-7xl tw-leading-normal tw-font-bold">
+          <h1 className="pt-16 w-auto text-5xl md:text-7xl leading-normal font-bold">
             Skill, Strategy <br />& Stakes
           </h1>
         </header>
 
         <section>
-          <p className="tw-max-w-[752px] tw-my-12">
+          <p className="max-w-[752px] my-12">
             The excitement of sports betting meets the thrill of car auctions.
             Car enthusiasts, put your skills to the test by predicting the
             outcomes of car auctions with unmatched precision. Combine
@@ -37,7 +37,7 @@ const SkillStrategyAndStakes = () => {
             of rare classics, luxury exotics, and iconic muscle cars.
           </p>
           <Link href="/create_account">
-            <button className="btn-yellow tw-w-full sm:tw-w-auto hover:tw-scale-110 tw-transform tw-transition-all tw-duration-100">
+            <button className="btn-yellow w-full sm:w-auto hover:scale-110 transform transition-all duration-100">
               Join and get 100 credits
             </button>
           </Link>

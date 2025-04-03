@@ -55,56 +55,56 @@ const WithdrawForm = (props: any) => {
   };
 
   return (
-    <div className='tw-bg-black/80 tw-w-screen tw-h-screen tw-flex tw-justify-center tw-items-start md:tw-items-center tw-absolute tw-top-0 tw-left-0'>
-      <div className='tw-relative tw-bg-[#0F1923] tw-w-[640px] tw-h-[720px] tw-p-6'>
-        <div className='tw-flex tw-justify-between tw-mb-12'>
-          <div className='tw-text-3xl tw-font-bold'>Withdraw</div>
-          <div className='tw-w-[35px] tw-h-[35px] tw-flex tw-justify-center tw-items-center'>
+    <div className='bg-black/80 w-screen h-screen flex justify-center items-start md:items-center absolute top-0 left-0'>
+      <div className='relative bg-[#0F1923] w-[640px] h-[720px] p-6'>
+        <div className='flex justify-between mb-12'>
+          <div className='text-3xl font-bold'>Withdraw</div>
+          <div className='w-[35px] h-[35px] flex justify-center items-center'>
             <button onClick={handleCloseWithdrawModal}>
-              <Image src={CancelIcon} width={20} height={20} alt='x' className='tw-w-[20px] tw-h-[20px]' />
+              <Image src={CancelIcon} width={20} height={20} alt='x' className='w-[20px] h-[20px]' />
             </button>
           </div>
         </div>
-        <hr className='tw-border-white/5' />
-        <form className='tw-flex tw-flex-col tw-gap-5 tw-my-5' onSubmit={handleWithdraw}>
-          <div className='tw-flex tw-flex-col tw-gap-2'>
+        <hr className='border-white/5' />
+        <form className='flex flex-col gap-5 my-5' onSubmit={handleWithdraw}>
+          <div className='flex flex-col gap-2'>
             <label>Amount *</label>
-            <div className='tw-flex'>
+            <div className='flex'>
               {' '}
-              <span className='tw-rounded-sm tw-text-white/60 tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2'>$</span>{' '}
-              <input type='number' className='tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full' onChange={(e) => setAmount(e.target.value)}></input>
+              <span className='rounded-sm text-white/60 bg-[#172431] h-auto py-2 md:py-2 px-2'>$</span>{' '}
+              <input type='number' className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setAmount(e.target.value)}></input>
             </div>
           </div>
-          <hr className='tw-border-white/5' />
-          <div className='tw-flex tw-flex-col tw-gap-2'>
+          <hr className='border-white/5' />
+          <div className='flex flex-col gap-2'>
             <label>Account Name *</label>
-            <input type='text' className='tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full' onChange={(e) => setAccountName(e.target.value)}></input>
+            <input type='text' className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setAccountName(e.target.value)}></input>
           </div>
-          <div className='tw-flex tw-flex-col tw-gap-2'>
+          <div className='flex flex-col gap-2'>
             <label>Account Number *</label>
             <input
               type='number'
-              className='tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full'
+              className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full'
               onChange={(e) => setAccountNumber(e.target.value)}
             ></input>
           </div>
-          <div className='tw-flex tw-flex-col tw-gap-2'>
+          <div className='flex flex-col gap-2'>
             <label>Bank Name *</label>
-            <input type='text' className='tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full' onChange={(e) => setBankName(e.target.value)}></input>
+            <input type='text' className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setBankName(e.target.value)}></input>
           </div>
-          <div className='tw-flex tw-flex-col tw-gap-2'>
+          <div className='flex flex-col gap-2'>
             <label>SWIFT Code / IBAN / ACH / Wire Routing Number *</label>
             <input
               type='text'
-              className='tw-rounded-sm tw-bg-[#172431] tw-h-auto tw-py-2 md:tw-py-2 tw-px-2 tw-w-full'
+              className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full'
               onChange={(e) => setWireRoutingNumber(e.target.value)}
             ></input>
           </div>
           <button type='submit' disabled={loading} className='btn-yellow'>
             Submit
           </button>
-          {error && <p className='tw-text-red-500 tw-mt-4'>{error}</p>}
-          {success && <p className='tw-text-green-500 tw-mt-4'>{success}</p>}
+          {error && <p className='text-red-500 mt-4'>{error}</p>}
+          {success && <p className='text-green-500 mt-4'>{success}</p>}
         </form>
       </div>
     </div>

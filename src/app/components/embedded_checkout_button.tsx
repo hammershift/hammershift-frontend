@@ -49,22 +49,22 @@ export default function EmbeddedCheckoutButton(props: any) {
   };
 
   return (
-    <div className="tw-my-4 tw-w-full tw-text-center btn-yellow">
+    <div className="my-4 w-full text-center btn-yellow">
       <button onClick={() => handleCheckoutClick(priceId)}>Add Funds</button>
       {showCheckout && (
         <div className="backdrop" onClick={handleCloseModal}></div>
       )}
-      <dialog ref={modalRef} className="top tw-w-3/4 tw-rounded-lg tw-relative">
-        <div className="tw-max-w-screen-2xl">
-          <div className="tw-flex tw-items-end tw-justify-end">
+      <dialog ref={modalRef} className="top w-3/4 rounded-lg relative">
+        <div className="max-w-screen-2xl">
+          <div className="flex items-end justify-end">
             <button
-              className="tw-self-end tw-px-3 tw-text-red-500 tw-font-bold tw-text-xl"
+              className="self-end px-3 text-red-500 font-bold text-xl"
               onClick={handleCloseModal}
             >
               x
             </button>
           </div>
-          <div className="tw-w-full">
+          <div className="w-full">
             {showCheckout && (
               <EmbeddedCheckoutProvider
                 stripe={stripePromise}

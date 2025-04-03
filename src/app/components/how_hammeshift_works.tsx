@@ -22,22 +22,22 @@ import PeopleIcon from "../../../public/images/people-icon.svg";
 const HowHammerShiftWorks = () => {
     return (
         <div
-            className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center"
+            className="bg-[#DCE0D9] text-[#0F1923] w-full flex justify-center"
             id="how-hammershift-works"
         >
-            <div className="section-container tw-py-16 md:tw-py-[120px]">
+            <div className="section-container py-16 md:py-[120px]">
                 <header>
-                    <h1 className="tw-text-5xl tw-font-bold">
+                    <h1 className="text-5xl font-bold">
                         How HammerShift Works
                     </h1>
                 </header>
 
-                <section className="tw-mt-8">
-                    <div className="tw-flex tw-flex-col md:tw-flex-row">
-                        <div className="tw-flex tw-flex-wrap">
-                            <div className="tw-flex tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px]  tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8">
+                <section className="mt-8">
+                    <div className="flex flex-col md:flex-row">
+                        <div className="flex flex-wrap">
+                            <div className="flex justify-between w-full min-w-[280px] xl:w-[300px]  pr-0 md:pr-4 py-4 md:py-8">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Registration and Access
                                     </div>
                                     <div>
@@ -51,16 +51,16 @@ const HowHammerShiftWorks = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                             <hr
                                 style={{ borderColor: "black", opacity: "10%" }}
-                                className="tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0"
+                                className="mx-0 md:mx-4 my-4 md:my-0"
                             />
-                            <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8">
+                            <div className="flex  justify-between w-full min-w-[280px] xl:w-[300px] pr-0 md:pr-4 py-4 md:py-8">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Live Auction Collaboration
                                     </div>
                                     <div>
@@ -74,18 +74,18 @@ const HowHammerShiftWorks = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                         </div>
                         <hr
                             style={{ borderColor: "black", opacity: "10%" }}
-                            className="tw-hidden lg:tw-block tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0"
+                            className="hidden lg:block mx-0 md:mx-4 my-4 md:my-0"
                         />
-                        <div className="tw-flex tw-flex-wrap">
-                            <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 ">
+                        <div className="flex flex-wrap">
+                            <div className="flex  justify-between w-full min-w-[280px] xl:w-[300px] pr-0 md:pr-4 py-4 md:py-8 ">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Prediction and Strategy
                                     </div>
                                     <div>
@@ -100,16 +100,16 @@ const HowHammerShiftWorks = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                             <hr
                                 style={{ borderColor: "black", opacity: "10%" }}
-                                className="tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0"
+                                className="mx-0 md:mx-4 my-4 md:my-0"
                             />
-                            <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 ">
+                            <div className="flex  justify-between w-full min-w-[280px] xl:w-[300px] pr-0 md:pr-4 py-4 md:py-8 ">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Community Engagement and Learning
                                     </div>
                                     <div>
@@ -124,7 +124,7 @@ const HowHammerShiftWorks = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                         </div>
@@ -140,22 +140,22 @@ export default HowHammerShiftWorks;
 export const LatestNews = () => {
     return (
         <div
-            className="tw-bg-[#DCE0D9] tw-text-[#0F1923] tw-w-full tw-flex tw-justify-center"
+            className="bg-[#DCE0D9] text-[#0F1923] w-full flex justify-center"
             id="how-hammershift-works"
         >
-            <div className="section-container tw-py-16 md:tw-py-[120px]">
+            <div className="section-container py-16 md:py-[120px]">
                 <header>
-                    <h1 className="tw-text-5xl tw-font-bold">
+                    <h1 className="text-5xl font-bold">
                         How HammerShift Works
                     </h1>
                 </header>
 
-                <section className="tw-mt-8">
-                    <div className="tw-flex tw-flex-col md:tw-flex-row">
-                        <div className="tw-flex tw-flex-wrap">
-                            <div className="tw-flex tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px]  tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8">
+                <section className="mt-8">
+                    <div className="flex flex-col md:flex-row">
+                        <div className="flex flex-wrap">
+                            <div className="flex justify-between w-full min-w-[280px] xl:w-[300px]  pr-0 md:pr-4 py-4 md:py-8">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Registration and Access
                                     </div>
                                     <div>
@@ -169,16 +169,16 @@ export const LatestNews = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                             <hr
                                 style={{ borderColor: "black", opacity: "10%" }}
-                                className="tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0"
+                                className="mx-0 md:mx-4 my-4 md:my-0"
                             />
-                            <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8">
+                            <div className="flex  justify-between w-full min-w-[280px] xl:w-[300px] pr-0 md:pr-4 py-4 md:py-8">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Live Auction Collaboration
                                     </div>
                                     <div>
@@ -192,18 +192,18 @@ export const LatestNews = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                         </div>
                         <hr
                             style={{ borderColor: "black", opacity: "10%" }}
-                            className="tw-hidden lg:tw-block tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0"
+                            className="hidden lg:block mx-0 md:mx-4 my-4 md:my-0"
                         />
-                        <div className="tw-flex tw-flex-wrap">
-                            <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 ">
+                        <div className="flex flex-wrap">
+                            <div className="flex  justify-between w-full min-w-[280px] xl:w-[300px] pr-0 md:pr-4 py-4 md:py-8 ">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Prediction and Strategy
                                     </div>
                                     <div>
@@ -218,16 +218,16 @@ export const LatestNews = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                             <hr
                                 style={{ borderColor: "black", opacity: "10%" }}
-                                className="tw-mx-0 md:tw-mx-4 tw-my-4 md:tw-my-0"
+                                className="mx-0 md:mx-4 my-4 md:my-0"
                             />
-                            <div className="tw-flex  tw-justify-between tw-w-full tw-min-w-[280px] xl:tw-w-[300px] tw-pr-0 md:tw-pr-4 tw-py-4 md:tw-py-8 ">
+                            <div className="flex  justify-between w-full min-w-[280px] xl:w-[300px] pr-0 md:pr-4 py-4 md:py-8 ">
                                 <div>
-                                    <div className="tw-text-[#53944F] tw-font-bold">
+                                    <div className="text-[#53944F] font-bold">
                                         Community Engagement and Learning
                                     </div>
                                     <div>
@@ -242,7 +242,7 @@ export const LatestNews = () => {
                                     width={80}
                                     height={80}
                                     alt="car"
-                                    className="tw-w-20 tw-h-20 tw-object-cover tw-ml-6"
+                                    className="w-20 h-20 object-cover ml-6"
                                 />
                             </div>
                         </div>
