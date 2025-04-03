@@ -36,7 +36,7 @@ const LivePage = () => {
 
   const NUM_DISPLAY = screenWidth < 1400 && screenWidth > 996 ? 2 : 3;
   return (
-    <div className="tw-flex tw-flex-col tw-justify-center">
+    <div className="flex flex-col justify-center">
       <section
         style={{
           backgroundImage:
@@ -44,11 +44,11 @@ const LivePage = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
-        className="tw-relative tw-flex tw-min-h-[50vh] tw-items-center tw-justify-center"
+        className="relative flex min-h-[50vh] items-center justify-center"
       >
-        <div className="tw-absolute tw-inset-0 tw-bg-[#0C1924]/70"></div>
-        <div className="tw-relative tw-z-10">
-          <div className="section-container tw-mx-auto tw-flex tw-min-h-[50vh] tw-w-full tw-flex-col tw-items-center tw-justify-center tw-gap-5">
+        <div className="absolute inset-0 bg-[#0C1924]/70"></div>
+        <div className="relative z-10">
+          <div className="section-container mx-auto flex min-h-[50vh] w-full flex-col items-center justify-center gap-5">
             {" "}
             {/* <Image
               alt="hammershift-logo"
@@ -61,23 +61,23 @@ const LivePage = () => {
       </section>
 
       {/* <LivePageCarousel /> */}
-      <section className="section-container tw-mx-auto tw-flex tw-justify-between max-lg:tw-flex-col">
+      <section className="section-container mx-auto flex justify-between max-lg:flex-col">
         {/* <LiveGames numberToDisplay={NUM_DISPLAY} />
         <MiniLeaderboard /> */}
         <GameModes />
       </section>
       {/* AI Agents */}
-      <section className="section-container tw-mx-auto tw-bg-[#0A1621] tw-px-4 tw-py-12">
+      <section className="section-container mx-auto bg-[#0A1621] px-4 py-12">
         <AIAgents />
       </section>
       {/* Live Auctions*/}
-      <section className="section-container tw-mx-auto tw-px-4 tw-py-12">
-        <div className="tw-mb-6 tw-flex tw-items-center tw-justify-between">
-          <h2 className="tw-text-3xl tw-font-bold">LIVE AUCTIONS</h2>
+      <section className="section-container mx-auto px-4 py-12">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-3xl font-bold">LIVE AUCTIONS</h2>
         </div>
         <LiveAuctions />
       </section>
-      {/* <div className="section-container tw-mx-auto tw-mb-10">
+      {/* <div className="section-container mx-auto mb-10">
         <Carousel />
       </div> */}
 
