@@ -35,27 +35,30 @@ const buttonVariants = cva(
 
 interface IProps {
   className: string;
-  variant:
-  | "default"
-  | "destructive"
-  | "outline"
-  | "secondary"
-  | "ghost"
-  | "link";
-  size: "default" | "sm" | "lg" | "icon";
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
+  size?: "default" | "sm" | "lg" | "icon";
   children: React.ReactNode;
+  [x: string]: any;
 }
 export const Button = ({
   className,
   variant = "default",
   size = "default",
   children,
+  props,
 }: IProps) => {
   return (
     <button
       className={cn(
         buttonVariants({ variant: variant, size: size, className })
       )}
+      {...props}
     >
       {children}
     </button>
