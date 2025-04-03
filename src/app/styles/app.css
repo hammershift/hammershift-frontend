@@ -288,12 +288,12 @@ option {
  //* animation loading
  * ----------------------------------------
  */
-svg {
+/* svg {
   stroke-dasharray: 269.7405090332031px;
   stroke-dashoffset: 0;
   animation: heartBeat 5s linear reverse infinite;
   transform: rotate(-90deg);
-}
+} */
 
 @keyframes heartBeat {
   50% {
@@ -358,7 +358,7 @@ svg {
 }
 @media screen and (min-width: 1536px) {
   .section-container {
-    width: 1440px;
+    width: 1536px;
   }
 }
 
