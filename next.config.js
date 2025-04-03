@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['bringatrailer.com', 'lh3.googleusercontent.com', 'pbs.twimg.com', 'images.unsplash.com'],
+        domains: ['bringatrailer.com', 'lh3.googleusercontent.com', 'pbs.twimg.com', 'images.unsplash.com', 'qtrypzzcjebvfcihiynt.supabase.co'],
     },
     async headers() {
         return [
