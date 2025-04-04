@@ -12,7 +12,7 @@ import { getCarsWithMostPot } from "@/lib/data";
 import React, { useEffect, useRef, useState } from "react";
 import Carousel from "./components/carousel";
 import AuctionHero from "./components/auction_hero";
-import { Button } from "./components/button";
+import { Button } from "./components/ui/button";
 import { GameModes } from "./components/game_modes";
 import { AIAgents } from "./components/ai_agents";
 import { LiveAuctions } from "./components/live_auctions";
@@ -175,9 +175,6 @@ const LivePage = () => {
             {/* <NewEraWagering /> */}
             {/* <HowHammerShiftWorks /> */}
             {/* <Subscribe /> */}
-            <div>
-                <Footer />
-            </div>
         </div>
     );
 };
