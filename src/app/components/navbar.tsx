@@ -33,12 +33,12 @@ import MyWagerPhotoThree from "../../../public/images/my-wagers-navbar/my-wager-
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
-  getAuctionTransactions,
-  getMyWagers,
-  getMyWatchlist,
-  getTournamentTransactions,
-  getUserPointsAndPlacing,
-  refundWager,
+    getAuctionTransactions,
+    getMyWagers,
+    getMyWatchlist,
+    getTournamentTransactions,
+    getUserPointsAndPlacing,
+    refundWager,
 } from "@/lib/data";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { BeatLoader, BounceLoader } from "react-spinners";
@@ -49,244 +49,255 @@ import { createPageUrl } from "./utils";
 // }
 
 type NavbarDropdownMenuProps =
-  | null
-  | "My Watchlist"
-  | "My Wagers"
-  | "My Account"
-  | "Search";
+    | null
+    | "My Watchlist"
+    | "My Wagers"
+    | "My Account"
+    | "Search";
 
 const Navbar = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const [searchedData, setSearchedData] = useState([]);
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchBoxDropDown, setSearchBoxDropDown] = useState(false);
-  const [dropWatchlist, setDropWatchlist] = useState(false);
-  const [dropMyWagers, setDropMyWagers] = useState(false);
-  const [dropMyAccount, setDropMyAccount] = useState(false);
-  const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
-  const [showClearSearchButton, setShowClearSearchButton] = useState(false);
-  const [navlinkIsOpen, setNavlinkIsOpen] = useState(false);
+    const router = useRouter();
+    const pathname = usePathname();
+    const [menuIsOpen, setMenuIsOpen] = useState(false);
+    const [searchedData, setSearchedData] = useState([]);
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [searchBoxDropDown, setSearchBoxDropDown] = useState(false);
+    const [dropWatchlist, setDropWatchlist] = useState(false);
+    const [dropMyWagers, setDropMyWagers] = useState(false);
+    const [dropMyAccount, setDropMyAccount] = useState(false);
+    const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
+    const [showClearSearchButton, setShowClearSearchButton] = useState(false);
+    const [navlinkIsOpen, setNavlinkIsOpen] = useState(false);
+    const logoUrl =
+        "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
+    const navBarList = [
+        { title: "Home", urlString: "" },
+        { title: "Free Play", urlString: "Free Play" },
+        { title: "Tournaments", urlString: "Tournaments" },
+        { title: "Guess the Hammer", urlString: "Price Is Right" },
+    ];
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            const searchBox = document.getElementById("search-box");
+            const searchBar = document.getElementById("search-bar-input");
 
-  const navBarList = [
-    { title: "Home", urlString: "" },
-    { title: "Free Play", urlString: "Free Play" },
-    { title: "Tournaments", urlString: "Tournaments" },
-    { title: "Guess the Hammer", urlString: "Price Is Right" },
-  ]
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const searchBox = document.getElementById("search-box");
-      const searchBar = document.getElementById("search-bar-input");
+            const watchlistButton = document.getElementById("watchlist-button");
+            const watchlistActiveButton = document.getElementById(
+                "active-watchlist-button"
+            );
+            const watchlistCompletedButton = document.getElementById(
+                "completed-watchlist-button"
+            );
 
-      const watchlistButton = document.getElementById("watchlist-button");
-      const watchlistActiveButton = document.getElementById(
-        "active-watchlist-button"
-      );
-      const watchlistCompletedButton = document.getElementById(
-        "completed-watchlist-button"
-      );
+            const myWagersButton = document.getElementById("mywagers-button");
+            const myWagersActiveButton = document.getElementById(
+                "active-mywagers-button"
+            );
+            const myWagersCompletedButton = document.getElementById(
+                "completed-mywagers-button"
+            );
+            const myWagersSortButton = document.getElementById("myWagers-sort");
+            const myWatchlistSortButton =
+                document.getElementById("myWatchlist-sort");
 
-      const myWagersButton = document.getElementById("mywagers-button");
-      const myWagersActiveButton = document.getElementById(
-        "active-mywagers-button"
-      );
-      const myWagersCompletedButton = document.getElementById(
-        "completed-mywagers-button"
-      );
-      const myWagersSortButton = document.getElementById("myWagers-sort");
-      const myWatchlistSortButton = document.getElementById("myWatchlist-sort");
+            const myAccountButton = document.getElementById("myaccount-button");
 
-      const myAccountButton = document.getElementById("myaccount-button");
+            if (
+                searchBox &&
+                !searchBox.contains(e.target as Node) &&
+                searchBar &&
+                !searchBar.contains(e.target as Node)
+            ) {
+                setSearchBoxDropDown(false);
+            }
 
-      if (
-        searchBox &&
-        !searchBox.contains(e.target as Node) &&
-        searchBar &&
-        !searchBar.contains(e.target as Node)
-      ) {
+            if (
+                watchlistButton &&
+                !watchlistButton.contains(e.target as Node) &&
+                watchlistActiveButton &&
+                !watchlistActiveButton.contains(e.target as Node) &&
+                watchlistCompletedButton &&
+                !watchlistCompletedButton.contains(e.target as Node) &&
+                myWatchlistSortButton &&
+                !myWatchlistSortButton.contains(e.target as Node)
+            ) {
+                setDropWatchlist(false);
+            }
+
+            if (
+                myWagersButton &&
+                !myWagersButton.contains(e.target as Node) &&
+                myWagersActiveButton &&
+                !myWagersActiveButton.contains(e.target as Node) &&
+                myWagersCompletedButton &&
+                !myWagersCompletedButton.contains(e.target as Node) &&
+                myWagersSortButton &&
+                !myWagersSortButton.contains(e.target as Node)
+            ) {
+                setDropMyWagers(false);
+            }
+
+            const claimRefundButtons = document.getElementsByClassName(
+                "claim-button"
+            ) as HTMLCollectionOf<HTMLElement>;
+
+            const isClaimButtonClicked = Array.from(claimRefundButtons).some(
+                (button) => button.contains(e.target as Node)
+            );
+
+            if (isClaimButtonClicked) {
+                setDropMyWagers(true);
+            }
+
+            if (
+                myAccountButton &&
+                !myAccountButton.contains(e.target as Node)
+            ) {
+                setDropMyAccount(false);
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, [
+        setSearchBoxDropDown,
+        setDropWatchlist,
+        setDropMyWagers,
+        setDropMyAccount,
+    ]);
+
+    useEffect(() => {
+        const fetchSearchedAuctions = async () => {
+            const response = await fetch(
+                `/api/cars/filter?search=${searchKeyword}`
+            );
+            const data = await response.json();
+            setSearchedData(data.cars);
+        };
+
+        if (searchKeyword.length) {
+            fetchSearchedAuctions();
+            setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
+        }
+    }, [searchKeyword]);
+
+    const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const response = await fetch(
+            `/api/cars/filter?search=${searchKeyword}`
+        );
+        const data = await response.json();
+
+        setSearchedData(data.cars);
         setSearchBoxDropDown(false);
-      }
-
-      if (
-        watchlistButton &&
-        !watchlistButton.contains(e.target as Node) &&
-        watchlistActiveButton &&
-        !watchlistActiveButton.contains(e.target as Node) &&
-        watchlistCompletedButton &&
-        !watchlistCompletedButton.contains(e.target as Node) &&
-        myWatchlistSortButton &&
-        !myWatchlistSortButton.contains(e.target as Node)
-      ) {
-        setDropWatchlist(false);
-      }
-
-      if (
-        myWagersButton &&
-        !myWagersButton.contains(e.target as Node) &&
-        myWagersActiveButton &&
-        !myWagersActiveButton.contains(e.target as Node) &&
-        myWagersCompletedButton &&
-        !myWagersCompletedButton.contains(e.target as Node) &&
-        myWagersSortButton &&
-        !myWagersSortButton.contains(e.target as Node)
-      ) {
-        setDropMyWagers(false);
-      }
-
-      const claimRefundButtons = document.getElementsByClassName(
-        "claim-button"
-      ) as HTMLCollectionOf<HTMLElement>;
-
-      const isClaimButtonClicked = Array.from(claimRefundButtons).some(
-        (button) => button.contains(e.target as Node)
-      );
-
-      if (isClaimButtonClicked) {
-        setDropMyWagers(true);
-      }
-
-      if (myAccountButton && !myAccountButton.contains(e.target as Node)) {
-        setDropMyAccount(false);
-      }
+        router.push("/auctions");
     };
 
-    document.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [
-    setSearchBoxDropDown,
-    setDropWatchlist,
-    setDropMyWagers,
-    setDropMyAccount,
-  ]);
-
-  useEffect(() => {
-    const fetchSearchedAuctions = async () => {
-      const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
-      const data = await response.json();
-      setSearchedData(data.cars);
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchKeyword(e.target.value);
+        setShowClearSearchButton(true);
     };
 
-    if (searchKeyword.length) {
-      fetchSearchedAuctions();
-      setSearchBoxDropDown(true);
-    } else {
-      setSearchBoxDropDown(false);
-    }
-  }, [searchKeyword]);
+    const handleInputClick = () => {
+        if (searchedData.length !== 0) {
+            setSearchBoxDropDown(true);
+        } else {
+            setSearchBoxDropDown(false);
+        }
+    };
 
-  const handleSumbit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const response = await fetch(`/api/cars/filter?search=${searchKeyword}`);
-    const data = await response.json();
+    const handleSearchClick = async (
+        carMake: string,
+        carModel: string,
+        carID: string
+    ) => {
+        router.push(`/auctions/car_view_page/${carID}`);
+        const searchInput = document.getElementById(
+            "search-bar-input"
+        ) as HTMLInputElement;
+        const dropdownSearchInput = document.getElementById(
+            "dropdown-search-bar"
+        ) as HTMLInputElement;
+        if (searchInput) {
+            searchInput.value = `${carMake} ${carModel}`;
+        }
+        if (dropdownSearchInput) {
+            dropdownSearchInput.value = `${carMake} ${carModel}`;
+        }
+        setSearchBoxDropDown(false);
+        setMenuIsOpen(false);
+    };
 
-    setSearchedData(data.cars);
-    setSearchBoxDropDown(false);
-    router.push("/auctions");
-  };
+    const closeMenu = () => {
+        setMenuIsOpen(false);
+    };
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
-    setShowClearSearchButton(true);
-  };
+    const closeNavLinkDropDownMenu = () => {
+        setNavlinkIsOpen(false);
+    };
 
-  const handleInputClick = () => {
-    if (searchedData.length !== 0) {
-      setSearchBoxDropDown(true);
-    } else {
-      setSearchBoxDropDown(false);
-    }
-  };
+    const clearSearchInputs = () => {
+        const searchInput = document.getElementById(
+            "search-bar-input"
+        ) as HTMLInputElement;
+        const dropDownSearchInput = document.getElementById(
+            "dropdown-search-bar"
+        ) as HTMLInputElement;
 
-  const handleSearchClick = async (
-    carMake: string,
-    carModel: string,
-    carID: string
-  ) => {
-    router.push(`/auctions/car_view_page/${carID}`);
-    const searchInput = document.getElementById(
-      "search-bar-input"
-    ) as HTMLInputElement;
-    const dropdownSearchInput = document.getElementById(
-      "dropdown-search-bar"
-    ) as HTMLInputElement;
-    if (searchInput) {
-      searchInput.value = `${carMake} ${carModel}`;
-    }
-    if (dropdownSearchInput) {
-      dropdownSearchInput.value = `${carMake} ${carModel}`;
-    }
-    setSearchBoxDropDown(false);
-    setMenuIsOpen(false);
-  };
+        if (searchInput) searchInput.value = "";
 
-  const closeMenu = () => {
-    setMenuIsOpen(false);
-  };
+        if (dropDownSearchInput) dropDownSearchInput.value = "";
 
-  const closeNavLinkDropDownMenu = () => {
-    setNavlinkIsOpen(false);
-  };
+        setShowClearSearchButton(false);
+        setSearchedData([]);
+    };
 
-  const clearSearchInputs = () => {
-    const searchInput = document.getElementById(
-      "search-bar-input"
-    ) as HTMLInputElement;
-    const dropDownSearchInput = document.getElementById(
-      "dropdown-search-bar"
-    ) as HTMLInputElement;
+    const closeMyAccountMenu = () => {
+        setMyAccountMenuOpen(false);
+    };
 
-    if (searchInput) searchInput.value = "";
+    const { data: session } = useSession();
+    const isLoggedIn = !!session;
 
-    if (dropDownSearchInput) dropDownSearchInput.value = "";
-
-    setShowClearSearchButton(false);
-    setSearchedData([]);
-  };
-
-  const closeMyAccountMenu = () => {
-    setMyAccountMenuOpen(false);
-  };
-
-  const { data: session } = useSession();
-  const isLoggedIn = !!session;
-
-  return (
-    <div>
-      {isLoggedIn ? (
-        <div className=" flex px-4 md:px-16 w-full justify-between py-3 border-b-[1px] border-b-[#1b252e]">
-          <div className=" flex items-center justify-between">
-            <div className="pr-4">
-              <Link
-                onClick={() => {
-                  closeMenu();
-                  closeMyAccountMenu();
-                  closeNavLinkDropDownMenu();
-                  document.body.classList.remove("stop-scrolling");
-                }}
-                href="/"
-              >
-                <Image
-                  src={Logo}
-                  width={176}
-                  height={64}
-                  alt="logo"
-                  className="hidden sm:block w-auto h-auto"
-                />
-                <Image
+    return (
+        <div className="section-container mx-auto flex items-center justify-center">
+            {isLoggedIn ? (
+                <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
+                    <div className="flex items-center justify-between">
+                        <div className="pr-4">
+                            <Link
+                                onClick={() => {
+                                    closeMenu();
+                                    closeMyAccountMenu();
+                                    closeNavLinkDropDownMenu();
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
+                                }}
+                                href="/"
+                            >
+                                <Image
+                                    src={logoUrl}
+                                    width={330}
+                                    height={32}
+                                    alt="Velocity Markets"
+                                    className="h-auto w-auto sm:block"
+                                />
+                                {/* <Image
                   src={LogoSmall}
                   width={32}
                   height={32}
                   alt="logo"
                   className=" block sm:hidden w-auto h-auto"
-                />
-              </Link>
-            </div>
-            {/* <Link
+                /> */}
+                            </Link>
+                        </div>
+                        {/* <Link
               onClick={() => {
                 closeMenu()
                 closeMyAccountMenu()
@@ -304,7 +315,7 @@ const Navbar = () => {
               </div>
             </Link> */}
 
-            {/* <Link
+                        {/* <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
@@ -320,7 +331,7 @@ const Navbar = () => {
                 DISCOVER
               </div>
             </Link> */}
-            {/* <Link
+                        {/* <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
@@ -336,7 +347,7 @@ const Navbar = () => {
                 AUCTIONS
               </div>
             </Link> */}
-            {/* <Link
+                        {/* <Link
               onClick={() => {
                 closeMenu()
                 closeMyAccountMenu()
@@ -353,7 +364,7 @@ const Navbar = () => {
                 TOURNAMENTS
               </div>
             </Link> */}
-            {/* <div>
+                        {/* <div>
               <div className="flex">
                 <Link
                   onClick={() => {
@@ -521,8 +532,8 @@ const Navbar = () => {
                 )}
               </div>
             </div> */}
-          </div>
-          {/* <div className="relative max-w-[535px] w-full hidden lg:block">
+                    </div>
+                    {/* <div className="relative max-w-[535px] w-full hidden lg:block">
             <form
               onSubmit={handleSumbit}
               autoComplete="off"
@@ -570,134 +581,142 @@ const Navbar = () => {
               />
             )}
           </div> */}
-          {/* Buttons for logged in accounts */}
-          <div className="hidden sm:flex justify-between items-center w-[136px] md:visible relative">
-            <button
-              id="watchlist-button"
-              className="relative"
-              onClick={() => {
-                setDropWatchlist((prev) => !prev);
-                setDropMyAccount(false);
-                setDropMyWagers(false);
-              }}
-            >
-              <Image
-                src={WatchlistIcon}
-                width={24}
-                height={24}
-                alt="watchlist"
-                className="w-[24px] h-[24px]"
-              />
-            </button>
-            {dropWatchlist && <MyWatchlistDropdownMenu />}
-            <button
-              id="mywagers-button"
-              onClick={() => {
-                setDropMyWagers((prev) => !prev);
-                setDropMyAccount(false);
-                setDropWatchlist(false);
-              }}
-            >
-              <Image
-                src={WagersIcon}
-                width={24}
-                height={24}
-                alt="wagers"
-                className="w-[24px] h-[24px]"
-              />
-            </button>
-            {dropMyWagers && <MyWagersDropdownMenu />}
-            <button
-              id="myaccount-button"
-              className="relative"
-              onClick={() => {
-                setDropMyAccount((prev) => !prev);
-                setDropWatchlist(false);
-                setDropMyWagers(false);
-              }}
-            >
-              <Image
-                src={AccountIcon}
-                width={24}
-                height={24}
-                alt="account"
-                className="w-[24px] h-[24px]"
-              />
-              {dropMyAccount && <MyAccountDropdownMenu />}
-            </button>
-          </div>
-          <div className="sm:hidden">
-            <button
-              onClick={() => {
-                setMyAccountMenuOpen((prev) => !prev);
-                setMenuIsOpen(false);
-                document.body.classList.remove("stop-scrolling");
-              }}
-              className="mr-4"
-            >
-              <Image
-                src={AccountIcon}
-                width={24}
-                height={24}
-                alt="account"
-                className="w-[24px] h-[24px]"
-              />
-            </button>
-            <button
-              onClick={() => {
-                setMenuIsOpen((prev) => !prev);
-                setMyAccountMenuOpen(false);
-                closeNavLinkDropDownMenu();
-                if (!menuIsOpen) {
-                  document.body.classList.add("stop-scrolling");
-                } else {
-                  document.body.classList.remove("stop-scrolling");
-                }
-              }}
-            >
-              {menuIsOpen ? (
-                <Image
-                  src={CancelIcon}
-                  width={24}
-                  height={24}
-                  alt="menu"
-                  className=" w-auto h-auto"
-                />
-              ) : (
-                <Image
-                  src={HamburgerMenu}
-                  width={24}
-                  height={24}
-                  alt="menu"
-                  className=" w-auto h-auto"
-                />
-              )}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className=" flex px-4 md:px-6 2xl:px-36 w-full justify-between py-3 border-b-[1px] border-b-[#1b252e]">
-          <div className=" flex items-center justify-between">
-            <div className="pr-4">
-              <Link
-                onClick={() => {
-                  closeMenu();
-                  closeMyAccountMenu();
-                  closeNavLinkDropDownMenu();
-                  document.body.classList.remove("stop-scrolling");
-                }}
-                href="/"
-              >
-                <Image
-                  src={Logo}
-                  width={352}
-                  height={64}
-                  alt="logo"
-                  className="block w-auto h-auto"
-                />
-              </Link>
-            </div>
-            {/* <Link
+                    {/* Buttons for logged in accounts */}
+                    <div className="relative hidden w-[136px] items-center justify-between sm:flex md:visible">
+                        <button
+                            id="watchlist-button"
+                            className="relative"
+                            onClick={() => {
+                                setDropWatchlist((prev) => !prev);
+                                setDropMyAccount(false);
+                                setDropMyWagers(false);
+                            }}
+                        >
+                            <Image
+                                src={WatchlistIcon}
+                                width={24}
+                                height={24}
+                                alt="watchlist"
+                                className="h-[24px] w-[24px]"
+                            />
+                        </button>
+                        {dropWatchlist && <MyWatchlistDropdownMenu />}
+                        <button
+                            id="mywagers-button"
+                            onClick={() => {
+                                setDropMyWagers((prev) => !prev);
+                                setDropMyAccount(false);
+                                setDropWatchlist(false);
+                            }}
+                        >
+                            <Image
+                                src={WagersIcon}
+                                width={24}
+                                height={24}
+                                alt="wagers"
+                                className="h-[24px] w-[24px]"
+                            />
+                        </button>
+                        {dropMyWagers && <MyWagersDropdownMenu />}
+                        <button
+                            id="myaccount-button"
+                            className="relative"
+                            onClick={() => {
+                                setDropMyAccount((prev) => !prev);
+                                setDropWatchlist(false);
+                                setDropMyWagers(false);
+                            }}
+                        >
+                            <Image
+                                src={AccountIcon}
+                                width={24}
+                                height={24}
+                                alt="account"
+                                className="h-[24px] w-[24px]"
+                            />
+                            {dropMyAccount && <MyAccountDropdownMenu />}
+                        </button>
+                    </div>
+                    <div className="sm:hidden">
+                        <button
+                            onClick={() => {
+                                setMyAccountMenuOpen((prev) => !prev);
+                                setMenuIsOpen(false);
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                            }}
+                            className="mr-4"
+                        >
+                            <Image
+                                src={AccountIcon}
+                                width={24}
+                                height={24}
+                                alt="account"
+                                className="h-[24px] w-[24px]"
+                            />
+                        </button>
+                        <button
+                            onClick={() => {
+                                setMenuIsOpen((prev) => !prev);
+                                setMyAccountMenuOpen(false);
+                                closeNavLinkDropDownMenu();
+                                if (!menuIsOpen) {
+                                    document.body.classList.add(
+                                        "stop-scrolling"
+                                    );
+                                } else {
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
+                                }
+                            }}
+                        >
+                            {menuIsOpen ? (
+                                <Image
+                                    src={CancelIcon}
+                                    width={24}
+                                    height={24}
+                                    alt="menu"
+                                    className="h-auto w-auto"
+                                />
+                            ) : (
+                                <Image
+                                    src={HamburgerMenu}
+                                    width={24}
+                                    height={24}
+                                    alt="menu"
+                                    className="h-auto w-auto"
+                                />
+                            )}
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] py-3">
+                    <div className="flex items-center justify-between">
+                        <div className="pr-4">
+                            <Link
+                                onClick={() => {
+                                    closeMenu();
+                                    closeMyAccountMenu();
+                                    closeNavLinkDropDownMenu();
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
+                                }}
+                                href="/"
+                            >
+                                <Image
+                                    src={logoUrl}
+                                    width={330}
+                                    height={32}
+                                    alt="Velocity Markets"
+                                    className="h-auto w-auto sm:block"
+                                />
+                            </Link>
+                        </div>
+                        {/* <Link
               onClick={() => {
                 closeMenu()
                 closeMyAccountMenu()
@@ -714,7 +733,7 @@ const Navbar = () => {
                 LIVE
               </div>
             </Link> */}
-            {/* <Link
+                        {/* <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
@@ -730,7 +749,7 @@ const Navbar = () => {
                 DISCOVER
               </div>
             </Link> */}
-            {/* <Link
+                        {/* <Link
               onClick={() => {
                 closeMenu();
                 closeMyAccountMenu();
@@ -746,7 +765,7 @@ const Navbar = () => {
                 AUCTIONS
               </div>
             </Link> */}
-            {/* <Link
+                        {/* <Link
               onClick={() => {
                 closeMenu()
                 closeMyAccountMenu()
@@ -763,7 +782,7 @@ const Navbar = () => {
                 TOURNAMENTS
               </div>
             </Link> */}
-            {/* <div>
+                        {/* <div>
               <div className="flex">
                 <Link
                   onClick={() => {
@@ -914,23 +933,21 @@ const Navbar = () => {
                 )}
               </div>
             </div> */}
-          </div>
-          <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4 justify-between">
-            <nav className="flex items-center justify-between space-x-8">
-              {
-                navBarList.map((data, index) => (
-                  <Link
-                    key={index}
-                    href={createPageUrl(data.urlString)}
-                    className="hover:text-[#F2CA16] transition-colors"
-                  >
-                    {data.title.toUpperCase()}
-                  </Link>
-                ))
-              }
-            </nav>
-          </div>
-          {/* <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4">
+                    </div>
+                    <div className="relative mr-4 hidden max-w-[535px] flex-1 justify-between lg:flex xl:w-full">
+                        <nav className="flex items-center justify-between space-x-8">
+                            {navBarList.map((data, index) => (
+                                <Link
+                                    key={index}
+                                    href={createPageUrl(data.urlString)}
+                                    className="transition-colors hover:text-[#F2CA16]"
+                                >
+                                    {data.title.toUpperCase()}
+                                </Link>
+                            ))}
+                        </nav>
+                    </div>
+                    {/* <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4">
                         <form
                             onSubmit={handleSumbit}
                             autoComplete="off"
@@ -978,109 +995,113 @@ const Navbar = () => {
                             />
                         )}
                     </div> */}
-          <div className="flex items-center">
-            <Link href="/login_page">
-              <button className="btn-white mx-2  hover:bg-gold-200 hidden md:block ">
-                LOGIN
-              </button>
-            </Link>
-            <Link href="/create_account">
-              <button className="btn-white  hover:bg-gold-200 hidden md:block ">
-                SIGN UP
-              </button>
-            </Link>
-            <button
-              onClick={() => {
-                setMenuIsOpen((prev) => !prev);
-                setMyAccountMenuOpen(false);
-                if (!menuIsOpen) {
-                  document.body.classList.add("stop-scrolling");
-                } else {
-                  document.body.classList.remove("stop-scrolling");
-                }
-              }}
-            >
-              {menuIsOpen ? (
-                <Image
-                  src={CancelIcon}
-                  width={24}
-                  height={24}
-                  alt="menu"
-                  className="md:hidden w-auto h-auto"
+                    <div className="flex items-center">
+                        <Link href="/login_page">
+                            <button className="btn-white mx-2 hidden hover:bg-gold-200 md:block">
+                                LOGIN
+                            </button>
+                        </Link>
+                        <Link href="/create_account">
+                            <button className="btn-white hidden hover:bg-gold-200 md:block">
+                                SIGN UP
+                            </button>
+                        </Link>
+                        <button
+                            onClick={() => {
+                                setMenuIsOpen((prev) => !prev);
+                                setMyAccountMenuOpen(false);
+                                if (!menuIsOpen) {
+                                    document.body.classList.add(
+                                        "stop-scrolling"
+                                    );
+                                } else {
+                                    document.body.classList.remove(
+                                        "stop-scrolling"
+                                    );
+                                }
+                            }}
+                        >
+                            {menuIsOpen ? (
+                                <Image
+                                    src={CancelIcon}
+                                    width={24}
+                                    height={24}
+                                    alt="menu"
+                                    className="h-auto w-auto md:hidden"
+                                />
+                            ) : (
+                                <Image
+                                    src={HamburgerMenu}
+                                    width={24}
+                                    height={24}
+                                    alt="menu"
+                                    className="h-auto w-auto md:hidden"
+                                />
+                            )}
+                        </button>
+                    </div>
+                </div>
+            )}
+            {menuIsOpen && (
+                <DropdownMenu
+                    searchedData={searchedData}
+                    isLoggedIn={isLoggedIn}
+                    handleSubmit={handleSumbit}
+                    handleChange={handleChange}
+                    onSearchClick={handleSearchClick}
+                    searchBoxDropDown={searchBoxDropDown}
+                    setSearchBoxDropDown={setSearchBoxDropDown}
+                    handleInputClick={handleInputClick}
+                    closeMenu={closeMenu}
+                    showClearSearchButton={showClearSearchButton}
+                    clearSearchInputs={clearSearchInputs}
                 />
-              ) : (
-                <Image
-                  src={HamburgerMenu}
-                  width={24}
-                  height={24}
-                  alt="menu"
-                  className="md:hidden w-auto h-auto"
+            )}
+            {myAccountMenuOpen && (
+                <MyAccountMenu
+                    closeMyAccountMenu={closeMyAccountMenu}
+                    isLoggedIn={isLoggedIn}
                 />
-              )}
-            </button>
-          </div>
+            )}
         </div>
-      )}
-      {menuIsOpen && (
-        <DropdownMenu
-          searchedData={searchedData}
-          isLoggedIn={isLoggedIn}
-          handleSubmit={handleSumbit}
-          handleChange={handleChange}
-          onSearchClick={handleSearchClick}
-          searchBoxDropDown={searchBoxDropDown}
-          setSearchBoxDropDown={setSearchBoxDropDown}
-          handleInputClick={handleInputClick}
-          closeMenu={closeMenu}
-          showClearSearchButton={showClearSearchButton}
-          clearSearchInputs={clearSearchInputs}
-        />
-      )}
-      {myAccountMenuOpen && (
-        <MyAccountMenu
-          closeMyAccountMenu={closeMyAccountMenu}
-          isLoggedIn={isLoggedIn}
-        />
-      )}
-    </div>
-  );
+    );
 };
 export default Navbar;
 
 interface DropdownMenuProps {
-  isLoggedIn: boolean;
-  searchBoxDropDown: boolean;
-  closeMenu: () => void;
-  setSearchBoxDropDown: React.Dispatch<React.SetStateAction<boolean>>;
-  searchedData: SearchDatas[];
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearchClick: (carMake: string, carModel: string, carID: string) => void;
-  handleInputClick: () => void;
-  showClearSearchButton: boolean;
-  clearSearchInputs: () => void;
+    isLoggedIn: boolean;
+    searchBoxDropDown: boolean;
+    closeMenu: () => void;
+    setSearchBoxDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+    searchedData: SearchDatas[];
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onSearchClick: (carMake: string, carModel: string, carID: string) => void;
+    handleInputClick: () => void;
+    showClearSearchButton: boolean;
+    clearSearchInputs: () => void;
 }
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({
-  isLoggedIn,
-  searchedData,
-  handleSubmit,
-  handleChange,
-  onSearchClick,
-  searchBoxDropDown,
-  setSearchBoxDropDown,
-  handleInputClick,
-  closeMenu,
-  showClearSearchButton,
-  clearSearchInputs,
+    isLoggedIn,
+    searchedData,
+    handleSubmit,
+    handleChange,
+    onSearchClick,
+    searchBoxDropDown,
+    setSearchBoxDropDown,
+    handleInputClick,
+    closeMenu,
+    showClearSearchButton,
+    clearSearchInputs,
 }) => {
-  const router = useRouter();
-  const [dropWatchlistOrWagers, setDropWatchlistOrWagers] = useState("");
+    const router = useRouter();
+    const [dropWatchlistOrWagers, setDropWatchlistOrWagers] = useState("");
 
-  return (
-    <div className="drop-down-custom-height slide-in-top absolute z-50 flex-col text-white bg-[#0F1923] p-4 w-full ">
-      <div className="relative">
-        {/* <form
+    return (
+        <div className="drop-down-custom-height slide-in-top absolute z-50 w-full flex-col bg-[#0F1923] p-4 text-white">
+            <div className="relative">
+                {/* <form
                     autoComplete="off"
                     onSubmit={handleSubmit}
                     className="bg-shade-100 flex justify-between p-2 rounded my-4"
@@ -1116,2458 +1137,2577 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                         />
                     )}
                 </form> */}
-        {/* {searchBoxDropDown && (
+                {/* {searchBoxDropDown && (
                     <SearchDropDown
                         searchedData={searchedData}
                         onSearchClick={onSearchClick}
                     />
                 )} */}
-      </div>
-      {!isLoggedIn ? null : ( // </> //   </Link> //     <div>LEADERBOARD</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/leaderboard" //   <Link //   </Link> //     <div>ABOUT</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/about_page" //   <Link //   </Link> //     <div>TOURNAMENTS</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="flex py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
-        <>
-          <button
-            onClick={() => setDropWatchlistOrWagers("watchlist")}
-            className={`flex py-2 w-full ${dropWatchlistOrWagers === "watchlist" && "font-bold"
-              }`}
-          >
-            <Image
-              src={WatchlistIcon}
-              width={24}
-              height={24}
-              alt="watchlist"
-              className="w-[24px] h-[24px]"
-            />
-            <div className="ml-4">MY WATCHLIST</div>
-          </button>
-          {dropWatchlistOrWagers === "watchlist" ? (
-            <MobileMyWatchlist closeMenu={closeMenu} />
-          ) : null}
-          <button
-            onClick={() => setDropWatchlistOrWagers("wagers")}
-            className={`flex py-2 w-full ${dropWatchlistOrWagers === "wagers" && "font-bold"
-              }`}
-          >
-            <Image
-              src={WagersIcon}
-              width={24}
-              height={24}
-              alt="watchlist"
-              className="w-[24px] h-[24px]"
-            />
-            <div className="ml-4">MY WAGERS</div>
-          </button>
-          {dropWatchlistOrWagers === "wagers" ? (
-            <MobileMyWagers closeMenu={closeMenu} />
-          ) : null}
-        </>
-      )}
-      <div className="mt-4">
-        {!isLoggedIn && (
-          <>
-            <button
-              onClick={() => {
-                router.push("/login_page");
-                document.body.classList.remove("stop-scrolling");
-                closeMenu();
-              }}
-              className="btn-white w-full my-2"
-            >
-              LOGIN
-            </button>
-            <button
-              onClick={() => {
-                router.push("/create_account");
-                document.body.classList.remove("stop-scrolling");
-                closeMenu();
-              }}
-              className="btn-white w-full"
-            >
-              CREATE ACCOUNT
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  );
+            </div>
+            {!isLoggedIn ? null : ( // </> //   </Link> //     <div>LEADERBOARD</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/leaderboard" //   <Link //   </Link> //     <div>ABOUT</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/about_page" //   <Link //   </Link> //     <div>TOURNAMENTS</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/tournaments" //   <Link //   </Link> //     <div>AUCTIONS</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/auctions" //   <Link //   </Link> */} //     <div>LIVE</div> //   > //     className="flex py-2" //     }} //       document.body.classList.remove("stop-scrolling"); //       closeMenu(); //     onClick={() => { //     href="/live" //   {/* <Link //   </Link> //     <div>DISCOVER</div> //   > //     className="flex py-2" //     onClick={closeMenu} //     href="/discover" //   <Link // <>
+                <>
+                    <button
+                        onClick={() => setDropWatchlistOrWagers("watchlist")}
+                        className={`flex w-full py-2 ${
+                            dropWatchlistOrWagers === "watchlist" && "font-bold"
+                        }`}
+                    >
+                        <Image
+                            src={WatchlistIcon}
+                            width={24}
+                            height={24}
+                            alt="watchlist"
+                            className="h-[24px] w-[24px]"
+                        />
+                        <div className="ml-4">MY WATCHLIST</div>
+                    </button>
+                    {dropWatchlistOrWagers === "watchlist" ? (
+                        <MobileMyWatchlist closeMenu={closeMenu} />
+                    ) : null}
+                    <button
+                        onClick={() => setDropWatchlistOrWagers("wagers")}
+                        className={`flex w-full py-2 ${
+                            dropWatchlistOrWagers === "wagers" && "font-bold"
+                        }`}
+                    >
+                        <Image
+                            src={WagersIcon}
+                            width={24}
+                            height={24}
+                            alt="watchlist"
+                            className="h-[24px] w-[24px]"
+                        />
+                        <div className="ml-4">MY WAGERS</div>
+                    </button>
+                    {dropWatchlistOrWagers === "wagers" ? (
+                        <MobileMyWagers closeMenu={closeMenu} />
+                    ) : null}
+                </>
+            )}
+            <div className="mt-4">
+                {!isLoggedIn && (
+                    <>
+                        <button
+                            onClick={() => {
+                                router.push("/login_page");
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                                closeMenu();
+                            }}
+                            className="btn-white my-2 w-full"
+                        >
+                            LOGIN
+                        </button>
+                        <button
+                            onClick={() => {
+                                router.push("/create_account");
+                                document.body.classList.remove(
+                                    "stop-scrolling"
+                                );
+                                closeMenu();
+                            }}
+                            className="btn-white w-full"
+                        >
+                            CREATE ACCOUNT
+                        </button>
+                    </>
+                )}
+            </div>
+        </div>
+    );
 };
 
 interface MyAccountMenuProps {
-  isLoggedIn: boolean;
-  closeMyAccountMenu: () => void;
+    isLoggedIn: boolean;
+    closeMyAccountMenu: () => void;
 }
 
 const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
-  isLoggedIn,
-  closeMyAccountMenu,
+    isLoggedIn,
+    closeMyAccountMenu,
 }) => {
-  const [walletBalance, setWalletBalance] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const { data: session } = useSession();
-  const router = useRouter();
+    const [walletBalance, setWalletBalance] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: session } = useSession();
+    const router = useRouter();
 
-  useEffect(() => {
-    const fetchWalletBalance = async () => {
-      if (session) {
-        setIsLoading(true);
+    useEffect(() => {
+        const fetchWalletBalance = async () => {
+            if (session) {
+                setIsLoading(true);
+                try {
+                    const res = await fetch("/api/wallet", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        setWalletBalance(data.balance);
+                    } else {
+                        console.error(
+                            "Failed to fetch wallet balance:",
+                            data.message
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error fetching wallet balance:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchWalletBalance();
+    }, [session]);
+
+    const handleSignOut = async () => {
         try {
-          const res = await fetch("/api/wallet", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-
-          const data = await res.json();
-          if (res.ok) {
-            setWalletBalance(data.balance);
-          } else {
-            console.error("Failed to fetch wallet balance:", data.message);
-          }
+            await signOut({ redirect: false });
+            router.push("/");
+            console.log("User successfully logged out");
         } catch (error) {
-          console.error("Error fetching wallet balance:", error);
-        } finally {
-          setIsLoading(false);
+            console.error("Error during sign out:", error);
         }
-      }
     };
 
-    fetchWalletBalance();
-  }, [session]);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut({ redirect: false });
-      router.push("/");
-      console.log("User successfully logged out");
-    } catch (error) {
-      console.error("Error during sign out:", error);
-    }
-  };
-
-  return (
-    <div className="slide-in-top absolute z-50 flex flex-col text-white bg-[#1A2C3D] p-4 w-full h-auto">
-      <div className="text-lg font-bold p-1.5">MY ACCOUNT</div>
-      {isLoading ? (
-        <div className="px-6 w-full flex justify-center items-center">
-          <BeatLoader color="#696969" size={10} />
+    return (
+        <div className="slide-in-top absolute z-50 flex h-auto w-full flex-col bg-[#1A2C3D] p-4 text-white">
+            <div className="p-1.5 text-lg font-bold">MY ACCOUNT</div>
+            {isLoading ? (
+                <div className="flex w-full items-center justify-center px-6">
+                    <BeatLoader color="#696969" size={10} />
+                </div>
+            ) : typeof walletBalance === "number" ? (
+                <div className="w-full">
+                    <div className="flex w-full items-center gap-6 rounded bg-[#49C74233] px-6 py-4">
+                        <Image
+                            src={Wallet}
+                            width={32}
+                            height={32}
+                            alt="wallet icon"
+                            className="h-8 w-8"
+                        />
+                        <div className="flex grow flex-col items-start">
+                            <span className="py-1 text-xl font-bold">
+                                ${walletBalance.toFixed(2)}
+                            </span>
+                            <span className="text-[#49C742]">Withdraw</span>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="w-full px-6">Error fetching wallet balance</div>
+            )}
+            <Link
+                href="/profile"
+                className="w-full p-1.5 hover:bg-white/5"
+                onClick={closeMyAccountMenu}
+            >
+                Profile
+            </Link>
+            <Link
+                href="/profile"
+                className="w-full p-1.5 hover:bg-white/5"
+                onClick={closeMyAccountMenu}
+            >
+                Settings
+            </Link>
+            <button
+                onClick={() => {
+                    handleSignOut();
+                    closeMyAccountMenu();
+                }}
+                className="w-full p-1.5 text-left hover:bg-white/5"
+            >
+                Logout
+            </button>
         </div>
-      ) : typeof walletBalance === "number" ? (
-        <div className="w-full">
-          <div className="bg-[#49C74233] w-full px-6 py-4 rounded flex items-center gap-6">
-            <Image
-              src={Wallet}
-              width={32}
-              height={32}
-              alt="wallet icon"
-              className="w-8 h-8"
-            />
-            <div className="flex flex-col items-start grow">
-              <span className="font-bold text-xl py-1">
-                ${walletBalance.toFixed(2)}
-              </span>
-              <span className="text-[#49C742]">Withdraw</span>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="px-6 w-full">Error fetching wallet balance</div>
-      )}
-      <Link
-        href="/profile"
-        className="p-1.5 hover:bg-white/5 w-full"
-        onClick={closeMyAccountMenu}
-      >
-        Profile
-      </Link>
-      <Link
-        href="/profile"
-        className="p-1.5 hover:bg-white/5 w-full"
-        onClick={closeMyAccountMenu}
-      >
-        Settings
-      </Link>
-      <button
-        onClick={() => {
-          handleSignOut();
-          closeMyAccountMenu();
-        }}
-        className="p-1.5 text-left hover:bg-white/5 w-full"
-      >
-        Logout
-      </button>
-    </div>
-  );
+    );
 };
 
 // Dropdown Menus
 const MyWatchlistDropdownMenu = () => {
-  const router = useRouter();
-  const [activeOrCompleted, setActiveOrCompleted] = useState("active");
-  const [activeWatchlist, setActiveWatchlist] = useState([]);
-  const [completedWatchlist, setCompletedWatchlist] = useState([]);
-  const [activeTournamentWatchlist, setActiveTournamentWatchlist] = useState(
-    []
-  );
-  const [completedTournamentWatchlist, setCompletedTournamentWatchlist] =
-    useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
-  const [wagerSort, setWagerSort] = useState(words[0]);
+    const router = useRouter();
+    const [activeOrCompleted, setActiveOrCompleted] = useState("active");
+    const [activeWatchlist, setActiveWatchlist] = useState([]);
+    const [completedWatchlist, setCompletedWatchlist] = useState([]);
+    const [activeTournamentWatchlist, setActiveTournamentWatchlist] = useState(
+        []
+    );
+    const [completedTournamentWatchlist, setCompletedTournamentWatchlist] =
+        useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
+    const [wagerSort, setWagerSort] = useState(words[0]);
 
-  useEffect(() => {
-    const fetchWatchlist = async () => {
-      const data = await getMyWatchlist();
-      const currentDate = new Date();
+    useEffect(() => {
+        const fetchWatchlist = async () => {
+            const data = await getMyWatchlist();
+            const currentDate = new Date();
 
-      if (!data.watchlist || data.watchlist.length !== 0) {
-        const completed = data.watchlist.filter((watchlist: any) => {
-          const auctionDeadline = new Date(watchlist.auctionDeadline);
-          return auctionDeadline < currentDate;
-        });
-        const active = data.watchlist.filter((watchlist: any) => {
-          const auctionDeadline = new Date(watchlist.auctionDeadline);
-          return auctionDeadline >= currentDate;
-        });
-        const completedTournaments = data.tournament_watchlist.filter(
-          (watchlist: any) => {
-            const auctionDeadline = new Date(watchlist.endTime);
-            return auctionDeadline < currentDate;
-          }
-        );
+            if (!data.watchlist || data.watchlist.length !== 0) {
+                const completed = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
+                const completedTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline < currentDate;
+                    }
+                );
 
-        const activeTournaments = data.tournament_watchlist.filter(
-          (watchlist: any) => {
-            const auctionDeadline = new Date(watchlist.endTime);
-            return auctionDeadline >= currentDate;
-          }
-        );
+                const activeTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
-        setActiveWatchlist(active);
-        setCompletedWatchlist(completed);
-        setActiveTournamentWatchlist(activeTournaments);
-        setCompletedTournamentWatchlist(completedTournaments);
-      }
-      setIsLoading(false);
+                setActiveWatchlist(active);
+                setCompletedWatchlist(completed);
+                setActiveTournamentWatchlist(activeTournaments);
+                setCompletedTournamentWatchlist(completedTournaments);
+            }
+            setIsLoading(false);
+        };
+        fetchWatchlist();
+    }, []);
+
+    const handleClick = () => {
+        const currentIndex = words.indexOf(wagerSort);
+        const nextIndex = (currentIndex + 1) % words.length;
+        setWagerSort(words[nextIndex]);
     };
-    fetchWatchlist();
-  }, []);
 
-  const handleClick = () => {
-    const currentIndex = words.indexOf(wagerSort);
-    const nextIndex = (currentIndex + 1) % words.length;
-    setWagerSort(words[nextIndex]);
-  };
-
-  return (
-    <div className="watchlist-menu absolute z-30 right-[112px] top-10 w-[512px] max-h-[784px] overflow-auto bg-[#1A2C3D] rounded pt-6 pb-2 shadow-xl shadow-black">
-      <div className="px-6 flex flex-col gap-4">
-        <div className="flex justify-between">
-          <div className="font-bold text-lg text-left">
-            MY WATCHLIST
-          </div>
-          {(activeWatchlist.length !== 0 ||
-            completedWatchlist.length !== 0 ||
-            activeTournamentWatchlist.length !== 0 ||
-            completedTournamentWatchlist.length !== 0) && (
-              <button
-                id="myWatchlist-sort"
-                type="button"
-                className="rounded-sm w-[140px] text-center px-2 py-1.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#0f1923] truncate"
-                onClick={handleClick}
-              >
-                {wagerSort}
-              </button>
-            )}
-        </div>
-        <div className="flex">
-          <button
-            id="active-watchlist-button"
-            onClick={() => setActiveOrCompleted("active")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white flex justify-center items-center gap-2"
-            autoFocus
-          >
-            <div>ACTIVE </div>
-            {!isLoading && (
-              <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
-                {activeWatchlist.length + activeTournamentWatchlist.length}
-              </span>
-            )}
-          </button>
-          <button
-            id="completed-watchlist-button"
-            onClick={() => setActiveOrCompleted("completed")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white"
-          >
-            COMPLETED
-          </button>
-        </div>
-      </div>
-      {isLoading && (
-        <div className="pb-[50px] pt-[74px] flex justify-center">
-          <BounceLoader color="#696969" loading={true} />
-        </div>
-      )}
-      {activeOrCompleted === "active" &&
-        (activeWatchlist.length !== 0 ||
-          activeTournamentWatchlist.length !== 0) ? (
-        <div className="w-full">
-          {wagerSort !== "TOURNAMENTS" &&
-            activeWatchlist.map((watchlist: any, index: number) => (
-              <div key={watchlist._id}>
-                <TimerProvider deadline={watchlist.auctionDeadline}>
-                  <MyWatchlistCard
-                    title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                    img={watchlist.auctionImage}
-                    current_bid={watchlist.auctionPrice}
-                    time_left={watchlist.auctionDeadline}
-                    id={watchlist.auctionIdentifierId}
-                    isActive={true}
-                    index={index}
-                  />
-                </TimerProvider>
-              </div>
-            ))}
-          {wagerSort !== "AUCTIONS" &&
-            activeTournamentWatchlist.map((watchlist: any) => {
-              return (
-                <div key={watchlist._id}>
-                  <TimerProvider deadline={watchlist.endTime}>
-                    <MyWatchlistTournamentCard
-                      watchlist={watchlist}
-                      isActive={true}
-                    />
-                  </TimerProvider>
+    return (
+        <div className="watchlist-menu absolute right-[112px] top-10 z-30 max-h-[784px] w-[512px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black">
+            <div className="flex flex-col gap-4 px-6">
+                <div className="flex justify-between">
+                    <div className="text-left text-lg font-bold">
+                        MY WATCHLIST
+                    </div>
+                    {(activeWatchlist.length !== 0 ||
+                        completedWatchlist.length !== 0 ||
+                        activeTournamentWatchlist.length !== 0 ||
+                        completedTournamentWatchlist.length !== 0) && (
+                        <button
+                            id="myWatchlist-sort"
+                            type="button"
+                            className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
+                            onClick={handleClick}
+                        >
+                            {wagerSort}
+                        </button>
+                    )}
                 </div>
-              );
-            })}
-        </div>
-      ) : null}
-      {activeOrCompleted === "completed" &&
-        (completedWatchlist.length !== 0 ||
-          completedTournamentWatchlist.length !== 0) ? (
-        <div className="w-full">
-          {wagerSort !== "TOURNAMENTS" &&
-            completedWatchlist.map((watchlist: any, index: number) => (
-              <div key={watchlist._id}>
-                <TimerProvider deadline={watchlist.auctionDeadline}>
-                  <MyWatchlistCard
-                    title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                    img={watchlist.auctionImage}
-                    current_bid={watchlist.auctionPrice}
-                    id={watchlist.auctionIdentifierId}
-                    time_left={watchlist.auctionDeadline}
-                    isActive={false}
-                    index={index}
-                  />
-                </TimerProvider>
-              </div>
-            ))}
-          {wagerSort !== "AUCTIONS" &&
-            completedTournamentWatchlist.map((watchlist: any) => {
-              return (
-                <div key={watchlist._id}>
-                  <TimerProvider deadline={watchlist.endTime}>
-                    <MyWatchlistTournamentCard
-                      watchlist={watchlist}
-                      isActive={false}
-                    />
-                  </TimerProvider>
+                <div className="flex">
+                    <button
+                        id="active-watchlist-button"
+                        onClick={() => setActiveOrCompleted("active")}
+                        className="flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
+                        autoFocus
+                    >
+                        <div>ACTIVE </div>
+                        {!isLoading && (
+                            <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                                {activeWatchlist.length +
+                                    activeTournamentWatchlist.length}
+                            </span>
+                        )}
+                    </button>
+                    <button
+                        id="completed-watchlist-button"
+                        onClick={() => setActiveOrCompleted("completed")}
+                        className="w-1/2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
+                    >
+                        COMPLETED
+                    </button>
                 </div>
-              );
-            })}
+            </div>
+            {isLoading && (
+                <div className="flex justify-center pb-[50px] pt-[74px]">
+                    <BounceLoader color="#696969" loading={true} />
+                </div>
+            )}
+            {activeOrCompleted === "active" &&
+            (activeWatchlist.length !== 0 ||
+                activeTournamentWatchlist.length !== 0) ? (
+                <div className="w-full">
+                    {wagerSort !== "TOURNAMENTS" &&
+                        activeWatchlist.map((watchlist: any, index: number) => (
+                            <div key={watchlist._id}>
+                                <TimerProvider
+                                    deadline={watchlist.auctionDeadline}
+                                >
+                                    <MyWatchlistCard
+                                        title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                        img={watchlist.auctionImage}
+                                        current_bid={watchlist.auctionPrice}
+                                        time_left={watchlist.auctionDeadline}
+                                        id={watchlist.auctionIdentifierId}
+                                        isActive={true}
+                                        index={index}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        ))}
+                    {wagerSort !== "AUCTIONS" &&
+                        activeTournamentWatchlist.map((watchlist: any) => {
+                            return (
+                                <div key={watchlist._id}>
+                                    <TimerProvider deadline={watchlist.endTime}>
+                                        <MyWatchlistTournamentCard
+                                            watchlist={watchlist}
+                                            isActive={true}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                </div>
+            ) : null}
+            {activeOrCompleted === "completed" &&
+            (completedWatchlist.length !== 0 ||
+                completedTournamentWatchlist.length !== 0) ? (
+                <div className="w-full">
+                    {wagerSort !== "TOURNAMENTS" &&
+                        completedWatchlist.map(
+                            (watchlist: any, index: number) => (
+                                <div key={watchlist._id}>
+                                    <TimerProvider
+                                        deadline={watchlist.auctionDeadline}
+                                    >
+                                        <MyWatchlistCard
+                                            title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                            img={watchlist.auctionImage}
+                                            current_bid={watchlist.auctionPrice}
+                                            id={watchlist.auctionIdentifierId}
+                                            time_left={
+                                                watchlist.auctionDeadline
+                                            }
+                                            isActive={false}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            )
+                        )}
+                    {wagerSort !== "AUCTIONS" &&
+                        completedTournamentWatchlist.map((watchlist: any) => {
+                            return (
+                                <div key={watchlist._id}>
+                                    <TimerProvider deadline={watchlist.endTime}>
+                                        <MyWatchlistTournamentCard
+                                            watchlist={watchlist}
+                                            isActive={false}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeWatchlist.length === 0 &&
+            activeTournamentWatchlist.length === 0 ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No active wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedWatchlist.length === 0 &&
+            completedTournamentWatchlist.length === 0 ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No completed wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedWatchlist.length === 0 &&
+            wagerSort === "AUCTIONS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No completed wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedTournamentWatchlist.length === 0 &&
+            wagerSort === "TOURNAMENTS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No completed wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeWatchlist.length === 0 &&
+            wagerSort === "AUCTIONS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No active wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeTournamentWatchlist.length === 0 &&
+            wagerSort === "TOURNAMENTS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No active wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
         </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWatchlist.length === 0 &&
-        activeTournamentWatchlist.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No active wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWatchlist.length === 0 &&
-        completedTournamentWatchlist.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No completed wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWatchlist.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No completed wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedTournamentWatchlist.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No completed wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWatchlist.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No active wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeTournamentWatchlist.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No active wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-    </div>
-  );
+    );
 };
 
 export const MyWatchlistTournamentCard = ({
-  watchlist,
-  isActive,
-  closeMenu,
+    watchlist,
+    isActive,
+    closeMenu,
 }: any) => {
-  const { days, hours, minutes, seconds } = useTimer();
-  let formattedDateString;
-  if (watchlist.endTime) {
-    formattedDateString = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(new Date(watchlist.endTime));
-  }
+    const { days, hours, minutes, seconds } = useTimer();
+    let formattedDateString;
+    if (watchlist.endTime) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(watchlist.endTime));
+    }
 
-  return (
-    <div
-      className={`sm:px-6 px-5 w-full py-4 border-t-[1px] border-[#253747]`}
-    >
-      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
-        <Link
-          href={`/tournaments/${watchlist.tournamentID}`}
-          className="grid gap-[2px] grid-cols-2 sm:w-[100px] w-[50px] pt-2 sm:p-0"
-          onClick={() => closeMenu && closeMenu()}
+    return (
+        <div
+            className={`w-full border-t-[1px] border-[#253747] px-5 py-4 sm:px-6`}
         >
-          {watchlist.tournamentImages
-            .slice(0, 4)
-            .map((image: string, index: number) => {
-              return (
-                <Image
-                  key={index}
-                  src={image}
-                  alt="car image"
-                  width={49}
-                  height={49}
-                  className="rounded w-[24.5px] h-[24.5px] sm:h-[49px] sm:w-[49px] object-cover"
-                />
-              );
-            })}
-        </Link>
-        <div className="flex flex-col items-start sm:max-w-[323px] max-w-[230px]">
-          <Link
-            href={`/tournaments/${watchlist.tournamentID}`}
-            className="self-start"
-            onClick={() => closeMenu && closeMenu()}
-          >
-            <div className="w-full font-bold sm:text-lg text-base sm:py-1 text-left line-clamp-1">
-              {watchlist.title}
+            <div className="flex w-full items-center gap-6 rounded sm:py-3">
+                <Link
+                    href={`/tournaments/${watchlist.tournamentID}`}
+                    className="grid w-[50px] grid-cols-2 gap-[2px] pt-2 sm:w-[100px] sm:p-0"
+                    onClick={() => closeMenu && closeMenu()}
+                >
+                    {watchlist.tournamentImages
+                        .slice(0, 4)
+                        .map((image: string, index: number) => {
+                            return (
+                                <Image
+                                    key={index}
+                                    src={image}
+                                    alt="car image"
+                                    width={49}
+                                    height={49}
+                                    className="h-[24.5px] w-[24.5px] rounded object-cover sm:h-[49px] sm:w-[49px]"
+                                />
+                            );
+                        })}
+                </Link>
+                <div className="flex max-w-[230px] flex-col items-start sm:max-w-[323px]">
+                    <Link
+                        href={`/tournaments/${watchlist.tournamentID}`}
+                        className="self-start"
+                        onClick={() => closeMenu && closeMenu()}
+                    >
+                        <div className="line-clamp-1 w-full text-left text-base font-bold sm:py-1 sm:text-lg">
+                            {watchlist.title}
+                        </div>
+                    </Link>
+                    {!isActive && (
+                        <div className="text-xs opacity-80 sm:mb-2">
+                            Ended {formattedDateString}
+                        </div>
+                    )}
+                    <div className="mt-1 w-full text-sm">
+                        {isActive && (
+                            <div className="flex w-full items-center gap-2">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Time Left:</span>
+                                {Number(days) < 1 ? (
+                                    <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
-          </Link>
-          {!isActive && (
-            <div className="text-xs sm:mb-2 opacity-80">
-              Ended {formattedDateString}
-            </div>
-          )}
-          <div className="w-full mt-1 text-sm">
-            {isActive && (
-              <div className="flex items-center gap-2 w-full">
-                <Image
-                  src={Hourglass}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Time Left:</span>
-                {Number(days) < 1 ? (
-                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                ) : (
-                  <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                )}
-              </div>
-            )}
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 interface MyWatchlistCardProps {
-  title: string;
-  img: string;
-  current_bid: number;
-  time_left?: Date;
-  id: string;
-  isActive: boolean;
-  closeMenu?: () => void;
-  index?: number;
+    title: string;
+    img: string;
+    current_bid: number;
+    time_left?: Date;
+    id: string;
+    isActive: boolean;
+    closeMenu?: () => void;
+    index?: number;
 }
 export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
-  title,
-  img,
-  current_bid,
-  time_left,
-  id,
-  isActive,
-  closeMenu,
-  index,
+    title,
+    img,
+    current_bid,
+    time_left,
+    id,
+    isActive,
+    closeMenu,
+    index,
 }) => {
-  const { days, hours, minutes, seconds } = useTimer();
-  let formattedDateString;
-  if (time_left) {
-    formattedDateString = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(new Date(time_left));
-  }
+    const { days, hours, minutes, seconds } = useTimer();
+    let formattedDateString;
+    if (time_left) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(time_left));
+    }
 
-  return (
-    <div
-      className={`sm:px-6 px-5 w-full py-4 ${index === 0 ? "" : "border-t-[1px] border-[#253747]"
-        }`}
-    >
-      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
-        <Link
-          href={`/auctions/car_view_page/${id}`}
-          onClick={() => closeMenu && closeMenu()}
-          className="self-start sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] pt-2 sm:pt-0"
+    return (
+        <div
+            className={`w-full px-5 py-4 sm:px-6 ${
+                index === 0 ? "" : "border-t-[1px] border-[#253747]"
+            }`}
         >
-          <Image
-            src={img}
-            width={100}
-            height={100}
-            alt="wallet icon"
-            className="sm:w-[100px] w-[50px] h-[50px] sm:h-[100px] object-cover rounded-[4px]"
-          />
-        </Link>
-        <div className="flex flex-col items-start sm:max-w-[323px] max-w-[230px]">
-          <Link
-            href={`/auctions/car_view_page/${id}`}
-            className="self-start"
-            onClick={() => closeMenu && closeMenu()}
-          >
-            <div className="w-full font-bold sm:text-lg text-base sm:py-1 text-left line-clamp-1">
-              {title}
+            <div className="flex w-full items-center gap-6 rounded sm:py-3">
+                <Link
+                    href={`/auctions/car_view_page/${id}`}
+                    onClick={() => closeMenu && closeMenu()}
+                    className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
+                >
+                    <Image
+                        src={img}
+                        width={100}
+                        height={100}
+                        alt="wallet icon"
+                        className="h-[50px] w-[50px] rounded-[4px] object-cover sm:h-[100px] sm:w-[100px]"
+                    />
+                </Link>
+                <div className="flex max-w-[230px] flex-col items-start sm:max-w-[323px]">
+                    <Link
+                        href={`/auctions/car_view_page/${id}`}
+                        className="self-start"
+                        onClick={() => closeMenu && closeMenu()}
+                    >
+                        <div className="line-clamp-1 w-full text-left text-base font-bold sm:py-1 sm:text-lg">
+                            {title}
+                        </div>
+                    </Link>
+                    {!isActive && (
+                        <div className="text-xs opacity-80 sm:mb-2">
+                            Ended {formattedDateString}
+                        </div>
+                    )}
+                    <div className="mt-1 w-full text-sm">
+                        {!isActive && (
+                            <div className="flex w-full items-center gap-2">
+                                <Image
+                                    src={HammerIcon}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">
+                                    Hammer Price:
+                                </span>
+                                <span className="font-bold text-[#49C742]">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        )}
+                        {isActive && (
+                            <div className="flex w-full items-center gap-2">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Current Bid:</span>
+                                <span className="font-bold text-[#49C742]">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        )}
+                        {isActive && (
+                            <div className="flex w-full items-center gap-2">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Time Left:</span>
+                                {Number(days) < 1 ? (
+                                    <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
-          </Link>
-          {!isActive && (
-            <div className="text-xs sm:mb-2 opacity-80">
-              Ended {formattedDateString}
-            </div>
-          )}
-          <div className="w-full mt-1 text-sm">
-            {!isActive && (
-              <div className="flex items-center gap-2 w-full">
-                <Image
-                  src={HammerIcon}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Hammer Price:</span>
-                <span className="text-[#49C742] font-bold">
-                  ${new Intl.NumberFormat().format(current_bid)}
-                </span>
-              </div>
-            )}
-            {isActive && (
-              <div className="flex items-center gap-2 w-full">
-                <Image
-                  src={Dollar}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Current Bid:</span>
-                <span className="text-[#49C742] font-bold">
-                  ${new Intl.NumberFormat().format(current_bid)}
-                </span>
-              </div>
-            )}
-            {isActive && (
-              <div className="flex items-center gap-2 w-full">
-                <Image
-                  src={Hourglass}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Time Left:</span>
-                {Number(days) < 1 ? (
-                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                ) : (
-                  <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                )}
-              </div>
-            )}
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 const MyWagersDropdownMenu = () => {
-  const router = useRouter();
-  const [activeOrCompleted, setActiveOrCompleted] = useState("active");
-  const [activeWagers, setActiveWagers] = useState([]);
-  const [completedWagers, setCompletedWagers] = useState([]);
-  const [activeTournamentWagers, setActiveTournamentWagers] = useState([]);
-  const [completedTournamentWagers, setCompletedTournamentWagers] = useState(
-    []
-  );
-  const [isLoading, setIsLoading] = useState(true);
-  const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
-  const [wagerSort, setWagerSort] = useState(words[0]);
+    const router = useRouter();
+    const [activeOrCompleted, setActiveOrCompleted] = useState("active");
+    const [activeWagers, setActiveWagers] = useState([]);
+    const [completedWagers, setCompletedWagers] = useState([]);
+    const [activeTournamentWagers, setActiveTournamentWagers] = useState([]);
+    const [completedTournamentWagers, setCompletedTournamentWagers] = useState(
+        []
+    );
+    const [isLoading, setIsLoading] = useState(true);
+    const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
+    const [wagerSort, setWagerSort] = useState(words[0]);
 
-  useEffect(() => {
-    const fetchWagers = async () => {
-      const data = await getMyWagers();
-      const currentDate = new Date();
+    useEffect(() => {
+        const fetchWagers = async () => {
+            const data = await getMyWagers();
+            const currentDate = new Date();
 
-      if (!data.wagers || data.wagers.length !== 0) {
-        const completed = data.wagers.filter((wager: any) => {
-          const auctionDeadline = new Date(wager.auctionDeadline);
-          return auctionDeadline < currentDate;
-        });
-        const active = data.wagers.filter((wager: any) => {
-          const auctionDeadline = new Date(wager.auctionDeadline);
-          return auctionDeadline >= currentDate;
-        });
+            if (!data.wagers || data.wagers.length !== 0) {
+                const completed = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
 
-        const completedTournaments = data.tournament_wagers.filter(
-          (wager: any) => {
-            const auctionDeadline = new Date(wager.tournamentEndTime);
-            return auctionDeadline < currentDate;
-          }
-        );
+                const completedTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
+                        return auctionDeadline < currentDate;
+                    }
+                );
 
-        const activeTournaments = data.tournament_wagers.filter(
-          (wager: any) => {
-            const auctionDeadline = new Date(wager.tournamentEndTime);
-            return auctionDeadline >= currentDate;
-          }
-        );
+                const activeTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
-        setActiveWagers(active);
-        setCompletedWagers(completed);
-        setActiveTournamentWagers(activeTournaments);
-        setCompletedTournamentWagers(completedTournaments);
-      }
-      setIsLoading(false);
+                setActiveWagers(active);
+                setCompletedWagers(completed);
+                setActiveTournamentWagers(activeTournaments);
+                setCompletedTournamentWagers(completedTournaments);
+            }
+            setIsLoading(false);
+        };
+        fetchWagers();
+    }, []);
+
+    const handleClick = () => {
+        const currentIndex = words.indexOf(wagerSort);
+        const nextIndex = (currentIndex + 1) % words.length;
+        setWagerSort(words[nextIndex]);
     };
-    fetchWagers();
-  }, []);
 
-  const handleClick = () => {
-    const currentIndex = words.indexOf(wagerSort);
-    const nextIndex = (currentIndex + 1) % words.length;
-    setWagerSort(words[nextIndex]);
-  };
-
-  return (
-    <div className="my-wagers-menu absolute z-30 right-[56px] top-10 w-[512px] max-h-[784px] overflow-auto bg-[#1A2C3D] rounded pt-6 pb-2 shadow-xl shadow-black">
-      <div className="px-6 flex flex-col gap-4">
-        <div className="flex justify-between">
-          <div className="font-bold text-lg text-left">MY WAGERS</div>
-          {(activeWagers.length !== 0 ||
-            completedWagers.length !== 0 ||
-            activeTournamentWagers.length !== 0 ||
-            completedTournamentWagers.length !== 0) && (
-              <button
-                id="myWagers-sort"
-                type="button"
-                className="rounded-sm w-[140px] text-center px-2 py-1.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#0f1923] truncate"
-                onClick={handleClick}
-              >
-                {wagerSort}
-              </button>
-            )}
-        </div>
-        <div className="flex">
-          <button
-            id="active-mywagers-button"
-            onClick={() => setActiveOrCompleted("active")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white flex justify-center items-center gap-2"
-            autoFocus
-          >
-            <div>ACTIVE </div>
-            {!isLoading && (
-              <span className="px-1 text-sm bg-[#f2ca16] rounded font-bold text-[#0f1923]">
-                {activeWagers.length + activeTournamentWagers.length}
-              </span>
-            )}
-          </button>
-          <button
-            id="completed-mywagers-button"
-            onClick={() => setActiveOrCompleted("completed")}
-            className="border-b-2 w-1/2 py-2 border-[#314150] focus:font-bold focus:border-white"
-          >
-            COMPLETED
-          </button>
-        </div>
-      </div>
-      {isLoading && (
-        <div className="pb-[66px] pt-[74px] flex justify-center">
-          <BounceLoader color="#696969" loading={true} />
-        </div>
-      )}
-      {activeOrCompleted === "active" &&
-        (activeWagers.length !== 0 || activeTournamentWagers.length !== 0) ? (
-        <div className="w-full">
-          {wagerSort !== "TOURNAMENTS" &&
-            activeWagers.map((wager: any, index: number) => (
-              <div key={wager._id}>
-                <TimerProvider deadline={wager.auctionDeadline}>
-                  <MyWagersCard
-                    title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                    img={wager.auctionImage}
-                    my_wager={wager.priceGuessed}
-                    current_bid={wager.auctionPrice}
-                    time_left={wager.auctionDeadline}
-                    potential_prize={wager.auctionPot}
-                    id={wager.auctionIdentifierId}
-                    isActive={true}
-                    status={wager.auctionStatus}
-                    wagerAmount={wager.wagerAmount}
-                    objectID={wager.auctionObjectId}
-                    wagerID={wager._id}
-                    isRefunded={wager.refunded}
-                    prize={wager.prize}
-                    deadline={wager.auctionDeadline}
-                    index={index}
-                  />
-                </TimerProvider>
-              </div>
-            ))}
-          {wagerSort !== "AUCTIONS" &&
-            activeTournamentWagers.map((wager: any) => {
-              return (
-                <div key={wager._id}>
-                  <TimerProvider deadline={wager.tournamentEndTime}>
-                    <MyWagersTournamentCard wager={wager} isActive={true} />
-                  </TimerProvider>
+    return (
+        <div className="my-wagers-menu absolute right-[56px] top-10 z-30 max-h-[784px] w-[512px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black">
+            <div className="flex flex-col gap-4 px-6">
+                <div className="flex justify-between">
+                    <div className="text-left text-lg font-bold">MY WAGERS</div>
+                    {(activeWagers.length !== 0 ||
+                        completedWagers.length !== 0 ||
+                        activeTournamentWagers.length !== 0 ||
+                        completedTournamentWagers.length !== 0) && (
+                        <button
+                            id="myWagers-sort"
+                            type="button"
+                            className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
+                            onClick={handleClick}
+                        >
+                            {wagerSort}
+                        </button>
+                    )}
                 </div>
-              );
-            })}
-        </div>
-      ) : null}
-      {activeOrCompleted === "completed" &&
-        (completedWagers.length !== 0 ||
-          completedTournamentWagers.length !== 0) ? (
-        <div className="w-full">
-          {wagerSort !== "TOURNAMENTS" &&
-            completedWagers.map((wager: any, index: number) => (
-              <div key={wager._id}>
-                <TimerProvider deadline={wager.auctionDeadline}>
-                  <MyWagersCard
-                    title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                    img={wager.auctionImage}
-                    my_wager={wager.priceGuessed}
-                    current_bid={wager.auctionPrice}
-                    time_left={wager.auctionDeadline}
-                    potential_prize={wager.auctionPot}
-                    id={wager.auctionIdentifierId}
-                    isActive={false}
-                    status={wager.auctionStatus}
-                    wagerAmount={wager.wagerAmount}
-                    objectID={wager.auctionObjectId}
-                    wagerID={wager._id}
-                    isRefunded={wager.refunded}
-                    prize={wager.prize}
-                    deadline={wager.auctionDeadline}
-                    index={index}
-                  />
-                </TimerProvider>
-              </div>
-            ))}
-          {wagerSort !== "AUCTIONS" &&
-            completedTournamentWagers.map((wager: any) => {
-              return (
-                <div key={wager._id}>
-                  <TimerProvider deadline={wager.tournamentEndTime}>
-                    <MyWagersTournamentCard wager={wager} isActive={false} />
-                  </TimerProvider>
+                <div className="flex">
+                    <button
+                        id="active-mywagers-button"
+                        onClick={() => setActiveOrCompleted("active")}
+                        className="flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
+                        autoFocus
+                    >
+                        <div>ACTIVE </div>
+                        {!isLoading && (
+                            <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                                {activeWagers.length +
+                                    activeTournamentWagers.length}
+                            </span>
+                        )}
+                    </button>
+                    <button
+                        id="completed-mywagers-button"
+                        onClick={() => setActiveOrCompleted("completed")}
+                        className="w-1/2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
+                    >
+                        COMPLETED
+                    </button>
                 </div>
-              );
-            })}
+            </div>
+            {isLoading && (
+                <div className="flex justify-center pb-[66px] pt-[74px]">
+                    <BounceLoader color="#696969" loading={true} />
+                </div>
+            )}
+            {activeOrCompleted === "active" &&
+            (activeWagers.length !== 0 ||
+                activeTournamentWagers.length !== 0) ? (
+                <div className="w-full">
+                    {wagerSort !== "TOURNAMENTS" &&
+                        activeWagers.map((wager: any, index: number) => (
+                            <div key={wager._id}>
+                                <TimerProvider deadline={wager.auctionDeadline}>
+                                    <MyWagersCard
+                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                        img={wager.auctionImage}
+                                        my_wager={wager.priceGuessed}
+                                        current_bid={wager.auctionPrice}
+                                        time_left={wager.auctionDeadline}
+                                        potential_prize={wager.auctionPot}
+                                        id={wager.auctionIdentifierId}
+                                        isActive={true}
+                                        status={wager.auctionStatus}
+                                        wagerAmount={wager.wagerAmount}
+                                        objectID={wager.auctionObjectId}
+                                        wagerID={wager._id}
+                                        isRefunded={wager.refunded}
+                                        prize={wager.prize}
+                                        deadline={wager.auctionDeadline}
+                                        index={index}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        ))}
+                    {wagerSort !== "AUCTIONS" &&
+                        activeTournamentWagers.map((wager: any) => {
+                            return (
+                                <div key={wager._id}>
+                                    <TimerProvider
+                                        deadline={wager.tournamentEndTime}
+                                    >
+                                        <MyWagersTournamentCard
+                                            wager={wager}
+                                            isActive={true}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                </div>
+            ) : null}
+            {activeOrCompleted === "completed" &&
+            (completedWagers.length !== 0 ||
+                completedTournamentWagers.length !== 0) ? (
+                <div className="w-full">
+                    {wagerSort !== "TOURNAMENTS" &&
+                        completedWagers.map((wager: any, index: number) => (
+                            <div key={wager._id}>
+                                <TimerProvider deadline={wager.auctionDeadline}>
+                                    <MyWagersCard
+                                        title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                        img={wager.auctionImage}
+                                        my_wager={wager.priceGuessed}
+                                        current_bid={wager.auctionPrice}
+                                        time_left={wager.auctionDeadline}
+                                        potential_prize={wager.auctionPot}
+                                        id={wager.auctionIdentifierId}
+                                        isActive={false}
+                                        status={wager.auctionStatus}
+                                        wagerAmount={wager.wagerAmount}
+                                        objectID={wager.auctionObjectId}
+                                        wagerID={wager._id}
+                                        isRefunded={wager.refunded}
+                                        prize={wager.prize}
+                                        deadline={wager.auctionDeadline}
+                                        index={index}
+                                    />
+                                </TimerProvider>
+                            </div>
+                        ))}
+                    {wagerSort !== "AUCTIONS" &&
+                        completedTournamentWagers.map((wager: any) => {
+                            return (
+                                <div key={wager._id}>
+                                    <TimerProvider
+                                        deadline={wager.tournamentEndTime}
+                                    >
+                                        <MyWagersTournamentCard
+                                            wager={wager}
+                                            isActive={false}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            );
+                        })}
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeWagers.length === 0 &&
+            activeTournamentWagers.length === 0 ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No active wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedWagers.length === 0 &&
+            completedTournamentWagers.length === 0 ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No completed wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedWagers.length === 0 &&
+            wagerSort === "AUCTIONS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No completed wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "completed" &&
+            completedTournamentWagers.length === 0 &&
+            wagerSort === "TOURNAMENTS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No completed wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeWagers.length === 0 &&
+            wagerSort === "AUCTIONS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No active wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
+            {isLoading === false &&
+            activeOrCompleted === "active" &&
+            activeTournamentWagers.length === 0 &&
+            wagerSort === "TOURNAMENTS" ? (
+                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                    <Image
+                        src={MoneyBag}
+                        width={80}
+                        height={80}
+                        alt="watchlist icon"
+                        className="h-[80px] w-[80px]"
+                    />
+                    <div className="">
+                        <div className="text-center text-xl font-bold">
+                            No active wagers
+                        </div>
+                        <div className="text-center opacity-70">
+                            Quam temere in vitiis, legem sancimus haerentia
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => router.push("/auctions")}
+                        className="btn-transparent-white"
+                    >
+                        DISCOVER AUCTIONS
+                    </button>
+                </div>
+            ) : null}
         </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWagers.length === 0 &&
-        activeTournamentWagers.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No active wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWagers.length === 0 &&
-        completedTournamentWagers.length === 0 ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No completed wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedWagers.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No completed wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "completed" &&
-        completedTournamentWagers.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No completed wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeWagers.length === 0 &&
-        wagerSort === "AUCTIONS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No active wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-      {isLoading === false &&
-        activeOrCompleted === "active" &&
-        activeTournamentWagers.length === 0 &&
-        wagerSort === "TOURNAMENTS" ? (
-        <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-          <Image
-            src={MoneyBag}
-            width={80}
-            height={80}
-            alt="watchlist icon"
-            className="w-[80px] h-[80px]"
-          />
-          <div className="">
-            <div className="font-bold text-xl text-center">
-              No active wagers
-            </div>
-            <div className="opacity-70 text-center">
-              Quam temere in vitiis, legem sancimus haerentia
-            </div>
-          </div>
-          <button
-            onClick={() => router.push("/auctions")}
-            className="btn-transparent-white"
-          >
-            DISCOVER AUCTIONS
-          </button>
-        </div>
-      ) : null}
-    </div>
-  );
+    );
 };
 
 export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
-  const { days, hours, minutes, seconds } = useTimer();
-  const [prize, setPrize] = useState(0);
-  const [pointsAndPlacing, setPointsAndPlacing] = useState<{
-    placing: number;
-    totalScore: number;
-  }>({ placing: 0, totalScore: 0 });
-  let formattedDateString;
-  if (wager.tournamentEndTime) {
-    formattedDateString = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(new Date(wager.tournamentEndTime));
-  }
-
-  const addNumberSuffix = (number: number) => {
-    const suffixes = [
-      "th",
-      "st",
-      "nd",
-      "rd",
-      "th",
-      "th",
-      "th",
-      "th",
-      "th",
-      "th",
-    ];
-    if (number % 100 >= 11 && number % 100 <= 13) {
-      return number + "th";
-    } else {
-      return number + suffixes[number % 10];
+    const { days, hours, minutes, seconds } = useTimer();
+    const [prize, setPrize] = useState(0);
+    const [pointsAndPlacing, setPointsAndPlacing] = useState<{
+        placing: number;
+        totalScore: number;
+    }>({ placing: 0, totalScore: 0 });
+    let formattedDateString;
+    if (wager.tournamentEndTime) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(wager.tournamentEndTime));
     }
-  };
 
-  useEffect(() => {
-    const fetchTotalPointsAndPlacing = async () => {
-      const data = await getUserPointsAndPlacing(wager._id, wager.user._id);
-      setPointsAndPlacing(data);
+    const addNumberSuffix = (number: number) => {
+        const suffixes = [
+            "th",
+            "st",
+            "nd",
+            "rd",
+            "th",
+            "th",
+            "th",
+            "th",
+            "th",
+            "th",
+        ];
+        if (number % 100 >= 11 && number % 100 <= 13) {
+            return number + "th";
+        } else {
+            return number + suffixes[number % 10];
+        }
     };
 
-    fetchTotalPointsAndPlacing();
-  }, []);
+    useEffect(() => {
+        const fetchTotalPointsAndPlacing = async () => {
+            const data = await getUserPointsAndPlacing(
+                wager._id,
+                wager.user._id
+            );
+            setPointsAndPlacing(data);
+        };
 
-  useEffect(() => {
-    const fetchPrize = async () => {
-      const transactions = await getTournamentTransactions(wager._id);
+        fetchTotalPointsAndPlacing();
+    }, []);
 
-      const totalPrize =
-        0.88 *
-        transactions
-          .map((transaction: any) => transaction.amount)
-          .reduce(
-            (accumulator: any, currentValue: any) => accumulator + currentValue,
-            0
-          );
-      setPrize(totalPrize);
-    };
-    fetchPrize();
-  }, []);
+    useEffect(() => {
+        const fetchPrize = async () => {
+            const transactions = await getTournamentTransactions(wager._id);
 
-  return (
-    <div className="sm:px-6 px-5 w-full py-4 border-t-[1px] border-[#253747]">
-      <div className=" w-full sm:py-3 rounded flex items-start gap-6">
-        <Link
-          href={`/tournaments/${wager._id}`}
-          className="grid gap-[2px] grid-cols-2 sm:w-[100px] w-[50px] pt-2 sm:p-0"
-          onClick={() => closeMenu && closeMenu()}
-        >
-          {wager.tournamentImages
-            .slice(0, 4)
-            .map((image: string, index: number) => {
-              return (
-                <Image
-                  key={index}
-                  src={image}
-                  alt="car image"
-                  width={49}
-                  height={49}
-                  className="rounded w-[24.5px] h-[24.5px] sm:h-[49px] sm:w-[49px] object-cover"
-                />
-              );
-            })}
-        </Link>
-        <div className="flex flex-col items-start grow w-auto sm:max-w-[323px] max-w-[230px]">
-          <Link
-            href={`/tournaments/${wager._id}`}
-            className="self-start"
-            onClick={() => closeMenu && closeMenu()}
-          >
-            <div
-              className={`w-full font-bold sm:text-lg text-base text-left line-clamp-1 ${isActive ? "sm:mt-[14px]" : "sm:mt-[5px]"
-                }`}
-            >
-              {wager.tournamentTitle}
-            </div>
-          </Link>
-          {!isActive && (
-            <div className="text-xs sm:mb-2 opacity-80">
-              Ended {formattedDateString}
-            </div>
-          )}
-          <div className="w-full mt-1 text-sm">
-            <div className="flex items-center gap-2">
-              <Image
-                src={PodiumIcon}
-                width={14}
-                height={14}
-                alt="wallet icon"
-                className="w-[14px] h-[14px]"
-              />
-              <span className="opacity-80">Place:</span>
-              <span className="text-[#F2CA16] font-bold">
-                {isActive ? "Current: " : null}
-                {pointsAndPlacing.placing
-                  ? addNumberSuffix(pointsAndPlacing.placing)
-                  : "-"}{" "}
-                Place
-              </span>
-            </div>
-            {!isActive && (
-              <div className="flex items-center gap-2">
-                <Image
-                  src={ThreeStars}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Points:</span>{" "}
-                {pointsAndPlacing.totalScore
-                  ? new Intl.NumberFormat().format(pointsAndPlacing.totalScore)
-                  : "-"}{" "}
-                pts. away
-              </div>
-            )}
-            {wager.prize && (
-              <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
-                <div className="flex gap-2">
-                  <Image
-                    src={MoneyBagBlack}
-                    width={20}
-                    height={20}
-                    alt="money bag"
-                    className="w-[20px] h-[20px]"
-                  />
-                  <div>WINNINGS</div>
+            const totalPrize =
+                0.88 *
+                transactions
+                    .map((transaction: any) => transaction.amount)
+                    .reduce(
+                        (accumulator: any, currentValue: any) =>
+                            accumulator + currentValue,
+                        0
+                    );
+            setPrize(totalPrize);
+        };
+        fetchPrize();
+    }, []);
+
+    return (
+        <div className="w-full border-t-[1px] border-[#253747] px-5 py-4 sm:px-6">
+            <div className="flex w-full items-start gap-6 rounded sm:py-3">
+                <Link
+                    href={`/tournaments/${wager._id}`}
+                    className="grid w-[50px] grid-cols-2 gap-[2px] pt-2 sm:w-[100px] sm:p-0"
+                    onClick={() => closeMenu && closeMenu()}
+                >
+                    {wager.tournamentImages
+                        .slice(0, 4)
+                        .map((image: string, index: number) => {
+                            return (
+                                <Image
+                                    key={index}
+                                    src={image}
+                                    alt="car image"
+                                    width={49}
+                                    height={49}
+                                    className="h-[24.5px] w-[24.5px] rounded object-cover sm:h-[49px] sm:w-[49px]"
+                                />
+                            );
+                        })}
+                </Link>
+                <div className="flex w-auto max-w-[230px] grow flex-col items-start sm:max-w-[323px]">
+                    <Link
+                        href={`/tournaments/${wager._id}`}
+                        className="self-start"
+                        onClick={() => closeMenu && closeMenu()}
+                    >
+                        <div
+                            className={`line-clamp-1 w-full text-left text-base font-bold sm:text-lg ${
+                                isActive ? "sm:mt-[14px]" : "sm:mt-[5px]"
+                            }`}
+                        >
+                            {wager.tournamentTitle}
+                        </div>
+                    </Link>
+                    {!isActive && (
+                        <div className="text-xs opacity-80 sm:mb-2">
+                            Ended {formattedDateString}
+                        </div>
+                    )}
+                    <div className="mt-1 w-full text-sm">
+                        <div className="flex items-center gap-2">
+                            <Image
+                                src={PodiumIcon}
+                                width={14}
+                                height={14}
+                                alt="wallet icon"
+                                className="h-[14px] w-[14px]"
+                            />
+                            <span className="opacity-80">Place:</span>
+                            <span className="font-bold text-[#F2CA16]">
+                                {isActive ? "Current: " : null}
+                                {pointsAndPlacing.placing
+                                    ? addNumberSuffix(pointsAndPlacing.placing)
+                                    : "-"}{" "}
+                                Place
+                            </span>
+                        </div>
+                        {!isActive && (
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={ThreeStars}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Points:</span>{" "}
+                                {pointsAndPlacing.totalScore
+                                    ? new Intl.NumberFormat().format(
+                                          pointsAndPlacing.totalScore
+                                      )
+                                    : "-"}{" "}
+                                pts. away
+                            </div>
+                        )}
+                        {wager.prize && (
+                            <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+                                <div className="flex gap-2">
+                                    <Image
+                                        src={MoneyBagBlack}
+                                        width={20}
+                                        height={20}
+                                        alt="money bag"
+                                        className="h-[20px] w-[20px]"
+                                    />
+                                    <div>WINNINGS</div>
+                                </div>
+                                <div>
+                                    $
+                                    {wager.prize % 1 === 0
+                                        ? wager.prize.toLocaleString()
+                                        : wager.prize.toLocaleString(
+                                              undefined,
+                                              {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                              }
+                                          )}{" "}
+                                    🎉
+                                </div>
+                            </div>
+                        )}
+                        {isActive && (
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Time Left:</span>
+                                {Number(days) < 1 ? (
+                                    <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {isActive && (
+                        <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49C74233] p-1 text-xs sm:mt-[30px] sm:gap-4 sm:p-2 sm:text-sm">
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={MoneyBagGreen}
+                                    width={20}
+                                    height={20}
+                                    alt="money bag"
+                                    className="h-[20px] w-[20px]"
+                                />
+                                <div className="grow-[1] text-left font-bold text-[#49C742]">
+                                    POTENTIAL PRIZE
+                                </div>
+                            </div>
+                            <div className="text-left font-bold text-[#49C742]">
+                                {prize
+                                    ? `$${new Intl.NumberFormat().format(prize)}`
+                                    : " --"}
+                            </div>
+                        </div>
+                    )}
                 </div>
-                <div>
-                  $
-                  {wager.prize % 1 === 0
-                    ? wager.prize.toLocaleString()
-                    : wager.prize.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                  🎉
-                </div>
-              </div>
-            )}
-            {isActive && (
-              <div className="flex items-center gap-2">
-                <Image
-                  src={Hourglass}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Time Left:</span>
-                {Number(days) < 1 ? (
-                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                ) : (
-                  <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                )}
-              </div>
-            )}
-          </div>
-          {isActive && (
-            <div className="sm:mt-[30px] mt-2 w-full sm:p-2 p-1 items-center flex justify-between sm:gap-4 bg-[#49C74233] rounded sm:text-sm text-xs">
-              <div className="flex gap-2 items-center">
-                <Image
-                  src={MoneyBagGreen}
-                  width={20}
-                  height={20}
-                  alt="money bag"
-                  className="w-[20px] h-[20px]"
-                />
-                <div className="text-[#49C742] font-bold text-left grow-[1]">
-                  POTENTIAL PRIZE
-                </div>
-              </div>
-              <div className="text-[#49C742] font-bold text-left">
-                {prize ? `$${new Intl.NumberFormat().format(prize)}` : " --"}
-              </div>
             </div>
-          )}
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 interface MyWagersCardProps {
-  title: string;
-  img: string;
-  my_wager: number;
-  current_bid: number;
-  time_left: Date;
-  potential_prize: number;
-  id: string;
-  isActive: boolean;
-  status: number;
-  wagerAmount: number;
-  objectID: string;
-  wagerID: string;
-  isRefunded: boolean;
-  closeMenu?: () => void;
-  prize?: number;
-  deadline: Date;
-  index?: number;
+    title: string;
+    img: string;
+    my_wager: number;
+    current_bid: number;
+    time_left: Date;
+    potential_prize: number;
+    id: string;
+    isActive: boolean;
+    status: number;
+    wagerAmount: number;
+    objectID: string;
+    wagerID: string;
+    isRefunded: boolean;
+    closeMenu?: () => void;
+    prize?: number;
+    deadline: Date;
+    index?: number;
 }
 export const MyWagersCard: React.FC<MyWagersCardProps> = ({
-  title,
-  img,
-  my_wager,
-  current_bid,
-  time_left,
-  potential_prize,
-  id,
-  isActive,
-  status,
-  wagerAmount,
-  objectID,
-  wagerID,
-  isRefunded,
-  closeMenu,
-  prize,
-  deadline,
-  index,
+    title,
+    img,
+    my_wager,
+    current_bid,
+    time_left,
+    potential_prize,
+    id,
+    isActive,
+    status,
+    wagerAmount,
+    objectID,
+    wagerID,
+    isRefunded,
+    closeMenu,
+    prize,
+    deadline,
+    index,
 }) => {
-  const { days, hours, minutes, seconds } = useTimer();
-  const [refunded, setRefunded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [pot, setPot] = useState(0);
+    const { days, hours, minutes, seconds } = useTimer();
+    const [refunded, setRefunded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [pot, setPot] = useState(0);
 
-  useEffect(() => {
-    const fetchPrize = async () => {
-      const { totalPrize } = await getAuctionTransactions(objectID);
-      setPot(totalPrize);
+    useEffect(() => {
+        const fetchPrize = async () => {
+            const { totalPrize } = await getAuctionTransactions(objectID);
+            setPot(totalPrize);
+        };
+        fetchPrize();
+    }, []);
+
+    let formattedDateString;
+    if (deadline) {
+        formattedDateString = new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+        }).format(new Date(deadline));
+    }
+
+    useEffect(() => {
+        setRefunded(isRefunded);
+    }, []);
+
+    const handleRefund = async (auctionObjectID: string, wagerID: string) => {
+        setLoading(true);
+        await refundWager(auctionObjectID, wagerID);
+        setRefunded(true);
+        setLoading(false);
     };
-    fetchPrize();
-  }, []);
 
-  let formattedDateString;
-  if (deadline) {
-    formattedDateString = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    }).format(new Date(deadline));
-  }
-
-  useEffect(() => {
-    setRefunded(isRefunded);
-  }, []);
-
-  const handleRefund = async (auctionObjectID: string, wagerID: string) => {
-    setLoading(true);
-    await refundWager(auctionObjectID, wagerID);
-    setRefunded(true);
-    setLoading(false);
-  };
-
-  return (
-    <div
-      className={`sm:px-6 px-5 w-full py-4 ${index === 0 ? "" : "border-t-[1px] border-[#253747]"
-        }`}
-    >
-      <div className=" w-full sm:py-3 rounded flex items-center gap-6">
-        <Link
-          href={`/auctions/car_view_page/${id}`}
-          onClick={() => closeMenu && closeMenu()}
-          className="self-start sm:w-[100px] sm:h-[100px] w-[50px] h-[50px] sm:pt-0 pt-2"
+    return (
+        <div
+            className={`w-full px-5 py-4 sm:px-6 ${
+                index === 0 ? "" : "border-t-[1px] border-[#253747]"
+            }`}
         >
-          <Image
-            src={img}
-            width={100}
-            height={100}
-            alt="wallet icon"
-            className="sm:w-[100px] w-[50px] h-[50px] sm:h-[100px] object-cover rounded-[4px]"
-          />
-        </Link>
-        <div className="flex flex-col items-start grow w-auto sm:max-w-[323px] max-w-[230px]">
-          <Link
-            href={`/auctions/car_view_page/${id}`}
-            onClick={() => closeMenu && closeMenu()}
-            className="self-start"
-          >
-            <div className="w-full font-bold sm:text-lg text-base text-left line-clamp-1">
-              {title}
-            </div>
-          </Link>
-          {status === 2 || status === 4 ? (
-            <div className="text-xs sm:mb-2 opacity-80">
-              Ended {formattedDateString}
-            </div>
-          ) : null}
-          <div className="w-full mt-1 text-sm">
-            <div className="flex items-center gap-2">
-              <Image
-                src={WalletSmall}
-                width={14}
-                height={14}
-                alt="wallet icon"
-                className="w-[14px] h-[14px]"
-              />
-              <span className="opacity-80">My Wager:</span>
-              <span className="text-[#F2CA16] font-bold">
-                ${new Intl.NumberFormat().format(my_wager)}
-              </span>
-            </div>
-            {prize ? (
-              <div className="flex items-center gap-2">
-                <Image
-                  src={HammerIcon}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Hammer Price:</span>
-                <span className="text-[#49C742] font-bold">
-                  ${new Intl.NumberFormat().format(current_bid)}
-                </span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Image
-                  src={Dollar}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Current Bid:</span>
-                <span className="text-[#49C742] font-bold">
-                  ${new Intl.NumberFormat().format(current_bid)}
-                </span>
-              </div>
-            )}
+            <div className="flex w-full items-center gap-6 rounded sm:py-3">
+                <Link
+                    href={`/auctions/car_view_page/${id}`}
+                    onClick={() => closeMenu && closeMenu()}
+                    className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
+                >
+                    <Image
+                        src={img}
+                        width={100}
+                        height={100}
+                        alt="wallet icon"
+                        className="h-[50px] w-[50px] rounded-[4px] object-cover sm:h-[100px] sm:w-[100px]"
+                    />
+                </Link>
+                <div className="flex w-auto max-w-[230px] grow flex-col items-start sm:max-w-[323px]">
+                    <Link
+                        href={`/auctions/car_view_page/${id}`}
+                        onClick={() => closeMenu && closeMenu()}
+                        className="self-start"
+                    >
+                        <div className="line-clamp-1 w-full text-left text-base font-bold sm:text-lg">
+                            {title}
+                        </div>
+                    </Link>
+                    {status === 2 || status === 4 ? (
+                        <div className="text-xs opacity-80 sm:mb-2">
+                            Ended {formattedDateString}
+                        </div>
+                    ) : null}
+                    <div className="mt-1 w-full text-sm">
+                        <div className="flex items-center gap-2">
+                            <Image
+                                src={WalletSmall}
+                                width={14}
+                                height={14}
+                                alt="wallet icon"
+                                className="h-[14px] w-[14px]"
+                            />
+                            <span className="opacity-80">My Wager:</span>
+                            <span className="font-bold text-[#F2CA16]">
+                                ${new Intl.NumberFormat().format(my_wager)}
+                            </span>
+                        </div>
+                        {prize ? (
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={HammerIcon}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">
+                                    Hammer Price:
+                                </span>
+                                <span className="font-bold text-[#49C742]">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Current Bid:</span>
+                                <span className="font-bold text-[#49C742]">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        current_bid
+                                    )}
+                                </span>
+                            </div>
+                        )}
 
-            {prize && (
-              <div className="sm:mt-4 mt-2 w-full sm:p-2 font-bold p-1 justify-between items-center flex sm:gap-4 bg-[#49c742] text-[#0f1923] rounded sm:text-sm text-xs">
-                <div className="flex gap-2">
-                  <Image
-                    src={MoneyBagBlack}
-                    width={20}
-                    height={20}
-                    alt="money bag"
-                    className="w-[20px] h-[20px]"
-                  />
-                  <div>WINNINGS</div>
-                </div>
-                <div>
-                  $
-                  {prize % 1 === 0
-                    ? prize.toLocaleString()
-                    : prize.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}{" "}
-                  🎉
-                </div>
-              </div>
-            )}
-            {isActive && (
-              <div className="flex items-center gap-2">
-                <Image
-                  src={Hourglass}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Time Left:</span>
-                {Number(days) < 1 ? (
-                  <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                ) : (
-                  <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
-                )}
-              </div>
-            )}
-          </div>
-          {isActive && !isRefunded && (
-            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex justify-between sm:gap-4 bg-[#49C74233] rounded sm:text-sm text-xs">
-              <div className="flex gap-2 items-center">
-                <Image
-                  src={MoneyBagGreen}
-                  width={20}
-                  height={20}
-                  alt="money bag"
-                  className="w-[20px] h-[20px]"
-                />
-                <div className="text-[#49C742] font-bold text-left grow-[1]">
-                  POTENTIAL PRIZE
-                </div>
-              </div>
-              <div className="text-[#49C742] font-bold text-left">
-                $
-                {pot % 1 === 0
-                  ? pot.toLocaleString()
-                  : pot.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-              </div>
-            </div>
-          )}
-          {isActive && isRefunded && (
-            <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
-              <div className="text-[#f92f60] font-bold text-left grow-[1]">
-                ❌ AUCTION WAGER
-              </div>
-
-              <button
-                disabled
-                className="bg-[white] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
-              >
-                REFUNDED
-              </button>
-            </div>
-          )}
-          {status === 3 && (
-            <>
-              <div className="flex items-center gap-2 w-full text-sm">
-                <Image
-                  src={Dollar}
-                  width={14}
-                  height={14}
-                  alt="wallet icon"
-                  className="w-[14px] h-[14px]"
-                />
-                <span className="opacity-80">Wager Amount:</span>
-                <span className="text-[#f92f60] font-bold">
-                  ${new Intl.NumberFormat().format(wagerAmount)}
-                </span>
-              </div>
-              <div className="sm:mt-4 mt-2 w-full sm:p-2 p-1 items-center flex sm:gap-4 gap-2 bg-[#4b2330] rounded sm:text-sm text-xs">
-                <div className="text-[#f92f60] font-bold text-left grow-[1]">
-                  ❌ UNSUCCESSFUL{" "}
-                  <span className="hidden sm:inline-block">AUCTION</span>
-                </div>
-                {refunded ? (
-                  <button
-                    disabled
-                    className="bg-[white] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
-                  >
-                    REFUNDED
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleRefund(objectID, wagerID)}
-                    className="claim-button hover:bg-[#ebcb48] bg-[#facc15] text-[black] text-[12px] font-bold text-left px-2 rounded-sm"
-                  >
-                    {loading && (
-                      <div className="px-[14px]">
-                        <BeatLoader size={8} />
-                      </div>
+                        {prize && (
+                            <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+                                <div className="flex gap-2">
+                                    <Image
+                                        src={MoneyBagBlack}
+                                        width={20}
+                                        height={20}
+                                        alt="money bag"
+                                        className="h-[20px] w-[20px]"
+                                    />
+                                    <div>WINNINGS</div>
+                                </div>
+                                <div>
+                                    $
+                                    {prize % 1 === 0
+                                        ? prize.toLocaleString()
+                                        : prize.toLocaleString(undefined, {
+                                              minimumFractionDigits: 2,
+                                              maximumFractionDigits: 2,
+                                          })}{" "}
+                                    🎉
+                                </div>
+                            </div>
+                        )}
+                        {isActive && (
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={Hourglass}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">Time Left:</span>
+                                {Number(days) < 1 ? (
+                                    <span className="text-[#c2451e]">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                ) : (
+                                    <span className="">{`${days}:${hours}:${minutes}:${seconds}`}</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    {isActive && !isRefunded && (
+                        <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49C74233] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+                            <div className="flex items-center gap-2">
+                                <Image
+                                    src={MoneyBagGreen}
+                                    width={20}
+                                    height={20}
+                                    alt="money bag"
+                                    className="h-[20px] w-[20px]"
+                                />
+                                <div className="grow-[1] text-left font-bold text-[#49C742]">
+                                    POTENTIAL PRIZE
+                                </div>
+                            </div>
+                            <div className="text-left font-bold text-[#49C742]">
+                                $
+                                {pot % 1 === 0
+                                    ? pot.toLocaleString()
+                                    : pot.toLocaleString(undefined, {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })}
+                            </div>
+                        </div>
                     )}
-                    <span className={`${loading && "hidden"}`}>
-                      REFUND
-                      {/* CLAIM $
+                    {isActive && isRefunded && (
+                        <div className="mt-2 flex w-full items-center gap-2 rounded bg-[#4b2330] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+                            <div className="grow-[1] text-left font-bold text-[#f92f60]">
+                                ❌ AUCTION WAGER
+                            </div>
+
+                            <button
+                                disabled
+                                className="rounded-sm bg-[white] px-2 text-left text-[12px] font-bold text-[black]"
+                            >
+                                REFUNDED
+                            </button>
+                        </div>
+                    )}
+                    {status === 3 && (
+                        <>
+                            <div className="flex w-full items-center gap-2 text-sm">
+                                <Image
+                                    src={Dollar}
+                                    width={14}
+                                    height={14}
+                                    alt="wallet icon"
+                                    className="h-[14px] w-[14px]"
+                                />
+                                <span className="opacity-80">
+                                    Wager Amount:
+                                </span>
+                                <span className="font-bold text-[#f92f60]">
+                                    $
+                                    {new Intl.NumberFormat().format(
+                                        wagerAmount
+                                    )}
+                                </span>
+                            </div>
+                            <div className="mt-2 flex w-full items-center gap-2 rounded bg-[#4b2330] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+                                <div className="grow-[1] text-left font-bold text-[#f92f60]">
+                                    ❌ UNSUCCESSFUL{" "}
+                                    <span className="hidden sm:inline-block">
+                                        AUCTION
+                                    </span>
+                                </div>
+                                {refunded ? (
+                                    <button
+                                        disabled
+                                        className="rounded-sm bg-[white] px-2 text-left text-[12px] font-bold text-[black]"
+                                    >
+                                        REFUNDED
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() =>
+                                            handleRefund(objectID, wagerID)
+                                        }
+                                        className="claim-button rounded-sm bg-[#facc15] px-2 text-left text-[12px] font-bold text-[black] hover:bg-[#ebcb48]"
+                                    >
+                                        {loading && (
+                                            <div className="px-[14px]">
+                                                <BeatLoader size={8} />
+                                            </div>
+                                        )}
+                                        <span
+                                            className={`${loading && "hidden"}`}
+                                        >
+                                            REFUND
+                                            {/* CLAIM $
                                         {new Intl.NumberFormat().format(
                                             wagerAmount
                                         )}{" "} */}
-                    </span>
-                  </button>
-                )}
-              </div>
-            </>
-          )}
+                                        </span>
+                                    </button>
+                                )}
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 const MyAccountDropdownMenu = () => {
-  const [walletBalance, setWalletBalance] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const { data: session } = useSession();
-  const router = useRouter();
+    const [walletBalance, setWalletBalance] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const { data: session } = useSession();
+    const router = useRouter();
 
-  useEffect(() => {
-    const fetchWalletBalance = async () => {
-      if (session) {
-        setIsLoading(true);
+    useEffect(() => {
+        const fetchWalletBalance = async () => {
+            if (session) {
+                setIsLoading(true);
+                try {
+                    const res = await fetch("/api/wallet", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        setWalletBalance(data.balance);
+                    } else {
+                        console.error(
+                            "Failed to fetch wallet balance:",
+                            data.message
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error fetching wallet balance:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        fetchWalletBalance();
+    }, [session]);
+
+    const handleSignOut = async () => {
         try {
-          const res = await fetch("/api/wallet", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-
-          const data = await res.json();
-          if (res.ok) {
-            setWalletBalance(data.balance);
-          } else {
-            console.error("Failed to fetch wallet balance:", data.message);
-          }
+            await signOut({ redirect: false });
+            router.push("/");
+            console.log("User successfully logged out");
         } catch (error) {
-          console.error("Error fetching wallet balance:", error);
-        } finally {
-          setIsLoading(false);
+            console.error("Error during sign out:", error);
         }
-      }
     };
 
-    fetchWalletBalance();
-  }, [session]);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut({ redirect: false });
-      router.push("/");
-      console.log("User successfully logged out");
-    } catch (error) {
-      console.error("Error during sign out:", error);
-    }
-  };
-
-  return (
-    <div className="absolute z-10 right-0 top-8 w-[320px] h-auto bg-[#1A2C3D] rounded py-6 flex flex-col items-start gap-4 shadow-xl shadow-black">
-      <div className="px-6 font-bold text-lg">MY ACCOUNT</div>
-      {isLoading ? (
-        <div className="px-6 w-full flex justify-center items-center">
-          <BeatLoader color="#696969" size={10} />
-        </div>
-      ) : typeof walletBalance === "number" ? (
-        <div className="px-6 w-full">
-          <div
-            className="bg-[#49C74233] w-full px-6 py-4 rounded flex items-center gap-6"
-            onClick={() => router.push("/my_wallet")}
-          >
-            <Image
-              src={Wallet}
-              width={32}
-              height={32}
-              alt="wallet icon"
-              className="w-8 h-8"
-            />
-            <div className="flex flex-col items-start grow">
-              <span className="font-bold text-xl py-1">
-                ${walletBalance.toFixed(2)}
-              </span>
-              <span className="text-[#49C742]">My Wallet</span>
+    return (
+        <div className="absolute right-0 top-8 z-10 flex h-auto w-[320px] flex-col items-start gap-4 rounded bg-[#1A2C3D] py-6 shadow-xl shadow-black">
+            <div className="px-6 text-lg font-bold">MY ACCOUNT</div>
+            {isLoading ? (
+                <div className="flex w-full items-center justify-center px-6">
+                    <BeatLoader color="#696969" size={10} />
+                </div>
+            ) : typeof walletBalance === "number" ? (
+                <div className="w-full px-6">
+                    <div
+                        className="flex w-full items-center gap-6 rounded bg-[#49C74233] px-6 py-4"
+                        onClick={() => router.push("/my_wallet")}
+                    >
+                        <Image
+                            src={Wallet}
+                            width={32}
+                            height={32}
+                            alt="wallet icon"
+                            className="h-8 w-8"
+                        />
+                        <div className="flex grow flex-col items-start">
+                            <span className="py-1 text-xl font-bold">
+                                ${walletBalance.toFixed(2)}
+                            </span>
+                            <span className="text-[#49C742]">My Wallet</span>
+                        </div>
+                        <Image
+                            src={ArrowRight}
+                            width={32}
+                            height={32}
+                            alt="wallet icon"
+                            className="h-8 w-8"
+                        />
+                    </div>
+                </div>
+            ) : (
+                <div className="w-full px-6">Error fetching wallet balance</div>
+            )}
+            <div className="flex w-full flex-col items-start px-6">
+                <Link
+                    href="/profile"
+                    className="w-full rounded p-2 text-left hover:bg-white/5"
+                >
+                    Profile
+                </Link>
+                <button className="w-full rounded p-2 text-left hover:bg-white/5">
+                    Settings
+                </button>
+                <button
+                    onClick={handleSignOut}
+                    className="w-full rounded p-2 text-left hover:bg-white/5"
+                >
+                    Logout
+                </button>
             </div>
-            <Image
-              src={ArrowRight}
-              width={32}
-              height={32}
-              alt="wallet icon"
-              className="w-8 h-8"
-            />
-          </div>
         </div>
-      ) : (
-        <div className="px-6 w-full">Error fetching wallet balance</div>
-      )}
-      <div className="px-6 flex flex-col items-start w-full">
-        <Link
-          href="/profile"
-          className="text-left p-2 hover:bg-white/5 rounded w-full"
-        >
-          Profile
-        </Link>
-        <button className="text-left p-2 hover:bg-white/5 rounded w-full">
-          Settings
-        </button>
-        <button
-          onClick={handleSignOut}
-          className="text-left p-2 hover:bg-white/5 rounded w-full"
-        >
-          Logout
-        </button>
-      </div>
-    </div>
-  );
+    );
 };
 
 const SearchDropDown: React.FC<SearchDropDownProps> = ({
-  searchedData,
-  onSearchClick,
+    searchedData,
+    onSearchClick,
 }) => {
-  return (
-    <div
-      id="search-box"
-      className="bg-shade-100 absolute top-10 left-0 right-0 sm:bg-shade-50 max-h-[344px] overflow-y-scroll z-10 rounded-b px-1 border-t-[1px] border-t-[#1b252e]"
-    >
-      {Array.isArray(searchedData) &&
-        searchedData &&
-        searchedData.map((carData) => {
-          return (
-            <div
-              key={carData.auction_id}
-              onClick={() =>
-                onSearchClick(
-                  `${carData.make}`,
-                  `${carData.model}`,
-                  `${carData.auction_id}`
-                )
-              }
-              className="p-2 hover:bg-shade-25 hover:cursor-pointer hover:rounded"
-            >
-              {carData.make} {carData.model}
-            </div>
-          );
-        })}
-    </div>
-  );
+    return (
+        <div
+            id="search-box"
+            className="absolute left-0 right-0 top-10 z-10 max-h-[344px] overflow-y-scroll rounded-b border-t-[1px] border-t-[#1b252e] bg-shade-100 px-1 sm:bg-shade-50"
+        >
+            {Array.isArray(searchedData) &&
+                searchedData &&
+                searchedData.map((carData) => {
+                    return (
+                        <div
+                            key={carData.auction_id}
+                            onClick={() =>
+                                onSearchClick(
+                                    `${carData.make}`,
+                                    `${carData.model}`,
+                                    `${carData.auction_id}`
+                                )
+                            }
+                            className="p-2 hover:cursor-pointer hover:rounded hover:bg-shade-25"
+                        >
+                            {carData.make} {carData.model}
+                        </div>
+                    );
+                })}
+        </div>
+    );
 };
 
 interface SearchDatas {
-  auction_id: string;
-  make: string;
-  model: string;
-  year: string;
-  price: number;
-  bids: number;
-  deadline: string;
+    auction_id: string;
+    make: string;
+    model: string;
+    year: string;
+    price: number;
+    bids: number;
+    deadline: string;
 }
 
 interface SearchDropDownProps {
-  searchedData: SearchDatas[];
-  onSearchClick: (carMake: string, carModel: string, carID: string) => void;
+    searchedData: SearchDatas[];
+    onSearchClick: (carMake: string, carModel: string, carID: string) => void;
 }
 
 interface MobileMyWatchlistProps {
-  closeMenu: () => void;
+    closeMenu: () => void;
 }
 
 const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
-  const router = useRouter();
-  const [activeOrCompleted, setActiveOrCompleted] = useState("active");
-  const [activeWatchlist, setActiveWatchlist] = useState([]);
-  const [completedWatchlist, setCompletedWatchlist] = useState([]);
-  const [activeTournamentWatchlist, setActiveTournamentWatchlist] = useState(
-    []
-  );
-  const [completedTournamentWatchlist, setCompletedTournamentWatchlist] =
-    useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
-  const [wagerSort, setWagerSort] = useState(words[0]);
+    const router = useRouter();
+    const [activeOrCompleted, setActiveOrCompleted] = useState("active");
+    const [activeWatchlist, setActiveWatchlist] = useState([]);
+    const [completedWatchlist, setCompletedWatchlist] = useState([]);
+    const [activeTournamentWatchlist, setActiveTournamentWatchlist] = useState(
+        []
+    );
+    const [completedTournamentWatchlist, setCompletedTournamentWatchlist] =
+        useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
+    const [wagerSort, setWagerSort] = useState(words[0]);
 
-  useEffect(() => {
-    const fetchWatchlist = async () => {
-      const data = await getMyWatchlist();
-      const currentDate = new Date();
+    useEffect(() => {
+        const fetchWatchlist = async () => {
+            const data = await getMyWatchlist();
+            const currentDate = new Date();
 
-      if (!data.watchlist || data.watchlist.length !== 0) {
-        const completed = data.watchlist.filter((watchlist: any) => {
-          const auctionDeadline = new Date(watchlist.auctionDeadline);
-          return auctionDeadline < currentDate;
-        });
-        const active = data.watchlist.filter((watchlist: any) => {
-          const auctionDeadline = new Date(watchlist.auctionDeadline);
-          return auctionDeadline >= currentDate;
-        });
-        const completedTournaments = data.tournament_watchlist.filter(
-          (watchlist: any) => {
-            const auctionDeadline = new Date(watchlist.endTime);
-            return auctionDeadline < currentDate;
-          }
-        );
+            if (!data.watchlist || data.watchlist.length !== 0) {
+                const completed = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.watchlist.filter((watchlist: any) => {
+                    const auctionDeadline = new Date(watchlist.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
+                const completedTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline < currentDate;
+                    }
+                );
 
-        const activeTournaments = data.tournament_watchlist.filter(
-          (watchlist: any) => {
-            const auctionDeadline = new Date(watchlist.endTime);
-            return auctionDeadline >= currentDate;
-          }
-        );
+                const activeTournaments = data.tournament_watchlist.filter(
+                    (watchlist: any) => {
+                        const auctionDeadline = new Date(watchlist.endTime);
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
-        setActiveWatchlist(active);
-        setCompletedWatchlist(completed);
-        setActiveTournamentWatchlist(activeTournaments);
-        setCompletedTournamentWatchlist(completedTournaments);
-      }
-      setIsLoading(false);
+                setActiveWatchlist(active);
+                setCompletedWatchlist(completed);
+                setActiveTournamentWatchlist(activeTournaments);
+                setCompletedTournamentWatchlist(completedTournaments);
+            }
+            setIsLoading(false);
+        };
+        fetchWatchlist();
+    }, []);
+
+    const handleClick = () => {
+        const currentIndex = words.indexOf(wagerSort);
+        const nextIndex = (currentIndex + 1) % words.length;
+        setWagerSort(words[nextIndex]);
     };
-    fetchWatchlist();
-  }, []);
 
-  const handleClick = () => {
-    const currentIndex = words.indexOf(wagerSort);
-    const nextIndex = (currentIndex + 1) % words.length;
-    setWagerSort(words[nextIndex]);
-  };
-
-  return (
-    <div className="relative">
-      {(activeWatchlist.length !== 0 ||
-        completedWatchlist.length !== 0 ||
-        activeTournamentWatchlist.length !== 0 ||
-        completedTournamentWatchlist.length !== 0) && (
-          <button
-            id="myWatchlist-sort"
-            type="button"
-            className="rounded-sm w-[110px] font-bold text-center px-2 py-1.5 text-white-900 bg-[#172431] text-[12px] absolute right-0 -top-[34px]"
-            onClick={handleClick}
-          >
-            {wagerSort}
-          </button>
-        )}
-      <div className="flex">
-        <button
-          autoFocus
-          onClick={() => setActiveOrCompleted("active")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
-        >
-          ACTIVE
-          {!isLoading && (
-            <span className="ml-1 px-1 text-xs bg-[#f2ca16] rounded font-bold text-[#0f1923]">
-              {activeWatchlist.length + activeTournamentWatchlist.length}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveOrCompleted("completed")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
-        >
-          COMPLETED
-        </button>
-      </div>
-      <div className="mb-4 watchlist-custom-height overflow-y-auto">
-        {isLoading && (
-          <div className="pb-[50px] pt-[74px] flex justify-center">
-            <BounceLoader color="#696969" loading={true} />
-          </div>
-        )}
-        {activeOrCompleted === "active" &&
-          (activeWatchlist.length !== 0 ||
-            activeTournamentWatchlist.length !== 0) ? (
-          <div className="w-full">
-            {wagerSort !== "TOURNAMENTS" &&
-              activeWatchlist.map((watchlist: any, index: number) => (
-                <div key={watchlist._id}>
-                  <TimerProvider deadline={watchlist.auctionDeadline}>
-                    <MyWatchlistCard
-                      title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                      img={watchlist.auctionImage}
-                      current_bid={watchlist.auctionPrice}
-                      time_left={watchlist.auctionDeadline}
-                      id={watchlist.auctionIdentifierId}
-                      isActive={true}
-                      closeMenu={closeMenu}
-                      index={index}
-                    />
-                  </TimerProvider>
-                </div>
-              ))}
-            {wagerSort !== "AUCTIONS" &&
-              activeTournamentWatchlist.map((watchlist: any) => {
-                return (
-                  <div key={watchlist._id}>
-                    <TimerProvider deadline={watchlist.endTime}>
-                      <MyWatchlistTournamentCard
-                        watchlist={watchlist}
-                        isActive={true}
-                        closeMenu={closeMenu}
-                      />
-                    </TimerProvider>
-                  </div>
-                );
-              })}
-          </div>
-        ) : null}
-        {activeOrCompleted === "completed" &&
-          (completedWatchlist.length !== 0 ||
-            completedTournamentWatchlist.length !== 0) ? (
-          <div className="w-full">
-            {wagerSort !== "TOURNAMENTS" &&
-              completedWatchlist.map((watchlist: any, index: number) => (
-                <div key={watchlist._id}>
-                  <TimerProvider deadline={watchlist.auctionDeadline}>
-                    <MyWatchlistCard
-                      title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-                      img={watchlist.auctionImage}
-                      current_bid={watchlist.auctionPrice}
-                      id={watchlist.auctionIdentifierId}
-                      time_left={watchlist.auctionDeadline}
-                      isActive={false}
-                      closeMenu={closeMenu}
-                      index={index}
-                    />
-                  </TimerProvider>
-                </div>
-              ))}
-            {wagerSort !== "AUCTIONS" &&
-              completedTournamentWatchlist.map((watchlist: any) => {
-                return (
-                  <div key={watchlist._id}>
-                    <TimerProvider deadline={watchlist.endTime}>
-                      <MyWatchlistTournamentCard
-                        watchlist={watchlist}
-                        isActive={false}
-                        closeMenu={closeMenu}
-                      />
-                    </TimerProvider>
-                  </div>
-                );
-              })}
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "active" &&
-          activeWatchlist.length === 0 &&
-          activeTournamentWatchlist.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No active wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
+    return (
+        <div className="relative">
+            {(activeWatchlist.length !== 0 ||
+                completedWatchlist.length !== 0 ||
+                activeTournamentWatchlist.length !== 0 ||
+                completedTournamentWatchlist.length !== 0) && (
+                <button
+                    id="myWatchlist-sort"
+                    type="button"
+                    className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
+                    onClick={handleClick}
+                >
+                    {wagerSort}
+                </button>
+            )}
+            <div className="flex">
+                <button
+                    autoFocus
+                    onClick={() => setActiveOrCompleted("active")}
+                    className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
+                >
+                    ACTIVE
+                    {!isLoading && (
+                        <span className="ml-1 rounded bg-[#f2ca16] px-1 text-xs font-bold text-[#0f1923]">
+                            {activeWatchlist.length +
+                                activeTournamentWatchlist.length}
+                        </span>
+                    )}
+                </button>
+                <button
+                    onClick={() => setActiveOrCompleted("completed")}
+                    className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
+                >
+                    COMPLETED
+                </button>
             </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "completed" &&
-          completedWatchlist.length === 0 &&
-          completedTournamentWatchlist.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No completed wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
+            <div className="watchlist-custom-height mb-4 overflow-y-auto">
+                {isLoading && (
+                    <div className="flex justify-center pb-[50px] pt-[74px]">
+                        <BounceLoader color="#696969" loading={true} />
+                    </div>
+                )}
+                {activeOrCompleted === "active" &&
+                (activeWatchlist.length !== 0 ||
+                    activeTournamentWatchlist.length !== 0) ? (
+                    <div className="w-full">
+                        {wagerSort !== "TOURNAMENTS" &&
+                            activeWatchlist.map(
+                                (watchlist: any, index: number) => (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.auctionDeadline}
+                                        >
+                                            <MyWatchlistCard
+                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                                img={watchlist.auctionImage}
+                                                current_bid={
+                                                    watchlist.auctionPrice
+                                                }
+                                                time_left={
+                                                    watchlist.auctionDeadline
+                                                }
+                                                id={
+                                                    watchlist.auctionIdentifierId
+                                                }
+                                                isActive={true}
+                                                closeMenu={closeMenu}
+                                                index={index}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                )
+                            )}
+                        {wagerSort !== "AUCTIONS" &&
+                            activeTournamentWatchlist.map((watchlist: any) => {
+                                return (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.endTime}
+                                        >
+                                            <MyWatchlistTournamentCard
+                                                watchlist={watchlist}
+                                                isActive={true}
+                                                closeMenu={closeMenu}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                );
+                            })}
+                    </div>
+                ) : null}
+                {activeOrCompleted === "completed" &&
+                (completedWatchlist.length !== 0 ||
+                    completedTournamentWatchlist.length !== 0) ? (
+                    <div className="w-full">
+                        {wagerSort !== "TOURNAMENTS" &&
+                            completedWatchlist.map(
+                                (watchlist: any, index: number) => (
+                                    <div key={watchlist._id}>
+                                        <TimerProvider
+                                            deadline={watchlist.auctionDeadline}
+                                        >
+                                            <MyWatchlistCard
+                                                title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
+                                                img={watchlist.auctionImage}
+                                                current_bid={
+                                                    watchlist.auctionPrice
+                                                }
+                                                id={
+                                                    watchlist.auctionIdentifierId
+                                                }
+                                                time_left={
+                                                    watchlist.auctionDeadline
+                                                }
+                                                isActive={false}
+                                                closeMenu={closeMenu}
+                                                index={index}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                )
+                            )}
+                        {wagerSort !== "AUCTIONS" &&
+                            completedTournamentWatchlist.map(
+                                (watchlist: any) => {
+                                    return (
+                                        <div key={watchlist._id}>
+                                            <TimerProvider
+                                                deadline={watchlist.endTime}
+                                            >
+                                                <MyWatchlistTournamentCard
+                                                    watchlist={watchlist}
+                                                    isActive={false}
+                                                    closeMenu={closeMenu}
+                                                />
+                                            </TimerProvider>
+                                        </div>
+                                    );
+                                }
+                            )}
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeWatchlist.length === 0 &&
+                activeTournamentWatchlist.length === 0 ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedWatchlist.length === 0 &&
+                completedTournamentWatchlist.length === 0 ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedWatchlist.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedTournamentWatchlist.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeWatchlist.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeTournamentWatchlist.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
             </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "completed" &&
-          completedWatchlist.length === 0 &&
-          wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No completed wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "completed" &&
-          completedTournamentWatchlist.length === 0 &&
-          wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No completed wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "active" &&
-          activeWatchlist.length === 0 &&
-          wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No active wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "active" &&
-          activeTournamentWatchlist.length === 0 &&
-          wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No active wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
-  const router = useRouter();
-  const [activeOrCompleted, setActiveOrCompleted] = useState("active");
-  const [activeWagers, setActiveWagers] = useState([]);
-  const [completedWagers, setCompletedWagers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTournamentWagers, setActiveTournamentWagers] = useState([]);
-  const [completedTournamentWagers, setCompletedTournamentWagers] = useState(
-    []
-  );
-  const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
-  const [wagerSort, setWagerSort] = useState(words[0]);
+    const router = useRouter();
+    const [activeOrCompleted, setActiveOrCompleted] = useState("active");
+    const [activeWagers, setActiveWagers] = useState([]);
+    const [completedWagers, setCompletedWagers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [activeTournamentWagers, setActiveTournamentWagers] = useState([]);
+    const [completedTournamentWagers, setCompletedTournamentWagers] = useState(
+        []
+    );
+    const words = ["ALL", "AUCTIONS", "TOURNAMENTS"];
+    const [wagerSort, setWagerSort] = useState(words[0]);
 
-  useEffect(() => {
-    const fetchWagers = async () => {
-      const data = await getMyWagers();
-      const currentDate = new Date();
+    useEffect(() => {
+        const fetchWagers = async () => {
+            const data = await getMyWagers();
+            const currentDate = new Date();
 
-      if (!data.wagers || data.wagers.length !== 0) {
-        const completed = data.wagers.filter((wager: any) => {
-          const auctionDeadline = new Date(wager.auctionDeadline);
-          return auctionDeadline < currentDate;
-        });
-        const active = data.wagers.filter((wager: any) => {
-          const auctionDeadline = new Date(wager.auctionDeadline);
-          return auctionDeadline >= currentDate;
-        });
+            if (!data.wagers || data.wagers.length !== 0) {
+                const completed = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline < currentDate;
+                });
+                const active = data.wagers.filter((wager: any) => {
+                    const auctionDeadline = new Date(wager.auctionDeadline);
+                    return auctionDeadline >= currentDate;
+                });
 
-        const completedTournaments = data.tournament_wagers.filter(
-          (wager: any) => {
-            const auctionDeadline = new Date(wager.tournamentEndTime);
-            return auctionDeadline < currentDate;
-          }
-        );
+                const completedTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
+                        return auctionDeadline < currentDate;
+                    }
+                );
 
-        const activeTournaments = data.tournament_wagers.filter(
-          (wager: any) => {
-            const auctionDeadline = new Date(wager.tournamentEndTime);
-            return auctionDeadline >= currentDate;
-          }
-        );
+                const activeTournaments = data.tournament_wagers.filter(
+                    (wager: any) => {
+                        const auctionDeadline = new Date(
+                            wager.tournamentEndTime
+                        );
+                        return auctionDeadline >= currentDate;
+                    }
+                );
 
-        setActiveWagers(active);
-        setCompletedWagers(completed);
-        setActiveTournamentWagers(activeTournaments);
-        setCompletedTournamentWagers(completedTournaments);
-      }
-      setIsLoading(false);
+                setActiveWagers(active);
+                setCompletedWagers(completed);
+                setActiveTournamentWagers(activeTournaments);
+                setCompletedTournamentWagers(completedTournaments);
+            }
+            setIsLoading(false);
+        };
+        fetchWagers();
+    }, []);
+
+    const handleClick = () => {
+        const currentIndex = words.indexOf(wagerSort);
+        const nextIndex = (currentIndex + 1) % words.length;
+        setWagerSort(words[nextIndex]);
     };
-    fetchWagers();
-  }, []);
 
-  const handleClick = () => {
-    const currentIndex = words.indexOf(wagerSort);
-    const nextIndex = (currentIndex + 1) % words.length;
-    setWagerSort(words[nextIndex]);
-  };
+    return (
+        <div className="relative">
+            {(activeWagers.length !== 0 ||
+                completedWagers.length !== 0 ||
+                activeTournamentWagers.length !== 0 ||
+                completedTournamentWagers.length !== 0) && (
+                <button
+                    id="myWatchlist-sort"
+                    type="button"
+                    className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
+                    onClick={handleClick}
+                >
+                    {wagerSort}
+                </button>
+            )}
+            <div className="flex">
+                <button
+                    autoFocus
+                    onClick={() => setActiveOrCompleted("active")}
+                    className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
+                >
+                    ACTIVE
+                    {!isLoading && (
+                        <span className="ml-1 rounded bg-[#f2ca16] px-1 text-xs font-bold text-[#0f1923]">
+                            {activeWagers.length +
+                                activeTournamentWagers.length}
+                        </span>
+                    )}
+                </button>
+                <button
+                    onClick={() => setActiveOrCompleted("completed")}
+                    className="w-1/2 border-b-2 border-[#314150] py-2 text-center text-sm focus:border-white focus:font-bold"
+                >
+                    COMPLETED
+                </button>
+            </div>
+            <div className="watchlist-custom-height mb-4 overflow-y-auto">
+                {isLoading && (
+                    <div className="flex justify-center pb-[50px] pt-[74px]">
+                        <BounceLoader color="#696969" loading={true} />
+                    </div>
+                )}
+                {activeOrCompleted === "active" &&
+                (activeWagers.length !== 0 ||
+                    activeTournamentWagers.length !== 0) ? (
+                    <div className="w-full">
+                        {wagerSort !== "TOURNAMENTS" &&
+                            activeWagers.map((wager: any, index: number) => (
+                                <div key={wager._id}>
+                                    <TimerProvider
+                                        deadline={wager.auctionDeadline}
+                                    >
+                                        <MyWagersCard
+                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                            img={wager.auctionImage}
+                                            my_wager={wager.priceGuessed}
+                                            current_bid={wager.auctionPrice}
+                                            time_left={wager.auctionDeadline}
+                                            potential_prize={wager.auctionPot}
+                                            id={wager.auctionIdentifierId}
+                                            isActive={true}
+                                            status={wager.auctionStatus}
+                                            wagerAmount={wager.wagerAmount}
+                                            objectID={wager.auctionObjectId}
+                                            wagerID={wager._id}
+                                            isRefunded={wager.refunded}
+                                            closeMenu={closeMenu}
+                                            prize={wager.prize}
+                                            deadline={wager.auctionDeadline}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))}
+                        {wagerSort !== "AUCTIONS" &&
+                            activeTournamentWagers.map((wager: any) => {
+                                return (
+                                    <div key={wager._id}>
+                                        <TimerProvider
+                                            deadline={wager.tournamentEndTime}
+                                        >
+                                            <MyWagersTournamentCard
+                                                wager={wager}
+                                                isActive={true}
+                                                closeMenu={closeMenu}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                );
+                            })}
+                    </div>
+                ) : null}
 
-  return (
-    <div className="relative">
-      {(activeWagers.length !== 0 ||
-        completedWagers.length !== 0 ||
-        activeTournamentWagers.length !== 0 ||
-        completedTournamentWagers.length !== 0) && (
-          <button
-            id="myWatchlist-sort"
-            type="button"
-            className="rounded-sm w-[110px] font-bold text-center px-2 py-1.5 text-white-900 bg-[#172431] text-[12px] absolute right-0 -top-[34px]"
-            onClick={handleClick}
-          >
-            {wagerSort}
-          </button>
-        )}
-      <div className="flex">
-        <button
-          autoFocus
-          onClick={() => setActiveOrCompleted("active")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
-        >
-          ACTIVE
-          {!isLoading && (
-            <span className="ml-1 px-1 text-xs bg-[#f2ca16] rounded font-bold text-[#0f1923]">
-              {activeWagers.length + activeTournamentWagers.length}
-            </span>
-          )}
-        </button>
-        <button
-          onClick={() => setActiveOrCompleted("completed")}
-          className="py-2 w-1/2 text-center text-sm border-b-2 border-[#314150] focus:font-bold focus:border-white"
-        >
-          COMPLETED
-        </button>
-      </div>
-      <div className="mb-4 watchlist-custom-height overflow-y-auto">
-        {isLoading && (
-          <div className="pb-[50px] pt-[74px] flex justify-center">
-            <BounceLoader color="#696969" loading={true} />
-          </div>
-        )}
-        {activeOrCompleted === "active" &&
-          (activeWagers.length !== 0 || activeTournamentWagers.length !== 0) ? (
-          <div className="w-full">
-            {wagerSort !== "TOURNAMENTS" &&
-              activeWagers.map((wager: any, index: number) => (
-                <div key={wager._id}>
-                  <TimerProvider deadline={wager.auctionDeadline}>
-                    <MyWagersCard
-                      title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                      img={wager.auctionImage}
-                      my_wager={wager.priceGuessed}
-                      current_bid={wager.auctionPrice}
-                      time_left={wager.auctionDeadline}
-                      potential_prize={wager.auctionPot}
-                      id={wager.auctionIdentifierId}
-                      isActive={true}
-                      status={wager.auctionStatus}
-                      wagerAmount={wager.wagerAmount}
-                      objectID={wager.auctionObjectId}
-                      wagerID={wager._id}
-                      isRefunded={wager.refunded}
-                      closeMenu={closeMenu}
-                      prize={wager.prize}
-                      deadline={wager.auctionDeadline}
-                      index={index}
-                    />
-                  </TimerProvider>
-                </div>
-              ))}
-            {wagerSort !== "AUCTIONS" &&
-              activeTournamentWagers.map((wager: any) => {
-                return (
-                  <div key={wager._id}>
-                    <TimerProvider deadline={wager.tournamentEndTime}>
-                      <MyWagersTournamentCard
-                        wager={wager}
-                        isActive={true}
-                        closeMenu={closeMenu}
-                      />
-                    </TimerProvider>
-                  </div>
-                );
-              })}
-          </div>
-        ) : null}
-
-        {activeOrCompleted === "completed" &&
-          (completedWagers.length !== 0 ||
-            completedTournamentWagers.length !== 0) ? (
-          <div className="w-full">
-            {wagerSort !== "TOURNAMENTS" &&
-              completedWagers.map((wager: any, index: number) => (
-                <div key={wager._id}>
-                  <TimerProvider deadline={wager.auctionDeadline}>
-                    <MyWagersCard
-                      title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
-                      img={wager.auctionImage}
-                      my_wager={wager.priceGuessed}
-                      current_bid={wager.auctionPrice}
-                      time_left={wager.auctionDeadline}
-                      potential_prize={wager.auctionPot}
-                      id={wager.auctionIdentifierId}
-                      isActive={false}
-                      status={wager.auctionStatus}
-                      wagerAmount={wager.wagerAmount}
-                      objectID={wager.auctionObjectId}
-                      wagerID={wager._id}
-                      isRefunded={wager.refunded}
-                      closeMenu={closeMenu}
-                      prize={wager.prize}
-                      deadline={wager.auctionDeadline}
-                      index={index}
-                    />
-                  </TimerProvider>
-                </div>
-              ))}
-            {wagerSort !== "AUCTIONS" &&
-              completedTournamentWagers.map((wager: any) => {
-                return (
-                  <div key={wager._id}>
-                    <TimerProvider deadline={wager.tournamentEndTime}>
-                      <MyWagersTournamentCard
-                        wager={wager}
-                        isActive={false}
-                        closeMenu={closeMenu}
-                      />
-                    </TimerProvider>
-                  </div>
-                );
-              })}
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "active" &&
-          activeWagers.length === 0 &&
-          activeTournamentWagers.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No active wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
+                {activeOrCompleted === "completed" &&
+                (completedWagers.length !== 0 ||
+                    completedTournamentWagers.length !== 0) ? (
+                    <div className="w-full">
+                        {wagerSort !== "TOURNAMENTS" &&
+                            completedWagers.map((wager: any, index: number) => (
+                                <div key={wager._id}>
+                                    <TimerProvider
+                                        deadline={wager.auctionDeadline}
+                                    >
+                                        <MyWagersCard
+                                            title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
+                                            img={wager.auctionImage}
+                                            my_wager={wager.priceGuessed}
+                                            current_bid={wager.auctionPrice}
+                                            time_left={wager.auctionDeadline}
+                                            potential_prize={wager.auctionPot}
+                                            id={wager.auctionIdentifierId}
+                                            isActive={false}
+                                            status={wager.auctionStatus}
+                                            wagerAmount={wager.wagerAmount}
+                                            objectID={wager.auctionObjectId}
+                                            wagerID={wager._id}
+                                            isRefunded={wager.refunded}
+                                            closeMenu={closeMenu}
+                                            prize={wager.prize}
+                                            deadline={wager.auctionDeadline}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))}
+                        {wagerSort !== "AUCTIONS" &&
+                            completedTournamentWagers.map((wager: any) => {
+                                return (
+                                    <div key={wager._id}>
+                                        <TimerProvider
+                                            deadline={wager.tournamentEndTime}
+                                        >
+                                            <MyWagersTournamentCard
+                                                wager={wager}
+                                                isActive={false}
+                                                closeMenu={closeMenu}
+                                            />
+                                        </TimerProvider>
+                                    </div>
+                                );
+                            })}
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeWagers.length === 0 &&
+                activeTournamentWagers.length === 0 ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedWagers.length === 0 &&
+                completedTournamentWagers.length === 0 ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedWagers.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "completed" &&
+                completedTournamentWagers.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeWagers.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
+                {isLoading === false &&
+                activeOrCompleted === "active" &&
+                activeTournamentWagers.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active wagers
+                            </div>
+                            <div className="text-center opacity-70">
+                                Quam temere in vitiis, legem sancimus haerentia
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => router.push("/auctions")}
+                            className="btn-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </button>
+                    </div>
+                ) : null}
             </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "completed" &&
-          completedWagers.length === 0 &&
-          completedTournamentWagers.length === 0 ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No completed wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "completed" &&
-          completedWagers.length === 0 &&
-          wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No completed wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "completed" &&
-          completedTournamentWagers.length === 0 &&
-          wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No completed wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "active" &&
-          activeWagers.length === 0 &&
-          wagerSort === "AUCTIONS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No active wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-        {isLoading === false &&
-          activeOrCompleted === "active" &&
-          activeTournamentWagers.length === 0 &&
-          wagerSort === "TOURNAMENTS" ? (
-          <div className="px-6 py-16 flex flex-col justify-center items-center w-full gap-4">
-            <Image
-              src={MoneyBag}
-              width={80}
-              height={80}
-              alt="watchlist icon"
-              className="w-[80px] h-[80px]"
-            />
-            <div className="">
-              <div className="font-bold text-xl text-center">
-                No active wagers
-              </div>
-              <div className="opacity-70 text-center">
-                Quam temere in vitiis, legem sancimus haerentia
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/auctions")}
-              className="btn-transparent-white"
-            >
-              DISCOVER AUCTIONS
-            </button>
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };

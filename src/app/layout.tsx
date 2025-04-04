@@ -3,7 +3,7 @@
 import "./styles/globals.css";
 import "./styles/app.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import Navbar from "./components/navbar";
 import { SessionProvider } from "next-auth/react";
 import BetaTesting from "./components/beta_testing";
@@ -11,7 +11,7 @@ import { Analytics } from "@vercel/analytics/react";
 import LoadWallet from "./components/load_wallet";
 import Footer from "./components/footer";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 // export const metadata: Metadata = {
 //   title: 'Hammershift',
@@ -26,7 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SessionProvider>
-        <body className={inter.className}>
+        {/*<body className={inter.className} */}
+        <body>
           <Navbar />
           {/* <BetaTesting /> */}
           {children}

@@ -8,10 +8,10 @@
   box-sizing: border-box;
 }
 
-@font-face {
+/* @font-face {
   src: url("../../../public/fonts/eurostarblackextended.ttf");
   font-family: "euro-star-black-extended";
-}
+} */
 
 .scale-tournament-background-on-hover {
   position: relative;
