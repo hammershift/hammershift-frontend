@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/app/components/footer";
-import HowItWorks from "@/app/components/how_it_works";
 import LiveGames from "@/app/components/live_games";
 import LivePageCarousel from "@/app/components/live_page_carousel";
 import NewEraWagering from "@/app/components/new_era_wagering";
@@ -33,10 +31,8 @@ const LivePage = () => {
         <LiveGames numberToDisplay={NUM_DISPLAY} />
       </div>
       <NewEraWagering />
-      <HowItWorks />
       <Subscribe />
       <div className="m-auto">
-        <Footer />
       </div>
     </div>
   );

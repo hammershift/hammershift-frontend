@@ -1,6 +1,4 @@
 "use client";
-import Footer from "@/app/components/footer";
-import { LatestNews } from "@/app/components/how_it_works";
 import { SubscribeSmall } from "@/app/components/subscribe";
 import { getWinnersRank } from "@/lib/getWinners";
 import React, { useEffect, useState } from "react";
@@ -61,9 +59,7 @@ const LeaderBoardPage = () => {
           </table>
         )}
       </div>
-      <LatestNews />
       <SubscribeSmall />
-      <Footer />
     </div>
   );
 };
