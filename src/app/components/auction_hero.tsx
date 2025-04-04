@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "./button";
 export default function AuctionHero() {
   return (
-    <div>
+    <div className="section-container">
       <div className="flex flex-col items-center justify-center rounded px-4">
         <h1 className="mb-4 text-center text-4xl font-bold md:text-6xl">
           <span className="text-white">PREDICT.</span>{" "}
@@ -20,7 +20,7 @@ export default function AuctionHero() {
           chance—it&apos;s a test of your knowledge and a thrill ride with every
           bid.
         </p> */}
-        <p className="mx-auto mb-8 max-w-md text-center text-xs text-gray-300">
+        <p className="mx-auto mb-8 max-w-md text-sm text-gray-300">
           For entertainment purposes only. Velocity Markets does not guarantee
           results. Users must be 18+ to play free games and 21+ for paid games.
         </p>
