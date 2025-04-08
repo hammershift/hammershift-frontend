@@ -64,7 +64,7 @@ export const HowItWorks = () => {
 
             <div className="mt-8 flex justify-center">
                 <Link
-                    href="/"
+                    href="/how_it_works"
                     className="flex items-center text-[#F2CA16] hover:underline"
                 >
                     Learn More

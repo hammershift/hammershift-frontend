@@ -58,7 +58,10 @@ const Footer = () => {
                     footerContent.content.map((data, index) => (
                       <Link key={index}
                         href={createPageUrl(data.urlString)}
-                        className="hover:text-[#F2CA16]"
+                        className={`hover:text-[#F2CA16] ${data.title === "Tournaments" || data.title === "Guess the Hammer" ? 'pointer-events-none opacity-50' : ''
+                          }`}
+                        aria-disabled={data.title === "Tournaments" || data.title === "Guess The Hammer"}
+                        tabIndex={data.title === "Tournaments" || data.title === "Guess The Hammer" ? -1 : undefined}
                       >
                         {data.title.toUpperCase()}
                       </Link>

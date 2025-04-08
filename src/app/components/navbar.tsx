@@ -940,7 +940,10 @@ const Navbar = () => {
                                 <Link
                                     key={index}
                                     href={createPageUrl(data.urlString)}
-                                    className="transition-colors hover:text-[#F2CA16]"
+                                    className={`transition-colors hover:text-[#F2CA16] ${data.title === "Tournaments" || data.title === "Guess the Hammer" ? 'pointer-events-none opacity-50' : ''
+                                        }`}
+                                    aria-disabled={data.title === "Tournaments" || data.title === "Guess The Hammer"}
+                                    tabIndex={data.title === "Tournaments" || data.title === "Guess The Hammer" ? -1 : undefined}
                                 >
                                     {data.title.toUpperCase()}
                                 </Link>
@@ -1148,9 +1151,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 <>
                     <button
                         onClick={() => setDropWatchlistOrWagers("watchlist")}
-                        className={`flex w-full py-2 ${
-                            dropWatchlistOrWagers === "watchlist" && "font-bold"
-                        }`}
+                        className={`flex w-full py-2 ${dropWatchlistOrWagers === "watchlist" && "font-bold"
+                            }`}
                     >
                         <Image
                             src={WatchlistIcon}
@@ -1166,9 +1168,8 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
                     ) : null}
                     <button
                         onClick={() => setDropWatchlistOrWagers("wagers")}
-                        className={`flex w-full py-2 ${
-                            dropWatchlistOrWagers === "wagers" && "font-bold"
-                        }`}
+                        className={`flex w-full py-2 ${dropWatchlistOrWagers === "wagers" && "font-bold"
+                            }`}
                     >
                         <Image
                             src={WagersIcon}
@@ -1399,15 +1400,15 @@ const MyWatchlistDropdownMenu = () => {
                         completedWatchlist.length !== 0 ||
                         activeTournamentWatchlist.length !== 0 ||
                         completedTournamentWatchlist.length !== 0) && (
-                        <button
-                            id="myWatchlist-sort"
-                            type="button"
-                            className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
-                            onClick={handleClick}
-                        >
-                            {wagerSort}
-                        </button>
-                    )}
+                            <button
+                                id="myWatchlist-sort"
+                                type="button"
+                                className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
+                                onClick={handleClick}
+                            >
+                                {wagerSort}
+                            </button>
+                        )}
                 </div>
                 <div className="flex">
                     <button
@@ -1439,8 +1440,8 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             )}
             {activeOrCompleted === "active" &&
-            (activeWatchlist.length !== 0 ||
-                activeTournamentWatchlist.length !== 0) ? (
+                (activeWatchlist.length !== 0 ||
+                    activeTournamentWatchlist.length !== 0) ? (
                 <div className="w-full">
                     {wagerSort !== "TOURNAMENTS" &&
                         activeWatchlist.map((watchlist: any, index: number) => (
@@ -1476,8 +1477,8 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {activeOrCompleted === "completed" &&
-            (completedWatchlist.length !== 0 ||
-                completedTournamentWatchlist.length !== 0) ? (
+                (completedWatchlist.length !== 0 ||
+                    completedTournamentWatchlist.length !== 0) ? (
                 <div className="w-full">
                     {wagerSort !== "TOURNAMENTS" &&
                         completedWatchlist.map(
@@ -1517,9 +1518,9 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "active" &&
-            activeWatchlist.length === 0 &&
-            activeTournamentWatchlist.length === 0 ? (
+                activeOrCompleted === "active" &&
+                activeWatchlist.length === 0 &&
+                activeTournamentWatchlist.length === 0 ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -1545,9 +1546,9 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "completed" &&
-            completedWatchlist.length === 0 &&
-            completedTournamentWatchlist.length === 0 ? (
+                activeOrCompleted === "completed" &&
+                completedWatchlist.length === 0 &&
+                completedTournamentWatchlist.length === 0 ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -1573,9 +1574,9 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "completed" &&
-            completedWatchlist.length === 0 &&
-            wagerSort === "AUCTIONS" ? (
+                activeOrCompleted === "completed" &&
+                completedWatchlist.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -1601,9 +1602,9 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "completed" &&
-            completedTournamentWatchlist.length === 0 &&
-            wagerSort === "TOURNAMENTS" ? (
+                activeOrCompleted === "completed" &&
+                completedTournamentWatchlist.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -1629,9 +1630,9 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "active" &&
-            activeWatchlist.length === 0 &&
-            wagerSort === "AUCTIONS" ? (
+                activeOrCompleted === "active" &&
+                activeWatchlist.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -1657,9 +1658,9 @@ const MyWatchlistDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "active" &&
-            activeTournamentWatchlist.length === 0 &&
-            wagerSort === "TOURNAMENTS" ? (
+                activeOrCompleted === "active" &&
+                activeTournamentWatchlist.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -1806,9 +1807,8 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 
     return (
         <div
-            className={`w-full px-5 py-4 sm:px-6 ${
-                index === 0 ? "" : "border-t-[1px] border-[#253747]"
-            }`}
+            className={`w-full px-5 py-4 sm:px-6 ${index === 0 ? "" : "border-t-[1px] border-[#253747]"
+                }`}
         >
             <div className="flex w-full items-center gap-6 rounded sm:py-3">
                 <Link
@@ -1973,15 +1973,15 @@ const MyWagersDropdownMenu = () => {
                         completedWagers.length !== 0 ||
                         activeTournamentWagers.length !== 0 ||
                         completedTournamentWagers.length !== 0) && (
-                        <button
-                            id="myWagers-sort"
-                            type="button"
-                            className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
-                            onClick={handleClick}
-                        >
-                            {wagerSort}
-                        </button>
-                    )}
+                            <button
+                                id="myWagers-sort"
+                                type="button"
+                                className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
+                                onClick={handleClick}
+                            >
+                                {wagerSort}
+                            </button>
+                        )}
                 </div>
                 <div className="flex">
                     <button
@@ -2013,8 +2013,8 @@ const MyWagersDropdownMenu = () => {
                 </div>
             )}
             {activeOrCompleted === "active" &&
-            (activeWagers.length !== 0 ||
-                activeTournamentWagers.length !== 0) ? (
+                (activeWagers.length !== 0 ||
+                    activeTournamentWagers.length !== 0) ? (
                 <div className="w-full">
                     {wagerSort !== "TOURNAMENTS" &&
                         activeWagers.map((wager: any, index: number) => (
@@ -2059,8 +2059,8 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {activeOrCompleted === "completed" &&
-            (completedWagers.length !== 0 ||
-                completedTournamentWagers.length !== 0) ? (
+                (completedWagers.length !== 0 ||
+                    completedTournamentWagers.length !== 0) ? (
                 <div className="w-full">
                     {wagerSort !== "TOURNAMENTS" &&
                         completedWagers.map((wager: any, index: number) => (
@@ -2105,9 +2105,9 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "active" &&
-            activeWagers.length === 0 &&
-            activeTournamentWagers.length === 0 ? (
+                activeOrCompleted === "active" &&
+                activeWagers.length === 0 &&
+                activeTournamentWagers.length === 0 ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -2133,9 +2133,9 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "completed" &&
-            completedWagers.length === 0 &&
-            completedTournamentWagers.length === 0 ? (
+                activeOrCompleted === "completed" &&
+                completedWagers.length === 0 &&
+                completedTournamentWagers.length === 0 ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -2161,9 +2161,9 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "completed" &&
-            completedWagers.length === 0 &&
-            wagerSort === "AUCTIONS" ? (
+                activeOrCompleted === "completed" &&
+                completedWagers.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -2189,9 +2189,9 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "completed" &&
-            completedTournamentWagers.length === 0 &&
-            wagerSort === "TOURNAMENTS" ? (
+                activeOrCompleted === "completed" &&
+                completedTournamentWagers.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -2217,9 +2217,9 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "active" &&
-            activeWagers.length === 0 &&
-            wagerSort === "AUCTIONS" ? (
+                activeOrCompleted === "active" &&
+                activeWagers.length === 0 &&
+                wagerSort === "AUCTIONS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -2245,9 +2245,9 @@ const MyWagersDropdownMenu = () => {
                 </div>
             ) : null}
             {isLoading === false &&
-            activeOrCompleted === "active" &&
-            activeTournamentWagers.length === 0 &&
-            wagerSort === "TOURNAMENTS" ? (
+                activeOrCompleted === "active" &&
+                activeTournamentWagers.length === 0 &&
+                wagerSort === "TOURNAMENTS" ? (
                 <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                     <Image
                         src={MoneyBag}
@@ -2375,9 +2375,8 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                         onClick={() => closeMenu && closeMenu()}
                     >
                         <div
-                            className={`line-clamp-1 w-full text-left text-base font-bold sm:text-lg ${
-                                isActive ? "sm:mt-[14px]" : "sm:mt-[5px]"
-                            }`}
+                            className={`line-clamp-1 w-full text-left text-base font-bold sm:text-lg ${isActive ? "sm:mt-[14px]" : "sm:mt-[5px]"
+                                }`}
                         >
                             {wager.tournamentTitle}
                         </div>
@@ -2417,8 +2416,8 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                                 <span className="opacity-80">Points:</span>{" "}
                                 {pointsAndPlacing.totalScore
                                     ? new Intl.NumberFormat().format(
-                                          pointsAndPlacing.totalScore
-                                      )
+                                        pointsAndPlacing.totalScore
+                                    )
                                     : "-"}{" "}
                                 pts. away
                             </div>
@@ -2440,12 +2439,12 @@ export const MyWagersTournamentCard = ({ wager, isActive, closeMenu }: any) => {
                                     {wager.prize % 1 === 0
                                         ? wager.prize.toLocaleString()
                                         : wager.prize.toLocaleString(
-                                              undefined,
-                                              {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                              }
-                                          )}{" "}
+                                            undefined,
+                                            {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2,
+                                            }
+                                        )}{" "}
                                     🎉
                                 </div>
                             </div>
@@ -2571,9 +2570,8 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
 
     return (
         <div
-            className={`w-full px-5 py-4 sm:px-6 ${
-                index === 0 ? "" : "border-t-[1px] border-[#253747]"
-            }`}
+            className={`w-full px-5 py-4 sm:px-6 ${index === 0 ? "" : "border-t-[1px] border-[#253747]"
+                }`}
         >
             <div className="flex w-full items-center gap-6 rounded sm:py-3">
                 <Link
@@ -2673,9 +2671,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                     {prize % 1 === 0
                                         ? prize.toLocaleString()
                                         : prize.toLocaleString(undefined, {
-                                              minimumFractionDigits: 2,
-                                              maximumFractionDigits: 2,
-                                          })}{" "}
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        })}{" "}
                                     🎉
                                 </div>
                             </div>
@@ -2717,9 +2715,9 @@ export const MyWagersCard: React.FC<MyWagersCardProps> = ({
                                 {pot % 1 === 0
                                     ? pot.toLocaleString()
                                     : pot.toLocaleString(undefined, {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                      })}
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    })}
                             </div>
                         </div>
                     )}
@@ -3025,15 +3023,15 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                 completedWatchlist.length !== 0 ||
                 activeTournamentWatchlist.length !== 0 ||
                 completedTournamentWatchlist.length !== 0) && (
-                <button
-                    id="myWatchlist-sort"
-                    type="button"
-                    className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
-                    onClick={handleClick}
-                >
-                    {wagerSort}
-                </button>
-            )}
+                    <button
+                        id="myWatchlist-sort"
+                        type="button"
+                        className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
+                        onClick={handleClick}
+                    >
+                        {wagerSort}
+                    </button>
+                )}
             <div className="flex">
                 <button
                     autoFocus
@@ -3062,8 +3060,8 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 )}
                 {activeOrCompleted === "active" &&
-                (activeWatchlist.length !== 0 ||
-                    activeTournamentWatchlist.length !== 0) ? (
+                    (activeWatchlist.length !== 0 ||
+                        activeTournamentWatchlist.length !== 0) ? (
                     <div className="w-full">
                         {wagerSort !== "TOURNAMENTS" &&
                             activeWatchlist.map(
@@ -3111,8 +3109,8 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {activeOrCompleted === "completed" &&
-                (completedWatchlist.length !== 0 ||
-                    completedTournamentWatchlist.length !== 0) ? (
+                    (completedWatchlist.length !== 0 ||
+                        completedTournamentWatchlist.length !== 0) ? (
                     <div className="w-full">
                         {wagerSort !== "TOURNAMENTS" &&
                             completedWatchlist.map(
@@ -3162,9 +3160,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeWatchlist.length === 0 &&
-                activeTournamentWatchlist.length === 0 ? (
+                    activeOrCompleted === "active" &&
+                    activeWatchlist.length === 0 &&
+                    activeTournamentWatchlist.length === 0 ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3190,9 +3188,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedWatchlist.length === 0 &&
-                completedTournamentWatchlist.length === 0 ? (
+                    activeOrCompleted === "completed" &&
+                    completedWatchlist.length === 0 &&
+                    completedTournamentWatchlist.length === 0 ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3218,9 +3216,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedWatchlist.length === 0 &&
-                wagerSort === "AUCTIONS" ? (
+                    activeOrCompleted === "completed" &&
+                    completedWatchlist.length === 0 &&
+                    wagerSort === "AUCTIONS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3246,9 +3244,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedTournamentWatchlist.length === 0 &&
-                wagerSort === "TOURNAMENTS" ? (
+                    activeOrCompleted === "completed" &&
+                    completedTournamentWatchlist.length === 0 &&
+                    wagerSort === "TOURNAMENTS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3274,9 +3272,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeWatchlist.length === 0 &&
-                wagerSort === "AUCTIONS" ? (
+                    activeOrCompleted === "active" &&
+                    activeWatchlist.length === 0 &&
+                    wagerSort === "AUCTIONS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3302,9 +3300,9 @@ const MobileMyWatchlist: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeTournamentWatchlist.length === 0 &&
-                wagerSort === "TOURNAMENTS" ? (
+                    activeOrCompleted === "active" &&
+                    activeTournamentWatchlist.length === 0 &&
+                    wagerSort === "TOURNAMENTS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3402,15 +3400,15 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                 completedWagers.length !== 0 ||
                 activeTournamentWagers.length !== 0 ||
                 completedTournamentWagers.length !== 0) && (
-                <button
-                    id="myWatchlist-sort"
-                    type="button"
-                    className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
-                    onClick={handleClick}
-                >
-                    {wagerSort}
-                </button>
-            )}
+                    <button
+                        id="myWatchlist-sort"
+                        type="button"
+                        className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
+                        onClick={handleClick}
+                    >
+                        {wagerSort}
+                    </button>
+                )}
             <div className="flex">
                 <button
                     autoFocus
@@ -3439,8 +3437,8 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 )}
                 {activeOrCompleted === "active" &&
-                (activeWagers.length !== 0 ||
-                    activeTournamentWagers.length !== 0) ? (
+                    (activeWagers.length !== 0 ||
+                        activeTournamentWagers.length !== 0) ? (
                     <div className="w-full">
                         {wagerSort !== "TOURNAMENTS" &&
                             activeWagers.map((wager: any, index: number) => (
@@ -3490,8 +3488,8 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                 ) : null}
 
                 {activeOrCompleted === "completed" &&
-                (completedWagers.length !== 0 ||
-                    completedTournamentWagers.length !== 0) ? (
+                    (completedWagers.length !== 0 ||
+                        completedTournamentWagers.length !== 0) ? (
                     <div className="w-full">
                         {wagerSort !== "TOURNAMENTS" &&
                             completedWagers.map((wager: any, index: number) => (
@@ -3540,9 +3538,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeWagers.length === 0 &&
-                activeTournamentWagers.length === 0 ? (
+                    activeOrCompleted === "active" &&
+                    activeWagers.length === 0 &&
+                    activeTournamentWagers.length === 0 ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3568,9 +3566,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedWagers.length === 0 &&
-                completedTournamentWagers.length === 0 ? (
+                    activeOrCompleted === "completed" &&
+                    completedWagers.length === 0 &&
+                    completedTournamentWagers.length === 0 ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3596,9 +3594,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedWagers.length === 0 &&
-                wagerSort === "AUCTIONS" ? (
+                    activeOrCompleted === "completed" &&
+                    completedWagers.length === 0 &&
+                    wagerSort === "AUCTIONS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3624,9 +3622,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedTournamentWagers.length === 0 &&
-                wagerSort === "TOURNAMENTS" ? (
+                    activeOrCompleted === "completed" &&
+                    completedTournamentWagers.length === 0 &&
+                    wagerSort === "TOURNAMENTS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3652,9 +3650,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeWagers.length === 0 &&
-                wagerSort === "AUCTIONS" ? (
+                    activeOrCompleted === "active" &&
+                    activeWagers.length === 0 &&
+                    wagerSort === "AUCTIONS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}
@@ -3680,9 +3678,9 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                     </div>
                 ) : null}
                 {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activeTournamentWagers.length === 0 &&
-                wagerSort === "TOURNAMENTS" ? (
+                    activeOrCompleted === "active" &&
+                    activeTournamentWagers.length === 0 &&
+                    wagerSort === "TOURNAMENTS" ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
                         <Image
                             src={MoneyBag}

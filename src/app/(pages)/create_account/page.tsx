@@ -674,7 +674,7 @@ const CreateAccount = () => {
   };
 
   return (
-    <div className='w-screen md:h-screen absolute top-0 z-[-1] flex justify-center items-center mt-16 md:mt-0'>
+    <div className='w-screen md:h-screen top-0 z-[-1] flex justify-center items-center mt-16 md:mt-0'>
       {isLoading ? (
         <div className='flex justify-center items-center h-full'>
           <BounceLoader color='#696969' loading={isLoading} />

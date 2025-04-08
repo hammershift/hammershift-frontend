@@ -158,7 +158,7 @@ const LivePage = () => {
                         Join Velocity Markets today and start predicting auction
                         prices to win prizes.
                     </p>
-                    <Link href="/">
+                    <Link href="/create_account">
                         <Button className="bg-[#F2CA16] px-8 py-6 text-lg text-[#0C1924] hover:bg-[#F2CA16]/90">
                             SIGN UP NOW
                         </Button>

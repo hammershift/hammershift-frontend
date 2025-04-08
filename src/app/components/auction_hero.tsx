@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 export default function AuctionHero() {
+    const isTournamentDisabled = true;
+
     return (
         <div className="section-container">
             <div className="flex flex-col items-center justify-center rounded px-4">
@@ -28,7 +30,7 @@ export default function AuctionHero() {
                 </p>
             </div>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                <Link href="/">
+                <Link href="/free_play">
                     <Button
                         variant="default"
                         className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
@@ -36,7 +38,13 @@ export default function AuctionHero() {
                         PLAY FREE GAME
                     </Button>
                 </Link>
-                <Link href="/">
+                <Link
+                    href="/tournaments"
+                    className={`w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto ${isTournamentDisabled ? 'pointer-events-none opacity-50' : ''
+                        }`}
+                    aria-disabled={isTournamentDisabled}
+                    tabIndex={isTournamentDisabled ? -1 : undefined}
+                >
                     <Button
                         variant="outline"
                         className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto"
