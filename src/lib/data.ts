@@ -45,21 +45,15 @@ export const getCarData = async (ID: string) => {
   }
 };
 
-export const getCars = async ({
-  limit,
-  mostBids = false,
-}: {
-  limit: number;
-  mostBids?: boolean;
-}) => {
+export const getCars = async ({ limit }: { limit: number }) => {
   try {
-    const response = await fetch(
-      `/api/cars/filter?completed=false&limit=${limit}&mostBids=${mostBids}`,
-      {
-        cache: "no-store", //dynamic rendering
-      }
-    );
-
+    // const response = await fetch(
+    //   `/api/cars/filter?completed=false&limit=${limit}`,
+    //   {
+    //     cache: "no-store", //dynamic rendering
+    //   }
+    // );
+    const response = await fetch(`/api/cars?limit=${limit}`);
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -185,7 +179,10 @@ export const getCarsWithMostPot = async (limit: number) => {
   }
 };
 
-export const getLiveAuctionsToDisplay = async (limit: number, offset: number) => {
+export const getLiveAuctionsToDisplay = async (
+  limit: number,
+  offset: number
+) => {
   try {
     const response = await fetch(
       `/api/cars/filter?display=true&limit=${limit}&offset=${offset}`
