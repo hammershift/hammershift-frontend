@@ -24,12 +24,15 @@ const badgeVariants = cva(
 
 interface IProps {
   className: string;
-  variant: "default" | "secondary" | "destructive" | "outline";
+  variant?: "default" | "secondary" | "destructive" | "outline";
   children: React.ReactNode;
+  [x: string]: any;
 }
-const Badge = ({ className, variant, children }: IProps) => {
+const Badge = ({ className, variant, children, props }: IProps) => {
   return (
-    <div className={cn(badgeVariants({ variant }), className)}>{children}</div>
+    <div className={cn(badgeVariants({ variant }), className)} {...props}>
+      {children}
+    </div>
   );
 };
 

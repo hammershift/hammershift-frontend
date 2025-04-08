@@ -1,5 +1,4 @@
 import React from "react";
-import type { Ref } from "react";
 
 import { cn } from "@/helpers/utils";
 
@@ -11,7 +10,7 @@ interface IProps {
 const Card = ({ className, children }: IProps) => (
   <div
     className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
+      "bg-card text-card-foreground rounded-xl border shadow",
       className
     )}
   >
@@ -32,7 +31,7 @@ const CardTitle = ({ className, children }: IProps) => (
 );
 
 const CardDescription = ({ className, children }: IProps) => (
-  <div className={cn("text-sm text-muted-foreground", className)}>
+  <div className={cn("text-muted-foreground text-sm", className)}>
     {children}
   </div>
 );
