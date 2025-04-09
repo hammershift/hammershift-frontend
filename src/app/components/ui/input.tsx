@@ -1,28 +1,23 @@
-import { cn } from '@/helpers/utils'
-import { forwardRef } from 'react'
+import { cn } from "@/helpers/utils";
+import { forwardRef } from "react";
 
 interface InputProps {
-  className?: string
-  type?: string
-  id?: string
-  name?: string
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  required?: boolean
+  className?: string;
+  type?: string;
+  id?: string;
+  name?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  [x: string]: any;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(({
-  className,
-  type = 'text',
-  id,
-  name,
-  value,
-  onChange,
-  required,
-  ...props
-}, ref) => {
-  return (
-    (
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  (
+    { className, type = "text", id, name, value, onChange, required, ...props },
+    ref
+  ) => {
+    return (
       <input
         type={type}
         className={cn(
@@ -35,10 +30,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
         value={value}
         onChange={onChange}
         required={required}
-        {...props} />
-    )
-  );
-})
-Input.displayName = "Input"
+        {...props}
+      />
+    );
+  }
+);
+Input.displayName = "Input";
 
-export { Input }
+export { Input };
