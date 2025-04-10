@@ -1,3 +1,4 @@
+import { Prediction } from "@/models/predictions.model";
 export const getCarData = async (ID: string) => {
   try {
     const response = await fetch(`/api/cars?auction_id=${ID}`, {
@@ -46,7 +47,13 @@ export const getCarData = async (ID: string) => {
   }
 };
 
-export const getCars = async ({ limit }: { limit: number }) => {
+export const getCars = async ({
+  offset,
+  limit,
+}: {
+  offset: number;
+  limit: number;
+}) => {
   try {
     // const response = await fetch(
     //   `/api/cars/filter?completed=false&limit=${limit}`,
@@ -54,7 +61,7 @@ export const getCars = async ({ limit }: { limit: number }) => {
     //     cache: "no-store", //dynamic rendering
     //   }
     // );
-    const response = await fetch(`/api/cars?limit=${limit}`);
+    const response = await fetch(`/api/cars?offset=${offset}&limit=${limit}`);
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -77,6 +84,64 @@ export const getPredictionData = async (auction_id: string) => {
     }
   } catch (e) {
     console.error(e);
+  }
+};
+
+export const getPredictionDataFilter = async (
+  car_id: string,
+  prediction_type: string,
+  username: string
+) => {
+  try {
+    const response = await fetch(
+      `/api/predictions?car_id=${car_id}&prediction_type=${prediction_type}&username=${username}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch prediction!");
+    }
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ message: "Internal server error" });
+  }
+};
+export const getLatestPrediction = async (username: string) => {
+  try {
+    const response = await fetch(
+      `/api/predictions?latest=true&username=${username}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch latest prediction!");
+    }
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ message: "Internal server error" });
+  }
+};
+
+export const addPrediction = async (prediction: Prediction) => {
+  try {
+    const response = await fetch(`/api/predictions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(prediction),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to add prediction!");
+    }
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ message: "Internal server error" });
   }
 };
 

@@ -1,23 +1,22 @@
 import { Document, Schema, model, models, Types } from "mongoose";
 
-export interface Predictions extends Document {
-  auction_id: Types.ObjectId;
+export interface Prediction {
   predicted_price: number;
   prediction_type: string;
   user: {
-    _id: Types.ObjectId;
     fullName: string;
     username: string;
   };
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const predictionsSchema = new Schema(
   {
-    auction_id: { type: Schema.Types.ObjectId, required: true },
+    car_id: { type: String, required: true },
     predicted_price: { type: Number, required: true },
     prediction_type: { type: String, required: true },
     user: {
-      _id: { type: Schema.Types.ObjectId, required: true },
       fullName: { type: String, required: true },
       username: { type: String, required: true },
     },
