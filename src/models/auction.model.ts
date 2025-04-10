@@ -1,5 +1,5 @@
-import { Document, Schema, model, models } from "mongoose";
-
+import mongoose, { Document, Schema, model, models } from "mongoose";
+import paginate from "mongoose-paginate-v2";
 const attributeSchema = new Schema({
   key: { type: String, required: true },
   value: { type: Schema.Types.Mixed, required: true },
@@ -85,6 +85,7 @@ interface AuctionSort {
 }
 export interface Auction extends Document {
   auction_id: string;
+  title: string;
   website: string;
   image: string;
   page_url: string;
@@ -104,6 +105,7 @@ export interface Auction extends Document {
 }
 export interface Car {
   auction_id: string;
+  title: string;
   website: string;
   image: string;
   page_url: string;
@@ -131,6 +133,7 @@ const auctionSchema = new Schema(
     //   required: false,
     // },
     auction_id: { type: String, required: true },
+    title: { type: String, required: true },
     website: { type: String, required: true },
     image: { type: String, required: true },
     page_url: { type: String, required: true },
@@ -166,6 +169,13 @@ const auctionSchema = new Schema(
   { collection: "auctions", timestamps: true }
 );
 
-const Auctions = models.auctions || model<Auction>("auctions", auctionSchema);
+auctionSchema.plugin(paginate);
+const Auctions =
+  (models.auctions as mongoose.PaginateModel<Auction>) ||
+  model<Auction, mongoose.PaginateModel<Auction>>(
+    "auctions",
+    auctionSchema,
+    "auctions"
+  );
 
 export default Auctions;

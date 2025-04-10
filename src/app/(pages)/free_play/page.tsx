@@ -17,25 +17,35 @@ import { getCars } from "@/lib/data";
 import { AIStatistics } from "@/app/components/ai_statistics";
 import { AuctionFilters } from "@/app/components/auction_filters";
 import { AuctionGrid } from "@/app/components/auction_grid";
+import ResponsivePagination from "react-responsive-pagination";
+import "react-responsive-pagination/themes/classic.css";
 const FreePlay = () => {
   const [hammerCars, setHammerCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>("hammer");
   const [velocityPicks, setVelocityPicks] = useState([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [filters, setFilters] = useState({
     make: "all",
     priceRange: "all",
     status: "active",
   });
   const loadHammerCars = async () => {
+    setLoading(true);
     try {
-      console.log("Loading hammer cars...");
+      console.log("Loading hammer cars, page:", currentPage);
       const now = new Date().toISOString();
 
-      const response = await getCars({ limit: 10 });
+      const response = await getCars({
+        offset: (currentPage - 1) * 6,
+        limit: 6,
+      });
+      // console.log(response);
       console.log(response);
       setHammerCars(response.cars);
+      setTotalPages(response.total);
     } catch (e) {
       console.error("Error in loading hammer cars:", e);
       setError("Failed to load hammer game cars");
@@ -48,7 +58,14 @@ const FreePlay = () => {
 
   useEffect(() => {
     loadHammerCars();
-  }, []);
+  }, [currentPage]);
+
+  // useEffect(() => {
+  //   if (hammerCars.length > 0) {
+  //     // console.log(hammerCars);
+  //     setLoading(false);
+  //   }
+  // }, [hammerCars]);
   return (
     <div className="page-container">
       <div className="section-container mx-auto px-4 py-12">
@@ -163,6 +180,13 @@ const FreePlay = () => {
             )}
           </TabsContent> */}
         </Tabs>
+        <div className="mx-auto mb-8 w-1/3">
+          <ResponsivePagination
+            current={currentPage}
+            total={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
     </div>
   );

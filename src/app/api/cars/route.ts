@@ -35,8 +35,12 @@ export async function GET(req: NextRequest) {
     }
     // api/cars to get all cars
     console.log("Fetching all cars...");
-    const cars = await Auctions.find({}).skip(offset).limit(limit);
-    return NextResponse.json({ total: cars.length, cars: cars });
+
+    const cars = await Auctions.paginate(
+      { isActive: true },
+      { offset: offset, limit: limit, sort: { createdAt: -1 } }
+    );
+    return NextResponse.json({ total: cars.totalPages, cars: cars.docs });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" });

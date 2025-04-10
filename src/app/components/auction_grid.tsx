@@ -81,7 +81,7 @@ export const AuctionGrid = ({
               alt={"Car auction"}
               width={483.333}
               height={192}
-              className="w-full h-48 sm:h-56 md:h-64 object-cover"
+              className="h-48 w-full object-cover sm:h-56 md:h-64"
             />
             <div className="absolute right-2 top-2">
               <Badge className="bg-[#F2CA16] text-[#0C1924]">
@@ -90,9 +90,7 @@ export const AuctionGrid = ({
             </div>
           </div>
           <CardContent className="p-4">
-            <h3 className="mb-2 font-bold">
-              {/*auction.title || */ "Unknown Car"}
-            </h3>
+            <h3 className="mb-2 font-bold">{auction.title || "Unknown Car"}</h3>
             <div className="mb-4 grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-gray-400">Current Bid</div>

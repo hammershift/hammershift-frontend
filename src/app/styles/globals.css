@@ -6,6 +6,12 @@
   background: #0f1923;
   color: white;
   box-sizing: border-box;
+  --pagination-color: #FFFFFF;
+  --pagination-active-bg: #F2CA16;
+  --pagination-hover-bg: #f2ca16ab;
+  --pagination-hover-color: #000000;
+  --pagination-active-color: #000000;
+  --pagination-bg: #13202D;
 }
 
 /* @font-face {
