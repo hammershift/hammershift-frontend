@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 
 import Image from "next/image";
-import Card from "../../components/card";
+import Card from "../../components/old_card";
 import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 
 import CancelIcon from "../../../../public/images/x-icon.svg";
@@ -371,8 +371,8 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
                             height={20}
                             alt={isWatching ? "Checked" : "Watch"}
                             className={`w-5 h-5 mr-2 ${isWatching
-                                    ? "scale-animation is-watching"
-                                    : "scale-animation"
+                                ? "scale-animation is-watching"
+                                : "scale-animation"
                                 }`}
                         />
                         {isWatching ? "WATCHING" : "WATCH"}

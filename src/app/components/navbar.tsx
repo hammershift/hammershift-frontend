@@ -43,6 +43,7 @@ import {
 import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { BeatLoader, BounceLoader } from "react-spinners";
 import { createPageUrl } from "./utils";
+import { Button } from "./ui/button";
 
 // export interface NavbarProps {
 //     isLoggedIn: boolean;
@@ -288,13 +289,6 @@ const Navbar = () => {
                                     alt="Velocity Markets"
                                     className="h-auto w-auto sm:block"
                                 />
-                                {/* <Image
-                  src={LogoSmall}
-                  width={32}
-                  height={32}
-                  alt="logo"
-                  className=" block sm:hidden w-auto h-auto"
-                /> */}
                             </Link>
                         </div>
                         {/* <Link
@@ -532,6 +526,22 @@ const Navbar = () => {
                 )}
               </div>
             </div> */}
+                    </div>
+                    <div className="relative mr-4 hidden max-w-[535px] flex-1 justify-between lg:flex xl:w-full">
+                        <nav className="flex items-center justify-between space-x-8">
+                            {navBarList.map((data, index) => (
+                                <Link
+                                    key={index}
+                                    href={createPageUrl(data.urlString)}
+                                    className={`transition-colors hover:text-[#F2CA16] ${data.title === "Tournaments" || data.title === "Guess the Hammer" ? 'pointer-events-none opacity-50' : ''
+                                        }`}
+                                    aria-disabled={data.title === "Tournaments" || data.title === "Guess The Hammer"}
+                                    tabIndex={data.title === "Tournaments" || data.title === "Guess The Hammer" ? -1 : undefined}
+                                >
+                                    {data.title.toUpperCase()}
+                                </Link>
+                            ))}
+                        </nav>
                     </div>
                     {/* <div className="relative max-w-[535px] w-full hidden lg:block">
             <form
@@ -1000,14 +1010,14 @@ const Navbar = () => {
                     </div> */}
                     <div className="flex items-center">
                         <Link href="/login_page">
-                            <button className="btn-white mx-2 hidden hover:bg-gold-200 md:block">
-                                LOGIN
-                            </button>
+                            <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+                                LOG IN
+                            </Button>
                         </Link>
                         <Link href="/create_account">
-                            <button className="btn-white hidden hover:bg-gold-200 md:block">
+                            <Button className="ml-2 bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
                                 SIGN UP
-                            </button>
+                            </Button>
                         </Link>
                         <button
                             onClick={() => {
@@ -1278,7 +1288,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
     return (
         <div className="slide-in-top absolute z-50 flex h-auto w-full flex-col bg-[#1A2C3D] p-4 text-white">
             <div className="p-1.5 text-lg font-bold">MY ACCOUNT</div>
-            {isLoading ? (
+            {/* {isLoading ? (
                 <div className="flex w-full items-center justify-center px-6">
                     <BeatLoader color="#696969" size={10} />
                 </div>
@@ -1302,7 +1312,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
                 </div>
             ) : (
                 <div className="w-full px-6">Error fetching wallet balance</div>
-            )}
+            )} */}
             <Link
                 href="/profile"
                 className="w-full p-1.5 hover:bg-white/5"
@@ -2841,6 +2851,7 @@ const MyAccountDropdownMenu = () => {
 
     const handleSignOut = async () => {
         try {
+            console.log("hello");
             await signOut({ redirect: false });
             router.push("/");
             console.log("User successfully logged out");
@@ -2852,7 +2863,7 @@ const MyAccountDropdownMenu = () => {
     return (
         <div className="absolute right-0 top-8 z-10 flex h-auto w-[320px] flex-col items-start gap-4 rounded bg-[#1A2C3D] py-6 shadow-xl shadow-black">
             <div className="px-6 text-lg font-bold">MY ACCOUNT</div>
-            {isLoading ? (
+            {/* {isLoading ? (
                 <div className="flex w-full items-center justify-center px-6">
                     <BeatLoader color="#696969" size={10} />
                 </div>
@@ -2886,7 +2897,7 @@ const MyAccountDropdownMenu = () => {
                 </div>
             ) : (
                 <div className="w-full px-6">Error fetching wallet balance</div>
-            )}
+            )} */}
             <div className="flex w-full flex-col items-start px-6">
                 <Link
                     href="/profile"
@@ -2898,7 +2909,7 @@ const MyAccountDropdownMenu = () => {
                     Settings
                 </button>
                 <button
-                    onClick={handleSignOut}
+                    onClick={() => handleSignOut()}
                     className="w-full rounded p-2 text-left hover:bg-white/5"
                 >
                     Logout

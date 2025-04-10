@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { TournamentsListCard } from "../../components/card";
+import { TournamentsListCard } from "../../components/old_card";
 import Image from "next/image";
 import TournamentsCard from "@/app/components/tournaments_card";
 import Link from "next/link";

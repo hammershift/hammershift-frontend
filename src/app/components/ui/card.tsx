@@ -1,12 +1,13 @@
 import { cn } from '@/helpers/utils'
-import { forwardRef } from 'react'
+import React from 'react'
 
-interface CardProps {
-  className?: string
-  children?: React.ReactNode
+interface IProps {
+  className?: string;
+  children?: React.ReactNode;
+  [x: string]: any;
 }
 
-const Card = forwardRef<HTMLDivElement, CardProps>(({
+const Card = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props
@@ -22,7 +23,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(({
 
 Card.displayName = "Card"
 
-const CardHeader = forwardRef<HTMLDivElement, CardProps>(({
+const CardHeader = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props
@@ -37,7 +38,7 @@ const CardHeader = forwardRef<HTMLDivElement, CardProps>(({
 ))
 CardHeader.displayName = "CardHeader"
 
-const CardTitle = forwardRef<HTMLDivElement, CardProps>(({
+const CardTitle = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props
@@ -52,7 +53,7 @@ const CardTitle = forwardRef<HTMLDivElement, CardProps>(({
 ))
 CardTitle.displayName = "CardTitle"
 
-const CardDescription = forwardRef<HTMLDivElement, CardProps>(({
+const CardDescription = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props
@@ -67,7 +68,7 @@ const CardDescription = forwardRef<HTMLDivElement, CardProps>(({
 ))
 CardDescription.displayName = "CardDescription"
 
-const CardContent = forwardRef<HTMLDivElement, CardProps>(({
+const CardContent = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props
@@ -79,7 +80,7 @@ const CardContent = forwardRef<HTMLDivElement, CardProps>(({
 ))
 CardContent.displayName = "CardContent"
 
-const CardFooter = forwardRef<HTMLDivElement, CardProps>(({
+const CardFooter = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props

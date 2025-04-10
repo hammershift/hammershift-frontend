@@ -9,11 +9,12 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import TwitterProvider from 'next-auth/providers/twitter';
+import connectToDB from './mongoose';
+import Users from '@/models/user.model';
 
 async function doesEmailExist(email: string): Promise<boolean> {
-  const client = await clientPromise;
-  const db = client.db();
-  const user = await db.collection('users').findOne({ email });
+  await connectToDB();
+  const user = await Users.findOne({ email });
   return !!user;
 }
 
@@ -73,97 +74,91 @@ export const authOptions: NextAuthOptions = {
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'email', placeholder: 'you@gmail.com' },
-        password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials: Credentials | undefined) => {
-        if (!credentials || !credentials.email || !credentials.password) throw new Error('Missing credentials');
-
-        const client = await clientPromise;
-        const db = client.db();
-        const user = await db.collection<User>('users').findOne({ email: credentials.email });
+        if (!credentials || !credentials.email) throw new Error('Missing credentials');
+        await connectToDB();
+        const user = await Users.findOne({ email: credentials.email });
 
         if (user?.isBanned) throw new Error('Your account has been banned');
-        if (!user || !user.password || !(await bcrypt.compare(credentials.password, user.password))) throw new Error('Invalid credentials');
-
-        return { id: user._id.toString(), email: user.email, provider: 'credentials' };
+        return { id: user._id.toString(), email: user.email, username: user.username, fullName: user.fullName, provider: user.provider };
       },
     }),
-    GoogleProvider({
-      clientId: getGoogleCredentials().clientId,
-      clientSecret: getGoogleCredentials().clientSecret,
-      allowDangerousEmailAccountLinking: true,
-      profile: (profile) => ({
-        id: profile.sub,
-        name: profile.name,
-        email: profile.email,
-        image: profile.picture,
-        provider: 'google',
-      }),
-    }),
-    FacebookProvider({
-      clientId: getFacebookCredentials().clientId,
-      clientSecret: getFacebookCredentials().clientSecret,
-      allowDangerousEmailAccountLinking: true,
-      userinfo: {
-        url: 'https://graph.facebook.com/v19.0/me',
-        params: {
-          fields: 'id,name,email,first_name,last_name',
-        },
-        async request({ tokens, client, provider }) {
-          // eslint-disable-next-line
-          return await client.userinfo(tokens.access_token!, {
-            // @ts-expect-error
-            params: provider.userinfo?.params,
-          });
-        },
-      },
-      profile: (_profile) => {
-        return {
-          id: _profile.id,
-          firstName: _profile.first_name,
-          lastName: _profile.last_name,
-          email: _profile.email,
-          provider: 'facebook',
-        };
-      },
-    }),
-    TwitterProvider({
-      clientId: getTwitterCredentials().clientId,
-      clientSecret: getTwitterCredentials().clientSecret,
-      allowDangerousEmailAccountLinking: true,
-      profile: (profile) => ({
-        id: profile.id_str,
-        name: profile.name,
-        email: profile.email,
-        image: profile.profile_image_url_https,
-        provider: 'twitter',
-      }),
-    }),
+    // GoogleProvider({
+    //   clientId: getGoogleCredentials().clientId,
+    //   clientSecret: getGoogleCredentials().clientSecret,
+    //   allowDangerousEmailAccountLinking: true,
+    //   profile: (profile) => ({
+    //     id: profile.sub,
+    //     name: profile.name,
+    //     email: profile.email,
+    //     image: profile.picture,
+    //     provider: 'google',
+    //   }),
+    // }),
+    // FacebookProvider({
+    //   clientId: getFacebookCredentials().clientId,
+    //   clientSecret: getFacebookCredentials().clientSecret,
+    //   allowDangerousEmailAccountLinking: true,
+    //   userinfo: {
+    //     url: 'https://graph.facebook.com/v19.0/me',
+    //     params: {
+    //       fields: 'id,name,email,first_name,last_name',
+    //     },
+    //     async request({ tokens, client, provider }) {
+    //       // eslint-disable-next-line
+    //       return await client.userinfo(tokens.access_token!, {
+    //         // @ts-expect-error
+    //         params: provider.userinfo?.params,
+    //       });
+    //     },
+    //   },
+    //   profile: (_profile) => {
+    //     return {
+    //       id: _profile.id,
+    //       firstName: _profile.first_name,
+    //       lastName: _profile.last_name,
+    //       email: _profile.email,
+    //       provider: 'facebook',
+    //     };
+    //   },
+    // }),
+    // TwitterProvider({
+    //   clientId: getTwitterCredentials().clientId,
+    //   clientSecret: getTwitterCredentials().clientSecret,
+    //   allowDangerousEmailAccountLinking: true,
+    //   profile: (profile) => ({
+    //     id: profile.id_str,
+    //     name: profile.name,
+    //     email: profile.email,
+    //     image: profile.profile_image_url_https,
+    //     provider: 'twitter',
+    //   }),
+    // }),
   ],
   callbacks: {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;
-        session.user.name = token.fullName;
         session.user.fullName = token.fullName;
         session.user.username = token.username;
-        session.user.image = token.image;
+        // session.user.image = token.image;
         session.user.provider = token.provider;
         session.user.isNewUser = token.isNewUser;
         session.user.emailExists = token.emailExists;
-        session.user.stripeCustomerId = token.stripeCustomerId;
+        // session.user.stripeCustomerId = token.stripeCustomerId;
       }
       return session;
     },
     async jwt({ token, user, account, isNewUser }: any) {
       if (user) {
-        token.fullName = user.name;
-        token.id = user.id;
+        token.fullName = user.fullName;
+        token.username = user.username;
         token.email = user.email;
-        token.image = user.image;
+        // token.image = user.image;
         token.provider = account.provider;
-        token.stripeCustomerId = user.stripeCustomerId;
+        // token.stripeCustomerId = user.stripeCustomerId;
       }
 
       const existingUser = await doesEmailExist(token.email);
@@ -189,10 +184,10 @@ export const authOptions: NextAuthOptions = {
       if (dbUser) {
         token.fullName = dbUser.name;
         token.username = dbUser.username;
-        token.image = dbUser.image;
+        // token.image = dbUser.image;
         token.isActive = dbUser.isActive;
         token.balance = dbUser.balance;
-        token.stripeCustomerId = dbUser.stripeCustomerId;
+        // token.stripeCustomerId = dbUser.stripeCustomerId;
         token.isBanned = dbUser.isBanned;
 
         if (!dbUser.createdAt) {

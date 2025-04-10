@@ -13,7 +13,7 @@ const MostBids = () => {
   const [mostBids, setMostBids] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const DynamicCards = dynamic(() => import("@/app/components/card"), {
+  const DynamicCards = dynamic(() => import("@/app/components/old_card"), {
     ssr: false,
     loading: () => (
       <div className="flex mt-8 justify-evenly">

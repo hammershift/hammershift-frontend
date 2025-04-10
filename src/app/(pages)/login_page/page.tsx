@@ -16,6 +16,8 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import PasswordInput from '@/app/components/password_input';
 import { BounceLoader, PulseLoader } from 'react-spinners';
+import { Alert, AlertDescription } from '@/app/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -64,7 +66,6 @@ const CreateAccount = () => {
       const result = await signIn('credentials', {
         redirect: false,
         email: email,
-        password: password,
       });
 
       console.log('signIn result:', result);
@@ -76,12 +77,12 @@ const CreateAccount = () => {
       }
 
       if (result.error === 'Your account has been banned') {
-        setError('✕ Your account has been banned. Please contact support');
+        setError('Your account has been banned. Please contact support');
         return;
       }
 
       // for any other errors
-      setError('✕ Invalid credentials. Please try again');
+      setError('Invalid credentials. Please try again');
     } catch (error) {
       console.error('An unexpected error occurred during login:', error);
       setError('An unexpected error occurred');
@@ -150,15 +151,21 @@ const CreateAccount = () => {
           <div className='flex flex-col gap-6 text-sm'>
             <div className='flex flex-col gap-2'>
               <label>Email</label>
-              <input className='py-2.5 px-3 bg-[#172431]' placeholder='you@email.com' value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
-              {error && <div className='text-sm text-red-500'>{error}</div>}
+              <input className='py-2.5 px-3 bg-[#172431]' placeholder='Enter email here' value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
+
+              {error && (
+                <Alert variant="destructive" className="mt-2 text-red-500">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
             </div>
-            <div className='flex flex-col gap-2'>
+            {/* <div className='flex flex-col gap-2'>
               <label>Password</label>
               <PasswordInput value={password} onChange={setPassword} />
-            </div>
+            </div> */}
           </div>
-          <div className='flex justify-between text-sm sm:text-base'>
+          {/* <div className='flex justify-between text-sm sm:text-base'>
             <div className='relative flex items-center gap-2'>
               <input
                 type='checkbox'
@@ -178,12 +185,12 @@ const CreateAccount = () => {
             >
               Forgot password
             </button>
-          </div>
+          </div> */}
           <button onClick={handleSignIn} className='btn-yellow'>
             Sign In
           </button>
 
-          <div className='w-full grid grid-cols-4 gap-2 mt-8 clickable-icon'>
+          {/* <div className='w-full grid grid-cols-4 gap-2 mt-8 clickable-icon'>
             <div onClick={() => handleGoogleSignIn('google')} className='bg-white flex justify-center items-center rounded h-[48px]'>
               <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='w-6 h-6' />
             </div>
@@ -199,11 +206,11 @@ const CreateAccount = () => {
             <div onClick={() => handleTwitterSignIn('twitter')} className='bg-[#1DA1F2] flex justify-center items-center rounded h-[48px]'>
               <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='w-6 h-6' />
             </div>
-          </div>
-          <div className='text-center opacity-50'>{'By logging in, you agree to HammerShift’s Privacy Policy and Terms of Use.'}</div>
+          </div> */}
+          <div className='text-center opacity-50'>{'By logging in, you agree to Velocity Market\'s Privacy Policy and Terms of Use.'}</div>
         </div>
       )}
-      {createAccountPage === 'reset password' && (
+      {/* {createAccountPage === 'reset password' && (
         <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-8 pt-6'>
           <div>
             <div className='flex justify-between md:justify-start'>
@@ -238,7 +245,7 @@ const CreateAccount = () => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

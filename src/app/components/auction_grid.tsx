@@ -59,9 +59,9 @@ export const AuctionGrid = ({
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {activeAuctions.map((auction) => (
+      {activeAuctions.map((auction, index) => (
         <Card
-          key={auction.id}
+          key={index}
           className="overflow-hidden border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]"
         >
           <div className="relative">
@@ -81,6 +81,7 @@ export const AuctionGrid = ({
               alt={"Car auction"}
               width={483.333}
               height={192}
+              className="w-full h-48 sm:h-56 md:h-64 object-cover"
             />
             <div className="absolute right-2 top-2">
               <Badge className="bg-[#F2CA16] text-[#0C1924]">

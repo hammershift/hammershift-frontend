@@ -1,5 +1,5 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/group/text_card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import React from 'react';
 
 export default function Rules() {

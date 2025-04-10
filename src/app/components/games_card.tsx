@@ -10,7 +10,7 @@ import HourGlass from "../../../public/images/hour-glass.svg";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { CardWagersSection } from "./card";
+import { CardWagersSection } from "./old_card";
 
 const GamesCard = (props: any) => {
   const [imageSrc, setImageSrc] = useState(props.image);

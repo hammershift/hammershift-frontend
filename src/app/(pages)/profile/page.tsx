@@ -19,6 +19,7 @@ import IDIcon from "../../../../public/images/single-neutral-id-card-3.svg";
 import TransitionPattern from "../../../../public/images/transition-pattern.svg";
 import Twitter from "../../../../public/images/twitter-social.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
+import { Button } from '@/app/components/ui/button';
 
 
 interface Props { }
@@ -43,6 +44,7 @@ function Profile(props: Props) {
     const router = useRouter();
 
     useEffect(() => {
+        console.log(data);
         if (data) {
             setName(data?.user.fullName);
             setUsername(data?.user.username);
@@ -170,10 +172,11 @@ function Profile(props: Props) {
                             </div>
                         </div>
                     </div>
-                    <button className="text-base font-medium text-[#f2ca16] border-[1px] border-[#f2ca16] py-2 px-3 rounded mt-4 sm:mt-[50px] h-[44px]  cursor-pointer "
-                        onClick={e => router.push("/profile/edit")}>
+                    <Button className="text-base font-medium text-[#f2ca16] border-[1px] border-[#f2ca16] py-2 px-3 rounded mt-4 sm:mt-[50px] h-[44px]  cursor-pointer pointer-events-none opacity-50"
+                        onClick={e => router.push("/profile/edit")}
+                        aria-disabled={true}>
                         Edit Profile
-                    </button>
+                    </Button>
                 </div>
                 <div className="flex items-center gap-6 bg-[#184c80] mx-6 mt-[80px] px-6 py-4 rounded-lg md:mx-0">
                     <Image
@@ -372,7 +375,7 @@ function Profile(props: Props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

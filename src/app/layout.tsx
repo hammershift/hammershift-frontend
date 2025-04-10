@@ -28,11 +28,11 @@ export default function RootLayout({
       <SessionProvider>
         {/*<body className={inter.className} */}
         <body>
+          <Analytics />
           <Navbar />
           {/* <BetaTesting /> */}
           {children}
-          <Analytics />
-          <LoadWallet />
+          {/* <LoadWallet /> */}
           <Footer />
         </body>
       </SessionProvider>

@@ -1,17 +1,17 @@
+import React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
 import { cn } from '@/helpers/utils'
-import { forwardRef } from 'react'
 
 const Accordion = AccordionPrimitive.Root
 
-interface AccordionProps {
-  className?: string
-  children?: React.ReactNode
-  value?: string
+interface IProps {
+  className?: string;
+  children?: React.ReactNode;
+  [x: string]: any;
 }
 
-const AccordionItem = forwardRef<HTMLDivElement, AccordionProps>(({
+const AccordionItem = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   value,
@@ -24,7 +24,7 @@ const AccordionItem = forwardRef<HTMLDivElement, AccordionProps>(({
 ))
 AccordionItem.displayName = "AccordionItem"
 
-const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionProps>(({
+const AccordionTrigger = React.forwardRef<HTMLButtonElement, IProps>(({
   className,
   children,
   ...props
@@ -45,7 +45,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionProps>(({
 ))
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
 
-const AccordionContent = forwardRef<HTMLDivElement, AccordionProps>(({
+const AccordionContent = React.forwardRef<HTMLDivElement, IProps>(({
   className,
   children,
   ...props

@@ -13,7 +13,7 @@ const NewGames = () => {
   const [newlyListed, setNewlyListed] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const DynamicCards = dynamic(() => import("./card"), {
+  const DynamicCards = dynamic(() => import("./old_card"), {
     ssr: false,
     loading: () => (
       <div className="flex mt-8 justify-evenly">

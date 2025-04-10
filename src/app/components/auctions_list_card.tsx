@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Dollar from "../../../public/images/dollar.svg";
 import HourGlass from "../../../public/images/hour-glass.svg";
 import { TimerProvider, useTimer } from "../_context/TimerContext";
-import { CardWagersSection } from "./card";
+import { CardWagersSection } from "./old_card";
 
 const AuctionsListCard = (props: any) => {
   const router = useRouter();

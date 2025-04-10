@@ -21,7 +21,7 @@ const FreePlay = () => {
   const [hammerCars, setHammerCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState("hammer");
+  const [activeTab, setActiveTab] = useState<string>("hammer");
   const [velocityPicks, setVelocityPicks] = useState([]);
   const [filters, setFilters] = useState({
     make: "all",
@@ -113,7 +113,7 @@ const FreePlay = () => {
             <TabsTrigger
               value="hammer"
               className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+            // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Card } from '@/app/components/group/text_card';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/components/group/accordion';
+import { Card } from '@/app/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/components/ui/accordion';
 
 export default function FAQ() {
     return (
