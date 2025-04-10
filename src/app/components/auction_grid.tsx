@@ -96,14 +96,14 @@ export const AuctionGrid = ({
               <div>
                 <div className="text-sm text-gray-400">Current Bid</div>
                 <div className="font-bold text-[#F2CA16]">
-                  ${(auction.sort.bids || 0).toLocaleString()}
+                  ${(auction.sort!.bids || 0).toLocaleString()}
                 </div>
               </div>
               <div>
                 <div className="text-sm text-gray-400">Time Left</div>
                 <div className="flex items-center">
                   <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
-                  {formatTimeLeft(auction.sort.deadline.toString())}
+                  {formatTimeLeft(auction.sort!.deadline.toString())}
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ export const AuctionGrid = ({
               </div>
 
               <Link
-                href={`${createPageUrl("CarDetail")}?id=${auction.id}&${new URLSearchParams(getModeParams(mode))}`}
+                href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams(mode))}`}
               >
                 <Button
                   className={

@@ -96,11 +96,30 @@ export interface Auction extends Document {
   description: string[];
   images_list: AuctionImageList[];
   listing_details: string[];
-  sort: AuctionSort;
+  sort?: AuctionSort;
   statusAndPriceChecked: boolean;
   pot: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+export interface Car {
+  auction_id: string;
+  website: string;
+  image: string;
+  page_url: string;
+  isActive: boolean;
+  attributes: AuctionAttributes[];
+  views: number;
+  watchers: number;
+  comments: number;
+  description: string[];
+  images_list: AuctionImageList[];
+  listing_details: string[];
+  sort?: AuctionSort;
+  statusAndPriceChecked: boolean;
+  pot: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 const auctionSchema = new Schema(
   {

@@ -8,40 +8,49 @@ interface IProps {
   [x: string]: any;
 }
 const Tabs = Root;
-const TabsList = ({ className, children, props }: IProps) => (
-  <List
-    className={cn(
-      "bg-muted text-muted-foreground inline-flex h-9 items-center justify-center rounded-lg p-1",
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </List>
-);
 
-const TabsTrigger = ({ className, children, props }: IProps) => (
-  <Trigger
-    className={cn(
-      "ring-offset-background inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium transition-all focus-visible:outline",
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </Trigger>
+const TabsList = React.forwardRef<HTMLDivElement, IProps>(
+  ({ className, ...props }: IProps, ref) => (
+    <List
+      ref={ref}
+      className={cn(
+        "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+        className
+      )}
+      {...props}
+    />
+  )
 );
+TabsList.displayName = List.displayName;
 
-const TabsContent = ({ className, children, props }: IProps) => (
-  <Content
-    className={cn(
-      "ring-offset-background focus-visible:ring-ring mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </Content>
+const TabsTrigger = React.forwardRef<HTMLButtonElement, IProps>(
+  ({ className, ...props }: IProps, ref) => (
+    <Trigger
+      ref={ref}
+      className={cn(
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
+        className
+      )}
+      value={""}
+      {...props}
+    />
+  )
 );
+TabsTrigger.displayName = Trigger.displayName;
+
+const TabsContent = React.forwardRef<HTMLDivElement, IProps>(
+  ({ className, ...props }: IProps, ref) => (
+    <Content
+      ref={ref}
+      className={cn(
+        "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        className
+      )}
+      value={""}
+      {...props}
+    />
+  )
+);
+TabsContent.displayName = Content.displayName;
 
 export { Tabs, TabsList, TabsTrigger, TabsContent };
