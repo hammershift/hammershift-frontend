@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,7 +13,7 @@ import Onfido from '../../../../public/images/onfido.svg';
 import SingleNeutral from '../../../../public/images/single-neutral-id-card-3.svg';
 import UserImage from '../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import PasswordInput from '@/app/components/password_input';
 import { BounceLoader, PulseLoader } from 'react-spinners';
 import { Alert, AlertDescription } from '@/app/components/ui/alert';
@@ -33,6 +33,25 @@ const CreateAccount = () => {
 
   // Forgot/Reset Password
   const [resetEmail, setResetEmail] = useState('');
+  const { data: session } = useSession();
+
+  useEffect(() => {
+
+    const handleSession = async () => {
+      if (!session || !session.user) {
+        return;
+      }
+      else {
+        router.push("/authenticated");
+      }
+    }
+
+    const checkSession = async () => {
+      await handleSession();
+    };
+
+    checkSession();
+  }, [session]);
 
   const handleResetPassword = async () => {
     setIsResetPasswordLoading(true);

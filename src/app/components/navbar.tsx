@@ -266,7 +266,7 @@ const Navbar = () => {
     const isLoggedIn = !!session;
 
     return (
-        <div className="section-container mx-auto flex items-center justify-center">
+        <div className="navbar-container mx-auto flex items-center justify-center">
             {isLoggedIn ? (
                 <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
                     <div className="flex items-center justify-between">
@@ -592,7 +592,7 @@ const Navbar = () => {
             )}
           </div> */}
                     {/* Buttons for logged in accounts */}
-                    <div className="relative hidden w-[136px] items-center justify-between sm:flex md:visible">
+                    <div className="flex items-center justify-between gap-4">
                         <button
                             id="watchlist-button"
                             className="relative"
@@ -703,7 +703,7 @@ const Navbar = () => {
                     </div>
                 </div>
             ) : (
-                <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] py-3">
+                <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
                     <div className="flex items-center justify-between">
                         <div className="pr-4">
                             <Link

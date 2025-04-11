@@ -26,14 +26,14 @@ const Authenticated: React.FC = () => {
     if (session && showLoader) {
       const redirectTimer = setTimeout(() => {
         router.push('/');
-      }, 3000);
+      }, 1000);
 
       return () => clearTimeout(redirectTimer);
     }
   }, [session, showLoader, router]);
 
   return (
-    <div className='h-screen flex flex-col items-center justify-start pt-16'>
+    <div className='flex flex-col items-center justify-start pt-16  pb-16'>
       {showLoader ? (
         <div className='flex grow items-center justify-center'>
           <BounceLoader color='gray' />
