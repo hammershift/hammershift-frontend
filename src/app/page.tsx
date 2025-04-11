@@ -1,28 +1,16 @@
 "use client";
 
-import "./styles/app.css";
-import Footer from "@/app/components/footer";
 import Link from "next/link";
+import "./styles/app.css";
 
-import LiveGames from "@/app/components/live_games";
-import LivePageCarousel from "@/app/components/live_page_carousel";
-import NewEraWagering from "@/app/components/new_era_wagering";
-import Subscribe from "@/app/components/subscribe";
-import { getCarsWithMostPot } from "@/lib/data";
-import React, { useEffect, useRef, useState } from "react";
-import Carousel from "./components/carousel";
-import AuctionHero from "./components/auction_hero";
-import { Button } from "./components/ui/button";
-import { GameModes } from "./components/game_modes";
-import { AIAgents } from "./components/ai_agents";
-import { LiveAuctions } from "./components/live_auctions";
-import { DollarSign, Timer, Users, Car } from "lucide-react";
-import { Leaderboard } from "./components/leaderboard";
-import { HowItWorks } from "./components/how_it_works";
-import Image from "next/image";
-import HammershiftLogo from "../../public/images/hammershift-logo.svg";
-import MiniLeaderboard from "./components/mini_leaderboard";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import banner from '../../public/images/banner.jpg';
+import AuctionHero from "./components/auction_hero";
+import { GameModes } from "./components/game_modes";
+import { HowItWorks } from "./components/how_it_works";
+import { LiveAuctions } from "./components/live_auctions";
+import { Button } from "./components/ui/button";
 
 const LivePage = () => {
   const [screenWidth, setScreenWidth] = useState(0);
@@ -51,8 +39,7 @@ const LivePage = () => {
     <div className="flex flex-col justify-center">
       <section
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80')",
+          backgroundImage: `url(${banner.src})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
