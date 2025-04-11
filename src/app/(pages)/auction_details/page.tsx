@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 
 import { createPageUrl } from "@/app/components/utils";
 import Image from "next/image";
@@ -112,7 +112,7 @@ const GuessTheHammer = () => {
     return result;
   };
 
-  const handlePredictionSubmit = async (e) => {
+  const handlePredictionSubmit = async (e: { preventDefault: () => void; }) => {
     if (e) e.preventDefault();
 
     if (session === null || user === null) {
@@ -308,9 +308,8 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
-                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                    }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                      }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -321,10 +320,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                      // onError={(e) => {
-                      //   e.target.src =
-                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                      // }}
+                    // onError={(e) => {
+                    //   e.target.src =
+                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                    // }}
                     />
                   </button>
                 ))}
@@ -553,7 +552,7 @@ const GuessTheHammer = () => {
                               <Input
                                 type="number"
                                 value={prediction}
-                                onChange={(e) => setPrediction(e.target.value)}
+                                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setPrediction(e.target.value)}
                                 className="border-[#1E2A36] bg-[#1E2A36] pl-8"
                                 placeholder="Enter amount"
                               />

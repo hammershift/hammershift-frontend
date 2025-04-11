@@ -160,7 +160,7 @@ const CreateAccount = () => {
                   type="email"
                   placeholder='Enter email here'
                   value={email}
-                  onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                  onChange={(e: { target: { value: string; }; }) => setEmail(e.target.value.toLowerCase())}
                   name="email"
                   autoComplete="email"
                 />

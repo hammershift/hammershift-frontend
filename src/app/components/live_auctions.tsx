@@ -49,7 +49,7 @@ export const LiveAuctions = () => {
   const defaultImage =
     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
   const formatTimeLeft = (dateString: string) => {
-    if (!dateString) return "No end date";
+    if (!dateString || dateString == "") return "No end date";
 
     try {
       const endDate = new Date(dateString);
@@ -136,7 +136,7 @@ export const LiveAuctions = () => {
                         <div className="text-sm text-gray-400">Time Left</div>
                         <div className="flex items-center">
                           <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
-                          {formatTimeLeft(auction.sort.deadline.toString())}
+                          {formatTimeLeft(auction.sort?.deadline.toString() ?? "")}
                         </div>
                       </div>
                     </div>

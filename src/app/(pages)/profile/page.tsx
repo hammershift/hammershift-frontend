@@ -173,7 +173,7 @@ function Profile(props: Props) {
                         </div>
                     </div>
                     <Button className="text-base font-medium text-[#f2ca16] border-[1px] border-[#f2ca16] py-2 px-3 rounded mt-4 sm:mt-[50px] h-[44px]  cursor-pointer pointer-events-none opacity-50"
-                        onClick={e => router.push("/profile/edit")}
+                        onClick={() => router.push("/profile/edit")}
                         aria-disabled={true}>
                         Edit Profile
                     </Button>

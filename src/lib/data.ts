@@ -48,11 +48,11 @@ export const getCarData = async (ID: string) => {
 };
 
 export const getCars = async ({
-  offset,
-  limit,
+  offset = 0,
+  limit = 0,
 }: {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
 }) => {
   try {
     // const response = await fetch(
