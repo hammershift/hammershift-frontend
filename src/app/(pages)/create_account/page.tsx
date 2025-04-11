@@ -10,6 +10,7 @@ import { Button } from '@/app/components/ui/button';
 import { Alert, AlertDescription } from '@/app/components/ui/alert';
 import { Checkbox } from '@/app/components/ui/checkbox';
 import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function CustomSignupPage() {
     const router = useRouter();
@@ -217,19 +218,19 @@ export default function CustomSignupPage() {
                     >
                         Create Account
                     </Button>
+                </form>
 
+                <div className="mt-4">
                     <p className="text-center text-sm text-gray-400">
                         Already have an account?{" "}
-                        <Button
-                            type="button"
-                            variant="link"
+                        <Link
                             className="text-[#F2CA16] p-0"
-                            onClick={() => router.push("/login_page")}
+                            href="/login_page"
                         >
                             Log in
-                        </Button>
+                        </Link>
                     </p>
-                </form>
+                </div>
             </Card>
         </div>
     );

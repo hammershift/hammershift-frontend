@@ -20,6 +20,10 @@ import { Alert, AlertDescription } from '@/app/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { Input } from '@/app/components/ui/input';
 
+interface UserExistenceResponse {
+  emailExists: boolean;
+}
+
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
   const [createAccountPage, setCreateAccountPage] = useState<createAccountPageProps>('sign in');
@@ -83,28 +87,49 @@ const CreateAccount = () => {
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
-      const result = await signIn('email', {
-        redirect: false,
-        email: email,
-        callbackUrl: '/',
-        authorizationParams: {
-          email: email
-        }
+      const response = await fetch('/api/checkUserExistence', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
       });
 
-      if (!result?.error) {
-        console.log('Login successful');
-        router.push('/login_info');
-        return;
+      if (!response) {
+        setError('Invalid email. Please try again');
       }
+      else {
+        const data: UserExistenceResponse = await response.json();
+        if (!data.emailExists) {
+          setError('Email is not registered. Please sign up first.');
+        }
+        else {
+          const result = await signIn('email', {
+            redirect: false,
+            email: email,
+            callbackUrl: '/',
+            authorizationParams: {
+              email: email
+            }
+          });
 
-      if (result.error === 'Your account has been banned') {
-        setError('Your account has been banned. Please contact support');
-        return;
+          if (!result?.error) {
+            console.log('Login successful');
+            router.push('/login_info');
+            return;
+          }
+
+          if (result.error === 'Your account has been banned') {
+            setError('Your account has been banned. Please contact support');
+            return;
+          }
+
+          // for any other errors
+          setError('Invalid credentials. Please try again');
+        }
       }
-
-      // for any other errors
-      setError('Invalid credentials. Please try again');
     } catch (error) {
       console.error('An unexpected error occurred during login:', error);
       setError('An unexpected error occurred');

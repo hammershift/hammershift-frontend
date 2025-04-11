@@ -1,29 +1,22 @@
 import clientPromise from '@/lib/mongodb';
+import connectToDB from '@/lib/mongoose';
+import Users from '@/models/user.model';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  const { username, email } = await req.json();
+  const { email } = await req.json();
 
   try {
-    const client = await clientPromise;
-    const db = client.db();
+    await connectToDB();
 
     const response = {
       emailExists: false,
-      usernameExists: false,
     };
 
     if (email) {
-      const emailCheck = await db.collection('users').findOne({ email });
+      const emailCheck = await Users.findOne({ email });
       if (emailCheck) {
         response.emailExists = true;
-      }
-    }
-
-    if (username) {
-      const usernameCheck = await db.collection('users').findOne({ username });
-      if (usernameCheck) {
-        response.usernameExists = true;
       }
     }
 
