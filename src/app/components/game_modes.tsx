@@ -10,7 +10,7 @@ export const GameModes = () => {
           description="Practice with AI-powered insights"
           icon={PlayCircle}
           playerCount={1234}
-          link={"/"}
+          link={"/free_play"}
           badgeText="AI POWERED"
         />
         <GameModeCard

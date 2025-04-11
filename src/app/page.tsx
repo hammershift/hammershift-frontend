@@ -22,9 +22,11 @@ import { HowItWorks } from "./components/how_it_works";
 import Image from "next/image";
 import HammershiftLogo from "../../public/images/hammershift-logo.svg";
 import MiniLeaderboard from "./components/mini_leaderboard";
+import { useSession } from "next-auth/react";
 
 const LivePage = () => {
   const [screenWidth, setScreenWidth] = useState(0);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,6 +40,11 @@ const LivePage = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    console.log("session");
+    console.log(session);
+  }, [session]);
 
   const NUM_DISPLAY = screenWidth < 1400 && screenWidth > 996 ? 2 : 3;
   return (
@@ -147,25 +154,30 @@ const LivePage = () => {
         </p>
       </section>
       {/* CTA Section */}
-      <section className="bg-[#13202D] py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-4 text-3xl font-bold">
-            READY TO <span className="text-[#F2CA16]">START</span> PLAYING?
-          </h2>
-          <p className="mx-auto mb-8 max-w-2xl text-xl">
-            Join Velocity Markets today and start predicting auction prices to
-            win prizes.
-          </p>
-          <Link href="/create_account">
-            <Button className="bg-[#F2CA16] px-8 py-6 text-lg text-[#0C1924] hover:bg-[#F2CA16]/90">
-              SIGN UP NOW
-            </Button>
-          </Link>
-          <p className="mt-4 text-sm text-gray-300">
-            Please read our terms and conditions before signing up.
-          </p>
-        </div>
-      </section>
+      {
+        session == null && (
+          <section className="bg-[#13202D] py-16">
+            <div className="container mx-auto px-4 text-center">
+              <h2 className="mb-4 text-3xl font-bold">
+                READY TO <span className="text-[#F2CA16]">START</span>{" "}
+                PLAYING?
+              </h2>
+              <p className="mx-auto mb-8 max-w-2xl text-xl">
+                Join Velocity Markets today and start predicting auction
+                prices to win prizes.
+              </p>
+              <Link href="/create_account">
+                <Button className="bg-[#F2CA16] px-8 py-6 text-lg text-[#0C1924] hover:bg-[#F2CA16]/90">
+                  SIGN UP NOW
+                </Button>
+              </Link>
+              <p className="mt-4 text-sm text-gray-300">
+                Please read our terms and conditions before signing up.
+              </p>
+            </div>
+          </section>
+        )
+      }
       {/* <div className="section-container mx-auto mb-10">
         <Carousel />
       </div> */}
