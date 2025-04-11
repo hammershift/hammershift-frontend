@@ -32,7 +32,6 @@ export default function CustomSignupPage() {
     };
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        console.log("hello");
         e.preventDefault();
         setError("");
         setIsLoading(true);
@@ -53,7 +52,7 @@ export default function CustomSignupPage() {
                     email: formData.email,
                     username: formData.username,
                     fullName: formData.fullName,
-                    provider: 'credentials',
+                    provider: 'email',
                 }),
             });
             if (!response.ok) {
@@ -75,19 +74,23 @@ export default function CustomSignupPage() {
                 return;
             }
 
-            const signInResponse = await signIn('credentials', {
+            const signInResponse = await signIn('email', {
                 redirect: false,
                 email: formData.email,
+                callbackUrl: '/',
+                authorizationParams: {
+                    email: formData.email
+                }
             });
 
             if (signInResponse?.error) {
-                setError('Sign-up successful but auto sign-in failed. Redirecting to home page.');
+                setError('Sign-up successful but auto sign-in failed.');
                 setTimeout(() => {
-                    router.push('/');
+                    router.push('/create_account_complete');
                 }, 2000);
             }
             else {
-                router.push("/");
+                router.push("/create_account_complete");
             }
         } catch (error) {
             setError("Failed to create account. Please try again.");

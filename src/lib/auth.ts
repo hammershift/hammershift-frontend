@@ -9,6 +9,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import FacebookProvider from 'next-auth/providers/facebook';
 import TwitterProvider from 'next-auth/providers/twitter';
+import EmailProvider from 'next-auth/providers/email';
 import connectToDB from './mongoose';
 import Users from '@/models/user.model';
 
@@ -83,6 +84,17 @@ export const authOptions: NextAuthOptions = {
         if (user?.isBanned) throw new Error('Your account has been banned');
         return { id: user._id.toString(), email: user.email, username: user.username, fullName: user.fullName, provider: user.provider };
       },
+    }),
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
     }),
     // GoogleProvider({
     //   clientId: getGoogleCredentials().clientId,
@@ -160,29 +172,24 @@ export const authOptions: NextAuthOptions = {
         token.provider = account.provider;
         // token.stripeCustomerId = user.stripeCustomerId;
       }
-
       const existingUser = await doesEmailExist(token.email);
       token.emailExists = !!existingUser;
 
-      if (isNewUser && existingUser && typeof existingUser !== 'boolean') {
-        token.isNewUser = false;
-        if ((existingUser as any).provider !== account.provider) {
-          const client = await clientPromise;
-          const db = client.db();
-          await db.collection('users').updateOne({ email: token.email }, { $set: { provider: account.provider } });
-        }
-      } else {
-        token.isNewUser = isNewUser;
-      }
+      // if (isNewUser && existingUser && typeof existingUser !== 'boolean') {
+      //   token.isNewUser = false;
+      //   if ((existingUser as any).provider !== account.provider) {
+      //     connectToDB();
+      //     await Users.updateOne({ email: token.email }, { $set: { provider: account.provider } });
+      //   }
+      // } else {
+      //   token.isNewUser = isNewUser;
+      // }
 
-      const client = await clientPromise;
-      const db = client.db();
-      const dbUser = await db.collection('users').findOne({ _id: new ObjectId(token.id) });
+      await connectToDB();
+      const dbUser = await Users.findOne({ email: token.email });
 
-      console.log('Fetched user from DB', dbUser);
-
-      if (dbUser) {
-        token.fullName = dbUser.name;
+      if (existingUser) {
+        token.fullName = dbUser.fullName;
         token.username = dbUser.username;
         // token.image = dbUser.image;
         token.isActive = dbUser.isActive;
@@ -192,7 +199,7 @@ export const authOptions: NextAuthOptions = {
 
         if (!dbUser.createdAt) {
           const createdAt = new Date();
-          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { createdAt } });
+          await Users.updateOne({ email: token.email }, { $set: { createdAt } });
           token.createdAt = createdAt;
         } else {
           token.createdAt = dbUser.createdAt;
@@ -201,9 +208,11 @@ export const authOptions: NextAuthOptions = {
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
           dbUser.balance = 500;
-          await db.collection('users').updateOne({ _id: new ObjectId(token.id) }, { $set: { isActive: true, balance: 500 } });
+          await Users.updateOne({ email: token.email }, { $set: { isActive: true, balance: 500 } });
         }
       }
+
+      await Users.updateOne({ email: token.email }, { $set: { updatedAt: new Date() } });
 
       return token;
     },

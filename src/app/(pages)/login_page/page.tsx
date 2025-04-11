@@ -18,6 +18,7 @@ import PasswordInput from '@/app/components/password_input';
 import { BounceLoader, PulseLoader } from 'react-spinners';
 import { Alert, AlertDescription } from '@/app/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { Input } from '@/app/components/ui/input';
 
 const CreateAccount = () => {
   type createAccountPageProps = 'sign in' | 'reset password';
@@ -63,16 +64,18 @@ const CreateAccount = () => {
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
-      const result = await signIn('credentials', {
+      const result = await signIn('email', {
         redirect: false,
         email: email,
+        callbackUrl: '/',
+        authorizationParams: {
+          email: email
+        }
       });
-
-      console.log('signIn result:', result);
 
       if (!result?.error) {
         console.log('Login successful');
-        router.push('/');
+        router.push('/login_info');
         return;
       }
 
@@ -148,23 +151,31 @@ const CreateAccount = () => {
               </Link>
             </div>
           </div>
-          <div className='flex flex-col gap-6 text-sm'>
-            <div className='flex flex-col gap-2'>
-              <label>Email</label>
-              <input className='py-2.5 px-3 bg-[#172431]' placeholder='Enter email here' value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} />
-
-              {error && (
-                <Alert variant="destructive" className="mt-2 text-red-500">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
+          <form method="POST">
+            <div className='flex flex-col gap-6 text-sm'>
+              <div className='flex flex-col gap-2'>
+                <label>Email</label>
+                <Input
+                  className='py-2.5 px-3 bg-[#1E2A36] border-[#1E2A36]'
+                  type="email"
+                  placeholder='Enter email here'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value.toLowerCase())}
+                  name="email"
+                  autoComplete="email"
+                />
+                {error && (
+                  <Alert variant="destructive" className="mt-2 text-red-500">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                <button onClick={handleSignIn} className='btn-yellow'>
+                  Sign In
+                </button>
+              </div>
             </div>
-            {/* <div className='flex flex-col gap-2'>
-              <label>Password</label>
-              <PasswordInput value={password} onChange={setPassword} />
-            </div> */}
-          </div>
+          </form>
           {/* <div className='flex justify-between text-sm sm:text-base'>
             <div className='relative flex items-center gap-2'>
               <input
@@ -186,9 +197,6 @@ const CreateAccount = () => {
               Forgot password
             </button>
           </div> */}
-          <button onClick={handleSignIn} className='btn-yellow'>
-            Sign In
-          </button>
 
           {/* <div className='w-full grid grid-cols-4 gap-2 mt-8 clickable-icon'>
             <div onClick={() => handleGoogleSignIn('google')} className='bg-white flex justify-center items-center rounded h-[48px]'>

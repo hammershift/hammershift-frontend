@@ -22,7 +22,7 @@ const userSchema = new Schema(
     balance: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
     isBanned: { type: Boolean, default: false },
-    provider: { type: String, default: "credentials" },
+    provider: { type: String, default: "email" },
     createdAt: Date,
     updatedAt: Date,
   },
