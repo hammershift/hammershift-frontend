@@ -9,6 +9,7 @@ import { USDollar } from "@/helpers/utils";
 import { Badge } from "./badge";
 import { Auction } from "@/models/auction.model";
 import { getCars } from "@/lib/data";
+import { createPageUrl } from "./utils";
 export const LiveAuctions = () => {
   // const [auctions, setAuctions] = useState([
   //     {
@@ -68,6 +69,15 @@ export const LiveAuctions = () => {
       console.error("Date formatting error:", error);
       return "Date error";
     }
+  };
+
+  const getModeParams = (mode: string) => {
+    if (mode === "tournament") {
+      return { mode: "tournament" };
+    } else if (mode === "price_is_right") {
+      return { mode: "price_is_right" };
+    }
+    return { mode: "free_play" };
   };
 
   useEffect(() => {
@@ -136,7 +146,9 @@ export const LiveAuctions = () => {
                         <div className="text-sm text-gray-400">Time Left</div>
                         <div className="flex items-center">
                           <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
-                          {formatTimeLeft(auction.sort?.deadline.toString() ?? "")}
+                          {formatTimeLeft(
+                            auction.sort?.deadline.toString() ?? ""
+                          )}
                         </div>
                       </div>
                     </div>
@@ -144,7 +156,9 @@ export const LiveAuctions = () => {
                       <div className="flex items-center text-sm text-gray-400">
                         <Users className="mr-1 h-4 w-4" />0 watchers
                       </div>
-                      <Link href="/">
+                      <Link
+                        href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams("free_play"))}`}
+                      >
                         <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
                           PREDICT NOW
                         </Button>
