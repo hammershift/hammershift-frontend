@@ -5,7 +5,7 @@ import "./styles/app.css";
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import banner from '../../public/images/banner.jpg';
+import banner from '../../public/images/banner-min.jpg';
 import AuctionHero from "./components/auction_hero";
 import { GameModes } from "./components/game_modes";
 import { HowItWorks } from "./components/how_it_works";

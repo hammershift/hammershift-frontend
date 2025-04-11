@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "./ui/button";
-import { Card, CardContent } from "./card_component";
-import { Users, RefreshCcw, Clock } from "lucide-react";
-import { formatDistanceToNow, isValid } from "date-fns";
 import { USDollar } from "@/helpers/utils";
-import { Badge } from "./badge";
-import { Auction } from "@/models/auction.model";
 import { getCars } from "@/lib/data";
+import { Auction } from "@/models/auction.model";
+import { formatDistanceToNow, isValid } from "date-fns";
+import { Clock, RefreshCcw, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { Badge } from "./badge";
+import { Card, CardContent } from "./card_component";
+import { Button } from "./ui/button";
 import { createPageUrl } from "./utils";
 export const LiveAuctions = () => {
   // const [auctions, setAuctions] = useState([
@@ -134,7 +134,7 @@ export const LiveAuctions = () => {
                     </div>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="mb-2 font-bold">Title</h3>
+                    <h3 className="mb-2 font-bold">{auction.title}</h3>
                     <div className="mb-4 grid grid-cols-2 gap-2">
                       <div>
                         <div className="text-sm text-gray-400">Current Bid</div>

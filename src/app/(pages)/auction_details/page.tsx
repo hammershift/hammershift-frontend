@@ -1,55 +1,51 @@
 "use client";
-import { useState, useEffect, SetStateAction } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
-import { createPageUrl } from "@/app/components/utils";
-import Image from "next/image";
+import { Badge } from "@/app/components/badge";
 import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
-  CardFooter,
+  CardTitle
 } from "@/app/components/card_component";
-import { useRouter } from "next/navigation";
+import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
-import { Badge } from "@/app/components/badge";
-import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/app/components/ui/tabs";
+import { USDollar } from "@/helpers/utils";
+import { formatDistanceToNow, isValid } from "date-fns";
 import {
-  Clock,
-  Eye,
-  MessageSquare,
-  Heart,
-  Car as CarIcon,
-  MapPin,
-  Hash,
-  DollarSign,
   ArrowLeft,
+  Car as CarIcon,
+  Clock,
+  DollarSign,
+  Eye,
+  Hash,
+  Heart,
   Link as LinkIcon,
   Loader2,
+  MapPin,
+  MessageSquare,
 } from "lucide-react";
-import { getSession } from "next-auth/react";
-import { Types } from "mongoose";
-import { USDollar } from "@/helpers/utils";
 import { useSession } from "next-auth/react";
-import { formatDistanceToNow, isValid } from "date-fns";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import {
+  addPrediction,
   getCarData,
   getPredictionData,
   getPredictionDataFilter,
-  addPrediction,
 } from "@/lib/data";
 
 import { Car } from "@/models/auction.model";
-import { User } from "@/models/user.model";
 import { Prediction } from "@/models/predictions.model";
+import { User } from "@/models/user.model";
 const GuessTheHammer = () => {
   const navigate = useRouter();
 
@@ -258,7 +254,9 @@ const GuessTheHammer = () => {
   }, []);
   return (
     <div className="container mx-auto px-4 py-8">
-      <Button variant="ghost" className="mb-4" onClick={() => navigate.back()}>
+      <Button variant="ghost" className="mb-4" onClick={() => {
+        navigate.back()
+      }}>
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
       </Button>

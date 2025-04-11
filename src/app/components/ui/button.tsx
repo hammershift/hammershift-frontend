@@ -1,5 +1,5 @@
-import React from "react";
 import { cva } from "class-variance-authority";
+import React from "react";
 
 import { cn } from "@/helpers/utils";
 
@@ -36,12 +36,12 @@ const buttonVariants = cva(
 interface IProps {
   className: string;
   variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link";
+  | "default"
+  | "destructive"
+  | "outline"
+  | "secondary"
+  | "ghost"
+  | "link";
   size?: "default" | "sm" | "lg" | "icon";
   children: React.ReactNode;
   [x: string]: any;
@@ -52,12 +52,14 @@ export const Button = ({
   size = "default",
   children,
   props,
+  onClick,
 }: IProps) => {
   return (
     <button
       className={cn(
         buttonVariants({ variant: variant, size: size, className })
       )}
+      onClick={onClick}
       {...props}
     >
       {children}
