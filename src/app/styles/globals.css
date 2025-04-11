@@ -2,20 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  background: #0f1923;
-  color: white;
-  box-sizing: border-box;
-  --pagination-color: #FFFFFF;
-  --pagination-active-bg: #F2CA16;
-  --pagination-hover-bg: #f2ca16ab;
-  --pagination-hover-color: #000000;
-  --pagination-active-color: #000000;
-  --pagination-bg: #13202D;
-}
 
 @layer base {
   :root {
+    background: #0f1923;
+    color: white;
+    box-sizing: border-box;
+    --pagination-color: #FFFFFF;
+    --pagination-active-bg: #F2CA16;
+    --pagination-hover-bg: #f2ca16ab;
+    --pagination-hover-color: #000000;
+    --pagination-active-color: #000000;
+    --pagination-bg: #13202D;
     /* --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
