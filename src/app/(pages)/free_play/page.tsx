@@ -76,7 +76,7 @@ const FreePlay = () => {
               Practice your prediction skills without risking real money
             </p>
           </div>
-          <Link href={createPageUrl("Leaderboard")}>
+          {/* <Link href={createPageUrl("Leaderboard")}>
             <Button
               variant="outline"
               className="border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
@@ -84,7 +84,7 @@ const FreePlay = () => {
               <Trophy className="mr-2 h-5 w-5" />
               LEADERBOARD
             </Button>
-          </Link>
+          </Link> */}
         </div>
 
         <div className="mb-8 rounded-md border border-blue-800/30 bg-blue-900/20 p-4">
@@ -95,7 +95,7 @@ const FreePlay = () => {
             before making financial decisions.
           </p>
         </div>
-
+        {/* 
         <div className="mb-8 flex items-start gap-4 rounded-md border border-purple-800/30 bg-purple-900/20 p-4">
           <div className="mt-1 min-w-[40px]">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 text-white">
@@ -113,7 +113,7 @@ const FreePlay = () => {
               predictions. Compete against them to test your prediction skills!
             </p>
           </div>
-        </div>
+        </div> */}
 
         {error && (
           <div className="mb-8 rounded-md border border-red-800/30 bg-red-900/20 p-4">
@@ -121,16 +121,16 @@ const FreePlay = () => {
           </div>
         )}
 
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <AIStatistics />
-        </div>
+        </div> */}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
           <TabsList className="border-[#333333] bg-[#2C2C2C]">
             <TabsTrigger
               value="hammer"
               className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-            // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>
