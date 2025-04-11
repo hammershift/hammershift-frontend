@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { Auction } from "@/models/auction.model";
+import { formatDistanceToNow, isValid } from "date-fns";
+import { Badge, Clock, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { createPageUrl } from "./utils";
+import { useState } from "react";
 import { Card, CardContent } from "./card_component";
 import { Button } from "./ui/button";
-import { Badge } from "lucide-react";
-import { Clock, Users } from "lucide-react";
-import { formatDistanceToNow, isValid } from "date-fns";
-import { Auction } from "@/models/auction.model";
-import Image from "next/image";
+import { createPageUrl } from "./utils";
 interface IProps {
   auctions: Auction[];
   mode: string;
@@ -95,7 +94,7 @@ export const AuctionGrid = ({
               <div>
                 <div className="text-sm text-gray-400">Current Bid</div>
                 <div className="font-bold text-[#F2CA16]">
-                  ${(auction.sort!.bids || 0).toLocaleString()}
+                  ${(auction.sort!.price || 0).toLocaleString()}
                 </div>
               </div>
               <div>
