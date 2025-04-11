@@ -14,6 +14,8 @@ export async function GET(req: NextRequest) {
     const tournamentID = req.nextUrl.searchParams.get("tournamentID");
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
+    const make = req.nextUrl.searchParams.get("make");
+    const priceRange = Number(req.nextUrl.searchParams.get("priceRange"));
 
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
@@ -35,11 +37,48 @@ export async function GET(req: NextRequest) {
     }
     // api/cars to get all cars
     console.log("Fetching all cars...");
-
-    const cars = await Auctions.paginate(
-      { isActive: true },
-      { offset: offset, limit: limit, sort: { createdAt: -1 } }
-    );
+    /*
+      price range values:
+      0: all
+      1: < 50k
+      2: 50k - 100k
+      3: 100k - 200k
+      4: 250k
+    */
+    let priceFilter = {};
+    switch (priceRange) {
+      case 0:
+        priceFilter = { $exists: true };
+        break;
+      case 1:
+        priceFilter = { $lt: 50000 };
+        break;
+      case 2:
+        priceFilter = { $gte: 50000, $lt: 100000 };
+        break;
+      case 3:
+        priceFilter = { $gte: 100000, $lt: 250000 };
+        break;
+      case 4:
+        priceFilter = { $gte: 250000 };
+        break;
+      default:
+        priceFilter = { $exists: true };
+    }
+    const query = {
+      "attributes.2.value": make === "all" ? { $exists: true } : make,
+      isActive: true,
+      "attributes.0.value": priceFilter,
+    };
+    console.log(query);
+    const options = {
+      offset: offset,
+      limit: limit,
+      sort: {
+        createdAt: -1,
+      },
+    };
+    const cars = await Auctions.paginate(query, options);
     return NextResponse.json({ total: cars.totalPages, cars: cars.docs });
   } catch (error) {
     console.error(error);

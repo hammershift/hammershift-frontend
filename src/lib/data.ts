@@ -50,9 +50,13 @@ export const getCarData = async (ID: string) => {
 export const getCars = async ({
   offset = 0,
   limit = 0,
+  make = "all",
+  priceRange = 0,
 }: {
   offset?: number;
   limit?: number;
+  make?: string;
+  priceRange?: number;
 }) => {
   try {
     // const response = await fetch(
@@ -61,7 +65,9 @@ export const getCars = async ({
     //     cache: "no-store", //dynamic rendering
     //   }
     // );
-    const response = await fetch(`/api/cars?offset=${offset}&limit=${limit}`);
+    const response = await fetch(
+      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}`
+    );
     if (response.ok) {
       const data = await response.json();
       return data;

@@ -17,20 +17,28 @@ interface IProps {
   setFilters: (filter: IFilter) => void;
 }
 export const AuctionFilters = ({ filters, setFilters }: IProps) => {
+  // const makes = [
+  //   "All Makes",
+  //   "Porsche",
+  //   "Ferrari",
+  //   "Aston Martin",
+  //   "BMW",
+  //   "Mercedes-Benz",
+  // ];
   const makes = [
-    "All Makes",
-    "Porsche",
-    "Ferrari",
-    "Aston Martin",
-    "BMW",
-    "Mercedes-Benz",
+    { label: "All Makes", value: "all" },
+    { label: "Porsche", value: "Porsche" },
+    { label: "Ferrari", value: "Ferrari" },
+    { label: "Aston Martin", value: "Aston Martin" },
+    { label: "BMW", value: "BMW" },
+    { label: "Mercedes-Benz", value: "Mercedes-Benz" },
   ];
   const priceRanges = [
-    { label: "All Prices", value: "all" },
-    { label: "Under $50k", value: "0-50000" },
-    { label: "$50k - $100k", value: "50000-100000" },
-    { label: "$100k - $250k", value: "100000-250000" },
-    { label: "$250k+", value: "250000+" },
+    { label: "All Prices", value: "0" },
+    { label: "Under $50k", value: "1" },
+    { label: "$50k - $100k", value: "2" },
+    { label: "$100k - $250k", value: "3" },
+    { label: "$250k+", value: "4" },
   ];
 
   return (
@@ -46,15 +54,15 @@ export const AuctionFilters = ({ filters, setFilters }: IProps) => {
         </SelectTrigger>
         <SelectContent>
           {makes.map((make) => (
-            <SelectItem key={make} value={make.toLowerCase()}>
-              {make}
+            <SelectItem key={make.value} value={make.value}>
+              {make.label}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
 
       <Select
-        value={filters.priceRange}
+        value={filters.priceRange.toString()}
         onValueChange={(value: string) =>
           setFilters({ ...filters, priceRange: value })
         }
@@ -79,7 +87,7 @@ export const AuctionFilters = ({ filters, setFilters }: IProps) => {
         >
           Active
         </Badge>
-        <Badge
+        {/* <Badge
           variant={filters.status === "ending_soon" ? "default" : "outline"}
           className="cursor-pointer"
           onClick={() => setFilters({ ...filters, status: "ending_soon" })}
@@ -92,7 +100,7 @@ export const AuctionFilters = ({ filters, setFilters }: IProps) => {
           onClick={() => setFilters({ ...filters, status: "ended" })}
         >
           Ended
-        </Badge>
+        </Badge> */}
       </div>
     </div>
   );

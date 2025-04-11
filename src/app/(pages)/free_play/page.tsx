@@ -29,7 +29,7 @@ const FreePlay = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [filters, setFilters] = useState({
     make: "all",
-    priceRange: "all",
+    priceRange: "0",
     status: "active",
   });
   const loadHammerCars = async () => {
@@ -41,6 +41,8 @@ const FreePlay = () => {
       const response = await getCars({
         offset: (currentPage - 1) * 6,
         limit: 6,
+        make: filters.make,
+        priceRange: parseInt(filters.priceRange),
       });
       // console.log(response);
       console.log(response);
@@ -58,7 +60,7 @@ const FreePlay = () => {
 
   useEffect(() => {
     loadHammerCars();
-  }, [currentPage]);
+  }, [currentPage, filters]);
 
   // useEffect(() => {
   //   if (hammerCars.length > 0) {
