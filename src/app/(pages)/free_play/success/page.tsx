@@ -69,7 +69,7 @@ export default function FreePlaySuccessPage() {
       <div className="container mx-auto px-4 py-12 text-center">
         <h1 className="mb-4 text-3xl font-bold">No Recent Prediction Found</h1>
         <p className="mb-8 text-gray-400">
-          We couldn't find a recent prediction. Try making a new one!
+          {"We couldn't find a recent prediction. Try making a new one!"}
         </p>
         <Link href={createPageUrl("free_play")}>
           <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
@@ -89,8 +89,7 @@ export default function FreePlaySuccessPage() {
 
         <h1 className="mb-2 text-3xl font-bold">Prediction Submitted!</h1>
         <p className="mb-8 text-lg text-gray-400">
-          Your Free Play prediction has been recorded. We'll let you know when
-          the auction ends!
+          {"Your Free Play prediction has been recorded. We'll let you know when the auction ends!"}
         </p>
 
         <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
