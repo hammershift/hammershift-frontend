@@ -62,3 +62,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #1b252e;
+}

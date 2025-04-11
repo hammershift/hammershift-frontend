@@ -1,6 +1,6 @@
 
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AlertCircle } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { createPageUrl } from '@/app/components/utils';
@@ -9,7 +9,7 @@ import { Input } from '@/app/components/ui/input';
 import { Button } from '@/app/components/ui/button';
 import { Alert, AlertDescription } from '@/app/components/ui/alert';
 import { Checkbox } from '@/app/components/ui/checkbox';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 export default function CustomSignupPage() {
     const router = useRouter();
@@ -22,6 +22,26 @@ export default function CustomSignupPage() {
         agreeToTerms: false,
         isOver18: false,
     });
+
+    const { data: session } = useSession();
+
+    useEffect(() => {
+
+        const handleSession = async () => {
+            if (!session || !session.user) {
+                return;
+            }
+            else {
+                router.push("/authenticated");
+            }
+        }
+
+        const checkSession = async () => {
+            await handleSession();
+        };
+
+        checkSession();
+    }, [session]);
 
     const handleChange = (e: { target: any; }) => {
         const { name, value, type, checked } = e.target;
