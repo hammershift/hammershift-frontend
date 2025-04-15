@@ -16,12 +16,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { getLatestPrediction, getCarData } from "@/lib/data";
+import { useSession } from "next-auth/react";
+import { User } from "@/models/user.model";
 export default function FreePlaySuccessPage() {
   const navigate = useRouter();
   const [prediction, setPrediction] = useState<Prediction>();
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
 
+  const { data: session } = useSession();
+  const [user, setUser] = useState<User | null>(session?.user);
   useEffect(() => {
     loadPredictionData();
   }, []);
@@ -29,7 +33,8 @@ export default function FreePlaySuccessPage() {
   const loadPredictionData = async () => {
     try {
       // Get the most recent prediction by current user
-      const latestPrediction = await getLatestPrediction("johndoe123");
+      if (!user) return;
+      const latestPrediction = await getLatestPrediction(user.username);
       setPrediction(latestPrediction);
 
       if (latestPrediction.car_id) {
@@ -89,7 +94,9 @@ export default function FreePlaySuccessPage() {
 
         <h1 className="mb-2 text-3xl font-bold">Prediction Submitted!</h1>
         <p className="mb-8 text-lg text-gray-400">
-          {"Your Free Play prediction has been recorded. We'll let you know when the auction ends!"}
+          {
+            "Your Free Play prediction has been recorded. We'll let you know when the auction ends!"
+          }
         </p>
 
         <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
