@@ -6,7 +6,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/app/components/card_component";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { Button } from "@/app/components/ui/button";
@@ -108,7 +108,7 @@ const GuessTheHammer = () => {
     return result;
   };
 
-  const handlePredictionSubmit = async (e: { preventDefault: () => void; }) => {
+  const handlePredictionSubmit = async (e: { preventDefault: () => void }) => {
     if (e) e.preventDefault();
 
     if (session === null || user === null) {
@@ -133,8 +133,8 @@ const GuessTheHammer = () => {
     try {
       let predictionData = {
         car_id: car.auction_id,
-        predicted_price: predictionValue,
-        prediction_type: mode,
+        predictedPrice: predictionValue,
+        predictionType: mode,
         user: {
           fullName: user.fullName,
           username: user.username,
@@ -254,9 +254,13 @@ const GuessTheHammer = () => {
   }, []);
   return (
     <div className="container mx-auto px-4 py-8">
-      <Button variant="ghost" className="mb-4" onClick={() => {
-        navigate.back()
-      }}>
+      <Button
+        variant="ghost"
+        className="mb-4"
+        onClick={() => {
+          navigate.back();
+        }}
+      >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
       </Button>
@@ -306,8 +310,9 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                      }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
+                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                    }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -318,10 +323,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                    // onError={(e) => {
-                    //   e.target.src =
-                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                    // }}
+                      // onError={(e) => {
+                      //   e.target.src =
+                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                      // }}
                     />
                   </button>
                 ))}
@@ -550,7 +555,9 @@ const GuessTheHammer = () => {
                               <Input
                                 type="number"
                                 value={prediction}
-                                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setPrediction(e.target.value)}
+                                onChange={(e: {
+                                  target: { value: SetStateAction<string> };
+                                }) => setPrediction(e.target.value)}
                                 className="border-[#1E2A36] bg-[#1E2A36] pl-8"
                                 placeholder="Enter amount"
                               />
@@ -706,10 +713,10 @@ const GuessTheHammer = () => {
 
                     const displayAmount =
                       mode === "free_play"
-                        ? USDollar.format(prediction.predicted_price)
+                        ? USDollar.format(prediction.predictedPrice)
                         : isCurrentUser
-                          ? USDollar.format(prediction.predicted_price)
-                          : obfuscateAmount(prediction.predicted_price);
+                          ? USDollar.format(prediction.predictedPrice)
+                          : obfuscateAmount(prediction.predictedPrice);
 
                     const getDisplayName = () => {
                       // if (prediction.is_ai_agent) {
