@@ -118,7 +118,7 @@ export default function FreePlaySuccessPage() {
               <div>
                 <p className="mb-1 text-sm text-gray-400">Your Prediction</p>
                 <p className="text-2xl font-bold text-[#F2CA16]">
-                  ${prediction.predicted_price?.toLocaleString()}
+                  ${prediction.predictedPrice?.toLocaleString()}
                 </p>
               </div>
             </div>
