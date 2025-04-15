@@ -129,6 +129,21 @@ export const getLatestPrediction = async (username: string) => {
     return JSON.stringify({ message: "Internal server error" });
   }
 };
+export const getMyPredictions = async () => {
+  try {
+    const response = await fetch("/api/myPredictions");
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch user predictions");
+      return JSON.stringify({ message: "Internal server error" });
+    }
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ message: "Internal server error" });
+  }
+};
 
 export const addPrediction = async (prediction: Prediction) => {
   try {

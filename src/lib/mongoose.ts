@@ -5,11 +5,12 @@ if (!process.env.MONGODB_URI) {
 }
 
 const uri = process.env.MONGODB_URI;
+const dbName = process.env.DB_NAME;
 
 const connectToDB = async () => {
   try {
     await mongoose.connect(uri, {
-      dbName: "hammershift",
+      dbName: dbName,
     });
   } catch (err) {
     console.log(err);
