@@ -1,44 +1,42 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Badge } from "@/app/components/badge";
+import { Card, CardContent } from "@/app/components/card_component";
+import { Button } from "@/app/components/ui/button";
 import { createPageUrl } from "@/app/components/utils";
+import { getCarData, getLatestPrediction } from "@/lib/data";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
-import { Button } from "@/app/components/ui/button";
-import { Card, CardContent } from "@/app/components/card_component";
-import { Badge } from "@/app/components/badge";
 import {
   CheckCircle,
-  ArrowRight,
   Home,
-  BarChart,
-  RefreshCw,
+  RefreshCw
 } from "lucide-react";
-import Link from "next/link";
-import { getLatestPrediction, getCarData } from "@/lib/data";
 import { useSession } from "next-auth/react";
-import { User } from "@/models/user.model";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 export default function FreePlaySuccessPage() {
   const navigate = useRouter();
   const [prediction, setPrediction] = useState<Prediction>();
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
 
-  const { data: session } = useSession();
-  const [user, setUser] = useState<User | null>(session?.user);
+  const { data: session, status } = useSession();
+
   useEffect(() => {
     loadPredictionData();
-  }, []);
+  }, [session, status]);
 
   const loadPredictionData = async () => {
     try {
       // Get the most recent prediction by current user
-      if (!user) return;
-      const latestPrediction = await getLatestPrediction(user.username);
+      if (!session) return;
+
+      const latestPrediction = await getLatestPrediction(session.user.username);
       setPrediction(latestPrediction);
 
-      if (latestPrediction.car_id) {
-        const carDetails = await getCarData(latestPrediction.car_id);
+      if (latestPrediction.carId) {
+        const carDetails = await getCarData(latestPrediction.carId);
         setCar(carDetails);
       }
       // if (predictions.length > 0) {
@@ -51,10 +49,10 @@ export default function FreePlaySuccessPage() {
       //     setCar(carDetails);
       //   }
       // }
+      setLoading(false)
     } catch (error) {
       console.error("Error loading prediction data:", error);
-    } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -112,7 +110,7 @@ export default function FreePlaySuccessPage() {
               <div>
                 <p className="mb-1 text-sm text-gray-400">Current Bid</p>
                 <p className="text-2xl font-bold">
-                  ${car.sort!.bids.toLocaleString()}
+                  {car.sort!.bids.toLocaleString()}
                 </p>
               </div>
               <div>
@@ -126,7 +124,7 @@ export default function FreePlaySuccessPage() {
         </Card>
 
         <div className="flex flex-col justify-center gap-4 md:flex-row">
-          <Link href={createPageUrl("home")}>
+          <Link href={createPageUrl("")}>
             <Button
               variant="outline"
               className="border-[#1E2A36] hover:bg-[#1E2A36]"

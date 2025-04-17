@@ -1,6 +1,5 @@
 import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -14,7 +13,7 @@ export async function GET(req: NextRequest) {
     //get all predictions with the same car_id
     if (car_id) {
       const predictions = await Predictions.find({
-        car_id: car_id,
+        carId: car_id,
       });
       return NextResponse.json(predictions);
     }

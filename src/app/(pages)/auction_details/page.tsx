@@ -45,7 +45,6 @@ import {
 
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
-import { User } from "@/models/user.model";
 const GuessTheHammer = () => {
   const navigate = useRouter();
 
@@ -64,7 +63,7 @@ const GuessTheHammer = () => {
 
   const freePlayActive = true; // TODO: add check if auction is active and current date isn't 1 day before the deadline
   const { data: session } = useSession();
-  const [user, setUser] = useState<User | null>(session?.user);
+
   const formatTimeLeft = (dateString: string | undefined) => {
     if (dateString === undefined) return "No end date";
     if (!dateString) return "No end date";
@@ -111,7 +110,7 @@ const GuessTheHammer = () => {
   const handlePredictionSubmit = async (e: { preventDefault: () => void }) => {
     if (e) e.preventDefault();
 
-    if (session === null || user === null) {
+    if (session === null) {
       setError("You must be logged in to make a prediction.");
       return;
     }
@@ -132,12 +131,12 @@ const GuessTheHammer = () => {
 
     try {
       let predictionData = {
-        car_id: car.auction_id,
+        carId: car.auction_id,
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
-          fullName: user.fullName,
-          username: user.username,
+          fullName: session.user.fullName,
+          username: session.user.username,
         },
       };
 
@@ -156,6 +155,7 @@ const GuessTheHammer = () => {
       setIsSubmitting(false);
     }
   };
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const auctionId = urlParams.get("id");
@@ -170,7 +170,6 @@ const GuessTheHammer = () => {
       if (auctionId) {
         try {
           const response = await getCarData(auctionId);
-          console.log(response);
           if (response) {
             setCar(response);
           } else {
@@ -195,6 +194,7 @@ const GuessTheHammer = () => {
 
           try {
             const predictionData = await getPredictionData(auctionId);
+            console.log(predictionData);
             setPredictions(predictionData || []);
           } catch (e) {
             console.error("Error loading predictions:", e);
@@ -203,7 +203,6 @@ const GuessTheHammer = () => {
 
           try {
             // const userData = await getUserData();
-
             if (session?.user && auctionId) {
               try {
                 //TODO get user specific prediction, maybe filter just from the predictions array
@@ -226,7 +225,6 @@ const GuessTheHammer = () => {
             }
           } catch (e) {
             console.error("User is not logged in");
-            setUser(null);
           }
         } catch (e) {
           console.error("Error loading car data:", e);
@@ -251,7 +249,7 @@ const GuessTheHammer = () => {
       }
     }
     loadData();
-  }, []);
+  }, [session]);
   return (
     <div className="container mx-auto px-4 py-8">
       <Button
@@ -707,8 +705,10 @@ const GuessTheHammer = () => {
                   .map((prediction, index) => {
                     if (!prediction) return null;
 
+                    console.log(prediction)
+
                     const isCurrentUser =
-                      user && prediction.user.username === user.username;
+                      session && prediction.user.username === session.user.username;
 
                     const displayAmount =
                       mode === "free_play"

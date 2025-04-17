@@ -162,7 +162,7 @@ export const addPrediction = async (prediction: Prediction) => {
     }
   } catch (e) {
     console.error(e);
-    return JSON.stringify({ message: "Internal server error" });
+    throw Error("API Error");
   }
 };
 
