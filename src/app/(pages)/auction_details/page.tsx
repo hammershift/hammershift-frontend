@@ -310,9 +310,8 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
-                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                    }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                      }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -323,10 +322,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                      // onError={(e) => {
-                      //   e.target.src =
-                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                      // }}
+                    // onError={(e) => {
+                    //   e.target.src =
+                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                    // }}
                     />
                   </button>
                 ))}
@@ -496,7 +495,7 @@ const GuessTheHammer = () => {
                   className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
                   onClick={() =>
                     window.open(
-                      `https://bringatrailer.com/listing/${car?.attributes[10].value}/`,
+                      `${car.page_url}`,
                       "_blank"
                     )
                   }
