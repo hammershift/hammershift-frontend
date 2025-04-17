@@ -457,7 +457,7 @@ const GuessTheHammer = () => {
                   <div className="text-sm text-gray-400">Time Left</div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4 text-gray-400" />
-                    {/* {formatTimeLeft(car?.sort!.deadline.toString())} */}
+                    {formatTimeLeft(car?.sort!.deadline.toString())}
                   </div>
                 </div>
                 <div>
