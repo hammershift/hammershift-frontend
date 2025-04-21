@@ -1,17 +1,17 @@
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import clientPromise from '@/lib/mongodb';
-import bcrypt from 'bcrypt';
-import { User, Credentials } from '@/app/types/userTypes';
-import { NextAuthOptions, getServerSession } from 'next-auth';
-import { ObjectId } from 'mongodb';
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "@/lib/mongodb";
+import bcrypt from "bcrypt";
+import { User, Credentials } from "@/app/types/userTypes";
+import { NextAuthOptions, getServerSession } from "next-auth";
+import { ObjectId } from "mongodb";
 
-import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
-import FacebookProvider from 'next-auth/providers/facebook';
-import TwitterProvider from 'next-auth/providers/twitter';
-import EmailProvider from 'next-auth/providers/email';
-import connectToDB from './mongoose';
-import Users from '@/models/user.model';
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import TwitterProvider from "next-auth/providers/twitter";
+import EmailProvider from "next-auth/providers/email";
+import connectToDB from "./mongoose";
+import Users from "@/models/user.model";
 
 async function doesEmailExist(email: string): Promise<boolean> {
   await connectToDB();
@@ -24,11 +24,11 @@ function getGoogleCredentials(): { clientId: string; clientSecret: string } {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   if (!clientId || clientId.length === 0) {
-    throw new Error('Missing GOOGLE_CLIENT_ID');
+    throw new Error("Missing GOOGLE_CLIENT_ID");
   }
 
   if (!clientSecret || clientSecret.length === 0) {
-    throw new Error('Missing GOOGLE_CLIENT_SECRET');
+    throw new Error("Missing GOOGLE_CLIENT_SECRET");
   }
 
   return { clientId, clientSecret };
@@ -39,11 +39,11 @@ function getFacebookCredentials(): { clientId: string; clientSecret: string } {
   const clientId = process.env.FACEBOOK_CLIENT_ID;
   const clientSecret = process.env.FACEBOOK_CLIENT_SECRET;
   if (!clientId || clientId.length === 0) {
-    throw new Error('Missing FACEBOOK_CLIENT_ID');
+    throw new Error("Missing FACEBOOK_CLIENT_ID");
   }
 
   if (!clientSecret || clientSecret.length === 0) {
-    throw new Error('Missing FACEBOOK_CLIENT_SECRET');
+    throw new Error("Missing FACEBOOK_CLIENT_SECRET");
   }
 
   return { clientId, clientSecret };
@@ -54,11 +54,11 @@ function getTwitterCredentials(): { clientId: string; clientSecret: string } {
   const clientId = process.env.TWITTER_CLIENT_ID;
   const clientSecret = process.env.TWITTER_CLIENT_SECRET;
   if (!clientId || clientId.length === 0) {
-    throw new Error('Missing TWITTER_CLIENT_ID');
+    throw new Error("Missing TWITTER_CLIENT_ID");
   }
 
   if (!clientSecret || clientSecret.length === 0) {
-    throw new Error('Missing TWITTER_CLIENT_SECRET');
+    throw new Error("Missing TWITTER_CLIENT_SECRET");
   }
 
   return { clientId, clientSecret };
@@ -68,21 +68,28 @@ export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'you@gmail.com' },
+        email: { label: "Email", type: "email", placeholder: "you@gmail.com" },
       },
       authorize: async (credentials: Credentials | undefined) => {
-        if (!credentials || !credentials.email) throw new Error('Missing credentials');
+        if (!credentials || !credentials.email)
+          throw new Error("Missing credentials");
         await connectToDB();
         const user = await Users.findOne({ email: credentials.email });
 
-        if (user?.isBanned) throw new Error('Your account has been banned');
-        return { id: user._id.toString(), email: user.email, username: user.username, fullName: user.fullName, provider: user.provider };
+        if (user?.isBanned) throw new Error("Your account has been banned");
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
+          fullName: user.fullName,
+          provider: user.provider,
+        };
       },
     }),
     EmailProvider({
@@ -149,9 +156,10 @@ export const authOptions: NextAuthOptions = {
     // }),
   ],
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       if (token) {
-        session.user.id = token.id;
+        //session.user.id = token.id;
+        session.user._id = token._id;
         session.user.email = token.email;
         session.user.fullName = token.fullName;
         session.user.username = token.username;
@@ -196,10 +204,13 @@ export const authOptions: NextAuthOptions = {
         token.balance = dbUser.balance;
         // token.stripeCustomerId = dbUser.stripeCustomerId;
         token.isBanned = dbUser.isBanned;
-
+        token._id = dbUser._id.toString();
         if (!dbUser.createdAt) {
           const createdAt = new Date();
-          await Users.updateOne({ email: token.email }, { $set: { createdAt } });
+          await Users.updateOne(
+            { email: token.email },
+            { $set: { createdAt } }
+          );
           token.createdAt = createdAt;
         } else {
           token.createdAt = dbUser.createdAt;
@@ -208,11 +219,17 @@ export const authOptions: NextAuthOptions = {
         if (dbUser.isActive === undefined) {
           dbUser.isActive = true;
           dbUser.balance = 500;
-          await Users.updateOne({ email: token.email }, { $set: { isActive: true, balance: 500 } });
+          await Users.updateOne(
+            { email: token.email },
+            { $set: { isActive: true, balance: 500 } }
+          );
         }
       }
 
-      await Users.updateOne({ email: token.email }, { $set: { updatedAt: new Date() } });
+      await Users.updateOne(
+        { email: token.email },
+        { $set: { updatedAt: new Date() } }
+      );
 
       return token;
     },
