@@ -78,7 +78,7 @@ const FreePlay = () => {
               Practice your prediction skills without risking real money
             </p>
           </div>
-          {/* <Link href={createPageUrl("Leaderboard")}>
+          <Link href={createPageUrl("Leaderboard")}>
             <Button
               variant="outline"
               className="border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
@@ -86,7 +86,7 @@ const FreePlay = () => {
               <Trophy className="mr-2 h-5 w-5" />
               LEADERBOARD
             </Button>
-          </Link> */}
+          </Link>
         </div>
 
         <div className="mb-8 rounded-md border border-blue-800/30 bg-blue-900/20 p-4">
