@@ -121,13 +121,18 @@ const GuessTheHammer = () => {
       return;
     }
 
+    if (predictions.some((p) => p.user.username === session.user.username)) {
+      setError("You have already made a prediction for this auction.");
+      return;
+    }
+
     const predictionValue = parseInt(prediction);
     if (isNaN(predictionValue) || predictionValue < 0) {
       setError("Please enter a valid prediction amount.");
       return;
     }
 
-    if (predictions.find((p) => p.predictedPrice === predictionValue)) {
+    if (predictions.some((p) => p.predictedPrice === predictionValue)) {
       setError("No duplicate prediction values allowed");
       return;
     }
