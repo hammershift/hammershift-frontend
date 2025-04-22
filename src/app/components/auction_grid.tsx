@@ -1,12 +1,13 @@
 import { Auction } from "@/models/auction.model";
 import { formatDistanceToNow, isValid } from "date-fns";
-import { Badge, Clock, Users } from "lucide-react";
+import { Clock, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Card, CardContent } from "./card_component";
 import { Button } from "./ui/button";
 import { createPageUrl } from "./utils";
+import { Badge } from "./badge";
 interface IProps {
   auctions: Auction[];
   mode: string;

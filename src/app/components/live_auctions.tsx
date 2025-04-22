@@ -114,15 +114,15 @@ export const LiveAuctions = () => {
         >
           {auctions.length > 0 &&
             auctions.map((auction, index) => (
-              <div key={index} className="w-80 flex-shrink-0">
-                <Card className="h-full border-[#1E2A36] bg-[#13202D]">
+              <div key={index} className="w-90 flex-shrink-0">
+                <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]">
                   <div className="relative">
                     <Image
                       src={auction.image || defaultImage}
                       alt={"default"}
                       width={500}
                       height={192}
-                      className="h-48 w-full object-cover"
+                      className="h-48 w-full object-cover rounded-t-xl"
                     />
                     <div className="absolute right-2 top-2">
                       <Badge

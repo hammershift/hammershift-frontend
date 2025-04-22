@@ -8,8 +8,8 @@ const Footer = () => {
       header: "Game Modes",
       content: [
         { title: "Free Play", urlString: "Free Play" },
-        { title: "Tournaments", urlString: "Tournaments" },
-        { title: "Guess the Hammer", urlString: "Price Is Right" },
+        { title: "Tournaments (COMING SOON)", urlString: "Tournaments" },
+        { title: "Guess the Hammer (COMING SOON)", urlString: "Price Is Right" },
       ]
     },
     {
@@ -58,10 +58,10 @@ const Footer = () => {
                     footerContent.content.map((data, index) => (
                       <Link key={index}
                         href={createPageUrl(data.urlString)}
-                        className={`hover:text-[#F2CA16] ${data.title === "Tournaments" || data.title === "Guess the Hammer" ? 'pointer-events-none opacity-50' : ''
+                        className={`hover:text-[#F2CA16] ${data.title.includes("COMING SOON") ? 'pointer-events-none opacity-50' : ''
                           }`}
-                        aria-disabled={data.title === "Tournaments" || data.title === "Guess The Hammer"}
-                        tabIndex={data.title === "Tournaments" || data.title === "Guess The Hammer" ? -1 : undefined}
+                        aria-disabled={data.title.includes("COMING SOON")}
+                        tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
                       >
                         {data.title.toUpperCase()}
                       </Link>
