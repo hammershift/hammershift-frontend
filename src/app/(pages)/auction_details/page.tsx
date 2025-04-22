@@ -127,6 +127,11 @@ const GuessTheHammer = () => {
       return;
     }
 
+    if (predictions.find((p) => p.predictedPrice === predictionValue)) {
+      setError("No duplicate prediction values allowed");
+      return;
+    }
+
     setIsSubmitting(true);
     setError("");
 
