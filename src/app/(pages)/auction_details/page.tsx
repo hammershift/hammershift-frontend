@@ -133,7 +133,9 @@ const GuessTheHammer = () => {
     }
 
     if (predictions.some((p) => p.predictedPrice === predictionValue)) {
-      setError("No duplicate prediction values allowed");
+      setError(
+        "A user has already predicted this amount. Please enter a different amount."
+      );
       return;
     }
 
