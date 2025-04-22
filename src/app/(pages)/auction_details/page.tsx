@@ -60,6 +60,7 @@ const GuessTheHammer = () => {
   const [carNotLoaded, setCarNotLoaded] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const [error, setError] = useState<string>("");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const freePlayActive = true; // TODO: add check if auction is active and current date isn't 1 day before the deadline
   const { data: session } = useSession();
@@ -333,8 +334,18 @@ const GuessTheHammer = () => {
 
           <Tabs defaultValue="details">
             <TabsList className="bg-[#13202D]">
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="discussion">Discussion</TabsTrigger>
+              <TabsTrigger
+                value="details"
+                className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+              >
+                Details
+              </TabsTrigger>
+              <TabsTrigger
+                value="discussion"
+                className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+              >
+                Discussion
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="details" className="space-y-6 pt-4">
               <Card className="border-[#1E2A36] bg-[#13202D]">
@@ -423,9 +434,15 @@ const GuessTheHammer = () => {
                       <div className="mb-2 text-sm text-gray-400">
                         DESCRIPTION
                       </div>
-                      <p className="whitespace-pre-line text-gray-300">
-                        {car?.description}
+                      <p className={`text-gray-300 text-justify ${!isExpanded ? "line-clamp-3" : "whitespace-normal"}`}>
+                        {car.description}
                       </p>
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-sm text-gray-400 hover:text-gray-300 transition-colors"
+                      >
+                        {isExpanded ? 'Show less' : 'Show more'}
+                      </button>
                     </div>
                   )}
                 </CardContent>
@@ -555,7 +572,7 @@ const GuessTheHammer = () => {
                                 onChange={(e: {
                                   target: { value: SetStateAction<string> };
                                 }) => setPrediction(e.target.value)}
-                                className="border-[#1E2A36] bg-[#1E2A36] pl-8"
+                                className="border-[#1E2A36] bg-[#1E2A36] transition-colors hover:border-[#F2CA16] pl-8"
                                 placeholder="Enter amount"
                               />
                             </div>

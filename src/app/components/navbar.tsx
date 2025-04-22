@@ -74,8 +74,8 @@ const Navbar = () => {
     const navBarList = [
         { title: "Home", urlString: "" },
         { title: "Free Play", urlString: "Free Play" },
-        { title: "Tournaments", urlString: "Tournaments" },
-        { title: "Guess the Hammer", urlString: "Price Is Right" },
+        { title: "Tournaments (COMING SOON)", urlString: "Tournaments" },
+        { title: "Guess the Hammer (COMING SOON)", urlString: "Price Is Right" },
     ];
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -527,21 +527,23 @@ const Navbar = () => {
               </div>
             </div> */}
                     </div>
-                    <div className="relative mr-4 hidden max-w-[535px] flex-1 justify-between lg:flex xl:w-full">
-                        <nav className="flex items-center justify-between space-x-8">
-                            {navBarList.map((data, index) => (
-                                <Link
-                                    key={index}
-                                    href={createPageUrl(data.urlString)}
-                                    className={`transition-colors hover:text-[#F2CA16] ${data.title === "Tournaments" || data.title === "Guess the Hammer" ? 'pointer-events-none opacity-50' : ''
-                                        }`}
-                                    aria-disabled={data.title === "Tournaments" || data.title === "Guess The Hammer"}
-                                    tabIndex={data.title === "Tournaments" || data.title === "Guess The Hammer" ? -1 : undefined}
-                                >
-                                    {data.title.toUpperCase()}
-                                </Link>
-                            ))}
-                        </nav>
+                    <div className="flex justify-center items-center">
+                        <div className="relative mr-4 hidden items-center justify-center flex-1 justify-between lg:flex xl:w-full">
+                            <nav className="flex items-center justify-between space-x-8">
+                                {navBarList.map((data, index) => (
+                                    <Link
+                                        key={index}
+                                        href={createPageUrl(data.urlString)}
+                                        className={`transition-colors hover:text-[#F2CA16] ${data.title.includes("COMING SOON") ? 'pointer-events-none opacity-50' : ''
+                                            }`}
+                                        aria-disabled={data.title.includes("COMING SOON")}
+                                        tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
+                                    >
+                                        {data.title.toUpperCase()}
+                                    </Link>
+                                ))}
+                            </nav>
+                        </div>
                     </div>
                     {/* <div className="relative max-w-[535px] w-full hidden lg:block">
             <form
@@ -944,21 +946,23 @@ const Navbar = () => {
               </div>
             </div> */}
                     </div>
-                    <div className="relative mr-4 hidden max-w-[535px] flex-1 justify-between lg:flex xl:w-full">
-                        <nav className="flex items-center justify-between space-x-8">
-                            {navBarList.map((data, index) => (
-                                <Link
-                                    key={index}
-                                    href={createPageUrl(data.urlString)}
-                                    className={`transition-colors hover:text-[#F2CA16] ${data.title === "Tournaments" || data.title === "Guess the Hammer" ? 'pointer-events-none opacity-50' : ''
-                                        }`}
-                                    aria-disabled={data.title === "Tournaments" || data.title === "Guess The Hammer"}
-                                    tabIndex={data.title === "Tournaments" || data.title === "Guess The Hammer" ? -1 : undefined}
-                                >
-                                    {data.title.toUpperCase()}
-                                </Link>
-                            ))}
-                        </nav>
+                    <div className="flex justify-center items-center">
+                        <div className="relative mr-4 hidden items-center justify-center flex-1 justify-between lg:flex xl:w-full">
+                            <nav className="flex items-center justify-between space-x-8">
+                                {navBarList.map((data, index) => (
+                                    <Link
+                                        key={index}
+                                        href={createPageUrl(data.urlString)}
+                                        className={`transition-colors hover:text-[#F2CA16] ${data.title.includes("COMING SOON") ? 'pointer-events-none opacity-50' : ''
+                                            }`}
+                                        aria-disabled={data.title.includes("COMING SOON")}
+                                        tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
+                                    >
+                                        {data.title.toUpperCase()}
+                                    </Link>
+                                ))}
+                            </nav>
+                        </div>
                     </div>
                     {/* <div className="relative max-w-[535px] xl:w-full flex-1 hidden lg:flex mr-4">
                         <form

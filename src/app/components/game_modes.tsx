@@ -14,14 +14,14 @@ export const GameModes = () => {
           badgeText="AI POWERED"
         />
         <GameModeCard
-          title="TOURNAMENT MODE"
+          title="TOURNAMENT MODE (COMING SOON)"
           description="Compete for prize pools"
           icon={Trophy}
           playerCount={123}
           link={"/"}
         />
         <GameModeCard
-          title="GUESS THE HAMMER"
+          title="GUESS THE HAMMER (COMING SOON)"
           description="Guess the hammer price"
           icon={DollarSign}
           playerCount={727}

@@ -883,7 +883,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
               className={`btn-yellow w-full ${tournamentWagers.length > 4 ? "mt-2" : "mt-6"
                 }`}
             >
-              JOIN TOURNAMENT
+              {"JOIN TOURNAMENT (COMING SOON)"}
             </button>
           )}
         </div>

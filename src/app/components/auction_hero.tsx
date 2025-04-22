@@ -49,7 +49,7 @@ export default function AuctionHero() {
                         variant="outline"
                         className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto"
                     >
-                        JOIN TOURNAMENT
+                        {"JOIN TOURNAMENT (COMING SOON)"}
                     </Button>
                 </Link>
             </div>
