@@ -133,9 +133,11 @@ const GuessTheHammer = () => {
     try {
       let predictionData = {
         carId: car.auction_id,
+        carObjectId: car._id,
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
+          userId: session.user._id,
           fullName: session.user.fullName,
           username: session.user.username,
         },
@@ -195,7 +197,6 @@ const GuessTheHammer = () => {
 
           try {
             const predictionData = await getPredictionData(auctionId);
-            console.log(predictionData);
             setPredictions(predictionData || []);
           } catch (e) {
             console.error("Error loading predictions:", e);
@@ -309,8 +310,9 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                      }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
+                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                    }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -321,10 +323,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                    // onError={(e) => {
-                    //   e.target.src =
-                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                    // }}
+                      // onError={(e) => {
+                      //   e.target.src =
+                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                      // }}
                     />
                   </button>
                 ))}
@@ -434,14 +436,16 @@ const GuessTheHammer = () => {
                       <div className="mb-2 text-sm text-gray-400">
                         DESCRIPTION
                       </div>
-                      <p className={`text-gray-300 text-justify ${!isExpanded ? "line-clamp-3" : "whitespace-normal"}`}>
+                      <p
+                        className={`text-justify text-gray-300 ${!isExpanded ? "line-clamp-3" : "whitespace-normal"}`}
+                      >
                         {car.description}
                       </p>
                       <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="text-sm text-gray-400 hover:text-gray-300 transition-colors"
+                        className="text-sm text-gray-400 transition-colors hover:text-gray-300"
                       >
-                        {isExpanded ? 'Show less' : 'Show more'}
+                        {isExpanded ? "Show less" : "Show more"}
                       </button>
                     </div>
                   )}
@@ -508,12 +512,7 @@ const GuessTheHammer = () => {
                 <Button
                   variant="outline"
                   className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
-                  onClick={() =>
-                    window.open(
-                      `${car.page_url}`,
-                      "_blank"
-                    )
-                  }
+                  onClick={() => window.open(`${car.page_url}`, "_blank")}
                 >
                   <LinkIcon className="mr-2 h-4 w-4" />
                   VIEW ON BaT
@@ -572,7 +571,7 @@ const GuessTheHammer = () => {
                                 onChange={(e: {
                                   target: { value: SetStateAction<string> };
                                 }) => setPrediction(e.target.value)}
-                                className="border-[#1E2A36] bg-[#1E2A36] transition-colors hover:border-[#F2CA16] pl-8"
+                                className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
                                 placeholder="Enter amount"
                               />
                             </div>
@@ -722,10 +721,9 @@ const GuessTheHammer = () => {
                   .map((prediction, index) => {
                     if (!prediction) return null;
 
-                    console.log(prediction)
-
                     const isCurrentUser =
-                      session && prediction.user.username === session.user.username;
+                      session &&
+                      prediction.user.username === session.user.username;
 
                     const displayAmount =
                       mode === "free_play"
