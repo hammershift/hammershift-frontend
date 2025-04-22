@@ -36,6 +36,9 @@ import {
   dislikeReply,
   getReplies,
 } from "@/lib/data";
+import { Button } from "./ui/button";
+import { Send } from "lucide-react";
+import { TextArea } from "./ui/textarea";
 
 export const CommentsSection = ({
   pageID,
@@ -50,6 +53,7 @@ export const CommentsSection = ({
   const [comment, setComment] = useState("");
   const [sortDropdown, setSortDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const session = useSession();
   const dropdownRef = useRef<any | null>(null);
   const [reload, setReload] = useState(0);
@@ -64,6 +68,7 @@ export const CommentsSection = ({
       try {
         const response = await getComments(pageID, pageType, sort);
         if (response) {
+          console.log(response);
           setCommentsList(response.comments);
           setIsLoading(false);
         }
@@ -91,21 +96,26 @@ export const CommentsSection = ({
   };
 
   // handle submit comment
-  const handlePostComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handlePostComment = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setInputAlert(false);
+    setCommentAlert(false);
     if (comment == "") {
+      setIsSubmitting(false);
       setInputAlert(true);
       handleAlertTimer();
       console.log("comment is empty");
       return;
     } else {
-      if (session.data?.user.id) {
+      if (session.data?.user.email) {
         try {
           const response = await createComment(pageID, pageType, comment);
 
           if (response) {
             console.log("comment has been posted");
             setComment("");
+            setIsSubmitting(false);
             setReload((prev: number) => prev + 1);
           }
         } catch (error) {
@@ -113,6 +123,7 @@ export const CommentsSection = ({
         }
       } else {
         console.log("You cannot post a comment. Please log in first");
+        setIsSubmitting(false);
         setCommentAlert(true);
         handleAlertTimer();
       }
@@ -145,76 +156,58 @@ export const CommentsSection = ({
   }, []);
 
   return (
-    <div className="mt-16 max-w-[832px] mb-8 md:mb-16 sm:mb-0">
+    <div className="md:mb-16 sm:mb-0">
       <div className="flex justify-between">
-        <div className="text-xl md:text-3xl">
-          <span className="font-bold">Comments</span>
+        {/* <div className="text-xl md:text-3xl">
+          <span className="font-bold">Comments </span>
           {`(${Array.isArray(commentsList) && commentsList.length > 0
-              ? commentsList.length
-              : 0
+            ? commentsList.length
+            : 0
             })`}
-        </div>
-        {session.status == "unauthenticated" && (
-          <div className="flex items-center text-sm sm:text-base">
-            {/* <Image
-                            src={BellIcon}
-                            width={16}
-                            height={16}
-                            alt="Bell"
-                            className="w-4 h-4"
-                        /> */}
-            <Link href="/login_page">
-              <div className="text-[14px] opacity-50 ml-4">Log in</div>
-            </Link>
-            <Link href="/create_account">
-              <div className="text-[14px] opacity-50 ml-4">
-                Sign Up
-              </div>
-            </Link>
-          </div>
-        )}
+        </div> */}
       </div>
-      <div className="flex my-3">
-        <div className="relative flex w-full items-center bg-[#172431] py-2.5 px-3 rounded">
-          <input
-            type="text"
-            value={comment}
-            placeholder="Add a comment"
-            className="bg-[#172431] w-full outline-none"
-            name="comment"
-            onChange={(e) => setComment(e.target.value)}
-          />
+      {session.data?.user.email ?
+        (
+          <form onSubmit={handlePostComment} className="mb-6">
+            <div className="space-y-3">
+              <TextArea
+                placeholder="Share your thoughts about this auction..."
+                value={comment}
+                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setComment(e.target.value)}
+                className="bg-[#1E2A36] border-[#1E2A36] focus:border-[#F2CA16] min-h-[100px]"
+              />
 
-          {/* <Image
-                        src={CameraPlus}
-                        width={20}
-                        height={20}
-                        alt="camera plus"
-                        className="w-5 h-5"
-                    />
-                    <Image
-                        src={GifIcon}
-                        width={20}
-                        height={20}
-                        alt="gif"
-                        className="w-5 h-5 ml-2"
-                    /> */}
-        </div>
-        <button
-          className={`ml-2 rounded bg-white/20 px-4 ${session.status == "unauthenticated"
-              ? "opacity-50 disabled"
-              : "btn-white"
-            }`}
-          onClick={handlePostComment}
-        >
-          Comment
-        </button>
-      </div>
+              {/* {error && (
+          <p className="text-red-500 text-sm">{error}</p>
+        )} */}
+
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  aria-disabled={isSubmitting}
+                  className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
+                >
+                  {isSubmitting ? 'Posting...' : 'Post Comment'}
+                  <Send className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </form>
+        )
+        :
+        (
+          <div className="bg-[#1E2A36] border border-[#1E2A36] rounded-md p-4 mb-6">
+            <p className="text-center text-gray-400">
+              Please log in to leave a comment.
+            </p>
+          </div>
+        )
+      }
       {commentAlert && (
         <AlertMessage message="Please login before commenting" />
       )}
       {inputAlert && <AlertMessage message="Input is empty" />}
-      <div className=" mt-2 flex items-center text-sm sm:text-base">
+      {/* <div className=" mt-2 flex items-center text-sm sm:text-base">
         <div>Sort by</div>
         <div
           className="font-bold ml-2 cursor-pointer"
@@ -261,7 +254,7 @@ export const CommentsSection = ({
             </div>
           )}
         </div>
-      </div>
+      </div> */}
       <section>
         {isLoading ? (
           <div className="flex w-full justify-center h-12 items-center">
@@ -279,7 +272,7 @@ export const CommentsSection = ({
                   likes={item.likes || []}
                   dislikes={item.dislikes || []}
                   commentID={item._id}
-                  userID={session.data?.user.id}
+                  userID={session.data?.user._id}
                   setReload={setReload}
                   commenterUserID={item.user.userId}
                   pageID={pageID}
@@ -289,8 +282,8 @@ export const CommentsSection = ({
               </div>
             ))
         ) : (
-          <div className="w-full h-12 flex justify-center items-center">
-            No Comments Yet
+          <div className="text-center py-8 text-gray-400">
+            No comments yet. Be the first to comment!
           </div>
         )}
         {commentsDisplayed < commentsList.length && (
@@ -445,15 +438,21 @@ export const CommentsCard = ({
   };
 
   return (
-    <div className="flex mt-8 text-[14px]">
-      <Image
+    <div className="flex mt-4 text-[14px]">
+      {/* <Image
         src={AvatarOne}
         width={40}
         height={40}
         alt="camera plus"
         className="w-10 h-10 ml-2"
-      />
-      <div className="ml-4">
+      /> */}
+      <div
+        className={`flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+      >
+        {username?.[0]?.toUpperCase() ||
+          "U"}
+      </div>
+      <div className="ml-4 flex-1">
         <div className="relative flex justify-between">
           <div>
             <span className="font-bold">{username}</span>
@@ -462,7 +461,7 @@ export const CommentsCard = ({
               {dayjs(createdAt).fromNow()}
             </span>
           </div>
-          <div onClick={(e) => setDropdown((prev) => !prev)}>
+          {/* <div onClick={(e) => setDropdown((prev) => !prev)}>
             <Image
               src={ThreeDots}
               width={16}
@@ -486,12 +485,12 @@ export const CommentsCard = ({
           )}
           {deleteAlert && (
             <AlertMessage message="Please login before deleting" />
-          )}
+          )} */}
         </div>
-        <div className=" my-3 h-max-[100px] md:h-auto ellipsis overflow-hidden">
+        <div className=" my-3 h-max-[100px] md:h-auto ellipsis overflow-hidden text-justify">
           {censor.applyTo(comment, matches)}
         </div>
-        <div className="flex opacity-50 items-center">
+        {/* <div className="flex opacity-50 items-center">
           <div
             onClick={(e) => setReplyInput((prev) => !prev)}
             className="cursor-pointer"
@@ -551,7 +550,7 @@ export const CommentsCard = ({
             )}
             <div></div>
           </div>
-        </div>
+        </div> */}
 
         {replyInput && (
           <ReplyInputDropdown
@@ -596,7 +595,7 @@ export const CommentsCard = ({
                     commentID={commentID}
                     likes={item.likes || []}
                     dislikes={item.dislikes || []}
-                    userID={session.data?.user.id}
+                    userID={session.data?.user._id}
                     setReload={setReload}
                   />
                 ))}
@@ -634,7 +633,7 @@ const ReplyInputDropdown = ({
       handleAlertTimer();
       return;
     } else {
-      if (session.data?.user.id) {
+      if (session.data?.user.email) {
         try {
           const response = await createReply(pageID, pageType, reply);
 
@@ -674,8 +673,8 @@ const ReplyInputDropdown = ({
         </div>
         <button
           className={`ml-2 rounded bg-white/20 px-4 ${session.status == "unauthenticated"
-              ? "opacity-50 disabled"
-              : "btn-white"
+            ? "opacity-50 disabled"
+            : "btn-white"
             }`}
           onClick={handlePostReply}
         >

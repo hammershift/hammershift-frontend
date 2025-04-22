@@ -4,6 +4,9 @@ import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
 import page from '@/app/(pages)/auctions/car_view_page/page';
+import connectToDB from '@/lib/mongoose';
+import Comments from '@/models/comment.model';
+import { Types } from 'mongoose';
 
 // create comment for auction URL: /api/comments
 export async function POST(req: NextRequest) {
@@ -20,26 +23,28 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        const client = await clientPromise;
-        const db = client.db();
-        const userId = new ObjectId(session.user.id);
+        await connectToDB();
+        const userId = new ObjectId(session.user._id);
 
         if (commentID) {
-            const commentData = await db.collection('comments').insertOne({
-                comment,
-                pageID,
-                pageType,
+            const commentData = {
+                _id: new Types.ObjectId(),
+                comment: comment,
+                pageID: pageID,
+                pageType: pageType,
                 parentID: new ObjectId(commentID),
                 user: {
-                    userId,
+                    userId: userId,
                     username: session.user.username,
                 },
                 likes: [],
                 dislikes: [],
                 createdAt: new Date(),
-            });
+            };
 
-            if (!commentData) {
+            const newComment = new Comments(commentData);
+            await newComment.save();
+            if (!newComment) {
                 return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
             }
 
@@ -54,26 +59,26 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // create comment 
-        const commentData = await db.collection('comments').insertOne({
-            comment,
-            pageID,
-            pageType,
+        // create comment
+        const commentData = {
+            _id: new Types.ObjectId(),
+            comment: comment,
+            pageID: pageID,
+            pageType: pageType,
             user: {
-                userId,
+                userId: userId,
                 username: session.user.username,
             },
             likes: [],
             dislikes: [],
             createdAt: new Date(),
-        });
+        };
+        const newComment = new Comments(commentData);
+        await newComment.save();
 
-        if (!commentData) {
+        if (!newComment) {
             return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
         }
-
-
-
 
         return NextResponse.json(
             {
@@ -123,11 +128,10 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const client = await clientPromise;
-        const db = client.db();
+        await connectToDB();
 
         if (parentID) {
-            const replies = await db.collection('comments').find({ parentID: new ObjectId(parentID) }).sort({ createdAt: 1 }).toArray();
+            const replies = await Comments.find({ parentID: new ObjectId(parentID) }).sort({ createdAt: 1 });
 
             return NextResponse.json(
                 {
@@ -144,7 +148,7 @@ export async function GET(req: NextRequest) {
 
 
         // get comment for auction
-        const response = await db.collection('comments').find({ pageID: pageID, parentID: { $exists: false } })
+        const response = Comments.find({ pageID: pageID, parentID: { $exists: false } })
             .limit(limit)
             .skip(offset)
             .sort(sort as any);
@@ -152,7 +156,8 @@ export async function GET(req: NextRequest) {
         if (!response) {
             return NextResponse.json({ message: 'No comments found' }, { status: 400 });
         }
-        const comments = await response.toArray();
+
+        const comments = await response;
 
         return NextResponse.json(
             {

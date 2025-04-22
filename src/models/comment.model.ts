@@ -1,27 +1,41 @@
-import mongoose from 'mongoose';
-
-const commentSchema = new mongoose.Schema({
-    comment: {
-        type: String,
-        required: true,
-    },
-    auctionID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: false,
-    },
-    tournamentID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: false,
-    },
-    parentID: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: false,
-    },
+import mongoose, { model, models, Schema, Types } from 'mongoose';
+export interface Comment {
+    _id: Types.ObjectId;
+    comment: string;
+    pageID: string;
+    pageType: string;
+    parentID?: Types.ObjectId;
     user: {
-        type: Object,
-        required: true,
-        properties: {
-            UserId: {
+        userId: string;
+        username: string;
+        profilePicture?: string;
+    };
+    likes: any[];
+    dislikes: any[];
+    createdAt: Date;
+}
+
+const commentSchema = new Schema(
+    {
+        _id: { type: Types.ObjectId, required: true },
+        comment: {
+            type: String,
+            required: true,
+        },
+        pageID: {
+            type: String,
+            required: true,
+        },
+        pageType: {
+            type: String,
+            required: true,
+        },
+        parentID: {
+            type: Types.ObjectId,
+            required: false,
+        },
+        user: {
+            userId: {
                 type: String,
                 required: true,
             },
@@ -32,21 +46,21 @@ const commentSchema = new mongoose.Schema({
             profilePicture: {
                 type: String,
             },
-        }
+        },
+        likes: {
+            type: Array
+        },
+        dislikes: {
+            type: Array
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
+    },
+    { collection: "comments", timestamps: true }
+);
 
-    },
-    likes: {
-        type: Array
-    },
-    dislikes: {
-        type: Array
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
-
-const Comments = mongoose.models.Comment || mongoose.model('Comments', commentSchema);
+const Comments = models.comments || model<Comment>("comments", commentSchema);
 
 export default Comments;

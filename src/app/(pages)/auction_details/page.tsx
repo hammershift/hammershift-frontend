@@ -45,6 +45,7 @@ import {
 
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
+import { CommentsSection } from "@/app/components/CommentsSection";
 const GuessTheHammer = () => {
   const navigate = useRouter();
 
@@ -52,6 +53,7 @@ const GuessTheHammer = () => {
   const [wagerAmount, setWagerAmount] = useState<number>(10);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [prediction, setPrediction] = useState<string>("");
+  const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
 
@@ -106,6 +108,23 @@ const GuessTheHammer = () => {
     }
 
     return result;
+  };
+
+  const handlePredictionAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+
+    if (rawValue === '') {
+      setPrediction(rawValue);
+      return;
+    }
+
+    if (/^\d*$/.test(rawValue)) {
+      const numericValue = Number(rawValue);
+      if (numericValue <= MAX_SAFE_INTEGER) {
+        setPrediction(rawValue);
+      }
+      else { setPrediction(prediction) }
+    }
   };
 
   const handlePredictionSubmit = async (e: { preventDefault: () => void }) => {
@@ -322,9 +341,8 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
-                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                    }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                      }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -335,10 +353,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                      // onError={(e) => {
-                      //   e.target.src =
-                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                      // }}
+                    // onError={(e) => {
+                    //   e.target.src =
+                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                    // }}
                     />
                   </button>
                 ))}
@@ -467,9 +485,9 @@ const GuessTheHammer = () => {
               {/* <AIInsightCard car={car} /> */}
             </TabsContent>
 
-            {/* <TabsContent value="discussion" className="pt-4">
-              <CommentSection carId={car?.id} />
-            </TabsContent> */}
+            <TabsContent value="discussion" className="pt-4">
+              <CommentsSection pageID={car?.auction_id || ""} pageType={"auction"} />
+            </TabsContent>
           </Tabs>
         </div>
 
@@ -578,11 +596,9 @@ const GuessTheHammer = () => {
                             <div className="relative">
                               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500" />
                               <Input
-                                type="number"
+                                type="text"
                                 value={prediction}
-                                onChange={(e: {
-                                  target: { value: SetStateAction<string> };
-                                }) => setPrediction(e.target.value)}
+                                onChange={handlePredictionAmount}
                                 className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
                                 placeholder="Enter amount"
                               />
