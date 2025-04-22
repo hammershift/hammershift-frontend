@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, model, models } from "mongoose";
+import mongoose, { Document, Schema, model, models, Types } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 const attributeSchema = new Schema({
   key: { type: String, required: true },
@@ -104,6 +104,7 @@ export interface Auction extends Document {
   updatedAt?: Date;
 }
 export interface Car {
+  _id?: Types.ObjectId;
   auction_id: string;
   title: string;
   website: string;
