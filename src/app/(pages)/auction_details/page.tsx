@@ -118,7 +118,8 @@ const GuessTheHammer = () => {
       return;
     }
 
-    if (/^\d*$/.test(rawValue)) {
+    if (/^(\d+(\.\d*)?|\.\d+)$/.test(rawValue)) {
+      console.log(rawValue);
       const numericValue = Number(rawValue);
       if (numericValue <= MAX_SAFE_INTEGER) {
         setPrediction(rawValue);
