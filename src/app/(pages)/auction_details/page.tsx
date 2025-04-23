@@ -113,7 +113,7 @@ const GuessTheHammer = () => {
   const handlePredictionAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
 
-    if (rawValue === '') {
+    if (rawValue === "") {
       setPrediction(rawValue);
       return;
     }
@@ -123,8 +123,9 @@ const GuessTheHammer = () => {
       const numericValue = Number(rawValue);
       if (numericValue <= MAX_SAFE_INTEGER) {
         setPrediction(rawValue);
+      } else {
+        setPrediction(prediction);
       }
-      else { setPrediction(prediction) }
     }
   };
 
@@ -342,8 +343,9 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                      }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
+                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                    }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -354,10 +356,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                    // onError={(e) => {
-                    //   e.target.src =
-                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                    // }}
+                      // onError={(e) => {
+                      //   e.target.src =
+                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                      // }}
                     />
                   </button>
                 ))}
@@ -467,11 +469,49 @@ const GuessTheHammer = () => {
                       <div className="mb-2 text-sm text-gray-400">
                         DESCRIPTION
                       </div>
-                      <p
-                        className={`text-justify text-gray-300 ${!isExpanded ? "line-clamp-3" : "whitespace-normal"}`}
+
+                      <div
+                        className={`flex flex-col text-justify text-gray-300`}
                       >
-                        {car.description}
-                      </p>
+                        {car.description
+                          .slice(0, isExpanded ? car.description.length : 1)
+                          .map((text) => {
+                            if (Array.isArray(text)) {
+                              return (
+                                <ul
+                                  className="list-inside list-disc"
+                                  key={text}
+                                >
+                                  {text.map((points, index) => {
+                                    return (
+                                      <li className="mb-2" key={index}>
+                                        {points}
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              );
+                              // text.map((points, index) => {
+                              //   console.log(points);
+                              //   return (
+                              //     <ul key={index}>
+                              //       <li className="mb-2" key={index}>
+                              //         {points}
+                              //       </li>
+                              //     </ul>
+                              //   );
+                              // });
+                            } else {
+                              return (
+                                <div key={text}>
+                                  <p className="mb-2" key={text}>
+                                    {text}
+                                  </p>
+                                </div>
+                              );
+                            }
+                          })}
+                      </div>
                       <button
                         onClick={() => setIsExpanded(!isExpanded)}
                         className="text-sm text-gray-400 transition-colors hover:text-gray-300"
@@ -487,7 +527,10 @@ const GuessTheHammer = () => {
             </TabsContent>
 
             <TabsContent value="discussion" className="pt-4">
-              <CommentsSection pageID={car?.auction_id || ""} pageType={"auction"} />
+              <CommentsSection
+                pageID={car?.auction_id || ""}
+                pageType={"auction"}
+              />
             </TabsContent>
           </Tabs>
         </div>
