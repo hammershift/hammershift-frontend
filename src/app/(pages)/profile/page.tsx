@@ -1,37 +1,28 @@
 "use client";
-import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 import { TimerProvider } from "@/app/_context/TimerContext";
-import { PredictionsCard, MyWatchlistCard } from "@/app/components/navbar";
-import { getMyWagers, getMyWatchlist, getUserInfo } from "@/lib/data";
+import { PredictionsCard } from "@/app/components/navbar";
+import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
+import { Button } from "@/app/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import { Input } from "@/app/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
+import { TextArea } from "@/app/components/ui/textarea";
+import { getMyPredictions } from "@/lib/data";
+import { getInitials } from "@/lib/utils";
+import { CircleDollarSign, Clock, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
-import AvatarOne from "../../../../public/images/avatar-one.svg";
 import {
   default as Dollar,
   default as DollarIcon,
 } from "../../../../public/images/dollar.svg";
-import Globe from "../../../../public/images/earth11.svg";
 import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
-import Pin from "../../../../public/images/pin1.svg";
-import IDIcon from "../../../../public/images/single-neutral-id-card-3.svg";
-import TransitionPattern from "../../../../public/images/transition-pattern.svg";
-import Twitter from "../../../../public/images/twitter-social.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
-import { Button } from "@/app/components/ui/button";
-import { getMyPredictions } from "@/lib/data";
-import { BarChart3, CircleDollarSign, Clock, Settings, Trophy } from "lucide-react";
-import { createPageUrl } from "@/app/components/utils";
-import { getInitials } from "@/lib/utils";
-import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
-import { Input } from "@/app/components/ui/input";
-import { TextArea } from "@/app/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
 
 interface Props { }
 
@@ -262,7 +253,7 @@ function Profile(props: Props) {
                 <Clock className="w-6 h-6 text-[#F2CA16]" />
               </div>
               <p className="text-gray-400">Total Predictions</p>
-              <p className="text-3xl font-bold">0{/* TODO: put predictions */}</p>
+              <p className="text-3xl font-bold">{activePredictions.length + completedPredictions.length}</p>
             </div>
           </CardContent>
         </Card>
