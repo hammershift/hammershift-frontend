@@ -163,7 +163,7 @@ const LivePage = () => {
         </section>
       )}
       <section>
-        <iframe src="https://embeds.beehiiv.com/93359bc7-769f-4ce6-bb3d-3fbfdc15a4ff" data-test-id="beehiiv-embed" width="100%" height="320" frameborder="0" scrolling="no"
+        <iframe src="https://embeds.beehiiv.com/93359bc7-769f-4ce6-bb3d-3fbfdc15a4ff" data-test-id="beehiiv-embed" width="100%" height="320" frameBorder="0" scrolling="no"
           style={{ margin: 0, backgroundColor: 'transparent' }}></iframe>
       </section>
       {/* <div className="section-container mx-auto mb-10">

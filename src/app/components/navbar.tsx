@@ -644,7 +644,8 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     );
 };
 
-const PredictionsDropdownMenu = (closeMenu: () => void) => {
+
+const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
     const router = useRouter();
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activePredictions, setActivePredictions] = useState([]);
