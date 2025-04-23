@@ -222,7 +222,7 @@ const Navbar = () => {
                                 >
                                     <CircleDollarSignIcon className="h-8 w-8 text-[#F2CA16]" />
                                 </button>
-                                {dropPredictions && <PredictionsDropdownMenu />}
+                                {dropPredictions && <PredictionsDropdownMenu closeMenu={closeMenu} />}
                                 <button
                                     id="myaccount-button"
                                     className="relative"
@@ -644,7 +644,7 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
     );
 };
 
-const PredictionsDropdownMenu = () => {
+const PredictionsDropdownMenu = (closeMenu: () => void) => {
     const router = useRouter();
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activePredictions, setActivePredictions] = useState([]);
@@ -753,6 +753,7 @@ const PredictionsDropdownMenu = () => {
                                         potential_prize={prediction.auctionPot}
                                         id={prediction.auctionIdentifierId}
                                         isActive={true}
+                                        closeMenu={closeMenu}
                                         status={prediction.auctionStatus}
                                         predictionAmount={prediction.wagerAmount}
                                         objectID={prediction.auctionObjectId}
