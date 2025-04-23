@@ -1,15 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const AuctionPointsSchema = new mongoose.Schema(
   {
-    auctionID: {
+    auctionId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Auction',
+      ref: "Auction",
       required: true,
     },
-    userID: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     fullName: String,
@@ -27,6 +27,8 @@ const AuctionPointsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const AuctionPoints = mongoose.models.tournament_points || mongoose.model('auction_points', AuctionPointsSchema);
+const AuctionPoints =
+  mongoose.models.auction_points ||
+  mongoose.model("auction_points", AuctionPointsSchema);
 
 export default AuctionPoints;

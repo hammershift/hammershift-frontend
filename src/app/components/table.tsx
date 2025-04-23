@@ -3,7 +3,7 @@ import { cn } from "@/helpers/utils";
 
 interface IProps {
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   [x: string]: any;
 }
 const Table = ({ className, children, props }: IProps) => (
@@ -31,7 +31,7 @@ const TableBody = ({ className, children, props }: IProps) => (
 const TableFooter = ({ className, children, props }: IProps) => (
   <tfoot
     className={cn(
-      "bg-muted/50 border-t font-medium [&>tr]:last:border-b-0",
+      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
       className
     )}
     {...props}
@@ -43,7 +43,7 @@ const TableFooter = ({ className, children, props }: IProps) => (
 const TableRow = ({ className, children, props }: IProps) => (
   <tr
     className={cn(
-      "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
+      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
       className
     )}
     {...props}
@@ -55,7 +55,7 @@ const TableRow = ({ className, children, props }: IProps) => (
 const TableHead = ({ className, children, props }: IProps) => (
   <th
     className={cn(
-      "text-muted-foreground h-10 px-2 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
       className
     )}
     {...props}
@@ -78,7 +78,7 @@ const TableCell = ({ className, children, props }: IProps) => (
 
 const TableCaption = ({ className, children, props }: IProps) => (
   <caption
-    className={cn("text-muted-foreground mt-4 text-sm", className)}
+    className={cn("mt-4 text-sm text-muted-foreground", className)}
     {...props}
   >
     {children}

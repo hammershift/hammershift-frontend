@@ -1,58 +1,50 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Trophy, ArrowRight, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardContent } from "./card_component";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "./table";
-
+import { Types } from "mongoose";
+import Link from "next/link";
+type LeaderboardData = {
+  _id: Types.ObjectId;
+  totalPoints: number;
+  totalPredictions: number;
+  fullName: string;
+  username: string;
+  image: string;
+  auctions: {
+    auctionId: Types.ObjectId;
+    points: number;
+    rank: number;
+  };
+};
+import { getAuctionPoints } from "@/lib/data";
+import { createPageUrl } from "./utils";
 export const Leaderboard = () => {
-    const topPlayers = [
-        {
-            username: "CarMaster",
-            avatar: "M",
-            winRate: 78,
-            earnings: 12500,
-            points: 500,
-        },
-        {
-            username: "SpeedDemon",
-            avatar: "S",
-            winRate: 75,
-            earnings: 10200,
-            points: 450,
-        },
-        {
-            username: "AutoExpert",
-            avatar: "A",
-            winRate: 72,
-            earnings: 9800,
-            points: 400,
-        },
-        {
-            username: "RallyKing",
-            avatar: "R",
-            winRate: 70,
-            earnings: 8900,
-            points: 350,
-        },
-        {
-            username: "DriftQueen",
-            avatar: "D",
-            winRate: 68,
-            earnings: 8500,
-            points: 300,
-        },
-    ];
+  const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
 
-    return (
-        <section className="mx-auto py-12">
-            <div className="grid gap-6 md:grid-cols-2">
-                <Card className="border-[#1E2A36] bg-[#13202D]">
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      console.log("fetching leaderboards");
+      const leaderboard = await getAuctionPoints(50);
+      console.log(leaderboard);
+      setLeaderboard(leaderboard);
+    };
+    fetchLeaderboard();
+  }, []);
+
+  return (
+    <section className="mx-auto py-12">
+      <div className="grid">
+        {/* <Card className="border-[#1E2A36] bg-[#13202D]">
                     <CardHeader className="pb-3">
                         <h3 className="flex items-center gap-2 text-xl font-bold">
                             <Trophy className="text-[#F2CA16]" />
@@ -82,62 +74,68 @@ export const Leaderboard = () => {
                             </div>
                         </div>
                     </CardContent>
-                </Card>
+                </Card> */}
 
-                <Card className="border-[#1E2A36] bg-[#13202D]">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <h3 className="flex items-center gap-2 text-xl font-bold">
-                            <Users className="text-[#F2CA16]" />
-                            TOP PLAYERS
-                        </h3>
-                        <Button variant="link" className="text-[#F2CA16]">
-                            VIEW ALL
-                            <ArrowRight className="ml-1 h-4 w-4" />
-                        </Button>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Player</TableHead>
-                                    <TableHead>Win Rate</TableHead>
-                                    <TableHead className="text-right">
-                                        Earnings
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {topPlayers.map((player, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell className="font-medium">
-                                            <div className="flex items-center gap-2">
-                                                <div
-                                                    className={`flex h-8 w-8 items-center justify-center rounded-full ${
-                                                        index === 0
-                                                            ? "bg-[#F2CA16] text-[#0C1924]"
-                                                            : index === 1
-                                                              ? "bg-gray-300 text-[#0C1924]"
-                                                              : index === 2
-                                                                ? "bg-[#cd7f32] text-[#0C1924]"
-                                                                : "bg-[#1E2A36] text-white"
-                                                    }`}
-                                                >
-                                                    {index + 1}
-                                                </div>
-                                                {player.username}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>{player.winRate}%</TableCell>
-                                        <TableCell className="text-right">
-                                            ${player.earnings.toLocaleString()}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-            </div>
-        </section>
-    );
+        <Card className="border-[#1E2A36] bg-[#13202D]">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <h3 className="flex items-center gap-2 text-xl font-bold">
+              <Users className="text-[#F2CA16]" />
+              TOP PLAYERS
+            </h3>
+            <Link href={createPageUrl("leaderboard")}>
+              <Button variant="link" className="text-[#F2CA16]">
+                VIEW ALL
+                <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Player</TableHead>
+                  <TableHead>Predictions</TableHead>
+                  <TableHead className="text-right">Points</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {leaderboard.length > 0 ? (
+                  leaderboard.map((player, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`flex h-8 w-8 items-center justify-center rounded-full ${
+                              index === 0
+                                ? "bg-[#F2CA16] text-[#0C1924]"
+                                : index === 1
+                                  ? "bg-gray-300 text-[#0C1924]"
+                                  : index === 2
+                                    ? "bg-[#cd7f32] text-[#0C1924]"
+                                    : "bg-[#1E2A36] text-white"
+                            }`}
+                          >
+                            {index + 1}
+                          </div>
+                          {player.username}
+                        </div>
+                      </TableCell>
+                      <TableCell>{player.totalPredictions}</TableCell>
+                      <TableCell className="text-right">
+                        {player.totalPoints}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell className="h-24">No players found</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
 };

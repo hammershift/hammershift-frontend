@@ -5,13 +5,13 @@ import "./styles/app.css";
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import banner from '../../public/images/banner-min.jpg';
+import banner from "../../public/images/banner-min.jpg";
 import AuctionHero from "./components/auction_hero";
 import { GameModes } from "./components/game_modes";
 import { HowItWorks } from "./components/how_it_works";
 import { LiveAuctions } from "./components/live_auctions";
 import { Button } from "./components/ui/button";
-
+import { Leaderboard } from "./components/leaderboard";
 const LivePage = () => {
   const [screenWidth, setScreenWidth] = useState(0);
   const { data: session } = useSession();
@@ -125,13 +125,13 @@ const LivePage = () => {
                 </div>
             </section> */}
       {/* Leaderboard */}
-      {/* <section className="section-container mx-auto px-4 py-12">
-                <Leaderboard />
-                <p className="mt-4 text-center text-sm text-gray-300">
-                    Leaderboard results are based on game performance and do not
-                    guarantee any winnings.
-                </p>
-            </section> */}
+      <section className="section-container mx-auto px-4 py-12">
+        <Leaderboard />
+        <p className="mt-4 text-center text-sm text-gray-300">
+          Leaderboard results are based on game performance and do not guarantee
+          any winnings.
+        </p>
+      </section>
       {/* How It Works */}
       <section className="section-container mx-auto px-4 py-12">
         <HowItWorks />
@@ -141,30 +141,27 @@ const LivePage = () => {
         </p>
       </section>
       {/* CTA Section */}
-      {
-        session == null && (
-          <section className="bg-[#13202D] py-16">
-            <div className="container mx-auto px-4 text-center">
-              <h2 className="mb-4 text-3xl font-bold">
-                READY TO <span className="text-[#F2CA16]">START</span>{" "}
-                PLAYING?
-              </h2>
-              <p className="mx-auto mb-8 max-w-2xl text-xl">
-                Join Velocity Markets today and start predicting auction
-                prices to win prizes.
-              </p>
-              <Link href="/create_account">
-                <Button className="bg-[#F2CA16] px-8 py-6 text-lg text-[#0C1924] hover:bg-[#F2CA16]/90">
-                  SIGN UP NOW
-                </Button>
-              </Link>
-              <p className="mt-4 text-sm text-gray-300">
-                Please read our terms and conditions before signing up.
-              </p>
-            </div>
-          </section>
-        )
-      }
+      {session == null && (
+        <section className="bg-[#13202D] py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="mb-4 text-3xl font-bold">
+              READY TO <span className="text-[#F2CA16]">START</span> PLAYING?
+            </h2>
+            <p className="mx-auto mb-8 max-w-2xl text-xl">
+              Join Velocity Markets today and start predicting auction prices to
+              win prizes.
+            </p>
+            <Link href="/create_account">
+              <Button className="bg-[#F2CA16] px-8 py-6 text-lg text-[#0C1924] hover:bg-[#F2CA16]/90">
+                SIGN UP NOW
+              </Button>
+            </Link>
+            <p className="mt-4 text-sm text-gray-300">
+              Please read our terms and conditions before signing up.
+            </p>
+          </div>
+        </section>
+      )}
       {/* <div className="section-container mx-auto mb-10">
         <Carousel />
       </div> */}
