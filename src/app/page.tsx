@@ -9,9 +9,9 @@ import banner from "../../public/images/banner-min.jpg";
 import AuctionHero from "./components/auction_hero";
 import { GameModes } from "./components/game_modes";
 import { HowItWorks } from "./components/how_it_works";
+import { Leaderboard } from "./components/leaderboard";
 import { LiveAuctions } from "./components/live_auctions";
 import { Button } from "./components/ui/button";
-import { Leaderboard } from "./components/leaderboard";
 const LivePage = () => {
   const [screenWidth, setScreenWidth] = useState(0);
   const { data: session } = useSession();
@@ -162,6 +162,10 @@ const LivePage = () => {
           </div>
         </section>
       )}
+      <section>
+        <iframe src="https://embeds.beehiiv.com/93359bc7-769f-4ce6-bb3d-3fbfdc15a4ff" data-test-id="beehiiv-embed" width="100%" height="320" frameborder="0" scrolling="no"
+          style={{ margin: 0, backgroundColor: 'transparent' }}></iframe>
+      </section>
       {/* <div className="section-container mx-auto mb-10">
         <Carousel />
       </div> */}
