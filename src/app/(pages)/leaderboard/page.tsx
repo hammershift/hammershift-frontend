@@ -202,58 +202,63 @@ const LeaderboardPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {loading
-                    ? Array(10)
-                        .fill(0)
-                        .map((_, i) => (
-                          <TableRow key={i} className="animate-pulse">
-                            <TableCell>
-                              <div className="h-4 w-8 rounded bg-[#1E2A36]"></div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="h-4 w-32 rounded bg-[#1E2A36]"></div>
-                            </TableCell>
-                            <TableCell className="">
-                              <div className="h-4 w-16 rounded bg-[#1E2A36]"></div>
-                            </TableCell>
-                            {/* <TableCell>
-                              <div className="h-4 w-16 rounded bg-[#1E2A36]"></div>
-                            </TableCell> */}
-                            <TableCell className="">
-                              <div className="ml-auto h-4 w-20 rounded bg-[#1E2A36]"></div>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                    : leaderboard.slice(0, 50).map((player, index) => (
-                        <TableRow
-                          key={player._id.toString()}
-                          className="hover:bg-[#1E2A36]"
-                        >
+                  {loading ? (
+                    Array(10)
+                      .fill(0)
+                      .map((_, i) => (
+                        <TableRow key={i} className="animate-pulse">
                           <TableCell>
-                            <div className="flex items-center gap-2">
-                              {index < 3 ? (
-                                <Trophy
-                                  className={`h-4 w-4 ${getMedalColor(index + 1)}`}
-                                />
-                              ) : (
-                                <span className="text-gray-500">
-                                  {index + 1}
-                                </span>
-                              )}
-                            </div>
+                            <div className="h-4 w-8 rounded bg-[#1E2A36]"></div>
                           </TableCell>
-                          <TableCell className="font-medium">
-                            {player.username}
+                          <TableCell>
+                            <div className="h-4 w-32 rounded bg-[#1E2A36]"></div>
                           </TableCell>
                           <TableCell className="">
-                            {player.totalPredictions}
+                            <div className="h-4 w-16 rounded bg-[#1E2A36]"></div>
                           </TableCell>
-                          {/* <TableCell>{player.winRate}%</TableCell> */}
-                          <TableCell className="font-bold">
-                            {player.totalPoints.toLocaleString()}
+                          {/* <TableCell>
+                              <div className="h-4 w-16 rounded bg-[#1E2A36]"></div>
+                            </TableCell> */}
+                          <TableCell className="">
+                            <div className="ml-auto h-4 w-20 rounded bg-[#1E2A36]"></div>
                           </TableCell>
                         </TableRow>
-                      ))}
+                      ))
+                  ) : leaderboard.length > 0 ? (
+                    leaderboard.slice(0, 50).map((player, index) => (
+                      <TableRow
+                        key={player._id.toString()}
+                        className="hover:bg-[#1E2A36]"
+                      >
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {index < 3 ? (
+                              <Trophy
+                                className={`h-4 w-4 ${getMedalColor(index + 1)}`}
+                              />
+                            ) : (
+                              <span className="text-gray-500">{index + 1}</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {player.username}
+                        </TableCell>
+                        <TableCell className="">
+                          {player.totalPredictions}
+                        </TableCell>
+                        {/* <TableCell>{player.winRate}%</TableCell> */}
+                        <TableCell className="font-bold">
+                          {player.totalPoints.toLocaleString()}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell className="h-24"></TableCell>
+                      <TableCell className="h-24">No players found</TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -311,31 +316,38 @@ const LeaderboardPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {leaderboard.slice(0, 50).map((player, index) => (
-                    <TableRow key={player._id.toString()}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {index < 3 ? (
-                            <Trophy
-                              className={`h-4 w-4 ${getMedalColor(index + 1)}`}
-                            />
-                          ) : (
-                            <span className="text-gray-500">{index + 1}</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {player.username}
-                      </TableCell>
-                      <TableCell>
-                        {Math.floor(player.totalPredictions / 3)}
-                      </TableCell>
-                      {/* <TableCell>{player.winRate}%</TableCell> */}
-                      {/* <TableCell className="text-right font-bold">
+                  {leaderboard.length > 0 ? (
+                    leaderboard.slice(0, 50).map((player, index) => (
+                      <TableRow key={player._id.toString()}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {index < 3 ? (
+                              <Trophy
+                                className={`h-4 w-4 ${getMedalColor(index + 1)}`}
+                              />
+                            ) : (
+                              <span className="text-gray-500">{index + 1}</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {player.username}
+                        </TableCell>
+                        <TableCell>
+                          {Math.floor(player.totalPredictions / 3)}
+                        </TableCell>
+                        {/* <TableCell>{player.winRate}%</TableCell> */}
+                        {/* <TableCell className="text-right font-bold">
                         ${player.earnings.toLocaleString()}
                       </TableCell> */}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell className="h-24"></TableCell>
+                      <TableCell className="h-24">No players found</TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -396,32 +408,42 @@ const LeaderboardPage = () => {
                     <TableHead className="text-right">Earnings</TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
-                  {leaderboard.slice(0, 50).map((player, index) => (
-                    <TableRow key={player._id.toString()}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {index < 3 ? (
-                            <Trophy
-                              className={`h-4 w-4 ${getMedalColor(index + 1)}`}
-                            />
-                          ) : (
-                            <span className="text-gray-500">{index + 1}</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {player.username}
-                      </TableCell>
-                      <TableCell>
-                        {Math.floor(player.totalPredictions / 2)}
-                      </TableCell>
-                      {/* <TableCell>{player.winRate - 10}%</TableCell>
+                  {leaderboard.length > 0 ? (
+                    leaderboard.slice(0, 50).map((player, index) => (
+                      <TableRow key={player._id.toString()}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {index < 3 ? (
+                              <Trophy
+                                className={`h-4 w-4 ${getMedalColor(index + 1)}`}
+                              />
+                            ) : (
+                              <span className="text-gray-500">{index + 1}</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {player.username}
+                        </TableCell>
+                        <TableCell>
+                          {Math.floor(player.totalPredictions / 2)}
+                        </TableCell>
+                        {/* <TableCell>{player.winRate - 10}%</TableCell>
                       <TableCell className="text-right font-bold">
                         ${(player.earnings * 0.8).toLocaleString()}
                       </TableCell> */}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell className="h-24"></TableCell>
+                      <TableCell colSpan={5} className="h-24">
+                        No players found
+                      </TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
