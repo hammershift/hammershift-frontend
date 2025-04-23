@@ -751,4 +751,20 @@ w-screen px-4 md:px-16 pt-8 md:pt-16 2xl:w-[1440px] */
   align-items: center;
 }
 
+.link-transparent-white {
+  padding: 10px 14px;
+  color: white;
+  background-color: transparent;
+  border-radius: 4px;
+  font-weight: 500;
+  border: 1px solid white;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
+.link-transparent-white:hover {
+  background-color: #0f1923;
+  color: white;
+  font-weight: 700;
+}
