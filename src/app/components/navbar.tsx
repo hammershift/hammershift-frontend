@@ -1,24 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import PredictionsIcon from "../../../public/images/dollar-coin.svg";
-import AccountIcon from "../../../public/images/account-icon.svg";
-import HamburgerMenu from "../../../public/images/hamburger-menu.svg";
-import CancelIcon from "../../../public/images/x-icon.svg";
-import ThreeStars from "../../../public/images/three-star-icon.svg";
-import MoneyBag from "../../../public/images/monetization-browser-bag-big.svg";
-import Dollar from "../../../public/images/dollar.svg";
-import Hourglass from "../../../public/images/hour-glass.svg";
-import WalletSmall from "../../../public/images/wallet--money-payment-finance-wallet.svg";
-import MoneyBagGreen from "../../../public/images/monetization-browser-bag-green.svg";
-import MoneyBagBlack from "../../../public/images/money-bag-black.svg";
-import PodiumIcon from "../../../public/images/podium-icon.svg";
-import HammerIcon from "../../../public/images/hammer-icon.svg";
-import { useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
 import {
     getAuctionTransactions,
     getMyPredictions,
@@ -26,11 +7,28 @@ import {
     getUserPointsAndPlacing,
     refundWager,
 } from "@/lib/data";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
-import { BeatLoader, BounceLoader } from "react-spinners";
-import { createPageUrl } from "./utils";
-import { Button } from "./ui/button";
 import { CircleDollarSignIcon, LogOut, Settings, UserIcon } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { BeatLoader, BounceLoader } from "react-spinners";
+import AccountIcon from "../../../public/images/account-icon.svg";
+import Dollar from "../../../public/images/dollar.svg";
+import HamburgerMenu from "../../../public/images/hamburger-menu.svg";
+import HammerIcon from "../../../public/images/hammer-icon.svg";
+import Hourglass from "../../../public/images/hour-glass.svg";
+import MoneyBag from "../../../public/images/monetization-browser-bag-big.svg";
+import MoneyBagGreen from "../../../public/images/monetization-browser-bag-green.svg";
+import MoneyBagBlack from "../../../public/images/money-bag-black.svg";
+import PodiumIcon from "../../../public/images/podium-icon.svg";
+import ThreeStars from "../../../public/images/three-star-icon.svg";
+import WalletSmall from "../../../public/images/wallet--money-payment-finance-wallet.svg";
+import CancelIcon from "../../../public/images/x-icon.svg";
+import { TimerProvider, useTimer } from "../_context/TimerContext";
+import { Button } from "./ui/button";
+import { createPageUrl } from "./utils";
 
 const Navbar = () => {
     const router = useRouter();
@@ -556,7 +554,7 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
         >
             <div className="flex w-full items-center gap-6 rounded sm:py-3">
                 <Link
-                    href={`/auctions/car_view_page/${id}`}
+                    href={`/auction_details?id=${id}&mode=free_play`}
                     onClick={() => closeMenu && closeMenu()}
                     className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
                 >
@@ -570,7 +568,7 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
                 </Link>
                 <div className="flex max-w-[230px] flex-col items-start sm:max-w-[323px]">
                     <Link
-                        href={`/auctions/car_view_page/${id}`}
+                        href={`/auction_details?id=${id}&mode=free_play`}
                         className="self-start"
                         onClick={() => closeMenu && closeMenu()}
                     >
@@ -1300,7 +1298,7 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
         >
             <div className="flex w-full items-center gap-6 rounded sm:py-3">
                 <Link
-                    href={`/auctions/car_view_page/${id}`}
+                    href={`/auction_details?id=${id}&mode=free_play`}
                     onClick={() => closeMenu && closeMenu()}
                     className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
                 >
@@ -1314,7 +1312,7 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
                 </Link>
                 <div className="flex w-auto max-w-[230px] grow flex-col items-start sm:max-w-[323px]">
                     <Link
-                        href={`/auctions/car_view_page/${id}`}
+                        href={`/auction_details?id=${id}&mode=free_play`}
                         onClick={() => closeMenu && closeMenu()}
                         className="self-start"
                     >
