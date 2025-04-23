@@ -50,6 +50,7 @@ declare module 'next-auth' {
     balance?: number;
     isBanned?: boolean;
     username?: string;
+    about?: string;
     createdAt?: Date;
   }
 
@@ -64,6 +65,7 @@ declare module 'next-auth' {
       balance?: number;
       isBanned?: boolean;
       username?: string;
+      about?: string;
       createdAt?: Date;
     } & DefaultSession['user'];
   }

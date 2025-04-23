@@ -30,6 +30,7 @@ import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { BeatLoader, BounceLoader } from "react-spinners";
 import { createPageUrl } from "./utils";
 import { Button } from "./ui/button";
+import { CircleDollarSignIcon, LogOut, Settings, UserIcon } from "lucide-react";
 
 const Navbar = () => {
     const router = useRouter();
@@ -111,191 +112,66 @@ const Navbar = () => {
 
     const { data: session } = useSession();
     const isLoggedIn = !!session;
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 1800);
+    }, []);
 
     return (
-        <div className="navbar-container mx-auto flex items-center justify-center">
-            {isLoggedIn ? (
-                <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
-                    <div className="flex items-center justify-between">
-                        <div className="pr-4">
-                            <Link
-                                onClick={() => {
-                                    closeMenu();
-                                    closeMyAccountMenu();
-                                    document.body.classList.remove(
-                                        "stop-scrolling"
-                                    );
-                                }}
-                                href="/"
-                            >
-                                <Image
-                                    src={logoUrl}
-                                    width={330}
-                                    height={32}
-                                    alt="Velocity Markets"
-                                    className="h-auto w-auto sm:block"
-                                />
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="flex justify-center items-center">
-                        <div className="relative mr-4 hidden items-center justify-center flex-1 justify-between lg:flex xl:w-full">
-                            <nav className="flex items-center justify-between space-x-8">
-                                {navBarList.map((data, index) => (
-                                    <Link
-                                        key={index}
-                                        href={createPageUrl(data.urlString)}
-                                        className={`transition-colors hover:text-[#F2CA16] ${data.title.includes("COMING SOON") ? 'pointer-events-none opacity-50' : ''
-                                            }`}
-                                        aria-disabled={data.title.includes("COMING SOON")}
-                                        tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
-                                    >
-                                        {data.title.toUpperCase()}
-                                    </Link>
-                                ))}
-                            </nav>
-                        </div>
-                    </div>
-                    {/* Buttons for logged in accounts */}
-                    <div className="flex items-center justify-between gap-4">
-                        <button
-                            id="predictions-button"
+        <div className="navbar-container flex items-center justify-center">
+            <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
+                <div className="flex items-center justify-center">
+                    <div className="pr-4">
+                        <Link
                             onClick={() => {
-                                setDropPredictions((prev) => !prev);
-                                setDropMyAccount(false);
-                            }}
-                        >
-                            <Image
-                                src={PredictionsIcon}
-                                width={24}
-                                height={24}
-                                alt="predictions"
-                                className="h-[24px] w-[24px]"
-                            />
-                        </button>
-                        {dropPredictions && <PredictionsDropdownMenu />}
-                        <button
-                            id="myaccount-button"
-                            className="relative"
-                            onClick={() => {
-                                setDropMyAccount((prev) => !prev);
-                                setDropPredictions(false);
-                            }}
-                        >
-                            <Image
-                                src={AccountIcon}
-                                width={24}
-                                height={24}
-                                alt="account"
-                                className="h-[24px] w-[24px]"
-                            />
-                            {dropMyAccount && <MyAccountDropdownMenu />}
-                        </button>
-                    </div>
-                    <div className="sm:hidden">
-                        <button
-                            onClick={() => {
-                                setMyAccountMenuOpen((prev) => !prev);
-                                setMenuIsOpen(false);
+                                closeMenu();
+                                closeMyAccountMenu();
                                 document.body.classList.remove(
                                     "stop-scrolling"
                                 );
                             }}
-                            className="mr-4"
+                            href="/"
                         >
                             <Image
-                                src={AccountIcon}
-                                width={24}
-                                height={24}
-                                alt="account"
-                                className="h-[24px] w-[24px]"
+                                src={logoUrl}
+                                width={330}
+                                height={32}
+                                alt="Velocity Markets"
+                                className="h-auto w-auto sm:block"
                             />
-                        </button>
-                        <button
-                            onClick={() => {
-                                setMenuIsOpen((prev) => !prev);
-                                setMyAccountMenuOpen(false);
-                                if (!menuIsOpen) {
-                                    document.body.classList.add(
-                                        "stop-scrolling"
-                                    );
-                                } else {
-                                    document.body.classList.remove(
-                                        "stop-scrolling"
-                                    );
-                                }
-                            }}
-                        >
-                            {menuIsOpen ? (
-                                <Image
-                                    src={CancelIcon}
-                                    width={24}
-                                    height={24}
-                                    alt="menu"
-                                    className="h-auto w-auto"
-                                />
-                            ) : (
-                                <Image
-                                    src={HamburgerMenu}
-                                    width={24}
-                                    height={24}
-                                    alt="menu"
-                                    className="h-auto w-auto"
-                                />
-                            )}
-                        </button>
+                        </Link>
                     </div>
                 </div>
-            ) : (
-                <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
-                    <div className="flex items-center justify-between">
-                        <div className="pr-4">
-                            <Link
-                                onClick={() => {
-                                    closeMenu();
-                                    closeMyAccountMenu();
-                                    document.body.classList.remove(
-                                        "stop-scrolling"
-                                    );
-                                }}
-                                href="/"
-                            >
-                                <Image
-                                    src={logoUrl}
-                                    width={330}
-                                    height={32}
-                                    alt="Velocity Markets"
-                                    className="h-auto w-auto sm:block"
-                                />
-                            </Link>
-                        </div>
+                <div className="flex justify-center items-center">
+                    <div className="relative hidden items-center justify-center lg:flex">
+                        <nav className="flex items-center justify-center space-x-8">
+                            {navBarList.map((data, index) => (
+                                <Link
+                                    key={index}
+                                    href={createPageUrl(data.urlString)}
+                                    className={`transition-colors hover:text-[#F2CA16] ${data.title.includes("COMING SOON") ? 'pointer-events-none opacity-50' : ''
+                                        }`}
+                                    aria-disabled={data.title.includes("COMING SOON")}
+                                    tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
+                                >
+                                    {data.title.toUpperCase()}
+                                </Link>
+                            ))}
+                        </nav>
                     </div>
+                </div>
+                {!loading && !isLoggedIn &&
                     <div className="flex justify-center items-center">
-                        <div className="relative mr-4 hidden items-center justify-center flex-1 justify-between lg:flex xl:w-full">
-                            <nav className="flex items-center justify-between space-x-8">
-                                {navBarList.map((data, index) => (
-                                    <Link
-                                        key={index}
-                                        href={createPageUrl(data.urlString)}
-                                        className={`transition-colors hover:text-[#F2CA16] ${data.title.includes("COMING SOON") ? 'pointer-events-none opacity-50' : ''
-                                            }`}
-                                        aria-disabled={data.title.includes("COMING SOON")}
-                                        tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
-                                    >
-                                        {data.title.toUpperCase()}
-                                    </Link>
-                                ))}
-                            </nav>
-                        </div>
-                    </div>
-                    <div className="flex items-center">
                         <Link href="/login_page">
-                            <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+                            <Button className="h-10 w-20 bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
                                 LOG IN
                             </Button>
                         </Link>
                         <Link href="/create_account">
-                            <Button className="ml-2 bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+                            <Button className="ml-2 h-10 w-20 bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
                                 SIGN UP
                             </Button>
                         </Link>
@@ -333,8 +209,108 @@ const Navbar = () => {
                             )}
                         </button>
                     </div>
-                </div>
-            )}
+                }
+                {
+                    !loading && isLoggedIn && (
+                        <div className="flex justify-center items-center">
+                            {/* Buttons for logged in accounts */}
+                            <div className="flex items-center justify-center gap-4 px-4">
+                                <button
+                                    id="predictions-button"
+                                    onClick={() => {
+                                        setDropPredictions((prev) => !prev);
+                                        setDropMyAccount(false);
+                                    }}
+                                >
+                                    <CircleDollarSignIcon className="h-8 w-8 text-[#F2CA16]" />
+                                </button>
+                                {dropPredictions && <PredictionsDropdownMenu />}
+                                <button
+                                    id="myaccount-button"
+                                    className="relative"
+                                    onClick={() => {
+                                        setDropMyAccount((prev) => !prev);
+                                        setDropPredictions(false);
+                                    }}
+                                >
+                                    {/* <Image
+                                src={AccountIcon}
+                                width={24}
+                                height={24}
+                                alt="account"
+                                className="h-[24px] w-[24px]"
+                            /> */}
+                                    <div
+                                        className={`flex h-8 w-8 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+                                    >
+                                        {session ? session.user.username?.[0]?.toUpperCase() : "U"}
+                                    </div>
+                                    {dropMyAccount && <MyAccountDropdownMenu />}
+                                </button>
+                            </div>
+                            <div className="sm:hidden">
+                                <button
+                                    onClick={() => {
+                                        setMyAccountMenuOpen((prev) => !prev);
+                                        setMenuIsOpen(false);
+                                        document.body.classList.remove(
+                                            "stop-scrolling"
+                                        );
+                                    }}
+                                    className="mr-4"
+                                >
+                                    <Image
+                                        src={AccountIcon}
+                                        width={24}
+                                        height={24}
+                                        alt="account"
+                                        className="h-[24px] w-[24px]"
+                                    />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setMenuIsOpen((prev) => !prev);
+                                        setMyAccountMenuOpen(false);
+                                        if (!menuIsOpen) {
+                                            document.body.classList.add(
+                                                "stop-scrolling"
+                                            );
+                                        } else {
+                                            document.body.classList.remove(
+                                                "stop-scrolling"
+                                            );
+                                        }
+                                    }}
+                                >
+                                    {menuIsOpen ? (
+                                        <Image
+                                            src={CancelIcon}
+                                            width={24}
+                                            height={24}
+                                            alt="menu"
+                                            className="h-auto w-auto"
+                                        />
+                                    ) : (
+                                        <Image
+                                            src={HamburgerMenu}
+                                            width={24}
+                                            height={24}
+                                            alt="menu"
+                                            className="h-auto w-auto"
+                                        />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    )
+                }
+                {loading && (
+                    <div className="flex justify-end items-center space-x-2">
+                        <div className="h-10 w-20 bg-gray-300 rounded animate-pulse" />
+                        <div className="h-10 w-20 bg-gray-300 rounded animate-pulse" />
+                    </div>
+                )}
+            </div>
             {myAccountMenuOpen && (
                 <MyAccountMenu
                     closeMyAccountMenu={closeMyAccountMenu}
@@ -404,7 +380,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
 
     return (
         <div className="slide-in-top absolute z-50 flex h-auto w-full flex-col bg-[#1A2C3D] p-4 text-white">
-            <div className="p-1.5 text-lg font-bold">MY ACCOUNT</div>
+            {/* <div className="p-1.5 text-lg font-bold">MY ACCOUNT</div> */}
             {/* {isLoading ? (
                 <div className="flex w-full items-center justify-center px-6">
                     <BeatLoader color="#696969" size={10} />
@@ -1600,8 +1576,8 @@ const MyAccountDropdownMenu = () => {
     };
 
     return (
-        <div className="absolute right-0 top-8 z-10 flex h-auto w-[320px] flex-col items-start gap-4 rounded bg-[#1A2C3D] py-6 shadow-xl shadow-black">
-            <div className="px-6 text-lg font-bold">MY ACCOUNT</div>
+        <div className="absolute right-0 top-8 z-10 flex h-auto w-[200px] flex-col items-start justify-between rounded bg-[#1A2C3D] shadow-xl shadow-black">
+            {/* <div className="px-6 text-lg font-bold">MY ACCOUNT</div> */}
             {/* {isLoading ? (
                 <div className="flex w-full items-center justify-center px-6">
                     <BeatLoader color="#696969" size={10} />
@@ -1637,7 +1613,28 @@ const MyAccountDropdownMenu = () => {
             ) : (
                 <div className="w-full px-6">Error fetching wallet balance</div>
             )} */}
-            <div className="flex w-full flex-col items-start px-6">
+            <div
+                onClick={() => router.push(createPageUrl("Profile"))}
+                className="grid grid-cols-[auto_1fr]  w-full hover:bg-[#2A3A4A] cursor-pointer items-center justify-between rounded px-4 py-2"
+            >
+                <UserIcon className="h-4 w-4 text-[#F2CA16]" />
+                <span className="text-white">My Profile</span>
+            </div>
+            <div
+                onClick={() => router.push(createPageUrl("Settings"))}
+                className="grid grid-cols-[auto_1fr]  w-full hover:bg-[#2A3A4A] cursor-pointer items-center justify-between rounded px-4 py-2"
+            >
+                <Settings className="mr-2 h-4 w-4 text-[#F2CA16]" />
+                <span className="text-white">Account Settings</span>
+            </div>
+            <div
+                onClick={handleSignOut}
+                className="grid grid-cols-[auto_1fr] w-full hover:bg-[#2A3A4A] cursor-pointer items-center justify-between rounded px-4 py-2"
+            >
+                <LogOut className="mr-2 h-4 w-4 text-[#F2CA16]" />
+                <span className="text-white">Log out</span>
+            </div>
+            {/* <div className="flex w-full flex-col items-start px-6">
                 <Link
                     href="/profile"
                     className="w-full rounded p-2 text-left hover:bg-white/5"
@@ -1653,7 +1650,7 @@ const MyAccountDropdownMenu = () => {
                 >
                     Logout
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 };

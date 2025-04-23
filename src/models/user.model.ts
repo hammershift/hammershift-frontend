@@ -9,6 +9,7 @@ export interface User {
   isActive: boolean;
   isBanned: boolean;
   provider: string;
+  about: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,6 +24,7 @@ const userSchema = new Schema(
     isActive: { type: Boolean, default: true },
     isBanned: { type: Boolean, default: false },
     provider: { type: String, default: "email" },
+    about: { type: String, default: "" },
     createdAt: Date,
     updatedAt: Date,
   },

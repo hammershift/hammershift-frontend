@@ -204,6 +204,7 @@ export const authOptions: NextAuthOptions = {
         token.balance = dbUser.balance;
         // token.stripeCustomerId = dbUser.stripeCustomerId;
         token.isBanned = dbUser.isBanned;
+        token.about = dbUser.about;
         token._id = dbUser._id.toString();
         if (!dbUser.createdAt) {
           const createdAt = new Date();
