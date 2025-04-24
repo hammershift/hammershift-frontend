@@ -75,7 +75,7 @@ export async function GET(req: NextRequest) {
           )?.value,
           predictionType: prediction.predictionType,
           //TODO: rename priceGuessed to predictedPrice
-          priceGuessed: prediction.predictedPrice,
+          predictedPrice: prediction.predictedPrice,
           user: prediction.user,
           createdAt: prediction.createdAt,
         };

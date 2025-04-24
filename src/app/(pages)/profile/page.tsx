@@ -7,9 +7,19 @@ import { TimerProvider } from "@/app/_context/TimerContext";
 import { PredictionsCard } from "@/app/components/navbar";
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
 import { Input } from "@/app/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/components/ui/tabs";
 import { TextArea } from "@/app/components/ui/textarea";
 import { getMyPredictions } from "@/lib/data";
 import { getInitials } from "@/lib/utils";
@@ -24,7 +34,7 @@ import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 
-interface Props { }
+interface Props {}
 
 function Profile(props: Props) {
   const [name, setName] = useState("");
@@ -44,16 +54,16 @@ function Profile(props: Props) {
   const [winsNum, setWinsNum] = useState<number>(0);
   const [joinedDate, setJoinedDate] = useState<string>("");
 
-  const { } = props;
+  const {} = props;
   const { data } = useSession();
   const router = useRouter();
 
   const getUserInfo = async (email: string) => {
     const res = await fetch(`/api/userInfo?email=${email}`, {
-      method: 'GET',
+      method: "GET",
     });
     if (!res.ok) {
-      throw new Error('Unable to fetch user transactions');
+      throw new Error("Unable to fetch user transactions");
     }
     const result = await res.json();
     setAbout(result.user.about);
@@ -74,7 +84,6 @@ function Profile(props: Props) {
     setDataIsLoading(true);
     const fetchPredictions = async () => {
       const data = await getMyPredictions();
-      console.log(data);
       const currentDate = new Date();
 
       if (!data.predictions || data.predictions.length !== 0) {
@@ -104,9 +113,9 @@ function Profile(props: Props) {
   useEffect(() => {
     setTotalPredictionsAndWatchlist(
       activePredictions.length +
-      completedPredictions.length +
-      activeWatchlist.length +
-      completedWatchlist.length
+        completedPredictions.length +
+        activeWatchlist.length +
+        completedWatchlist.length
     );
   }, [
     activePredictions,
@@ -165,9 +174,9 @@ function Profile(props: Props) {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
-        <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="flex min-h-[60vh] items-center justify-center">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-t-[#F2CA16] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
             <p className="text-xl">Loading profile...</p>
           </div>
         </div>
@@ -176,30 +185,29 @@ function Profile(props: Props) {
   }
 
   return (
-
     <div className="container mx-auto px-4 py-12">
-      <div className="bg-[#1E2A36] rounded-xl overflow-hidden mb-8">
-        <div className="bg-[#1E2A36] h-20"></div>
+      <div className="mb-8 overflow-hidden rounded-xl bg-[#1E2A36]">
+        <div className="h-20 bg-[#1E2A36]"></div>
         <div className="px-8 pb-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6 -mt-12">
+          <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
             <Avatar className="h-24 w-24 border-4 border-[#13202D] shadow-lg">
-              <AvatarFallback className="bg-[#F2CA16] text-[#0C1924] text-2xl">
+              <AvatarFallback className="bg-[#F2CA16] text-2xl text-[#0C1924]">
                 {getInitials(data ? data.user.fullName : "")}
               </AvatarFallback>
             </Avatar>
             <div className="pt-12 md:pt-0">
-              <h1 className="text-3xl font-bold">{data ? data.user.fullName : ""}</h1>
-              <p className="text-gray-400">
-                {data ? data.user.username : ""}
-              </p>
+              <h1 className="text-3xl font-bold">
+                {data ? data.user.fullName : ""}
+              </h1>
+              <p className="text-gray-400">{data ? data.user.username : ""}</p>
             </div>
             <div className="ml-auto pt-6 md:pt-0">
               <Button
                 variant="outline"
-                className="flex gap-2 items-center bg-[#1E2A36]"
+                className="flex items-center gap-2 bg-[#1E2A36]"
                 onClick={() => router.push("/settings")}
               >
-                <Settings className="h-4 w-4 " />
+                <Settings className="h-4 w-4" />
                 Edit Profile
               </Button>
             </div>
@@ -207,7 +215,7 @@ function Profile(props: Props) {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
+      <div className="mb-8 grid gap-6 md:grid-cols-4">
         {/* <Card className="bg-[#13202D] border-[#1E2A36]">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center">
@@ -232,11 +240,11 @@ function Profile(props: Props) {
           </CardContent>
         </Card> */}
 
-        <Card className="bg-[#13202D] border-[#1E2A36]">
+        <Card className="border-[#1E2A36] bg-[#13202D]">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-full bg-[#1E2A36] flex items-center justify-center mb-2">
-                <CircleDollarSign className="w-6 h-6 text-[#F2CA16]" />
+              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#1E2A36]">
+                <CircleDollarSign className="h-6 w-6 text-[#F2CA16]" />
               </div>
               <p className="text-gray-400">Total Winnings</p>
               <p className="text-3xl font-bold">
@@ -246,40 +254,42 @@ function Profile(props: Props) {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#13202D] border-[#1E2A36]">
+        <Card className="border-[#1E2A36] bg-[#13202D]">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-full bg-[#1E2A36] flex items-center justify-center mb-2">
-                <Clock className="w-6 h-6 text-[#F2CA16]" />
+              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#1E2A36]">
+                <Clock className="h-6 w-6 text-[#F2CA16]" />
               </div>
               <p className="text-gray-400">Total Predictions</p>
-              <p className="text-3xl font-bold">{activePredictions.length + completedPredictions.length}</p>
+              <p className="text-3xl font-bold">
+                {activePredictions.length + completedPredictions.length}
+              </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-4">Profile Information</h2>
+        <h2 className="mb-4 text-xl font-bold">Profile Information</h2>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Username</label>
+            <label className="mb-2 block text-sm font-medium">Username</label>
             <Input
               value={username}
               placeholder="Choose a username"
               disabled
-              className="bg-[#1E2A36] border-[#1E2A36]"
+              className="border-[#1E2A36] bg-[#1E2A36]"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">About</label>
+            <label className="mb-2 block text-sm font-medium">About</label>
             <TextArea
               value={about}
               placeholder="Tell others about yourself"
               disabled
-              className="bg-[#1E2A36] border-[#1E2A36]"
+              className="border-[#1E2A36] bg-[#1E2A36]"
               rows={3}
             />
           </div>
@@ -287,9 +297,11 @@ function Profile(props: Props) {
       </div>
 
       <Tabs defaultValue="predictions" className="w-full">
-        <TabsList className="bg-[#1E2A36] mb-6">
-          <TabsTrigger value="predictions"
-            className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]">
+        <TabsList className="mb-6 bg-[#1E2A36]">
+          <TabsTrigger
+            value="predictions"
+            className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+          >
             Prediction History
           </TabsTrigger>
           {/* <TabsTrigger value="tournaments">Tournaments</TabsTrigger>
@@ -297,7 +309,7 @@ function Profile(props: Props) {
         </TabsList>
 
         <TabsContent value="predictions">
-          <Card className="bg-[#13202D] border-[#1E2A36]">
+          <Card className="border-[#1E2A36] bg-[#13202D]">
             <CardHeader>
               <CardTitle>Your Predictions</CardTitle>
             </CardHeader>
@@ -307,10 +319,11 @@ function Profile(props: Props) {
                   <button
                     id="active-watchlist-button"
                     onClick={() => setIsActivePrediction(true)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActivePrediction == true
-                      ? "border-white text-lg font-bold"
-                      : ""
-                      }`}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                      isActivePrediction == true
+                        ? "border-white text-lg font-bold"
+                        : ""
+                    }`}
                   >
                     <div>ACTIVE </div>
                     {!dataIsLoading && (
@@ -322,12 +335,18 @@ function Profile(props: Props) {
                   <button
                     id="completed-watchlist-button"
                     onClick={() => setIsActivePrediction(false)}
-                    className={`w-1/2 border-b-2 border-[#314150] py-2 ${isActivePrediction == false
-                      ? "border-white text-lg font-bold"
-                      : ""
-                      }`}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                      isActivePrediction == false
+                        ? "border-white text-lg font-bold"
+                        : ""
+                    }`}
                   >
-                    COMPLETED
+                    <div>COMPLETED</div>
+                    {!dataIsLoading && (
+                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                        {completedPredictions.length}
+                      </span>
+                    )}
                   </button>
                 </div>
                 <div>
@@ -354,7 +373,7 @@ function Profile(props: Props) {
                               id={prediction.auctionIdentifierId}
                               isActive={true}
                               status={prediction.auctionStatus}
-                              predictionAmount={prediction.predictionAmount}
+                              predictionAmount={prediction.predictedPrice}
                               objectID={prediction.auctionObjectId}
                               predictionID={prediction._id}
                               isRefunded={prediction.refunded}
@@ -376,11 +395,11 @@ function Profile(props: Props) {
                           <CompletedWagerCard
                             title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
                             img={prediction.auctionImage}
-                            priceGuess={prediction.priceGuessed}
+                            priceGuess={prediction.predictedPrice}
                             id={prediction.auctionIdentifierId}
                             status={prediction.auctionStatus}
                             finalPrice={prediction.auctionPrice}
-                            wagerAmount={prediction.predictionAmount}
+                            wagerAmount={0}
                             auctionObjectID={prediction.auctionObjectId}
                             wagerID={prediction._id}
                             prize={prediction.prize}
@@ -745,7 +764,7 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                 ${currencyFinalPrice}
               </div>
             </div>
-            <div className="flex w-full items-center gap-2 text-sm">
+            {/* <div className="flex w-full items-center gap-2 text-sm">
               <Image
                 src={Dollar}
                 width={14}
@@ -755,7 +774,7 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
               />
               <span className="opacity-80">Wager Amount:</span>
               <span className="font-bold">${currencyWagerAmount}</span>
-            </div>
+            </div> */}
             <div className="flex items-center gap-2 text-sm">
               <Image
                 src={HourglassIcon}
@@ -793,9 +812,9 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                 {prize % 1 === 0
                   ? prize.toLocaleString()
                   : prize.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
                 🎉
               </div>
             </div>
