@@ -3,6 +3,8 @@ import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { ObjectId } from 'mongodb';
+import connectToDB from '@/lib/mongoose';
+import Comments from '@/models/comment.model';
 
 // create reply for auction URL: /api/comments/replies
 export async function POST(req: NextRequest) {
@@ -12,37 +14,35 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
     }
 
-    const { commentID, reply, auctionID } = await req.json();
+    const { commentID, reply, pageID, pageType } = await req.json();
 
-    if (!reply || !commentID || !auctionID) {
+    if (!reply || !commentID || !pageID || !pageType) {
         console.error("missing required fields")
         return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
     try {
-        const client = await clientPromise;
-        const db = client.db();
-        const userId = new ObjectId(session.user.id);
+        await connectToDB();
+        const userId = new ObjectId(session.user._id);
         // const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
         // create comment for auction
         const replyData = {
             _id: new ObjectId(),
-            reply,
+            comment: reply,
+            pageID: pageID,
+            pageType: pageType,
             user: {
                 userId,
-                // username: "test",
                 username: session.user.username
             },
-            commentID,
-            auctionID,
+            parentID: commentID,
             likes: [],
             dislikes: [],
             createdAt: new Date(),
         }
 
-
-        const replyInserted = await db.collection('comments').updateOne(
+        const replyInserted = await Comments.updateOne(
             { _id: new ObjectId(commentID) },
             { $push: { replies: replyData } }
         );
@@ -82,11 +82,10 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const client = await clientPromise;
-        const db = client.db();
+        await connectToDB();
 
         // get comment for auction
-        const response = await db.collection('reply_comments').find({ commentID })
+        const response = await Comments.find({ parentID: commentID })
             .limit(limit)
             .skip(offset)
             .sort(sort as any);
@@ -94,7 +93,7 @@ export async function GET(req: NextRequest) {
         if (!response) {
             return NextResponse.json({ message: 'No replies found' }, { status: 400 });
         }
-        const replies = await response.toArray();
+        const replies = await response;
 
         return NextResponse.json(
             {

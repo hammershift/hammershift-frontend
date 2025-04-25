@@ -10,8 +10,8 @@ export interface Comment {
         username: string;
         profilePicture?: string;
     };
-    likes: any[];
-    dislikes: any[];
+    likes: [];
+    dislikes: [];
     createdAt: Date;
 }
 
@@ -47,12 +47,30 @@ const commentSchema = new Schema(
                 type: String,
             },
         },
-        likes: {
-            type: Array
-        },
-        dislikes: {
-            type: Array
-        },
+        likes: [
+            {
+                userId: {
+                    type: String,
+                    required: true,
+                },
+                username: {
+                    type: String,
+                    required: true,
+                },
+            }
+        ],
+        dislikes: [
+            {
+                userId: {
+                    type: String,
+                    required: true,
+                },
+                username: {
+                    type: String,
+                    required: true,
+                },
+            }
+        ],
         createdAt: {
             type: Date,
             default: Date.now,

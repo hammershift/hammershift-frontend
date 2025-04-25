@@ -1,4 +1,6 @@
+import { UserIdName } from "@/app/types/interfaces";
 import { Prediction } from "@/models/predictions.model";
+
 export const getCarData = async (ID: string) => {
   try {
     const response = await fetch(`/api/cars?auction_id=${ID}`, {
@@ -708,9 +710,9 @@ export const deleteComment = async (
 export const likeComment = async (
   commentID: string,
   userID: string,
-  likes: string[]
+  likes: UserIdName[]
 ) => {
-  if (!likes.includes(userID)) {
+  if (!likes.some(like => like.userId === userID)) {
     try {
       const res = await fetch("/api/comments", {
         method: "PUT",
@@ -755,10 +757,10 @@ export const likeComment = async (
 export const dislikeComment = async (
   commentID: string,
   userID: string,
-  dislikes: string[]
+  dislikes: UserIdName[]
 ) => {
   console.log(commentID);
-  if (!dislikes.includes(userID)) {
+  if (!dislikes.some(dislike => dislike.userId === userID)) {
     try {
       const res = await fetch("/api/comments", {
         method: "PUT",
@@ -816,16 +818,17 @@ export const getReplies = async (parentID: string) => {
 // creates reply
 export const createReply = async (
   commentID: string,
+  pageID: string,
+  pageType: string,
   reply: string,
-  auctionID: string
 ) => {
   try {
-    const res = await fetch("/api/comments/replies", {
+    const res = await fetch("/api/comments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ commentID, reply, auctionID }),
+      body: JSON.stringify({ commentID, pageID, pageType, comment: reply }),
     });
     if (res.ok) {
       const data = await res.json();
@@ -841,17 +844,16 @@ export const createReply = async (
 export const deleteReply = async (
   replyID: string,
   userID: string,
-  replyUserID: string,
-  commentID: string
+  replyUserID: string
 ) => {
   if (userID == replyUserID) {
     try {
-      const res = await fetch("/api/comments/replies", {
+      const res = await fetch("/api/comments", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ replyID, commentID }),
+        body: JSON.stringify({ commentID: replyID }),
       });
       if (res.ok) {
         return res;

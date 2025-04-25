@@ -234,12 +234,12 @@ option {
   border-radius: 8px;
 }
 
-.my-wagers-menu::-webkit-scrollbar,
+.my-predictions-menu::-webkit-scrollbar,
 .watchlist-menu::-webkit-scrollbar {
   display: none;
 }
 
-.my-wagers-menu,
+.my-predictions-menu,
 .watchlist-menu {
   -ms-overflow-style: none;
   scrollbar-width: none;

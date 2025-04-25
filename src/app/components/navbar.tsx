@@ -53,19 +53,18 @@ const Navbar = () => {
             const predictionsCompletedButton = document.getElementById(
                 "completed-predictions-button"
             );
-            const predictionsSortButton = document.getElementById("predictions-sort");
+            // const predictionsSortButton = document.getElementById("predictions-sort");
 
             const myAccountButton = document.getElementById("myaccount-button");
 
+            console.log("hello");
             if (
                 predictionsButton &&
                 !predictionsButton.contains(e.target as Node) &&
                 predictionsActiveButton &&
                 !predictionsActiveButton.contains(e.target as Node) &&
                 predictionsCompletedButton &&
-                !predictionsCompletedButton.contains(e.target as Node) &&
-                predictionsSortButton &&
-                !predictionsSortButton.contains(e.target as Node)
+                !predictionsCompletedButton.contains(e.target as Node)
             ) {
                 setDropPredictions(false);
             }
@@ -188,7 +187,7 @@ const Navbar = () => {
                                 }
                             }}
                         >
-                            {menuIsOpen ? (
+                            {/* {menuIsOpen ? (
                                 <Image
                                     src={CancelIcon}
                                     width={24}
@@ -204,7 +203,7 @@ const Navbar = () => {
                                     alt="menu"
                                     className="h-auto w-auto md:hidden"
                                 />
-                            )}
+                            )} */}
                         </button>
                     </div>
                 }
@@ -280,7 +279,7 @@ const Navbar = () => {
                                         }
                                     }}
                                 >
-                                    {menuIsOpen ? (
+                                    {/* {menuIsOpen ? (
                                         <Image
                                             src={CancelIcon}
                                             width={24}
@@ -296,7 +295,7 @@ const Navbar = () => {
                                             alt="menu"
                                             className="h-auto w-auto"
                                         />
-                                    )}
+                                    )} */}
                                 </button>
                             </div>
                         </div>
@@ -645,7 +644,7 @@ export const MyWatchlistCard: React.FC<MyWatchlistCardProps> = ({
 };
 
 
-const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
+const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
     const router = useRouter();
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activePredictions, setActivePredictions] = useState([]);
@@ -689,7 +688,7 @@ const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }
     // };
 
     return (
-        <div className="my-wagers-menu absolute right-[56px] top-10 z-30 max-h-[784px] w-[512px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black">
+        <div className={`my-predictions-menu absolute right-[56px] top-10 z-30 max-h-[784px] max-w-[425px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black transition-all duration-300 ${isLoading ? "w-[300px]" : ""}`}>
             <div className="flex flex-col gap-4 px-6">
                 <div className="flex justify-between">
                     <div className="text-left text-lg font-bold">PREDICTIONS</div>
@@ -715,60 +714,70 @@ const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }
                         autoFocus
                     >
                         <div>ACTIVE </div>
-                        {!isLoading && (
-                            <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
-                                {activePredictions.length +
-                                    activeTournamentPredictions.length}
-                            </span>
-                        )}
+                        <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+
+                            {!isLoading ? (activePredictions.length +
+                                activeTournamentPredictions.length)
+                                : "-"
+                            }
+                        </span>
                     </button>
                     <button
                         id="completed-predictions-button"
                         onClick={() => setActiveOrCompleted("completed")}
-                        className="w-1/2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
+                        className="flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
                     >
-                        COMPLETED
+                        <div>COMPLETED </div>
+                        <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                            {!isLoading ? (completedPredictions.length +
+                                completedTournamentPredictions.length)
+                                : "-"
+                            }
+                        </span>
                     </button>
                 </div>
             </div>
-            {isLoading && (
-                <div className="flex justify-center pb-[66px] pt-[74px]">
-                    <BounceLoader color="#696969" loading={true} />
-                </div>
-            )}
-            {activeOrCompleted === "active" &&
-                (activePredictions.length !== 0 ||
-                    activeTournamentPredictions.length !== 0) ? (
-                <div className="w-full">
-                    {
-                        // predictionSort !== "TOURNAMENTS" &&
-                        activePredictions.map((prediction: any, index: number) => (
-                            <div key={prediction._id}>
-                                <TimerProvider deadline={prediction.auctionDeadline}>
-                                    <PredictionsCard
-                                        title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
-                                        img={prediction.auctionImage}
-                                        my_prediction={prediction.priceGuessed}
-                                        current_bid={prediction.auctionPrice}
-                                        time_left={prediction.auctionDeadline}
-                                        potential_prize={prediction.auctionPot}
-                                        id={prediction.auctionIdentifierId}
-                                        isActive={true}
-                                        closeMenu={closeMenu}
-                                        status={prediction.auctionStatus}
-                                        predictionAmount={prediction.wagerAmount}
-                                        objectID={prediction.auctionObjectId}
-                                        predictionID={prediction._id}
-                                        isRefunded={prediction.refunded}
-                                        prize={prediction.prize}
-                                        deadline={prediction.auctionDeadline}
-                                        index={index}
-                                    />
-                                </TimerProvider>
-                            </div>
-                        ))
-                    }
-                    {/* {predictionSort !== "AUCTIONS" &&
+            {
+                isLoading && (
+                    <div className="flex justify-center pb-[36px] pt-[44px]">
+                        <BounceLoader color="#696969" loading={true} />
+                    </div>
+                )
+            }
+            {
+                activeOrCompleted === "active" &&
+                    (activePredictions.length !== 0 ||
+                        activeTournamentPredictions.length !== 0) ? (
+                    <div className="w-full">
+                        {
+                            // predictionSort !== "TOURNAMENTS" &&
+                            activePredictions.map((prediction: any, index: number) => (
+                                <div key={prediction._id}>
+                                    <TimerProvider deadline={prediction.auctionDeadline}>
+                                        <PredictionsCard
+                                            title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
+                                            img={prediction.auctionImage}
+                                            my_prediction={prediction.predictedPrice}
+                                            current_bid={prediction.auctionPrice}
+                                            time_left={prediction.auctionDeadline}
+                                            potential_prize={prediction.auctionPot}
+                                            id={prediction.auctionIdentifierId}
+                                            isActive={true}
+                                            closeMenu={closeMenu}
+                                            status={prediction.auctionStatus}
+                                            predictionAmount={prediction.wagerAmount}
+                                            objectID={prediction.auctionObjectId}
+                                            predictionID={prediction._id}
+                                            isRefunded={prediction.refunded}
+                                            prize={prediction.prize}
+                                            deadline={prediction.auctionDeadline}
+                                            index={index}
+                                        />
+                                    </TimerProvider>
+                                </div>
+                            ))
+                        }
+                        {/* {predictionSort !== "AUCTIONS" &&
                         activeTournamentPredictions.map((wager: any) => {
                             return (
                                 <div key={wager._id}>
@@ -783,8 +792,9 @@ const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }
                                 </div>
                             );
                         })} */}
-                </div>
-            ) : null}
+                    </div>
+                ) : null
+            }
             {
                 //TODO: completed predictions completed card
                 activeOrCompleted === "completed" &&
@@ -799,7 +809,7 @@ const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }
                                         <PredictionsCard
                                             title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
                                             img={prediction.auctionImage}
-                                            my_prediction={prediction.priceGuessed}
+                                            my_prediction={prediction.predictedPrice}
                                             current_bid={prediction.auctionPrice}
                                             time_left={prediction.auctionDeadline}
                                             potential_prize={prediction.auctionPot}
@@ -834,63 +844,68 @@ const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }
                             );
                         })} */}
                     </div>
-                ) : null}
-            {isLoading === false &&
-                activeOrCompleted === "active" &&
-                activePredictions.length === 0 &&
-                activeTournamentPredictions.length === 0 ? (
-                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
-                    <Image
-                        src={MoneyBag}
-                        width={80}
-                        height={80}
-                        alt="watchlist icon"
-                        className="h-[80px] w-[80px]"
-                    />
-                    <div className="">
-                        <div className="text-center text-xl font-bold">
-                            No active predictions
-                        </div>
-                        {/* <div className="text-center opacity-70">
+                ) : null
+            }
+            {
+                isLoading === false &&
+                    activeOrCompleted === "active" &&
+                    activePredictions.length === 0 &&
+                    activeTournamentPredictions.length === 0 ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No active predictions
+                            </div>
+                            {/* <div className="text-center opacity-70">
                             Quam temere in vitiis, legem sancimus haerentia
                         </div> */}
-                    </div>
-                    <Link
-                        href="/free_play"
-                        className="link-transparent-white"
-                    >
-                        DISCOVER AUCTIONS
-                    </Link>
-                </div>
-            ) : null}
-            {isLoading === false &&
-                activeOrCompleted === "completed" &&
-                completedPredictions.length === 0 &&
-                completedTournamentPredictions.length === 0 ? (
-                <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
-                    <Image
-                        src={MoneyBag}
-                        width={80}
-                        height={80}
-                        alt="watchlist icon"
-                        className="h-[80px] w-[80px]"
-                    />
-                    <div className="">
-                        <div className="text-center text-xl font-bold">
-                            No completed predictions
                         </div>
-                        {/* <div className="text-center opacity-70">
+                        <Link
+                            href="/free_play"
+                            className="link-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </Link>
+                    </div>
+                ) : null
+            }
+            {
+                isLoading === false &&
+                    activeOrCompleted === "completed" &&
+                    completedPredictions.length === 0 &&
+                    completedTournamentPredictions.length === 0 ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4 px-6 py-16">
+                        <Image
+                            src={MoneyBag}
+                            width={80}
+                            height={80}
+                            alt="watchlist icon"
+                            className="h-[80px] w-[80px]"
+                        />
+                        <div className="">
+                            <div className="text-center text-xl font-bold">
+                                No completed predictions
+                            </div>
+                            {/* <div className="text-center opacity-70">
                             Quam temere in vitiis, legem sancimus haerentia
                         </div> */}
+                        </div>
+                        <Link
+                            href="/free_play"
+                            className="link-transparent-white"
+                        >
+                            DISCOVER AUCTIONS
+                        </Link>
                     </div>
-                    <Link
-                        href="/free_play"
-                        className="link-transparent-white"
-                    >
-                        DISCOVER AUCTIONS
-                    </Link>
-                </div>
-            ) : null}
+                ) : null
+            }
             {/* {isLoading === false &&
                 activeOrCompleted === "completed" &&
                 completedPredictions.length === 0 &&
@@ -997,7 +1012,7 @@ const PredictionsDropdownMenu: React.FC<MobileMyWatchlistProps> = ({ closeMenu }
                     </button>
                 </div>
             ) : null} */}
-        </div>
+        </div >
     );
 };
 
@@ -1655,11 +1670,11 @@ const MyAccountDropdownMenu = () => {
     );
 };
 
-interface MobileMyWatchlistProps {
+interface CloseMenuProps {
     closeMenu: () => void;
 }
 
-const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
+const MobileMyWagers: React.FC<CloseMenuProps> = ({ closeMenu }) => {
     const router = useRouter();
     const [activeOrCompleted, setActiveOrCompleted] = useState("active");
     const [activePredictions, setActivePredictions] = useState([]);
@@ -1758,7 +1773,7 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                         <PredictionsCard
                                             title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
                                             img={prediction.auctionImage}
-                                            my_prediction={prediction.priceGuessed}
+                                            my_prediction={prediction.predictedPrice}
                                             current_bid={prediction.auctionPrice}
                                             time_left={prediction.auctionDeadline}
                                             potential_prize={prediction.auctionPot}
@@ -1810,7 +1825,7 @@ const MobileMyWagers: React.FC<MobileMyWatchlistProps> = ({ closeMenu }) => {
                                         <PredictionsCard
                                             title={`${wager.auctionYear} ${wager.auctionMake} ${wager.auctionModel}`}
                                             img={wager.auctionImage}
-                                            my_prediction={wager.priceGuessed}
+                                            my_prediction={wager.predictedPrice}
                                             current_bid={wager.auctionPrice}
                                             time_left={wager.auctionDeadline}
                                             potential_prize={wager.auctionPot}

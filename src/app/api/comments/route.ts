@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
             const newComment = new Comments(commentData);
             await newComment.save();
             if (!newComment) {
-                return NextResponse.json({ message: 'Cannot create comment' }, { status: 400 });
+                return NextResponse.json({ message: 'Cannot create reply' }, { status: 400 });
             }
 
 
@@ -189,31 +189,31 @@ export async function PUT(req: NextRequest) {
     }
 
     try {
-        const client = await clientPromise;
-        const db = client.db();
-        const userId = new ObjectId(session.user.id);
+        await connectToDB();
+        const userId = new ObjectId(session.user._id);
+        const username = session.user.username;
         // const userId = new ObjectId("65824ed1db2ea85500c815d9");
 
         let updateOperation;
 
         switch (key) {
             case "likes":
-                updateOperation = { $addToSet: { likes: userId } };
+                updateOperation = { $addToSet: { likes: { userId, username } } };
                 break;
             case "dislikes":
-                updateOperation = { $addToSet: { dislikes: userId } };
+                updateOperation = { $addToSet: { dislikes: { userId, username } } };
                 break;
             case "removeLikes":
-                updateOperation = { $pull: { likes: userId } };
+                updateOperation = { $pull: { likes: { userId, username } } };
                 break;
             case "removeDislikes":
-                updateOperation = { $pull: { dislikes: userId } };
+                updateOperation = { $pull: { dislikes: { userId, username } } };
                 break;
             default:
                 throw new Error(`Invalid key: ${key}`);
         }
 
-        const commentData = await db.collection('comments').updateOne(
+        const commentData = await Comments.updateOne(
             { _id: new ObjectId(commentID) },
             updateOperation
         );
@@ -251,15 +251,13 @@ export async function DELETE(req: NextRequest) {
     }
 
     try {
-        const client = await clientPromise;
-        const db = client.db();
-        // const userId = new ObjectId(session.user.id);
+        await connectToDB();
 
-        const commentData = await db.collection('comments').deleteOne(
+        const commentData = await Comments.deleteOne(
             { _id: new ObjectId(commentID) }
         );
 
-        await db.collection('comments').deleteMany(
+        await Comments.deleteMany(
             { parentID: new ObjectId(commentID) }
         );
 

@@ -34,7 +34,7 @@ import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 
-interface Props {}
+interface Props { }
 
 function Profile(props: Props) {
   const [name, setName] = useState("");
@@ -54,7 +54,7 @@ function Profile(props: Props) {
   const [winsNum, setWinsNum] = useState<number>(0);
   const [joinedDate, setJoinedDate] = useState<string>("");
 
-  const {} = props;
+  const { } = props;
   const { data } = useSession();
   const router = useRouter();
 
@@ -113,9 +113,9 @@ function Profile(props: Props) {
   useEffect(() => {
     setTotalPredictionsAndWatchlist(
       activePredictions.length +
-        completedPredictions.length +
-        activeWatchlist.length +
-        completedWatchlist.length
+      completedPredictions.length +
+      activeWatchlist.length +
+      completedWatchlist.length
     );
   }, [
     activePredictions,
@@ -319,11 +319,10 @@ function Profile(props: Props) {
                   <button
                     id="active-watchlist-button"
                     onClick={() => setIsActivePrediction(true)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
-                      isActivePrediction == true
-                        ? "border-white text-lg font-bold"
-                        : ""
-                    }`}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActivePrediction == true
+                      ? "border-white text-lg font-bold"
+                      : ""
+                      }`}
                   >
                     <div>ACTIVE </div>
                     {!dataIsLoading && (
@@ -335,11 +334,10 @@ function Profile(props: Props) {
                   <button
                     id="completed-watchlist-button"
                     onClick={() => setIsActivePrediction(false)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
-                      isActivePrediction == false
-                        ? "border-white text-lg font-bold"
-                        : ""
-                    }`}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActivePrediction == false
+                      ? "border-white text-lg font-bold"
+                      : ""
+                      }`}
                   >
                     <div>COMPLETED</div>
                     {!dataIsLoading && (
@@ -366,7 +364,7 @@ function Profile(props: Props) {
                             <PredictionsCard
                               title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
                               img={prediction.auctionImage}
-                              my_prediction={prediction.priceGuessed}
+                              my_prediction={prediction.predictedPrice}
                               current_bid={prediction.auctionPrice}
                               time_left={prediction.auctionDeadline}
                               potential_prize={prediction.auctionPot}
@@ -392,7 +390,7 @@ function Profile(props: Props) {
                     completedPredictions.map((prediction: any) => (
                       <div key={prediction._id + "completed"}>
                         <TimerProvider deadline={prediction.auctionDeadline}>
-                          <CompletedWagerCard
+                          <CompletedPredictionCard
                             title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
                             img={prediction.auctionImage}
                             priceGuess={prediction.predictedPrice}
@@ -704,7 +702,7 @@ type CompletedWagerCardProps = {
   prize?: number;
 };
 
-const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
+const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
   title,
   img,
   priceGuess,
@@ -812,9 +810,9 @@ const CompletedWagerCard: React.FC<CompletedWagerCardProps> = ({
                 {prize % 1 === 0
                   ? prize.toLocaleString()
                   : prize.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}{" "}
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}{" "}
                 🎉
               </div>
             </div>
