@@ -5,7 +5,6 @@ import "./styles/app.css";
 import "./styles/globals.css";
 // import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
-import Script from 'next/script';
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 
@@ -38,27 +37,10 @@ export default async function RootLayout({
       {/*<body className={inter.className} */}
       <SessionProvider session={session}>
         <body>
-
           <Analytics />
           <Navbar />
           {/* <BetaTesting /> */}
           {children}
-          {process.env.NEXT_PUBLIC_USERBACK_TOKEN && (
-            <>
-              {/* Inline script to initialize Userback config */}
-              <Script id="userback-config" strategy="afterInteractive">
-                {`
-                  window.Userback = window.Userback || {};
-                  Userback.access_token = '${process.env.NEXT_PUBLIC_USERBACK_TOKEN}';
-                `}
-              </Script>
-              {/* External script loader */}
-              <Script
-                src="https://static.userback.io/widget/v1.js"
-                strategy="afterInteractive"
-              />
-            </>
-          )}
           {/* <LoadWallet /> */}
           <Footer />
         </body>
