@@ -74,8 +74,8 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-t border-[#1E2A36] mt-4 pt-6 text-center text-sm text-gray-400 mx-auto px-4 py-8">
-        <p className="text-justify mb-4">
-          <strong>Risk Warning:</strong> Velocity Markets is a price
+        <p className="mb-4">
+          <strong>Risk Warning: </strong>Velocity Markets is a price
           prediction platform for entertainment purposes. All predictions
           involve risk and uncertainty. No information presented constitutes
           financial advice. Users must be 18+ for free games and 21+ for
