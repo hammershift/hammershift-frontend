@@ -188,7 +188,7 @@ const CreateAccount = () => {
               <div className='font-bold text-2xl md:text-4xl'>Sign In</div>
               <Image onClick={() => router.push('/')} src={CancelIcon} width={20} height={20} alt='' className='w-[20px] h-[20px] sm:hidden' />
             </div>
-            <div className='mt-1'>
+            <div className='text-sm sm:text-base mt-1'>
               {"Don't have an account?"}
               <Link href={'/create_account'} className='text-[#F2CA16] ml-2 underline'>
                 Create an account here
@@ -259,7 +259,7 @@ const CreateAccount = () => {
               <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='w-6 h-6' />
             </div>
           </div> */}
-          <div className='text-center opacity-50'>{'By logging in, you agree to Velocity Market\'s Privacy Policy and Terms of Use.'}</div>
+          <div className='text-sm sm:text-base text-center opacity-75'>{'By logging in, you agree to Velocity Market\'s Privacy Policy and Terms of Use.'}</div>
         </div>
       )}
       {/* {createAccountPage === 'reset password' && (

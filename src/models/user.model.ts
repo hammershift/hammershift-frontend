@@ -12,6 +12,7 @@ export interface User {
   about: string;
   createdAt: Date;
   updatedAt: Date;
+  isAgent?: boolean;
 }
 
 const userSchema = new Schema(
@@ -27,6 +28,7 @@ const userSchema = new Schema(
     about: { type: String, default: "" },
     createdAt: Date,
     updatedAt: Date,
+    isAgent: { type: Boolean, default: false },
   },
   { collection: "users", timestamps: true }
 );

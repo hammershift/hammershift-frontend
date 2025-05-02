@@ -126,14 +126,14 @@ export const LiveAuctions = () => {
               )
               .map((auction, index) => (
                 <div key={index} className="w-90 flex-shrink-0">
-                  <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]">
+                  <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16] max-w-[320px] flex flex-col">
                     <div className="relative">
                       <Image
                         src={auction.image || defaultImage}
-                        alt={"default"}
+                        alt="default"
                         width={500}
                         height={192}
-                        className="h-48 w-full rounded-t-xl object-cover"
+                        className="h-full w-full rounded-t-xl object-cover"
                       />
                       <div className="absolute right-2 top-2">
                         <Badge
@@ -144,38 +144,41 @@ export const LiveAuctions = () => {
                         </Badge>
                       </div>
                     </div>
-                    <CardContent className="p-4">
+
+                    <CardContent className="flex flex-col justify-between flex-grow p-4">
+                      {/* Title stays at top */}
                       <h3 className="mb-2 font-bold">{auction.title}</h3>
-                      <div className="mb-4 grid grid-cols-2 gap-2">
-                        <div>
-                          <div className="text-sm text-gray-400">
-                            Current Bid
+
+                      {/* Bottom-aligned section */}
+                      <div className="mt-auto space-y-4">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <div className="text-sm text-gray-400">Current Bid</div>
+                            <div className="font-bold text-[#F2CA16]">
+                              {USDollar.format(auction.attributes[0].value)}
+                            </div>
                           </div>
-                          <div className="font-bold text-[#F2CA16]">
-                            {USDollar.format(auction.attributes[0].value)}
+                          <div>
+                            <div className="text-sm text-gray-400">Time Left</div>
+                            <div className="flex items-center">
+                              <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
+                              {formatTimeLeft(auction.sort?.deadline.toString() ?? "")}
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-sm text-gray-400">Time Left</div>
-                          <div className="flex items-center">
-                            <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
-                            {formatTimeLeft(
-                              auction.sort?.deadline.toString() ?? ""
-                            )}
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center text-sm text-gray-400">
+                            <Users className="mr-1 h-4 w-4" /> 0 watchers
                           </div>
+                          <Link
+                            href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams("free_play"))}`}
+                          >
+                            <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+                              PREDICT NOW
+                            </Button>
+                          </Link>
                         </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-sm text-gray-400">
-                          <Users className="mr-1 h-4 w-4" />0 watchers
-                        </div>
-                        <Link
-                          href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams("free_play"))}`}
-                        >
-                          <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
-                            PREDICT NOW
-                          </Button>
-                        </Link>
                       </div>
                     </CardContent>
                   </Card>

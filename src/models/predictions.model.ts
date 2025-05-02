@@ -6,6 +6,7 @@ export interface Prediction {
   user: {
     fullName: string;
     username: string;
+    isAgent?: boolean;
   };
   createdAt?: Date;
   updatedAt?: Date;
@@ -22,6 +23,7 @@ const predictionsSchema = new Schema(
       userId: { type: Types.ObjectId, required: true },
       fullName: { type: String, required: true },
       username: { type: String, required: true },
+      isAgent: { type: Boolean, required: false },
     },
     refunded: { type: Boolean, required: false, default: false },
     isActive: { type: Boolean, required: true, default: true },

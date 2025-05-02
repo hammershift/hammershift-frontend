@@ -71,23 +71,26 @@ const FreePlay = () => {
   return (
     <div className="page-container">
       <div className="section-container mx-auto px-4 py-12">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="mb-2 text-3xl font-bold">FREE PLAY</h1>
-            <p className="text-gray-400">
-              Practice your prediction skills without risking real money
-            </p>
+        <div className="mb-8 space-y-2">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h1 className="text-3xl font-bold">FREE PLAY</h1>
+            <Link href={createPageUrl("Leaderboard")}>
+              <Button
+                variant="outline"
+                className="border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] w-full sm:w-auto"
+              >
+                <Trophy className="mr-2 h-5 w-5" />
+                LEADERBOARD
+              </Button>
+            </Link>
           </div>
-          <Link href={createPageUrl("Leaderboard")}>
-            <Button
-              variant="outline"
-              className="border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
-            >
-              <Trophy className="mr-2 h-5 w-5" />
-              LEADERBOARD
-            </Button>
-          </Link>
+
+          <p className="text-gray-400">
+            Practice your prediction skills without risking real money
+          </p>
         </div>
+
+
 
         <div className="mb-8 rounded-md border border-blue-800/30 bg-blue-900/20 p-4">
           <p className="text-blue-400">
@@ -132,7 +135,7 @@ const FreePlay = () => {
             <TabsTrigger
               value="hammer"
               className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+            // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>
