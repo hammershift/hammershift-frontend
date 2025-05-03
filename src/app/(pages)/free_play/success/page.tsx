@@ -3,7 +3,8 @@ import { Badge } from "@/app/components/badge";
 import { Card, CardContent } from "@/app/components/card_component";
 import { Button } from "@/app/components/ui/button";
 import { createPageUrl } from "@/app/components/utils";
-import { getCarData, getLatestPrediction } from "@/lib/data";
+import { usePrediction } from "@/app/context/predictionContext";
+import { getCarData } from "@/lib/data";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
 import {
@@ -15,8 +16,10 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 export default function FreePlaySuccessPage() {
   const navigate = useRouter();
+  const { latestPrediction } = usePrediction();
   const [prediction, setPrediction] = useState<Prediction>();
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
@@ -29,26 +32,16 @@ export default function FreePlaySuccessPage() {
 
   const loadPredictionData = async () => {
     try {
-      // Get the most recent prediction by current user
-      if (!session) return;
 
-      const latestPrediction = await getLatestPrediction(session.user.username);
-      setPrediction(latestPrediction);
+      if (latestPrediction) {
+        setPrediction(latestPrediction);
 
-      if (latestPrediction.carId) {
-        const carDetails = await getCarData(latestPrediction.carId);
-        setCar(carDetails);
+        if (latestPrediction.carId) {
+          const carDetails = await getCarData(latestPrediction.carId);
+          setCar(carDetails);
+        }
       }
-      // if (predictions.length > 0) {
-      //   const latestPrediction = predictions[0];
-      //   setPrediction(latestPrediction);
 
-      //   // Get the car details
-      //   if (latestPrediction.car_id) {
-      //     const carDetails = await Car.get(latestPrediction.car_id);
-      //     setCar(carDetails);
-      //   }
-      // }
       setLoading(false)
     } catch (error) {
       console.error("Error loading prediction data:", error);

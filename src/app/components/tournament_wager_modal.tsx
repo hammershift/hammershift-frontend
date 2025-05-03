@@ -1,24 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
-import MoneyBag from "../../../public/images/money-bag-green.svg";
-import PlayersIcon from "../../../public/images/players-icon-green.svg";
-import HourGlass from "../../../public/images/hour-glass.svg";
-import Dollar from "../../../public/images/dollar.svg";
-import CalendarGreen from "../../../public/images/calendar-icon-green.svg";
-import CancelIcon from "../../../public/images/x-icon.svg";
-import SedanPhotoOne from "../../../public/images/tournament-wager/sedan-photo-one.svg";
-import SedanPhotoTwo from "../../../public/images/tournament-wager/sedan-photo-two.svg";
-import SedanPhotoThree from "../../../public/images/tournament-wager/sedan-photo-three.svg";
-import SedanPhotoFour from "../../../public/images/tournament-wager/sedan-photo-four.svg";
-import SedanPhotoFive from "../../../public/images/tournament-wager/sedan-photo-five.svg";
 import { Auction } from "../(pages)/tournaments/[tournament_id]/page";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
+import CalendarGreen from "../../../public/images/calendar-icon-green.svg";
+import Dollar from "../../../public/images/dollar.svg";
+import HourGlass from "../../../public/images/hour-glass.svg";
+import MoneyBag from "../../../public/images/money-bag-green.svg";
+import CancelIcon from "../../../public/images/x-icon.svg";
+import { TimerProvider, useTimer } from "../context/TimerContext";
 
 interface TournamentWagerI {
     toggleTournamentWagerModal: () => void;

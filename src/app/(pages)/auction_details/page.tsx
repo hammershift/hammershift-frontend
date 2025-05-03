@@ -1,5 +1,5 @@
 "use client";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Badge } from "@/app/components/badge";
 import {
@@ -43,11 +43,14 @@ import {
   getPredictionDataFilter,
 } from "@/lib/data";
 
+import { CommentsSection } from "@/app/components/CommentsSection";
+import { usePrediction } from "@/app/context/predictionContext";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
-import { CommentsSection } from "@/app/components/CommentsSection";
+
 const GuessTheHammer = () => {
   const navigate = useRouter();
+  const { setLatestPrediction } = usePrediction()
 
   const [car, setCar] = useState<Car>();
   const [wagerAmount, setWagerAmount] = useState<number>(10);
@@ -181,7 +184,7 @@ const GuessTheHammer = () => {
         setUserPrediction(result);
         setPredictions([...predictions, result]);
         setHasSubmitted(true);
-
+        setLatestPrediction(predictionData)
         navigate.push("/free_play/success");
       }
     } catch (e) {
@@ -343,9 +346,8 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
-                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                    }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                      }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -356,10 +358,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                      // onError={(e) => {
-                      //   e.target.src =
-                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                      // }}
+                    // onError={(e) => {
+                    //   e.target.src =
+                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                    // }}
                     />
                   </button>
                 ))}

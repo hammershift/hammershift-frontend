@@ -1,39 +1,34 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
-import { WinnersSection } from "@/app/ui/car_view_page/CarViewPage";
-import {
-    PhotosLayout,
-    TournamentWagersSection,
-    TournamentsYouMightLike,
-    DetailsSection,
-    ArticleSection,
-    TitleSingleCarContainer,
-    TournamentButtons,
-    TournamentWinnersSection,
-} from "../../../../ui/tournaments_car_view_page/TournamentsCarViewPage";
 import { CommentsSection } from "@/app/components/CommentsSection";
+import { TimerProvider } from "@/app/context/TimerContext";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
-import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
 import {
-    addPrizePool,
     addTournamentPot,
     createTournamentWager,
-    createWager,
     getAllTournamentWagers,
     getAuctionsByTournamentId,
     getCarData,
-    getComments,
     getOneTournamentWager,
     getOneUserWager,
     getTournamentById,
     getTournamentTransactions,
-    getWagers,
-    sortByNewGames,
+    getWagers
 } from "@/lib/data";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { auctionDataOne } from "../../../../../sample_data";
+import {
+    ArticleSection,
+    DetailsSection,
+    PhotosLayout,
+    TitleSingleCarContainer,
+    TournamentButtons,
+    TournamentWagersSection,
+    TournamentWinnersSection,
+    TournamentsYouMightLike,
+} from "../../../../ui/tournaments_car_view_page/TournamentsCarViewPage";
 
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 

@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import dynamic from "next/dynamic";
 import { sortByMostBids } from "@/lib/data";
-import { TimerProvider } from "../_context/TimerContext";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { TimerProvider } from "../context/TimerContext";
 
-import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
 import Link from "next/link";
+import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
 
 const MostBids = () => {
   const [mostBids, setMostBids] = useState([]);

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
+import { PredictionProvider } from "./context/predictionContext";
 import "./styles/app.css";
 import "./styles/globals.css";
 
@@ -34,13 +35,15 @@ export default async function RootLayout({
     <html lang="en">
       {/*<body className={inter.className} */}
       <SessionProvider session={session}>
-        <body>
-          <Navbar />
-          {/* <BetaTesting /> */}
-          {children}
-          {/* <LoadWallet /> */}
-          <Footer />
-        </body>
+        <PredictionProvider>
+          <body>
+            <Navbar />
+            {/* <BetaTesting /> */}
+            {children}
+            {/* <LoadWallet /> */}
+            <Footer />
+          </body>
+        </PredictionProvider>
       </SessionProvider>
     </html>
   );

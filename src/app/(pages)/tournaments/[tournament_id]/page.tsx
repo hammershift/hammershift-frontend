@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { CommentsSection } from "@/app/components/CommentsSection";
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
+import { TimerProvider } from "@/app/context/TimerContext";
 import {
   TitleTournamentsList,
   TournamentButtons,
@@ -24,8 +25,7 @@ import {
   getTournamentTransactions,
 } from "@/lib/data";
 import { useSession } from "next-auth/react";
-import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
-import { CommentsSection } from "@/app/components/CommentsSection";
+import React, { useEffect, useState } from "react";
 
 export interface Tournaments {
   _id: string;

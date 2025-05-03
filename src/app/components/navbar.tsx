@@ -16,7 +16,6 @@ import React, { useEffect, useState } from "react";
 import { BeatLoader, BounceLoader } from "react-spinners";
 import AccountIcon from "../../../public/images/account-icon.svg";
 import Dollar from "../../../public/images/dollar.svg";
-import HamburgerMenu from "../../../public/images/hamburger-menu.svg";
 import HammerIcon from "../../../public/images/hammer-icon.svg";
 import Hourglass from "../../../public/images/hour-glass.svg";
 import MoneyBag from "../../../public/images/monetization-browser-bag-big.svg";
@@ -25,8 +24,7 @@ import MoneyBagBlack from "../../../public/images/money-bag-black.svg";
 import PodiumIcon from "../../../public/images/podium-icon.svg";
 import ThreeStars from "../../../public/images/three-star-icon.svg";
 import WalletSmall from "../../../public/images/wallet--money-payment-finance-wallet.svg";
-import CancelIcon from "../../../public/images/x-icon.svg";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
+import { TimerProvider, useTimer } from "../context/TimerContext";
 import { Button } from "./ui/button";
 import { createPageUrl } from "./utils";
 

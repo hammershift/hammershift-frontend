@@ -1,6 +1,6 @@
-import React, { Suspense } from "react";
-import { TimerProvider } from "@/app/_context/TimerContext";
+import { TimerProvider } from "@/app/context/TimerContext";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 const DynamicGamesCard = dynamic(() => import("../../components/games_card"), {
   ssr: false,

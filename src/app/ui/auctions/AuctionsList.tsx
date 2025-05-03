@@ -1,7 +1,6 @@
-import React, { Suspense } from "react";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import AuctionsListCard from "@/app/components/auctions_list_card";
+import { TimerProvider } from "@/app/context/TimerContext";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 
 const DynamicAuctionsListCard = dynamic(
   () => import("../../components/auctions_list_card"),

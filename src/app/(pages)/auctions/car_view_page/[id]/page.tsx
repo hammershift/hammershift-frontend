@@ -1,37 +1,31 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
-import {
-    WatchAndWagerButtons,
-    PhotosLayout,
+import { CommentsSection } from "@/app/components/CommentsSection";
+import WagerModal from "@/app/components/wager_modal";
+import { TimerProvider } from "@/app/context/TimerContext";
+import TitleContainer, {
     ArticleSection,
-    WagersSection,
     DetailsSection,
     GamesYouMightLike,
+    PhotosLayout,
+    WagersSection,
+    WatchAndWagerButtons,
     WinnersSection,
 } from "@/app/ui/car_view_page/CarViewPage";
-import { CommentsSection } from "@/app/components/CommentsSection";
-import TitleContainer from "@/app/ui/car_view_page/CarViewPage";
 import GuessThePriceInfoSection from "@/app/ui/car_view_page/GuessThePriceInfoSection";
-import { auctionDataOne, carDataTwo } from "../../../../../sample_data";
 import {
     addPrizePool,
     createWager,
     getAuctionTransactions,
     getCarData,
-    getComments,
     getOneUserWager,
-    getTournamentTransactions,
-    getWagers,
-    sortByNewGames,
+    getWagers
 } from "@/lib/data";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import WagerModal from "@/app/components/wager_modal";
-import { useParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { set } from "mongoose";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import AuctionHero from "@/app/components/auction_hero";
+import { auctionDataOne } from "../../../../../sample_data";
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
