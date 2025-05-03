@@ -1,24 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { createPageUrl } from "@/app/components/utils";
-import { Button } from "@/app/components/ui/button";
-import { Trophy } from "lucide-react";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/app/components/ui/tabs";
-import { Card } from "@/app/components/card_component";
-import { getCars } from "@/lib/data";
-import { AIStatistics } from "@/app/components/ai_statistics";
 import { AuctionFilters } from "@/app/components/auction_filters";
 import { AuctionGrid } from "@/app/components/auction_grid";
+import { Card } from "@/app/components/card_component";
+import { Button } from "@/app/components/ui/button";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/components/ui/tabs";
+import { createPageUrl } from "@/app/components/utils";
+import { getCars } from "@/lib/data";
+import { Trophy } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
+
 const FreePlay = () => {
   const [hammerCars, setHammerCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -132,7 +131,7 @@ const FreePlay = () => {
             <TabsTrigger
               value="hammer"
               className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+            // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>
