@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
-import { PredictionProvider } from "./context/predictionContext";
+import { PredictionProvider } from "./context/PredictionContext";
 import "./styles/app.css";
 import "./styles/globals.css";
 
