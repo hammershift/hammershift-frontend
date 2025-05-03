@@ -135,7 +135,7 @@ const Navbar = () => {
                                 width={330}
                                 height={32}
                                 alt="Velocity Markets"
-                                className="h-auto w-auto sm:block"
+                                className="h-auto w-60 sm:block"
                             />
                         </Link>
                     </div>

@@ -47,7 +47,7 @@ const LivePage = () => {
       >
         <div className="absolute inset-0 bg-[#0C1924]/70"></div>
         <div className="relative z-10">
-          <div className="section-container mx-auto flex min-h-[50vh] w-full flex-col items-center justify-center gap-5">
+          <div className="section-container mx-auto flex min-h-[50vh] w-full flex-col items-center justify-center gap-5 py-4">
             {" "}
             {/* <Image
               alt="hammershift-logo"
