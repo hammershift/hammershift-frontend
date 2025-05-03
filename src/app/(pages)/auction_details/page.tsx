@@ -44,7 +44,7 @@ import {
 } from "@/lib/data";
 
 import { CommentsSection } from "@/app/components/CommentsSection";
-import { usePrediction } from "@/app/context/predictionContext";
+import { usePrediction } from "@/app/context/PredictionContext";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
 
