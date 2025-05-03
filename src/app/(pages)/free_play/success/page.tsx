@@ -3,7 +3,7 @@ import { Badge } from "@/app/components/badge";
 import { Card, CardContent } from "@/app/components/card_component";
 import { Button } from "@/app/components/ui/button";
 import { createPageUrl } from "@/app/components/utils";
-import { usePrediction } from "@/app/context/predictionContext";
+import { usePrediction } from "@/app/context/PredictionContext";
 import { getCarData } from "@/lib/data";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
