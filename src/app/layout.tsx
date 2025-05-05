@@ -1,3 +1,4 @@
+import { authOptions } from "@/lib/auth";
 import SessionProvider from "@/providers/sessionProvider";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
@@ -29,7 +30,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
   return (
     <html lang="en">
