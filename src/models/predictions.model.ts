@@ -1,3 +1,4 @@
+import { Role } from "@/app/types/interfaces";
 import { Document, Schema, model, models, Types } from "mongoose";
 
 export interface Prediction {
@@ -6,7 +7,7 @@ export interface Prediction {
   user: {
     fullName: string;
     username: string;
-    isAgent?: boolean;
+    role: Role;
   };
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,7 +24,7 @@ const predictionsSchema = new Schema(
       userId: { type: Types.ObjectId, required: true },
       fullName: { type: String, required: true },
       username: { type: String, required: true },
-      isAgent: { type: Boolean, required: false },
+      role: { type: String, required: true },
     },
     refunded: { type: Boolean, required: false, default: false },
     isActive: { type: Boolean, required: true, default: true },

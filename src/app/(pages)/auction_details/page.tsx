@@ -47,6 +47,7 @@ import { CommentsSection } from "@/app/components/CommentsSection";
 import { usePrediction } from "@/app/context/PredictionContext";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
+import { Role } from "@/app/types/interfaces";
 
 const GuessTheHammer = () => {
   const navigate = useRouter();
@@ -858,7 +859,7 @@ const GuessTheHammer = () => {
                       >
                         <div className="flex items-center gap-4">
                           <div
-                            className={`flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full ${prediction.user.isAgent ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
+                            className={`flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
                           >
                             {prediction.user.username?.[0]?.toUpperCase() ||
                               "U"}
@@ -875,7 +876,7 @@ const GuessTheHammer = () => {
                                 </Badge>
                               )}
                               {
-                                prediction.user.isAgent && (
+                                prediction.user.role == Role.AGENT && (
                                   <Badge
                                     variant="outline"
                                     className="bg-[#A855f7]/20 border-[#A855f7] text-[#A855f7] text-xs md:text-sm"

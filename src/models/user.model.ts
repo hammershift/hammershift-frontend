@@ -1,3 +1,4 @@
+import { AgentProperties, Role } from "@/app/types/interfaces";
 import { Document, Schema, model, models, Types } from "mongoose";
 
 export interface User {
@@ -12,7 +13,8 @@ export interface User {
   about: string;
   createdAt: Date;
   updatedAt: Date;
-  isAgent?: boolean;
+  role: Role;
+  agentProperties?: AgentProperties;
 }
 
 const userSchema = new Schema(
@@ -26,9 +28,15 @@ const userSchema = new Schema(
     isBanned: { type: Boolean, default: false },
     provider: { type: String, default: "email" },
     about: { type: String, default: "" },
+    role: { type: String, default: Role.USER },
+    agentProperties: {
+      type: {
+        systemInstruction: { type: String },
+      },
+      required: false,
+    },
     createdAt: Date,
     updatedAt: Date,
-    isAgent: { type: Boolean, default: false },
   },
   { collection: "users", timestamps: true }
 );
