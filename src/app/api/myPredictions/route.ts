@@ -4,7 +4,6 @@ import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
   if (!session) {
@@ -38,8 +37,6 @@ export async function GET(req: NextRequest) {
         $unwind: "$carData",
       },
     ]);
-
-    console.log(userPredictions);
 
     const predictionDetails = userPredictions
       .map((prediction) => {
