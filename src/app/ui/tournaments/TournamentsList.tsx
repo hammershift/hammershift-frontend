@@ -1,19 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { TimerProvider } from "@/app/context/TimerContext";
 import {
-    getAllTournamentWagers,
     getAuctionsByTournamentId,
-    getOneTournamentWager,
     getSortedTournaments,
-    getTournamentPointsByTournamentId,
-    getTournaments,
+    getTournamentPointsByTournamentId
 } from "@/lib/data";
-import { TimerProvider } from "@/app/_context/TimerContext";
-import Image from "next/image"; // Assuming you are using Next.js Image component
-import { MoonLoader } from "react-spinners";
 import dynamic from "next/dynamic";
-import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 
 const DynamicTournamentsCards = dynamic(
     () => import("../../components/tournaments_card"),

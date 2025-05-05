@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { getCarsWithFilter, getLiveAuctionsToDisplay } from "@/lib/data";
+import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { TimerProvider } from "../_context/TimerContext";
+import { TimerProvider } from "../context/TimerContext";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import SwiperCore from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import SwiperCore from 'swiper';
+import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
-import ArrowRight from "../../../public/images/arrow-right.svg";
 import ArrowLeft from "../../../public/images/arrow-left.svg";
+import ArrowRight from "../../../public/images/arrow-right.svg";
+import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 

@@ -1,50 +1,38 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
+import { TimerProvider, useTimer } from "@/app/context/TimerContext";
 import Image from "next/image";
 import Card from "../../components/old_card";
-import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 
-import CancelIcon from "../../../../public/images/x-icon.svg";
-import DollarIcon from "../../../../public/images/dollar.svg";
 import CalendarIcon from "../../../../public/images/calendar-icon.svg";
+import CheckIcon from "../../../../public/images/check-black.svg";
+import CommentsIcon from "../../../../public/images/comments-icon.svg";
+import DollarIcon from "../../../../public/images/dollar.svg";
+import EyeIcon from "../../../../public/images/eye-on.svg";
 import HashtagIcon from "../../../../public/images/hash-02.svg";
-import PlayersIcon from "../../../../public/images/users-01.svg";
 import HourGlassIcon from "../../../../public/images/hour-glass.svg";
 import PrizeIcon from "../../../../public/images/monetization-browser-bag.svg";
-import CheckIcon from "../../../../public/images/check-black.svg";
-import CheckIconGreen from "../../../../public/images/check-green.svg";
-import CommentsIcon from "../../../../public/images/comments-icon.svg";
-import EyeIcon from "../../../../public/images/eye-on.svg";
 import TelescopeIcon from "../../../../public/images/telescope-sharp.svg";
+import PlayersIcon from "../../../../public/images/users-01.svg";
 
-import CameraPlus from "../../../../public/images/camera-plus.svg";
-import GifIcon from "../../../../public/images/image-document-gif.svg";
 
 import ArrowDown from "../../../../public/images/arrow-down.svg";
-import ArrowUp from "../../../../public/images/chevron-up.svg";
-import DiagonalLines from "../../../../public/images/green-diagonal.svg";
-import TransitionPattern from "../../../../public/images/transition-pattern.svg";
 import BringATrailerLogo from "../../../../public/images/bring-a-trailer-logo.svg";
 import ProfilePhoto from "../../../../public/images/ellipse-415.svg";
-import CarFaxLogo from "../../../../public/images/show-me-carfax.svg";
+import DiagonalLines from "../../../../public/images/green-diagonal.svg";
+import TransitionPattern from "../../../../public/images/transition-pattern.svg";
 import WatchListIcon from "../../../../public/images/watchlist-icon.svg";
 
 import AvatarOne from "../../../../public/images/avatar-one.svg";
-import AvatarTwo from "../../../../public/images/avatar-two.svg";
-import AvatarThree from "../../../../public/images/avatar-three.svg";
-import AvatarFour from "../../../../public/images/avatar-four.svg";
 
-import Link from "next/link";
 
+import CarImageModal from "@/app/components/car_image_modal";
+import { sortByMostExpensive } from "@/lib/data";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSession } from "next-auth/react";
-import { sortByMostExpensive, sortByNewGames } from "@/lib/data";
-import { BounceLoader } from "react-spinners";
-import CarImageModal from "@/app/components/car_image_modal";
-import { carData } from "@/sample_data";
 dayjs.extend(relativeTime);
 
 export interface CarDataOneProps {

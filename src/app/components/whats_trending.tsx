@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import dynamic from "next/dynamic";
 import { sortByTrending } from "@/lib/data";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
-import { TimerProvider } from "../_context/TimerContext";
 import Link from "next/link";
+import GamesByMakeIcon from "../../../public/images/green-diagonal.svg";
+import { TimerProvider } from "../context/TimerContext";
 
 const WhatsTrending = () => {
   const [trending, setTrending] = useState([]);

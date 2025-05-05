@@ -1,17 +1,15 @@
-import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-import AvatarOne from "../../../public/images/avatar-one.svg";
-import AvatarTwo from "../../../public/images/avatar-two.svg";
-import AvatarThree from "../../../public/images/avatar-three.svg";
 import AvatarFour from "../../../public/images/avatar-four.svg";
+import AvatarThree from "../../../public/images/avatar-three.svg";
 
 import HourGlassIcon from "../../../public/images/hour-glass.svg";
 
-import { useTimer } from "../_context/TimerContext";
 import { getWagers } from "@/lib/data";
+import { useTimer } from "../context/TimerContext";
 
 const LiveGamesCard: React.FC<any> = ({
     image,

@@ -1,20 +1,19 @@
 "use client";
 
-import "../styles/app.css";
-import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import AvatarOne from "../../../public/images/avatar-one.svg";
+import AvatarThree from "../../../public/images/avatar-three.svg";
+import AvatarTwo from "../../../public/images/avatar-two.svg";
 import HourGlass from "../../../public/images/hour-glass.svg";
 import PrizeIcon from "../../../public/images/monetization-browser-bag.svg";
-import AvatarOne from "../../../public/images/avatar-one.svg";
-import AvatarTwo from "../../../public/images/avatar-two.svg";
-import AvatarThree from "../../../public/images/avatar-three.svg";
-import { useTimer } from "../_context/TimerContext";
-import { useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
 import DefaultOne from "../../../public/images/tournament-wager/sedan-photo-one.svg";
-import DefaultTwo from "../../../public/images/tournament-wager/sedan-photo-two.svg";
 import DefaultThree from "../../../public/images/tournament-wager/sedan-photo-three.svg";
+import DefaultTwo from "../../../public/images/tournament-wager/sedan-photo-two.svg";
+import { useTimer } from "../context/TimerContext";
+import "../styles/app.css";
 
 const TournamentsCard = ({
   tournament_id,

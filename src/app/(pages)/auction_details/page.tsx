@@ -1,5 +1,5 @@
 "use client";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Badge } from "@/app/components/badge";
 import {
@@ -43,11 +43,14 @@ import {
   getPredictionDataFilter,
 } from "@/lib/data";
 
+import { CommentsSection } from "@/app/components/CommentsSection";
+import { usePrediction } from "@/app/context/PredictionContext";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
-import { CommentsSection } from "@/app/components/CommentsSection";
+
 const GuessTheHammer = () => {
   const navigate = useRouter();
+  const { setLatestPrediction } = usePrediction()
 
   const [car, setCar] = useState<Car>();
   const [wagerAmount, setWagerAmount] = useState<number>(10);
@@ -181,7 +184,7 @@ const GuessTheHammer = () => {
         setUserPrediction(result);
         setPredictions([...predictions, result]);
         setHasSubmitted(true);
-
+        setLatestPrediction(predictionData)
         navigate.push("/free_play/success");
       }
     } catch (e) {
@@ -298,8 +301,8 @@ const GuessTheHammer = () => {
         Back
       </Button>
 
-      <div className="sm:grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="space-y-6 lg:col-span-2 overflow-hidden">
           <div>
             <h1 className="mb-2 text-2xl font-bold md:text-3xl">
               {car?.title || "Untitled Auction"}
@@ -320,7 +323,7 @@ const GuessTheHammer = () => {
           </div>
 
           <div className="space-y-2">
-            <div className="relative aspect-video overflow-hidden rounded-lg bg-[#13202D]">
+            <div className="relative w-full aspect-video overflow-hidden rounded-lg bg-[#13202D]">
               {car?.images_list && car?.images_list.length > 0 ? (
                 <Image
                   src={
@@ -328,8 +331,10 @@ const GuessTheHammer = () => {
                     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80"
                   }
                   alt={"Car image"}
-                  className="h-full w-full object-cover"
-                  fill={true}
+                  layout="responsive"
+                  width={1600}        // Add intrinsic width (use your image's actual width)
+                  height={900}       // Add intrinsic height (use your image's actual height - maintaining aspect ratio)
+                  sizes="100vw" // Example sizes, adjust if needed
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center bg-[#13202D]">

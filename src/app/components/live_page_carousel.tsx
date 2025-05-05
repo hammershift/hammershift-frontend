@@ -1,33 +1,31 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 
-import ArrowRight from "../../../public/images/arrow-right.svg";
-import ArrowLeft from "../../../public/images/arrow-left.svg";
-import RedHourGlass from "../../../public/images/red-hour-glass.svg";
 import DollarSign from "../../../public/images/dollar.svg";
+import RedHourGlass from "../../../public/images/red-hour-glass.svg";
 // import AvatarOne from "../../../public/images/avatar-one.svg";
 // import AvatarTwo from "../../../public/images/avatar-two.svg";
 // import AvatarFour from "../../../public/images/avatar-four.svg";
-import TransitionPattern from "../../../public/images/transition-pattern-3.svg";
 import {
   getAuctionTransactions,
   getCarsWithMostPot,
   getWagers,
 } from "@/lib/data";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import WagerCycle from "./wager_cycle";
+import { useRouter } from "next/navigation";
 import { io } from "socket.io-client";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import SwiperCore from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import SwiperCore from 'swiper';
+import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import TransitionPattern from "../../../public/images/transition-pattern-3.svg";
+import { TimerProvider, useTimer } from "../context/TimerContext";
+import WagerCycle from "./wager_cycle";
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 

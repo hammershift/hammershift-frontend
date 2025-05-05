@@ -1,21 +1,19 @@
 "use client";
 
+import { useTimer } from "@/app/context/TimerContext";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import CreateAccount from "../(pages)/create_account/page";
-import CarPhoto from "../../../public/images/wager-car-photo.svg";
+import React, { useEffect, useState } from "react";
+import CalendarIcon from "../../../public/images/calendar-icon.svg";
 import DollarIcon from "../../../public/images/dollar.svg";
 import HashtagIcon from "../../../public/images/hash-02.svg";
-import CalendarIcon from "../../../public/images/calendar-icon.svg";
 import HourGlassIcon from "../../../public/images/hour-glass.svg";
 import MoneyBag from "../../../public/images/money-bag-green.svg";
 import Players from "../../../public/images/players-icon-green.svg";
-import CancelIcon from "../../../public/images/x-icon.svg";
-import { useTimer } from "@/app/_context/TimerContext";
-import { useSession } from "next-auth/react";
 import Wallet from "../../../public/images/wallet--money-payment-finance-wallet.svg";
+import CancelIcon from "../../../public/images/x-icon.svg";
 
 interface SessionDataI {
     user: {

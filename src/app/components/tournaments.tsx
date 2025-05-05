@@ -1,27 +1,26 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import React, { useEffect, useRef, useState } from "react";
 
-import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
-import ArrowRight from "../../../public/images/arrow-right.svg";
-import ArrowLeft from "../../../public/images/arrow-left.svg";
-import TournamentsCard from "./tournaments_card";
 import {
   getAuctionsByTournamentId,
   getLimitedTournaments,
-  getTournamentPointsByTournamentId,
-  getTournaments,
+  getTournamentPointsByTournamentId
 } from "@/lib/data";
-import { TimerProvider } from "../_context/TimerContext";
+import ArrowLeft from "../../../public/images/arrow-left.svg";
+import ArrowRight from "../../../public/images/arrow-right.svg";
+import TournamentsIcon from "../../../public/images/award-trophy-star-1.svg";
+import { TimerProvider } from "../context/TimerContext";
+import TournamentsCard from "./tournaments_card";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import SwiperCore from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import SwiperCore from 'swiper';
+import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 

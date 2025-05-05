@@ -1,10 +1,9 @@
-import "../styles/app.css";
-import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Dollar from "../../../public/images/dollar.svg";
 import HourGlass from "../../../public/images/hour-glass.svg";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
+import { TimerProvider, useTimer } from "../context/TimerContext";
+import "../styles/app.css";
 import { CardWagersSection } from "./old_card";
 
 const AuctionsListCard = (props: any) => {

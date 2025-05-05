@@ -1,19 +1,19 @@
 "use client";
 
-import "../styles/app.css";
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import Dollar from "../../../public/images/dollar.svg";
-import HourGlass from "../../../public/images/hour-glass.svg";
-import AvatarTwo from "../../../public/images/avatar-two.svg";
-import AvatarThree from "../../../public/images/avatar-three.svg";
-import AvatarFour from "../../../public/images/avatar-four.svg";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
 import { getWagers } from "@/lib/data";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
+import AvatarFour from "../../../public/images/avatar-four.svg";
+import AvatarThree from "../../../public/images/avatar-three.svg";
+import AvatarTwo from "../../../public/images/avatar-two.svg";
+import Dollar from "../../../public/images/dollar.svg";
+import HourGlass from "../../../public/images/hour-glass.svg";
+import { TimerProvider, useTimer } from "../context/TimerContext";
+import "../styles/app.css";
 
 const Card: React.FC<any> = ({
   image,

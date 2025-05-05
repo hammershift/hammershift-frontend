@@ -1,45 +1,45 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { TournamentsListCard } from "../../components/old_card";
-import Image from "next/image";
 import TournamentsCard from "@/app/components/tournaments_card";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { TournamentsListCard } from "../../components/old_card";
 
-import DollarIcon from "../../../../public/images/dollar.svg";
 import CalendarIcon from "../../../../public/images/calendar-icon.svg";
+import DollarIcon from "../../../../public/images/dollar.svg";
 import HashtagIcon from "../../../../public/images/hash-02.svg";
-import PlayersIcon from "../../../../public/images/users-01.svg";
 import HourGlassIcon from "../../../../public/images/hour-glass.svg";
 import PrizeIcon from "../../../../public/images/monetization-browser-bag.svg";
+import PlayersIcon from "../../../../public/images/users-01.svg";
 
 import ArrowDown from "../../../../public/images/arrow-down.svg";
-import DiagonalLines from "../../../../public/images/green-diagonal.svg";
-import TransitionPattern from "../../../../public/images/transition-pattern.svg";
 import BringATrailerLogo from "../../../../public/images/bring-a-trailer-logo.svg";
-import CarFaxLogo from "../../../../public/images/show-me-carfax.svg";
-import WatchListIcon from "../../../../public/images/watchlist-icon.svg";
-import ThropyIconBlue from "../../../../public/images/thropy-blue-big.svg";
-import CarsImage from "../../../../public/images/cars-icon.svg";
 import CarIcon from "../../../../public/images/car-01.svg";
+import CarsImage from "../../../../public/images/cars-icon.svg";
+import CheckIcon from "../../../../public/images/check-black.svg";
 import CommentsIcon from "../../../../public/images/comments-icon.svg";
 import EyeIcon from "../../../../public/images/eye-on.svg";
+import DiagonalLines from "../../../../public/images/green-diagonal.svg";
+import CarFaxLogo from "../../../../public/images/show-me-carfax.svg";
 import TelescopeIcon from "../../../../public/images/telescope-sharp.svg";
-import CheckIcon from "../../../../public/images/check-black.svg";
+import ThropyIconBlue from "../../../../public/images/thropy-blue-big.svg";
+import TransitionPattern from "../../../../public/images/transition-pattern.svg";
+import WatchListIcon from "../../../../public/images/watchlist-icon.svg";
 
 import AvatarOne from "../../../../public/images/avatar-one.svg";
 
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { TimerProvider, useTimer } from "@/app/_context/TimerContext";
 import CarImageModal from "@/app/components/car_image_modal";
+import { TimerProvider, useTimer } from "@/app/context/TimerContext";
 import {
   getAuctionsByTournamentId,
   getLimitedTournaments,
   getTournamentPointsByTournamentId,
 } from "@/lib/data";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
 interface TournamentButtonsI {

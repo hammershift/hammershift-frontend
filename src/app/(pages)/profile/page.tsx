@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
-import { TimerProvider } from "@/app/_context/TimerContext";
 import { PredictionsCard } from "@/app/components/navbar";
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
@@ -21,14 +20,14 @@ import {
   TabsTrigger,
 } from "@/app/components/ui/tabs";
 import { TextArea } from "@/app/components/ui/textarea";
+import { TimerProvider } from "@/app/context/TimerContext";
 import { getMyPredictions } from "@/lib/data";
 import { getInitials } from "@/lib/utils";
 import { CircleDollarSign, Clock, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
 import {
-  default as Dollar,
-  default as DollarIcon,
+  default as DollarIcon
 } from "../../../../public/images/dollar.svg";
 import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";

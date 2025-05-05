@@ -1,15 +1,15 @@
 "use client";
 
-import "../styles/app.css";
-import React, { useEffect, useRef, useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import Dollar from "../../../public/images/dollar.svg";
 import HourGlass from "../../../public/images/hour-glass.svg";
-import { TimerProvider, useTimer } from "../_context/TimerContext";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import { TimerProvider, useTimer } from "../context/TimerContext";
+import "../styles/app.css";
 import { CardWagersSection } from "./old_card";
 
 const GamesCard = (props: any) => {
