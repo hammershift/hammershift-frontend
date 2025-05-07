@@ -1,17 +1,21 @@
 "use client"
 
+import { Prediction } from "@/models/predictions.model";
 import { createContext, useContext, useState } from "react";
 
 const defaultContextValue = {
     latestPrediction: {
         carId: "",
-        carObjectId: "",
+        carObjectId: null,
         predictedPrice: 0,
         predictionType: "",
         user: {
+            userId: null,
             fullName: "",
-            username: ""
-        }
+            username: "",
+            role: "",
+        },
+        isActive: true,
     },
     setLatestPrediction: (_object: any) => { console.warn('PredictionProvider not found!') }
 }
@@ -27,13 +31,16 @@ const PredictionProvider: React.FC<PredictionProviderProps> = ({
 }) => {
     const [latestPrediction, setLatestPrediction] = useState({
         carId: "",
-        carObjectId: "",
+        carObjectId: null,
         predictedPrice: 0,
         predictionType: "",
         user: {
+            userId: null,
             fullName: "",
-            username: ""
-        }
+            username: "",
+            role: "",
+        },
+        isActive: true,
     })
 
     const value = {

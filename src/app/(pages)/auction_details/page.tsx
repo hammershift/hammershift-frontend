@@ -170,14 +170,16 @@ const GuessTheHammer = () => {
     try {
       let predictionData = {
         carId: car.auction_id,
-        carObjectId: car._id,
+        carObjectId: car._id!,
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
           userId: session.user._id,
           fullName: session.user.fullName,
           username: session.user.username,
+          role: session.user.role,
         },
+        isActive: true,
       };
 
       const result = await addPrediction(predictionData);

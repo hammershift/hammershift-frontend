@@ -13,7 +13,7 @@ export interface User {
   about: string;
   createdAt: Date;
   updatedAt: Date;
-  role: Role;
+  role: string;
   agentProperties?: AgentProperties;
 }
 
@@ -28,7 +28,7 @@ const userSchema = new Schema(
     isBanned: { type: Boolean, default: false },
     provider: { type: String, default: "email" },
     about: { type: String, default: "" },
-    role: { type: String, default: Role.USER },
+    role: { type: String, enum: Role, default: Role.USER },
     agentProperties: {
       type: {
         systemInstruction: { type: String },
