@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
           image: { $first: "$image" },
           auctions: {
             $push: {
-              auctionId: "$auctionId",
+              auction_id: "$auction_id",
               points: "$points",
               rank: "$rank",
             },

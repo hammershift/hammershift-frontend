@@ -3,8 +3,7 @@ import { Document, Schema, model, models, Types } from "mongoose";
 import { StdioNull } from "node:child_process";
 
 export interface Prediction {
-  carId: string;
-  carObjectId: Types.ObjectId | null;
+  auction_id: string;
   predictedPrice: number;
   predictionType: string;
   wagerAmount?: number;
@@ -22,8 +21,9 @@ export interface Prediction {
 
 const predictionsSchema = new Schema(
   {
-    carId: { type: String, required: true },
-    carObjectId: { type: Types.ObjectId, required: true },
+    // carId: { type: String, required: true },
+    // carObjectId: { type: Types.ObjectId, required: true },
+    auction_id: { type: String, required: true },
     predictedPrice: { type: Number, required: true },
     predictionType: { type: String, required: true },
     wagerAmount: { type: Number, required: false, default: 0 },

@@ -7,11 +7,7 @@ import { usePrediction } from "@/app/context/PredictionContext";
 import { getCarData } from "@/lib/data";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
-import {
-  CheckCircle,
-  Home,
-  RefreshCw
-} from "lucide-react";
+import { CheckCircle, Home, RefreshCw } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -32,20 +28,19 @@ export default function FreePlaySuccessPage() {
 
   const loadPredictionData = async () => {
     try {
-
       if (latestPrediction) {
         setPrediction(latestPrediction);
 
-        if (latestPrediction.carId) {
-          const carDetails = await getCarData(latestPrediction.carId);
+        if (latestPrediction.auction_id) {
+          const carDetails = await getCarData(latestPrediction.auction_id);
           setCar(carDetails);
         }
       }
 
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       console.error("Error loading prediction data:", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 

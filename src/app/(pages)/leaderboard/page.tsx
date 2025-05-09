@@ -44,7 +44,7 @@ type LeaderboardData = {
 
   image: string;
   auctions: {
-    auctionId: Types.ObjectId;
+    auction_id: String;
     points: number;
     rank: number;
   };

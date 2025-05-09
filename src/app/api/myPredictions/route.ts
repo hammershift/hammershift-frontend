@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
       {
         $lookup: {
           from: "auctions",
-          localField: "carId",
+          localField: "auction_id",
           foreignField: "auction_id",
           as: "carData",
         },

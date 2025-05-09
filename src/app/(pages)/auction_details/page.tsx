@@ -51,7 +51,7 @@ import { Role } from "@/app/types/interfaces";
 
 const GuessTheHammer = () => {
   const navigate = useRouter();
-  const { setLatestPrediction } = usePrediction()
+  const { setLatestPrediction } = usePrediction();
 
   const [car, setCar] = useState<Car>();
   const [wagerAmount, setWagerAmount] = useState<number>(10);
@@ -169,8 +169,7 @@ const GuessTheHammer = () => {
 
     try {
       let predictionData = {
-        carId: car.auction_id,
-        carObjectId: car._id!,
+        auction_id: car.auction_id,
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
@@ -187,7 +186,7 @@ const GuessTheHammer = () => {
         setUserPrediction(result);
         setPredictions([...predictions, result]);
         setHasSubmitted(true);
-        setLatestPrediction(predictionData)
+        setLatestPrediction(predictionData);
         navigate.push("/free_play/success");
       }
     } catch (e) {
@@ -305,7 +304,7 @@ const GuessTheHammer = () => {
       </Button>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2 overflow-hidden">
+        <div className="space-y-6 overflow-hidden lg:col-span-2">
           <div>
             <h1 className="mb-2 text-2xl font-bold md:text-3xl">
               {car?.title || "Untitled Auction"}
@@ -326,7 +325,7 @@ const GuessTheHammer = () => {
           </div>
 
           <div className="space-y-2">
-            <div className="relative w-full aspect-video overflow-hidden rounded-lg bg-[#13202D]">
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#13202D]">
               {car?.images_list && car?.images_list.length > 0 ? (
                 <Image
                   src={
@@ -335,8 +334,8 @@ const GuessTheHammer = () => {
                   }
                   alt={"Car image"}
                   layout="responsive"
-                  width={1600}        // Add intrinsic width (use your image's actual width)
-                  height={900}       // Add intrinsic height (use your image's actual height - maintaining aspect ratio)
+                  width={1600} // Add intrinsic width (use your image's actual width)
+                  height={900} // Add intrinsic height (use your image's actual height - maintaining aspect ratio)
                   sizes="100vw" // Example sizes, adjust if needed
                 />
               ) : (
@@ -351,8 +350,9 @@ const GuessTheHammer = () => {
                 {car?.images_list.map((image, index) => (
                   <button
                     key={index}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
-                      }`}
+                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
+                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                    }`}
                     onClick={() => setSelectedImage(index)}
                   >
                     <Image
@@ -363,10 +363,10 @@ const GuessTheHammer = () => {
                       alt={`Thumbnail ${index + 1}`}
                       className="h-full w-full object-cover"
                       fill={true}
-                    // onError={(e) => {
-                    //   e.target.src =
-                    //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
-                    // }}
+                      // onError={(e) => {
+                      //   e.target.src =
+                      //     "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80";
+                      // }}
                     />
                   </button>
                 ))}
@@ -545,46 +545,66 @@ const GuessTheHammer = () => {
         <div className="space-y-6">
           <Card className="border-[#1E2A36] bg-[#13202D]">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg sm:text-xl">AUCTION STATUS</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">
+                AUCTION STATUS
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="mb-6 grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-xs sm:text-sm text-gray-400">Current Bid</div>
-                  <div className="text-xl sm:text-2xl font-bold text-[#F2CA16]">
+                  <div className="text-xs text-gray-400 sm:text-sm">
+                    Current Bid
+                  </div>
+                  <div className="text-xl font-bold text-[#F2CA16] sm:text-2xl">
                     {USDollar.format(car?.attributes[0].value)}
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs sm:text-sm text-gray-400">Time Left</div>
+                  <div className="text-xs text-gray-400 sm:text-sm">
+                    Time Left
+                  </div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4 text-gray-400" />
-                    <div className="text-base sm:text-lg">{car && formatTimeLeft(car?.sort!.deadline.toString())}</div>
+                    <div className="text-base sm:text-lg">
+                      {car && formatTimeLeft(car?.sort!.deadline.toString())}
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs sm:text-sm text-gray-400">Bids</div>
-                  <div className="text-base sm:text-lg">{car?.sort!.bids || 0}</div>
+                  <div className="text-xs text-gray-400 sm:text-sm">Bids</div>
+                  <div className="text-base sm:text-lg">
+                    {car?.sort!.bids || 0}
+                  </div>
                 </div>
                 <div>
-                  <div className="text-xs sm:text-sm text-gray-400">Watchers</div>
+                  <div className="text-xs text-gray-400 sm:text-sm">
+                    Watchers
+                  </div>
                   <div className="flex items-center gap-1">
                     <Heart className="h-4 w-4 text-gray-400" />
-                    <div className="text-base sm:text-lg">{car?.watchers || 0}</div>
+                    <div className="text-base sm:text-lg">
+                      {car?.watchers || 0}
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs sm:text-sm text-gray-400">Views</div>
+                  <div className="text-xs text-gray-400 sm:text-sm">Views</div>
                   <div className="flex items-center gap-1">
                     <Eye className="h-4 w-4 text-gray-400" />
-                    <div className="text-base sm:text-lg">{car?.views || 0}</div>
+                    <div className="text-base sm:text-lg">
+                      {car?.views || 0}
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs sm:text-sm text-gray-400">Comments</div>
+                  <div className="text-xs text-gray-400 sm:text-sm">
+                    Comments
+                  </div>
                   <div className="flex items-center gap-1">
                     <MessageSquare className="h-4 w-4 text-gray-400" />
-                    <div className="text-base sm:text-lg">{car?.comments || 0}</div>
+                    <div className="text-base sm:text-lg">
+                      {car?.comments || 0}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -772,8 +792,10 @@ const GuessTheHammer = () => {
             <CardContent>
               <div className="mb-6 grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-sm sm:text-base text-gray-400">Players</div>
-                  <div className="text-lg sm:text-xl font-bold">
+                  <div className="text-sm text-gray-400 sm:text-base">
+                    Players
+                  </div>
+                  <div className="text-lg font-bold sm:text-xl">
                     {
                       (predictions || []).filter(
                         (p) => mode === "free_play" //|| !p?.is_ai_agent
@@ -782,8 +804,10 @@ const GuessTheHammer = () => {
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm sm:text-base text-gray-400">Prize</div>
-                  <div className="text-lg sm:text-xl font-bold text-[#F2CA16]">
+                  <div className="text-sm text-gray-400 sm:text-base">
+                    Prize
+                  </div>
+                  <div className="text-lg font-bold text-[#F2CA16] sm:text-xl">
                     $
                     {(
                       (predictions || []).filter(
@@ -861,38 +885,39 @@ const GuessTheHammer = () => {
                       >
                         <div className="flex items-center gap-4">
                           <div
-                            className={`flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-full ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
+                            className={`flex h-8 w-8 items-center justify-center rounded-full md:h-10 md:w-10 ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
                           >
                             {prediction.user.username?.[0]?.toUpperCase() ||
                               "U"}
                           </div>
                           <div>
-                            <div className="flex items-center gap-2 font-medium text-sm md:text-base">
+                            <div className="flex items-center gap-2 text-sm font-medium md:text-base">
                               {getDisplayName()}
                               {isCurrentUser && (
                                 <Badge
                                   variant="outline"
-                                  className="bg-[#F2CA16]/20 border-[#F2CA16] text-[#F2CA16] text-xs md:text-sm"
+                                  className="border-[#F2CA16] bg-[#F2CA16]/20 text-xs text-[#F2CA16] md:text-sm"
                                 >
                                   You
                                 </Badge>
                               )}
-                              {
-                                prediction.user.role == Role.AGENT && (
-                                  <Badge
-                                    variant="outline"
-                                    className="bg-[#A855f7]/20 border-[#A855f7] text-[#A855f7] text-xs md:text-sm"
-                                  >
-                                    AI
-                                  </Badge>
-                                )}
+                              {prediction.user.role == Role.AGENT && (
+                                <Badge
+                                  variant="outline"
+                                  className="border-[#A855f7] bg-[#A855f7]/20 text-xs text-[#A855f7] md:text-sm"
+                                >
+                                  AI
+                                </Badge>
+                              )}
                             </div>
-                            <div className="text-xs md:text-sm text-gray-400">
+                            <div className="text-xs text-gray-400 md:text-sm">
                               {displayTime()}
                             </div>
                           </div>
                         </div>
-                        <div className="text-sm md:text-base font-bold">{displayAmount}</div>
+                        <div className="text-sm font-bold md:text-base">
+                          {displayAmount}
+                        </div>
                       </div>
                     );
                   })}
@@ -901,7 +926,7 @@ const GuessTheHammer = () => {
           </Card>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
