@@ -6,6 +6,7 @@ import Navbar from "./components/navbar";
 import { PredictionProvider } from "./context/PredictionContext";
 import "./styles/app.css";
 import "./styles/globals.css";
+import Analytics from "./components/analytics";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default async function RootLayout({
       <SessionProvider session={session}>
         <PredictionProvider>
           <body>
+            <Analytics />
             <Navbar />
             {/* <BetaTesting /> */}
             {children}
