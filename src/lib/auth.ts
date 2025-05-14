@@ -152,6 +152,7 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.fullName = token.fullName;
         session.user.username = token.username;
+        session.user.role = token.role;
         // session.user.image = token.image;
         session.user.provider = token.provider;
         session.user.isNewUser = token.isNewUser;
@@ -192,6 +193,7 @@ export const authOptions: NextAuthOptions = {
         token.isBanned = dbUser.isBanned;
         token.about = dbUser.about;
         token._id = dbUser._id.toString();
+        token.role = dbUser.role;
         if (!dbUser.createdAt) {
           const createdAt = new Date();
           await Users.updateOne(

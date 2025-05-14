@@ -40,9 +40,9 @@ const Footer = () => {
   return (
     <div className="bg-[#13202D] border-t border-[#1E2A36]">
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <img src={logoUrl} alt="Velocity Markets" className="h-10 mb-4 w-auto" />
+            <img src={logoUrl} alt="Velocity Markets" className="h-10 mb-4 h-auto w-auto" />
             <p className="text-gray-300 mb-4">
               The ultimate platform for predicting classic car auction
               outcomes.
@@ -51,7 +51,7 @@ const Footer = () => {
           {
             footerList.map((footerContent, fcIndex) => (
 
-              <div key={fcIndex}>
+              <div key={fcIndex} className="text-center sm:text-left">
                 <h4 className="font-bold uppercase mb-4">{footerContent.header}</h4>
                 <div className="flex flex-col space-y-2">
                   {
@@ -72,28 +72,28 @@ const Footer = () => {
             ))
           }
         </div>
-        <div className="border-t border-[#1E2A36] mt-8 pt-6 text-center text-sm text-gray-400">
-          <p className="mb-4">
-            <strong>Risk Warning:</strong> Velocity Markets is a price
-            prediction platform for entertainment purposes. All predictions
-            involve risk and uncertainty. No information presented constitutes
-            financial advice. Users must be 18+ for free games and 21+ for
-            paid games.
-          </p>
-          <p>© 2024 Velocity Markets. All rights reserved.</p>
-          <div className="flex justify-center space-x-4 mt-2">
-            {
-              bottomFooterList.map((data, index) => (
-                <Link
-                  key={index}
-                  href={createPageUrl(data.urlString)}
-                  className="hover:text-[#F2CA16]"
-                >
-                  {data.title}
-                </Link>
-              ))
-            }
-          </div>
+      </div>
+      <div className="border-t border-[#1E2A36] mt-4 pt-6 text-center text-sm text-gray-400 mx-auto px-4 py-8">
+        <p className="mb-4">
+          <strong>Risk Warning: </strong>Velocity Markets is a price
+          prediction platform for entertainment purposes. All predictions
+          involve risk and uncertainty. No information presented constitutes
+          financial advice. Users must be 18+ for free games and 21+ for
+          paid games.
+        </p>
+        <p>© 2024 Velocity Markets. All rights reserved.</p>
+        <div className="flex justify-center space-x-4 mt-2">
+          {
+            bottomFooterList.map((data, index) => (
+              <Link
+                key={index}
+                href={createPageUrl(data.urlString)}
+                className="hover:text-[#F2CA16]"
+              >
+                {data.title}
+              </Link>
+            ))
+          }
         </div>
       </div>
     </div>

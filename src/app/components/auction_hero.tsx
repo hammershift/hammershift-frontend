@@ -11,7 +11,7 @@ export default function AuctionHero() {
                     <span className="text-[#F2CA16]">COMPETE.</span>{" "}
                     <span className="text-white">WIN.</span>
                 </h1>
-                <h3 className="mb-7 text-lg md:text-xl">
+                <h3 className="mb-7 text-lg md:text-xl text-center">
                     {/* Shift Your Perspective, Hammer Down on Your Predictions */}
                     Predict the hammer prices of classic car auctions and win
                     prizes
@@ -23,7 +23,7 @@ export default function AuctionHero() {
           chance—it&apos;s a test of your knowledge and a thrill ride with every
           bid.
         </p> */}
-                <p className="mx-auto mb-8 max-w-md text-sm text-gray-300">
+                <p className="mx-auto mb-8 max-w-md text-sm text-gray-300 text-center text-justify">
                     For entertainment purposes only. Velocity Markets does not
                     guarantee results. Users must be 18+ to play free games and
                     21+ for paid games.

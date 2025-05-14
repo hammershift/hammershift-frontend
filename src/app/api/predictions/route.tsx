@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     //get all predictions with the same car_id
     if (car_id) {
       const predictions = await Predictions.find({
-        carId: car_id,
+        auction_id: car_id,
       });
       return NextResponse.json(predictions);
     }
@@ -31,8 +31,8 @@ export async function GET(req: NextRequest) {
 
     if (car_id && username) {
       const userPredictions = await Predictions.find({
-        car_id: car_id,
-        prediction_type: prediction_type,
+        auction_id: car_id,
+        predictionType: prediction_type,
         "user.username": username,
       });
       return NextResponse.json(userPredictions);

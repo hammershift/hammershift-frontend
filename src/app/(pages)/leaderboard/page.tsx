@@ -35,11 +35,16 @@ type LeaderboardData = {
   _id: Types.ObjectId;
   totalPoints: number;
   totalPredictions: number;
-  fullName: string;
-  username: string;
+  user: {
+    userId: Types.ObjectId;
+    fullName: string;
+    username: string;
+    role: string;
+  };
+
   image: string;
   auctions: {
-    auctionId: Types.ObjectId;
+    auction_id: String;
     points: number;
     rank: number;
   };
@@ -242,7 +247,7 @@ const LeaderboardPage = () => {
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">
-                          {player.username}
+                          {player.user.username}
                         </TableCell>
                         <TableCell className="">
                           {player.totalPredictions}
@@ -331,7 +336,7 @@ const LeaderboardPage = () => {
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">
-                          {player.username}
+                          {player.user.username}
                         </TableCell>
                         <TableCell>
                           {Math.floor(player.totalPredictions / 3)}
@@ -425,7 +430,7 @@ const LeaderboardPage = () => {
                           </div>
                         </TableCell>
                         <TableCell className="font-medium">
-                          {player.username}
+                          {player.user.username}
                         </TableCell>
                         <TableCell>
                           {Math.floor(player.totalPredictions / 2)}

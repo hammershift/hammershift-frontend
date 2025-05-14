@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb';
-
-// TEST IMPLEMENTATION
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
+
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
 }
