@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import ArrowDown from "../../../public/images/arrow-down.svg";
 import AvatarOne from "../../../public/images/avatar-one.svg";
 import TransitionPattern from "../../../public/images/transition-pattern.svg";
@@ -27,20 +27,18 @@ const MiniLeaderboard = () => {
   }, []);
 
   return (
-    <div className="sm:w-full md:w-full md:my-24 md:mx-6 lg:w-1/3">
-      <div className="relative pb-8 sm:pb-0 min-h-[180px]">
-        <div className="p-6 w-full h-auto">
+    <div className="sm:w-full md:mx-6 md:my-24 md:w-full lg:w-1/3">
+      <div className="relative min-h-[180px] pb-8 sm:pb-0">
+        <div className="h-auto w-full p-6">
           <div className="mb-6">
             <div className="flex justify-between">
-              <div className="font-bold text-[18px]">
-                AUCTIONS LEADERBOARD
-              </div>
+              <div className="text-[18px] font-bold">AUCTIONS LEADERBOARD</div>
               <Image
                 src={ArrowDown}
                 width={20}
                 height={20}
                 alt="arrow down"
-                className="w-5 h-5 hover:cursor-pointer"
+                className="h-5 w-5 hover:cursor-pointer"
                 onClick={() => router.push("/leaderboards")}
               />
             </div>
@@ -51,18 +49,16 @@ const MiniLeaderboard = () => {
                 return (
                   <div
                     key={item._id}
-                    className="flex justify-between items-center py-2"
+                    className="flex items-center justify-between py-2"
                   >
-                    <div className="flex justify-between items-center gap-4">
-                      <div className="text-lg opacity-30">
-                        {index + 1}
-                      </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="text-lg opacity-30">{index + 1}</div>
                       <Image
                         src={item.image ? item.image : AvatarOne}
                         width={44}
                         height={44}
                         alt="dollar"
-                        className="w-[44px] h-[44px] rounded-full"
+                        className="h-[44px] w-[44px] rounded-full"
                       />
                       <div className="text-sm">
                         <div className="font-bold">
@@ -72,7 +68,7 @@ const MiniLeaderboard = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="w-auto px-6 py-1 text-sm font-bold text-black h-auto bg-yellow-400 rounded-md">
+                    <div className="h-auto w-auto rounded-md bg-yellow-400 px-6 py-1 text-sm font-bold text-black">
                       {item.totalPoints ? `${item.totalPoints} pts.` : "0 pts."}
                     </div>
                   </div>
@@ -81,15 +77,15 @@ const MiniLeaderboard = () => {
           </div>
         </div>
         {/* Background and button */}
-        <div className="absolute top-0 bottom-0 z-[-1] w-full">
+        <div className="absolute bottom-0 top-0 z-[-1] w-full">
           <Image
             src={TransitionPattern}
             width={288}
             height={356}
             alt="pattern"
-            className="w-full h-auto rounded-lg mr-1 object-cover"
+            className="mr-1 h-auto w-full rounded-lg object-cover"
           />
-          <div className="w-full h-full rounded-lg absolute top-0 bg-[#41a0ff62]"></div>
+          <div className="absolute top-0 h-full w-full rounded-lg bg-[#41a0ff62]"></div>
         </div>
       </div>
     </div>

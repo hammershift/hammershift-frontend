@@ -3,7 +3,7 @@
 import Link from "next/link";
 import "./styles/app.css";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import banner from "../../public/images/banner-min.jpg";
 import AuctionHero from "./components/auction_hero";
@@ -15,7 +15,6 @@ import { Button } from "./components/ui/button";
 const LivePage = () => {
   const [screenWidth, setScreenWidth] = useState(0);
   const { data: session } = useSession();
-
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
@@ -28,11 +27,6 @@ const LivePage = () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  useEffect(() => {
-    console.log("session");
-    console.log(session);
-  }, [session]);
 
   const NUM_DISPLAY = screenWidth < 1400 && screenWidth > 996 ? 2 : 3;
   return (
@@ -163,8 +157,15 @@ const LivePage = () => {
         </section>
       )}
       <section>
-        <iframe src="https://embeds.beehiiv.com/93359bc7-769f-4ce6-bb3d-3fbfdc15a4ff" data-test-id="beehiiv-embed" width="100%" height="320" frameBorder="0" scrolling="no"
-          style={{ margin: 0, backgroundColor: 'transparent' }}></iframe>
+        <iframe
+          src="https://embeds.beehiiv.com/93359bc7-769f-4ce6-bb3d-3fbfdc15a4ff"
+          data-test-id="beehiiv-embed"
+          width="100%"
+          height="320"
+          frameBorder="0"
+          scrolling="no"
+          style={{ margin: 0, backgroundColor: "transparent" }}
+        ></iframe>
       </section>
       {/* <div className="section-container mx-auto mb-10">
         <Carousel />

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";
@@ -158,53 +158,52 @@ export const CommentsSection = ({
   }, []);
 
   return (
-    <div className="md:mb-16 sm:mb-0">
+    <div className="sm:mb-0 md:mb-16">
       <div className="flex justify-between">
-        <div className="text-xl pb-4">
+        <div className="pb-4 text-xl">
           <span className="font-bold">Comments </span>
-          {`( ${Array.isArray(commentsList) && commentsList.length > 0
-            ? commentsList.length
-            : 0
-            } )`}
+          {`( ${
+            Array.isArray(commentsList) && commentsList.length > 0
+              ? commentsList.length
+              : 0
+          } )`}
         </div>
       </div>
-      {session.data?.user.email ?
-        (
-          <form onSubmit={handlePostComment} className="mb-6">
-            <div className="space-y-3">
-              <TextArea
-                placeholder="Share your thoughts about this auction..."
-                value={comment}
-                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setComment(e.target.value)}
-                className="bg-[#1E2A36] border-[#1E2A36] focus:border-[#F2CA16] min-h-[100px]"
-              />
+      {session.data?.user.email ? (
+        <form onSubmit={handlePostComment} className="mb-6">
+          <div className="space-y-3">
+            <TextArea
+              placeholder="Share your thoughts about this auction..."
+              value={comment}
+              onChange={(e: {
+                target: { value: React.SetStateAction<string> };
+              }) => setComment(e.target.value)}
+              className="min-h-[100px] border-[#1E2A36] bg-[#1E2A36] focus:border-[#F2CA16]"
+            />
 
-              {/* {error && (
+            {/* {error && (
           <p className="text-red-500 text-sm">{error}</p>
         )} */}
 
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  aria-disabled={isSubmitting}
-                  className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
-                >
-                  {isSubmitting ? 'Posting...' : 'Post Comment'}
-                  <Send className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
+            <div className="flex justify-end">
+              <Button
+                type="submit"
+                aria-disabled={isSubmitting}
+                className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
+              >
+                {isSubmitting ? "Posting..." : "Post Comment"}
+                <Send className="ml-2 h-4 w-4" />
+              </Button>
             </div>
-          </form>
-        )
-        :
-        (
-          <div className="bg-[#1E2A36] border border-[#1E2A36] rounded-md p-4 mb-6">
-            <p className="text-center text-gray-400">
-              Please log in to leave a comment.
-            </p>
           </div>
-        )
-      }
+        </form>
+      ) : (
+        <div className="mb-6 rounded-md border border-[#1E2A36] bg-[#1E2A36] p-4">
+          <p className="text-center text-gray-400">
+            Please log in to leave a comment.
+          </p>
+        </div>
+      )}
       {commentAlert && (
         <AlertMessage message="Please login before commenting" />
       )}
@@ -259,7 +258,7 @@ export const CommentsSection = ({
       </div> */}
       <section>
         {isLoading ? (
-          <div className="flex w-full justify-center h-12 items-center">
+          <div className="flex h-12 w-full items-center justify-center">
             <BeatLoader color="#f2ca16" />
           </div>
         ) : Array.isArray(commentsList) && commentsList.length > 0 ? (
@@ -284,13 +283,13 @@ export const CommentsSection = ({
               </div>
             ))
         ) : (
-          <div className="text-center py-8 text-gray-400">
+          <div className="py-8 text-center text-gray-400">
             No comments yet. Be the first to comment!
           </div>
         )}
         {commentsDisplayed < commentsList.length && (
           <button
-            className="btn-transparent-white w-full mt-8 text-sm"
+            className="btn-transparent-white mt-8 w-full text-sm"
             onClick={handleLoadComments}
           >
             {`Load ${Math.min(
@@ -453,7 +452,7 @@ export const CommentCard = ({
   };
 
   return (
-    <div className="flex mt-4 text-[14px]">
+    <div className="mt-4 flex text-[14px]">
       {/* <Image
         src={AvatarOne}
         width={40}
@@ -462,42 +461,38 @@ export const CommentCard = ({
         className="w-10 h-10 ml-2"
       /> */}
       <div
-        className={`flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
       >
-        {username?.[0]?.toUpperCase() ||
-          "U"}
+        {username?.[0]?.toUpperCase() || "U"}
       </div>
       <div className="ml-4 flex-1">
         <div className="relative flex justify-between">
           <div>
             <span className="font-bold">{username}</span>
-            <span className="text-[#F2CA16] ml-2">User</span>
-            <span className="opacity-50 ml-2">
+            <span className="ml-2 text-[#F2CA16]">User</span>
+            <span className="ml-2 opacity-50">
               {dayjs(createdAt).fromNow()}
             </span>
           </div>
-          {
-            session && username == session.data?.user.username &&
-            (
-              <div onClick={(e) => setDropdown((prev) => !prev)}>
-                <Image
-                  src={ThreeDots}
-                  width={16}
-                  height={16}
-                  alt="dots"
-                  className="w-4 h-4 ml-4"
-                />
-              </div>
-            )
-          }
+          {session && username == session.data?.user.username && (
+            <div onClick={(e) => setDropdown((prev) => !prev)}>
+              <Image
+                src={ThreeDots}
+                width={16}
+                height={16}
+                alt="dots"
+                className="ml-4 h-4 w-4"
+              />
+            </div>
+          )}
           {dropdown && (
             <div
               ref={dropdownRef}
-              className="absolute grid rounded top-8 right-0 bg-[#172431] z-10"
+              className="absolute right-0 top-8 z-10 grid rounded bg-[#172431]"
             >
               <div
                 onClick={handleDeleteComment}
-                className={`cursor-pointer py-2 px-3 text-center`}
+                className={`cursor-pointer px-3 py-2 text-center`}
               >
                 Delete
               </div>
@@ -507,20 +502,17 @@ export const CommentCard = ({
             <AlertMessage message="Please login before deleting" />
           )} */}
         </div>
-        <div className=" my-3 h-max-[100px] md:h-auto ellipsis overflow-hidden text-justify">
+        <div className="h-max-[100px] ellipsis my-3 overflow-hidden text-justify md:h-auto">
           {censor.applyTo(comment, matches)}
         </div>
-        <div className="flex opacity-50 items-center">
-          <div
-            onClick={handleReplying}
-            className="cursor-pointer"
-          >
+        <div className="flex items-center opacity-50">
+          <div onClick={handleReplying} className="cursor-pointer">
             Reply
           </div>
           <span className="ml-4">·</span>
 
           <div className="flex items-center" onClick={handleLiking}>
-            {likes.some(like => like.userId === userID) ? (
+            {likes.some((like) => like.userId === userID) ? (
               <div>
                 <Image
                   src={BlueThumbUp}
@@ -544,8 +536,8 @@ export const CommentCard = ({
             {likes.length > 0 && <div>{likes.length}</div>}
             <div></div>
           </div>
-          <div className="flex items-center ml-2" onClick={handleDisliking}>
-            {dislikes.some(dislike => dislike.userId === userID) ? (
+          <div className="ml-2 flex items-center" onClick={handleDisliking}>
+            {dislikes.some((dislike) => dislike.userId === userID) ? (
               <div>
                 <Image
                   src={BlueThumbsDown}
@@ -565,9 +557,7 @@ export const CommentCard = ({
                 />
               </div>
             )}
-            {dislikes.length > 0 && (
-              <div>{dislikes.length}</div>
-            )}
+            {dislikes.length > 0 && <div>{dislikes.length}</div>}
             <div></div>
           </div>
         </div>
@@ -582,9 +572,7 @@ export const CommentCard = ({
           />
         )}
 
-        {replyAlert && (
-          <AlertMessage message="Please login before replying" />
-        )}
+        {replyAlert && <AlertMessage message="Please login before replying" />}
 
         {likeDislikeAlert && (
           <AlertMessage message="Please login before liking or disliking" />
@@ -592,10 +580,9 @@ export const CommentCard = ({
 
         {replies.length > 0 && (
           <div>
-            {
-              !replyDropdown &&
+            {!replyDropdown && (
               <div
-                className="text-[#42A0FF] mt-3 flex cursor-pointer"
+                className="mt-3 flex cursor-pointer text-[#42A0FF]"
                 onClick={(e) => setReplyDropdown((prev) => !prev)}
               >
                 <Image
@@ -603,14 +590,14 @@ export const CommentCard = ({
                   width={16}
                   height={16}
                   alt="camera plus"
-                  className="w-4 h-4 mr-2 "
+                  className="mr-2 h-4 w-4"
                 />
                 {`${replies.length} ${replies.length > 1 ? "Replies" : "Reply"}`}
               </div>
-            }
+            )}
             {replyDropdown && (
               <div>
-                <div className="h-[1px] w-full mt-3 bg-white/10"></div>
+                <div className="mt-3 h-[1px] w-full bg-white/10"></div>
                 {replies.map((item: any, index: any) => (
                   <ReplyCard
                     key={item._id}
@@ -665,7 +652,12 @@ const ReplyInputDropdown = ({
     } else {
       if (session.data?.user.email) {
         try {
-          const response = await createReply(commentID, pageID, pageType, reply);
+          const response = await createReply(
+            commentID,
+            pageID,
+            pageType,
+            reply
+          );
 
           if (response) {
             console.log("reply has been posted");
@@ -691,7 +683,7 @@ const ReplyInputDropdown = ({
 
   return (
     <div className="relative">
-      <div className="relative flex my-3">
+      <div className="relative my-3 flex">
         {/* <div className="relative flex w-full items-center bg-[#172431] py-2.5 px-3 rounded">
           <input
             type="text"
@@ -702,42 +694,44 @@ const ReplyInputDropdown = ({
             onChange={(e) => setReply(e.target.value)}
           />
         </div> */}
-        {
-          session.data?.user.email ?
-            (
-              <form onSubmit={handlePostReply} className="mb-6 relative w-full items-center">
-                <div className="space-y-3">
-                  <Input
-                    placeholder="Add a reply"
-                    value={reply}
-                    onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setReply(e.target.value)}
-                    className="bg-[#1E2A36] border-[#1E2A36] focus:border-[#F2CA16] "
-                  />
+        {session.data?.user.email ? (
+          <form
+            onSubmit={handlePostReply}
+            className="relative mb-6 w-full items-center"
+          >
+            <div className="space-y-3">
+              <Input
+                placeholder="Add a reply"
+                value={reply}
+                onChange={(e: {
+                  target: { value: React.SetStateAction<string> };
+                }) => setReply(e.target.value)}
+                className="border-[#1E2A36] bg-[#1E2A36] focus:border-[#F2CA16]"
+              />
 
-                  {/* {error && (
+              {/* {error && (
           <p className="text-red-500 text-sm">{error}</p>
         )} */}
 
-                  <div className="flex justify-end">
-                    <Button
-                      type="submit"
-                      aria-disabled={isSubmitting}
-                      className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
-                    >
-                      {isSubmitting ? 'Replying...' : 'Reply'}
-                      <Send className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            )
-            :
-            ""
-        }
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  aria-disabled={isSubmitting}
+                  className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
+                >
+                  {isSubmitting ? "Replying..." : "Reply"}
+                  <Send className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </form>
+        ) : (
+          ""
+        )}
       </div>
       {replyAlert && <AlertMessage message="Please login before deleting" />}
       {replyInputAlert && <AlertMessage message="Input is empty" />}
-    </div >
+    </div>
   );
 };
 
@@ -785,11 +779,7 @@ const ReplyCard = ({
       console.log(replyUserID);
       if (userID == replyUserID) {
         try {
-          const response = await deleteReply(
-            replyID,
-            userID,
-            replyUserID
-          );
+          const response = await deleteReply(replyID, userID, replyUserID);
 
           if (response) {
             console.log("reply has been deleted");
@@ -856,44 +846,40 @@ const ReplyCard = ({
   };
 
   return (
-    <div className="flex mt-4 text-xs text-[14px]">
+    <div className="mt-4 flex text-[14px] text-xs">
       <div
-        className={`flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
       >
-        {username?.[0]?.toUpperCase() ||
-          "U"}
+        {username?.[0]?.toUpperCase() || "U"}
       </div>
       <div className="ml-4 flex-1">
         <div className="relative flex justify-between">
           <div>
             <span className="font-bold">{username}</span>
-            <span className="text-[#F2CA16] ml-2">User</span>
-            <span className="opacity-50 ml-2">
+            <span className="ml-2 text-[#F2CA16]">User</span>
+            <span className="ml-2 opacity-50">
               {dayjs(createdAt).fromNow()}
             </span>
           </div>
-          {
-            session && username == session.data?.user.username &&
-            (
-              <div onClick={(e) => setDropdown((prev) => !prev)}>
-                <Image
-                  src={ThreeDots}
-                  width={16}
-                  height={16}
-                  alt="dots"
-                  className="w-4 h-4 ml-4"
-                />
-              </div>
-            )
-          }
+          {session && username == session.data?.user.username && (
+            <div onClick={(e) => setDropdown((prev) => !prev)}>
+              <Image
+                src={ThreeDots}
+                width={16}
+                height={16}
+                alt="dots"
+                className="ml-4 h-4 w-4"
+              />
+            </div>
+          )}
           {dropdown && (
             <div
               ref={dropdownRef}
-              className="absolute grid rounded top-8 right-0 bg-[#172431] z-10"
+              className="absolute right-0 top-8 z-10 grid rounded bg-[#172431]"
             >
               <div
                 onClick={handleDeleteReply}
-                className={`cursor-pointer py-2 px-3 text-center`}
+                className={`cursor-pointer px-3 py-2 text-center`}
               >
                 Delete
               </div>
@@ -903,12 +889,12 @@ const ReplyCard = ({
             <AlertMessage message="Please login before deleting" />
           )} */}
         </div>
-        <div className=" my-3 h-max-[100px] md:h-auto ellipsis overflow-hidden text-justify">
+        <div className="h-max-[100px] ellipsis my-3 overflow-hidden text-justify md:h-auto">
           {censor.applyTo(reply, matches)}
         </div>
-        <div className="flex opacity-50 items-center">
+        <div className="flex items-center opacity-50">
           <div className="flex items-center" onClick={handleLiking}>
-            {likes.some(like => like.userId === userID) ? (
+            {likes.some((like) => like.userId === userID) ? (
               <div>
                 <Image
                   src={BlueThumbUp}
@@ -932,8 +918,8 @@ const ReplyCard = ({
             {likes.length > 0 && <div>{likes.length}</div>}
             <div></div>
           </div>
-          <div className="flex items-center ml-2" onClick={handleDisliking}>
-            {dislikes.some(dislike => dislike.userId === userID) ? (
+          <div className="ml-2 flex items-center" onClick={handleDisliking}>
+            {dislikes.some((dislike) => dislike.userId === userID) ? (
               <div>
                 <Image
                   src={BlueThumbsDown}
@@ -953,9 +939,7 @@ const ReplyCard = ({
                 />
               </div>
             )}
-            {dislikes.length > 0 && (
-              <div>{dislikes.length}</div>
-            )}
+            {dislikes.length > 0 && <div>{dislikes.length}</div>}
             <div></div>
           </div>
         </div>
@@ -970,7 +954,7 @@ const ReplyCard = ({
 
 const AlertMessage = ({ message }: { message: string }) => {
   return (
-    <div className="flex justify-center items-center text-sm text-black bg-[#F2CA16] py-2 px-4 mt-2 rounded">
+    <div className="mt-2 flex items-center justify-center rounded bg-[#F2CA16] px-4 py-2 text-sm text-black">
       {message}
     </div>
   );

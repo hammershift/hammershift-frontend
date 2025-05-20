@@ -32,7 +32,7 @@ import {
   MapPin,
   MessageSquare,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
