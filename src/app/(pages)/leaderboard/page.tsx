@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/app/components/card_component";
 import { Button } from "@/app/components/ui/button";
+import { Badge } from "@/app/components/badge";
 import {
   Tabs,
   TabsContent,
@@ -201,6 +202,7 @@ const LeaderboardPage = () => {
                   <TableRow className="bg-[#1E2A36]">
                     <TableHead className="w-16">Rank</TableHead>
                     <TableHead>Player</TableHead>
+                    <TableHead>Type</TableHead>
                     <TableHead className="">Predictions</TableHead>
                     {/* <TableHead>Win Rate</TableHead> */}
                     <TableHead className="">Points</TableHead>
@@ -218,6 +220,9 @@ const LeaderboardPage = () => {
                           <TableCell>
                             <div className="h-4 w-32 rounded bg-[#1E2A36]"></div>
                           </TableCell>
+                          <TableCell>
+                            <div className="h-4 w-32 rounded bg-[#1E2A36]"></div>
+                          </TableCell>
                           <TableCell className="">
                             <div className="h-4 w-16 rounded bg-[#1E2A36]"></div>
                           </TableCell>
@@ -225,7 +230,7 @@ const LeaderboardPage = () => {
                               <div className="h-4 w-16 rounded bg-[#1E2A36]"></div>
                             </TableCell> */}
                           <TableCell className="">
-                            <div className="ml-auto h-4 w-20 rounded bg-[#1E2A36]"></div>
+                            <div className="h-4 w-20 rounded bg-[#1E2A36]"></div>
                           </TableCell>
                         </TableRow>
                       ))
@@ -248,6 +253,17 @@ const LeaderboardPage = () => {
                         </TableCell>
                         <TableCell className="font-medium">
                           {player.user.username}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            className={
+                              player.user.role === "USER"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-purple-100 text-purple-800"
+                            }
+                          >
+                            {player.user.role}
+                          </Badge>
                         </TableCell>
                         <TableCell className="">
                           {player.totalPredictions}
