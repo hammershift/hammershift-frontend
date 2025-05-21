@@ -8,9 +8,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(email: string, username: string, url: string) {
   const { data, error } = await resend.emails.send({
-    from: "",
+    from: process.env.EMAIL_FROM || "",
     to: email,
-    subject: "Hello World",
+    subject: "Welcome to Velocity Markets!",
     react: EmailTemplate({ username, url }),
   });
 
