@@ -31,7 +31,7 @@ const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
 const CarViewPage = ({ params }: { params: { id: string } }) => {
   const urlPath = useParams();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [carData, setCarData] = useState<any>(null);
   const [wagersData, setWagersData] = useState<any>(null);
   const [playerNum, setPlayerNum] = useState(0);

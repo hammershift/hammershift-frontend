@@ -1,15 +1,14 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import clientPromise from '@/lib/mongodb';
-import { NextRequest, NextResponse } from 'next/server';
-import { ObjectId } from 'mongodb';
-import connectToDB from '@/lib/mongoose';
-import Users from '@/models/user.model';
+import { authClient } from "@/lib/auth-client";
+import clientPromise from "@/lib/mongodb";
+import { NextRequest, NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
+import connectToDB from "@/lib/mongoose";
+import Users from "@/models/user.model";
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
+  const session = await authClient.getSession();
+  if (!session || !session.data) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
 
   const { about } = await req.json();
@@ -18,40 +17,47 @@ export async function POST(req: NextRequest) {
     await connectToDB();
 
     const updatedUser = await Users.findOneAndUpdate(
-      { email: session.user.email },
+      { email: session.data.user.email },
       {
         $set: { about },
       },
       {
         upsert: true,
-        returnDocument: 'after',
+        returnDocument: "after",
       }
     );
 
     return NextResponse.json(
       {
-        message: 'Profile updated successfully',
+        message: "Profile updated successfully",
         user: updatedUser,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error during userInfo POST:', error);
-    return NextResponse.json({ message: 'Server error during userInfo POST' }, { status: 500 });
+    console.error("Error during userInfo POST:", error);
+    return NextResponse.json(
+      { message: "Server error during userInfo POST" },
+      { status: 500 }
+    );
   }
 }
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  // if not  logged in, return error
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 400 });
-  }
+  // const { data: session } = await authClient.useSession();
+  // console.log(session);
+  // // if not  logged in, return error
+  // if (!session) {
+  //   return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
+  // }
 
-  const email = req.nextUrl.searchParams.get('email');
+  const email = req.nextUrl.searchParams.get("email");
   //if ID is not provided, return error
   if (!email) {
-    return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
+    return NextResponse.json(
+      { message: "Missing required fields" },
+      { status: 400 }
+    );
   }
   try {
     await connectToDB();
@@ -59,8 +65,11 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ user: existingUser }, { status: 200 });
   } catch (error) {
-    console.error('Error during userInfo GET:', error);
-    return NextResponse.json({ message: 'Server error during userInfo GET' }, { status: 500 });
+    console.error("Error during userInfo GET:", error);
+    return NextResponse.json(
+      { message: "Server error during userInfo GET" },
+      { status: 500 }
+    );
   }
 }
 

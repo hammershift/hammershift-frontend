@@ -8,7 +8,6 @@ import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { Checkbox } from "@/app/components/ui/checkbox";
-import { signIn, useSession } from "next-auth/react";
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
@@ -25,7 +24,7 @@ export default function CustomSignupPage() {
     isOver18: false,
   });
 
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
 
   useEffect(() => {
     const handleSession = async () => {

@@ -13,7 +13,6 @@ import Onfido from "../../../../public/images/onfido.svg";
 import SingleNeutral from "../../../../public/images/single-neutral-id-card-3.svg";
 import UserImage from "../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
 import PasswordInput from "@/app/components/password_input";
 import { BounceLoader, PulseLoader } from "react-spinners";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
@@ -38,7 +37,7 @@ const CreateAccount = () => {
 
   // Forgot/Reset Password
   const [resetEmail, setResetEmail] = useState("");
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
 
   useEffect(() => {
     const handleSession = async () => {
@@ -152,40 +151,40 @@ const CreateAccount = () => {
   };
 
   // for Google signin
-  const handleGoogleSignIn = async (provider: string) => {
-    try {
-      const result = await signIn(provider, { callbackUrl: "/" });
-      if (result?.url) {
-        window.location.href = result.url;
-      }
-    } catch (error) {
-      console.error(`Error during ${provider} sign in:`, error);
-    }
-  };
+  // const handleGoogleSignIn = async (provider: string) => {
+  //   try {
+  //     const result = await signIn(provider, { callbackUrl: "/" });
+  //     if (result?.url) {
+  //       window.location.href = result.url;
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error during ${provider} sign in:`, error);
+  //   }
+  // };
 
-  // for Facebook sign-in
-  const handleFacebookSignIn = async (provider: string) => {
-    try {
-      const result = await signIn("facebook", { callbackUrl: "/" });
-      if (result?.url) {
-        window.location.href = result.url;
-      }
-    } catch (error) {
-      console.error("Error during Facebook sign in:", error);
-    }
-  };
+  // // for Facebook sign-in
+  // const handleFacebookSignIn = async (provider: string) => {
+  //   try {
+  //     const result = await signIn("facebook", { callbackUrl: "/" });
+  //     if (result?.url) {
+  //       window.location.href = result.url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during Facebook sign in:", error);
+  //   }
+  // };
 
-  // for Twitter sign-in
-  const handleTwitterSignIn = async (provider: string) => {
-    try {
-      const result = await signIn("twitter", { callbackUrl: "/" });
-      if (result?.url) {
-        window.location.href = result.url;
-      }
-    } catch (error) {
-      console.error("Error during Twitter sign in:", error);
-    }
-  };
+  // // for Twitter sign-in
+  // const handleTwitterSignIn = async (provider: string) => {
+  //   try {
+  //     const result = await signIn("twitter", { callbackUrl: "/" });
+  //     if (result?.url) {
+  //       window.location.href = result.url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during Twitter sign in:", error);
+  //   }
+  // };
 
   return (
     <div className="top-0 z-[-1] mt-16 flex w-screen items-center justify-center md:mt-0 md:h-screen">
