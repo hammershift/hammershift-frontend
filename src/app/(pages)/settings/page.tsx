@@ -48,6 +48,8 @@ export default function Settings() {
       setName(data?.user.name);
       setUsername(data?.user.username!);
       getUserInfo(data?.user.email);
+    } else {
+      router.push("/login_page");
     }
   }, [data]);
 
