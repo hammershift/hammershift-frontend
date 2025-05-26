@@ -1,12 +1,23 @@
-import { Credentials } from "@/app/types/userTypes";
-import clientPromise from "@/lib/mongodb";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import clientPromise from "@/lib/mongodb";
+import bcrypt from "bcrypt";
+import { User, Credentials } from "@/app/types/userTypes";
 import { NextAuthOptions, getServerSession } from "next-auth";
+import { ObjectId } from "mongodb";
 
-import Users from "@/models/user.model";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
+import TwitterProvider from "next-auth/providers/twitter";
 import EmailProvider from "next-auth/providers/email";
 import connectToDB from "./mongoose";
+import Users from "@/models/user.model";
+
+async function doesEmailExist(email: string): Promise<boolean> {
+  await connectToDB();
+  const user = await Users.findOne({ email });
+  return !!user;
+}
 
 // Google providers
 function getGoogleCredentials(): { clientId: string; clientSecret: string } {
@@ -170,6 +181,9 @@ export const authOptions: NextAuthOptions = {
         token.provider = account.provider;
         // token.stripeCustomerId = user.stripeCustomerId;
       }
+      const existingUser = await doesEmailExist(token.email);
+      token.emailExists = !!existingUser;
+
       // if (isNewUser && existingUser && typeof existingUser !== 'boolean') {
       //   token.isNewUser = false;
       //   if ((existingUser as any).provider !== account.provider) {
@@ -183,7 +197,7 @@ export const authOptions: NextAuthOptions = {
       await connectToDB();
       const dbUser = await Users.findOne({ email: token.email });
 
-      if (dbUser) {
+      if (existingUser) {
         token.fullName = dbUser.fullName;
         token.username = dbUser.username;
         // token.image = dbUser.image;

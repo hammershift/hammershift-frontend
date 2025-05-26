@@ -69,7 +69,7 @@ const GuessTheHammer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const freePlayActive = true; // TODO: add check if auction is active and current date isn't 1 day before the deadline
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session } = useSession();
 
   const formatTimeLeft = (dateString: string | undefined) => {
     if (dateString === undefined) return "No end date";
@@ -136,7 +136,7 @@ const GuessTheHammer = () => {
   const handlePredictionSubmit = async (e: { preventDefault: () => void }) => {
     if (e) e.preventDefault();
 
-    if (!session || !session?.user || !session?.user?.username) {
+    if (session === null) {
       setError("You must be logged in to make a prediction.");
       return;
     }
@@ -243,7 +243,7 @@ const GuessTheHammer = () => {
 
           try {
             // const userData = await getUserData();
-            if (sessionStatus == 'authenticated' && session?.user && auctionId) {
+            if (session?.user && auctionId) {
               try {
                 //TODO get user specific prediction, maybe filter just from the predictions array
                 const existingPredictions = await getPredictionDataFilter(
@@ -289,7 +289,7 @@ const GuessTheHammer = () => {
       }
     }
     loadData();
-  }, [session, sessionStatus]);
+  }, [session]);
   return (
     <div className="container mx-auto px-4 py-8">
       <Button

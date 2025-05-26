@@ -1,4 +1,3 @@
-import { authOptions } from "@/lib/auth";
 import SessionProvider from "@/providers/sessionProvider";
 import type { Metadata } from "next";
 import { authClient } from "@/lib/auth-client";
@@ -32,6 +31,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { data: session } = await authClient.getSession();
 
   return (
     <html lang="en">
