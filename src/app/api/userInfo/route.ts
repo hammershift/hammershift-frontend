@@ -1,13 +1,15 @@
-import { authClient } from "@/lib/auth-client";
 import clientPromise from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
-
+import { auth } from "@/lib/betterAuth";
+import { headers } from "next/headers";
 export async function POST(req: NextRequest) {
-  const session = await authClient.getSession();
-  if (!session || !session.data) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
 
@@ -17,7 +19,7 @@ export async function POST(req: NextRequest) {
     await connectToDB();
 
     const updatedUser = await Users.findOneAndUpdate(
-      { email: session.data.user.email },
+      { email: session.user.email },
       {
         $set: { about },
       },

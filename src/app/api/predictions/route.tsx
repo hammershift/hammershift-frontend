@@ -1,7 +1,8 @@
 import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
 import { NextRequest, NextResponse } from "next/server";
-
+import { auth } from "@/lib/betterAuth";
+import { headers } from "next/headers";
 export async function GET(req: NextRequest) {
   try {
     await connectToDB();
@@ -45,8 +46,21 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    await connectToDB();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
+    }
+
     const prediction = await req.json();
+    if (
+      session.user.id !== prediction.user.userId ||
+      session.user.username !== prediction.user.username
+    ) {
+      return NextResponse.json({ message: "User mismatch" }, { status: 400 });
+    }
+    await connectToDB();
 
     const newPrediction = await Predictions.create(prediction);
     return NextResponse.json(newPrediction, { status: 201 });
