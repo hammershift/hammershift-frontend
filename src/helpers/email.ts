@@ -5,7 +5,7 @@ import {
 import { Resend } from "resend";
 
 if (!process.env.EMAIL_SERVER_PASSWORD) {
-  throw new Error("RESEND_API_KEY is not defined");
+  throw new Error("EMAIL_SERVER_PASSWORD is not defined");
 }
 const resend = new Resend(process.env.EMAIL_SERVER_PASSWORD);
 
