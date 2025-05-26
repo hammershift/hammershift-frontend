@@ -223,14 +223,14 @@ const CreateAccount = () => {
                 <label>Username</label>
                 <Input
                   className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5"
-                  type="email"
+                  type="text"
                   placeholder="Enter username here"
                   value={username}
                   onChange={(e: { target: { value: string } }) =>
                     setUsername(e.target.value.toLowerCase())
                   }
-                  name="email"
-                  autoComplete="email"
+                  name="username"
+                  autoComplete="username"
                   required
                 />
                 <div>
