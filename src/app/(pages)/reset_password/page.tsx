@@ -24,6 +24,7 @@ const ResetPassword = () => {
     e.preventDefault();
     if (password !== passwordConfirm) {
       setError("Passwords do not match");
+      setSuccess("");
       return;
     }
     try {
@@ -39,6 +40,7 @@ const ResetPassword = () => {
       }
       setIsLoading(false);
       setSuccess("Password reset successfully");
+      setError("");
       setTimeout(() => {
         router.push("/login_page");
       }, 3000);

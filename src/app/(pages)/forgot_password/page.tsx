@@ -26,11 +26,13 @@ const ForgotPassword = () => {
 
       if (error) {
         setError(error.message!);
+        setSuccess("");
         setIsLoading(false);
         return;
       } else {
         setIsLoading(false);
         setSuccess("Please check your email for password reset link.");
+        setError("");
       }
     } catch (e) {
       console.log(e);
