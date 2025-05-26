@@ -233,7 +233,16 @@ const CreateAccount = () => {
                   autoComplete="email"
                   required
                 />
-                <label>Password</label>
+                <div>
+                  <label className="mr-2">Password</label>
+                  <Link
+                    href="/forgot_password"
+                    className="text-xs text-[#F2CA16]"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+
                 <Input
                   className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5"
                   type="password"
