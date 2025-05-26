@@ -13,8 +13,7 @@ export default function AuctionHero() {
                 </h1>
                 <h3 className="mb-7 text-lg md:text-xl text-center">
                     {/* Shift Your Perspective, Hammer Down on Your Predictions */}
-                    Predict the hammer prices of classic car auctions and win
-                    prizes
+                    Predict the hammer prices of collectible, rare, classic, and exotic car auctions and win prizes
                 </h3>
                 {/* <p className="text-lg text-center">
           Join the auction action with Hammershift! Your car auction savvy could

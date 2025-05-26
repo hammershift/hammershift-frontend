@@ -4,8 +4,10 @@ import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+
 import { auth } from "@/lib/betterAuth";
 import { headers } from "next/headers";
+
 export async function GET(req: NextRequest) {
   const session = await auth.api.getSession({
     headers: await headers(),

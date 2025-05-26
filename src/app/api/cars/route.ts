@@ -1,4 +1,3 @@
-import clientPromise from "@/lib/mongodb";
 import connectToDB from "@/lib/mongoose";
 import Auctions from "@/models/auction.model";
 import mongoose from "mongoose";
@@ -36,7 +35,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(auctions);
     }
     // api/cars to get all cars
-    console.log("Fetching all cars...");
     /*
       price range values:
       0: all
@@ -70,7 +68,7 @@ export async function GET(req: NextRequest) {
       isActive: true,
       "attributes.0.value": priceFilter,
     };
-    console.log(query);
+
     const options = {
       offset: offset,
       limit: limit,
