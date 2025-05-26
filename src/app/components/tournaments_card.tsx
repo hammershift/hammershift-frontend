@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -56,23 +56,23 @@ const TournamentsCard = ({
     return () => clearInterval(intervalId);
   }, [deadline, tournament_deadline]);
 
-
   return (
-    <div className="w-full flex justify-center items-center mt-4">
-      <div className="hover:scale-105 transform transition-all duration-100">
-        <div className="relative grid grid-cols-3 gap-4 px-2 sm:px-4 z-10">
+    <div className="mt-4 flex w-full items-center justify-center">
+      <div className="transform transition-all duration-100 hover:scale-105">
+        <div className="relative z-10 grid grid-cols-3 gap-4 px-2 sm:px-4">
           {images && images.length > 0 && (
             <>
-              <div className="flex justify-end ">
+              <div className="flex justify-end">
                 <Image
                   src={images[0] === undefined ? DefaultOne : images[0]}
                   width={90}
                   height={90}
                   alt="image"
-                  className={`w-[90px] h-[90px] absolute object-cover rounded-full top-[10px] opacity-[50%] ${pathname === "/tournaments"
-                    ? "lg:left-[160px] lg:w-[90px] lg:h-[90px] lg:absolute lg:object-cover lg:rounded-full lg:top-[10px]"
-                    : null
-                    }`}
+                  className={`absolute top-[10px] h-[90px] w-[90px] rounded-full object-cover opacity-[50%] ${
+                    pathname === "/tournaments"
+                      ? "lg:absolute lg:left-[160px] lg:top-[10px] lg:h-[90px] lg:w-[90px] lg:rounded-full lg:object-cover"
+                      : null
+                  }`}
                 />
               </div>
               <div className="flex justify-center">
@@ -81,7 +81,7 @@ const TournamentsCard = ({
                   width={100}
                   height={100}
                   alt="image"
-                  className="w-[100px] h-[100px] absolute object-cover rounded-full "
+                  className="absolute h-[100px] w-[100px] rounded-full object-cover"
                 />
               </div>
               <div className="flex justify-start">
@@ -90,18 +90,20 @@ const TournamentsCard = ({
                   width={90}
                   height={90}
                   alt="image"
-                  className={`w-[90px] h-[90px] absolute object-cover rounded-full top-[10px] opacity-[50%] ${pathname === "/tournaments"
-                    ? "lg:right-[160px] lg:w-[90px] lg:h-[90px] lg:absolute lg:object-cover lg:rounded-full lg:top-[10px]"
-                    : null
-                    }`}
+                  className={`absolute top-[10px] h-[90px] w-[90px] rounded-full object-cover opacity-[50%] ${
+                    pathname === "/tournaments"
+                      ? "lg:absolute lg:right-[160px] lg:top-[10px] lg:h-[90px] lg:w-[90px] lg:rounded-full lg:object-cover"
+                      : null
+                  }`}
                 />
               </div>
             </>
           )}
         </div>
         <div
-          className={`bg-[#1A2C3D] ${pathname === "/tournaments" ? "lg:w-[650px]" : "lg:w-[416px]"
-            } text-center p-4 rounded-lg mt-12 pt-20 w-[346px]`}
+          className={`bg-[#1A2C3D] ${
+            pathname === "/tournaments" ? "lg:w-[650px]" : "lg:w-[416px]"
+          } mt-12 w-[346px] rounded-lg p-4 pt-20 text-center`}
         >
           <div className="text-[18px] font-bold">{title}</div>
           <div className="flex items-center justify-center">
@@ -110,16 +112,14 @@ const TournamentsCard = ({
               width={20}
               height={20}
               alt="dollar"
-              className="w-5 h-5 mx-1"
+              className="mx-1 h-5 w-5"
             />
-            <div className="text-white font-bold">${pot}</div>
+            <div className="font-bold text-white">${pot}</div>
           </div>
           {tournamentEnded ? (
-            <p className="text-red-600 font-bold">Tournament has ended</p>
+            <p className="font-bold text-red-600">Tournament has ended</p>
           ) : buyInEnded ? (
-            <p className="text-green-600 font-bold">
-              Buy-in period has ended
-            </p>
+            <p className="font-bold text-green-600">Buy-in period has ended</p>
           ) : (
             <div className="flex items-center justify-center">
               <Image
@@ -127,18 +127,18 @@ const TournamentsCard = ({
                 width={20}
                 height={20}
                 alt="dollar"
-                className="w-5 h-5 mx-1"
+                className="mx-1 h-5 w-5"
               />
-              <div className="text-green-600 font-bold">
+              <div className="font-bold text-green-600">
                 {timerValues.days}:{timerValues.hours}:{timerValues.minutes}:
                 {timerValues.seconds}
               </div>
             </div>
           )}
-          <div className="h-40 px-2 py-1 my-3 bg-[#1A2C3D]">
+          <div className="my-3 h-40 bg-[#1A2C3D] px-2 py-1">
             {tournamentEnded ? (
               tournamentPoints && tournamentPoints.length === 0 ? (
-                <div className="bg-[#1A2C3D] p-4 h-36 flex justify-center items-center gap-2 rounded-[4px] my-3">
+                <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#1A2C3D] p-4">
                   <div>Tournament has ended, no players joined</div>
                 </div>
               ) : (
@@ -149,18 +149,20 @@ const TournamentsCard = ({
                       .map((item: any, index: number) => (
                         <div
                           key={index}
-                          className="flex items-center justify-between my-3"
+                          className="my-3 flex items-center justify-between"
                         >
                           <div className="flex items-center">
                             <div>{index + 1}</div>
                             <Image
                               src={
-                                item.user.image ? item.user.image : avatars[index]
+                                item.user.image
+                                  ? item.user.image
+                                  : avatars[index]
                               }
                               width={40}
                               height={40}
                               alt={"avatar"}
-                              className="w-[40px] h-[40px] mx-3 rounded-full"
+                              className="mx-3 h-[40px] w-[40px] rounded-full"
                             />
                             <div>
                               {sortedTournamentPoints.length > 2 && index === 0
@@ -168,7 +170,7 @@ const TournamentsCard = ({
                                 : item.user.username}{" "}
                             </div>
                           </div>
-                          <div className="text-[#F2CA16] font-bold">
+                          <div className="font-bold text-[#F2CA16]">
                             {item.auctionScores && item.auctionScores.length > 0
                               ? `${item.totalScore} pts.`
                               : "0 pts."}
@@ -180,7 +182,7 @@ const TournamentsCard = ({
             ) : buyInEnded ? (
               <>
                 {tournamentPoints && tournamentPoints.length === 0 ? (
-                  <div className="bg-[#1A2C3D] p-4 h-36 flex justify-center items-center gap-2 rounded-[4px] my-3">
+                  <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#1A2C3D] p-4">
                     <div>Buy-in has ended, no players joined</div>
                   </div>
                 ) : (
@@ -191,7 +193,7 @@ const TournamentsCard = ({
                         .map((item: any, index: number) => (
                           <div
                             key={index}
-                            className="flex items-center justify-between my-3"
+                            className="my-3 flex items-center justify-between"
                           >
                             <div className="flex items-center">
                               <div>{index + 1}</div>
@@ -204,12 +206,13 @@ const TournamentsCard = ({
                                 width={40}
                                 height={40}
                                 alt={"avatar"}
-                                className="w-[40px] h-[40px] mx-3 rounded-full"
+                                className="mx-3 h-[40px] w-[40px] rounded-full"
                               />
                               <div>{item.user.username}</div>
                             </div>
-                            <div className="text-[#F2CA16] font-bold">
-                              {item.auctionScores && item.auctionScores.length > 0
+                            <div className="font-bold text-[#F2CA16]">
+                              {item.auctionScores &&
+                              item.auctionScores.length > 0
                                 ? `${item.totalScore} pts.`
                                 : "0 pts."}
                             </div>
@@ -221,7 +224,7 @@ const TournamentsCard = ({
             ) : (
               <>
                 {tournamentPoints && tournamentPoints.length === 0 ? (
-                  <div className="bg-[#1A2C3D] p-4 h-36 flex justify-center items-center gap-2 rounded-[4px] my-3">
+                  <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#1A2C3D] p-4">
                     <div className="flex items-center">
                       {" "}
                       <Image
@@ -229,7 +232,7 @@ const TournamentsCard = ({
                         width={40}
                         height={40}
                         alt={"avatar"}
-                        className="w-[40px] h-[40px] mx-1 rounded-full"
+                        className="mx-1 h-[40px] w-[40px] rounded-full"
                       />
                       <div>Join this tournament</div>
                     </div>
@@ -242,7 +245,7 @@ const TournamentsCard = ({
                         .map((item: any, index: number) => (
                           <div
                             key={index}
-                            className="flex items-center justify-between my-3"
+                            className="my-3 flex items-center justify-between"
                           >
                             <div className="flex items-center">
                               <Image
@@ -254,7 +257,7 @@ const TournamentsCard = ({
                                 width={40}
                                 height={40}
                                 alt={"avatar"}
-                                className="w-[40px] h-[40px] mx-3 rounded-full"
+                                className="mx-3 h-[40px] w-[40px] rounded-full"
                               />
                               <div>
                                 {session?.user.username === item.user.username
@@ -272,21 +275,21 @@ const TournamentsCard = ({
           <div>
             {canceledTournament ? (
               <button
-                className="text-black bg-white font-bold rounded-md h-10 w-full"
+                className="h-10 w-full rounded-md bg-white font-bold text-black"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 Tournament Cancelled
               </button>
             ) : tournamentEnded ? (
               <button
-                className="text-black bg-[#f2ca16] font-bold rounded-md h-10 w-full"
+                className="h-10 w-full rounded-md bg-[#f2ca16] font-bold text-black"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 View Results 🏆
               </button>
             ) : (
               <button
-                className="text-black bg-white font-bold rounded-md h-10 w-full"
+                className="h-10 w-full rounded-md bg-white font-bold text-black"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 {/* View Results */}
