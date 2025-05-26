@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { Types } from "mongoose";
 import { Badge } from "@/app/components/badge";
 import {
   Card,
@@ -173,10 +173,10 @@ const GuessTheHammer = () => {
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
-          userId: session.user._id,
-          fullName: session.user.fullName,
-          username: session.user.username,
-          role: session.user.role,
+          userId: new Types.ObjectId(session.user.id), //TODO: change to string because the mongoose import is causing module not found errors. Instead convert to objectId on server side
+          fullName: session.user.name,
+          username: session.user.username!,
+          role: "USER", //should be default USER since agents can't access this page
         },
         isActive: true,
       };
@@ -249,7 +249,7 @@ const GuessTheHammer = () => {
                 const existingPredictions = await getPredictionDataFilter(
                   auctionId,
                   "free_play",
-                  session.user.username
+                  session.user.username!
                 );
 
                 if (existingPredictions && existingPredictions.length > 0) {

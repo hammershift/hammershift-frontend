@@ -88,7 +88,7 @@ function EditProfile() {
                 <input
                   type="text"
                   name="fullName"
-                  defaultValue={data?.user.fullName}
+                  defaultValue={data?.user.name}
                   className="mb-6 mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none sm:mb-0"
                   onChange={(e) =>
                     setEdits({
@@ -103,7 +103,7 @@ function EditProfile() {
             <input
               type="text"
               name="username"
-              defaultValue={data?.user.username}
+              defaultValue={data?.user.username!}
               className="mb-6 mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none"
               onChange={(e) =>
                 setEdits({

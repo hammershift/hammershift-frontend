@@ -52,7 +52,7 @@ const SingleViewPage = ({
   params: { auction_id: string; tournament_id: string };
 }) => {
   const urlPath = useParams();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const [carData, setCarData] = useState<any>(null);
   const [wagersData, setWagersData] = useState<any>(null);

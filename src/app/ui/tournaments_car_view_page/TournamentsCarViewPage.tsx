@@ -1238,7 +1238,7 @@ export const TournamentLeaderboard = ({ tournamentPointsData }: any) => {
                       />
                       <div className="text-sm">
                         <div className="font-bold">
-                          {session?.user._id === item.user._id
+                          {session?.user.id === item.user._id
                             ? "You"
                             : item.user.username}
                         </div>

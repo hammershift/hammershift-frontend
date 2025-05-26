@@ -20,7 +20,7 @@ export default function FreePlaySuccessPage() {
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     loadPredictionData();

@@ -77,9 +77,9 @@ const WagerModal: React.FC<WagerModalProps> = ({
   const sessionData = {
     user: {
       _id: session?.user.id,
-      fullName: session?.user.fullName,
-      username: session?.user.username,
-      image: session?.user.image,
+      fullName: session?.user.name!,
+      username: session?.user.username!,
+      image: session?.user.image!,
     },
   };
 

@@ -39,7 +39,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
   const { data: session } = useSession();
   const sessionData = {
     _id: session?.user.id,
-    fullName: session?.user.fullName,
+    fullName: session?.user.name,
     username: session?.user.username,
     image: session?.user.image,
   };
