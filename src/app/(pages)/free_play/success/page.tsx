@@ -24,7 +24,7 @@ export default function FreePlaySuccessPage() {
 
   useEffect(() => {
     loadPredictionData();
-  }, [session, status]);
+  }, [session]);
 
   const loadPredictionData = async () => {
     try {

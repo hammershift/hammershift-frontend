@@ -10,14 +10,16 @@ import { authClient } from "@/lib/auth-client";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
+import { useSearchParams } from "next/navigation";
 const ResetPassword = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
-  const token = new URLSearchParams(window.location.search).get("token");
+  const [token] = useState(searchParams.get("token"));
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== passwordConfirm) {

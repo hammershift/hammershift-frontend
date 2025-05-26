@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `${process.env.NEXTAUTH_URL}/metadata.png`,
+        url: `${process.env.BETTER_AUTH_URL}/metadata.png`,
         width: 1200,
         height: 630,
         alt: "Velocity Markets",
