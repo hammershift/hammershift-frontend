@@ -4,10 +4,10 @@ import {
 } from "@/app/components/email-template";
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
+if (!process.env.EMAIL_SERVER_PASSWORD) {
   throw new Error("RESEND_API_KEY is not defined");
 }
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.EMAIL_SERVER_PASSWORD);
 
 interface EmailObject {
   from: string;
