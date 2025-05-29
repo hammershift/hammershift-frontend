@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { checkUsernameExistence } from "@/lib/data";
 interface UserExistenceResponse {
   emailExists: boolean;
 }
@@ -104,7 +105,16 @@ const CreateAccount = () => {
       });
 
       if (error) {
-        setError(error.message!);
+        console.log(error);
+        if (error.message! === "invalid username or password") {
+          const data = await checkUsernameExistence(username);
+          if (data.exists && !data.hasPassword)
+            setError("Account doesn't have a password set. Please use 'Forgot Password' to create one.");
+          else
+            setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
+        }
+        else
+          setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
         setIsLoading(false);
         return;
       }
@@ -238,7 +248,7 @@ const CreateAccount = () => {
                   placeholder="Enter username here"
                   value={username}
                   onChange={(e: { target: { value: string } }) =>
-                    setUsername(e.target.value.toLowerCase())
+                    setUsername(e.target.value)
                   }
                   name="username"
                   autoComplete="username"

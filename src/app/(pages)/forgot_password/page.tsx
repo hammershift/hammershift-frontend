@@ -25,7 +25,7 @@ const ForgotPassword = () => {
       });
 
       if (error) {
-        setError(error.message!);
+        setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
         setSuccess("");
         setIsLoading(false);
         return;
