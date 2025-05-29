@@ -4,10 +4,13 @@ import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/betterAuth";
+import { headers } from "next/headers";
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   if (!session) {
-    console.log("Unauthorized: No session found");
     return NextResponse.json(
       { message: "Unauthorized request" },
       { status: 401 }

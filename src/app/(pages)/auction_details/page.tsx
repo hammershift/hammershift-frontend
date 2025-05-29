@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { Types } from "mongoose";
 import { Badge } from "@/app/components/badge";
 import {
   Card,
@@ -32,7 +32,7 @@ import {
   MapPin,
   MessageSquare,
 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -69,7 +69,7 @@ const GuessTheHammer = () => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const freePlayActive = true; // TODO: add check if auction is active and current date isn't 1 day before the deadline
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session } = useSession();
 
   const formatTimeLeft = (dateString: string | undefined) => {
     if (dateString === undefined) return "No end date";
@@ -136,7 +136,7 @@ const GuessTheHammer = () => {
   const handlePredictionSubmit = async (e: { preventDefault: () => void }) => {
     if (e) e.preventDefault();
 
-    if (!session || !session?.user || !session?.user?.username) {
+    if (session === null) {
       setError("You must be logged in to make a prediction.");
       return;
     }
@@ -173,10 +173,10 @@ const GuessTheHammer = () => {
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
-          userId: session.user._id,
-          fullName: session.user.fullName,
-          username: session.user.username,
-          role: session.user.role,
+          userId: new Types.ObjectId(session.user.id), //TODO: change to string because the mongoose import is causing module not found errors. Instead convert to objectId on server side
+          fullName: session.user.name,
+          username: session.user.username!,
+          role: "USER", //should be default USER since agents can't access this page
         },
         isActive: true,
       };
@@ -243,13 +243,13 @@ const GuessTheHammer = () => {
 
           try {
             // const userData = await getUserData();
-            if (sessionStatus == 'authenticated' && session?.user && auctionId) {
+            if (session?.user && auctionId) {
               try {
                 //TODO get user specific prediction, maybe filter just from the predictions array
                 const existingPredictions = await getPredictionDataFilter(
                   auctionId,
                   "free_play",
-                  session.user.username
+                  session.user.username!
                 );
 
                 if (existingPredictions && existingPredictions.length > 0) {
@@ -289,7 +289,7 @@ const GuessTheHammer = () => {
       }
     }
     loadData();
-  }, [session, sessionStatus]);
+  }, [session]);
   return (
     <div className="container mx-auto px-4 py-8">
       <Button

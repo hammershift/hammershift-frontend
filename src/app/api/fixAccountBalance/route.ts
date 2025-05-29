@@ -1,12 +1,14 @@
-import { authOptions } from '@/lib/auth';
-import clientPromise from '@/lib/mongodb';
-import { getServerSession } from 'next-auth';
-import { NextRequest, NextResponse } from 'next/server';
-
+import { authOptions } from "@/lib/auth";
+import clientPromise from "@/lib/mongodb";
+import { auth } from "@/lib/betterAuth";
+import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers";
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   if (!session) {
-    return new Response('Unauthorized', { status: 401 });
+    return new Response("Unauthorized", { status: 401 });
   }
 
   try {
@@ -15,14 +17,14 @@ export async function GET(req: NextRequest) {
 
     // fetch all users without balance field
     const usersWithoutBalance = await db
-      .collection('users')
+      .collection("users")
       .find({ balance: { $exists: false } })
       .toArray();
 
     const numUsersWithoutBalance = usersWithoutBalance.length;
     if (numUsersWithoutBalance === 0) {
-      console.log('All users have a balance');
-      return NextResponse.json({ message: 'All users have a balance' });
+      console.log("All users have a balance");
+      return NextResponse.json({ message: "All users have a balance" });
     }
     console.log(`${numUsersWithoutBalance} users found without a balance.`);
 
@@ -30,17 +32,24 @@ export async function GET(req: NextRequest) {
       console.log(`User ID: ${user._id}`);
     });
 
-    return NextResponse.json({ users: usersWithoutBalance.map((user) => user._id) });
+    return NextResponse.json({
+      users: usersWithoutBalance.map((user) => user._id),
+    });
   } catch (error) {
-    console.error('GET Users without Balance - Internal server error:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("GET Users without Balance - Internal server error:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -48,14 +57,14 @@ export async function POST(req: NextRequest) {
     const db = client.db();
 
     const usersWithoutBalance = await db
-      .collection('users')
+      .collection("users")
       .find({ balance: { $exists: false } })
       .toArray();
     const numUsersWithoutBalance = usersWithoutBalance.length;
 
     if (numUsersWithoutBalance === 0) {
-      console.log('All users have a balance.');
-      return NextResponse.json({ message: 'All users have a balance.' });
+      console.log("All users have a balance.");
+      return NextResponse.json({ message: "All users have a balance." });
     }
 
     console.log(`${numUsersWithoutBalance} users found without a balance.`);
@@ -72,13 +81,20 @@ export async function POST(req: NextRequest) {
     }));
 
     if (bulkOperations.length > 0) {
-      await db.collection('users').bulkWrite(bulkOperations);
-      console.log(`${numUsersWithoutBalance} users updated with a balance of 100.`);
+      await db.collection("users").bulkWrite(bulkOperations);
+      console.log(
+        `${numUsersWithoutBalance} users updated with a balance of 100.`
+      );
     }
 
-    return NextResponse.json({ users: usersWithoutBalance.map((user) => user._id) });
+    return NextResponse.json({
+      users: usersWithoutBalance.map((user) => user._id),
+    });
   } catch (error) {
-    console.error('POST Users without Balance - Internal server error:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    console.error("POST Users without Balance - Internal server error:", error);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
@@ -26,14 +26,12 @@ import { getInitials } from "@/lib/utils";
 import { CircleDollarSign, Clock, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
-import {
-  default as DollarIcon
-} from "../../../../public/images/dollar.svg";
+import { default as DollarIcon } from "../../../../public/images/dollar.svg";
 import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 
-interface Props { }
+interface Props {}
 
 function Profile(props: Props) {
   const [name, setName] = useState("");
@@ -53,7 +51,7 @@ function Profile(props: Props) {
   const [winsNum, setWinsNum] = useState<number>(0);
   const [joinedDate, setJoinedDate] = useState<string>("");
 
-  const { } = props;
+  const {} = props;
   const { data } = useSession();
   const router = useRouter();
 
@@ -72,8 +70,8 @@ function Profile(props: Props) {
   useEffect(() => {
     console.log(data);
     if (data) {
-      setName(data?.user.fullName);
-      setUsername(data?.user.username);
+      setName(data?.user.name);
+      setUsername(data?.user.username!);
       getUserInfo(data?.user.email);
     }
   }, [data]);
@@ -112,9 +110,9 @@ function Profile(props: Props) {
   useEffect(() => {
     setTotalPredictionsAndWatchlist(
       activePredictions.length +
-      completedPredictions.length +
-      activeWatchlist.length +
-      completedWatchlist.length
+        completedPredictions.length +
+        activeWatchlist.length +
+        completedWatchlist.length
     );
   }, [
     activePredictions,
@@ -191,12 +189,12 @@ function Profile(props: Props) {
           <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
             <Avatar className="h-24 w-24 border-4 border-[#13202D] shadow-lg">
               <AvatarFallback className="bg-[#F2CA16] text-2xl text-[#0C1924]">
-                {getInitials(data ? data.user.fullName : "")}
+                {getInitials(data ? data.user.name : "")}
               </AvatarFallback>
             </Avatar>
             <div className="pt-12 md:pt-0">
               <h1 className="text-3xl font-bold">
-                {data ? data.user.fullName : ""}
+                {data ? data.user.name : ""}
               </h1>
               <p className="text-gray-400">{data ? data.user.username : ""}</p>
             </div>
@@ -318,10 +316,11 @@ function Profile(props: Props) {
                   <button
                     id="active-watchlist-button"
                     onClick={() => setIsActivePrediction(true)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActivePrediction == true
-                      ? "border-white text-lg font-bold"
-                      : ""
-                      }`}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                      isActivePrediction == true
+                        ? "border-white text-lg font-bold"
+                        : ""
+                    }`}
                   >
                     <div>ACTIVE </div>
                     {!dataIsLoading && (
@@ -333,10 +332,11 @@ function Profile(props: Props) {
                   <button
                     id="completed-watchlist-button"
                     onClick={() => setIsActivePrediction(false)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActivePrediction == false
-                      ? "border-white text-lg font-bold"
-                      : ""
-                      }`}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                      isActivePrediction == false
+                        ? "border-white text-lg font-bold"
+                        : ""
+                    }`}
                   >
                     <div>COMPLETED</div>
                     {!dataIsLoading && (
@@ -809,9 +809,9 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
                 {prize % 1 === 0
                   ? prize.toLocaleString()
                   : prize.toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}{" "}
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}{" "}
                 🎉
               </div>
             </div>

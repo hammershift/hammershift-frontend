@@ -23,6 +23,7 @@ const userSchema = new Schema(
     username: { type: String, required: true },
     fullName: { type: String, required: true },
     email: { type: String, required: true },
+    emailVerified: { type: Boolean, default: false },
     balance: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
     isBanned: { type: Boolean, default: false },

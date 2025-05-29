@@ -8,7 +8,7 @@ import { getCarData } from "@/lib/data";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
 import { CheckCircle, Home, RefreshCw } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -20,11 +20,11 @@ export default function FreePlaySuccessPage() {
   const [car, setCar] = useState<Car>();
   const [loading, setLoading] = useState(true);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     loadPredictionData();
-  }, [session, status]);
+  }, [session]);
 
   const loadPredictionData = async () => {
     try {

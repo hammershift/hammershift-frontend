@@ -24,7 +24,7 @@ import {
   getTournamentPointsByTournamentId,
   getTournamentTransactions,
 } from "@/lib/data";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import React, { useEffect, useState } from "react";
 
 export interface Tournaments {
@@ -94,7 +94,6 @@ const TournamentViewPage = ({
     const fetchAuctionData = async () => {
       try {
         const data = await getAuctionsByTournamentId(ID);
-        console.log("auctions: ", data);
         setAuctionData(data);
         const images = await data.map((auction: any) => auction.image);
         setTournamentImages(images);
@@ -277,8 +276,8 @@ const TournamentViewPage = ({
           closeModal={closeModal}
         />
       ) : null}
-      <div className="section-container flex justify-between items-center mt-4 md:mt-8">
-        <div className="w-auto h-[28px] flex items-center bg-[#184C80] font-bold rounded-full px-2.5 py-2 text-[14px]">
+      <div className="section-container mt-4 flex items-center justify-between md:mt-8">
+        <div className="flex h-[28px] w-auto items-center rounded-full bg-[#184C80] px-2.5 py-2 text-[14px] font-bold">
           TOURNAMENT
         </div>
         <div className="hidden sm:block">
@@ -296,7 +295,7 @@ const TournamentViewPage = ({
           )}
         </div>
       </div>
-      <div className="section-container w-full mt-4 md:mt-8 flex flex-col lg:flex-row">
+      <div className="section-container mt-4 flex w-full flex-col md:mt-8 lg:flex-row">
         <div className="left-container-marker w-full basis-2/3 pl-0 lg:pr-8">
           {tournamentData && (
             <TimerProvider deadline={tournamentData.endTime}>
@@ -311,7 +310,7 @@ const TournamentViewPage = ({
               />
             </TimerProvider>
           )}
-          <div className="sm:hidden mt-4">
+          <div className="mt-4 sm:hidden">
             {tournamentData && (
               <TournamentButtons
                 tournamentImages={tournamentImages}
@@ -336,12 +335,12 @@ const TournamentViewPage = ({
             tournamentEnded={buyInEnded}
             tournamentID={ID}
           />
-          <div className="block sm:hidden mt-8">
+          <div className="mt-8 block sm:hidden">
             {winners.length !== 0 ? (
               <TournamentWinnersSection winners={winners} />
             ) : null}
           </div>
-          <div className="sm:hidden my-8">
+          <div className="my-8 sm:hidden">
             <TournamentWagersSection
               tournamentWagers={tournamentWagers}
               toggleTournamentWagerModal={toggleModal}
@@ -352,7 +351,7 @@ const TournamentViewPage = ({
           </div>
           <CommentsSection pageID={ID} pageType="tournament" />
         </div>
-        <div className="right-container-marker w-full basis-1/3 pl-0 lg:pl-8 hidden lg:flex lg:flex-col lg:gap-8">
+        <div className="right-container-marker hidden w-full basis-1/3 pl-0 lg:flex lg:flex-col lg:gap-8 lg:pl-8">
           {tournamentEnded && winners.length !== 0 ? (
             <TournamentWinnersSection winners={winners} />
           ) : null}
@@ -372,9 +371,7 @@ const TournamentViewPage = ({
       </div>
       {/* TODO: Check if working*/}
       {/* <TournamentWagerPage /> */}
-      {isWagerMenuOpen && (
-        <div className="bg-black w-screen h-full"></div>
-      )}
+      {isWagerMenuOpen && <div className="h-full w-screen bg-black"></div>}
       <TournamentsYouMightLike />
     </div>
   );

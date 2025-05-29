@@ -33,7 +33,6 @@ export const Leaderboard = () => {
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      console.log("fetching leaderboards");
       const leaderboard = await getAuctionPoints(50);
       console.log(leaderboard);
       setLeaderboard(leaderboard);
