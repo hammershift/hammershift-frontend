@@ -43,7 +43,6 @@ export default function CustomSignupPage() {
   }, [session]);
 
   const handleChange = (e: { target: any }) => {
-    console.log("handled change");
     const { name, value, type, checked } = e.target;
     if (name === "password") {
       const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
@@ -65,7 +64,6 @@ export default function CustomSignupPage() {
       e.preventDefault();
     }
   };
-
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -89,7 +87,9 @@ export default function CustomSignupPage() {
       });
 
       if (error) {
-        setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
+        setError(
+          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
+        );
         setIsLoading(false);
         return;
       }

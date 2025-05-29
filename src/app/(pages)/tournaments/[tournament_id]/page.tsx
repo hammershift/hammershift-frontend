@@ -94,7 +94,6 @@ const TournamentViewPage = ({
     const fetchAuctionData = async () => {
       try {
         const data = await getAuctionsByTournamentId(ID);
-        console.log("auctions: ", data);
         setAuctionData(data);
         const images = await data.map((auction: any) => auction.image);
         setTournamentImages(images);
