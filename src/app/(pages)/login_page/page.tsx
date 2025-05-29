@@ -55,6 +55,17 @@ const CreateAccount = () => {
     checkSession();
   }, [session]);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]$/;
+    if (
+      e.currentTarget.name === "password" &&
+      !allowedPattern.test(e.key) &&
+      e.key.length === 1
+    ) {
+      e.preventDefault();
+    }
+  };
+
   const handleResetPassword = async () => {
     setIsResetPasswordLoading(true);
     try {
@@ -248,9 +259,13 @@ const CreateAccount = () => {
                   type="password"
                   value={password}
                   placeholder={"Enter password here"}
-                  onChange={(e: { target: { value: string } }) =>
+                  onChange={(e: { target: { value: string } }) => {
+                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+                    if (!allowedPattern.test(e.target.value)) return;
                     setPassword(e.target.value)
                   }
+                  }
+                  onKeyDown={handleKeyDown}
                   name="password"
                   required
                 />
