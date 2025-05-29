@@ -1,7 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import clientPromise from "@/lib/mongodb";
 import Auctions from "@/models/auction.model";
-import Tournaments from "@/models/tournament";
+import Tournaments from "@/models/tournament.model";
 import Watchlist from "@/models/watchlist";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
