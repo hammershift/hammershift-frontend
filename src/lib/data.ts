@@ -712,7 +712,7 @@ export const likeComment = async (
   userID: string,
   likes: UserIdName[]
 ) => {
-  if (!likes.some(like => like.userId === userID)) {
+  if (!likes.some((like) => like.userId === userID)) {
     try {
       const res = await fetch("/api/comments", {
         method: "PUT",
@@ -760,7 +760,7 @@ export const dislikeComment = async (
   dislikes: UserIdName[]
 ) => {
   console.log(commentID);
-  if (!dislikes.some(dislike => dislike.userId === userID)) {
+  if (!dislikes.some((dislike) => dislike.userId === userID)) {
     try {
       const res = await fetch("/api/comments", {
         method: "PUT",
@@ -820,7 +820,7 @@ export const createReply = async (
   commentID: string,
   pageID: string,
   pageType: string,
-  reply: string,
+  reply: string
 ) => {
   try {
     const res = await fetch("/api/comments", {
@@ -1057,9 +1057,18 @@ export const createTournamentWager = async (wagerData: TournamentData) => {
   }
 };
 
-export const getTournaments = async () => {
+export const getTournaments = async ({
+  offset = 0,
+  limit = 0,
+}: {
+  offset: number;
+  limit: number;
+}) => {
   try {
-    const res = await fetch("/api/tournaments");
+    //TODO: hardcoded sort for now
+    const res = await fetch(
+      `/api/tournaments?offset=${offset}&limit=${limit}&sort=newest`
+    );
     const data = await res.json();
     console.log(data);
     return data;

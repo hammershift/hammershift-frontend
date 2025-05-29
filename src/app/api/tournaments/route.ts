@@ -1,10 +1,7 @@
 import connectToDB from "@/lib/mongoose";
-import Tournament from "@/models/tournament";
+import Tournament from "@/models/tournament.model";
 import Auctions from "@/models/auction.model";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import { ObjectId } from "mongodb";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     // check if there is a request body
     if (id) {
-      const tournament = await Tournament.findOne({ _id: id });
+      const tournament = await Tournament.findOne({ tournament_id: id });
       if (tournament) {
         return NextResponse.json(tournament, { status: 200 });
       } else {
@@ -48,26 +45,39 @@ export async function GET(req: NextRequest) {
       sortOptions = { endTime: 1 };
     }
 
+    const options = {
+      offset: offset,
+      limit: limit,
+      sort: sortOptions,
+    };
     // To get all tournaments with isActive = true
-    const tournaments = await Tournament.find({ isActive: true })
-      .sort(sortOptions)
-      .limit(limit)
-      .skip(offset);
-      
+    const tournaments = await Tournament.paginate(
+      {
+        isActive: true,
+      },
+      options
+    );
+    // const tournaments = await Tournament.find({ isActive: true })
+    //   .sort(sortOptions)
+    //   .limit(limit)
+    //   .skip(offset);
+
     // count all tournaments with isActive = true
-    const tournamentsCount = await Tournament.countDocuments({
-      isActive: true,
-    });
+    // const tournamentsCount = await Tournament.countDocuments({
+    //   isActive: true,
+    // });
+
+    //get the image of the first auction in auction_ids
 
     //response {total, tournaments}
     if (tournaments) {
       return NextResponse.json(
-        { total: tournamentsCount, tournaments },
+        { total: tournaments.totalPages, tournaments: tournaments.docs },
         { status: 200 }
       );
     } else {
       return NextResponse.json(
-        { message: "Cannot post tournament" },
+        { message: "Cannot GET tournament" },
         { status: 404 }
       );
     }
