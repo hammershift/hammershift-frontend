@@ -10,8 +10,8 @@ export interface Tournament extends Document {
   prizePool: number;
   buyInFee: number;
   isActive: boolean;
-  startTime: Date | null;
-  endTime: Date | null;
+  startTime: Date;
+  endTime: Date;
   auction_ids: string[];
   users: string[];
   maxUsers: number;
