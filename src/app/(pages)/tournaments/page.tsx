@@ -9,19 +9,12 @@ import { Button } from "@/app/components/ui/button";
 import { formatDistanceToNow, isValid } from "date-fns";
 import { Tournament } from "@/models/tournament.model";
 import { getTournaments } from "@/lib/data";
+import TournamentGrid from "@/app/components/tournament_grid";
 export default function Tournaments() {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const getBackgroundImage = (index: number) => {
-    const images = [
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&q=80",
-      "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&q=80",
-    ];
-    return images[index % images.length];
-  };
   const formatDate = (dateString: string) => {
     if (!dateString) return "Date not set";
 
@@ -121,82 +114,7 @@ export default function Tournaments() {
           ))}
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
-          {tournaments.map((tournament, index) => (
-            <Card
-              key={tournament.tournament_id}
-              className="overflow-hidden border-[#1E2A36] bg-[#13202D]"
-            >
-              <div className="relative aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <Image
-                  src={tournament.banner}
-                  alt={tournament.name}
-                  layout="fill"
-                  objectFit="cover"
-                  // height={192}
-                  className="object-cover sm:h-56 md:h-64"
-                />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="mb-2 text-2xl font-bold">{tournament.name}</h3>
-                  <p className="text-gray-300">{tournament.description}</p>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <div className="mb-6 grid grid-cols-2 gap-4">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-5 w-5 text-[#F2CA16]" />
-                    <div>
-                      <div className="text-sm text-gray-400">Entry Fee</div>
-                      <div className="font-bold">
-                        {tournament.type
-                          ? "Free"
-                          : `$${tournament.buyInFee || 0}`}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Trophy className="h-5 w-5 text-[#F2CA16]" />
-                    <div>
-                      <div className="text-sm text-gray-400">Prize Pool</div>
-                      <div className="font-bold">
-                        {tournament.type
-                          ? "Practice"
-                          : `$${tournament.prizePool || 0}`}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-[#F2CA16]" />
-                    <div>
-                      <div className="text-sm text-gray-400">Ends</div>
-                      <div>{formatDate(tournament.endTime?.toString()!)}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-[#F2CA16]" />
-                    <div>
-                      <div className="text-sm text-gray-400">Players</div>
-                      <div>
-                        {tournament.users.length || 0}/
-                        {tournament.maxUsers || 0}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <Link
-                  href={`${createPageUrl("TournamentDetail")}?id=${tournament.tournament_id}`}
-                >
-                  <Button className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
-                    JOIN TOURNAMENT
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          ))}
-        </div>
+        <TournamentGrid tournaments={tournaments} />
       )}
     </div>
   );
