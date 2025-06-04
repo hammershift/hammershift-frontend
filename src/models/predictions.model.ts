@@ -4,6 +4,7 @@ import { StdioNull } from "node:child_process";
 
 export interface Prediction {
   auction_id: string;
+  tournament_id?: number;
   predictedPrice: number;
   predictionType: string;
   wagerAmount?: number;
@@ -24,6 +25,7 @@ const predictionsSchema = new Schema(
     // carId: { type: String, required: true },
     // carObjectId: { type: Types.ObjectId, required: true },
     auction_id: { type: String, required: true },
+    tournament_id: { type: Number, required: false },
     predictedPrice: { type: Number, required: true },
     predictionType: { type: String, required: true },
     wagerAmount: { type: Number, required: false, default: 0 },
