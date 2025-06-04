@@ -102,6 +102,7 @@ const FreePlay = () => {
               const data = await getTournaments({
                 offset: (currentPage - 1) * 6,
                 limit: 6,
+                type: "free",
               });
               setTournaments(data.tournaments);
               setTotalPages(data.total);

@@ -36,6 +36,7 @@ export default function Tournaments() {
         const data = await getTournaments({
           offset: (currentPage - 1) * 6,
           limit: 6,
+          type: "standard",
         });
         setTournaments(data.tournaments);
         setTotalPages(data.total);
