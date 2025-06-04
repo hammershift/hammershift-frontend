@@ -81,6 +81,51 @@ export const getCars = async ({
   }
 };
 
+export const getBatchCars = async (auction_ids: string[]) => {
+  try {
+    const response = await fetch(
+      `/api/cars?auction_ids=${auction_ids.toString()}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch cars list!");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getTournamentCars = async (tournament_id: number) => {
+  try {
+    const response = await fetch(`/api/cars?tournament_id=${tournament_id}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch tournament cars");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getTournamentPredictions = async (tournament_id: number) => {
+  try {
+    const response = await fetch(
+      `/api/predictions?tournament_id=${tournament_id}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch tournament predictions!");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
 export const getPredictionData = async (auction_id: string) => {
   try {
     const response = await fetch(`/api/predictions?car_id=${auction_id}`);
@@ -155,6 +200,33 @@ export const addPrediction = async (prediction: Prediction) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(prediction),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to add prediction!");
+    }
+  } catch (e) {
+    console.error(e);
+    throw Error("API Error");
+  }
+};
+
+export const addTournamentPredictions = async (
+  tournament_id: number,
+  predictions: Prediction[]
+) => {
+  try {
+    const response = await fetch(`/api/tournaments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        predictions: predictions,
+        tournament_id: tournament_id,
+      }),
     });
     if (response.ok) {
       const data = await response.json();
@@ -1060,14 +1132,16 @@ export const createTournamentWager = async (wagerData: TournamentData) => {
 export const getTournaments = async ({
   offset = 0,
   limit = 0,
+  type,
 }: {
   offset: number;
   limit: number;
+  type: string;
 }) => {
   try {
     //TODO: hardcoded sort for now
     const res = await fetch(
-      `/api/tournaments?offset=${offset}&limit=${limit}&sort=newest`
+      `/api/tournaments?&type=${type}&offset=${offset}&limit=${limit}&sort=newest`
     );
     const data = await res.json();
     console.log(data);
