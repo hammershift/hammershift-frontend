@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
 
     const car_id = req.nextUrl.searchParams.get("car_id");
     const prediction_type = req.nextUrl.searchParams.get("prediction_type");
+    const tournament_id = req.nextUrl.searchParams.get("tournament_id");
     const username = req.nextUrl.searchParams.get("username");
     const latest = req.nextUrl.searchParams.get("latest");
     //get all predictions with the same car_id
@@ -16,6 +17,13 @@ export async function GET(req: NextRequest) {
       const predictions = await Predictions.find({
         auction_id: car_id,
       });
+      return NextResponse.json(predictions);
+    }
+
+    if (tournament_id) {
+      const predictions = await Predictions.find({
+        tournament_id: tournament_id,
+      }).sort({ createdAt: -1 });
       return NextResponse.json(predictions);
     }
 

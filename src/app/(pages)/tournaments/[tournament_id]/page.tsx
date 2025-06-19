@@ -29,13 +29,19 @@ import { useTournamentPredictions } from "@/app/context/TournamentPredictionCont
 import { useTournament } from "@/app/context/TournamentContext";
 import { getTournamentCars, getTournamentPredictions } from "@/lib/data";
 import { addTournamentPredictions } from "@/lib/data";
-import { Types } from "mongoose";
+import { set, Types } from "mongoose";
+import { BeatLoader } from "react-spinners";
 interface TournamentPrediction {
   auction_id: string;
   title: string;
   value: string;
   hasEnded: boolean;
   hasError: boolean;
+}
+
+interface DropdownValues {
+  value: string;
+  label: string;
 }
 
 interface PredictionSet {
@@ -54,11 +60,18 @@ const TournamentDetails = () => {
   const [currentPredictions, setCurrentPredictions] = useState<Prediction[]>(
     []
   );
+  const [filteredPredictions, setFilteredPredictions] = useState<Prediction[]>(
+    []
+  );
 
+  const [dropdownLimit, setDropdownLimit] = useState<number>(5);
+  const [predictionSets, setPredictionSets] = useState<PredictionSet>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasJoined, setHasJoined] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isPredictionLoading, setIsPredictionLoading] =
+    useState<boolean>(false);
   const { data: session } = useSession();
 
   const checkIfAllAuctionsAreOver = () => {
@@ -164,6 +177,15 @@ const TournamentDetails = () => {
       console.error("Date formatting error", error);
       return "Date error";
     }
+  };
+
+  const handleDropdownChange = async (auction_id: string) => {
+    setIsPredictionLoading(true);
+    setFilteredPredictions(
+      currentPredictions.filter((p) => p.auction_id === auction_id)
+    );
+    setDropdownLimit(5);
+    setTimeout(() => setIsPredictionLoading(false), 500);
   };
 
   const handleSubmitPredictions = async () => {
@@ -357,7 +379,14 @@ const TournamentDetails = () => {
         const currentPredictions = await getTournamentPredictions(
           tournament.tournament_id
         );
-        setCurrentPredictions(currentPredictions);
+        if (currentPredictions) {
+          setCurrentPredictions(currentPredictions);
+          setFilteredPredictions(
+            currentPredictions.filter(
+              (p: Prediction) => p.auction_id === res[0].auction_id
+            )
+          );
+        }
       } catch (e) {
         console.log(e);
       }
@@ -646,9 +675,10 @@ const TournamentDetails = () => {
                             <div key={auction.id} className="space-y-2">
                               <label className="text-sm font-medium">
                                 {/* make - model - year*/}
-                                {auction.attributes[2].value}{" "}
+                                {/* {auction.attributes[2].value}{" "}
                                 {auction.attributes[3].value} (
-                                {auction.attributes[1].value})
+                                {auction.attributes[1].value}) */}
+                                {auction.title}
                               </label>
                               <div className="relative">
                                 {predictions[index].hasEnded ? (
@@ -721,78 +751,124 @@ const TournamentDetails = () => {
                     )}
 
                     <div className="mt-8">
-                      <h4 className="mb-4 text-lg font-semibold">
-                        Current Predictions
-                      </h4>
-                      <div className="space-y-4">
-                        {currentPredictions.length > 0 ? (
-                          currentPredictions.map((prediction, index) => {
-                            const isCurrentUser =
-                              session &&
-                              prediction.user.username ===
-                                session.user.username;
-
-                            const displayAmount = isCurrentUser
-                              ? "$" + prediction.predictedPrice.toLocaleString()
-                              : obfuscateAmount(prediction.predictedPrice);
-
-                            return (
-                              <div
+                      <div className="flex justify-between">
+                        <h4 className="mb-4 w-1/2 text-lg font-semibold">
+                          Current Predictions
+                        </h4>
+                        <div className="mb-4 w-1/2">
+                          <select
+                            className="w-full rounded-lg bg-[#1E2A36] p-2 text-xs text-white"
+                            name="auctions"
+                            id="auctions"
+                            onChange={(e) =>
+                              handleDropdownChange(e.target.value)
+                            }
+                          >
+                            {auctions.map((auction, index) => (
+                              <option
+                                className="truncate"
+                                value={auction.auction_id}
                                 key={index}
-                                className="flex items-center justify-between rounded-lg bg-[#1E2A36] p-4"
                               >
-                                <div className="flex items-center gap-4">
-                                  <div
-                                    className={`h-10 w-10 rounded-full ${
-                                      prediction.user.role === "AGENT"
-                                        ? "bg-purple-600"
-                                        : "bg-[#F2CA16]"
-                                    } flex items-center justify-center text-white`}
-                                  >
-                                    {prediction.user.role === "AGENT"
-                                      ? "AI"
-                                      : getInitials(getDisplayName(prediction))}
+                                {auction.title}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {isPredictionLoading ? (
+                          <div className="mt-4 flex items-center justify-center">
+                            <BeatLoader color="yellow" />
+                          </div>
+                        ) : filteredPredictions &&
+                          filteredPredictions.length > 0 ? (
+                          filteredPredictions
+                            .slice(0, dropdownLimit)
+                            .map((prediction, index) => {
+                              const isCurrentUser =
+                                session &&
+                                prediction.user.username ===
+                                  session.user.username;
+
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex items-center justify-between rounded-lg bg-[#1E2A36] p-4"
+                                >
+                                  <div className="flex items-center gap-4">
+                                    <div
+                                      className={`h-10 w-10 rounded-full ${
+                                        prediction.user.role === "AGENT"
+                                          ? "bg-purple-600"
+                                          : "bg-[#F2CA16]"
+                                      } flex items-center justify-center text-white`}
+                                    >
+                                      {prediction.user.role === "AGENT"
+                                        ? "AI"
+                                        : getInitials(
+                                            getDisplayName(prediction)
+                                          )}
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2 font-medium">
+                                        {getDisplayName(prediction)}
+                                        {prediction.user.role === "AGENT" && (
+                                          <Badge
+                                            variant="outline"
+                                            className="bg-purple-500/20 text-xs text-purple-500"
+                                          >
+                                            AI AGENT
+                                          </Badge>
+                                        )}
+                                        {isCurrentUser && (
+                                          <Badge
+                                            variant="outline"
+                                            className="bg-blue-500/20 text-xs text-blue-500"
+                                          >
+                                            YOU
+                                          </Badge>
+                                        )}
+                                      </div>
+                                      <div className="text-sm text-gray-400">
+                                        {prediction.createdAt
+                                          ? formatTimeDistance(
+                                              prediction.createdAt.toString()
+                                            )
+                                          : "recently"}
+                                      </div>
+                                    </div>
                                   </div>
-                                  <div>
-                                    <div className="flex items-center gap-2 font-medium">
-                                      {getDisplayName(prediction)}
-                                      {prediction.user.role === "AGENT" && (
-                                        <Badge
-                                          variant="outline"
-                                          className="bg-purple-500/20 text-xs text-purple-500"
-                                        >
-                                          AI AGENT
-                                        </Badge>
-                                      )}
-                                      {isCurrentUser && (
-                                        <Badge
-                                          variant="outline"
-                                          className="bg-blue-500/20 text-xs text-blue-500"
-                                        >
-                                          YOU
-                                        </Badge>
-                                      )}
-                                    </div>
-                                    <div className="text-sm text-gray-400">
-                                      {prediction.createdAt
-                                        ? formatTimeDistance(
-                                            prediction.createdAt.toString()
-                                          )
-                                        : "recently"}
-                                    </div>
+                                  <div className="text-xl font-bold text-[#F2CA16]">
+                                    {"$" +
+                                      prediction.predictedPrice.toLocaleString()}
                                   </div>
                                 </div>
-                                <div className="text-xl font-bold text-[#F2CA16]">
-                                  {displayAmount}
-                                </div>
-                              </div>
-                            );
-                          })
+                              );
+                            })
                         ) : (
                           <div className="py-4 text-center text-gray-400">
                             No predictions yet. Be the first to join!
                           </div>
                         )}
+                        {!isPredictionLoading &&
+                          filteredPredictions.length > dropdownLimit && (
+                            <div className="flex justify-center">
+                              <Button
+                                className="bg-purple-600 text-white hover:bg-purple-700"
+                                onClick={() => {
+                                  setIsPredictionLoading(true);
+                                  setDropdownLimit(dropdownLimit + 5);
+                                  setTimeout(() => {
+                                    setIsPredictionLoading(false);
+                                  }, 300);
+                                }}
+                              >
+                                Load More
+                              </Button>
+                            </div>
+                          )}
                       </div>
                     </div>
                   </CardContent>
