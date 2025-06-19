@@ -17,6 +17,7 @@ export interface Tournament extends Document {
   maxUsers: number;
   createdAt?: Date;
   updatedAt?: Date;
+  haveWinners: boolean;
 }
 
 const tournamentWinnerSchema = new mongoose.Schema({
@@ -106,6 +107,7 @@ const tournamentSchema = new mongoose.Schema(
     auction_ids: { type: [String], required: true },
     users: { type: [userSchema] },
     maxUsers: { type: Number, required: true },
+    haveWinners: { type: Boolean, required: true, default: false },
   },
   {
     collection: "tournaments",
