@@ -9,7 +9,7 @@ export interface Prediction {
   predictionType: string;
   wagerAmount?: number;
   user: {
-    userId: Types.ObjectId | null;
+    userId: string;
     fullName: string;
     username: string;
     role: string;

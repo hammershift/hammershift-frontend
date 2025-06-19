@@ -3,6 +3,7 @@ import { Predictions } from "@/models/predictions.model";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/betterAuth";
 import { headers } from "next/headers";
+import { Types } from "mongoose";
 export async function GET(req: NextRequest) {
   try {
     await connectToDB();
@@ -61,7 +62,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
     }
 
-    const prediction = await req.json();
+    let prediction = await req.json();
+    const userId = Types.ObjectId.createFromHexString(prediction.user.userId);
+    prediction.user.userId = userId;
     if (
       session.user.id !== prediction.user.userId ||
       session.user.username !== prediction.user.username
