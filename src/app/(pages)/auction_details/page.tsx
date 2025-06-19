@@ -18,7 +18,7 @@ import {
   TabsTrigger,
 } from "@/app/components/ui/tabs";
 import { USDollar } from "@/helpers/utils";
-import { formatDistanceToNow, isValid } from "date-fns";
+import { formatDistanceToNow, isValid, subDays } from "date-fns";
 import {
   ArrowLeft,
   Car as CarIcon,
@@ -77,17 +77,17 @@ const GuessTheHammer = () => {
 
     try {
       const endDate = new Date(dateString);
-
-      if (!isValid(endDate)) {
+      const endDateMinusOneDay = subDays(endDate, 1);
+      if (!isValid(endDateMinusOneDay)) {
         return "Invalid date";
       }
 
       const now = new Date();
-      if (endDate < now) {
+      if (endDateMinusOneDay < now) {
         return "Ended";
       }
 
-      return formatDistanceToNow(endDate, { addSuffix: true });
+      return formatDistanceToNow(endDateMinusOneDay, { addSuffix: true });
     } catch (error) {
       console.error("Date formatting error:", error);
       return "Date error";
@@ -173,7 +173,7 @@ const GuessTheHammer = () => {
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
-          userId: new Types.ObjectId(session.user.id), //TODO: change to string because the mongoose import is causing module not found errors. Instead convert to objectId on server side
+          userId: session.user.id, //TODO: change to string because the mongoose import is causing module not found errors. Instead convert to objectId on server side
           fullName: session.user.name,
           username: session.user.username!,
           role: "USER", //should be default USER since agents can't access this page
