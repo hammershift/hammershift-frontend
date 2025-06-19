@@ -34,7 +34,7 @@ const ResetPassword = () => {
         newPassword: password,
       });
       if (error) {
-        setError(error.message!);
+        setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
         setIsLoading(false);
         return;
       }
@@ -46,6 +46,17 @@ const ResetPassword = () => {
       }, 3000);
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]$/;
+    if (
+      e.currentTarget.name === "password" &&
+      !allowedPattern.test(e.key) &&
+      e.key.length === 1
+    ) {
+      e.preventDefault();
     }
   };
 
@@ -83,9 +94,13 @@ const ResetPassword = () => {
                   name="password"
                   placeholder="New Password"
                   value={password}
-                  onChange={(e: { target: { value: string } }) =>
+                  onChange={(e: { target: { value: string } }) => {
+                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+                    if (!allowedPattern.test(e.target.value)) return;
                     setPassword(e.target.value)
                   }
+                  }
+                  onKeyDown={handleKeyDown}
                   required
                 />
                 <label>Confirm Password</label>
@@ -95,9 +110,13 @@ const ResetPassword = () => {
                   name="password"
                   placeholder="Confirm Password"
                   value={passwordConfirm}
-                  onChange={(e: { target: { value: string } }) =>
+                  onChange={(e: { target: { value: string } }) => {
+                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+                    if (!allowedPattern.test(e.target.value)) return;
                     setPasswordConfirm(e.target.value)
                   }
+                  }
+                  onKeyDown={handleKeyDown}
                   required
                 />
                 {error && (

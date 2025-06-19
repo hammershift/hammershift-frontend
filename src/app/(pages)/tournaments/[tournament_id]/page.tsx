@@ -70,6 +70,7 @@ const TournamentDetails = () => {
     []
   );
 
+
   const [dropdownLimit, setDropdownLimit] = useState<number>(5);
   const [predictionSets, setPredictionSets] = useState<PredictionSet>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -79,6 +80,7 @@ const TournamentDetails = () => {
   const [isPredictionLoading, setIsPredictionLoading] =
     useState<boolean>(false);
   const { data: session } = useSession();
+
 
   const checkIfAllAuctionsAreOver = () => {
     return false;

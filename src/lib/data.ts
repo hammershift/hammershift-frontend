@@ -1106,6 +1106,25 @@ export const checkEmailExistence = async (email: string) => {
   }
 };
 
+export const checkUsernameExistence = async (username: string) => {
+  try {
+    const res = await fetch(`/api/checkUserExistence?username=${encodeURIComponent(username)}`, {
+      method: "GET",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch user. Status: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    return data;
+  } catch (error: any) {
+    console.error("Error checking username:", error.message);
+    throw error;
+  }
+};
+
 interface TournamentUser {
   _id: string;
   fullName: string;

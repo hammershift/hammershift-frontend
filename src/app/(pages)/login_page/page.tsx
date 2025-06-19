@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { checkUsernameExistence } from "@/lib/data";
 interface UserExistenceResponse {
   emailExists: boolean;
 }
@@ -54,6 +55,17 @@ const CreateAccount = () => {
 
     checkSession();
   }, [session]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]$/;
+    if (
+      e.currentTarget.name === "password" &&
+      !allowedPattern.test(e.key) &&
+      e.key.length === 1
+    ) {
+      e.preventDefault();
+    }
+  };
 
   const handleResetPassword = async () => {
     setIsResetPasswordLoading(true);
@@ -93,7 +105,16 @@ const CreateAccount = () => {
       });
 
       if (error) {
-        setError(error.message!);
+        console.log(error);
+        if (error.message! === "invalid username or password") {
+          const data = await checkUsernameExistence(username);
+          if (data.exists && !data.hasPassword)
+            setError("Account doesn't have a password set. Please use 'Forgot Password' to create one.");
+          else
+            setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
+        }
+        else
+          setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
         setIsLoading(false);
         return;
       }
@@ -227,7 +248,7 @@ const CreateAccount = () => {
                   placeholder="Enter username here"
                   value={username}
                   onChange={(e: { target: { value: string } }) =>
-                    setUsername(e.target.value.toLowerCase())
+                    setUsername(e.target.value)
                   }
                   name="username"
                   autoComplete="username"
@@ -248,9 +269,13 @@ const CreateAccount = () => {
                   type="password"
                   value={password}
                   placeholder={"Enter password here"}
-                  onChange={(e: { target: { value: string } }) =>
+                  onChange={(e: { target: { value: string } }) => {
+                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+                    if (!allowedPattern.test(e.target.value)) return;
                     setPassword(e.target.value)
                   }
+                  }
+                  onKeyDown={handleKeyDown}
                   name="password"
                   required
                 />

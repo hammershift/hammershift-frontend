@@ -43,12 +43,26 @@ export default function CustomSignupPage() {
   }, [session]);
 
   const handleChange = (e: { target: any }) => {
-    console.log("handled change");
     const { name, value, type, checked } = e.target;
+    if (name === "password") {
+      const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+      if (!allowedPattern.test(value)) return;
+    }
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]$/;
+    if (
+      e.currentTarget.name === "password" &&
+      !allowedPattern.test(e.key) &&
+      e.key.length === 1
+    ) {
+      e.preventDefault();
+    }
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -73,7 +87,9 @@ export default function CustomSignupPage() {
       });
 
       if (error) {
-        setError(error.message!);
+        setError(
+          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
+        );
         setIsLoading(false);
         return;
       }
@@ -164,6 +180,7 @@ export default function CustomSignupPage() {
               type="password"
               value={formData.password}
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               required
               className="border-[#1E2A36] bg-[#1E2A36]"
             />

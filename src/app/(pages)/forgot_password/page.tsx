@@ -25,13 +25,13 @@ const ForgotPassword = () => {
       });
 
       if (error) {
-        setError(error.message!);
+        setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
         setSuccess("");
         setIsLoading(false);
         return;
       } else {
         setIsLoading(false);
-        setSuccess("Please check your email for password reset link.");
+        setSuccess("If an account with that email exists, a password reset link has been sent.");
         setError("");
       }
     } catch (e) {

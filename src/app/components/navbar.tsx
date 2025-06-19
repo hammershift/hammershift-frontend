@@ -55,7 +55,6 @@ const Navbar = () => {
 
       const myAccountButton = document.getElementById("myaccount-button");
 
-      console.log("hello");
       if (
         predictionsButton &&
         !predictionsButton.contains(e.target as Node) &&
@@ -1519,7 +1518,6 @@ const MyAccountDropdownMenu = () => {
 
   const handleSignOut = async () => {
     try {
-      console.log("hello");
       await signOut({});
       router.push("/");
       console.log("User successfully logged out");
