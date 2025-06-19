@@ -29,7 +29,6 @@ import { useTournamentPredictions } from "@/app/context/TournamentPredictionCont
 import { useTournament } from "@/app/context/TournamentContext";
 import { getTournamentCars, getTournamentPredictions } from "@/lib/data";
 import { addTournamentPredictions } from "@/lib/data";
-import { set, Types } from "mongoose";
 import { BeatLoader } from "react-spinners";
 interface TournamentPrediction {
   auction_id: string;
@@ -46,6 +45,13 @@ interface DropdownValues {
 
 interface PredictionSet {
   [key: string]: Set<number>;
+}
+
+interface User {
+  userId: string;
+  fullName: string;
+  username: string;
+  role: string;
 }
 
 const TournamentDetails = () => {
@@ -95,30 +101,30 @@ const TournamentDetails = () => {
     });
   };
 
-  const obfuscateAmount = (amount: number) => {
-    if (!amount && amount !== 0) return "$0";
+  // const obfuscateAmount = (amount: number) => {
+  //   if (!amount && amount !== 0) return "$0";
 
-    const amountStr = amount.toLocaleString();
+  //   const amountStr = amount.toLocaleString();
 
-    if (amountStr.length <= 1) return "$" + amountStr;
+  //   if (amountStr.length <= 1) return "$" + amountStr;
 
-    const firstDigit = amountStr[0];
-    let result = "$" + firstDigit;
+  //   const firstDigit = amountStr[0];
+  //   let result = "$" + firstDigit;
 
-    for (let i = 1; i < amountStr.length; i++) {
-      if (amountStr[i] === "," || amountStr[i] === ".") {
-        result += amountStr[i];
-      } else {
-        result += "*";
-      }
-    }
+  //   for (let i = 1; i < amountStr.length; i++) {
+  //     if (amountStr[i] === "," || amountStr[i] === ".") {
+  //       result += amountStr[i];
+  //     } else {
+  //       result += "*";
+  //     }
+  //   }
 
-    return result;
-  };
+  //   return result;
+  // };
 
   const getDisplayName = (prediction: Prediction) => {
     if (prediction.user.role === "AGENT") {
-      return `AI Agent ${prediction.user.fullName || ""}`;
+      return `${prediction.user.fullName || ""}`;
     }
 
     if (prediction.user?.username) {
@@ -300,7 +306,7 @@ const TournamentDetails = () => {
           predictionType: tournament.type,
           wagerAmount: tournament.buyInFee,
           user: {
-            userId: new Types.ObjectId(session.user.id),
+            userId: session.user.id,
             fullName: session.user.name,
             username: session.user.username!,
             role: session.user.role!,
@@ -347,14 +353,22 @@ const TournamentDetails = () => {
     async function loadTournament() {
       try {
         const res = await getTournamentById(tournament_id);
+
+        if (
+          session &&
+          res.users.some((user: User) => user.userId === session.user.id)
+        ) {
+          setHasJoined(true);
+        }
         setTournament(res);
+
         setIsLoading(false);
       } catch (e) {
         console.log(e);
       }
     }
     loadTournament();
-  }, []);
+  }, [session, tournament_id]);
 
   useEffect(() => {
     async function loadAuctions() {
@@ -364,6 +378,7 @@ const TournamentDetails = () => {
         setAuctions(res);
 
         const now = new Date();
+
         setPredictions(
           res.map((auction: Auction) => ({
             auction_id: auction.auction_id,
@@ -638,6 +653,15 @@ const TournamentDetails = () => {
                     {hasJoined ? (
                       <div className="mb-4 rounded-md border border-green-900/50 bg-green-900/20 p-3 text-green-500">
                         You have already joined this tournament.
+                      </div>
+                    ) : tournament.haveWinners ||
+                      new Date(tournament.endTime) < new Date() ? (
+                      <div className="mb-4 rounded-md border border-red-500/50 bg-red-500/20 p-3 text-red-500">
+                        Tournament has already ended.
+                      </div>
+                    ) : new Date(tournament.startTime) < new Date() ? (
+                      <div className="mb-4 rounded-md border border-yellow-500/50 bg-yellow-500/20 p-3 text-yellow-500">
+                        Tournament has already started.
                       </div>
                     ) : (
                       <>
