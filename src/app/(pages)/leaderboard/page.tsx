@@ -32,11 +32,11 @@ import { createPageUrl } from "@/app/components/utils";
 import { getAuctionPoints } from "@/lib/data";
 import { Types } from "mongoose";
 type LeaderboardData = {
-  _id: Types.ObjectId;
+  _id: string;
   totalPoints: number;
   totalPredictions: number;
   user: {
-    userId: Types.ObjectId;
+    userId: string;
     fullName: string;
     username: string;
     role: string;

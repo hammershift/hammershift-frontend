@@ -22,12 +22,21 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     console.log("Fetching user predictions...");
-    const userPredictions = await Predictions.aggregate([
-      {
-        $match: {
-          "user.username": username,
-        },
+
+    const forTournament = req.nextUrl.searchParams.get("tournament");
+
+    console.log(forTournament);
+
+    const query = {
+      $match: {
+        "user.username": username,
+        tournament_id: forTournament ? { $exists: true } : { $exists: false },
       },
+    };
+    console.log(query);
+
+    const userPredictions = await Predictions.aggregate([
+      query,
       {
         $lookup: {
           from: "auctions",
@@ -50,6 +59,7 @@ export async function GET(req: NextRequest) {
           _id: prediction._id.toString(),
           auctionObjectId: auctionDetails._id,
           auctionIdentifierId: auctionDetails.auction_id,
+          tournament_id: forTournament ? prediction.tournament_id : null,
           auctionPot: auctionDetails.pot,
           auctionImage:
             auctionDetails.images_list.length > 0

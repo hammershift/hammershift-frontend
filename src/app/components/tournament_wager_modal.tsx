@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
-import { Auction } from "../(pages)/tournaments/[tournament_id]/page";
+import { Auction } from "../(pages)/tournaments/[tournament_id]/oldpage";
 import CalendarGreen from "../../../public/images/calendar-icon-green.svg";
 import Dollar from "../../../public/images/dollar.svg";
 import HourGlass from "../../../public/images/hour-glass.svg";

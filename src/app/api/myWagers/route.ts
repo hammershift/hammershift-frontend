@@ -1,7 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import clientPromise from "@/lib/mongodb";
 import Auctions from "@/models/auction.model";
-import Tournament from "@/models/tournament";
+import Tournament from "@/models/tournament.model";
 import TournamentWager from "@/models/tournament_wager.model";
 import Wager from "@/models/wager";
 import mongoose from "mongoose";
