@@ -2,7 +2,7 @@
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-
+import Link from "next/link";
 import { PredictionsCard } from "@/app/components/navbar";
 import { Avatar, AvatarFallback } from "@/app/components/ui/avatar";
 import { Button } from "@/app/components/ui/button";
@@ -21,9 +21,9 @@ import {
 } from "@/app/components/ui/tabs";
 import { TextArea } from "@/app/components/ui/textarea";
 import { TimerProvider } from "@/app/context/TimerContext";
-import { getMyPredictions } from "@/lib/data";
+import { getMyPredictions, getMyTournamentPredictions } from "@/lib/data";
 import { getInitials } from "@/lib/utils";
-import { CircleDollarSign, Clock, Settings } from "lucide-react";
+import { CircleDollarSign, Clock, Settings, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
 import { default as DollarIcon } from "../../../../public/images/dollar.svg";
@@ -44,9 +44,15 @@ function Profile(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [activePredictions, setActivePredictions] = useState([]);
   const [completedPredictions, setCompletedPredictions] = useState([]);
+  const [activeTournamentPredictions, setActiveTournamentPredictions] =
+    useState([]);
+  const [completedTournamentPredictions, setCompletedTournamentPredictions] =
+    useState([]);
   const [activeWatchlist, setActiveWatchlist] = useState([]);
   const [completedWatchlist, setCompletedWatchlist] = useState([]);
   const [isActivePrediction, setIsActivePrediction] = useState(true);
+  const [isActiveTournament, setIsActiveTournament] = useState(true);
+  const [currentTab, setCurrentTab] = useState<string>("predictions");
   const [userInfo, setUserInfo] = useState<any | null>(null);
   const [winsNum, setWinsNum] = useState<number>(0);
   const [joinedDate, setJoinedDate] = useState<string>("");
@@ -98,8 +104,32 @@ function Profile(props: Props) {
       }
       setDataIsLoading(false);
     };
-    fetchPredictions();
-  }, []);
+    const fetchTournaments = async () => {
+      const data = await getMyTournamentPredictions();
+      const currentDate = new Date();
+
+      if (!data.predictions || data.predictions.length !== 0) {
+        const completed = data.predictions.filter((prediction: any) => {
+          const auctionDeadline = new Date(prediction.auctionDeadline);
+          return auctionDeadline < currentDate;
+        });
+        const active = data.predictions.filter((prediction: any) => {
+          const auctionDeadline = new Date(prediction.auctionDeadline);
+          return auctionDeadline >= currentDate;
+        });
+
+        setActiveTournamentPredictions(active);
+        setCompletedTournamentPredictions(completed);
+      }
+      setDataIsLoading(false);
+    };
+    if (currentTab === "predictions") {
+      fetchPredictions();
+      console.log("predictions loaded");
+    } else if (currentTab === "tournaments") {
+      fetchTournaments();
+    }
+  }, [currentTab]);
 
   // logs active and completed wagers for checking
   // useEffect(() => {
@@ -293,7 +323,11 @@ function Profile(props: Props) {
         </div>
       </div>
 
-      <Tabs defaultValue="predictions" className="w-full">
+      <Tabs
+        defaultValue="predictions"
+        className="w-full"
+        onValueChange={(value) => setCurrentTab(value)}
+      >
         <TabsList className="mb-6 bg-[#1E2A36]">
           <TabsTrigger
             value="predictions"
@@ -301,8 +335,13 @@ function Profile(props: Props) {
           >
             Prediction History
           </TabsTrigger>
-          {/* <TabsTrigger value="tournaments">Tournaments</TabsTrigger>
-          <TabsTrigger value="badges">Badges & Achievements</TabsTrigger> */}
+          <TabsTrigger
+            value="tournaments"
+            className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+          >
+            Tournaments
+          </TabsTrigger>
+          {/* <TabsTrigger value="badges">Badges & Achievements</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="predictions">
@@ -376,6 +415,7 @@ function Profile(props: Props) {
                               isRefunded={prediction.refunded}
                               prize={prediction.prize}
                               deadline={prediction.auctionDeadline}
+                              type="prediction"
                             />
                           </TimerProvider>
                         </div>
@@ -400,6 +440,7 @@ function Profile(props: Props) {
                             auctionObjectID={prediction.auctionObjectId}
                             wagerID={prediction._id}
                             prize={prediction.prize}
+                            type="prediction"
                           />
                         </TimerProvider>
                       </div>
@@ -411,13 +452,13 @@ function Profile(props: Props) {
           </Card>
         </TabsContent>
 
-        {/* <TabsContent value="tournaments">
-          <Card className="bg-[#13202D] border-[#1E2A36]">
+        <TabsContent value="tournaments">
+          <Card className="border-[#1E2A36] bg-[#13202D]">
             <CardHeader>
               <CardTitle>Your Tournaments</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12">
+              {/* <div className="text-center py-12">
                 <Trophy className="w-12 h-12 text-gray-500 mx-auto mb-4" />
                 <h3 className="text-xl font-bold mb-2">
                   No Tournament History
@@ -428,12 +469,108 @@ function Profile(props: Props) {
                 <Button onClick={() => navigate(createPageUrl("Tournaments"))}>
                   Browse Tournaments
                 </Button>
+              </div> */}
+              <div className="flex flex-col gap-4 rounded bg-[#172431]">
+                <div className="flex">
+                  <button
+                    id="active-watchlist-button"
+                    onClick={() => setIsActiveTournament(true)}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActiveTournament === true ? "border-white text-lg font-bold" : ""} `}
+                  >
+                    <div>ACTIVE</div>
+                    {!dataIsLoading && (
+                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                        {activeTournamentPredictions.length}
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    id="completed-watchlist-button"
+                    onClick={() => setIsActiveTournament(false)}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                      isActiveTournament == false
+                        ? "border-white text-lg font-bold"
+                        : ""
+                    }`}
+                  >
+                    <div>COMPLETED</div>
+                    {!dataIsLoading && (
+                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                        {completedTournamentPredictions.length}
+                      </span>
+                    )}
+                  </button>
+                </div>
+                <div>
+                  {dataIsLoading ? (
+                    <div className="flex h-[100px] w-full items-center justify-center">
+                      <PulseLoader color="#f2ca16" />
+                    </div>
+                  ) : isActiveTournament == true ? (
+                    activeTournamentPredictions.length == 0 ? (
+                      <div className="flex w-full justify-center py-4">
+                        No Active Tournament Predictions
+                      </div>
+                    ) : (
+                      activeTournamentPredictions.map((prediction: any) => (
+                        <div key={prediction._id + "active"}>
+                          <TimerProvider deadline={prediction.auctionDeadline}>
+                            <PredictionsCard
+                              title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
+                              img={prediction.auctionImage}
+                              my_prediction={prediction.predictedPrice}
+                              current_bid={prediction.auctionPrice}
+                              time_left={prediction.auctionDeadline}
+                              potential_prize={prediction.auctionPot}
+                              id={prediction.auctionIdentifierId}
+                              isActive={true}
+                              status={prediction.auctionStatus}
+                              predictionAmount={prediction.predictedPrice}
+                              objectID={prediction.auctionObjectId}
+                              predictionID={prediction._id}
+                              isRefunded={prediction.refunded}
+                              prize={prediction.prize}
+                              deadline={prediction.auctionDeadline}
+                              type="tournament"
+                              tournament_id={prediction.tournament_id}
+                            />
+                          </TimerProvider>
+                        </div>
+                      ))
+                    )
+                  ) : completedTournamentPredictions.length == 0 ? (
+                    <div className="flex w-full justify-center py-4">
+                      No Completed Predictions
+                    </div>
+                  ) : (
+                    completedTournamentPredictions.map((prediction: any) => (
+                      <div key={prediction._id + "completed"}>
+                        <TimerProvider deadline={prediction.auctionDeadline}>
+                          <CompletedPredictionCard
+                            title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
+                            img={prediction.auctionImage}
+                            priceGuess={prediction.predictedPrice}
+                            id={prediction.auctionIdentifierId}
+                            status={prediction.auctionStatus}
+                            finalPrice={prediction.auctionPrice}
+                            wagerAmount={0}
+                            auctionObjectID={prediction.auctionObjectId}
+                            wagerID={prediction._id}
+                            prize={prediction.prize}
+                            type="tournament"
+                            tournament_id={prediction.tournament_id}
+                          />
+                        </TimerProvider>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="badges">
+        {/* <TabsContent value="badges">
           <Card className="bg-[#13202D] border-[#1E2A36]">
             <CardHeader>
               <CardTitle>Badges & Achievements</CardTitle>
@@ -699,6 +836,8 @@ type CompletedWagerCardProps = {
   auctionObjectID: string;
   wagerID: string;
   prize?: number;
+  type: string;
+  tournament_id?: number;
 };
 
 const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
@@ -712,6 +851,8 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
   auctionObjectID,
   wagerID,
   prize,
+  type,
+  tournament_id,
 }) => {
   const [auctionStatus, setAuctionStatus] = useState("Completed");
   const [refunded, setRefunded] = useState(false);
@@ -739,13 +880,19 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
   return (
     <div>
       <div className="flex gap-6 px-6 py-6">
-        <Image
-          src={img}
-          width={100}
-          height={100}
-          alt={title}
-          className="h-[100px] w-[100px] rounded object-cover"
-        />
+        <Link
+          href={`${type === "prediction" ? "/auction_details?id=${id}&mode=free_play" : "/tournaments/" + tournament_id}`}
+          className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
+        >
+          <Image
+            src={img}
+            width={100}
+            height={100}
+            alt={title}
+            className="h-[100px] w-[100px] rounded object-cover"
+          />
+        </Link>
+
         <div className="flex flex-auto flex-col gap-1.5">
           <div className="text-xl font-bold leading-7">{title}</div>
           <div>

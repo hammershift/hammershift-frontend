@@ -191,6 +191,21 @@ export const getMyPredictions = async () => {
     return JSON.stringify({ message: "Internal server error" });
   }
 };
+export const getMyTournamentPredictions = async () => {
+  try {
+    const response = await fetch(`/api/myPredictions?tournament=true`);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch user's tournament predictions");
+      return JSON.stringify({ message: "Internal server error" });
+    }
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ message: "Internal server error" });
+  }
+};
 
 export const addPrediction = async (prediction: Prediction) => {
   try {
