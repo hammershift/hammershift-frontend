@@ -13,15 +13,12 @@ export async function GET(req: NextRequest) {
     const leaderboardData = await AuctionPoints.aggregate([
       {
         $match: {
-          user: {
-            role: "USER",
-          },
+          "user.role": "USER",
         },
       },
       {
         $group: {
           _id: "$user.userId",
-
           totalPoints: { $sum: "$points" },
           totalPredictions: { $sum: 1 },
           user: { $first: "$user" },
