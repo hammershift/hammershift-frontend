@@ -6,7 +6,6 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { Types } from "mongoose";
 
 interface Tournament {
   tournament_id: number;

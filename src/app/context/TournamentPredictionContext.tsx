@@ -7,14 +7,12 @@ import {
   SetStateAction,
 } from "react";
 
-import { Types } from "mongoose";
-
 interface TournamentPrediction {
   auction_id: string;
   predictedPrice: number;
   predictionType: string;
   user: {
-    userId: Types.ObjectId | null;
+    userId: string;
     fullName: string;
     username: string;
     role: string;
@@ -34,7 +32,7 @@ const defaultContextValue = {
       predictedPrice: 0,
       predictionType: "",
       user: {
-        userId: null,
+        userId: "",
         fullName: "",
         username: "",
         role: "",
@@ -62,7 +60,7 @@ const TournamentPredictionProvider: React.FC<
         predictedPrice: 0,
         predictionType: "",
         user: {
-          userId: null,
+          userId: "",
           fullName: "",
           username: "",
           role: "",

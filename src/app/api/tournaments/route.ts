@@ -124,7 +124,7 @@ export async function POST(req: NextRequest) {
 
     if (
       predictions.every(
-        (prediction) =>
+        (prediction: Prediction) =>
           prediction.user.username === session.user.username &&
           prediction.user.userId === session.user.id
       )
