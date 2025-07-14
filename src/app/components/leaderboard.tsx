@@ -17,8 +17,13 @@ type LeaderboardData = {
   _id: Types.ObjectId;
   totalPoints: number;
   totalPredictions: number;
-  fullName: string;
-  username: string;
+  user: {
+    userId: string;
+    fullName: string;
+    username: string;
+    role: string;
+  };
+
   image: string;
   auctions: {
     auctionId: Types.ObjectId;
@@ -116,7 +121,7 @@ export const Leaderboard = () => {
                           >
                             {index + 1}
                           </div>
-                          {player.username}
+                          {player.user.username}
                         </div>
                       </TableCell>
                       <TableCell>{player.totalPredictions}</TableCell>
