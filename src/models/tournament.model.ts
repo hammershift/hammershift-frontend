@@ -84,12 +84,17 @@ const tournamentWinnerSchema = new mongoose.Schema({
 //   { timestamps: true }
 // );
 
-const userSchema = new mongoose.Schema({
-  userId: { type: Types.ObjectId, required: true },
-  fullName: { type: String, required: true },
-  username: { type: String, required: true },
-  role: { type: String, enum: ["USER", "AGENT"], required: true },
-});
+const userSchema = new mongoose.Schema(
+  {
+    userId: { type: Types.ObjectId, required: true },
+    fullName: { type: String, required: true },
+    username: { type: String, required: true },
+    role: { type: String, enum: ["USER", "AGENT"], required: true },
+  },
+  {
+    _id: false,
+  }
+);
 
 const tournamentSchema = new mongoose.Schema(
   {
