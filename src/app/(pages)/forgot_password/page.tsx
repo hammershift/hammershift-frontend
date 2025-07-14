@@ -25,13 +25,17 @@ const ForgotPassword = () => {
       });
 
       if (error) {
-        setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
+        setError(
+          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
+        );
         setSuccess("");
         setIsLoading(false);
         return;
       } else {
         setIsLoading(false);
-        setSuccess("If an account with that email exists, a password reset link has been sent.");
+        setSuccess(
+          "If an account with that email exists, a password reset link has been sent."
+        );
         setError("");
       }
     } catch (e) {
@@ -100,7 +104,7 @@ const ForgotPassword = () => {
                   variant="default"
                   type="submit"
                   className="mt-2 w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
-                  onClick={handleForgotPassword}
+                  onClick={() => handleForgotPassword}
                 >
                   Send Reset Password Email
                 </Button>
