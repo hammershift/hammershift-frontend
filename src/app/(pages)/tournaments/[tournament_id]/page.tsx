@@ -431,8 +431,8 @@ const TournamentDetails = () => {
         </div>
       ) : (
         <>
-          <div className="mb-8 overflow-hidden rounded-xl bg-[#13202D]">
-            <div className="relative aspect-[3/1]">
+          <div className="mb-4 overflow-hidden rounded-xl bg-[#13202D] sm:mb-8">
+            <div className="relative aspect-[3/1] min-h-[180px] sm:min-h-[240px]">
               <div className="absolute inset-0 z-10 bg-gradient-to-t from-black to-transparent" />
               <Image
                 src={tournament?.banner || ""}
@@ -511,70 +511,109 @@ const TournamentDetails = () => {
             </div>
           </div>
 
-          <div className="mb-8 rounded-lg bg-[#13202D] p-6">
+          <div className="mb-4 rounded-lg bg-[#13202D] p-3 sm:mb-8 sm:p-6">
             <h2 className="mb-4 text-xl font-bold">TOURNAMENT RULES</h2>
-            <p className="mb-4 text-gray-300">
-              In this tournament, you&apos;ll predict the final hammer price for
-              each car below. The person with the closest predictions across all
-              cars will win the tournament. A 12% platform fee is deducted from
-              the prize pool.
-            </p>
-
-            {tournament.buyInFee > 0 && (
-              <div className="mb-4 rounded-md border border-gray-700 bg-gray-800/60 p-3">
-                <p className="text-sm text-gray-400">
-                  <strong>Disclaimer:</strong> Tournament participation involves
-                  financial risk. Past performance is not indicative of future
-                  results. Velocity Markets does not guarantee winnings.
-                  Platform fee of 12% applies to all tournaments.
+            {tournament.buyInFee > 0 ? (
+              <>
+                <p className="mb-4 text-gray-300">
+                  In this tournament, you&apos;ll predict the final hammer price
+                  for each car below. The person with the closest predictions
+                  across all cars will win the tournament. A 12% platform fee is
+                  deducted from the prize pool.
                 </p>
-              </div>
-            )}
-
-            {tournament.prizePool > 0 && (
-              <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="rounded-lg bg-[#1E2A36] p-4">
-                  <h3 className="mb-2 text-lg font-bold text-[#F2CA16]">
-                    1st PLACE
-                  </h3>
-                  <p className="text-xl font-bold">
-                    ${tournament!.prizePool * 0.5}
+                <div className="mb-4 rounded-md border border-gray-700 bg-gray-800/60 p-3">
+                  <p className="text-sm text-gray-400">
+                    <strong>Disclaimer:</strong> Tournament participation
+                    involves financial risk. Past performance is not indicative
+                    of future results. Velocity Markets does not guarantee
+                    winnings. Platform fee of 12% applies to all tournaments.
                   </p>
-                  <p className="text-sm text-gray-400">50% of prize pool</p>
                 </div>
-                <div className="rounded-lg bg-[#1E2A36] p-4">
-                  <h3 className="mb-2 text-lg font-bold text-gray-300">
-                    2nd PLACE
-                  </h3>
-                  <p className="text-xl font-bold">
-                    ${tournament!.prizePool * 0.3}
-                  </p>
-                  <p className="text-sm text-gray-400">30% of prize pool</p>
+                <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="rounded-lg bg-[#1E2A36] p-4">
+                    <h3 className="mb-2 text-lg font-bold text-[#F2CA16]">
+                      1st PLACE
+                    </h3>
+                    <p className="text-xl font-bold">
+                      ${tournament!.prizePool * 0.5}
+                    </p>
+                    <p className="text-sm text-gray-400">50% of prize pool</p>
+                  </div>
+                  <div className="rounded-lg bg-[#1E2A36] p-4">
+                    <h3 className="mb-2 text-lg font-bold text-gray-300">
+                      2nd PLACE
+                    </h3>
+                    <p className="text-xl font-bold">
+                      ${tournament!.prizePool * 0.3}
+                    </p>
+                    <p className="text-sm text-gray-400">30% of prize pool</p>
+                  </div>
+                  <div className="rounded-lg bg-[#1E2A36] p-4">
+                    <h3 className="mb-2 text-lg font-bold text-[#cd7f32]">
+                      3rd PLACE
+                    </h3>
+                    <p className="text-xl font-bold">
+                      ${tournament!.prizePool * 0.2}
+                    </p>
+                    <p className="text-sm text-gray-400">20% of prize pool</p>
+                  </div>
                 </div>
-                <div className="rounded-lg bg-[#1E2A36] p-4">
-                  <h3 className="mb-2 text-lg font-bold text-[#cd7f32]">
-                    3rd PLACE
-                  </h3>
-                  <p className="text-xl font-bold">
-                    ${tournament!.prizePool * 0.2}
-                  </p>
-                  <p className="text-sm text-gray-400">20% of prize pool</p>
+              </>
+            ) : (
+              <>
+                <p className="mb-4 text-gray-300">
+                  In this tournament, you&apos;ll predict the final hammer price
+                  for each car below. The person with the closest predictions
+                  across all cars will win the tournament. For free tournaments,
+                  the prize pool will be calculated as 10 points multiplied by
+                  the number of cars in the tournament.
+                </p>
+                <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="rounded-lg bg-[#1E2A36] p-4">
+                    <h3 className="mb-2 text-lg font-bold text-[#F2CA16]">
+                      1st PLACE
+                    </h3>
+                    <p className="text-xl font-bold">
+                      {tournament!.auction_ids.length * 10 * 0.5} points
+                    </p>
+                    <p className="text-sm text-gray-400">50% of prize pool</p>
+                  </div>
+                  <div className="rounded-lg bg-[#1E2A36] p-4">
+                    <h3 className="mb-2 text-lg font-bold text-gray-300">
+                      2nd PLACE
+                    </h3>
+                    <p className="text-xl font-bold">
+                      {tournament!.auction_ids.length * 10 * 0.3} points
+                    </p>
+                    <p className="text-sm text-gray-400">30% of prize pool</p>
+                  </div>
+                  <div className="rounded-lg bg-[#1E2A36] p-4">
+                    <h3 className="mb-2 text-lg font-bold text-[#cd7f32]">
+                      3rd PLACE
+                    </h3>
+                    <p className="text-xl font-bold">
+                      {tournament!.auction_ids.length * 10 * 0.2} points
+                    </p>
+                    <p className="text-sm text-gray-400">20% of prize pool</p>
+                  </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
 
-          <div className="grid gap-8 md:grid-cols-12">
+          <div className="grid gap-4 sm:gap-8 md:grid-cols-12">
             <div className="md:col-span-7">
-              <h2 className="mb-6 text-2xl font-bold">TOURNAMENT CARS</h2>
-              <div className="space-y-6">
+              <h2 className="mb-4 text-lg font-bold sm:mb-6 sm:text-2xl">
+                TOURNAMENT CARS
+              </h2>
+              <div className="space-y-4 sm:space-y-6">
                 {auctions.map((auction) => (
                   <Card
                     key={auction.id}
                     className="overflow-hidden border-[#1E2A36] bg-[#13202D]"
                   >
-                    <div className="grid grid-cols-5">
-                      <div className="relative col-span-2">
+                    <div className="flex flex-col sm:grid sm:grid-cols-5">
+                      <div className="relative h-40 sm:col-span-2 sm:h-auto">
                         <Image
                           src={auction.image}
                           alt={auction.title}
@@ -583,7 +622,7 @@ const TournamentDetails = () => {
                           objectFit="cover"
                         />
                       </div>
-                      <div className="col-span-3 p-4">
+                      <div className="p-3 sm:col-span-3 sm:p-4">
                         <h3 className="mb-2 font-bold">{auction.title}</h3>
                         <div className="mb-4 grid grid-cols-2 gap-2">
                           <div>
@@ -632,7 +671,7 @@ const TournamentDetails = () => {
             <div className="md:col-span-5">
               <div className="sticky top-24">
                 <Card className="border-[#1E2A36] bg-[#13202D]">
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-6">
                     <h3 className="mb-6 text-xl font-bold">YOUR PREDICTIONS</h3>
 
                     {error && (
@@ -694,9 +733,12 @@ const TournamentDetails = () => {
                           )}
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3 sm:space-y-4">
                           {auctions.map((auction, index) => (
-                            <div key={auction.id} className="space-y-2">
+                            <div
+                              key={auction.id}
+                              className="space-y-1 sm:space-y-2"
+                            >
                               <label className="text-sm font-medium">
                                 {/* make - model - year*/}
                                 {/* {auction.attributes[2].value}{" "}
