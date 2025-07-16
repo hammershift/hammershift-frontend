@@ -63,8 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     let prediction = await req.json();
-    const userId = Types.ObjectId.createFromHexString(prediction.user.userId);
-    prediction.user.userId = userId;
+    // const userId = Types.ObjectId.createFromHexString(prediction.user.userId);
     if (
       session.user.id !== prediction.user.userId ||
       session.user.username !== prediction.user.username
