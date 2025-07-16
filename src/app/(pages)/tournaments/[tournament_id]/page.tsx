@@ -70,7 +70,6 @@ const TournamentDetails = () => {
     []
   );
 
-
   const [dropdownLimit, setDropdownLimit] = useState<number>(5);
   const [predictionSets, setPredictionSets] = useState<PredictionSet>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -80,7 +79,6 @@ const TournamentDetails = () => {
   const [isPredictionLoading, setIsPredictionLoading] =
     useState<boolean>(false);
   const { data: session } = useSession();
-
 
   const checkIfAllAuctionsAreOver = () => {
     return false;
@@ -303,7 +301,7 @@ const TournamentDetails = () => {
       const submitPredictions = predictions.map((prediction) => {
         return {
           auction_id: prediction.auction_id,
-          tournament_id: tournament.tournament_id,
+          tournament_id: tournament._id,
           predictedPrice: parseInt(prediction.value),
           predictionType: tournament.type,
           wagerAmount: tournament.buyInFee,
@@ -318,7 +316,7 @@ const TournamentDetails = () => {
       });
 
       const res = await addTournamentPredictions(
-        tournament.tournament_id,
+        tournament._id,
         submitPredictions
       );
 
@@ -383,7 +381,7 @@ const TournamentDetails = () => {
 
         setPredictions(
           res.map((auction: Auction) => ({
-            auction_id: auction.auction_id,
+            auction_id: auction._id,
             title: auction.title,
             value: "",
             hasEnded: subDays(new Date(auction.attributes[12].value), 1) < now,
@@ -394,13 +392,13 @@ const TournamentDetails = () => {
         //get current predictions for tournament
 
         const currentPredictions = await getTournamentPredictions(
-          tournament.tournament_id
+          tournament._id
         );
         if (currentPredictions) {
           setCurrentPredictions(currentPredictions);
           setFilteredPredictions(
             currentPredictions.filter(
-              (p: Prediction) => p.auction_id === res[0].auction_id
+              (p: Prediction) => p.auction_id === res[0]._id
             )
           );
         }

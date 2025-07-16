@@ -111,7 +111,7 @@ export const getTournamentCars = async (tournament_id: number) => {
   }
 };
 
-export const getTournamentPredictions = async (tournament_id: number) => {
+export const getTournamentPredictions = async (tournament_id: string) => {
   try {
     const response = await fetch(
       `/api/predictions?tournament_id=${tournament_id}`
@@ -229,7 +229,7 @@ export const addPrediction = async (prediction: Prediction) => {
 };
 
 export const addTournamentPredictions = async (
-  tournament_id: number,
+  tournament_id: string,
   predictions: Prediction[]
 ) => {
   try {
@@ -1108,9 +1108,12 @@ export const checkEmailExistence = async (email: string) => {
 
 export const checkUsernameExistence = async (username: string) => {
   try {
-    const res = await fetch(`/api/checkUserExistence?username=${encodeURIComponent(username)}`, {
-      method: "GET",
-    });
+    const res = await fetch(
+      `/api/checkUserExistence?username=${encodeURIComponent(username)}`,
+      {
+        method: "GET",
+      }
+    );
 
     if (!res.ok) {
       throw new Error(`Failed to fetch user. Status: ${res.status}`);

@@ -131,8 +131,8 @@ export async function POST(req: NextRequest) {
     ) {
       const newPredictions = await Predictions.insertMany(predictions);
 
-      const updatedTournament = await Tournament.findOneAndUpdate(
-        { tournament_id: tournament_id },
+      const updatedTournament = await Tournament.findByIdAndUpdate(
+        tournament_id,
         {
           $push: {
             users: {
