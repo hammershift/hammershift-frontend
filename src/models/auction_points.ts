@@ -24,11 +24,10 @@ const AuctionPointsSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "auction_points" }
 );
 
 const AuctionPoints =
-  mongoose.models.auction_points ||
-  mongoose.model("auction_points", AuctionPointsSchema);
+  mongoose.models.Point || mongoose.model("Point", AuctionPointsSchema);
 
 export default AuctionPoints;

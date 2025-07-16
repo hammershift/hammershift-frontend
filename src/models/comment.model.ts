@@ -1,84 +1,84 @@
-import mongoose, { model, models, Schema, Types } from 'mongoose';
+import mongoose, { model, models, Schema, Types } from "mongoose";
 export interface Comment {
-    _id: Types.ObjectId;
-    comment: string;
-    pageID: string;
-    pageType: string;
-    parentID?: Types.ObjectId;
-    user: {
-        userId: string;
-        username: string;
-        profilePicture?: string;
-    };
-    likes: [];
-    dislikes: [];
-    createdAt: Date;
+  _id: Types.ObjectId;
+  comment: string;
+  pageID: string;
+  pageType: string;
+  parentID?: Types.ObjectId;
+  user: {
+    userId: string;
+    username: string;
+    profilePicture?: string;
+  };
+  likes: [];
+  dislikes: [];
+  createdAt: Date;
 }
 
 const commentSchema = new Schema(
-    {
-        _id: { type: Types.ObjectId, required: true },
-        comment: {
-            type: String,
-            required: true,
-        },
-        pageID: {
-            type: String,
-            required: true,
-        },
-        pageType: {
-            type: String,
-            required: true,
-        },
-        parentID: {
-            type: Types.ObjectId,
-            required: false,
-        },
-        user: {
-            userId: {
-                type: String,
-                required: true,
-            },
-            username: {
-                type: String,
-                required: true,
-            },
-            profilePicture: {
-                type: String,
-            },
-        },
-        likes: [
-            {
-                userId: {
-                    type: String,
-                    required: true,
-                },
-                username: {
-                    type: String,
-                    required: true,
-                },
-            }
-        ],
-        dislikes: [
-            {
-                userId: {
-                    type: String,
-                    required: true,
-                },
-                username: {
-                    type: String,
-                    required: true,
-                },
-            }
-        ],
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        },
+  {
+    _id: { type: Types.ObjectId, required: true },
+    comment: {
+      type: String,
+      required: true,
     },
-    { collection: "comments", timestamps: true }
+    pageID: {
+      type: String,
+      required: true,
+    },
+    pageType: {
+      type: String,
+      required: true,
+    },
+    parentID: {
+      type: Types.ObjectId,
+      required: false,
+    },
+    user: {
+      userId: {
+        type: String,
+        required: true,
+      },
+      username: {
+        type: String,
+        required: true,
+      },
+      profilePicture: {
+        type: String,
+      },
+    },
+    likes: [
+      {
+        userId: {
+          type: String,
+          required: true,
+        },
+        username: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    dislikes: [
+      {
+        userId: {
+          type: String,
+          required: true,
+        },
+        username: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { collection: "comments", timestamps: true }
 );
 
-const Comments = models.comments || model<Comment>("comments", commentSchema);
+const Comments = models.Comment || model<Comment>("comments", commentSchema);
 
 export default Comments;
