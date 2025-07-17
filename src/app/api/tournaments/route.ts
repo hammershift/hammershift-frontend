@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     const type = req.nextUrl.searchParams.get("type");
     // check if there is a request body
     if (id) {
-      const tournament = await Tournament.findOne({ tournament_id: id });
+      const tournament = await Tournament.findOne({ _id: id });
       if (tournament) {
         return NextResponse.json(tournament, { status: 200 });
       } else {
