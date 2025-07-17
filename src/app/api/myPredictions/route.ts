@@ -1,8 +1,5 @@
-import { authOptions } from "@/lib/auth";
-
 import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/betterAuth";
 import { headers } from "next/headers";
@@ -21,39 +18,41 @@ export async function GET(req: NextRequest) {
 
   try {
     await connectToDB();
-    console.log("Fetching user predictions...");
 
     const forTournament = req.nextUrl.searchParams.get("tournament");
 
-    console.log(forTournament);
-
-    const query = {
-      $match: {
-        "user.username": username,
-        tournament_id: forTournament ? { $exists: true } : { $exists: false },
-      },
+    const filter: any = {
+      "user.username": username,
     };
-    console.log(query);
+    if (forTournament) {
+      filter.tournament_id = { $exists: true };
+    } else {
+      filter.tournament_id = { $exists: false };
+    }
 
-    const userPredictions = await Predictions.aggregate([
-      query,
-      {
-        $lookup: {
-          from: "auctions",
-          localField: "auction_id",
-          foreignField: "auction_id",
-          as: "carData",
-        },
-      },
-      {
-        $unwind: "$carData",
-      },
-    ]);
+    const userPredictions = await Predictions.find(filter).populate({
+      path: "auction_id",
+      model: "Auction",
+    });
+    // const userPredictions = await Predictions.aggregate([
+    //   query,
+    //   {
+    //     $lookup: {
+    //       from: "auctions",
+    //       localField: "auction_id",
+    //       foreignField: "auction_id",
+    //       as: "carData",
+    //     },
+    //   },
+    //   {
+    //     $unwind: "$carData",
+    //   },
+    // ]);
 
     const predictionDetails = userPredictions
       .map((prediction) => {
-        if (!prediction.carData.auction_id) return null;
-        const auctionDetails = prediction.carData;
+        if (!prediction.auction_id) return null;
+        const auctionDetails = prediction.auction_id;
 
         return {
           _id: prediction._id.toString(),
