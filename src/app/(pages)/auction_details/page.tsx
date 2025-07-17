@@ -122,7 +122,6 @@ const GuessTheHammer = () => {
     }
 
     if (/^(\d+(\.\d*)?|\.\d+)$/.test(rawValue)) {
-      console.log(rawValue);
       const numericValue = Number(rawValue);
       if (numericValue <= MAX_SAFE_INTEGER) {
         setPrediction(rawValue);
@@ -207,7 +206,6 @@ const GuessTheHammer = () => {
     async function loadData() {
       if (auctionId) {
         try {
-          console.log(auctionId);
           const response = await getCarData(auctionId);
           if (response) {
             setCar(response);
