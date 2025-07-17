@@ -702,6 +702,13 @@ const TournamentDetails = () => {
                       <div className="mb-4 rounded-md border border-yellow-500/50 bg-yellow-500/20 p-3 text-yellow-500">
                         Tournament has already started.
                       </div>
+                    ) : tournament.users.length >= tournament.maxUsers ? (
+                      <>
+                        <div className="mb-4 rounded-md border border-red-500/50 bg-red-500/20 p-3 text-red-500">
+                          Tournament has reached its maximum number of
+                          participants.
+                        </div>
+                      </>
                     ) : (
                       <>
                         <div className="mb-6 rounded-lg bg-[#1E2A36]/80 p-4">
