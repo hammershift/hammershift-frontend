@@ -21,7 +21,11 @@ import {
 } from "@/app/components/ui/tabs";
 import { TextArea } from "@/app/components/ui/textarea";
 import { TimerProvider } from "@/app/context/TimerContext";
-import { getMyPredictions, getMyTournamentPredictions } from "@/lib/data";
+import {
+  getMyPredictions,
+  getMyTournamentPredictions,
+  getMyAuctionPoints,
+} from "@/lib/data";
 import { getInitials } from "@/lib/utils";
 import { CircleDollarSign, Clock, Settings, Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -56,7 +60,7 @@ function Profile(props: Props) {
   const [userInfo, setUserInfo] = useState<any | null>(null);
   const [winsNum, setWinsNum] = useState<number>(0);
   const [joinedDate, setJoinedDate] = useState<string>("");
-
+  const [userPoints, setUserPoints] = useState<number>(0);
   const {} = props;
   const { data } = useSession();
   const router = useRouter();
@@ -80,6 +84,23 @@ function Profile(props: Props) {
       setUsername(data?.user.username!);
       getUserInfo(data?.user.email);
     }
+  }, [data]);
+
+  //fetch total points
+
+  useEffect(() => {
+    async function fetchUserPoints() {
+      if (data) {
+        try {
+          const res = await getMyAuctionPoints(data.user.id);
+          setUserPoints(res.total);
+        } catch (error) {
+          console.error("Error fetching user points:", error);
+        }
+      }
+    }
+
+    fetchUserPoints();
   }, [data]);
 
   // fetch wagers
@@ -273,10 +294,8 @@ function Profile(props: Props) {
               <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#1E2A36]">
                 <CircleDollarSign className="h-6 w-6 text-[#F2CA16]" />
               </div>
-              <p className="text-gray-400">Total Winnings</p>
-              <p className="text-3xl font-bold">
-                $0 {/* TODO: put winnings */}
-              </p>
+              <p className="text-gray-400">Total Points</p>
+              <p className="text-3xl font-bold">{userPoints}</p>
             </div>
           </CardContent>
         </Card>

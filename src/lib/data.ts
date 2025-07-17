@@ -1305,3 +1305,8 @@ export const getAuctionPoints = async (limit: number) => {
   const data = await res.json();
   return data;
 };
+export const getMyAuctionPoints = async (id: string) => {
+  const res = await fetch(`/api/auctionPoints/${id}`, { method: "GET" });
+  const data = await res.json();
+  return data;
+};
