@@ -675,35 +675,44 @@ const GuessTheHammer = () => {
                         )}
 
                         <div className="space-y-4">
-                          <div>
-                            <label className="mb-1 block text-sm text-gray-400">
-                              Your Prediction (USD)
-                            </label>
-                            <div className="relative">
-                              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500" />
-                              <Input
-                                type="text"
-                                value={prediction}
-                                onChange={handlePredictionAmount}
-                                className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
-                                placeholder="Enter amount"
-                              />
+                          {hasSubmitted ? (
+                            <div className="mb-4 rounded-md border border-green-900/50 bg-green-900/20 p-3 text-green-500">
+                              You have already made a prediction for this
+                              auction.
                             </div>
-                          </div>
-                          <Button
-                            type="submit"
-                            disabled={isSubmitting || !freePlayActive}
-                            className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
-                          >
-                            {isSubmitting ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Submitting...
-                              </>
-                            ) : (
-                              "Submit Prediction"
-                            )}
-                          </Button>
+                          ) : (
+                            <>
+                              <div>
+                                <label className="mb-1 block text-sm text-gray-400">
+                                  Your Prediction (USD)
+                                </label>
+                                <div className="relative">
+                                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500" />
+                                  <Input
+                                    type="text"
+                                    value={prediction}
+                                    onChange={handlePredictionAmount}
+                                    className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
+                                    placeholder="Enter amount"
+                                  />
+                                </div>
+                              </div>
+                              <Button
+                                type="submit"
+                                disabled={isSubmitting || !freePlayActive}
+                                className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                              >
+                                {isSubmitting ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Submitting...
+                                  </>
+                                ) : (
+                                  "Submit Prediction"
+                                )}
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </form>
                     </CardContent>
