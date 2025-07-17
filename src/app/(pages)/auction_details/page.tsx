@@ -823,12 +823,8 @@ const GuessTheHammer = () => {
                     Prize
                   </div>
                   <div className="text-lg font-bold text-[#F2CA16] sm:text-xl">
-                    $
-                    {(
-                      (predictions || []).filter(
-                        (p) => mode === "free_play" //|| !p?.is_ai_agent
-                      ).length * 10
-                    ).toFixed(2)}
+                    {/*TODO: change this when paid auctions are implemented */}
+                    10 points
                   </div>
                 </div>
               </div>
