@@ -15,7 +15,8 @@ interface IProps {
 const TournamentGrid = ({ tournaments }: IProps) => {
   if (!Array.isArray(tournaments) || tournaments.length === 0) return null;
 
-  const formatTimeLeft = (dateString: string) => {
+  const formatTimeLeft = (tournament: Tournament) => {
+    const dateString = tournament.endTime;
     if (!dateString) return "No end date";
 
     try {
@@ -26,7 +27,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
       }
 
       const now = new Date();
-      if (endDate < now) {
+      if (endDate < now || tournament.haveWinners) {
         return "Ended";
       }
 
@@ -78,7 +79,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
                   <div className="text-sm text-gray-400">Prize Pool</div>
                   <div className="font-bold">
                     {tournament.type === "free_play"
-                      ? "Practice"
+                      ? `${tournament.auction_ids.length * 10} points`
                       : `$${tournament.prizePool || 0}`}
                   </div>
                 </div>
@@ -87,7 +88,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
                 <Clock className="h-5 w-5 text-[#F2CA16]" />
                 <div>
                   <div className="text-sm text-gray-400">Ends</div>
-                  <div>{formatTimeLeft(tournament.endTime?.toString())}</div>
+                  <div>{formatTimeLeft(tournament)}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -104,9 +105,11 @@ const TournamentGrid = ({ tournaments }: IProps) => {
               href={`${createPageUrl("tournaments")}/${tournament.tournament_id}`}
             >
               <Button className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
-                {tournament.type === "free_play"
-                  ? "Play Free"
-                  : "Enter Tournament"}
+                {formatTimeLeft(tournament) === "Ended"
+                  ? "View Details"
+                  : tournament.type === "free_play"
+                    ? "Play for Free"
+                    : "Enter Tournament"}
               </Button>
             </Link>
           </CardContent>

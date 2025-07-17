@@ -123,7 +123,7 @@ export const AuctionGrid = ({
                 </div>
 
                 <Link
-                  href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams(mode))}`}
+                  href={`${createPageUrl("auction_details")}?id=${auction._id}&${new URLSearchParams(getModeParams(mode))}`}
                 >
                   <Button
                     className={
