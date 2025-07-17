@@ -91,6 +91,8 @@ export async function GET(req: NextRequest) {
       "attributes.2.value": make === "all" ? { $exists: true } : make,
       isActive: true,
       "attributes.0.value": priceFilter,
+      "sort.deadline": { $gt: new Date() },
+      "attributes.14.value": 1,
     };
     const options = {
       offset: offset,

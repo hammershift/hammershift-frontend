@@ -60,13 +60,13 @@ export const AuctionGrid = ({
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {activeAuctions
-        .filter(
-          (auction) =>
-            auction.attributes[14].value === 1 &&
-            !["No end date", "Invalid date", "Ended", "Date error"].includes(
-              formatTimeLeft(auction.sort!.deadline.toString())
-            )
-        )
+        // .filter(
+        //   (auction) =>
+        //     auction.attributes[14].value === 1 &&
+        //     !["No end date", "Invalid date", "Ended", "Date error"].includes(
+        //       formatTimeLeft(auction.sort!.deadline.toString())
+        //     )
+        // )
         .map((auction, index) => (
           <Card
             key={index}
