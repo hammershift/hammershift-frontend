@@ -76,17 +76,17 @@ const GuessTheHammer = () => {
 
     try {
       const endDate = new Date(dateString);
-      const endDateMinusOneDay = subDays(endDate, 1);
-      if (!isValid(endDateMinusOneDay)) {
+
+      if (!isValid(endDate)) {
         return "Invalid date";
       }
 
       const now = new Date();
-      if (endDateMinusOneDay < now) {
+      if (endDate < now) {
         return "Ended";
       }
 
-      return formatDistanceToNow(endDateMinusOneDay, { addSuffix: true });
+      return formatDistanceToNow(endDate, { addSuffix: true });
     } catch (error) {
       console.error("Date formatting error:", error);
       return "Date error";
