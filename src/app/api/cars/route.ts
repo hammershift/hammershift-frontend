@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     if (auction_ids) {
       const auction_ids_split = auction_ids.split(",");
       const auctions = await Auctions.find({
-        auction_id: {
+        _id: {
           $in: auction_ids_split,
         },
       });
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
       const car = await Auctions.findOne({
-        $and: [{ auction_id: auction_id }, { isActive: true }],
+        $and: [{ _id: auction_id }, { isActive: true }],
       });
       return NextResponse.json(car);
     }
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
         );
       }
       const auctions = await Auctions.find({
-        auction_id: { $in: tournament.auction_ids },
+        _id: { $in: tournament.auction_ids },
       });
 
       return NextResponse.json(auctions);
@@ -135,7 +135,7 @@ export async function PUT(req: NextRequest) {
     const edits = await req.json();
 
     const editedAuction = Auctions.findOneAndUpdate(
-      { $and: [{ auction_id: auction_id }, { isActive: true }] },
+      { $and: [{ _id: auction_id }, { isActive: true }] },
       { $set: edits },
       { returnDocument: "after" }
     );
