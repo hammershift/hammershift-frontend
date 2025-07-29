@@ -652,7 +652,7 @@ const TournamentDetails = () => {
                             onClick={() =>
                               router.push(
                                 `${createPageUrl("auction_details")}?id=${
-                                  auction.auction_id
+                                  auction._id
                                 }&mode=tournament`
                               )
                             }
