@@ -8,6 +8,7 @@ import {
 } from "react";
 
 interface Tournament {
+  _id: string;
   tournament_id: number;
   name: string;
   description: string;
@@ -30,6 +31,7 @@ interface TournamentContextType {
 }
 const defaultContextValue = {
   latestTournament: {
+    _id: "",
     tournament_id: 0,
     name: "",
     description: "",
