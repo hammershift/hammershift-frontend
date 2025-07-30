@@ -50,7 +50,9 @@ export async function GET(req: NextRequest) {
       query = {
         isActive: true,
         buyInFee: 0,
-        endTime: { $gte: new Date() },
+        startTime: {
+          $gt: new Date(),
+        },
       };
     } else if (type === "standard") {
       query = {
