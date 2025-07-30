@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const make = req.nextUrl.searchParams.get("make");
+    const status = req.nextUrl.searchParams.get("status");
     const priceRange = Number(req.nextUrl.searchParams.get("priceRange"));
 
     if (auction_ids) {
@@ -91,15 +92,19 @@ export async function GET(req: NextRequest) {
       "attributes.2.value": make === "all" ? { $exists: true } : make,
       isActive: true,
       "attributes.0.value": priceFilter,
-      "sort.deadline": { $gt: new Date() },
+      "sort.deadline":
+        status === "active" || status === "ending_soon"
+          ? { $gt: new Date() }
+          : { $lt: new Date() },
       "attributes.14.value": 1,
     };
     const options = {
       offset: offset,
       limit: limit,
-      sort: {
-        createdAt: -1,
-      },
+      sort:
+        status === "ending_soon"
+          ? { "sort.deadline": 1 }
+          : { "sort.deadline": -1 },
     };
     const cars = await Auctions.paginate(query, options);
     return NextResponse.json({ total: cars.totalPages, cars: cars.docs });

@@ -19,6 +19,12 @@ import { useEffect, useState } from "react";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
 import TournamentGrid from "@/app/components/tournament_grid";
+
+interface Filters {
+  make: string;
+  priceRange: string;
+  status: "active" | "ending_soon" | "ended";
+}
 const FreePlay = () => {
   const [hammerCars, setHammerCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +33,7 @@ const FreePlay = () => {
   const [velocityPicks, setVelocityPicks] = useState([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     make: "all",
     priceRange: "0",
     status: "active",
@@ -94,6 +100,7 @@ const FreePlay = () => {
                 limit: 6,
                 make: filters.make,
                 priceRange: parseInt(filters.priceRange),
+                status: filters.status,
               });
               setHammerCars(data.cars);
               setTotalPages(data.total);
@@ -222,7 +229,11 @@ const FreePlay = () => {
                 <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
               </div>
             ) : (
-              <AuctionGrid auctions={hammerCars} mode="free_play" />
+              <AuctionGrid
+                isEnded={filters.status === "ended"}
+                auctions={hammerCars}
+                mode="free_play"
+              />
             )}
           </TabsContent>
 

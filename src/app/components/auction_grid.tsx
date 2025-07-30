@@ -12,11 +12,12 @@ interface IProps {
   auctions: Auction[];
   mode: string;
   user?: any;
+  isEnded: boolean;
 }
 export const AuctionGrid = ({
   auctions = [],
   mode = "free_play",
-  user,
+  isEnded = false,
 }: IProps) => {
   const [processedCars, setProcessedCars] = useState(new Set());
 
@@ -134,7 +135,11 @@ export const AuctionGrid = ({
                           : "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
                     }
                   >
-                    {mode === "price_is_right" ? "PLACE WAGER" : "PREDICT NOW"}
+                    {mode === "price_is_right"
+                      ? "PLACE WAGER"
+                      : isEnded
+                        ? "VIEW RESULTS"
+                        : "PREDICT NOW"}
                   </Button>
                 </Link>
               </div>

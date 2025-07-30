@@ -6,11 +6,12 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Badge } from "./badge";
+import { Button } from "./ui/button";
 
 interface IFilter {
   make: string;
   priceRange: string;
-  status: string;
+  status: "active" | "ending_soon" | "ended";
 }
 interface IProps {
   filters: IFilter;
@@ -80,27 +81,36 @@ export const AuctionFilters = ({ filters, setFilters }: IProps) => {
       </Select>
 
       <div className="flex gap-2">
-        <Badge
+        <Button
           variant={filters.status === "active" ? "default" : "outline"}
-          className="cursor-pointer"
+          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "active" ? "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90" : ""} `}
           onClick={() => setFilters({ ...filters, status: "active" })}
         >
           Active
-        </Badge>
+        </Button>
         {/* <Badge
-          variant={filters.status === "ending_soon" ? "default" : "outline"}
+          variant={filters.status === "active" ? "default" : "outline"}
           className="cursor-pointer"
+          // onClick={() => setFilters({ ...filters, status: "active" })}
+        >
+          <button onClick={() => setFilters({ ...filters, status: "active" })}>
+            Active
+          </button>
+        </Badge> */}
+        <Button
+          variant={filters.status === "ending_soon" ? "default" : "outline"}
+          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "ending_soon" ? "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90" : ""} `}
           onClick={() => setFilters({ ...filters, status: "ending_soon" })}
         >
           Ending Soon
-        </Badge>
-        <Badge
+        </Button>
+        <Button
           variant={filters.status === "ended" ? "default" : "outline"}
-          className="cursor-pointer"
+          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "ended" ? "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90" : ""} `}
           onClick={() => setFilters({ ...filters, status: "ended" })}
         >
           Ended
-        </Badge> */}
+        </Button>
       </div>
     </div>
   );

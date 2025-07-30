@@ -54,11 +54,13 @@ export const getCars = async ({
   limit = 0,
   make = "all",
   priceRange = 0,
+  status = "active",
 }: {
   offset?: number;
   limit?: number;
   make?: string;
   priceRange?: number;
+  status?: "active" | "ending_soon" | "ended";
 }) => {
   try {
     // const response = await fetch(
@@ -68,7 +70,7 @@ export const getCars = async ({
     //   }
     // );
     const response = await fetch(
-      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}`
+      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}&status=${status}`
     );
     if (response.ok) {
       const data = await response.json();
