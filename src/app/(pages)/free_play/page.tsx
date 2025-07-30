@@ -92,6 +92,8 @@ const FreePlay = () => {
               const data = await getCars({
                 offset: (currentPage - 1) * 6,
                 limit: 6,
+                make: filters.make,
+                priceRange: parseInt(filters.priceRange),
               });
               setHammerCars(data.cars);
               setTotalPages(data.total);
