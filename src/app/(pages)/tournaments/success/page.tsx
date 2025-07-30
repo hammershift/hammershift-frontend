@@ -154,7 +154,7 @@ const TournamentSuccessPage = () => {
           </Link>
 
           <Link
-            href={`${createPageUrl("tournaments")}/${latestTournament.tournament_id}`}
+            href={`${createPageUrl("tournaments")}/${latestTournament._id}`}
           >
             <Button className="bg-purple-600 text-white hover:bg-purple-700">
               <Trophy className="mr-2 h-4 w-4" />
