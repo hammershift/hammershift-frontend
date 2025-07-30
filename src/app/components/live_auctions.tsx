@@ -2,7 +2,7 @@ import { USDollar } from "@/helpers/utils";
 import { getCars } from "@/lib/data";
 import { Auction } from "@/models/auction.model";
 import { formatDistanceToNow, isValid } from "date-fns";
-import { Clock, RefreshCcw, Users } from "lucide-react";
+import { Clock, RefreshCcw, Users, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -80,17 +80,20 @@ export const LiveAuctions = () => {
     return { mode: "free_play" };
   };
 
-  useEffect(() => {
-    const fetchAuctions = async () => {
-      try {
-        console.log("Fetching auctions...");
-        const response = await getCars({ limit: 10 });
-        setAuctions(response.cars);
-      } catch (e) {
-        console.log(e);
-      }
-    };
+  const fetchAuctions = async () => {
+    setLoading(true);
+    try {
+      console.log("Fetching auctions...");
+      const response = await getCars({ limit: 20 });
+      setAuctions(response.cars);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchAuctions();
   }, []);
 
@@ -101,32 +104,22 @@ export const LiveAuctions = () => {
         <Button
           variant="outline"
           className="border-[#F2CA16] text-[#F2CA16]"
-          onClick={() => setCurrentIndex(0)}
+          onClick={() => fetchAuctions()}
         >
           <RefreshCcw className="mr-2 h-4 w-4" />
           Refresh
         </Button>
       </div>
       <div className="relative">
-        <div
-          className="scrollbar-hide flex space-x-4 overflow-x-auto py-2"
-          ref={scrollContainerRef}
-        >
-          {auctions.length > 0 &&
-            auctions
-              .filter(
-                (auction) =>
-                  auction.attributes[14].value === 1 &&
-                  ![
-                    "No end date",
-                    "Invalid date",
-                    "Ended",
-                    "Date error",
-                  ].includes(formatTimeLeft(auction.sort!.deadline.toString()))
-              )
-              .map((auction, index) => (
+        {!loading && (
+          <div
+            className="scrollbar-hide flex space-x-4 overflow-x-auto py-2"
+            ref={scrollContainerRef}
+          >
+            {auctions.length > 0 &&
+              auctions.map((auction, index) => (
                 <div key={index} className="w-80 flex-shrink-0 lg:w-96">
-                  <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16] flex flex-col">
+                  <Card className="flex h-full flex-col border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]">
                     <div className="relative h-[240px]">
                       <Image
                         src={auction.image || defaultImage}
@@ -144,7 +137,7 @@ export const LiveAuctions = () => {
                       </div>
                     </div>
 
-                    <CardContent className="flex flex-col justify-between flex-grow p-4">
+                    <CardContent className="flex flex-grow flex-col justify-between p-4">
                       {/* Title stays at top */}
                       <h3 className="mb-2 font-bold">{auction.title}</h3>
 
@@ -152,16 +145,22 @@ export const LiveAuctions = () => {
                       <div className="mt-auto space-y-4">
                         <div className="grid grid-cols-2 gap-2">
                           <div>
-                            <div className="text-sm text-gray-400">Current Bid</div>
+                            <div className="text-sm text-gray-400">
+                              Current Bid
+                            </div>
                             <div className="font-bold text-[#F2CA16]">
                               {USDollar.format(auction.attributes[0].value)}
                             </div>
                           </div>
                           <div>
-                            <div className="text-sm text-gray-400">Time Left</div>
+                            <div className="text-sm text-gray-400">
+                              Time Left
+                            </div>
                             <div className="flex items-center">
                               <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
-                              {formatTimeLeft(auction.sort?.deadline.toString() ?? "")}
+                              {formatTimeLeft(
+                                auction.sort?.deadline.toString() ?? ""
+                              )}
                             </div>
                           </div>
                         </div>
@@ -183,7 +182,16 @@ export const LiveAuctions = () => {
                   </Card>
                 </div>
               ))}
-        </div>
+          </div>
+        )}
+        {
+          // Loading spinner
+          loading && (
+            <div className="flex min-h-[30vh] items-center justify-center">
+              <Loader2 className="h-16 w-16 animate-spin" color="#F2CA16" />
+            </div>
+          )
+        }
       </div>
     </section>
   );
