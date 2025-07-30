@@ -11,6 +11,7 @@ import { GameModes } from "./components/game_modes";
 import { HowItWorks } from "./components/how_it_works";
 import { Leaderboard } from "./components/leaderboard";
 import { LiveAuctions } from "./components/live_auctions";
+import { LiveTournaments } from "./components/live_tournaments";
 import { Button } from "./components/ui/button";
 const LivePage = () => {
   const [screenWidth, setScreenWidth] = useState(0);
@@ -71,6 +72,15 @@ const LivePage = () => {
         <LiveAuctions />
         <p className="mt-4 text-center text-sm text-gray-300">
           Participating in live auctions is subject to terms and conditions.
+        </p>
+      </section>
+      <section className="section-container mx-auto px-4 py-12">
+        {/* <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold">LIVE AUCTIONS</h2>
+        </div> */}
+        <LiveTournaments />
+        <p className="mt-4 text-center text-sm text-gray-300">
+          Participating in tournaments is subject to terms and conditions.
         </p>
       </section>
       {/* Stats Row*/}
