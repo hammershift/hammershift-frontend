@@ -384,7 +384,7 @@ const TournamentDetails = () => {
             auction_id: auction._id,
             title: auction.title,
             value: "",
-            hasEnded: subDays(new Date(auction.attributes[12].value), 1) < now,
+            hasEnded: new Date(auction.attributes[12].value) < now,
             hasError: false,
           }))
         );
@@ -780,7 +780,7 @@ const TournamentDetails = () => {
                                           e.target.value
                                         )
                                       }
-                                      className={`pl-8 ${predictions[index].hasError ? "border-red-500" : ""}`}
+                                      className={`pl-10 ${predictions[index].hasError ? "border-red-500" : ""}`}
                                       placeholder="Enter your prediction"
                                       min="0"
                                       step="1"
