@@ -17,6 +17,9 @@ export async function GET(req: NextRequest) {
     if (car_id) {
       const predictions = await Predictions.find({
         auction_id: car_id,
+        tournament_id: {
+          $exists: false,
+        },
       });
       return NextResponse.json(predictions);
     }
@@ -44,6 +47,9 @@ export async function GET(req: NextRequest) {
         auction_id: car_id,
         predictionType: prediction_type,
         "user.username": username,
+        tournament_id: {
+          $exists: false,
+        },
       });
       return NextResponse.json(userPredictions);
     }
