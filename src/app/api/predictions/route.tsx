@@ -13,6 +13,19 @@ export async function GET(req: NextRequest) {
     const tournament_id = req.nextUrl.searchParams.get("tournament_id");
     const username = req.nextUrl.searchParams.get("username");
     const latest = req.nextUrl.searchParams.get("latest");
+
+    if (car_id && username) {
+      const userPredictions = await Predictions.find({
+        auction_id: car_id,
+        predictionType: prediction_type,
+        "user.username": username,
+        tournament_id: {
+          $exists: false,
+        },
+      });
+      console.log(userPredictions);
+      return NextResponse.json(userPredictions);
+    }
     //get all predictions with the same car_id
     if (car_id) {
       const predictions = await Predictions.find({
@@ -41,18 +54,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(latestPrediction);
     }
     //get all predictions submitted by the same user for the specific car_id
-
-    if (car_id && username) {
-      const userPredictions = await Predictions.find({
-        auction_id: car_id,
-        predictionType: prediction_type,
-        "user.username": username,
-        tournament_id: {
-          $exists: false,
-        },
-      });
-      return NextResponse.json(userPredictions);
-    }
   } catch (e) {
     console.error(e);
     return NextResponse.json({ message: "Internal server error" });
