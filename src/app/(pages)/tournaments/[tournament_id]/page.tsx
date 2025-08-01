@@ -840,7 +840,7 @@ const TournamentDetails = () => {
                             {auctions.map((auction, index) => (
                               <option
                                 className="truncate"
-                                value={auction.auction_id}
+                                value={auction._id}
                                 key={index}
                               >
                                 {auction.title}
