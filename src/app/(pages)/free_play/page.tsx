@@ -3,6 +3,7 @@
 import { AuctionFilters } from "@/app/components/auction_filters";
 import { AuctionGrid } from "@/app/components/auction_grid";
 import { Card } from "@/app/components/card_component";
+import TournamentGrid from "@/app/components/tournament_grid";
 import { Button } from "@/app/components/ui/button";
 import {
   Tabs,
@@ -11,14 +12,13 @@ import {
   TabsTrigger,
 } from "@/app/components/ui/tabs";
 import { createPageUrl } from "@/app/components/utils";
-import { Tournament } from "@/models/tournament.model";
 import { getCars, getTournaments } from "@/lib/data";
+import { Tournament } from "@/models/tournament.model";
 import { Trophy } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
-import TournamentGrid from "@/app/components/tournament_grid";
 
 interface Filters {
   make: string;
@@ -111,7 +111,7 @@ const FreePlay = () => {
               const data = await getTournaments({
                 offset: (currentPage - 1) * 6,
                 limit: 6,
-                type: "free",
+                type: "free_play",
               });
               setTournaments(data.tournaments);
               setTotalPages(data.total);
@@ -203,7 +203,7 @@ const FreePlay = () => {
             <TabsTrigger
               value="hammer"
               className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+            // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>
