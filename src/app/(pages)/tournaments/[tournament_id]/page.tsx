@@ -358,7 +358,7 @@ const TournamentDetails = () => {
           session &&
           res.users.some((user: User) => user.userId === session.user.id)
         ) {
-          setHasJoined(true);
+          //setHasJoined(true);
         }
         setTournament(res);
 
@@ -384,7 +384,7 @@ const TournamentDetails = () => {
             auction_id: auction._id,
             title: auction.title,
             value: "",
-            hasEnded: new Date(auction.attributes[12].value) < now,
+            hasEnded: new Date(auction.sort!.deadline) < now,
             hasError: false,
           }))
         );
@@ -637,7 +637,7 @@ const TournamentDetails = () => {
                             <div className="text-xs text-gray-400">Ends</div>
                             <div>
                               {formatDistanceToNow(
-                                new Date(auction.attributes[12].value),
+                                new Date(auction.sort!.deadline),
                                 {
                                   addSuffix: true,
                                 }
