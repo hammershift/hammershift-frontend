@@ -698,10 +698,6 @@ const TournamentDetails = () => {
                       <div className="mb-4 rounded-md border border-red-500/50 bg-red-500/20 p-3 text-red-500">
                         Tournament has already ended.
                       </div>
-                    ) : new Date(tournament.startTime) < new Date() ? (
-                      <div className="mb-4 rounded-md border border-yellow-500/50 bg-yellow-500/20 p-3 text-yellow-500">
-                        Tournament has already started.
-                      </div>
                     ) : tournament.users.length >= tournament.maxUsers ? (
                       <>
                         <div className="mb-4 rounded-md border border-red-500/50 bg-red-500/20 p-3 text-red-500">
