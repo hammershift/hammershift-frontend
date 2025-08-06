@@ -72,7 +72,7 @@ const ForgotPassword = () => {
             </div>
           </div>
 
-          <form method="POST">
+          <form method="POST" onSubmit={handleForgotPassword}>
             <div className="flex flex-col gap-6 text-sm">
               <div className="flex flex-col gap-2">
                 <label>Email</label>
@@ -104,7 +104,6 @@ const ForgotPassword = () => {
                   variant="default"
                   type="submit"
                   className="mt-2 w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
-                  onClick={() => handleForgotPassword}
                 >
                   Send Reset Password Email
                 </Button>
