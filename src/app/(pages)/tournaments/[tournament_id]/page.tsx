@@ -359,7 +359,7 @@ const TournamentDetails = () => {
           session &&
           res.users.some((user: User) => user.userId === session.user.id)
         ) {
-          //setHasJoined(true);
+          setHasJoined(true);
         }
         setTournament(res);
 
