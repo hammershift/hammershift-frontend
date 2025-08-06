@@ -249,7 +249,9 @@ export const addTournamentPredictions = async (
       const data = await response.json();
       return data;
     } else {
-      console.error("Failed to add prediction!");
+      console.error("Failed to add tournament predictions!");
+      const data = await response.json();
+      return data;
     }
   } catch (e) {
     console.error(e);

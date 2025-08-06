@@ -139,7 +139,7 @@ export async function POST(req: NextRequest) {
       )
     ) {
       return NextResponse.json(
-        { message: "User already in tournament" },
+        { message: "You have already joined this tournament." },
         { status: 400 }
       );
     }

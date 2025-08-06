@@ -325,13 +325,12 @@ const TournamentDetails = () => {
         setLatestTournamentPredictions(res.predictions);
         setLatestTournament(res.tournaments);
         router.push(`/tournaments/success`);
-        //TODO: go to tournament success page
       } else {
-        setError("Failed to submit predictions");
+        setError(res.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Failed to submit predictions", e);
-      setError("Failed to submit tournament predictions.");
+      setError(e);
     } finally {
       setIsSubmitting(false);
     }
@@ -360,7 +359,7 @@ const TournamentDetails = () => {
           session &&
           res.users.some((user: User) => user.userId === session.user.id)
         ) {
-          setHasJoined(true);
+          //setHasJoined(true);
         }
         setTournament(res);
 
