@@ -690,6 +690,8 @@ const GuessTheHammer = () => {
                                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500" />
                                   <Input
                                     type="text"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*"
                                     value={prediction}
                                     onChange={handlePredictionAmount}
                                     className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"

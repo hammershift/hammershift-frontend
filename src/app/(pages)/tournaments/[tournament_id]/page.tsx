@@ -765,7 +765,9 @@ const TournamentDetails = () => {
                                   <>
                                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                     <Input
-                                      type="number"
+                                      type="text"
+                                      inputmode="numeric"
+                                      pattern="[0-9]*"
                                       value={predictions[
                                         index
                                       ].value.toString()}
