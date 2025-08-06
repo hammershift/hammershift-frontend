@@ -320,12 +320,14 @@ const TournamentDetails = () => {
         submitPredictions
       );
 
-      if (res) {
+      if (res.status === 201) {
         setHasJoined(true);
         setLatestTournamentPredictions(res.predictions);
         setLatestTournament(res.tournaments);
         router.push(`/tournaments/success`);
         //TODO: go to tournament success page
+      } else {
+        setError("Failed to submit predictions");
       }
     } catch (e) {
       console.error("Failed to submit predictions", e);

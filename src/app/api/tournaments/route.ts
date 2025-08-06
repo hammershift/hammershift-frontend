@@ -125,6 +125,24 @@ export async function POST(req: NextRequest) {
     const predictions = body.predictions;
     const tournament_id = body.tournament_id;
 
+    const tournament = await Tournament.findById(tournament_id);
+    if (!tournament) {
+      return NextResponse.json(
+        { message: "Tournament not found" },
+        { status: 404 }
+      );
+    }
+
+    if (
+      tournament.users.some(
+        (user) => user.userId.toHexString() === session.user.id
+      )
+    ) {
+      return NextResponse.json(
+        { message: "User already in tournament" },
+        { status: 400 }
+      );
+    }
     if (
       predictions.every(
         (prediction: Prediction) =>

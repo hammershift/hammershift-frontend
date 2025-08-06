@@ -31,7 +31,14 @@ export interface TournamentDocument extends Document {
   startTime: Date;
   endTime: Date;
   auction_ids: string[];
-  users: string[];
+  users: [
+    {
+      userId: Types.ObjectId;
+      fullName: string;
+      username: string;
+      role: string;
+    },
+  ];
   maxUsers: number;
   createdAt?: Date;
   updatedAt?: Date;
