@@ -359,7 +359,7 @@ const TournamentDetails = () => {
           session &&
           res.users.some((user: User) => user.userId === session.user.id)
         ) {
-          setHasJoined(true);
+          //setHasJoined(true);
         }
         setTournament(res);
 
@@ -765,9 +765,7 @@ const TournamentDetails = () => {
                                   <>
                                     <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                     <Input
-                                      type="text"
-                                      inputmode="numeric"
-                                      pattern="[0-9]*"
+                                      type="number"
                                       value={predictions[
                                         index
                                       ].value.toString()}
