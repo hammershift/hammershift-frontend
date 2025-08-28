@@ -319,15 +319,10 @@ const TournamentDetails = () => {
         tournament._id,
         submitPredictions
       );
-
-      if (res.status === 201) {
-        setHasJoined(true);
-        setLatestTournamentPredictions(res.predictions);
-        setLatestTournament(res.tournaments);
-        router.push(`/tournaments/success`);
-      } else {
-        setError(res.message);
-      }
+      setHasJoined(true);
+      setLatestTournamentPredictions(res.predictions);
+      setLatestTournament(res.tournaments);
+      router.push(`/tournaments/success`);
     } catch (e: any) {
       console.error("Failed to submit predictions", e);
       setError(e);
