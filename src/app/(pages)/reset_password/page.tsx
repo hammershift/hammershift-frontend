@@ -21,6 +21,7 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState<string>("");
   const [token] = useState(searchParams.get("token"));
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("reset password");
     e.preventDefault();
     if (password !== passwordConfirm) {
       setError("Passwords do not match");
@@ -86,7 +87,7 @@ const ResetPassword = () => {
               className="h-[20px] w-[20px] sm:hidden"
             ></Image>
           </div>
-          <form method="POST">
+          <form method="POST" onSubmit={handleResetPassword}>
             <div className="flex flex-col gap-6 text-sm">
               <div className="flex flex-col gap-2">
                 <label>New Password</label>
@@ -137,7 +138,6 @@ const ResetPassword = () => {
                   variant="default"
                   type="submit"
                   className="mt-2 w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
-                  onClick={() => handleResetPassword}
                 >
                   Reset Password
                 </Button>
