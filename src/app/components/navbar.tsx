@@ -738,6 +738,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                     prize={prediction.prize}
                     deadline={prediction.auctionDeadline}
                     index={index}
+                    type="prediction"
                   />
                 </TimerProvider>
               </div>
@@ -788,6 +789,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                       prize={prediction.prize}
                       deadline={prediction.auctionDeadline}
                       index={index}
+                      type="prediction"
                     />
                   </TimerProvider>
                 </div>
@@ -1204,6 +1206,8 @@ interface PredictionsCardProps {
   prize?: number;
   deadline: Date;
   index?: number;
+  type: string;
+  tournament_id?: number;
 }
 export const PredictionsCard: React.FC<PredictionsCardProps> = ({
   title,
@@ -1223,6 +1227,8 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
   prize,
   deadline,
   index,
+  type,
+  tournament_id,
 }) => {
   const { days, hours, minutes, seconds } = useTimer();
   const [refunded, setRefunded] = useState(false);
@@ -1268,7 +1274,7 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
     >
       <div className="flex w-full items-center gap-6 rounded sm:py-3">
         <Link
-          href={`/auction_details?id=${id}&mode=free_play`}
+          href={`${type === "prediction" ? "/auction_details?id=${id}&mode=free_play" : "/tournaments/" + tournament_id}`}
           onClick={() => closeMenu && closeMenu()}
           className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
         >
@@ -1282,7 +1288,7 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
         </Link>
         <div className="flex w-auto max-w-[230px] grow flex-col items-start sm:max-w-[323px]">
           <Link
-            href={`/auction_details?id=${id}&mode=free_play`}
+            href={`${type === "prediction" ? "/auction_details?id=${id}&mode=free_play" : "/tournaments/" + tournament_id}`}
             onClick={() => closeMenu && closeMenu()}
             className="self-start"
           >
@@ -1715,6 +1721,7 @@ const MobileMyWagers: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                       prize={prediction.prize}
                       deadline={prediction.auctionDeadline}
                       index={index}
+                      type="prediction"
                     />
                   </TimerProvider>
                 </div>
@@ -1766,6 +1773,7 @@ const MobileMyWagers: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                       prize={wager.prize}
                       deadline={wager.auctionDeadline}
                       index={index}
+                      type="prediction"
                     />
                   </TimerProvider>
                 </div>

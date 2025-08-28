@@ -12,11 +12,12 @@ interface IProps {
   auctions: Auction[];
   mode: string;
   user?: any;
+  isEnded: boolean;
 }
 export const AuctionGrid = ({
   auctions = [],
   mode = "free_play",
-  user,
+  isEnded = false,
 }: IProps) => {
   const [processedCars, setProcessedCars] = useState(new Set());
 
@@ -60,13 +61,13 @@ export const AuctionGrid = ({
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {activeAuctions
-        .filter(
-          (auction) =>
-            auction.attributes[14].value === 1 &&
-            !["No end date", "Invalid date", "Ended", "Date error"].includes(
-              formatTimeLeft(auction.sort!.deadline.toString())
-            )
-        )
+        // .filter(
+        //   (auction) =>
+        //     auction.attributes[14].value === 1 &&
+        //     !["No end date", "Invalid date", "Ended", "Date error"].includes(
+        //       formatTimeLeft(auction.sort!.deadline.toString())
+        //     )
+        // )
         .map((auction, index) => (
           <Card
             key={index}
@@ -123,7 +124,7 @@ export const AuctionGrid = ({
                 </div>
 
                 <Link
-                  href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams(mode))}`}
+                  href={`${createPageUrl("auction_details")}?id=${auction._id}&${new URLSearchParams(getModeParams(mode))}`}
                 >
                   <Button
                     className={
@@ -134,7 +135,11 @@ export const AuctionGrid = ({
                           : "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
                     }
                   >
-                    {mode === "price_is_right" ? "PLACE WAGER" : "PREDICT NOW"}
+                    {mode === "price_is_right"
+                      ? "PLACE WAGER"
+                      : isEnded
+                        ? "VIEW RESULTS"
+                        : "PREDICT NOW"}
                   </Button>
                 </Link>
               </div>

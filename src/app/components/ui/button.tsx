@@ -36,14 +36,16 @@ const buttonVariants = cva(
 interface IProps {
   className: string;
   variant?:
-  | "default"
-  | "destructive"
-  | "outline"
-  | "secondary"
-  | "ghost"
-  | "link";
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
   size?: "default" | "sm" | "lg" | "icon";
   children: React.ReactNode;
+  onClick?: () => void;
+
   [x: string]: any;
 }
 export const Button = ({
@@ -51,8 +53,8 @@ export const Button = ({
   variant = "default",
   size = "default",
   children,
-  props,
   onClick,
+  ...props
 }: IProps) => {
   return (
     <button

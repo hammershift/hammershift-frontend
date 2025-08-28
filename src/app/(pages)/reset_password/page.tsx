@@ -34,7 +34,9 @@ const ResetPassword = () => {
         newPassword: password,
       });
       if (error) {
-        setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
+        setError(
+          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
+        );
         setIsLoading(false);
         return;
       }
@@ -95,11 +97,11 @@ const ResetPassword = () => {
                   placeholder="New Password"
                   value={password}
                   onChange={(e: { target: { value: string } }) => {
-                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+                    const allowedPattern =
+                      /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
                     if (!allowedPattern.test(e.target.value)) return;
-                    setPassword(e.target.value)
-                  }
-                  }
+                    setPassword(e.target.value);
+                  }}
                   onKeyDown={handleKeyDown}
                   required
                 />
@@ -111,11 +113,11 @@ const ResetPassword = () => {
                   placeholder="Confirm Password"
                   value={passwordConfirm}
                   onChange={(e: { target: { value: string } }) => {
-                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
+                    const allowedPattern =
+                      /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
                     if (!allowedPattern.test(e.target.value)) return;
-                    setPasswordConfirm(e.target.value)
-                  }
-                  }
+                    setPasswordConfirm(e.target.value);
+                  }}
                   onKeyDown={handleKeyDown}
                   required
                 />
@@ -135,7 +137,7 @@ const ResetPassword = () => {
                   variant="default"
                   type="submit"
                   className="mt-2 w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
-                  onClick={handleResetPassword}
+                  onClick={() => handleResetPassword}
                 >
                   Reset Password
                 </Button>

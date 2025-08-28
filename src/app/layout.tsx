@@ -4,6 +4,8 @@ import { authClient } from "@/lib/auth-client";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import { PredictionProvider } from "./context/PredictionContext";
+import { TournamentPredictionProvider } from "./context/TournamentPredictionContext";
+import { TournamentProvider } from "./context/TournamentContext";
 import "./styles/app.css";
 import "./styles/globals.css";
 import Analytics from "./components/analytics";
@@ -38,14 +40,18 @@ export default async function RootLayout({
       {/*<body className={inter.className} */}
 
       <PredictionProvider>
-        <body>
-          <Analytics />
-          <Navbar />
-          {/* <BetaTesting /> */}
-          {children}
-          {/* <LoadWallet /> */}
-          <Footer />
-        </body>
+        <TournamentPredictionProvider>
+          <TournamentProvider>
+            <body>
+              <Analytics />
+              <Navbar />
+              {/* <BetaTesting /> */}
+              {children}
+              {/* <LoadWallet /> */}
+              <Footer />
+            </body>
+          </TournamentProvider>
+        </TournamentPredictionProvider>
       </PredictionProvider>
     </html>
   );

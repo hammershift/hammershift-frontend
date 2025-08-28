@@ -54,11 +54,13 @@ export const getCars = async ({
   limit = 0,
   make = "all",
   priceRange = 0,
+  status = "active",
 }: {
   offset?: number;
   limit?: number;
   make?: string;
   priceRange?: number;
+  status?: "active" | "ending_soon" | "ended";
 }) => {
   try {
     // const response = await fetch(
@@ -68,7 +70,7 @@ export const getCars = async ({
     //   }
     // );
     const response = await fetch(
-      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}`
+      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}&status=${status}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -81,6 +83,51 @@ export const getCars = async ({
   }
 };
 
+export const getBatchCars = async (auction_ids: string[]) => {
+  try {
+    const response = await fetch(
+      `/api/cars?auction_ids=${auction_ids.toString()}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch cars list!");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getTournamentCars = async (tournament_id: number) => {
+  try {
+    const response = await fetch(`/api/cars?tournament_id=${tournament_id}`);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch tournament cars");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getTournamentPredictions = async (tournament_id: string) => {
+  try {
+    const response = await fetch(
+      `/api/predictions?tournament_id=${tournament_id}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch tournament predictions!");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
 export const getPredictionData = async (auction_id: string) => {
   try {
     const response = await fetch(`/api/predictions?car_id=${auction_id}`);
@@ -146,6 +193,21 @@ export const getMyPredictions = async () => {
     return JSON.stringify({ message: "Internal server error" });
   }
 };
+export const getMyTournamentPredictions = async () => {
+  try {
+    const response = await fetch(`/api/myPredictions?tournament=true`);
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to fetch user's tournament predictions");
+      return JSON.stringify({ message: "Internal server error" });
+    }
+  } catch (e) {
+    console.error(e);
+    return JSON.stringify({ message: "Internal server error" });
+  }
+};
 
 export const addPrediction = async (prediction: Prediction) => {
   try {
@@ -161,6 +223,35 @@ export const addPrediction = async (prediction: Prediction) => {
       return data;
     } else {
       console.error("Failed to add prediction!");
+    }
+  } catch (e) {
+    console.error(e);
+    throw Error("API Error");
+  }
+};
+
+export const addTournamentPredictions = async (
+  tournament_id: string,
+  predictions: Prediction[]
+) => {
+  try {
+    const response = await fetch(`/api/tournaments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        predictions: predictions,
+        tournament_id: tournament_id,
+      }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    } else {
+      console.error("Failed to add tournament predictions!");
+      const data = await response.json();
+      return data;
     }
   } catch (e) {
     console.error(e);
@@ -712,7 +803,7 @@ export const likeComment = async (
   userID: string,
   likes: UserIdName[]
 ) => {
-  if (!likes.some(like => like.userId === userID)) {
+  if (!likes.some((like) => like.userId === userID)) {
     try {
       const res = await fetch("/api/comments", {
         method: "PUT",
@@ -760,7 +851,7 @@ export const dislikeComment = async (
   dislikes: UserIdName[]
 ) => {
   console.log(commentID);
-  if (!dislikes.some(dislike => dislike.userId === userID)) {
+  if (!dislikes.some((dislike) => dislike.userId === userID)) {
     try {
       const res = await fetch("/api/comments", {
         method: "PUT",
@@ -820,7 +911,7 @@ export const createReply = async (
   commentID: string,
   pageID: string,
   pageType: string,
-  reply: string,
+  reply: string
 ) => {
   try {
     const res = await fetch("/api/comments", {
@@ -1021,9 +1112,12 @@ export const checkEmailExistence = async (email: string) => {
 
 export const checkUsernameExistence = async (username: string) => {
   try {
-    const res = await fetch(`/api/checkUserExistence?username=${encodeURIComponent(username)}`, {
-      method: "GET",
-    });
+    const res = await fetch(
+      `/api/checkUserExistence?username=${encodeURIComponent(username)}`,
+      {
+        method: "GET",
+      }
+    );
 
     if (!res.ok) {
       throw new Error(`Failed to fetch user. Status: ${res.status}`);
@@ -1076,9 +1170,20 @@ export const createTournamentWager = async (wagerData: TournamentData) => {
   }
 };
 
-export const getTournaments = async () => {
+export const getTournaments = async ({
+  offset = 0,
+  limit = 0,
+  type,
+}: {
+  offset: number;
+  limit: number;
+  type: string;
+}) => {
   try {
-    const res = await fetch("/api/tournaments");
+    //TODO: hardcoded sort for now
+    const res = await fetch(
+      `/api/tournaments?&type=${type}&offset=${offset}&limit=${limit}&sort=newest`
+    );
     const data = await res.json();
     console.log(data);
     return data;
@@ -1201,6 +1306,11 @@ export const getUserPointsAndPlacing = async (
 
 export const getAuctionPoints = async (limit: number) => {
   const res = await fetch(`/api/auctionPoints?limit=${limit}`);
+  const data = await res.json();
+  return data;
+};
+export const getMyAuctionPoints = async (id: string) => {
+  const res = await fetch(`/api/auctionPoints/${id}`, { method: "GET" });
   const data = await res.json();
   return data;
 };

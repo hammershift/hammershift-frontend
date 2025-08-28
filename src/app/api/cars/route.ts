@@ -1,6 +1,7 @@
 import clientPromise from "@/lib/mongodb";
 import connectToDB from "@/lib/mongoose";
 import Auctions from "@/models/auction.model";
+import Tournaments from "@/models/tournament.model";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,34 +10,56 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest) {
   try {
     await connectToDB();
-
     const auction_id = req.nextUrl.searchParams.get("auction_id");
-    const tournamentID = req.nextUrl.searchParams.get("tournamentID");
+    const auction_ids = req.nextUrl.searchParams.get("auction_ids");
+    const tournament_id = req.nextUrl.searchParams.get("tournament_id");
     const offset = Number(req.nextUrl.searchParams.get("offset")) || 0;
     const limit = Number(req.nextUrl.searchParams.get("limit"));
     const make = req.nextUrl.searchParams.get("make");
+    const status = req.nextUrl.searchParams.get("status");
     const priceRange = Number(req.nextUrl.searchParams.get("priceRange"));
 
+    if (auction_ids) {
+      const auction_ids_split = auction_ids.split(",");
+      const auctions = await Auctions.find({
+        _id: {
+          $in: auction_ids_split,
+        },
+      });
+
+      if (auctions.length === 0) {
+        return NextResponse.json(
+          { message: "No auctions found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json(auctions);
+    }
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
       const car = await Auctions.findOne({
-        $and: [{ auction_id: auction_id }, { isActive: true }],
+        $and: [{ _id: auction_id }, { isActive: true }],
       });
       return NextResponse.json(car);
     }
-    // api/cars?tournamentID=123123 to get cars by tournament id
-    if (tournamentID) {
+    // api/cars?tournament_id=123123 to get cars by tournament id
+    if (tournament_id) {
+      const tournament = await Tournaments.findOne({
+        tournament_id: tournament_id,
+      });
+      if (!tournament) {
+        return NextResponse.json(
+          { message: "Tournament not found" },
+          { status: 404 }
+        );
+      }
       const auctions = await Auctions.find({
-        $and: [
-          { tournamentID: new mongoose.Types.ObjectId(tournamentID) },
-          { isActive: true },
-        ],
+        _id: { $in: tournament.auction_ids },
       });
 
       return NextResponse.json(auctions);
     }
     // api/cars to get all cars
-    console.log("Fetching all cars...");
     /*
       price range values:
       0: all
@@ -69,14 +92,19 @@ export async function GET(req: NextRequest) {
       "attributes.2.value": make === "all" ? { $exists: true } : make,
       isActive: true,
       "attributes.0.value": priceFilter,
+      "sort.deadline":
+        status === "active" || status === "ending_soon"
+          ? { $gt: new Date() }
+          : { $lt: new Date() },
+      "attributes.14.value": 1,
     };
-    console.log(query);
     const options = {
       offset: offset,
       limit: limit,
-      sort: {
-        createdAt: -1,
-      },
+      sort:
+        status === "ending_soon"
+          ? { "sort.deadline": 1 }
+          : { "sort.deadline": -1 },
     };
     const cars = await Auctions.paginate(query, options);
     return NextResponse.json({ total: cars.totalPages, cars: cars.docs });
@@ -112,7 +140,7 @@ export async function PUT(req: NextRequest) {
     const edits = await req.json();
 
     const editedAuction = Auctions.findOneAndUpdate(
-      { $and: [{ auction_id: auction_id }, { isActive: true }] },
+      { $and: [{ _id: auction_id }, { isActive: true }] },
       { $set: edits },
       { returnDocument: "after" }
     );

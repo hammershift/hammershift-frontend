@@ -80,7 +80,7 @@ const config: Config = {
       // }
     },
     screens: {
-      sx: "390px",
+      // sx: "390px",
       // => @media (min-width: 390px) { ... }
 
       sm: "640px",

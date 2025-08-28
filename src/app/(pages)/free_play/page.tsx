@@ -11,13 +11,20 @@ import {
   TabsTrigger,
 } from "@/app/components/ui/tabs";
 import { createPageUrl } from "@/app/components/utils";
-import { getCars } from "@/lib/data";
+import { Tournament } from "@/models/tournament.model";
+import { getCars, getTournaments } from "@/lib/data";
 import { Trophy } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ResponsivePagination from "react-responsive-pagination";
 import "react-responsive-pagination/themes/classic.css";
+import TournamentGrid from "@/app/components/tournament_grid";
 
+interface Filters {
+  make: string;
+  priceRange: string;
+  status: "active" | "ending_soon" | "ended";
+}
 const FreePlay = () => {
   const [hammerCars, setHammerCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,40 +33,100 @@ const FreePlay = () => {
   const [velocityPicks, setVelocityPicks] = useState([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<Filters>({
     make: "all",
     priceRange: "0",
     status: "active",
   });
-  const loadHammerCars = async () => {
-    setLoading(true);
-    try {
-      console.log("Loading hammer cars, page:", currentPage);
-      const now = new Date().toISOString();
+  const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
-      const response = await getCars({
-        offset: (currentPage - 1) * 6,
-        limit: 6,
-        make: filters.make,
-        priceRange: parseInt(filters.priceRange),
-      });
-      // console.log(response);
-      console.log(response);
-      setHammerCars(response.cars);
-      setTotalPages(response.total);
-    } catch (e) {
-      console.error("Error in loading hammer cars:", e);
-      setError("Failed to load hammer game cars");
-    } finally {
-      setLoading(false);
-    }
+  const handleTabChange = async (tab: string) => {
+    setActiveTab(tab);
+    //reset page and filter
+    setCurrentPage(1);
+    setTotalPages(1);
+    setFilters({ make: "all", priceRange: "0", status: "active" });
   };
+  // const loadHammerCars = async () => {
+  //   setLoading(true);
+  //   try {
+  //     console.log("Loading hammer cars, page:", currentPage);
+  //     const now = new Date().toISOString();
+
+  //     const response = await getCars({
+  //       offset: (currentPage - 1) * 6,
+  //       limit: 6,
+  //       make: filters.make,
+  //       priceRange: parseInt(filters.priceRange),
+  //     });
+  //     // console.log(response);
+  //     console.log(response);
+  //     setHammerCars(response.cars);
+  //     setTotalPages(response.total);
+  //   } catch (e) {
+  //     console.error("Error in loading hammer cars:", e);
+  //     setError("Failed to load hammer game cars");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  // const loadFreeTournaments = async () => {
+  //   try {
+  //     const data = await getTournaments({
+  //       offset: (currentPage - 1) * 6,
+  //       limit: 6,
+  //     });
+  //     setTournaments(data.tournaments);
+  //     setTotalPages(data.total);
+  //   } catch (e) {
+  //     console.error("Error in loading tournaments:", e);
+  //     setError("Failed to load tournaments");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   //TODO: for Velocity Picks, add field in auction model for isVelocityPick
 
   useEffect(() => {
-    loadHammerCars();
-  }, [currentPage, filters]);
+    async function loadData() {
+      setLoading(true);
+      try {
+        switch (activeTab) {
+          case "hammer":
+            {
+              const data = await getCars({
+                offset: (currentPage - 1) * 6,
+                limit: 6,
+                make: filters.make,
+                priceRange: parseInt(filters.priceRange),
+                status: filters.status,
+              });
+              setHammerCars(data.cars);
+              setTotalPages(data.total);
+            }
+            break;
+          case "tournaments":
+            {
+              const data = await getTournaments({
+                offset: (currentPage - 1) * 6,
+                limit: 6,
+                type: "free",
+              });
+              setTournaments(data.tournaments);
+              setTotalPages(data.total);
+            }
+            break;
+        }
+      } catch (e) {
+        console.log(e);
+        setError("Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadData();
+  }, [currentPage, filters, activeTab]);
 
   // useEffect(() => {
   //   if (hammerCars.length > 0) {
@@ -71,12 +138,12 @@ const FreePlay = () => {
     <div className="page-container">
       <div className="section-container mx-auto px-4 py-12">
         <div className="mb-8 space-y-2">
-          <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h1 className="text-3xl font-bold">FREE PLAY</h1>
             <Link href={createPageUrl("Leaderboard")}>
               <Button
                 variant="outline"
-                className="border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] w-full sm:w-auto"
+                className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto"
               >
                 <Trophy className="mr-2 h-5 w-5" />
                 LEADERBOARD
@@ -88,8 +155,6 @@ const FreePlay = () => {
             Practice your prediction skills without risking real money
           </p>
         </div>
-
-
 
         <div className="mb-8 rounded-md border border-blue-800/30 bg-blue-900/20 p-4">
           <p className="text-blue-400">
@@ -129,21 +194,25 @@ const FreePlay = () => {
           <AIStatistics />
         </div> */}
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => handleTabChange(value)}
+          className="mb-8"
+        >
           <TabsList className="border-[#333333] bg-[#2C2C2C]">
             <TabsTrigger
               value="hammer"
               className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-            // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>
-            {/* <TabsTrigger
-            value="tournaments"
-            className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-          >
-            Free Tournaments
-          </TabsTrigger> */}
+            <TabsTrigger
+              value="tournaments"
+              className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+            >
+              Free Tournaments
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="hammer" className="pt-6">
@@ -160,17 +229,21 @@ const FreePlay = () => {
                 <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
               </div>
             ) : (
-              <AuctionGrid auctions={hammerCars} mode="free_play" />
+              <AuctionGrid
+                isEnded={filters.status === "ended"}
+                auctions={hammerCars}
+                mode="free_play"
+              />
             )}
           </TabsContent>
 
-          {/* <TabsContent value="tournaments" className="pt-6">
+          <TabsContent value="tournaments" className="pt-6">
             {loading ? (
               <div className="flex items-center justify-center p-12">
                 <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
               </div>
-            ) : freeTournaments.length > 0 ? (
-              <TournamentList tournaments={freeTournaments} isFreeMode={true} />
+            ) : tournaments.length > 0 ? (
+              <TournamentGrid tournaments={tournaments} />
             ) : (
               <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-12 text-center">
                 <h3 className="mb-2 text-xl font-bold">
@@ -182,7 +255,7 @@ const FreePlay = () => {
                 </p>
               </div>
             )}
-          </TabsContent> */}
+          </TabsContent>
         </Tabs>
         <div className="mx-auto mb-8 w-1/3">
           <ResponsivePagination

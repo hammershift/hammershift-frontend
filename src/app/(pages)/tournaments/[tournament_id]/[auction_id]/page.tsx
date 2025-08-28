@@ -32,7 +32,7 @@ import {
 
 import TournamentWagerModal from "@/app/components/tournament_wager_modal";
 
-import { Auction } from "../page";
+import { Auction } from "../oldpage";
 
 export interface Tournaments {
   _id: string;

@@ -45,9 +45,7 @@ export async function sendEmail(
       react: ResetPasswordEmailTemplate({ url }),
     };
   }
-  const { data, error } = await resend.emails.send({
-    ...emailObj,
-  });
+  const { data, error } = await resend.emails.send(emailObj);
   if (error) {
     return console.error({ error });
   }

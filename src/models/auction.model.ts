@@ -104,7 +104,7 @@ export interface Auction extends Document {
   updatedAt?: Date;
 }
 export interface Car {
-  _id?: Types.ObjectId;
+  _id: string;
   auction_id: string;
   title: string;
   website: string;
@@ -172,9 +172,9 @@ const auctionSchema = new Schema(
 
 auctionSchema.plugin(paginate);
 const Auctions =
-  (models.auctions as mongoose.PaginateModel<Auction>) ||
+  (models.Auction as mongoose.PaginateModel<Auction>) ||
   model<Auction, mongoose.PaginateModel<Auction>>(
-    "auctions",
+    "Auction",
     auctionSchema,
     "auctions"
   );

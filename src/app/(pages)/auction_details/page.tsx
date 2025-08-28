@@ -18,7 +18,7 @@ import {
   TabsTrigger,
 } from "@/app/components/ui/tabs";
 import { USDollar } from "@/helpers/utils";
-import { formatDistanceToNow, isValid } from "date-fns";
+import { formatDistanceToNow, isValid, subDays } from "date-fns";
 import {
   ArrowLeft,
   Car as CarIcon,
@@ -54,13 +54,12 @@ const GuessTheHammer = () => {
   const { setLatestPrediction } = usePrediction();
 
   const [car, setCar] = useState<Car>();
-  const [wagerAmount, setWagerAmount] = useState<number>(10);
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [prediction, setPrediction] = useState<string>("");
   const MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER;
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-
+  const [predictionLoading, setPredictionLoading] = useState<boolean>(true);
   const [userPrediction, setUserPrediction] = useState(null);
   const [mode, setMode] = useState<string>("free_play");
   const [carNotLoaded, setCarNotLoaded] = useState<boolean>(false);
@@ -123,7 +122,6 @@ const GuessTheHammer = () => {
     }
 
     if (/^(\d+(\.\d*)?|\.\d+)$/.test(rawValue)) {
-      console.log(rawValue);
       const numericValue = Number(rawValue);
       if (numericValue <= MAX_SAFE_INTEGER) {
         setPrediction(rawValue);
@@ -141,7 +139,7 @@ const GuessTheHammer = () => {
       return;
     }
 
-    if (!car || !car.auction_id) {
+    if (!car || !car._id) {
       setError("Car not found");
       return;
     }
@@ -169,11 +167,11 @@ const GuessTheHammer = () => {
 
     try {
       let predictionData = {
-        auction_id: car.auction_id,
+        auction_id: car._id,
         predictedPrice: predictionValue,
         predictionType: mode,
         user: {
-          userId: new Types.ObjectId(session.user.id), //TODO: change to string because the mongoose import is causing module not found errors. Instead convert to objectId on server side
+          userId: session.user.id, //TODO: change to string because the mongoose import is causing module not found errors. Instead convert to objectId on server side
           fullName: session.user.name,
           username: session.user.username!,
           role: "USER", //should be default USER since agents can't access this page
@@ -202,8 +200,6 @@ const GuessTheHammer = () => {
     const auctionId = urlParams.get("id");
     const modeParam = urlParams.get("mode")!;
 
-    //TODO: get the auction details from the server and display them
-
     //TODO: for now, mode is only free_play. Later on, add tournament and price_is_right
     setMode(modeParam);
 
@@ -215,7 +211,8 @@ const GuessTheHammer = () => {
             setCar(response);
           } else {
             setCar({
-              auction_id: auctionId,
+              _id: auctionId,
+              auction_id: "",
               title: "Untitled Auction",
               website: "",
               image: "",
@@ -235,10 +232,27 @@ const GuessTheHammer = () => {
 
           try {
             const predictionData = await getPredictionData(auctionId);
-            setPredictions(predictionData || []);
+            if (session?.user) {
+              const sorted = predictionData.sort(
+                (a: Prediction, b: Prediction) => {
+                  if (session.user.username === a.user.username) {
+                    return -1;
+                  } else if (session.user.username === b.user.username) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                }
+              );
+              setPredictions(sorted || []);
+            } else {
+              setPredictions(predictionData || []);
+            }
           } catch (e) {
             console.error("Error loading predictions:", e);
             setPredictions([]);
+          } finally {
+            setPredictionLoading(false);
           }
 
           try {
@@ -269,7 +283,8 @@ const GuessTheHammer = () => {
         } catch (e) {
           console.error("Error loading car data:", e);
           setCar({
-            auction_id: auctionId,
+            _id: auctionId,
+            auction_id: "",
             title: "Untitled Auction",
             website: "",
             image: "",
@@ -660,35 +675,46 @@ const GuessTheHammer = () => {
                         )}
 
                         <div className="space-y-4">
-                          <div>
-                            <label className="mb-1 block text-sm text-gray-400">
-                              Your Prediction (USD)
-                            </label>
-                            <div className="relative">
-                              <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500" />
-                              <Input
-                                type="text"
-                                value={prediction}
-                                onChange={handlePredictionAmount}
-                                className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
-                                placeholder="Enter amount"
-                              />
+                          {hasSubmitted ? (
+                            <div className="mb-4 rounded-md border border-green-900/50 bg-green-900/20 p-3 text-green-500">
+                              You have already made a prediction for this
+                              auction.
                             </div>
-                          </div>
-                          <Button
-                            type="submit"
-                            disabled={isSubmitting || !freePlayActive}
-                            className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
-                          >
-                            {isSubmitting ? (
-                              <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Submitting...
-                              </>
-                            ) : (
-                              "Submit Prediction"
-                            )}
-                          </Button>
+                          ) : (
+                            <>
+                              <div>
+                                <label className="mb-1 block text-sm text-gray-400">
+                                  Your Prediction (USD)
+                                </label>
+                                <div className="relative">
+                                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-500" />
+                                  <Input
+                                    type="text"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*"
+                                    value={prediction}
+                                    onChange={handlePredictionAmount}
+                                    className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
+                                    placeholder="Enter amount"
+                                  />
+                                </div>
+                              </div>
+                              <Button
+                                type="submit"
+                                disabled={isSubmitting || !freePlayActive}
+                                className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                              >
+                                {isSubmitting ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Submitting...
+                                  </>
+                                ) : (
+                                  "Submit Prediction"
+                                )}
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </form>
                     </CardContent>
@@ -808,120 +834,123 @@ const GuessTheHammer = () => {
                     Prize
                   </div>
                   <div className="text-lg font-bold text-[#F2CA16] sm:text-xl">
-                    $
-                    {(
-                      (predictions || []).filter(
-                        (p) => mode === "free_play" //|| !p?.is_ai_agent
-                      ).length * 10
-                    ).toFixed(2)}
+                    {/*TODO: change this when paid auctions are implemented */}
+                    10 points
                   </div>
                 </div>
               </div>
+              {predictionLoading ? (
+                <div className="flex items-center justify-center">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading predictions...
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {(predictions || [])
+                    .filter((prediction) => prediction && mode === "free_play")
 
-              <div className="space-y-4">
-                {(predictions || [])
-                  .filter((prediction) => prediction && mode === "free_play")
-                  .map((prediction, index) => {
-                    if (!prediction) return null;
+                    .map((prediction, index) => {
+                      if (!prediction) return null;
 
-                    const isCurrentUser =
-                      session &&
-                      prediction.user.username === session.user.username;
+                      const isCurrentUser =
+                        session &&
+                        prediction.user.username === session.user.username;
 
-                    const displayAmount =
-                      mode === "free_play"
-                        ? USDollar.format(prediction.predictedPrice)
-                        : isCurrentUser
+                      const displayAmount =
+                        mode === "free_play"
                           ? USDollar.format(prediction.predictedPrice)
-                          : obfuscateAmount(prediction.predictedPrice);
+                          : isCurrentUser
+                            ? USDollar.format(prediction.predictedPrice)
+                            : obfuscateAmount(prediction.predictedPrice);
 
-                    const getDisplayName = () => {
-                      // if (prediction.is_ai_agent) {
-                      //   return prediction.agent_id || "UnknownAgent";
-                      // }
+                      const getDisplayName = () => {
+                        // if (prediction.is_ai_agent) {
+                        //   return prediction.agent_id || "UnknownAgent";
+                        // }
 
-                      if (prediction.user?.username) {
-                        return prediction.user.username;
-                      }
+                        if (prediction.user?.username) {
+                          return prediction.user.username;
+                        }
 
-                      // if (prediction.created_by) {
-                      //   const emailParts = prediction.created_by.split("@");
-                      //   if (emailParts.length > 0) {
-                      //     return emailParts[0];
-                      //   }
-                      // }
-                      return "Unknown User";
-                    };
+                        // if (prediction.created_by) {
+                        //   const emailParts = prediction.created_by.split("@");
+                        //   if (emailParts.length > 0) {
+                        //     return emailParts[0];
+                        //   }
+                        // }
+                        return "Unknown User";
+                      };
 
-                    // const getAvatarBg = () => {
-                    //   return prediction.is_ai_agent
-                    //     ? "bg-purple-600 text-white"
-                    //     : prediction.user?.avatar_color
-                    //       ? `bg-${prediction.user.avatar_color}-500 text-white`
-                    //       : "bg-[#F2CA16]/20";
-                    // };
+                      // const getAvatarBg = () => {
+                      //   return prediction.is_ai_agent
+                      //     ? "bg-purple-600 text-white"
+                      //     : prediction.user?.avatar_color
+                      //       ? `bg-${prediction.user.avatar_color}-500 text-white`
+                      //       : "bg-[#F2CA16]/20";
+                      // };
 
-                    const displayTime = () => {
-                      if (!prediction.createdAt) return "";
-                      try {
-                        const date = new Date(prediction.createdAt);
-                        return (
-                          date.toLocaleDateString() +
-                          " " +
-                          date.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        );
-                      } catch (e) {
-                        return "";
-                      }
-                    };
+                      const displayTime = () => {
+                        if (!prediction.createdAt) return "";
+                        try {
+                          const date = new Date(prediction.createdAt);
+                          return (
+                            date.toLocaleDateString() +
+                            " " +
+                            date.toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })
+                          );
+                        } catch (e) {
+                          return "";
+                        }
+                      };
 
-                    return (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between rounded-lg bg-[#1E2A36] p-4"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`flex h-8 w-8 items-center justify-center rounded-full md:h-10 md:w-10 ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
-                          >
-                            {prediction.user.username?.[0]?.toUpperCase() ||
-                              "U"}
+                      return (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between rounded-lg bg-[#1E2A36] p-4"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div
+                              className={`flex h-8 w-8 items-center justify-center rounded-full md:h-10 md:w-10 ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
+                            >
+                              {prediction.user.username?.[0]?.toUpperCase() ||
+                                "U"}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2 text-sm font-medium md:text-base">
+                                {getDisplayName()}
+                                {isCurrentUser && (
+                                  <Badge
+                                    variant="outline"
+                                    className="border-[#F2CA16] bg-[#F2CA16]/20 text-xs text-[#F2CA16] md:text-sm"
+                                  >
+                                    You
+                                  </Badge>
+                                )}
+                                {prediction.user.role == Role.AGENT && (
+                                  <Badge
+                                    variant="outline"
+                                    className="border-[#A855f7] bg-[#A855f7]/20 text-xs text-[#A855f7] md:text-sm"
+                                  >
+                                    AI
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="text-xs text-gray-400 md:text-sm">
+                                {displayTime()}
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2 text-sm font-medium md:text-base">
-                              {getDisplayName()}
-                              {isCurrentUser && (
-                                <Badge
-                                  variant="outline"
-                                  className="border-[#F2CA16] bg-[#F2CA16]/20 text-xs text-[#F2CA16] md:text-sm"
-                                >
-                                  You
-                                </Badge>
-                              )}
-                              {prediction.user.role == Role.AGENT && (
-                                <Badge
-                                  variant="outline"
-                                  className="border-[#A855f7] bg-[#A855f7]/20 text-xs text-[#A855f7] md:text-sm"
-                                >
-                                  AI
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="text-xs text-gray-400 md:text-sm">
-                              {displayTime()}
-                            </div>
+                          <div className="text-sm font-bold md:text-base">
+                            {displayAmount}
                           </div>
                         </div>
-                        <div className="text-sm font-bold md:text-base">
-                          {displayAmount}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
+                      );
+                    })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

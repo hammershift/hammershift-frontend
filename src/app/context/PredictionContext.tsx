@@ -9,7 +9,7 @@ const defaultContextValue = {
     predictedPrice: 0,
     predictionType: "",
     user: {
-      userId: null,
+      userId: "",
       fullName: "",
       username: "",
       role: "",
@@ -35,7 +35,7 @@ const PredictionProvider: React.FC<PredictionProviderProps> = ({
     predictedPrice: 0,
     predictionType: "",
     user: {
-      userId: null,
+      userId: "",
       fullName: "",
       username: "",
       role: "",
