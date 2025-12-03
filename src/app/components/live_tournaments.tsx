@@ -31,9 +31,10 @@ export const LiveTournaments = () => {
         limit: 20,
         type: "free",
       });
-      setLiveTournaments(data.tournaments);
+      setLiveTournaments(data?.tournaments || []);
     } catch (e) {
       console.log(e);
+      setLiveTournaments([]);
     } finally {
       setLoading(false);
     }
