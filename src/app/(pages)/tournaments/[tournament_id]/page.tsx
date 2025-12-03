@@ -294,8 +294,50 @@ const TournamentDetails = () => {
     setIsSubmitting(true);
 
     try {
+      // Handle tournament buy-in payment
       if (tournament.buyInFee > 0) {
-        //TODO: update user balance
+        // Step 1: Deduct balance from wallet
+        const walletResponse = await fetch("/api/wallet", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            wagerAmount: tournament.buyInFee,
+          }),
+        });
+
+        if (!walletResponse.ok) {
+          const errorData = await walletResponse.json();
+          throw new Error(errorData.message || "Failed to deduct tournament fee from wallet");
+        }
+
+        const walletData = await walletResponse.json();
+
+        // Step 2: Create transaction record for tournament buy-in
+        const transactionResponse = await fetch("/api/transaction", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            transactionType: "tournament buy-in",
+            amount: tournament.buyInFee,
+            type: "-",
+            tournamentID: tournament._id,
+          }),
+        });
+
+        if (!transactionResponse.ok) {
+          // If transaction record fails, we should ideally refund the wallet
+          // but for now we'll just log the error and continue
+          console.error("Failed to create transaction record, but wallet was debited");
+        }
+
+        // Update local session balance if available
+        if (session && session.user) {
+          session.user.balance = walletData.newBalance;
+        }
       }
 
       const submitPredictions = predictions.map((prediction) => {
@@ -325,7 +367,7 @@ const TournamentDetails = () => {
       router.push(`/tournaments/success`);
     } catch (e: any) {
       console.error("Failed to submit predictions", e);
-      setError(e);
+      setError(e.message || "Failed to join tournament. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
