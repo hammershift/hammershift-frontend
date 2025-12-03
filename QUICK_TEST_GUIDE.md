@@ -149,7 +149,7 @@ Before you start:
 
 **Option 1: MongoDB Compass**
 1. Open MongoDB Compass
-2. Connect to: `mongodb+srv://hammershift-new:tgR7VWisuPLZ43eB@cluster0.kpemmst.mongodb.net/`
+2. Connect using your MongoDB connection string from `.env.local`
 3. Select database: `hammershift`
 4. Open collection: `transactions`
 5. Filter: `{ transactionType: "tournament buy-in" }`
