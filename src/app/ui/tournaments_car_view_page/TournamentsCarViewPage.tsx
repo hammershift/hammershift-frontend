@@ -1,7 +1,7 @@
 "use client";
 
 import TournamentsCard from "@/app/components/tournaments_card";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

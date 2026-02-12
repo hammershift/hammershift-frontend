@@ -16,7 +16,7 @@ import {
 } from "@/app/components/ui/tabs";
 import { TextArea } from "@/app/components/ui/textarea";
 import { AlertCircle, CheckCircle2, UserRound } from "lucide-react";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SetStateAction, useEffect, useState } from "react";
 

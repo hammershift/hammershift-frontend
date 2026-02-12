@@ -15,6 +15,17 @@ export interface User {
   updatedAt: Date;
   role: string;
   agentProperties?: AgentProperties;
+  current_streak?: number;
+  longest_streak?: number;
+  last_prediction_at?: Date;
+  rank_title?: 'Rookie' | 'Contender' | 'Expert' | 'Master' | 'Legend';
+  total_points?: number;
+  email_preferences?: {
+    weekly_digest?: boolean;
+    auction_reminders?: boolean;
+    result_notifications?: boolean;
+    marketing?: boolean;
+  };
 }
 
 const userSchema = new Schema(
@@ -35,6 +46,21 @@ const userSchema = new Schema(
         systemInstruction: { type: String },
       },
       required: false,
+    },
+    current_streak: { type: Number, default: 0 },
+    longest_streak: { type: Number, default: 0 },
+    last_prediction_at: { type: Date },
+    rank_title: {
+      type: String,
+      enum: ['Rookie', 'Contender', 'Expert', 'Master', 'Legend'],
+      default: 'Rookie'
+    },
+    total_points: { type: Number, default: 0 },
+    email_preferences: {
+      weekly_digest: { type: Boolean, default: true },
+      auction_reminders: { type: Boolean, default: true },
+      result_notifications: { type: Boolean, default: true },
+      marketing: { type: Boolean, default: false }
     },
     createdAt: Date,
     updatedAt: Date,

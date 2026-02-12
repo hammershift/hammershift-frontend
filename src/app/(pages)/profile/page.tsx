@@ -1,5 +1,6 @@
 "use client";
-import { useSession } from "@/lib/auth-client";
+
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -20,6 +21,8 @@ import {
   TabsTrigger,
 } from "@/app/components/ui/tabs";
 import { TextArea } from "@/app/components/ui/textarea";
+import { Label } from "@/app/components/ui/label";
+import { Switch } from "@/app/components/ui/switch";
 import { TimerProvider } from "@/app/context/TimerContext";
 import {
   getMyPredictions,
@@ -27,13 +30,30 @@ import {
   getMyAuctionPoints,
 } from "@/lib/data";
 import { getInitials } from "@/lib/utils";
-import { CircleDollarSign, Clock, Settings, Trophy } from "lucide-react";
+import {
+  CircleDollarSign,
+  Clock,
+  Settings,
+  Trophy,
+  TrendingUp,
+  Target,
+  Award,
+  Download,
+  Trash2,
+  Eye,
+  EyeOff,
+  Flame,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PulseLoader } from "react-spinners";
 import { default as DollarIcon } from "../../../../public/images/dollar.svg";
 import HourglassIcon from "../../../../public/images/hour-glass.svg";
 import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
+import StreakIndicator from "@/app/components/StreakIndicator";
+import BadgeDisplay from "@/app/components/BadgeDisplay";
+import { BadgeType } from "@/models/badge.model";
+import { useTrackEvent } from "@/hooks/useTrackEvent";
 
 interface Props {}
 
@@ -42,8 +62,6 @@ function Profile(props: Props) {
   const [username, setUsername] = useState("");
   const [about, setAbout] = useState("");
   const [loading, setLoading] = useState(true);
-  const [totalPredictionsAndWatchlist, setTotalPredictionsAndWatchlist] =
-    useState(0);
   const [dataIsLoading, setDataIsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activePredictions, setActivePredictions] = useState([]);
@@ -52,42 +70,77 @@ function Profile(props: Props) {
     useState([]);
   const [completedTournamentPredictions, setCompletedTournamentPredictions] =
     useState([]);
-  const [activeWatchlist, setActiveWatchlist] = useState([]);
-  const [completedWatchlist, setCompletedWatchlist] = useState([]);
   const [isActivePrediction, setIsActivePrediction] = useState(true);
   const [isActiveTournament, setIsActiveTournament] = useState(true);
-  const [currentTab, setCurrentTab] = useState<string>("predictions");
-  const [userInfo, setUserInfo] = useState<any | null>(null);
-  const [winsNum, setWinsNum] = useState<number>(0);
-  const [joinedDate, setJoinedDate] = useState<string>("");
+  const [currentTab, setCurrentTab] = useState<string>("overview");
   const [userPoints, setUserPoints] = useState<number>(0);
-  const {} = props;
+  const [emailPreferences, setEmailPreferences] = useState({
+    weekly_digest: true,
+    auction_reminders: true,
+    result_notifications: true,
+    marketing: false,
+  });
+  const [profileData, setProfileData] = useState<any>(null);
+  const [badges, setBadges] = useState<any[]>([]);
+  const [streakData, setStreakData] = useState<any>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwords, setPasswords] = useState({
+    old: "",
+    new: "",
+    confirm: "",
+  });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const { data } = useSession();
   const router = useRouter();
-
-  const getUserInfo = async (email: string) => {
-    const res = await fetch(`/api/userInfo?email=${email}`, {
-      method: "GET",
-    });
-    if (!res.ok) {
-      throw new Error("Unable to fetch user transactions");
-    }
-    const result = await res.json();
-    setAbout(result.user.about);
-    setLoading(false);
-  };
+  const track = useTrackEvent();
 
   useEffect(() => {
-    console.log(data);
     if (data) {
       setName(data?.user.name);
       setUsername(data?.user.username!);
-      getUserInfo(data?.user.email);
+      fetchUserProfile();
     }
   }, [data]);
 
-  //fetch total points
+  useEffect(() => {
+    track("profile_viewed", {
+      tab: currentTab,
+      current_streak: streakData?.current_streak || 0,
+      badges_earned: badges.length,
+    });
+  }, [currentTab]);
 
+  const fetchUserProfile = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/profile`, {
+        method: "GET",
+      });
+      if (!res.ok) throw new Error("Unable to fetch user profile");
+
+      const result = await res.json();
+      setProfileData(result);
+      setAbout(result.user.about || "");
+      setBadges(result.badges || []);
+      setStreakData(result.streak);
+      setEmailPreferences(
+        result.user.email_preferences || {
+          weekly_digest: true,
+          auction_reminders: true,
+          result_notifications: true,
+          marketing: false,
+        }
+      );
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch total points
   useEffect(() => {
     async function fetchUserPoints() {
       if (data) {
@@ -103,7 +156,7 @@ function Profile(props: Props) {
     fetchUserPoints();
   }, [data]);
 
-  // fetch wagers
+  // Fetch predictions/tournaments
   useEffect(() => {
     setDataIsLoading(true);
     const fetchPredictions = async () => {
@@ -146,85 +199,133 @@ function Profile(props: Props) {
     };
     if (currentTab === "predictions") {
       fetchPredictions();
-      console.log("predictions loaded");
     } else if (currentTab === "tournaments") {
       fetchTournaments();
     }
   }, [currentTab]);
 
-  // logs active and completed wagers for checking
-  // useEffect(() => {
-  //     console.log("active:", activeWagers, "completed:", completedWagers)
-  // }, [activeWagers, completedWagers])
+  const handleUpdateProfile = async () => {
+    setIsLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+    try {
+      const response = await fetch(`/api/profile`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: name,
+          about: about,
+        }),
+      });
 
-  //calculates total wagers and watchlist
-  useEffect(() => {
-    setTotalPredictionsAndWatchlist(
-      activePredictions.length +
-        completedPredictions.length +
-        activeWatchlist.length +
-        completedWatchlist.length
-    );
-  }, [
-    activePredictions,
-    completedPredictions,
-    activeWatchlist,
-    completedWatchlist,
-  ]);
+      if (response.ok) {
+        setSuccessMessage("Profile updated successfully");
+        fetchUserProfile();
+      } else {
+        setErrorMessage("Failed to update profile");
+      }
+    } catch (error) {
+      setErrorMessage("Failed to update profile");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // fetch watchlist
-  // useEffect(() => {
-  //   const fetchWatchlist = async () => {
-  //     const data = await getMyWatchlist();
-  //     const currentDate = new Date();
+  const handleUpdateEmailPreferences = async () => {
+    setIsLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+    try {
+      const response = await fetch(`/api/profile/email-preferences`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email_preferences: emailPreferences }),
+      });
 
-  //     if (!data.watchlist || data.watchlist.length !== 0) {
-  //       const completed = data.watchlist.filter((watchlist: any) => {
-  //         const auctionDeadline = new Date(watchlist.auctionDeadline);
-  //         return auctionDeadline < currentDate;
-  //       });
-  //       const active = data.watchlist.filter((watchlist: any) => {
-  //         const auctionDeadline = new Date(watchlist.auctionDeadline);
-  //         return auctionDeadline >= currentDate;
-  //       });
+      if (response.ok) {
+        setSuccessMessage("Email preferences updated successfully");
+        track("email_preferences_updated", { preferences: emailPreferences });
+      } else {
+        setErrorMessage("Failed to update email preferences");
+      }
+    } catch (error) {
+      setErrorMessage("Failed to update email preferences");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  //       setActiveWatchlist(active);
-  //       setCompletedWatchlist(completed);
-  //     }
-  //     setDataIsLoading(false);
-  //   };
-  //   fetchWatchlist();
-  // }, []);
+  const handleChangePassword = async () => {
+    if (passwords.new !== passwords.confirm) {
+      setErrorMessage("New passwords do not match");
+      return;
+    }
+    if (passwords.new.length < 8) {
+      setErrorMessage("Password must be at least 8 characters");
+      return;
+    }
 
-  //fetch user data
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     const res = await getUserInfo(data?.user.id);
-  //     setUserInfo(res.user);
-  //     setJoinedDate(dayjs(res.user.createdAt).format("MMMM YYYY"));
-  //   };
-  //   if (data) {
-  //     fetchUser();
-  //   }
-  // }, [data]);
+    setIsLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+    try {
+      const response = await fetch(`/api/profile/change-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          oldPassword: passwords.old,
+          newPassword: passwords.new,
+        }),
+      });
 
-  //fetch winnings number
-  useEffect(() => {
-    const fetchWinnings = async () => {
-      const res = await fetch("/api/winnings");
-      const data = await res.json();
-      setWinsNum(data.winnings);
-    };
+      if (response.ok) {
+        setSuccessMessage("Password changed successfully");
+        setPasswords({ old: "", new: "", confirm: "" });
+      } else {
+        const data = await response.json();
+        setErrorMessage(data.error || "Failed to change password");
+      }
+    } catch (error) {
+      setErrorMessage("Failed to change password");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchWinnings();
-  }, []);
+  const handleExportData = async () => {
+    try {
+      const response = await fetch(`/api/profile/export`);
+      if (!response.ok) throw new Error("Export failed");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `velocity-markets-data-${new Date().toISOString().split("T")[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      track("profile_data_exported", {});
+    } catch (error) {
+      setErrorMessage("Failed to export data");
+    }
+  };
+
+  // Get all badge types and determine which are locked
+  const allBadgeTypes = Object.values(BadgeType);
+  const earnedBadgeTypes = badges.map((b) => b.badge_type);
+  const lockedBadges = allBadgeTypes.filter(
+    (type) => !earnedBadgeTypes.includes(type)
+  );
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="flex min-h-[60vh] items-center justify-center">
           <div className="text-center">
-            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#E94560]"></div>
             <p className="text-xl">Loading profile...</p>
           </div>
         </div>
@@ -234,12 +335,13 @@ function Profile(props: Props) {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      {/* Profile Header */}
       <div className="mb-8 overflow-hidden rounded-xl bg-[#1E2A36]">
-        <div className="h-20 bg-[#1E2A36]"></div>
+        <div className="h-20 bg-gradient-to-r from-[#E94560] to-[#0A0A1A]"></div>
         <div className="px-8 pb-8">
           <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
             <Avatar className="h-24 w-24 border-4 border-[#13202D] shadow-lg">
-              <AvatarFallback className="bg-[#F2CA16] text-2xl text-[#0C1924]">
+              <AvatarFallback className="bg-[#E94560] text-2xl text-white">
                 {getInitials(data ? data.user.name : "")}
               </AvatarFallback>
             </Avatar>
@@ -247,122 +349,264 @@ function Profile(props: Props) {
               <h1 className="text-3xl font-bold">
                 {data ? data.user.name : ""}
               </h1>
-              <p className="text-gray-400">{data ? data.user.username : ""}</p>
+              <p className="text-gray-400">@{data ? data.user.username : ""}</p>
+              {profileData?.user?.rank_title && (
+                <span className="mt-2 inline-block rounded-full bg-[#E94560]/20 px-3 py-1 text-sm font-medium text-[#E94560]">
+                  {profileData.user.rank_title}
+                </span>
+              )}
             </div>
             <div className="ml-auto pt-6 md:pt-0">
               <Button
                 variant="outline"
-                className="flex items-center gap-2 bg-[#1E2A36]"
+                className="flex items-center gap-2 border-[#E94560] bg-[#0A0A1A] hover:bg-[#E94560]/10"
                 onClick={() => router.push("/settings")}
               >
                 <Settings className="h-4 w-4" />
-                Edit Profile
+                Settings
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-8 grid gap-6 md:grid-cols-4">
-        {/* <Card className="bg-[#13202D] border-[#1E2A36]">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-full bg-[#1E2A36] flex items-center justify-center mb-2">
-                <BarChart3 className="w-6 h-6 text-[#F2CA16]" />
-              </div>
-              <p className="text-gray-400">Prediction Accuracy</p>
-              <p className="text-3xl font-bold">{stats.accuracy.toFixed(1)}%</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-[#13202D] border-[#1E2A36]">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-full bg-[#1E2A36] flex items-center justify-center mb-2">
-                <Trophy className="w-6 h-6 text-[#F2CA16]" />
-              </div>
-              <p className="text-gray-400">Global Rank</p>
-              <p className="text-3xl font-bold">#{stats.rank}</p>
-            </div>
-          </CardContent>
-        </Card> */}
-
-        <Card className="border-[#1E2A36] bg-[#13202D]">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#1E2A36]">
-                <CircleDollarSign className="h-6 w-6 text-[#F2CA16]" />
-              </div>
-              <p className="text-gray-400">Total Points</p>
-              <p className="text-3xl font-bold">{userPoints}</p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-[#1E2A36] bg-[#13202D]">
-          <CardContent className="pt-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#1E2A36]">
-                <Clock className="h-6 w-6 text-[#F2CA16]" />
-              </div>
-              <p className="text-gray-400">Total Predictions</p>
-              <p className="text-3xl font-bold">
-                {activePredictions.length + completedPredictions.length}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mb-6">
-        <h2 className="mb-4 text-xl font-bold">Profile Information</h2>
-
-        <div className="space-y-4">
-          <div>
-            <label className="mb-2 block text-sm font-medium">Username</label>
-            <Input
-              value={username}
-              placeholder="Choose a username"
-              disabled
-              className="border-[#1E2A36] bg-[#1E2A36]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium">About</label>
-            <TextArea
-              value={about}
-              placeholder="Tell others about yourself"
-              disabled
-              className="border-[#1E2A36] bg-[#1E2A36]"
-              rows={3}
-            />
-          </div>
-        </div>
-      </div>
-
+      {/* Main Tabs */}
       <Tabs
-        defaultValue="predictions"
+        defaultValue="overview"
         className="w-full"
+        value={currentTab}
         onValueChange={(value) => setCurrentTab(value)}
       >
         <TabsList className="mb-6 bg-[#1E2A36]">
           <TabsTrigger
-            value="predictions"
-            className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+            value="overview"
+            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
           >
-            Prediction History
+            Overview
+          </TabsTrigger>
+          <TabsTrigger
+            value="predictions"
+            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
+          >
+            Predictions
           </TabsTrigger>
           <TabsTrigger
             value="tournaments"
-            className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
           >
             Tournaments
           </TabsTrigger>
-          {/* <TabsTrigger value="badges">Badges & Achievements</TabsTrigger> */}
+          <TabsTrigger
+            value="settings"
+            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
+          >
+            Settings
+          </TabsTrigger>
         </TabsList>
 
+        {/* Tab 1: Overview */}
+        <TabsContent value="overview">
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Hero Stats Card */}
+            <div className="lg:col-span-3">
+              <Card className="border-[#1E2A36] bg-gradient-to-br from-[#1E2A36] to-[#13202D]">
+                <CardContent className="p-6">
+                  <div className="grid gap-6 md:grid-cols-5">
+                    <div className="flex flex-col items-center text-center">
+                      <Award className="mb-2 h-8 w-8 text-[#E94560]" />
+                      <p className="text-sm text-gray-400">Current Rank</p>
+                      <p className="font-mono text-2xl font-bold">
+                        #{profileData?.rank || "-"}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <Target className="mb-2 h-8 w-8 text-[#FFB547]" />
+                      <p className="text-sm text-gray-400">Total Points</p>
+                      <p className="font-mono text-2xl font-bold text-[#FFB547]">
+                        {userPoints.toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <TrendingUp className="mb-2 h-8 w-8 text-[#00D4AA]" />
+                      <p className="text-sm text-gray-400">Predictions</p>
+                      <p className="font-mono text-2xl font-bold">
+                        {(activePredictions.length +
+                          completedPredictions.length)}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <CircleDollarSign className="mb-2 h-8 w-8 text-[#00D4AA]" />
+                      <p className="text-sm text-gray-400">Accuracy</p>
+                      <p className="font-mono text-2xl font-bold text-[#00D4AA]">
+                        {profileData?.accuracy?.toFixed(1) || "0.0"}%
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <Clock className="mb-2 h-8 w-8 text-gray-400" />
+                      <p className="text-sm text-gray-400">Member Since</p>
+                      <p className="text-sm font-medium">
+                        {profileData?.user?.createdAt
+                          ? new Date(
+                              profileData.user.createdAt
+                            ).toLocaleDateString("en-US", {
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "-"}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Column 1: Streaks & Badges */}
+            <div className="space-y-6">
+              {/* Streak Dashboard */}
+              <Card className="border-[#1E2A36] bg-[#13202D]">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Flame className="h-5 w-5 text-[#FFB547]" />
+                    Prediction Streaks
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Current Streak</span>
+                    {streakData?.current_streak > 0 ? (
+                      <StreakIndicator
+                        currentStreak={streakData.current_streak}
+                        size="md"
+                      />
+                    ) : (
+                      <span className="text-gray-500">No streak</span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Longest Streak</span>
+                    <span className="font-mono text-xl font-bold text-[#FFB547]">
+                      {streakData?.longest_streak || 0} days
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-400">Freeze Tokens</span>
+                    <span className="font-mono text-xl font-bold text-[#00D4AA]">
+                      {streakData?.freeze_tokens || 0}
+                    </span>
+                  </div>
+                  <div className="mt-4 rounded-lg bg-[#1E2A36] p-3">
+                    <p className="text-xs text-gray-400">
+                      Make predictions daily to build your streak and earn
+                      rewards!
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Badges Grid */}
+              <Card className="border-[#1E2A36] bg-[#13202D]">
+                <CardHeader>
+                  <CardTitle>Badges & Achievements</CardTitle>
+                  <p className="text-sm text-gray-400">
+                    {badges.length} of {allBadgeTypes.length} earned
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-3 gap-3">
+                    {/* Earned badges first */}
+                    {badges.map((badge) => (
+                      <BadgeDisplay
+                        key={badge._id}
+                        badge={badge}
+                        size="sm"
+                        locked={false}
+                      />
+                    ))}
+                    {/* Locked badges */}
+                    {lockedBadges.map((badgeType) => (
+                      <BadgeDisplay
+                        key={badgeType}
+                        badge={badgeType}
+                        size="sm"
+                        locked={true}
+                      />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Column 2: Recent Activity */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="border-[#1E2A36] bg-[#13202D]">
+                <CardHeader>
+                  <CardTitle>Recent Predictions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {completedPredictions.length === 0 ? (
+                    <div className="py-12 text-center text-gray-400">
+                      No recent predictions to display
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {completedPredictions.slice(0, 5).map((prediction: any) => (
+                        <div
+                          key={prediction._id}
+                          className="flex items-center gap-4 rounded-lg border border-[#1E2A36] bg-[#0A0A1A] p-4"
+                        >
+                          <Image
+                            src={prediction.auctionImage}
+                            width={80}
+                            height={80}
+                            alt={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
+                            className="h-20 w-20 rounded object-cover"
+                          />
+                          <div className="flex-1">
+                            <h4 className="font-semibold">
+                              {prediction.auctionYear} {prediction.auctionMake}{" "}
+                              {prediction.auctionModel}
+                            </h4>
+                            <div className="mt-1 flex items-center gap-4 text-sm">
+                              <span className="text-gray-400">
+                                Your Prediction:{" "}
+                                <span className="font-mono text-[#FFB547]">
+                                  ${prediction.predictedPrice.toLocaleString()}
+                                </span>
+                              </span>
+                              <span className="text-gray-400">
+                                Actual:{" "}
+                                <span className="font-mono text-[#00D4AA]">
+                                  ${prediction.auctionPrice.toLocaleString()}
+                                </span>
+                              </span>
+                            </div>
+                            {prediction.score && (
+                              <div className="mt-1">
+                                <span className="text-xs text-gray-400">
+                                  Score:{" "}
+                                </span>
+                                <span className="font-mono font-bold text-[#E94560]">
+                                  {prediction.score}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      <Link href="/profile?tab=predictions">
+                        <Button variant="outline" className="w-full">
+                          View All Predictions
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+
+        {/* Tab 2: Predictions History */}
         <TabsContent value="predictions">
           <Card className="border-[#1E2A36] bg-[#13202D]">
             <CardHeader>
@@ -372,33 +616,31 @@ function Profile(props: Props) {
               <div className="flex flex-col gap-4 rounded bg-[#172431]">
                 <div className="flex">
                   <button
-                    id="active-watchlist-button"
                     onClick={() => setIsActivePrediction(true)}
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
-                      isActivePrediction == true
+                      isActivePrediction === true
                         ? "border-white text-lg font-bold"
                         : ""
                     }`}
                   >
                     <div>ACTIVE </div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
                         {activePredictions.length}
                       </span>
                     )}
                   </button>
                   <button
-                    id="completed-watchlist-button"
                     onClick={() => setIsActivePrediction(false)}
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
-                      isActivePrediction == false
+                      isActivePrediction === false
                         ? "border-white text-lg font-bold"
                         : ""
                     }`}
                   >
                     <div>COMPLETED</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
                         {completedPredictions.length}
                       </span>
                     )}
@@ -407,10 +649,10 @@ function Profile(props: Props) {
                 <div>
                   {dataIsLoading ? (
                     <div className="flex h-[100px] w-full items-center justify-center">
-                      <PulseLoader color="#f2ca16" />
+                      <PulseLoader color="#E94560" />
                     </div>
-                  ) : isActivePrediction == true ? (
-                    activePredictions.length == 0 ? (
+                  ) : isActivePrediction === true ? (
+                    activePredictions.length === 0 ? (
                       <div className="flex w-full justify-center py-4">
                         No Active Predictions
                       </div>
@@ -440,7 +682,7 @@ function Profile(props: Props) {
                         </div>
                       ))
                     )
-                  ) : completedPredictions.length == 0 ? (
+                  ) : completedPredictions.length === 0 ? (
                     <div className="flex w-full justify-center py-4">
                       No Completed Predictions
                     </div>
@@ -471,50 +713,41 @@ function Profile(props: Props) {
           </Card>
         </TabsContent>
 
+        {/* Tab 3: Tournament History */}
         <TabsContent value="tournaments">
           <Card className="border-[#1E2A36] bg-[#13202D]">
             <CardHeader>
               <CardTitle>Your Tournaments</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* <div className="text-center py-12">
-                <Trophy className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">
-                  No Tournament History
-                </h3>
-                <p className="text-gray-400 mb-4">
-                  You haven't participated in any tournaments yet.
-                </p>
-                <Button onClick={() => navigate(createPageUrl("Tournaments"))}>
-                  Browse Tournaments
-                </Button>
-              </div> */}
               <div className="flex flex-col gap-4 rounded bg-[#172431]">
                 <div className="flex">
                   <button
-                    id="active-watchlist-button"
                     onClick={() => setIsActiveTournament(true)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActiveTournament === true ? "border-white text-lg font-bold" : ""} `}
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                      isActiveTournament === true
+                        ? "border-white text-lg font-bold"
+                        : ""
+                    } `}
                   >
                     <div>ACTIVE</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
                         {activeTournamentPredictions.length}
                       </span>
                     )}
                   </button>
                   <button
-                    id="completed-watchlist-button"
                     onClick={() => setIsActiveTournament(false)}
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
-                      isActiveTournament == false
+                      isActiveTournament === false
                         ? "border-white text-lg font-bold"
                         : ""
                     }`}
                   >
                     <div>COMPLETED</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
                         {completedTournamentPredictions.length}
                       </span>
                     )}
@@ -523,10 +756,10 @@ function Profile(props: Props) {
                 <div>
                   {dataIsLoading ? (
                     <div className="flex h-[100px] w-full items-center justify-center">
-                      <PulseLoader color="#f2ca16" />
+                      <PulseLoader color="#E94560" />
                     </div>
-                  ) : isActiveTournament == true ? (
-                    activeTournamentPredictions.length == 0 ? (
+                  ) : isActiveTournament === true ? (
+                    activeTournamentPredictions.length === 0 ? (
                       <div className="flex w-full justify-center py-4">
                         No Active Tournament Predictions
                       </div>
@@ -557,7 +790,7 @@ function Profile(props: Props) {
                         </div>
                       ))
                     )
-                  ) : completedTournamentPredictions.length == 0 ? (
+                  ) : completedTournamentPredictions.length === 0 ? (
                     <div className="flex w-full justify-center py-4">
                       No Completed Predictions
                     </div>
@@ -589,261 +822,279 @@ function Profile(props: Props) {
           </Card>
         </TabsContent>
 
-        {/* <TabsContent value="badges">
-          <Card className="bg-[#13202D] border-[#1E2A36]">
-            <CardHeader>
-              <CardTitle>Badges & Achievements</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {stats.badges.map((badge, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#1E2A36] p-4 rounded-lg text-center"
-                  >
-                    <div className="w-16 h-16 rounded-full bg-[#F2CA16]/20 flex items-center justify-center mx-auto mb-4">
-                      <Trophy className="w-8 h-8 text-[#F2CA16]" />
-                    </div>
-                    <h3 className="font-medium mb-1">{badge}</h3>
+        {/* Tab 4: Settings */}
+        <TabsContent value="settings">
+          <div className="space-y-6">
+            {/* Profile Settings */}
+            <Card className="border-[#1E2A36] bg-[#13202D]">
+              <CardHeader>
+                <CardTitle>Profile Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="displayName">Display Name</Label>
+                  <Input
+                    id="displayName"
+                    value={name}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                    placeholder="Your display name"
+                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    value={username}
+                    disabled
+                    className="mt-2 border-[#1E2A36] bg-[#1E2A36] opacity-50"
+                  />
+                  <p className="mt-1 text-xs text-gray-400">
+                    Username cannot be changed
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="about">About / Bio</Label>
+                  <TextArea
+                    id="about"
+                    value={about}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAbout(e.target.value)}
+                    placeholder="Tell others about yourself"
+                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                    rows={3}
+                    maxLength={200}
+                  />
+                  <p className="mt-1 text-xs text-gray-400">
+                    {about.length}/200 characters
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleUpdateProfile}
+                  disabled={isLoading}
+                  className="bg-[#E94560] hover:bg-[#E94560]/90"
+                >
+                  {isLoading ? "Saving..." : "Save Changes"}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Email Preferences */}
+            <Card className="border-[#1E2A36] bg-[#13202D]">
+              <CardHeader>
+                <CardTitle>Email Preferences</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Weekly Digest</Label>
                     <p className="text-sm text-gray-400">
-                      Earned {new Date().toLocaleDateString()}
+                      Receive weekly summary of your predictions
                     </p>
                   </div>
-                ))}
+                  <Switch
+                    checked={emailPreferences.weekly_digest}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences((prev) => ({
+                        ...prev,
+                        weekly_digest: checked,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Auction Reminders</Label>
+                    <p className="text-sm text-gray-400">
+                      Get notified 24h before auction close
+                    </p>
+                  </div>
+                  <Switch
+                    checked={emailPreferences.auction_reminders}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences((prev) => ({
+                        ...prev,
+                        auction_reminders: checked,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Result Notifications</Label>
+                    <p className="text-sm text-gray-400">
+                      Receive emails when predictions are scored
+                    </p>
+                  </div>
+                  <Switch
+                    checked={emailPreferences.result_notifications}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences((prev) => ({
+                        ...prev,
+                        result_notifications: checked,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Marketing Emails</Label>
+                    <p className="text-sm text-gray-400">
+                      Receive promotional offers and updates
+                    </p>
+                  </div>
+                  <Switch
+                    checked={emailPreferences.marketing}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences((prev) => ({
+                        ...prev,
+                        marketing: checked,
+                      }))
+                    }
+                  />
+                </div>
+
+                <Button
+                  onClick={handleUpdateEmailPreferences}
+                  disabled={isLoading}
+                  className="bg-[#E94560] hover:bg-[#E94560]/90"
+                >
+                  {isLoading ? "Saving..." : "Save Preferences"}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Change Password */}
+            <Card className="border-[#1E2A36] bg-[#13202D]">
+              <CardHeader>
+                <CardTitle>Change Password</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="oldPassword">Current Password</Label>
+                  <div className="relative mt-2">
+                    <Input
+                      id="oldPassword"
+                      type={showPassword ? "text" : "password"}
+                      value={passwords.old}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setPasswords((prev) => ({ ...prev, old: e.target.value }))
+                      }
+                      className="border-[#1E2A36] bg-[#0A0A1A] pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-400" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-400" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="newPassword">New Password</Label>
+                  <Input
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={passwords.new}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setPasswords((prev) => ({ ...prev, new: e.target.value }))
+                    }
+                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={passwords.confirm}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setPasswords((prev) => ({
+                        ...prev,
+                        confirm: e.target.value,
+                      }))
+                    }
+                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                  />
+                </div>
+
+                <Button
+                  onClick={handleChangePassword}
+                  disabled={isLoading}
+                  className="bg-[#E94560] hover:bg-[#E94560]/90"
+                >
+                  {isLoading ? "Changing..." : "Change Password"}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Account Actions */}
+            <Card className="border-[#1E2A36] bg-[#13202D]">
+              <CardHeader>
+                <CardTitle>Account Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button
+                  variant="outline"
+                  onClick={handleExportData}
+                  className="flex w-full items-center gap-2 border-[#1E2A36]"
+                >
+                  <Download className="h-4 w-4" />
+                  Export My Data
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="flex w-full items-center gap-2 border-[#E94560] text-[#E94560] hover:bg-[#E94560]/10"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        "Are you sure you want to delete your account? This action cannot be undone."
+                      )
+                    ) {
+                      // Handle account deletion
+                    }
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete Account
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Success/Error Messages */}
+            {successMessage && (
+              <div className="rounded-lg border border-[#00D4AA] bg-[#00D4AA]/10 p-4 text-[#00D4AA]">
+                {successMessage}
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent> */}
+            )}
+            {errorMessage && (
+              <div className="rounded-lg border border-[#E94560] bg-[#E94560]/10 p-4 text-[#E94560]">
+                {errorMessage}
+              </div>
+            )}
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
-    // <div className="flex justify-center bg-[#1A2C3D] pb-[60px]">
-    //   <Image
-    //     src={TransitionPattern}
-    //     className="black-filter absolute max-h-[280px] object-cover object-bottom"
-    //     alt=""
-    //   />
-    //   <div className="z-[1] mt-[120px] w-full max-w-[862px] sm:mt-[200px]">
-    //     <div className="px-6 sm:flex sm:justify-between sm:px-0">
-    //       <div className="sm:flex sm:items-center sm:gap-6">
-    //         <Image
-    //           src={AvatarOne}
-    //           alt=""
-    //           className="w-[100px] rounded-full sm:w-[200px]"
-    //         />
-    //         <div className="mt-6 sm:mt-0">
-    //           <div className="text-4xl font-bold">{name}</div>
-    //           <div className="text-lg text-[#d1d5d8]">
-    //             {`Joined ${joinedDate}`}
-    //           </div>
-    //           <div className="flex gap-6 text-base text-[#487f4b]">
-    //             <div>@{username}</div>
-    //             <div>{totalPredictionsAndWatchlist} wagers</div>
-    //             <div>{winsNum} wins</div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <Button
-    //         className="pointer-events-none mt-4 h-[44px] cursor-pointer rounded border-[1px] border-[#f2ca16] px-3 py-2 text-base font-medium text-[#f2ca16] opacity-50 sm:mt-[50px]"
-    //         onClick={() => router.push("/profile/edit")}
-    //         aria-disabled={true}
-    //       >
-    //         Edit Profile
-    //       </Button>
-    //     </div>
-    //     <div className="mx-6 mt-[80px] flex items-center gap-6 rounded-lg bg-[#184c80] px-6 py-4 md:mx-0">
-    //       <Image
-    //         src={IDIcon}
-    //         alt=""
-    //         className="yellow-filter w-8"
-    //         style={{ fill: "#53944f" }}
-    //       />
-    //       <div>
-    //         <div className="text-base font-bold leading-6">
-    //           Verify your identity
-    //         </div>
-    //         <div className="text-sm leading-5 text-[#bac9d9]">
-    //           To wager on car auctions, you need to verify your identity
-    //         </div>
-    //         <div className="text-base font-medium leading-6 text-[#f2ca16]">
-    //           Verify now
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div className="mt-8 flex flex-col gap-4 rounded bg-[#172431] p-6">
-    //       <div className="text-lg font-bold leading-7 text-[#f2ca16]">
-    //         ABOUT
-    //       </div>
-    //       <div className="leading-7">
-    //         {userInfo && userInfo.aboutMe
-    //           ? userInfo.aboutMe
-    //           : "Join us and fuel your passion for cars!"}
-    //       </div>
-    //       <div className="flex flex-col gap-2 text-sm font-light leading-7 sm:flex-row sm:gap-6 sm:text-lg">
-    //         <div className="flex items-center gap-2">
-    //           <Image
-    //             src={Pin}
-    //             width={24}
-    //             height={24}
-    //             alt="pin"
-    //             className="h-6"
-    //           />
-    //           <div>
-    //             {userInfo ? `${userInfo.state}, ${userInfo.country}` : "--"}
-    //           </div>
-    //         </div>
-    //         <div className="flex items-center gap-2">
-    //           <Image
-    //             src={Twitter}
-    //             width={24}
-    //             height={24}
-    //             alt="twitter"
-    //             className="h-6 opacity-20"
-    //           />
-    //           <div className="opacity-20">Twitter</div>
-    //         </div>
-    //         <div className="flex items-center gap-2">
-    //           <Image
-    //             src={Globe}
-    //             width={24}
-    //             height={24}
-    //             alt="globe"
-    //             className="h-6 opacity-20"
-    //           />
-    //           <div className="opacity-20">Website</div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div className="mt-8 flex flex-col gap-4 rounded bg-[#172431] p-6">
-    //       <div className="text-lg font-bold leading-7 text-[#f2ca16]">
-    //         PREDICTIONS
-    //       </div>
-    //       <div className="flex">
-    //         <button
-    //           id="active-watchlist-button"
-    //           onClick={() => setIsActivePrediction(true)}
-    //           className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${isActivePrediction == true
-    //             ? "border-white text-lg font-bold"
-    //             : ""
-    //             }`}
-    //         >
-    //           <div>ACTIVE </div>
-    //           {!dataIsLoading && (
-    //             <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
-    //               {activePredictions.length}
-    //             </span>
-    //           )}
-    //         </button>
-    //         <button
-    //           id="completed-watchlist-button"
-    //           onClick={() => setIsActivePrediction(false)}
-    //           className={`w-1/2 border-b-2 border-[#314150] py-2 ${isActivePrediction == false
-    //             ? "border-white text-lg font-bold"
-    //             : ""
-    //             }`}
-    //         >
-    //           COMPLETED
-    //         </button>
-    //       </div>
-    //       <div>
-    //         {dataIsLoading ? (
-    //           <div className="flex h-[100px] w-full items-center justify-center">
-    //             <PulseLoader color="#f2ca16" />
-    //           </div>
-    //         ) : isActivePrediction == true ? (
-    //           activePredictions.length == 0 ? (
-    //             <div className="flex w-full justify-center py-4">
-    //               No Active Predictions
-    //             </div>
-    //           ) : (
-    //             activePredictions.map((prediction: any) => (
-    //               <div key={prediction._id + "active"}>
-    //                 <TimerProvider deadline={prediction.auctionDeadline}>
-    //                   <PredictionsCard
-    //                     title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
-    //                     img={prediction.auctionImage}
-    //                     my_prediction={prediction.priceGuessed}
-    //                     current_bid={prediction.auctionPrice}
-    //                     time_left={prediction.auctionDeadline}
-    //                     potential_prize={prediction.auctionPot}
-    //                     id={prediction.auctionIdentifierId}
-    //                     isActive={true}
-    //                     status={prediction.auctionStatus}
-    //                     predictionAmount={prediction.predictionAmount}
-    //                     objectID={prediction.auctionObjectId}
-    //                     predictionID={prediction._id}
-    //                     isRefunded={prediction.refunded}
-    //                     prize={prediction.prize}
-    //                     deadline={prediction.auctionDeadline}
-    //                   />
-    //                 </TimerProvider>
-    //               </div>
-    //             ))
-    //           )
-    //         ) : completedPredictions.length == 0 ? (
-    //           <div className="flex w-full justify-center py-4">
-    //             No Completed Predictions
-    //           </div>
-    //         ) : (
-    //           completedPredictions.map((prediction: any) => (
-    //             <div key={prediction._id + "completed"}>
-    //               <TimerProvider deadline={prediction.auctionDeadline}>
-    //                 <CompletedWagerCard
-    //                   title={`${prediction.auctionYear} ${prediction.auctionMake} ${prediction.auctionModel}`}
-    //                   img={prediction.auctionImage}
-    //                   priceGuess={prediction.priceGuessed}
-    //                   id={prediction.auctionIdentifierId}
-    //                   status={prediction.auctionStatus}
-    //                   finalPrice={prediction.auctionPrice}
-    //                   wagerAmount={prediction.predictionAmount}
-    //                   auctionObjectID={prediction.auctionObjectId}
-    //                   wagerID={prediction._id}
-    //                   prize={prediction.prize}
-    //                 />
-    //               </TimerProvider>
-    //             </div>
-    //           ))
-    //         )}
-    //       </div>
-    //       {/* <UserWagerList /> */}
-    //     </div>
-    //     <div className="mt-8 flex flex-col gap-4 rounded bg-[#172431] p-6">
-    //       <div className="text-lg font-bold leading-7 text-[#f2ca16]">
-    //         WATCHLIST
-    //       </div>
-    //       <div>
-    //         {dataIsLoading ? (
-    //           <div className="flex h-[100px] w-full items-center justify-center">
-    //             <PulseLoader color="#f2ca16" />
-    //           </div>
-    //         ) : activeWatchlist.length === 0 ? (
-    //           <div className="flex w-full justify-center py-4">
-    //             No Active Watchlist
-    //           </div>
-    //         ) : (
-    //           activeWatchlist.map((watchlist: any) => (
-    //             <div key={watchlist._id}>
-    //               <TimerProvider deadline={watchlist.auctionDeadline}>
-    //                 <MyWatchlistCard
-    //                   title={`${watchlist.auctionYear} ${watchlist.auctionMake} ${watchlist.auctionModel}`}
-    //                   img={watchlist.auctionImage}
-    //                   current_bid={watchlist.auctionPrice}
-    //                   time_left={watchlist.auctionDeadline}
-    //                   id={watchlist.auctionIdentifierId}
-    //                   isActive={true}
-    //                 />
-    //               </TimerProvider>
-    //             </div>
-    //           ))
-    //         )}
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 
 export default Profile;
 
+// Completed Prediction Card Component (kept from original)
 type CompletedWagerCardProps = {
   title: string;
   img: string;
@@ -874,8 +1125,6 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
   tournament_id,
 }) => {
   const [auctionStatus, setAuctionStatus] = useState("Completed");
-  const [refunded, setRefunded] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const statusMap: any = {
     1: "Ongoing",
@@ -889,18 +1138,18 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
     setAuctionStatus(statusMap[status] || statusMap.default);
   }, [status]);
 
-  //convert number to currency
   const currencyMyWager = new Intl.NumberFormat().format(priceGuess);
   const currencyFinalPrice = new Intl.NumberFormat().format(finalPrice);
-  const currencyWagerAmount = new Intl.NumberFormat().format(wagerAmount);
-
-  // refund for when auction is unsuccessful
 
   return (
     <div>
       <div className="flex gap-6 px-6 py-6">
         <Link
-          href={`${type === "prediction" ? "/auction_details?id=${id}&mode=free_play" : "/tournaments/" + tournament_id}`}
+          href={
+            type === "prediction"
+              ? `/auction_details?id=${id}&mode=free_play`
+              : `/tournaments/${tournament_id}`
+          }
           className="h-[50px] w-[50px] self-start pt-2 sm:h-[100px] sm:w-[100px] sm:pt-0"
         >
           <Image
@@ -918,26 +1167,15 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
             <div className="flex gap-2 leading-5">
               <Image src={WalletIcon} alt="" className="w-3.5 text-[#d1d3d6]" />
               <div className="text-[#d1d3d6]">Your Price Guess:</div>
-              <div className="font-bold text-[#f2ca16]">${currencyMyWager}</div>
+              <div className="font-bold text-[#E94560]">${currencyMyWager}</div>
             </div>
             <div className="flex gap-2 text-sm">
               <Image src={DollarIcon} alt="" className="w-3.5 text-[#d1d3d6]" />
               <div className="text-[#d1d3d6]">Final Price:</div>
-              <div className="font-bold text-[#49c742]">
+              <div className="font-bold text-[#00D4AA]">
                 ${currencyFinalPrice}
               </div>
             </div>
-            {/* <div className="flex w-full items-center gap-2 text-sm">
-              <Image
-                src={Dollar}
-                width={14}
-                height={14}
-                alt="wallet icon"
-                className="h-[14px] w-[14px]"
-              />
-              <span className="opacity-80">Wager Amount:</span>
-              <span className="font-bold">${currencyWagerAmount}</span>
-            </div> */}
             <div className="flex items-center gap-2 text-sm">
               <Image
                 src={HourglassIcon}
@@ -949,17 +1187,15 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
             </div>
           </div>
           {status === 3 && (
-            <>
-              <div className="mt-2 flex w-full items-center gap-2 rounded bg-[#4b2330] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
-                <div className="grow-[1] text-left font-bold text-[#f92f60]">
-                  ❌ UNSUCCESSFUL{" "}
-                  <span className="hidden sm:inline-block">AUCTION</span>
-                </div>
+            <div className="mt-2 flex w-full items-center gap-2 rounded bg-[#4b2330] p-1 text-xs sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+              <div className="grow-[1] text-left font-bold text-[#E94560]">
+                UNSUCCESSFUL{" "}
+                <span className="hidden sm:inline-block">AUCTION</span>
               </div>
-            </>
+            </div>
           )}
-          {status == 4 && prize && (
-            <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+          {status === 4 && prize && (
+            <div className="mt-2 flex w-full items-center justify-between rounded bg-[#00D4AA] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
               <div className="flex gap-2">
                 <Image
                   src={MoneyBagBlack}
@@ -977,8 +1213,7 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
                   : prize.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    })}{" "}
-                🎉
+                    })}
               </div>
             </div>
           )}
@@ -988,40 +1223,3 @@ const CompletedPredictionCard: React.FC<CompletedWagerCardProps> = ({
     </div>
   );
 };
-
-// function UserWatchList() {
-//     return (
-//         <div className="flex gap-4 py-3 items-center">
-//             <Image
-//                 src={WagerPhotoOne}
-//                 alt=""
-//                 className="rounded w-[100px]"
-//             />
-//             <div>
-//                 <div className="font-bold sm:text-lg leading-7">
-//                     620-Mile 2019 Ford GT
-//                 </div>
-//                 <div className="flex gap-2 text-sm leading-5">
-//                     <Image
-//                         src={DollarIcon}
-//                         alt=""
-//                         className="text-[#d1d3d6] w-3.5"
-//                     />
-//                     <div className="text-[#d1d3d6]">Current Bid:</div>
-//                     <div className="text-[#49c742] font-bold">
-//                         $904,000
-//                     </div>
-//                 </div>
-//                 <div className="flex gap-2 text-sm items-center">
-//                     <Image
-//                         src={HourglassIcon}
-//                         alt=""
-//                         className="text-[#d1d3d6] w-3.5 h-3.5"
-//                     />
-//                     <div className="text-[#d1d3d6]">Time Left:</div>
-//                     <div>12:17:00</div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }

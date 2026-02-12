@@ -16,6 +16,9 @@ export interface Tournament {
   auction_ids: string[];
   users: string[];
   maxUsers: number;
+  max_participants?: number;
+  scoring_version?: 'v1' | 'v2';
+  featured_image?: string;
   haveWinners: boolean;
 }
 export interface TournamentDocument extends Document {
@@ -40,6 +43,9 @@ export interface TournamentDocument extends Document {
     },
   ];
   maxUsers: number;
+  max_participants?: number;
+  scoring_version?: 'v1' | 'v2';
+  featured_image?: string;
   createdAt?: Date;
   updatedAt?: Date;
   haveWinners: boolean;
@@ -137,6 +143,9 @@ const tournamentSchema = new mongoose.Schema(
     auction_ids: { type: [String], required: true },
     users: { type: [userSchema] },
     maxUsers: { type: Number, required: true },
+    max_participants: { type: Number, default: null },
+    scoring_version: { type: String, enum: ['v1', 'v2'], default: 'v2' },
+    featured_image: { type: String },
     haveWinners: { type: Boolean, required: true, default: false },
   },
   {

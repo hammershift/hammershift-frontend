@@ -16,6 +16,16 @@ export interface Prediction {
   };
   refunded?: boolean;
   isActive: boolean;
+  score?: number;
+  rank?: number;
+  delta_from_actual?: number;
+  scored_at?: Date;
+  bonus_modifiers?: {
+    early_bird?: boolean;
+    streak_bonus?: boolean;
+    bullseye?: boolean;
+    tournament_multiplier?: number;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -42,6 +52,16 @@ const predictionsSchema = new Schema(
     refunded: { type: Boolean, required: false, default: false },
     isActive: { type: Boolean, required: true, default: true },
     prize: { type: Number, required: false, default: 0 },
+    score: { type: Number },
+    rank: { type: Number },
+    delta_from_actual: { type: Number },
+    scored_at: { type: Date },
+    bonus_modifiers: {
+      early_bird: { type: Boolean, default: false },
+      streak_bonus: { type: Boolean, default: false },
+      bullseye: { type: Boolean, default: false },
+      tournament_multiplier: { type: Number, default: 1 },
+    },
   },
   {
     collection: "predictions",

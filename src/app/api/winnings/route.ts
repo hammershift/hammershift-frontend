@@ -4,16 +4,13 @@ import connectToDB from "@/lib/mongoose";
 import { ObjectId } from "mongodb";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/betterAuth";
-import { headers } from "next/headers";
+import { getAuthSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 // get winners, URL: /api/winnings?id=123
 export async function GET(req: NextRequest) {
   //check if user is logged in
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getAuthSession();
   console.log("session:", session);
   if (!session) {
     console.log("Unauthorized: No session found");

@@ -24,7 +24,7 @@ import {
   getTournamentPointsByTournamentId,
   getTournamentTransactions,
 } from "@/lib/data";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 
 export interface Tournaments {

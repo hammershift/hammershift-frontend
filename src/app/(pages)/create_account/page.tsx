@@ -8,7 +8,7 @@ import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { Checkbox } from "@/app/components/ui/checkbox";
-import { authClient } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function CustomSignupPage() {
@@ -24,7 +24,7 @@ export default function CustomSignupPage() {
     isOver18: false,
   });
 
-  const { data: session } = authClient.useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleSession = async () => {
@@ -79,17 +79,32 @@ export default function CustomSignupPage() {
     }
 
     try {
-      const { data, error } = await authClient.signUp.email({
-        email: formData.email,
-        name: formData.fullName,
-        password: formData.password,
-        username: formData.username,
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          username: formData.username,
+          fullName: formData.fullName,
+          password: formData.password,
+          provider: "email",
+        }),
       });
 
-      if (error) {
-        setError(
-          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
-        );
+      if (!response.ok) {
+        const data = await response.json();
+        if (data.message === "Username already used") {
+          setError("Username is already in use. Try a different one.");
+        } else if (data.message === "Email already used") {
+          setError("Email is already in use. Try a different one.");
+        } else if (data.message === "Invalid email") {
+          setError("Invalid email. Try a different one.");
+        } else {
+          console.log(data);
+          setError("Error. Please try again.");
+        }
         setIsLoading(false);
         return;
       }

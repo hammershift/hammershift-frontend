@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import ArrowDown from "../../../public/images/arrow-down.svg";
 import AvatarOne from "../../../public/images/avatar-one.svg";
 import TransitionPattern from "../../../public/images/transition-pattern.svg";

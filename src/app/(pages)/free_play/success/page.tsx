@@ -8,7 +8,7 @@ import { getCarData } from "@/lib/data";
 import { Car } from "@/models/auction.model";
 import { Prediction } from "@/models/predictions.model";
 import { CheckCircle, Home, RefreshCw } from "lucide-react";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

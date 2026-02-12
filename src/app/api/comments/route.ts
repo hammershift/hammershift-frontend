@@ -1,25 +1,22 @@
 import { authOptions } from "@/lib/auth";
 import clientPromise from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { ObjectId } from "mongodb";
 import page from "@/app/(pages)/auctions/car_view_page/page";
 import connectToDB from "@/lib/mongoose";
 import Comments from "@/models/comment.model";
 import { Types } from "mongoose";
-import { auth } from "@/lib/betterAuth";
+import { getAuthSession } from "@/lib/auth";
 
 // create comment for auction URL: /api/comments
 export async function POST(req: NextRequest) {
   const { comment, pageID, pageType, commentID } = await req.json();
-  // const session = await auth.api.getSession({
+  // const session = await getAuthSession();
 
   // })
   // const _id = req.headers.get("x-user-id");
   // const username = req.headers.get("x-user-username");
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getAuthSession();
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
   }
@@ -203,9 +200,7 @@ export async function GET(req: NextRequest) {
 
 //add likes and dislikes and edit comment URL: /api/comments
 export async function PUT(req: NextRequest) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getAuthSession();
 
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 400 });

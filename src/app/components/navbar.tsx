@@ -8,7 +8,7 @@ import {
   refundWager,
 } from "@/lib/data";
 import { CircleDollarSignIcon, LogOut, Settings, UserIcon } from "lucide-react";
-import { signOut, useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -346,7 +346,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
 
   const handleSignOut = async () => {
     try {
-      await signOut({});
+      await signOut({ redirect: false });
       router.push("/");
       console.log("User successfully logged out");
     } catch (error) {
@@ -1518,7 +1518,7 @@ const MyAccountDropdownMenu = () => {
 
   const handleSignOut = async () => {
     try {
-      await signOut({});
+      await signOut({ redirect: false });
       router.push("/");
       console.log("User successfully logged out");
     } catch (error) {

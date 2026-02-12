@@ -15,7 +15,7 @@ import {
   getTournamentTransactions,
   getWagers,
 } from "@/lib/data";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { auctionDataOne } from "../../../../../sample_data";

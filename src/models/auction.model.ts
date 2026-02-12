@@ -100,6 +100,10 @@ export interface Auction extends Document {
   sort?: AuctionSort;
   statusAndPriceChecked: boolean;
   pot: number;
+  prediction_count?: number;
+  avg_predicted_price?: number;
+  source_badge?: 'bat' | 'cab';
+  status_display?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -149,6 +153,10 @@ const auctionSchema = new Schema(
     sort: sortSchema,
     statusAndPriceChecked: { type: Boolean, default: false },
     pot: { type: Number, default: 0 },
+    prediction_count: { type: Number, default: 0 },
+    avg_predicted_price: { type: Number },
+    source_badge: { type: String, enum: ['bat', 'cab'], default: 'bat' },
+    status_display: { type: String },
 
     // pot: { type: Number },
     // __v: { type: Number, default: 0 },

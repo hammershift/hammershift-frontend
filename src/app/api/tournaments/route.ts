@@ -2,8 +2,7 @@ import connectToDB from "@/lib/mongoose";
 import Tournament from "@/models/tournament.model";
 import { Prediction, Predictions } from "@/models/predictions.model";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/betterAuth";
-import { headers } from "next/headers";
+import { getAuthSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 type TournamentData = {
@@ -83,8 +82,7 @@ export async function GET(req: NextRequest) {
     // count all tournaments with isActive = true
     // const tournamentsCount = await Tournament.countDocuments({
     //   isActive: true,
-    // });
-
+    // 
     //get the image of the first auction in auction_ids
 
     //response {total, tournaments}
@@ -113,9 +111,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getAuthSession();
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
     }

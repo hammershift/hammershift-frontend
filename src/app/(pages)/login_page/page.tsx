@@ -18,7 +18,7 @@ import { BounceLoader, PulseLoader } from "react-spinners";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
-import { authClient } from "@/lib/auth-client";
+import { useSession, signIn } from "next-auth/react";
 import { checkUsernameExistence } from "@/lib/data";
 interface UserExistenceResponse {
   emailExists: boolean;
@@ -38,7 +38,7 @@ const CreateAccount = () => {
 
   // Forgot/Reset Password
   const [resetEmail, setResetEmail] = useState("");
-  const { data: session } = authClient.useSession();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleSession = async () => {
@@ -99,22 +99,20 @@ const CreateAccount = () => {
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await authClient.signIn.username({
-        username: username,
+      const result = await signIn("credentials", {
+        email: username,
         password: password,
+        redirect: false,
       });
 
-      if (error) {
-        console.log(error);
-        if (error.message! === "invalid username or password") {
-          const data = await checkUsernameExistence(username);
-          if (data.exists && !data.hasPassword)
-            setError("Account doesn't have a password set. Please use 'Forgot Password' to create one.");
-          else
-            setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
+      if (result?.error) {
+        console.log(result.error);
+        const data = await checkUsernameExistence(username);
+        if (data.exists && !data.hasPassword) {
+          setError("Account doesn't have a password set. Please use 'Forgot Password' to create one.");
+        } else {
+          setError("Invalid username or password");
         }
-        else
-          setError(error.message!.charAt(0).toUpperCase() + error.message!.slice(1));
         setIsLoading(false);
         return;
       }

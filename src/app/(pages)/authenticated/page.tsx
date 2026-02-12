@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BounceLoader } from "react-spinners";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 
 const Authenticated: React.FC = () => {
   const router = useRouter();

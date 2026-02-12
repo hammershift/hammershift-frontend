@@ -9,14 +9,11 @@ import { authOptions } from "@/lib/auth";
 import connectToDB from "@/lib/mongoose";
 import { ObjectId } from "mongodb";
 import Transaction from "@/models/transaction";
-import { auth } from "@/lib/betterAuth";
-import { headers } from "next/headers";
+import { getAuthSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getAuthSession();
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }

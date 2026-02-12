@@ -7,7 +7,6 @@ import CancelIcon from "../../../../public/images/x-icon.svg";
 import { Input } from "@/app/components/ui/input";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/app/components/ui/button";
 const ForgotPassword = () => {
   const router = useRouter();
@@ -19,27 +18,32 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      const { data, error } = await authClient.forgetPassword({
-        email: email,
-        redirectTo: "/reset_password",
+      const response = await fetch("/api/forgotPassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email }),
       });
 
-      if (error) {
-        setError(
-          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
-        );
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "An error occurred");
         setSuccess("");
         setIsLoading(false);
         return;
-      } else {
-        setIsLoading(false);
-        setSuccess(
-          "If an account with that email exists, a password reset link has been sent."
-        );
-        setError("");
       }
+
+      setIsLoading(false);
+      setSuccess(
+        "If an account with that email exists, a password reset link has been sent."
+      );
+      setError("");
     } catch (e) {
       console.log(e);
+      setError("An error occurred. Please try again.");
+      setIsLoading(false);
     }
   };
   return (

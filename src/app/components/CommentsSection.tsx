@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
 import Link from "next/link";

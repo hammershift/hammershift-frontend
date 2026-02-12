@@ -1,8 +1,7 @@
 import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/betterAuth";
-import { headers } from "next/headers";
+import { getAuthSession } from "@/lib/auth";
 import { Types } from "mongoose";
 export async function GET(req: NextRequest) {
   try {
@@ -62,9 +61,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const session = await getAuthSession();
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
     }

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { BounceLoader } from "react-spinners";
 import CancelIcon from "../../../../public/images/x-icon.svg";
 import { Input } from "@/app/components/ui/input";
-import { authClient } from "@/lib/auth-client";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
@@ -30,17 +29,25 @@ const ResetPassword = () => {
     }
     try {
       setIsLoading(true);
-      const { data, error } = await authClient.resetPassword({
-        token: token!,
-        newPassword: password,
+      const response = await fetch("/api/resetPassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: token,
+          newPassword: password,
+        }),
       });
-      if (error) {
-        setError(
-          error.message!.charAt(0).toUpperCase() + error.message!.slice(1)
-        );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Failed to reset password");
         setIsLoading(false);
         return;
       }
+
       setIsLoading(false);
       setSuccess("Password reset successfully");
       setError("");
@@ -49,6 +56,8 @@ const ResetPassword = () => {
       }, 3000);
     } catch (e) {
       console.log(e);
+      setError("An error occurred. Please try again.");
+      setIsLoading(false);
     }
   };
 

@@ -1,6 +1,6 @@
 import SessionProvider from "@/providers/sessionProvider";
 import type { Metadata } from "next";
-import { authClient } from "@/lib/auth-client";
+import { getAuthSession } from "@/lib/auth";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import { PredictionProvider } from "./context/PredictionContext";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `${process.env.BETTER_AUTH_URL}/metadata.png`,
+        url: `${process.env.NEXTAUTH_URL}/metadata.png`,
         width: 1200,
         height: 630,
         alt: "Velocity Markets",
@@ -33,26 +33,27 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = await authClient.getSession();
+  const session = await getAuthSession();
 
   return (
     <html lang="en">
       {/*<body className={inter.className} */}
-
-      <PredictionProvider>
-        <TournamentPredictionProvider>
-          <TournamentProvider>
-            <body>
-              <Analytics />
-              <Navbar />
-              {/* <BetaTesting /> */}
-              {children}
-              {/* <LoadWallet /> */}
-              <Footer />
-            </body>
-          </TournamentProvider>
-        </TournamentPredictionProvider>
-      </PredictionProvider>
+      <body>
+        <SessionProvider session={session}>
+          <PredictionProvider>
+            <TournamentPredictionProvider>
+              <TournamentProvider>
+                <Analytics />
+                <Navbar />
+                {/* <BetaTesting /> */}
+                {children}
+                {/* <LoadWallet /> */}
+                <Footer />
+              </TournamentProvider>
+            </TournamentPredictionProvider>
+          </PredictionProvider>
+        </SessionProvider>
+      </body>
     </html>
   );
 }

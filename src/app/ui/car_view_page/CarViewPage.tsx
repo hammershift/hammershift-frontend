@@ -30,7 +30,7 @@ import CarImageModal from "@/app/components/car_image_modal";
 import { sortByMostExpensive } from "@/lib/data";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useSession } from "@/lib/auth-client";
+import { useSession } from "next-auth/react";
 dayjs.extend(relativeTime);
 
 export interface CarDataOneProps {

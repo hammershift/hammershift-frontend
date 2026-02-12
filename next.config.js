@@ -1,7 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['bringatrailer.com', 'lh3.googleusercontent.com', 'pbs.twimg.com', 'images.unsplash.com', 'qtrypzzcjebvfcihiynt.supabase.co'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'bringatrailer.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'pbs.twimg.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'qtrypzzcjebvfcihiynt.supabase.co',
+            },
+        ],
     },
     async headers() {
         return [
