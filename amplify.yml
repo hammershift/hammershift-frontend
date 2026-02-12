@@ -4,6 +4,31 @@ frontend:
     preBuild:
       commands:
         - npm ci
+        # Inject environment variables into .env.production for Next.js runtime
+        # This is required for Next.js SSR on Amplify - env vars are only available at build time
+        - echo "MONGODB_URI=$MONGODB_URI" >> .env.production
+        - echo "DB_NAME=$DB_NAME" >> .env.production
+        - echo "NEXTAUTH_URL=$NEXTAUTH_URL" >> .env.production
+        - echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env.production
+        - echo "GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" >> .env.production
+        - echo "GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" >> .env.production
+        - echo "FACEBOOK_CLIENT_ID=$FACEBOOK_CLIENT_ID" >> .env.production
+        - echo "FACEBOOK_CLIENT_SECRET=$FACEBOOK_CLIENT_SECRET" >> .env.production
+        - echo "TWITTER_CLIENT_ID=$TWITTER_CLIENT_ID" >> .env.production
+        - echo "TWITTER_CLIENT_SECRET=$TWITTER_CLIENT_SECRET" >> .env.production
+        - echo "STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY" >> .env.production
+        - echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY" >> .env.production
+        - echo "STRIPE_WEBHOOK_SECRET=$STRIPE_WEBHOOK_SECRET" >> .env.production
+        - echo "EMAIL_SERVER_HOST=$EMAIL_SERVER_HOST" >> .env.production
+        - echo "EMAIL_SERVER_PORT=$EMAIL_SERVER_PORT" >> .env.production
+        - echo "EMAIL_SERVER_USER=$EMAIL_SERVER_USER" >> .env.production
+        - echo "EMAIL_SERVER_PASSWORD=$EMAIL_SERVER_PASSWORD" >> .env.production
+        - echo "EMAIL_FROM=$EMAIL_FROM" >> .env.production
+        - echo "FEEDBACK_EMAIL=$FEEDBACK_EMAIL" >> .env.production
+        - echo "VELOCITY_MARKETS_LOGO_URL=$VELOCITY_MARKETS_LOGO_URL" >> .env.production
+        - echo "NEXT_PUBLIC_DISABLE_DEPOSIT=$NEXT_PUBLIC_DISABLE_DEPOSIT" >> .env.production
+        - echo "NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID" >> .env.production
+        - echo "NEXT_PUBLIC_NODE_ENV=$NEXT_PUBLIC_NODE_ENV" >> .env.production
     build:
       commands:
         - npm run build
