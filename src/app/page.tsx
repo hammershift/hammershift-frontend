@@ -111,8 +111,59 @@ async function getHomePageData() {
 }
 
 export default async function HomePage() {
-  const session = await getServerSession(authOptions);
-  const { featuredAuction, liveAuctions, leaderboard, activityStats } = await getHomePageData();
+  let session = null;
+  let featuredAuction = null;
+  let liveAuctions: any[] = [];
+  let leaderboard: any[] = [];
+  let activityStats = {
+    predictions_today: 0,
+    active_auctions_value: 0,
+    active_players: 0
+  };
+  let error = null;
+
+  try {
+    session = await getServerSession(authOptions);
+  } catch (err: any) {
+    console.error('❌ Error getting session:', err);
+    error = `Session error: ${err.message}`;
+  }
+
+  try {
+    const data = await getHomePageData();
+    featuredAuction = data.featuredAuction;
+    liveAuctions = data.liveAuctions;
+    leaderboard = data.leaderboard;
+    activityStats = data.activityStats;
+  } catch (err: any) {
+    console.error('❌ Error fetching homepage data:', err);
+    error = error ? `${error} | Data error: ${err.message}` : `Data error: ${err.message}`;
+  }
+
+  // If critical error, show error page
+  if (error && liveAuctions.length === 0) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0A0A1A] p-4">
+        <div className="max-w-2xl rounded-lg border border-[#E94560]/30 bg-[#13202D] p-8">
+          <h1 className="mb-4 text-3xl font-bold text-[#E94560]">Service Temporarily Unavailable</h1>
+          <p className="mb-4 text-gray-300">
+            We're experiencing technical difficulties. Our team has been notified and is working to resolve the issue.
+          </p>
+          <details className="mt-4">
+            <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
+              Technical Details
+            </summary>
+            <pre className="mt-2 overflow-auto rounded bg-[#0A0A1A] p-4 text-xs text-gray-400">
+              {error}
+            </pre>
+          </details>
+          <p className="mt-6 text-sm text-gray-400">
+            Try visiting <a href="/api/health" className="text-[#00D4AA] underline">/api/health</a> for diagnostics
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col">
