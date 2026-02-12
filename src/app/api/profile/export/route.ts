@@ -7,6 +7,9 @@ import { Predictions } from "@/models/predictions.model";
 import Streak from "@/models/streak.model";
 import Badge from "@/models/badge.model";
 
+// Force dynamic rendering - do not pre-render at build time
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/profile/export
  * Exports all user data as JSON file

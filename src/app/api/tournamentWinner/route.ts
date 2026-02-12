@@ -11,6 +11,9 @@ import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
+// Force dynamic rendering - do not pre-render at build time
+export const dynamic = 'force-dynamic';
+
 interface TournamentWager {
   _id: ObjectId;
   tournamentID: ObjectId;
