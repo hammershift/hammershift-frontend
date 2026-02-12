@@ -147,7 +147,7 @@ export default async function HomePage() {
         <div className="max-w-2xl rounded-lg border border-[#E94560]/30 bg-[#13202D] p-8">
           <h1 className="mb-4 text-3xl font-bold text-[#E94560]">Service Temporarily Unavailable</h1>
           <p className="mb-4 text-gray-300">
-            We're experiencing technical difficulties. Our team has been notified and is working to resolve the issue.
+            We&apos;re experiencing technical difficulties. Our team has been notified and is working to resolve the issue.
           </p>
           <details className="mt-4">
             <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300">
