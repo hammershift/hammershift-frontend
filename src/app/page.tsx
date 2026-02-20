@@ -1,3 +1,6 @@
+// Force dynamic rendering - page uses session/headers and live DB data
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "next-auth/next";

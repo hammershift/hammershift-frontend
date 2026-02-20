@@ -88,15 +88,25 @@ export async function GET(req: NextRequest) {
       default:
         priceFilter = { $exists: true };
     }
-    const query = {
-      "attributes.2.value": make === "all" ? { $exists: true } : make,
+    // Build attribute filters using $elemMatch (key-based, not positional index)
+    // Positional queries like "attributes.14.value" break if scraper changes attribute order
+    const attributeFilters: any[] = [
+      { $elemMatch: { key: "status", value: 1 } },
+    ];
+    if (make && make !== "all") {
+      attributeFilters.push({ $elemMatch: { key: "make", value: make } });
+    }
+    if (priceRange !== 0) {
+      attributeFilters.push({ $elemMatch: { key: "price", value: priceFilter } });
+    }
+
+    const query: any = {
       isActive: true,
-      "attributes.0.value": priceFilter,
       "sort.deadline":
         status === "active" || status === "ending_soon"
           ? { $gt: new Date() }
           : { $lt: new Date() },
-      "attributes.14.value": 1,
+      $and: attributeFilters.map((f) => ({ attributes: f })),
     };
     const options = {
       offset: offset,
