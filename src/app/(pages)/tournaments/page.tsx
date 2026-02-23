@@ -17,6 +17,7 @@ import { formatDistanceToNow, isValid } from "date-fns";
 import { Tournament } from "@/models/tournament.model";
 import TournamentGrid from "@/app/components/tournament_grid";
 import { useTrackEvent } from "@/hooks/useTrackEvent";
+import { LadderProgress, LadderData } from "@/app/components/LadderProgress";
 
 type StatusFilter = 'all' | 'active' | 'upcoming' | 'completed';
 type TypeFilter = 'all' | 'free_play' | 'paid';
@@ -36,6 +37,10 @@ export default function TournamentsPage() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [sortBy, setSortBy] = useState<SortOption>('ending_soon');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Ladder
+  const [ladderData, setLadderData] = useState<LadderData | null>(null);
+  const [ladderLoading, setLadderLoading] = useState(true);
 
   // Stats
   const [stats, setStats] = useState({
@@ -105,6 +110,14 @@ export default function TournamentsPage() {
     }
 
     loadTournaments();
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/tournaments/ladder/me")
+      .then((r) => r.json())
+      .then((data) => { if (!data.error) setLadderData(data); })
+      .catch(() => {})
+      .finally(() => setLadderLoading(false));
   }, []);
 
   // Apply filters and sorting
@@ -241,6 +254,20 @@ export default function TournamentsPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Ladder progress card */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-white font-semibold text-sm">My Tier</h3>
+          <Link
+            href="/tournaments/ladder"
+            className="text-[#E94560] text-xs hover:underline transition-colors"
+          >
+            View ladder →
+          </Link>
+        </div>
+        <LadderProgress data={ladderData} loading={ladderLoading} />
       </div>
 
       {/* Filter Bar */}
