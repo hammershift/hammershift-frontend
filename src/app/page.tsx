@@ -41,6 +41,18 @@ async function getHomePageData() {
       .lean()
       .exec();
 
+    // Featured car hero (most-predicted auction closing within 48 hours)
+    const now48h = new Date();
+    const in48h = new Date(now48h.getTime() + 48 * 60 * 60 * 1000);
+    const featuredCar = await Auctions.findOne({
+      isActive: true,
+      'sort.deadline': { $gt: now48h, $lt: in48h },
+    })
+      .sort({ prediction_count: -1 })
+      .lean()
+      .exec();
+    const featuredCarJson = featuredCar ? JSON.parse(JSON.stringify(featuredCar)) : null;
+
     // Live auctions (12 most recent)
     const liveAuctions = await Auctions.find({
       isActive: true,
@@ -94,6 +106,7 @@ async function getHomePageData() {
 
     return {
       featuredAuction: featuredAuction ? JSON.parse(JSON.stringify(featuredAuction)) : null,
+      featuredCar: featuredCarJson,
       liveAuctions: liveAuctions ? JSON.parse(JSON.stringify(liveAuctions)) : [],
       leaderboard: leaderboard ? JSON.parse(JSON.stringify(leaderboard)) : [],
       activityStats
@@ -102,6 +115,7 @@ async function getHomePageData() {
     console.error('Error fetching homepage data:', error);
     return {
       featuredAuction: null,
+      featuredCar: null,
       liveAuctions: [],
       leaderboard: [],
       activityStats: {
@@ -116,6 +130,7 @@ async function getHomePageData() {
 export default async function HomePage() {
   let session = null;
   let featuredAuction = null;
+  let featuredCar = null;
   let liveAuctions: any[] = [];
   let leaderboard: any[] = [];
   let activityStats = {
@@ -135,6 +150,7 @@ export default async function HomePage() {
   try {
     const data = await getHomePageData();
     featuredAuction = data.featuredAuction;
+    featuredCar = data.featuredCar;
     liveAuctions = data.liveAuctions;
     leaderboard = data.leaderboard;
     activityStats = data.activityStats;
@@ -269,7 +285,43 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 2: LIVE AUCTIONS GRID */}
+      {/* SECTION 2: FEATURED CAR HERO */}
+      {featuredCar && (
+        <section className="section-container mx-auto px-4 pb-8 pt-0">
+          <div className="relative overflow-hidden rounded-xl">
+            <Image
+              src={featuredCar.image || '/images/default-car.jpg'}
+              alt={featuredCar.title}
+              width={1400}
+              height={600}
+              className="h-64 w-full object-cover md:h-96"
+              priority={false}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A1A] via-[#0A0A1A]/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+              <p className="mb-1 font-mono text-xs uppercase tracking-wider text-[#FFB547]">
+                Featured Auction
+              </p>
+              <h2 className="mb-2 text-2xl font-bold text-white md:text-4xl">
+                {featuredCar.title}
+              </h2>
+              {featuredCar.sort?.deadline && (
+                <p className="mb-4 font-mono text-sm text-gray-300">
+                  {`Ends ${new Date(featuredCar.sort.deadline).toLocaleString()}`}
+                </p>
+              )}
+              <a
+                href={`/auctions/car_view_page/${featuredCar._id}`}
+                className="inline-block rounded-lg bg-[#E94560] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#E94560]/90"
+              >
+                Make Your Pick →
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* SECTION 3: LIVE AUCTIONS GRID */}
       <section id="live-auctions" className="section-container mx-auto px-4 py-16">
         <div className="mb-8 flex items-center justify-between">
           <h2 className="text-3xl font-bold">Live Auctions</h2>
@@ -344,7 +396,7 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* SECTION 3: LEADERBOARD PREVIEW */}
+      {/* SECTION 4: LEADERBOARD PREVIEW */}
       <section className="bg-[#13202D]/50 py-16">
         <div className="section-container mx-auto px-4">
           <div className="mb-8 flex items-center justify-between">
@@ -395,7 +447,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 4: GAME MODES */}
+      {/* SECTION 5: GAME MODES */}
       <section className="section-container mx-auto px-4 py-16">
         <h2 className="mb-8 text-center text-3xl font-bold">Choose Your Game Mode</h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -453,7 +505,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* SECTION 5: HOW IT WORKS */}
+      {/* SECTION 6: HOW IT WORKS */}
       <section className="bg-[#13202D]/50 py-16">
         <div className="section-container mx-auto px-4">
           <HowItWorks />
