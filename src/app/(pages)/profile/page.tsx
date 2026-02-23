@@ -54,6 +54,11 @@ import StreakIndicator from "@/app/components/StreakIndicator";
 import BadgeDisplay from "@/app/components/BadgeDisplay";
 import { BadgeType } from "@/models/badge.model";
 import { useTrackEvent } from "@/hooks/useTrackEvent";
+import { DailyChallenge } from "@/app/components/DailyChallenge";
+import {
+  getGuestPredictions,
+  clearGuestPredictions,
+} from "@/lib/guestPredictions";
 
 interface Props {}
 
@@ -91,6 +96,14 @@ function Profile(props: Props) {
   });
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [notifPrefs, setNotifPrefs] = useState({
+    email_30min: true,
+    email_rank_drop: true,
+    push_30min: false,
+    sms_30min: false,
+  });
+  const [notifLoading, setNotifLoading] = useState(false);
+  const [notifSaved, setNotifSaved] = useState(false);
 
   const { data } = useSession();
   const router = useRouter();
@@ -102,6 +115,30 @@ function Profile(props: Props) {
       setUsername(data?.user.username!);
       fetchUserProfile();
     }
+  }, [data]);
+
+  // Migrate guest predictions to the authenticated account on first login
+  useEffect(() => {
+    if (!data?.user) return;
+    const guestPredictions = getGuestPredictions();
+    if (!guestPredictions.length) return;
+
+    fetch("/api/guest/migrate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        predictions: guestPredictions.map((p) => ({
+          auctionId: p.auctionId,
+          predictedPrice: p.predictedPrice,
+        })),
+      }),
+    })
+      .then(() => {
+        clearGuestPredictions();
+      })
+      .catch(() => {
+        // Silently fail — guest predictions remain in localStorage
+      });
   }, [data]);
 
   useEffect(() => {
@@ -203,6 +240,27 @@ function Profile(props: Props) {
       fetchTournaments();
     }
   }, [currentTab]);
+
+  useEffect(() => {
+    fetch("/api/notifications/preferences")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && !data.error) setNotifPrefs(data);
+      })
+      .catch(() => {}); // graceful — backend not yet implemented
+  }, []);
+
+  const saveNotifPrefs = async () => {
+    setNotifLoading(true);
+    await fetch("/api/notifications/preferences", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notifPrefs),
+    }).catch(() => {});
+    setNotifLoading(false);
+    setNotifSaved(true);
+    setTimeout(() => setNotifSaved(false), 2000);
+  };
 
   const handleUpdateProfile = async () => {
     setIsLoading(true);
@@ -406,6 +464,9 @@ function Profile(props: Props) {
 
         {/* Tab 1: Overview */}
         <TabsContent value="overview">
+          <div className="mb-6">
+            <DailyChallenge />
+          </div>
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Hero Stats Card */}
             <div className="lg:col-span-3">
@@ -968,6 +1029,56 @@ function Profile(props: Props) {
                 </Button>
               </CardContent>
             </Card>
+
+            {/* Notification Preferences */}
+            <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 mt-6">
+              <h3 className="text-white font-semibold mb-4">Notifications</h3>
+              <div className="space-y-3 mb-4">
+                {([
+                  { key: "email_30min", label: "Email when auction closes in 30 min" },
+                  { key: "email_rank_drop", label: "Email when you drop in rank" },
+                ] as const).map(({ key, label }) => (
+                  <label key={key} className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={notifPrefs[key]}
+                      onChange={(e) =>
+                        setNotifPrefs((p) => ({ ...p, [key]: e.target.checked }))
+                      }
+                      className="w-4 h-4 accent-[#E94560]"
+                    />
+                    <span className="text-gray-300 text-sm">{label}</span>
+                  </label>
+                ))}
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={notifPrefs.push_30min}
+                    onChange={async (e) => {
+                      if (e.target.checked && typeof Notification !== "undefined") {
+                        const perm = await Notification.requestPermission();
+                        if (perm !== "granted") return;
+                      }
+                      setNotifPrefs((p) => ({ ...p, push_30min: e.target.checked }));
+                    }}
+                    className="w-4 h-4 accent-[#E94560]"
+                  />
+                  <span className="text-gray-300 text-sm">
+                    Push: Auction closes in 30 min
+                    {!notifPrefs.push_30min && (
+                      <span className="ml-2 text-xs text-[#FFB547]">(requires permission)</span>
+                    )}
+                  </span>
+                </label>
+              </div>
+              <button
+                onClick={saveNotifPrefs}
+                disabled={notifLoading}
+                className="bg-[#E94560] text-white px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-[#E94560]/90 transition-colors"
+              >
+                {notifSaved ? "Saved!" : notifLoading ? "Saving\u2026" : "Save Preferences"}
+              </button>
+            </div>
 
             {/* Change Password */}
             <Card className="border-[#1E2A36] bg-[#13202D]">
