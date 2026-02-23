@@ -10,10 +10,13 @@ import { Badge } from "@/app/components/badge";
 import { Button } from "@/app/components/ui/button";
 import CountdownTimer from "@/app/components/CountdownTimer";
 import { CommentsSection } from "@/app/components/CommentsSection";
-import { Clock, Users, TrendingUp, Info, ChevronLeft } from "lucide-react";
+import { Clock, Users, TrendingUp, ChevronLeft } from "lucide-react";
 import ClientAuctionTracker from "@/app/components/ClientAuctionTracker";
 import PredictionFormClient from "@/app/components/PredictionFormClient";
 import RecentPredictionsFeed from "@/app/components/RecentPredictionsFeed";
+import { ShareCard } from "@/app/components/ShareCard";
+import { PriceDistribution } from "@/app/components/PriceDistribution";
+import { CompsTable } from "@/app/components/CompsTable";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
@@ -69,6 +72,17 @@ async function getAuctionData(auctionId: string, userId?: string) {
       .lean()
       .exec();
 
+    // All predicted prices for distribution chart
+    const allPredictions = await Predictions.find(
+      { auction_id: auction._id },
+      { predictedPrice: 1, _id: 0 }
+    )
+      .lean()
+      .exec();
+    const predictedPrices: number[] = allPredictions
+      .map((p: any) => p.predictedPrice)
+      .filter(Boolean);
+
     // Top 3 predictors for this auction (by score)
     const topPredictors = await Predictions.find({
       auction_id: auction._id,
@@ -102,7 +116,8 @@ async function getAuctionData(auctionId: string, userId?: string) {
       predictionStats: predictionStats[0] || { count: 0, avg: 0, min: 0, max: 0 },
       recentPredictions: JSON.parse(JSON.stringify(recentPredictions)),
       topPredictors: JSON.parse(JSON.stringify(topPredictors)),
-      similarAuctions: JSON.parse(JSON.stringify(similarAuctions))
+      similarAuctions: JSON.parse(JSON.stringify(similarAuctions)),
+      predictedPrices,
     };
   } catch (error) {
     console.error('Error fetching auction data:', error);
@@ -128,7 +143,7 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
     );
   }
 
-  const { auction, userPrediction, predictionStats, recentPredictions, topPredictors, similarAuctions } = data;
+  const { auction, userPrediction, predictionStats, recentPredictions, topPredictors, similarAuctions, predictedPrices } = data;
 
   // Parse attributes
   const priceAttr = auction.attributes?.find((a: any) => a.key === 'price') || auction.sort?.price || 0;
@@ -343,21 +358,22 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
             <CardContent className="p-6">
               <h2 className="mb-4 text-xl font-bold">Make Your Prediction</h2>
 
-              {!session ? (
-                <div className="text-center">
-                  <Info className="mx-auto mb-3 h-12 w-12 text-gray-400" />
-                  <p className="mb-4 text-gray-400">Sign in to make predictions</p>
-                  <Link href="/login_page">
-                    <Button className="w-full bg-[#E94560]">Sign In</Button>
-                  </Link>
-                </div>
-              ) : isLocked || hasEnded ? (
+              {isLocked || hasEnded ? (
                 <div className="text-center">
                   <Clock className="mx-auto mb-3 h-12 w-12 text-gray-400" />
                   <p className="text-gray-400">
                     {hasEnded ? 'This auction has ended' : 'Predictions locked (less than 1 hour remaining)'}
                   </p>
                 </div>
+              ) : !session ? (
+                <PredictionFormClient
+                  auctionId={params.id}
+                  minPrice={minSuggested}
+                  maxPrice={maxSuggested}
+                  currentBid={currentBid}
+                  deadline={deadline}
+                  isGuest={true}
+                />
               ) : userPrediction ? (
                 <div className="text-center">
                   <div className="mb-4 rounded-lg bg-[#00D4AA]/10 p-4">
@@ -374,6 +390,11 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
                   <p className="text-sm text-gray-400">
                     Prediction submitted. Good luck!
                   </p>
+                  <ShareCard
+                    predictionId={String(userPrediction._id)}
+                    auctionId={String(auction._id)}
+                    auctionTitle={auction.title}
+                  />
                 </div>
               ) : (
                 <PredictionFormClient
@@ -397,6 +418,19 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
               />
             </CardContent>
           </Card>
+
+          {/* Market Data */}
+          <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 space-y-6 mb-8">
+            <h3 className="text-white font-semibold text-base">Market Data</h3>
+            <PriceDistribution
+              predictions={predictedPrices}
+              userPrediction={userPrediction?.predictedPrice}
+            />
+            <CompsTable
+              auctionId={String(auction._id)}
+              currentBid={auction.sort?.price}
+            />
+          </div>
 
           {/* Top Predictors */}
           {topPredictors.length > 0 && (
