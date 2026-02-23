@@ -23,7 +23,7 @@ import TournamentGrid from "@/app/components/tournament_grid";
 interface Filters {
   make: string;
   priceRange: string;
-  status: "active" | "ending_soon" | "ended";
+  status: "active" | "ending_soon" | "starting_soon" | "ended";
 }
 const FreePlay = () => {
   const [hammerCars, setHammerCars] = useState([]);
@@ -36,7 +36,7 @@ const FreePlay = () => {
   const [filters, setFilters] = useState<Filters>({
     make: "all",
     priceRange: "0",
-    status: "active",
+    status: "ending_soon",
   });
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
@@ -45,7 +45,7 @@ const FreePlay = () => {
     //reset page and filter
     setCurrentPage(1);
     setTotalPages(1);
-    setFilters({ make: "all", priceRange: "0", status: "active" });
+    setFilters({ make: "all", priceRange: "0", status: "ending_soon" });
   };
   // const loadHammerCars = async () => {
   //   setLoading(true);
@@ -219,6 +219,26 @@ const FreePlay = () => {
             {/* {velocityPicks.length > 0 && (
               <VelocityPicks cars={velocityPicks} mode="free_play" />
             )} */}
+
+            {/* Tab bar */}
+            <div className="flex overflow-x-auto border-b border-[#1E2A36] mb-6">
+              {(["ending_soon", "active", "starting_soon", "ended"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setFilters((f) => ({ ...f, status: tab }))}
+                  className={`px-5 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+                    filters.status === tab
+                      ? "border-b-2 border-[#E94560] text-white"
+                      : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  {tab === "ending_soon" && "Ending Soon"}
+                  {tab === "active" && "Live Now"}
+                  {tab === "starting_soon" && "Starting Soon"}
+                  {tab === "ended" && "Ended"}
+                </button>
+              ))}
+            </div>
 
             <Card className="mb-8 border-[#333333] bg-[#2C2C2C] p-6">
               <AuctionFilters filters={filters} setFilters={setFilters} />

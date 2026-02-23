@@ -11,7 +11,7 @@ import { Button } from "./ui/button";
 interface IFilter {
   make: string;
   priceRange: string;
-  status: "active" | "ending_soon" | "ended";
+  status: "active" | "ending_soon" | "starting_soon" | "ended";
 }
 interface IProps {
   filters: IFilter;

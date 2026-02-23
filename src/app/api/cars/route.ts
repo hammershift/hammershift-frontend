@@ -105,6 +105,8 @@ export async function GET(req: NextRequest) {
       "sort.deadline":
         status === "active" || status === "ending_soon"
           ? { $gt: new Date() }
+          : status === "starting_soon"
+          ? { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) }
           : { $lt: new Date() },
       $and: attributeFilters.map((f) => ({ attributes: f })),
     };
@@ -113,6 +115,8 @@ export async function GET(req: NextRequest) {
       limit: limit,
       sort:
         status === "ending_soon"
+          ? { "sort.deadline": 1 }
+          : status === "starting_soon"
           ? { "sort.deadline": 1 }
           : { "sort.deadline": -1 },
     };

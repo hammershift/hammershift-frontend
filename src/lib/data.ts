@@ -60,7 +60,7 @@ export const getCars = async ({
   limit?: number;
   make?: string;
   priceRange?: number;
-  status?: "active" | "ending_soon" | "ended";
+  status?: "active" | "ending_soon" | "starting_soon" | "ended";
 }) => {
   try {
     // const response = await fetch(
