@@ -6,6 +6,10 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useTrackEvent } from '@/hooks/useTrackEvent';
 import { Loader2 } from 'lucide-react';
+import {
+  saveGuestPrediction,
+  getGuestPredictions,
+} from '@/lib/guestPredictions';
 
 interface PredictionFormClientProps {
   auctionId: string;
@@ -13,6 +17,7 @@ interface PredictionFormClientProps {
   maxPrice: number;
   currentBid: number;
   deadline?: string | Date;
+  isGuest?: boolean;
 }
 
 export default function PredictionFormClient({
@@ -20,21 +25,23 @@ export default function PredictionFormClient({
   minPrice,
   maxPrice,
   currentBid,
-  deadline
+  deadline,
+  isGuest = false,
 }: PredictionFormClientProps) {
   const [predictedPrice, setPredictedPrice] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [guestSubmitted, setGuestSubmitted] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const router = useRouter();
   const track = useTrackEvent();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleAuthenticatedSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     const price = parseInt(predictedPrice);
 
-    // Validation
     if (!price || isNaN(price)) {
       setError('Please enter a valid price');
       return;
@@ -66,7 +73,6 @@ export default function PredictionFormClient({
         return;
       }
 
-      // Track event
       const timeBeforeEnd = deadline
         ? new Date(deadline).getTime() - Date.now()
         : 0;
@@ -78,7 +84,6 @@ export default function PredictionFormClient({
         timestamp: new Date().toISOString()
       });
 
-      // Refresh page to show updated prediction
       router.refresh();
     } catch (err) {
       console.error('Prediction submission error:', err);
@@ -87,38 +92,145 @@ export default function PredictionFormClient({
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Range slider helper */}
-      <div className="rounded-lg bg-[#0A0A1A]/50 p-3">
-        <div className="mb-2 text-xs text-gray-400">Suggested Range</div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="font-mono text-gray-300">${minPrice.toLocaleString()}</span>
-          <span className="text-gray-500">to</span>
-          <span className="font-mono text-gray-300">${maxPrice.toLocaleString()}</span>
-        </div>
-      </div>
+  const handleGuestSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
 
-      {/* Price input */}
-      <div>
-        <label htmlFor="predicted-price" className="mb-2 block text-sm text-gray-400">
-          Your Prediction
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-          <Input
-            id="predicted-price"
-            type="number"
-            placeholder="Enter amount"
-            value={predictedPrice}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPredictedPrice(e.target.value)}
-            className="border-[#1E2A36] bg-[#0A0A1A] pl-7 font-mono text-lg"
-            min={minPrice}
-            max={maxPrice}
-            disabled={isSubmitting}
-          />
-        </div>
+    const price = parseInt(predictedPrice.replace(/[^0-9]/g, ''));
+
+    if (!price || isNaN(price)) {
+      setError('Please enter a valid price');
+      return;
+    }
+
+    if (price < minPrice || price > maxPrice) {
+      setError(`Prediction must be between $${minPrice.toLocaleString()} and $${maxPrice.toLocaleString()}`);
+      return;
+    }
+
+    const count = saveGuestPrediction(auctionId, price);
+    setGuestSubmitted(true);
+    if (count >= 3) {
+      setShowSignupModal(true);
+    }
+  };
+
+  // Shared price range display
+  const rangeDisplay = (
+    <div className="rounded-lg bg-[#0A0A1A]/50 p-3">
+      <div className="mb-2 text-xs text-gray-400">Suggested Range</div>
+      <div className="flex items-center justify-between text-sm">
+        <span className="font-mono text-gray-300">${minPrice.toLocaleString()}</span>
+        <span className="text-gray-500">to</span>
+        <span className="font-mono text-gray-300">${maxPrice.toLocaleString()}</span>
       </div>
+    </div>
+  );
+
+  // Shared price input
+  const priceInput = (
+    <div>
+      <label htmlFor="predicted-price" className="mb-2 block text-sm text-gray-400">
+        Your Prediction
+      </label>
+      <div className="relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+        <Input
+          id="predicted-price"
+          type="number"
+          placeholder="Enter amount"
+          value={predictedPrice}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPredictedPrice(e.target.value)}
+          className="border-[#1E2A36] bg-[#0A0A1A] pl-7 font-mono text-lg"
+          min={minPrice}
+          max={maxPrice}
+          disabled={isSubmitting}
+        />
+      </div>
+    </div>
+  );
+
+  if (isGuest) {
+    return (
+      <>
+        {guestSubmitted ? (
+          <div className="text-center py-4">
+            <p className="text-[#00D4AA] font-medium mb-2">Pick saved!</p>
+            <p className="text-gray-400 text-sm mb-4">
+              Sign up to save your picks permanently and see your rank.
+            </p>
+            <a
+              href="/api/auth/signin"
+              className="inline-block bg-[#E94560] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#E94560]/90 transition-colors"
+            >
+              Create Free Account
+            </a>
+          </div>
+        ) : (
+          <form onSubmit={handleGuestSubmit} className="space-y-4">
+            {rangeDisplay}
+            {priceInput}
+
+            <div className="rounded-lg bg-[#FFB547]/10 border border-[#FFB547]/20 p-3 text-xs text-[#FFB547]">
+              Guest picks are saved locally. Sign up to track results and earn points.
+            </div>
+
+            {error && (
+              <div className="rounded-lg bg-red-500/10 p-3 text-sm text-red-400">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-[#1E2A36] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2C3A4A] transition-colors border border-[#1E2A36]"
+            >
+              Save Guest Pick
+            </button>
+
+            <a
+              href="/api/auth/signin"
+              className="block w-full text-center bg-[#E94560] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#E94560]/90 transition-colors"
+            >
+              Sign In to Submit for Real
+            </a>
+
+            <p className="text-center text-xs text-gray-500">
+              Predictions lock 1 hour before auction end
+            </p>
+          </form>
+        )}
+
+        {showSignupModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+            <div className="bg-[#13202D] rounded-xl border border-[#1E2A36] p-6 w-full max-w-sm">
+              <h3 className="text-white font-bold text-xl mb-2">Save your picks</h3>
+              <p className="text-gray-400 text-sm mb-6">
+                {`You've made 3 picks! Create a free account to save your predictions and see how you rank.`}
+              </p>
+              <a
+                href="/api/auth/signin"
+                className="block w-full bg-[#E94560] text-white py-3 px-4 rounded-lg text-center font-semibold mb-3 hover:bg-[#E94560]/90 transition-colors"
+              >
+                Sign Up — {"It's Free"}
+              </a>
+              <button
+                onClick={() => setShowSignupModal(false)}
+                className="w-full text-gray-400 text-sm hover:text-white transition-colors py-1"
+              >
+                Continue as guest
+              </button>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <form onSubmit={handleAuthenticatedSubmit} className="space-y-4">
+      {rangeDisplay}
+      {priceInput}
 
       {/* Bonus modifiers display */}
       <div className="space-y-1 text-xs">
@@ -132,14 +244,12 @@ export default function PredictionFormClient({
         </div>
       </div>
 
-      {/* Error message */}
       {error && (
         <div className="rounded-lg bg-red-500/10 p-3 text-sm text-red-400">
           {error}
         </div>
       )}
 
-      {/* Submit button */}
       <Button
         type="submit"
         className="w-full bg-[#E94560] text-white hover:bg-[#E94560]/90"
