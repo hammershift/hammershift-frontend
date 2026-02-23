@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTrackEvent } from "@/hooks/useTrackEvent";
 
 interface ShareCardProps {
   predictionId: string;
@@ -11,6 +12,7 @@ interface ShareCardProps {
 export function ShareCard({ predictionId, auctionId, auctionTitle }: ShareCardProps) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const track = useTrackEvent();
 
   const shareUrl =
     typeof window !== "undefined"
@@ -25,6 +27,7 @@ export function ShareCard({ predictionId, auctionId, auctionTitle }: ShareCardPr
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      track("share_card_shared", { platform: "copy" });
     } catch {
       // fallback: select text
     }
@@ -33,7 +36,7 @@ export function ShareCard({ predictionId, auctionId, auctionTitle }: ShareCardPr
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={() => { setOpen(true); track("share_card_opened", { auctionId, predictionId }); }}
         className="mt-3 w-full bg-[#1E2A36] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#2C3A4A] transition-colors border border-[#1E2A36] hover:border-[#E94560]/30"
       >
         Share My Pick
@@ -57,6 +60,7 @@ export function ShareCard({ predictionId, auctionId, auctionTitle }: ShareCardPr
                 href={`https://twitter.com/intent/tweet?text=${tweetText}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => track("share_card_shared", { platform: "twitter" })}
                 className="flex-1 bg-black text-white py-2 px-4 rounded-lg text-sm text-center hover:bg-gray-900 transition-colors"
               >
                 Post on &#120143;

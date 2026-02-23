@@ -1058,6 +1058,7 @@ function Profile(props: Props) {
                       if (e.target.checked && typeof Notification !== "undefined") {
                         const perm = await Notification.requestPermission();
                         if (perm !== "granted") return;
+                        track("notification_opted_in", { channel: "push" });
                       }
                       setNotifPrefs((p) => ({ ...p, push_30min: e.target.checked }));
                     }}

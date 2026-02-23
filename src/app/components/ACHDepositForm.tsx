@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTrackEvent } from "@/hooks/useTrackEvent";
 
 interface ACHDepositFormProps {
   onSuccess?: () => void;
@@ -15,6 +16,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const track = useTrackEvent();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +36,8 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
       return;
     }
 
+    track("deposit_started", { method: "ach", amount: amountCents });
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/wallet/deposit/ach", {
@@ -51,6 +55,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
         setError(data.error ?? "Transfer failed. Please try again.");
         return;
       }
+      track("deposit_completed", { method: "ach", amount: amountCents, transactionId: data.transactionId });
       setSuccess(true);
       setTimeout(() => onSuccess?.(), 2000);
     } catch {

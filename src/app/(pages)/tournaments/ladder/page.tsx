@@ -3,16 +3,21 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LadderProgress, TIERS, LadderData } from "@/app/components/LadderProgress";
+import { useTrackEvent } from "@/hooks/useTrackEvent";
 
 export default function LadderPage() {
   const [ladderData, setLadderData] = useState<LadderData | null>(null);
   const [loading, setLoading] = useState(true);
+  const track = useTrackEvent();
 
   useEffect(() => {
     fetch("/api/tournaments/ladder/me")
       .then((r) => r.json())
       .then((data) => {
-        if (!data.error) setLadderData(data);
+        if (!data.error) {
+          setLadderData(data);
+          track("ladder_page_viewed", { currentTier: data.tier });
+        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));

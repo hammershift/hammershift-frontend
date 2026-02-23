@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTrackEvent } from "@/hooks/useTrackEvent";
 
 const CHALLENGES = [
   { id: "pick_3", label: "Make 3 picks today", target: 3 },
@@ -22,7 +23,9 @@ export function DailyChallenge() {
   const { data: session } = useSession();
   const [todayPickCount, setTodayPickCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [trackedComplete, setTrackedComplete] = useState(false);
   const challenge = getTodayChallenge();
+  const track = useTrackEvent();
 
   useEffect(() => {
     if (!session?.user) {
@@ -55,6 +58,13 @@ export function DailyChallenge() {
   const progress = Math.min(todayPickCount, challenge.target);
   const completed = progress >= challenge.target;
   const pct = Math.round((progress / challenge.target) * 100);
+
+  useEffect(() => {
+    if (completed && !trackedComplete && !loading) {
+      track("daily_challenge_completed", { challengeId: challenge.id, xpEarned: 50 });
+      setTrackedComplete(true);
+    }
+  }, [completed, trackedComplete, loading]);
 
   if (loading) return null;
 

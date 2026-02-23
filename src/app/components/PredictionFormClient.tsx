@@ -109,8 +109,10 @@ export default function PredictionFormClient({
     }
 
     const count = saveGuestPrediction(auctionId, price);
+    track("pick_submitted_guest", { auctionId, predictedPrice: price });
     setGuestSubmitted(true);
     if (count >= 3) {
+      track("signup_from_guest_gate", { picksCount: count });
       setShowSignupModal(true);
     }
   };
