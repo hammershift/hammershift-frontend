@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import PaymentForm from "@/app/components/payment_form";
+import { ACHDepositForm } from "@/app/components/ACHDepositForm";
 import Image from "next/image";
 import { redirect, usePathname, useSearchParams } from "next/navigation";
 
@@ -56,6 +57,7 @@ const MyWalletPage = () => {
     useState(false);
   const [showFailedLoadNotification, setShowFailedLoadNotification] =
     useState(false);
+  const [showACHForm, setShowACHForm] = useState(false);
 
   const isDisabled = process.env.NEXT_PUBLIC_DISABLE_DEPOSIT;
 
@@ -266,6 +268,33 @@ const MyWalletPage = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* ACH Bank Transfer deposit option */}
+      <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full mt-4">
+        <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 mb-4">
+          <div className="flex items-start justify-between">
+            <div>
+              <h4 className="text-white font-medium text-sm">Bank Transfer (ACH)</h4>
+              <p className="text-[#00D4AA] text-xs mt-0.5">Save 2-3% vs card</p>
+            </div>
+            <button
+              onClick={() => setShowACHForm(!showACHForm)}
+              className="text-xs bg-[#0A0A1A] border border-[#1E2A36] text-white px-3 py-1.5 rounded-lg hover:border-[#E94560]/50 transition-colors"
+            >
+              {showACHForm ? "Cancel" : "Deposit"}
+            </button>
+          </div>
+          {showACHForm && (
+            <ACHDepositForm
+              onSuccess={() => {
+                setShowACHForm(false);
+                setTimeout(() => window.location.reload(), 2500);
+              }}
+              onCancel={() => setShowACHForm(false)}
+            />
+          )}
+        </div>
+        <p className="text-xs text-gray-500 mb-2">Pay with card instead:</p>
       </div>
       <div>
         {isPaymentModalOpen && (
