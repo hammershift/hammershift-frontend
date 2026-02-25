@@ -90,9 +90,9 @@ export async function GET(req: NextRequest) {
     }
     // Build attribute filters using $elemMatch (key-based, not positional index)
     // Positional queries like "attributes.14.value" break if scraper changes attribute order
-    const attributeFilters: any[] = [
-      { $elemMatch: { key: "status", value: 1 } },
-    ];
+    // NOTE: Do NOT filter by attributes.status — isActive:true is the source of truth.
+    // Some auctions (non-BaT sources, manually added) won't have that attribute.
+    const attributeFilters: any[] = [];
     if (make && make !== "all") {
       attributeFilters.push({ $elemMatch: { key: "make", value: make } });
     }
@@ -100,16 +100,25 @@ export async function GET(req: NextRequest) {
       attributeFilters.push({ $elemMatch: { key: "price", value: priceFilter } });
     }
 
+    const deadlineFilter =
+      status === "active" || status === "ending_soon"
+        ? { $gt: new Date() }
+        : status === "starting_soon"
+        ? { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) }
+        : { $lt: new Date() };
+
     const query: any = {
       isActive: true,
-      "sort.deadline":
-        status === "active" || status === "ending_soon"
-          ? { $gt: new Date() }
-          : status === "starting_soon"
-          ? { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) }
-          : { $lt: new Date() },
-      $and: attributeFilters.map((f) => ({ attributes: f })),
     };
+
+    // Only filter by deadline when a status is explicitly requested
+    if (status) {
+      query["sort.deadline"] = deadlineFilter;
+    }
+
+    if (attributeFilters.length > 0) {
+      query.$and = attributeFilters.map((f) => ({ attributes: f }));
+    }
     const options = {
       offset: offset,
       limit: limit,
