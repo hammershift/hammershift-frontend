@@ -70,5 +70,9 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/otp-generator": "^4.0.2"
+  },
+  "overrides": {
+    "@types/react": "18.2.22",
+    "@types/react-dom": "18.2.7"
   }
 }
