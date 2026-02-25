@@ -55,6 +55,7 @@
     "react-responsive-pagination": "^2.10.5",
     "react-router-dom": "^7.5.0",
     "react-spinners": "^0.13.8",
+    "recharts": "^3.7.0",
     "resend": "^4.5.1",
     "socket.io-client": "^4.7.4",
     "stripe": "^15.4.0",
