@@ -36,7 +36,7 @@ const FreePlay = () => {
   const [filters, setFilters] = useState<Filters>({
     make: "all",
     priceRange: "0",
-    status: "ending_soon",
+    status: "active",
   });
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
 
@@ -45,7 +45,7 @@ const FreePlay = () => {
     //reset page and filter
     setCurrentPage(1);
     setTotalPages(1);
-    setFilters({ make: "all", priceRange: "0", status: "ending_soon" });
+    setFilters({ make: "all", priceRange: "0", status: "active" });
   };
   // const loadHammerCars = async () => {
   //   setLoading(true);

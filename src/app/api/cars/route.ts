@@ -100,21 +100,23 @@ export async function GET(req: NextRequest) {
       attributeFilters.push({ $elemMatch: { key: "price", value: priceFilter } });
     }
 
-    const deadlineFilter =
-      status === "active" || status === "ending_soon"
-        ? { $gt: new Date() }
-        : status === "starting_soon"
-        ? { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) }
-        : { $lt: new Date() };
-
     const query: any = {
       isActive: true,
     };
 
-    // Only filter by deadline when a status is explicitly requested
-    if (status) {
-      query["sort.deadline"] = deadlineFilter;
+    // "active" (Live Now) = all isActive:true cars, no deadline filter.
+    // Admin-activated cars may have no sort.deadline set; isActive is the source of truth.
+    // "ending_soon" = has a future deadline (BaT-scraped auctions with known close times)
+    // "starting_soon" = deadline more than 24h away
+    // "ended" = deadline in the past (or isActive was flipped to false by scraper)
+    if (status === "ending_soon") {
+      query["sort.deadline"] = { $gt: new Date() };
+    } else if (status === "starting_soon") {
+      query["sort.deadline"] = { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) };
+    } else if (status === "ended") {
+      query["sort.deadline"] = { $lt: new Date() };
     }
+    // status === "active" or no status: no deadline filter
 
     if (attributeFilters.length > 0) {
       query.$and = attributeFilters.map((f) => ({ attributes: f }));
