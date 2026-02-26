@@ -14,28 +14,70 @@ export async function GET() {
     const dbName = mongoose.connection.db?.databaseName ?? "unknown";
     const totalCount = await Auctions.countDocuments({});
     const activeCount = await Auctions.countDocuments({ isActive: true });
-    const inactiveCount = await Auctions.countDocuments({ isActive: false });
-    const noFieldCount = await Auctions.countDocuments({ isActive: { $exists: false } });
 
-    // Sample 3 active docs
-    const samples = await Auctions.find({ isActive: true })
-      .limit(3)
-      .select("_id title isActive sort.deadline attributes")
+    // Exact same queries as the homepage getHomePageData()
+    const now = new Date();
+    const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+
+    const homepageLiveAuctions = await Auctions.find({
+      isActive: true,
+      "sort.deadline": { $exists: true },
+    })
+      .sort({ "sort.deadline": 1 })
+      .limit(12)
+      .select("_id title isActive sort image source_badge")
       .lean();
+
+    const homepageFeaturedAuction = await Auctions.findOne({
+      isActive: true,
+      "sort.deadline": { $exists: true },
+    })
+      .sort({ "sort.deadline": 1 })
+      .select("_id title isActive sort image")
+      .lean();
+
+    // Count active with deadline existing vs missing
+    const activeWithDeadline = await Auctions.countDocuments({
+      isActive: true,
+      "sort.deadline": { $exists: true },
+    });
+    const activeWithFutureDeadline = await Auctions.countDocuments({
+      isActive: true,
+      "sort.deadline": { $gt: now },
+    });
+    const activeNoDeadline = await Auctions.countDocuments({
+      isActive: true,
+      "sort.deadline": { $exists: false },
+    });
 
     return NextResponse.json({
       connectedDb: dbName,
       mongoUri: process.env.MONGODB_URI
         ? process.env.MONGODB_URI.replace(/\/\/[^:]+:[^@]+@/, "//***:***@")
         : "NOT SET",
-      dbNameEnvVar: process.env.DB_NAME ?? "NOT SET (defaulting to hammershift)",
+      dbNameEnvVar: process.env.DB_NAME ?? "NOT SET",
       counts: {
         total: totalCount,
         isActive_true: activeCount,
-        isActive_false: inactiveCount,
-        isActive_missing: noFieldCount,
+        active_with_deadline: activeWithDeadline,
+        active_with_future_deadline: activeWithFutureDeadline,
+        active_no_deadline: activeNoDeadline,
       },
-      sampleActiveDocs: samples,
+      homepageQueries: {
+        liveAuctionsCount: homepageLiveAuctions.length,
+        liveAuctions: homepageLiveAuctions.map((a: any) => ({
+          _id: a._id,
+          title: a.title,
+          deadline: a.sort?.deadline,
+          deadlinePast: a.sort?.deadline ? new Date(a.sort.deadline) < now : null,
+          hasImage: !!a.image,
+          imageUrl: a.image?.substring(0, 60),
+          source_badge: a.source_badge,
+        })),
+        featuredAuction: homepageFeaturedAuction
+          ? { _id: homepageFeaturedAuction._id, title: (homepageFeaturedAuction as any).title, deadline: (homepageFeaturedAuction as any).sort?.deadline }
+          : null,
+      },
     });
   } catch (err: any) {
     return NextResponse.json(
