@@ -32,11 +32,8 @@ async function getHomePageData() {
   try {
     await connectToDB();
 
-    // Featured auction (ending soonest, active)
-    const featuredAuction = await Auctions.findOne({
-      isActive: true,
-      'sort.deadline': { $exists: true }
-    })
+    // Featured auction (ending soonest, active) — no deadline filter, isActive is the gate
+    const featuredAuction = await Auctions.findOne({ isActive: true })
       .sort({ 'sort.deadline': 1 })
       .lean()
       .exec();
@@ -53,11 +50,8 @@ async function getHomePageData() {
       .exec();
     const featuredCarJson = featuredCar ? JSON.parse(JSON.stringify(featuredCar)) : null;
 
-    // Live auctions (12 most recent)
-    const liveAuctions = await Auctions.find({
-      isActive: true,
-      'sort.deadline': { $exists: true }
-    })
+    // Live auctions (12 soonest active) — no deadline filter, isActive is the gate
+    const liveAuctions = await Auctions.find({ isActive: true })
       .sort({ 'sort.deadline': 1 })
       .limit(12)
       .lean()
@@ -255,7 +249,9 @@ export default async function HomePage() {
                       <div className="text-sm text-gray-400">Time Left</div>
                       <div className="flex items-center">
                         <Clock className="mr-2 h-5 w-5 text-[#FFB547]" />
-                        <CountdownTimer endTime={new Date(featuredAuction.sort?.deadline)} />
+                        {featuredAuction.sort?.deadline
+                          ? <CountdownTimer endTime={new Date(featuredAuction.sort.deadline)} />
+                          : <span className="font-mono text-sm text-gray-400">Active</span>}
                       </div>
                     </div>
                   </div>
@@ -366,7 +362,9 @@ export default async function HomePage() {
                       <div className="text-xs text-gray-400">Time Left</div>
                       <div className="flex items-center text-sm">
                         <Clock className="mr-1 h-3 w-3 text-[#FFB547]" />
-                        <CountdownTimer endTime={new Date(auction.sort?.deadline)} size="sm" />
+                        {auction.sort?.deadline
+                          ? <CountdownTimer endTime={new Date(auction.sort.deadline)} size="sm" />
+                          : <span className="font-mono text-xs text-gray-400">Active</span>}
                       </div>
                     </div>
                   </div>
