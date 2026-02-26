@@ -41,8 +41,13 @@ export async function GET(req: NextRequest) {
       query["sort.deadline"] = { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) };
     } else if (status === "ended") {
       query["sort.deadline"] = { $lt: new Date() };
+    } else {
+      // "active" or missing: exclude past-deadline auctions; include no-deadline ones
+      query.$or = [
+        { "sort.deadline": { $gt: new Date() } },
+        { "sort.deadline": null },
+      ];
     }
-    // status === "active" or missing: no deadline filter — isActive is the gate
 
     // Price range filter
     if (priceRange !== 0) {

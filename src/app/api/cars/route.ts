@@ -104,19 +104,23 @@ export async function GET(req: NextRequest) {
       isActive: true,
     };
 
-    // "active" (Live Now) = all isActive:true cars, no deadline filter.
-    // Admin-activated cars may have no sort.deadline set; isActive is the source of truth.
-    // "ending_soon" = has a future deadline (BaT-scraped auctions with known close times)
+    // "active" (Live Now) = isActive:true with future deadline or no deadline set.
+    // "ending_soon" = future deadline (BaT-scraped auctions with known close times)
     // "starting_soon" = deadline more than 24h away
-    // "ended" = deadline in the past (or isActive was flipped to false by scraper)
+    // "ended" = deadline in the past (explicit tab — only shown when user selects it)
     if (status === "ending_soon") {
       query["sort.deadline"] = { $gt: new Date() };
     } else if (status === "starting_soon") {
       query["sort.deadline"] = { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) };
     } else if (status === "ended") {
       query["sort.deadline"] = { $lt: new Date() };
+    } else {
+      // "active" or no status: exclude past-deadline auctions; include no-deadline ones
+      query.$or = [
+        { "sort.deadline": { $gt: new Date() } },
+        { "sort.deadline": null },
+      ];
     }
-    // status === "active" or no status: no deadline filter
 
     if (attributeFilters.length > 0) {
       query.$and = attributeFilters.map((f) => ({ attributes: f }));
