@@ -242,11 +242,8 @@ export async function GET(req: NextRequest) {
         $elemMatch: { key: "state", value: { $in: location } },
       });
     }
-    if (completed) {
-      query.attributes.$all.push({
-        $elemMatch: { key: "status", value: { $in: completed } },
-      });
-    }
+    // NOTE: Do NOT filter by attributes.status — isActive:true is the source of truth.
+    // Admin-activated auctions from non-BaT sources may not have this attribute.
 
     const totalCars = await db.collection("auctions").countDocuments(query);
 

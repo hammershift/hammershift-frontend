@@ -70,7 +70,8 @@ export const getCars = async ({
     //   }
     // );
     const response = await fetch(
-      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}&status=${status}`
+      `/api/cars?offset=${offset}&limit=${limit}&make=${make}&priceRange=${priceRange}&status=${status}`,
+      { cache: "no-store" }
     );
     if (response.ok) {
       const data = await response.json();

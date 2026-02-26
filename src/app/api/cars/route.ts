@@ -132,7 +132,10 @@ export async function GET(req: NextRequest) {
           : { "sort.deadline": -1 },
     };
     const cars = await Auctions.paginate(query, options);
-    return NextResponse.json({ total: cars.totalPages, cars: cars.docs });
+    return NextResponse.json(
+      { total: cars.totalPages, cars: cars.docs },
+      { headers: { "Cache-Control": "no-store, max-age=0" } }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Internal server error" });
