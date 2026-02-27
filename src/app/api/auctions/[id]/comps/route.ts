@@ -4,6 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+const BACKEND_API =
+  process.env.BACKEND_API_URL ?? "https://main.d3bje0ak6q49bm.amplifyapp.com";
+
 function getAttrValue(attributes: any[], key: string) {
   return attributes?.find((a: any) => a.key === key)?.value;
 }
@@ -14,9 +17,23 @@ export async function GET(
 ) {
   try {
     await connectToDB();
-    const auction = await Auctions.findById(params.id).lean().exec();
+
+    // Try local DB first, then fall back to backend (auction may be in dev database)
+    let auction: any = await Auctions.findById(params.id).lean().exec();
+
     if (!auction) {
-      return NextResponse.json({ error: "Auction not found" }, { status: 404 });
+      const backendRes = await fetch(
+        `${BACKEND_API}/api/cars?auction_id=${params.id}`,
+        { cache: "no-store", headers: { Accept: "application/json" } }
+      );
+      if (backendRes.ok) {
+        const d = await backendRes.json();
+        if (d && d._id) auction = d;
+      }
+    }
+
+    if (!auction) {
+      return NextResponse.json({ comps: [] });
     }
 
     const attrs = (auction as any).attributes ?? [];

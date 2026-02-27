@@ -7,32 +7,33 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDB();
 
-    const car_id = req.nextUrl.searchParams.get("car_id");
+    // Accept both "car_id" (legacy) and "auction_id" (new)
+    const car_id =
+      req.nextUrl.searchParams.get("car_id") ||
+      req.nextUrl.searchParams.get("auction_id");
     const prediction_type = req.nextUrl.searchParams.get("prediction_type");
     const tournament_id = req.nextUrl.searchParams.get("tournament_id");
     const username = req.nextUrl.searchParams.get("username");
     const latest = req.nextUrl.searchParams.get("latest");
+    const limit = Number(req.nextUrl.searchParams.get("limit")) || 0;
 
     if (car_id && username) {
       const userPredictions = await Predictions.find({
         auction_id: car_id,
         predictionType: prediction_type,
         "user.username": username,
-        tournament_id: {
-          $exists: false,
-        },
-      });
-      console.log(userPredictions);
+        tournament_id: { $exists: false },
+      }).sort({ createdAt: -1 });
       return NextResponse.json(userPredictions);
     }
-    //get all predictions with the same car_id
+
     if (car_id) {
-      const predictions = await Predictions.find({
+      let query = Predictions.find({
         auction_id: car_id,
-        tournament_id: {
-          $exists: false,
-        },
-      });
+        tournament_id: { $exists: false },
+      }).sort({ createdAt: -1 });
+      if (limit > 0) query = query.limit(limit);
+      const predictions = await query;
       return NextResponse.json(predictions);
     }
 
@@ -43,19 +44,17 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(predictions);
     }
 
-    //get the user's latest submission (for success page)
     if (latest && username) {
       const latestPrediction = await Predictions.findOne({
         "user.username": username,
-      }).sort({
-        createdAt: -1,
-      });
+      }).sort({ createdAt: -1 });
       return NextResponse.json(latestPrediction);
     }
-    //get all predictions submitted by the same user for the specific car_id
+
+    return NextResponse.json([]);
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ message: "Internal server error" });
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
 
