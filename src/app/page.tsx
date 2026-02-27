@@ -32,12 +32,9 @@ async function getHomePageData() {
   try {
     await connectToDB();
 
-    // Featured auction (ending soonest, active) — exclude past-deadline auctions
-    const featuredAuction = await Auctions.findOne({
-      isActive: true,
-      $or: [{ 'sort.deadline': { $gt: new Date() } }, { 'sort.deadline': null }],
-    })
-      .sort({ 'sort.deadline': 1 })
+    // Featured auction (ending soonest, active) — isActive is the gate
+    const featuredAuction = await Auctions.findOne({ isActive: true })
+      .sort({ 'sort.deadline': -1 })
       .lean()
       .exec();
 
@@ -53,12 +50,9 @@ async function getHomePageData() {
       .exec();
     const featuredCarJson = featuredCar ? JSON.parse(JSON.stringify(featuredCar)) : null;
 
-    // Live auctions (12 soonest active) — exclude past-deadline auctions
-    const liveAuctions = await Auctions.find({
-      isActive: true,
-      $or: [{ 'sort.deadline': { $gt: new Date() } }, { 'sort.deadline': null }],
-    })
-      .sort({ 'sort.deadline': 1 })
+    // Live auctions (12) — isActive is the gate
+    const liveAuctions = await Auctions.find({ isActive: true })
+      .sort({ 'sort.deadline': -1 })
       .limit(12)
       .lean()
       .exec();

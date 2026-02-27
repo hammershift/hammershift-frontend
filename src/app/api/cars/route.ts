@@ -114,13 +114,8 @@ export async function GET(req: NextRequest) {
       query["sort.deadline"] = { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) };
     } else if (status === "ended") {
       query["sort.deadline"] = { $lt: new Date() };
-    } else {
-      // "active" or no status: exclude past-deadline auctions; include no-deadline ones
-      query.$or = [
-        { "sort.deadline": { $gt: new Date() } },
-        { "sort.deadline": null },
-      ];
     }
+    // "active" or no status: no deadline filter — isActive is the gate
 
     if (attributeFilters.length > 0) {
       query.$and = attributeFilters.map((f) => ({ attributes: f }));
