@@ -35,6 +35,19 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await res.json();
+    const status = req.nextUrl.searchParams.get("status");
+
+    // For any non-"ended" view, strip out auctions whose deadline has passed.
+    // Auctions with no deadline set are always shown (admin-activated without BaT data).
+    if (status !== "ended") {
+      const now = new Date();
+      data.cars = (data.cars ?? []).filter((car: any) => {
+        const deadline = car.sort?.deadline;
+        if (!deadline) return true;
+        return new Date(deadline) > now;
+      });
+    }
+
     return NextResponse.json(data, {
       headers: { "Cache-Control": "no-store, max-age=0" },
     });

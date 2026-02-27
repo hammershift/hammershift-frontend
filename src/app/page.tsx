@@ -41,13 +41,16 @@ async function getHomePageData() {
       { cache: "no-store" }
     );
     const auctionsData = auctionsRes.ok ? await auctionsRes.json() : { cars: [] };
-    const liveAuctions: any[] = auctionsData.cars ?? [];
+    const now = new Date();
+    const liveAuctions: any[] = (auctionsData.cars ?? []).filter((a: any) => {
+      const d = a.sort?.deadline;
+      return !d || new Date(d) > now;
+    });
 
     // Featured auction = first (soonest deadline) from live list
     const featuredAuction = liveAuctions[0] ?? null;
 
     // Featured car hero = first auction with a deadline within 48 hours
-    const now = new Date();
     const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
     const featuredCarJson = liveAuctions.find((a: any) => {
       const d = a.sort?.deadline ? new Date(a.sort.deadline) : null;
