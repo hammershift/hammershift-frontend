@@ -29,17 +29,46 @@ const USDollar = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
+const BACKEND_API =
+  process.env.BACKEND_API_URL ?? "https://main.d3bje0ak6q49bm.amplifyapp.com";
+
 // Server-side data fetching
 async function getAuctionData(auctionId: string, userId?: string) {
   try {
-    await connectToDB();
+    // 1. Try the direct car lookup endpoint on the backend
+    let auction: any = null;
 
-    // Main auction data
-    const auction = await Auctions.findById(auctionId).lean().exec();
+    const directRes = await fetch(
+      `${BACKEND_API}/api/cars?auction_id=${auctionId}`,
+      { cache: "no-store", headers: { Accept: "application/json" } }
+    );
 
+    if (directRes.ok) {
+      const directData = await directRes.json();
+      if (directData && directData._id) {
+        auction = directData;
+      }
+    }
+
+    // 2. Fallback: search the filter endpoint (known working)
     if (!auction) {
+      const filterRes = await fetch(
+        `${BACKEND_API}/api/auctions/filter?publicOnly=true&limit=100`,
+        { cache: "no-store", headers: { Accept: "application/json" } }
+      );
+      if (filterRes.ok) {
+        const filterData = await filterRes.json();
+        auction = (filterData.cars ?? []).find(
+          (c: any) => String(c._id) === auctionId
+        ) ?? null;
+      }
+    }
+
+    if (!auction || !auction._id) {
       return null;
     }
+
+    await connectToDB();
 
     // User's prediction (if logged in)
     const userPrediction = userId
