@@ -27,35 +27,32 @@ const USDollar = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
+const BACKEND_API =
+  process.env.BACKEND_API_URL ?? "https://main.d3bje0ak6q49bm.amplifyapp.com";
+
 // Server Component - Fetch data on server
 async function getHomePageData() {
   try {
     await connectToDB();
 
-    // Featured auction (ending soonest, active) — isActive is the gate
-    const featuredAuction = await Auctions.findOne({ isActive: true })
-      .sort({ 'sort.deadline': -1 })
-      .lean()
-      .exec();
+    // Fetch live auctions from the backend API (correct database)
+    const auctionsRes = await fetch(
+      `${BACKEND_API}/api/auctions/filter?publicOnly=true&limit=12&status=active`,
+      { cache: "no-store" }
+    );
+    const auctionsData = auctionsRes.ok ? await auctionsRes.json() : { cars: [] };
+    const liveAuctions: any[] = auctionsData.cars ?? [];
 
-    // Featured car hero (most-predicted auction closing within 48 hours)
-    const now48h = new Date();
-    const in48h = new Date(now48h.getTime() + 48 * 60 * 60 * 1000);
-    const featuredCar = await Auctions.findOne({
-      isActive: true,
-      'sort.deadline': { $gt: now48h, $lt: in48h },
-    })
-      .sort({ prediction_count: -1 })
-      .lean()
-      .exec();
-    const featuredCarJson = featuredCar ? JSON.parse(JSON.stringify(featuredCar)) : null;
+    // Featured auction = first (soonest deadline) from live list
+    const featuredAuction = liveAuctions[0] ?? null;
 
-    // Live auctions (12) — isActive is the gate
-    const liveAuctions = await Auctions.find({ isActive: true })
-      .sort({ 'sort.deadline': -1 })
-      .limit(12)
-      .lean()
-      .exec();
+    // Featured car hero = first auction with a deadline within 48 hours
+    const now = new Date();
+    const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+    const featuredCarJson = liveAuctions.find((a: any) => {
+      const d = a.sort?.deadline ? new Date(a.sort.deadline) : null;
+      return d && d > now && d < in48h;
+    }) ?? null;
 
     // Activity stats
     const predictions_today = await Predictions.countDocuments({
