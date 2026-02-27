@@ -63,20 +63,21 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getAuthSession();
     if (!session) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 400 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    let prediction = await req.json();
-    // const userId = Types.ObjectId.createFromHexString(prediction.user.userId);
-    if (
-      session.user.id !== prediction.user.userId ||
-      session.user.username !== prediction.user.username
-    ) {
-      return NextResponse.json({ message: "User mismatch" }, { status: 400 });
-    }
+    const body = await req.json();
     await connectToDB();
 
-    const newPrediction = await Predictions.create(prediction);
+    // Always derive user identity from the verified session — never trust client payload.
+    const newPrediction = await Predictions.create({
+      ...body,
+      user: {
+        userId: session.user.id,
+        username: session.user.username,
+        fullName: session.user.name,
+      },
+    });
     return NextResponse.json(newPrediction, { status: 201 });
   } catch (e) {
     console.error(e);
