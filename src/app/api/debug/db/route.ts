@@ -15,26 +15,7 @@ export async function GET() {
     const totalCount = await Auctions.countDocuments({});
     const activeCount = await Auctions.countDocuments({ isActive: true });
 
-    // Exact same queries as the homepage getHomePageData()
     const now = new Date();
-    const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
-
-    const homepageLiveAuctions = await Auctions.find({
-      isActive: true,
-      "sort.deadline": { $exists: true },
-    })
-      .sort({ "sort.deadline": 1 })
-      .limit(12)
-      .select("_id title isActive sort image source_badge")
-      .lean();
-
-    const homepageFeaturedAuction = await Auctions.findOne({
-      isActive: true,
-      "sort.deadline": { $exists: true },
-    })
-      .sort({ "sort.deadline": 1 })
-      .select("_id title isActive sort image")
-      .lean();
 
     // Count active with deadline existing vs missing
     const activeWithDeadline = await Auctions.countDocuments({
@@ -50,6 +31,31 @@ export async function GET() {
       "sort.deadline": { $exists: false },
     });
 
+    // Exact same query as homepage
+    const homepageLiveAuctions = await Auctions.find({ isActive: true })
+      .sort({ "sort.deadline": -1 })
+      .limit(12)
+      .select("_id title isActive sort image source_badge createdAt updatedAt")
+      .lean();
+
+    // KEY DIAGNOSTIC: docs created/updated in last 48h regardless of isActive
+    // If admin's new auctions don't show here, they landed in a different database.
+    const recentlyAdded = await Auctions.find({
+      createdAt: { $gte: new Date(now.getTime() - 48 * 60 * 60 * 1000) },
+    })
+      .select("_id title isActive createdAt updatedAt source_badge")
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    const recentlyUpdated = await Auctions.find({
+      updatedAt: { $gte: new Date(now.getTime() - 48 * 60 * 60 * 1000) },
+    })
+      .select("_id title isActive createdAt updatedAt source_badge")
+      .sort({ updatedAt: -1 })
+      .limit(20)
+      .lean();
+
     return NextResponse.json({
       connectedDb: dbName,
       mongoUri: process.env.MONGODB_URI
@@ -63,21 +69,32 @@ export async function GET() {
         active_with_future_deadline: activeWithFutureDeadline,
         active_no_deadline: activeNoDeadline,
       },
-      homepageQueries: {
-        liveAuctionsCount: homepageLiveAuctions.length,
-        liveAuctions: homepageLiveAuctions.map((a: any) => ({
-          _id: a._id,
-          title: a.title,
-          deadline: a.sort?.deadline,
-          deadlinePast: a.sort?.deadline ? new Date(a.sort.deadline) < now : null,
-          hasImage: !!a.image,
-          imageUrl: a.image?.substring(0, 60),
-          source_badge: a.source_badge,
-        })),
-        featuredAuction: homepageFeaturedAuction
-          ? { _id: homepageFeaturedAuction._id, title: (homepageFeaturedAuction as any).title, deadline: (homepageFeaturedAuction as any).sort?.deadline }
-          : null,
-      },
+      // If admin's newly activated auctions don't appear here,
+      // they are in a DIFFERENT database than this frontend reads from.
+      recentlyAdded_last48h: recentlyAdded.map((a: any) => ({
+        _id: a._id,
+        title: a.title,
+        isActive: a.isActive,
+        createdAt: a.createdAt,
+        source_badge: a.source_badge,
+      })),
+      recentlyUpdated_last48h: recentlyUpdated.map((a: any) => ({
+        _id: a._id,
+        title: a.title,
+        isActive: a.isActive,
+        updatedAt: a.updatedAt,
+        source_badge: a.source_badge,
+      })),
+      homepageLiveAuctions: homepageLiveAuctions.map((a: any) => ({
+        _id: a._id,
+        title: a.title,
+        isActive: a.isActive,
+        deadline: a.sort?.deadline,
+        deadlinePast: a.sort?.deadline ? new Date(a.sort.deadline) < now : null,
+        createdAt: a.createdAt,
+        updatedAt: a.updatedAt,
+        source_badge: a.source_badge,
+      })),
     });
   } catch (err: any) {
     return NextResponse.json(
