@@ -74,12 +74,13 @@ export async function POST(req: NextRequest) {
       user: {
         userId: session.user.id,
         username: session.user.username,
-        fullName: session.user.name,
+        fullName: session.user.name ?? session.user.username ?? "Anonymous",
+        role: session.user.role ?? "user",
       },
     });
     return NextResponse.json(newPrediction, { status: 201 });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ message: "Internal server error" });
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }

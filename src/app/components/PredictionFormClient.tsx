@@ -85,6 +85,7 @@ export default function PredictionFormClient({
       });
 
       router.refresh();
+      setIsSubmitting(false);
     } catch (err) {
       console.error('Prediction submission error:', err);
       setError('An error occurred. Please try again.');
