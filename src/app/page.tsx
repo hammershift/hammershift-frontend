@@ -28,25 +28,20 @@ const USDollar = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const BACKEND_API =
-  process.env.BACKEND_API_URL ?? "https://main.d3bje0ak6q49bm.amplifyapp.com";
-
 // Server Component - Fetch data on server
 async function getHomePageData() {
   try {
     await connectToDB();
 
-    // Fetch live auctions from the backend API (correct database)
-    const auctionsRes = await fetch(
-      `${BACKEND_API}/api/auctions/filter?publicOnly=true&limit=12&status=active`,
-      { cache: "no-store" }
-    );
-    const auctionsData = auctionsRes.ok ? await auctionsRes.json() : { cars: [] };
+    // Query live auctions directly from shared MongoDB
     const now = new Date();
-    const liveAuctions: any[] = (auctionsData.cars ?? []).filter((a: any) => {
-      const d = a.sort?.deadline;
-      return !d || new Date(d) > now;
-    });
+    const liveAuctions: any[] = await Auctions.find({
+      isActive: true,
+      "sort.deadline": { $gt: now },
+    })
+      .sort({ "sort.deadline": 1 })
+      .limit(12)
+      .lean();
 
     // Featured auction = first (soonest deadline) from live list
     const featuredAuction = liveAuctions[0] ?? null;
