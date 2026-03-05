@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeType } from "@/models/badge.model";
+import { BadgeType } from "@/types/badge-types";
 import { Lock } from "lucide-react";
 
 /**

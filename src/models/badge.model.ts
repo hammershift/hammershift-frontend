@@ -1,18 +1,7 @@
 import { Document, Schema, model, models, Types } from "mongoose";
+import { BadgeType } from "@/types/badge-types";
 
-export enum BadgeType {
-  FIRST_PREDICTION = 'first_prediction',
-  FIRST_WIN = 'first_win',
-  HOT_START = 'hot_start',           // 3-day streak
-  ON_FIRE = 'on_fire',               // 7-day streak
-  UNSTOPPABLE = 'unstoppable',       // 14-day streak
-  LEGEND = 'legend',                 // 30-day streak
-  TOURNAMENT_ROOKIE = 'tournament_rookie',
-  TOURNAMENT_CHAMPION = 'tournament_champion',
-  SHARPSHOOTER = 'sharpshooter',     // 5 scores ≥ 900
-  CENTURION = 'centurion',           // 100 total predictions
-  TOP_10 = 'top_10',                 // Reach top 10 on leaderboard
-}
+export { BadgeType } from "@/types/badge-types";
 
 export interface Badge extends Document {
   user_id: Types.ObjectId;

@@ -52,7 +52,7 @@ import MoneyBagBlack from "../../../../public/images/money-bag-black.svg";
 import WalletIcon from "../../../../public/images/wallet--money-payment-finance-wallet.svg";
 import StreakIndicator from "@/app/components/StreakIndicator";
 import BadgeDisplay from "@/app/components/BadgeDisplay";
-import { BadgeType } from "@/models/badge.model";
+import { BadgeType } from "@/types/badge-types";
 import { useTrackEvent } from "@/hooks/useTrackEvent";
 import { DailyChallenge } from "@/app/components/DailyChallenge";
 import {

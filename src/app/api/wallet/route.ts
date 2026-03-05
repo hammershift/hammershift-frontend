@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const userID = new mongoose.Types.ObjectId(session.user.id);
+  const userID = new mongoose.Types.ObjectId(session.user._id as string);
 
   try {
     const client = await clientPromise;
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
 
-    const userID = new mongoose.Types.ObjectId(session.user.id);
+    const userID = new mongoose.Types.ObjectId(session.user._id as string);
 
     // retrieve the user and check their balance
     const user = await db.collection("users").findOne({ _id: userID });
