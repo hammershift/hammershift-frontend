@@ -1,5 +1,6 @@
-import prizeDistribution from '@/helpers/prizeDistribution';
 import { sendReceiptEmail } from '@/lib/sendReceiptEmail';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 // export async function POST(req: NextRequest) {
@@ -16,6 +17,11 @@ import { NextRequest, NextResponse } from 'next/server';
 // }
 
 export async function POST(req: NextRequest) {
+  const authSession = await getServerSession(authOptions);
+  if (!authSession) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { email, amountPaid } = await req.json();
     if (!email || !amountPaid) {

@@ -3,44 +3,34 @@ import Transaction from '@/models/transaction';
 import { ObjectId } from 'mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  const authSession = await getServerSession(authOptions);
+  if (!authSession) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
+  const mongoSession = await mongoose.startSession();
+  mongoSession.startTransaction();
 
   try {
-    console.log('Starting transaction...');
+    const { amount, accountName, accountNumber, bankName, wireRoutingNumber } = await req.json();
 
-    const { amount, accountName, accountNumber, bankName, wireRoutingNumber, userId } = await req.json();
-    console.log('Request data:', {
-      amount,
-      accountName,
-      accountNumber,
-      bankName,
-      wireRoutingNumber,
-      userId,
-    });
-
-    const userID = new ObjectId(userId);
+    const userID = new ObjectId((authSession as any).user.id);
     const client = await clientPromise;
     const db = client.db();
 
-    const user = await db.collection('users').findOne({ _id: userID }, { session });
+    const user = await db.collection('users').findOne({ _id: userID }, { session: mongoSession });
     if (!user) {
       throw new Error('User not found');
     }
 
-    console.log('User found:', user);
-
-    // check for wallet balance
     if (user.balance < amount) {
-      console.error('Insufficient balance:', user.balance);
       throw new Error('Insufficient balance');
     }
 
-    console.log('Sufficient balance available');
-
-    // create a transaction record
     const transaction = new Transaction({
       userID: userID,
       transactionType: 'withdraw',
@@ -53,22 +43,17 @@ export async function POST(req: NextRequest) {
       wireRoutingNumber: wireRoutingNumber,
       status: 'processing',
     });
-    console.log('Transaction object before save:', transaction);
 
-    await transaction.save({ session });
+    await transaction.save({ session: mongoSession });
 
-    console.log('Transaction saved:', transaction);
-
-    await session.commitTransaction();
-    session.endSession();
-
-    console.log('Transaction committed');
+    await mongoSession.commitTransaction();
+    mongoSession.endSession();
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    await session.abortTransaction();
-    session.endSession();
-    console.error('Error processing withdrawal request:', error);
+    await mongoSession.abortTransaction();
+    mongoSession.endSession();
+    console.error('Error processing withdrawal request:', error.message);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

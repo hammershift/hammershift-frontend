@@ -195,6 +195,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  const authSession = await getAuthSession();
+  if (!authSession) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const client = await clientPromise;
     const db = client.db();
@@ -207,7 +212,23 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const edits = await req.json();
+    const body = await req.json();
+
+    // Allowlist: only permit safe wager fields to be updated
+    const ALLOWED_FIELDS = ["isActive", "refunded"] as const;
+    const safeEdits: Record<string, unknown> = {};
+    for (const field of ALLOWED_FIELDS) {
+      if (field in body) {
+        safeEdits[field] = body[field];
+      }
+    }
+
+    if (Object.keys(safeEdits).length === 0) {
+      return NextResponse.json(
+        { message: "No valid fields to update" },
+        { status: 400 }
+      );
+    }
 
     const currentWager = await db
       .collection("wagers")
@@ -217,7 +238,6 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ message: "Wager not found" }, { status: 404 });
     }
 
-    // check if the wager has already been refunded
     if (currentWager.refunded) {
       return NextResponse.json(
         { message: "Refund already processed" },
@@ -229,7 +249,7 @@ export async function PUT(req: NextRequest) {
       .collection("wagers")
       .findOneAndUpdate(
         { _id: new ObjectId(id) },
-        { $set: edits },
+        { $set: safeEdits },
         { returnDocument: "after" }
       );
 
@@ -239,7 +259,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ message: "Wager not found" }, { status: 404 });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error updating wager:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

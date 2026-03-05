@@ -1,6 +1,8 @@
 import connectToDB from "@/lib/mongoose";
 import Auctions from "@/models/auction.model";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -8,6 +10,11 @@ export const dynamic = "force-dynamic";
 // Temporary diagnostic endpoint — remove after debugging
 // GET /api/debug/db
 export async function GET() {
+  const authSession = await getServerSession(authOptions);
+  if (!authSession) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     await connectToDB();
 
