@@ -29,6 +29,7 @@ import WagerCycle from "./wager_cycle";
 
 const WEBSOCKET_SERVER = "https://socket-practice-c55s.onrender.com";
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const LivePageCarousel = () => {

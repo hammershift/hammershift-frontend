@@ -22,12 +22,13 @@ interface LeaderboardEntry {
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDB();
+    const { id } = await params;
 
-    const tournament = await Tournaments.findById(params.id);
+    const tournament = await Tournaments.findById(id);
 
     if (!tournament) {
       return NextResponse.json(

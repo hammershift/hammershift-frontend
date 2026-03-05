@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   const payload = await req.text();
   const signature = req.headers.get("Stripe-Signature");
   const client = await clientPromise;

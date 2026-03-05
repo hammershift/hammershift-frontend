@@ -154,9 +154,10 @@ async function getAuctionData(auctionId: string, userId?: string) {
   }
 }
 
-export default async function AuctionDetailPage({ params }: { params: { id: string } }) {
+export default async function AuctionDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
-  const data = await getAuctionData(params.id, session?.user?.id);
+  const { id } = await params;
+  const data = await getAuctionData(id, session?.user?.id);
 
   if (!data || !data.auction) {
     return (
@@ -197,7 +198,7 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
     <div className="flex w-full flex-col">
       {/* Client-side tracking */}
       <ClientAuctionTracker
-        auctionId={params.id}
+        auctionId={id}
         auctionTitle={auction.title}
         currentBid={currentBid}
         timeRemaining={deadline}
@@ -376,7 +377,7 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
 
           {/* Comments */}
           <div className="mb-8">
-            <CommentsSection pageID={params.id} pageType="auction" />
+            <CommentsSection pageID={id} pageType="auction" />
           </div>
         </div>
 
@@ -396,7 +397,7 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
                 </div>
               ) : !session ? (
                 <PredictionFormClient
-                  auctionId={params.id}
+                  auctionId={id}
                   minPrice={minSuggested}
                   maxPrice={maxSuggested}
                   currentBid={currentBid}
@@ -427,7 +428,7 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
                 </div>
               ) : (
                 <PredictionFormClient
-                  auctionId={params.id}
+                  auctionId={id}
                   minPrice={minSuggested}
                   maxPrice={maxSuggested}
                   currentBid={currentBid}
@@ -442,7 +443,7 @@ export default async function AuctionDetailPage({ params }: { params: { id: stri
             <CardContent className="p-6">
               <h3 className="mb-4 text-lg font-bold">Recent Predictions</h3>
               <RecentPredictionsFeed
-                auctionId={params.id}
+                auctionId={id}
                 initialPredictions={recentPredictions}
               />
             </CardContent>

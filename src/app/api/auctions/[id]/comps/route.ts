@@ -13,17 +13,18 @@ function getAttrValue(attributes: any[], key: string) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDB();
+    const { id } = await params;
 
     // Try local DB first, then fall back to backend (auction may be in dev database)
-    let auction: any = await Auctions.findById(params.id).lean().exec();
+    let auction: any = await Auctions.findById(id).lean().exec();
 
     if (!auction) {
       const backendRes = await fetch(
-        `${BACKEND_API}/api/cars?auction_id=${params.id}`,
+        `${BACKEND_API}/api/cars?auction_id=${id}`,
         { cache: "no-store", headers: { Accept: "application/json" } }
       );
       if (backendRes.ok) {
@@ -45,7 +46,7 @@ export async function GET(
 
     const comps = await Auctions.find({
       isActive: false,
-      _id: { $ne: params.id },
+      _id: { $ne: id },
       attributes: { $elemMatch: { key: "make", value: make } },
       "sort.price": { $gt: 0 },
     })

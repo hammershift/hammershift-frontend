@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -26,8 +26,9 @@ export async function POST(
     }
 
     await connectToDB();
+    const { id } = await params;
 
-    const tournament = await Tournaments.findById(params.id);
+    const tournament = await Tournaments.findById(id);
 
     if (!tournament) {
       return NextResponse.json(
@@ -108,14 +109,14 @@ export async function POST(
 
       // Add to prize pool
       await Tournaments.findByIdAndUpdate(
-        params.id,
+        id,
         { $inc: { prizePool: tournament.buyInFee } }
       );
     }
 
     // Add user to tournament
     const updatedTournament = await Tournaments.findByIdAndUpdate(
-      params.id,
+      id,
       {
         $push: {
           users: {

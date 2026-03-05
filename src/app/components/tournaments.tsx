@@ -22,6 +22,7 @@ import 'swiper/css/scrollbar';
 import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 interface Tournaments {

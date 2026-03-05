@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { useTrackEvent } from '@/hooks/useTrackEvent';
@@ -162,12 +163,12 @@ export default function PredictionFormClient({
             <p className="text-gray-400 text-sm mb-4">
               Sign up to save your picks permanently and see your rank.
             </p>
-            <a
+            <Link
               href="/api/auth/signin"
               className="inline-block bg-[#E94560] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#E94560]/90 transition-colors"
             >
               Create Free Account
-            </a>
+            </Link>
           </div>
         ) : (
           <form onSubmit={handleGuestSubmit} className="space-y-4">
@@ -191,12 +192,12 @@ export default function PredictionFormClient({
               Save Guest Pick
             </button>
 
-            <a
+            <Link
               href="/api/auth/signin"
               className="block w-full text-center bg-[#E94560] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#E94560]/90 transition-colors"
             >
               Sign In to Submit for Real
-            </a>
+            </Link>
 
             <p className="text-center text-xs text-gray-500">
               Predictions lock 1 hour before auction end
@@ -211,12 +212,12 @@ export default function PredictionFormClient({
               <p className="text-gray-400 text-sm mb-6">
                 {`You've made 3 picks! Create a free account to save your predictions and see how you rank.`}
               </p>
-              <a
+              <Link
                 href="/api/auth/signin"
                 className="block w-full bg-[#E94560] text-white py-3 px-4 rounded-lg text-center font-semibold mb-3 hover:bg-[#E94560]/90 transition-colors"
               >
                 Sign Up — {"It's Free"}
-              </a>
+              </Link>
               <button
                 onClick={() => setShowSignupModal(false)}
                 className="w-full text-gray-400 text-sm hover:text-white transition-colors py-1"

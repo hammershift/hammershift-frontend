@@ -47,9 +47,7 @@ export interface Tournaments {
 }
 
 const SingleViewPage = ({
-  params,
 }: {
-  params: { auction_id: string; tournament_id: string };
 }) => {
   const urlPath = useParams();
   const { data: session } = useSession();
@@ -78,8 +76,8 @@ const SingleViewPage = ({
 
   // const router = useRouter();
 
-  const ID = params.auction_id;
-  const TournamentID = params.tournament_id;
+  const ID = urlPath.auction_id as string;
+  const TournamentID = urlPath.tournament_id as string;
 
   useEffect(() => {
     const fetchAuctionData = async () => {

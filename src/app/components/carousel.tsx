@@ -18,6 +18,7 @@ import DiagonalLinesCarousel from '../../../public/images/diagonal-lines-carouse
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const Carousel: React.FC = () => {

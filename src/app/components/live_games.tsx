@@ -18,6 +18,7 @@ import ArrowLeft from "../../../public/images/arrow-left.svg";
 import ArrowRight from "../../../public/images/arrow-right.svg";
 import LiveGamesIcon from "../../../public/images/currency-dollar-circle.svg";
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const LiveGames = ({ numberToDisplay = 5 }: { numberToDisplay: number }) => {

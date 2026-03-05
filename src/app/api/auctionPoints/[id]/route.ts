@@ -4,13 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 import AuctionPoints from "@/models/auction_points";
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDB();
+    const { id } = await params;
 
     const userPoints = await AuctionPoints.find({
-      userID: params.id,
+      userID: id,
     });
     if (!userPoints) {
       //user has no points, return 0
