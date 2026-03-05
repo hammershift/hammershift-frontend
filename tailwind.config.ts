@@ -24,6 +24,16 @@ const config: Config = {
           "50": "#1a2c3d",
           "100": "#172431",
         },
+        // Polymarket-style trading colors
+        trading: {
+          yes: "#14B8A6", // Teal for YES
+          no: "#EF4444", // Red for NO
+          bg: {
+            primary: "#0A0A1A",
+            secondary: "#1A1B2E",
+            card: "#252739",
+          },
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
