@@ -17,6 +17,7 @@ import CountdownTimer from "./components/CountdownTimer";
 import { Clock, Users as UsersIcon, TrendingUp, Target, Trophy, ArrowRight } from "lucide-react";
 import { HowItWorks } from "./components/how_it_works";
 import ClientHomepageTracker from "./components/ClientHomepageTracker";
+import LiveAuctionsSection from "./components/LiveAuctionsSection";
 import connectToDB from "@/lib/mongoose";
 
 // Format currency
@@ -329,59 +330,8 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {liveAuctions.slice(0, 12).map((auction: any) => (
-            <Link key={auction._id} href={`/auctions/car_view_page/${auction._id}?mode=free_play`}>
-              <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-all hover:border-[#E94560] hover:shadow-lg hover:shadow-[#E94560]/20">
-                <div className="relative h-[200px]">
-                  <Image
-                    src={auction.image || '/images/default-car.jpg'}
-                    alt={auction.title}
-                    fill
-                    className="rounded-t-xl object-cover"
-                  />
-                  {auction.source_badge && (
-                    <div className="absolute right-2 top-2">
-                      <Badge className="bg-[#FFB547] text-[#0A0A1A]">
-                        {auction.source_badge.toUpperCase()}
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="mb-3 line-clamp-2 font-bold">{auction.title}</h3>
-                  <div className="mb-4 grid grid-cols-2 gap-2">
-                    <div>
-                      <div className="text-xs text-gray-400">Current Bid</div>
-                      <div className="font-mono font-bold text-[#00D4AA]">
-                        {USDollar.format(auction.sort?.price || 0)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-gray-400">Time Left</div>
-                      <div className="flex items-center text-sm">
-                        <Clock className="mr-1 h-3 w-3 text-[#FFB547]" />
-                        {auction.sort?.deadline
-                          ? <CountdownTimer endTime={new Date(auction.sort.deadline)} size="sm" />
-                          : <span className="font-mono text-xs text-gray-400">Active</span>}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center text-xs text-gray-400">
-                      <UsersIcon className="mr-1 h-3 w-3" />
-                      {auction.prediction_count || 0} predictions
-                    </div>
-                    <Button size="sm" className="bg-[#E94560] text-white hover:bg-[#E94560]/90">
-                      Predict
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        {/* Grid — client component handles polygon market Trade buttons */}
+        <LiveAuctionsSection auctions={liveAuctions} />
 
         {liveAuctions.length > 12 && (
           <div className="mt-8 text-center">

@@ -40,6 +40,7 @@ const Navbar = () => {
     { title: "Home", urlString: "" },
     { title: "Free Play", urlString: "Free Play" },
     { title: "Tournaments (COMING SOON)", urlString: "Tournaments" },
+    { title: "Markets", urlString: "markets" },
     { title: "Guess the Hammer (COMING SOON)", urlString: "Price Is Right" },
   ];
   useEffect(() => {
