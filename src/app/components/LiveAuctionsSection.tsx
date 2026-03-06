@@ -54,8 +54,8 @@ export default function LiveAuctionsSection({ auctions }: Props) {
           polygonMarketMap.get(auction.auction_id);
 
         return (
-          <div key={auction._id} className="relative flex flex-col">
-            <Link href={`/auctions/car_view_page/${auction._id}?mode=free_play`}>
+          <div key={auction._id} className="relative flex cursor-pointer flex-col">
+            <Link href={`/auctions/car_view_page/${auction._id}?mode=free_play`} className="block touch-manipulation">
               <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-all hover:border-[#E94560] hover:shadow-lg hover:shadow-[#E94560]/20">
                 <div className="relative h-[200px]">
                   <Image
@@ -119,7 +119,7 @@ export default function LiveAuctionsSection({ auctions }: Props) {
             {polygonMarketId && (
               <a
                 href={`/trading/${polygonMarketId}`}
-                className="mt-2 flex items-center justify-center gap-1.5 w-full bg-[#00D4AA]/10 hover:bg-[#00D4AA]/20 border border-[#00D4AA]/40 text-[#00D4AA] text-xs font-semibold py-2 px-3 rounded-lg transition-colors"
+                className="relative z-10 mt-2 flex min-h-[44px] w-full touch-manipulation items-center justify-center gap-1.5 rounded-lg border border-[#00D4AA]/40 bg-[#00D4AA]/10 px-3 text-xs font-semibold text-[#00D4AA] transition-colors hover:bg-[#00D4AA]/20"
               >
                 ⚡ Trade Market
               </a>

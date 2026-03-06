@@ -63,7 +63,8 @@ export function TradingOrderBook({ marketId }: TradingOrderBookProps) {
       </div>
 
       {/* Order Book Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="overflow-x-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-w-0">
         {/* YES Orders */}
         <div>
           <h4 className="text-sm font-medium text-[#00D4AA] mb-3">YES</h4>
@@ -78,12 +79,12 @@ export function TradingOrderBook({ marketId }: TradingOrderBookProps) {
                 {orderBook.buy.YES.slice(0, 5).map((order) => (
                   <div
                     key={order.id}
-                    className="flex items-center justify-between bg-green-500/10 px-3 py-2 rounded"
+                    className="flex items-center justify-between bg-green-500/10 px-3 py-2 rounded min-w-0 gap-2"
                   >
-                    <span className="font-mono text-sm text-white">
+                    <span className="font-mono text-sm text-white truncate">
                       ${(order.price * 100).toFixed(2)}
                     </span>
-                    <span className="font-mono text-xs text-gray-400">
+                    <span className="font-mono text-xs text-gray-400 shrink-0">
                       {order.remainingSize} shares
                     </span>
                   </div>
@@ -102,12 +103,12 @@ export function TradingOrderBook({ marketId }: TradingOrderBookProps) {
                 {orderBook.sell.YES.slice(0, 5).map((order) => (
                   <div
                     key={order.id}
-                    className="flex items-center justify-between bg-red-500/10 px-3 py-2 rounded"
+                    className="flex items-center justify-between bg-red-500/10 px-3 py-2 rounded min-w-0 gap-2"
                   >
-                    <span className="font-mono text-sm text-white">
+                    <span className="font-mono text-sm text-white truncate">
                       ${(order.price * 100).toFixed(2)}
                     </span>
-                    <span className="font-mono text-xs text-gray-400">
+                    <span className="font-mono text-xs text-gray-400 shrink-0">
                       {order.remainingSize} shares
                     </span>
                   </div>
@@ -131,12 +132,12 @@ export function TradingOrderBook({ marketId }: TradingOrderBookProps) {
                 {orderBook.buy.NO.slice(0, 5).map((order) => (
                   <div
                     key={order.id}
-                    className="flex items-center justify-between bg-green-500/10 px-3 py-2 rounded"
+                    className="flex items-center justify-between bg-green-500/10 px-3 py-2 rounded min-w-0 gap-2"
                   >
-                    <span className="font-mono text-sm text-white">
+                    <span className="font-mono text-sm text-white truncate">
                       ${(order.price * 100).toFixed(2)}
                     </span>
-                    <span className="font-mono text-xs text-gray-400">
+                    <span className="font-mono text-xs text-gray-400 shrink-0">
                       {order.remainingSize} shares
                     </span>
                   </div>
@@ -155,12 +156,12 @@ export function TradingOrderBook({ marketId }: TradingOrderBookProps) {
                 {orderBook.sell.NO.slice(0, 5).map((order) => (
                   <div
                     key={order.id}
-                    className="flex items-center justify-between bg-red-500/10 px-3 py-2 rounded"
+                    className="flex items-center justify-between bg-red-500/10 px-3 py-2 rounded min-w-0 gap-2"
                   >
-                    <span className="font-mono text-sm text-white">
+                    <span className="font-mono text-sm text-white truncate">
                       ${(order.price * 100).toFixed(2)}
                     </span>
-                    <span className="font-mono text-xs text-gray-400">
+                    <span className="font-mono text-xs text-gray-400 shrink-0">
                       {order.remainingSize} shares
                     </span>
                   </div>
@@ -170,6 +171,8 @@ export function TradingOrderBook({ marketId }: TradingOrderBookProps) {
           </div>
         </div>
       </div>
+
+      </div>{/* end overflow-x-auto */}
 
       {/* Last Update Timestamp */}
       <div className="mt-4 pt-4 border-t border-gray-800">

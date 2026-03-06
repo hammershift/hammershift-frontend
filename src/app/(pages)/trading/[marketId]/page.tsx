@@ -408,13 +408,13 @@ export default function TradingPage() {
         {/* Status Banners */}
         {market.status === 'RESOLVED' && (
           <div className="mb-4 rounded-xl border border-[#00D4AA]/30 bg-[#00D4AA]/10 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="font-semibold text-[#00D4AA]">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <p className="font-semibold text-[#00D4AA] break-words min-w-0">
                 Market Resolved — Winner:{' '}
                 <span className="font-bold">{market.winningOutcome ?? '—'}</span>
               </p>
               {resolvedAtFormatted && (
-                <p className="text-sm text-[#00D4AA]/70">
+                <p className="text-sm text-[#00D4AA]/70 shrink-0">
                   Resolved at: {resolvedAtFormatted}
                 </p>
               )}
@@ -424,7 +424,7 @@ export default function TradingPage() {
 
         {market.status === 'PENDING' && (
           <div className="mb-4 rounded-xl border border-[#FFB547]/30 bg-[#FFB547]/10 p-4">
-            <p className="font-semibold text-[#FFB547]">
+            <p className="font-semibold text-[#FFB547] break-words">
               Market not yet active — trading opens soon
             </p>
           </div>
@@ -439,7 +439,7 @@ export default function TradingPage() {
         <div className="mb-6 flex items-center gap-2 rounded-lg border border-gray-700 bg-trading-bg-card p-2">
           <button
             onClick={() => setSelectedOutcome('YES')}
-            className={`flex-1 rounded-md px-4 py-2 font-semibold transition-colors ${
+            className={`flex-1 rounded-md px-4 min-h-[44px] font-semibold transition-colors touch-manipulation ${
               selectedOutcome === 'YES'
                 ? 'bg-trading-yes text-white'
                 : 'text-gray-400 hover:text-white'
@@ -449,7 +449,7 @@ export default function TradingPage() {
           </button>
           <button
             onClick={() => setSelectedOutcome('NO')}
-            className={`flex-1 rounded-md px-4 py-2 font-semibold transition-colors ${
+            className={`flex-1 rounded-md px-4 min-h-[44px] font-semibold transition-colors touch-manipulation ${
               selectedOutcome === 'NO'
                 ? 'bg-trading-no text-white'
                 : 'text-gray-400 hover:text-white'
@@ -462,18 +462,18 @@ export default function TradingPage() {
         {/* Main Trading Layout */}
         <div className="grid gap-6 lg:grid-cols-12">
           {/* Left Column - Charts & Trades */}
-          <div className="space-y-6 lg:col-span-5">
+          <div className="space-y-6 lg:col-span-5 order-2 lg:order-1">
             <PriceChart data={priceData} outcome={selectedOutcome} />
             <RecentTrades trades={adaptedTrades} />
           </div>
 
           {/* Middle Column - Order Book (Real-time via WebSocket) */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 order-3 lg:order-2">
             <TradingOrderBook marketId={marketId} />
           </div>
 
           {/* Right Column - Trading Form & User Data */}
-          <div className="space-y-6 lg:col-span-4">
+          <div className="space-y-6 lg:col-span-4 order-1 lg:order-3">
             {session ? (
               <TradingForm
                 marketId={String(market._id)}
@@ -486,9 +486,9 @@ export default function TradingPage() {
                 loading={orderSubmitting}
               />
             ) : (
-              <div className="flex w-full items-center justify-center rounded-lg border border-gray-700 bg-trading-bg-card p-8">
-                <p className="text-center text-sm text-gray-400">
-                  <span className="mb-2 block font-semibold text-white">
+              <div className="flex w-full items-center justify-center rounded-lg border border-gray-700 bg-trading-bg-card px-6 py-10 sm:p-8">
+                <p className="text-center text-sm text-gray-400 max-w-xs">
+                  <span className="mb-2 block font-semibold text-white text-base">
                     Sign in to trade
                   </span>
                   You must be signed in to place orders on this market.

@@ -107,7 +107,7 @@ export default function CountdownTimer({
 
   return (
     <div
-      className={`font-mono font-medium ${sizeClass} ${colorClass} tabular-nums`}
+      className={`min-w-0 font-mono font-medium ${sizeClass} ${colorClass} tabular-nums`}
       role="timer"
       aria-live="polite"
       aria-label={`Time remaining: ${formatTimeDisplay(timeRemaining)}`}

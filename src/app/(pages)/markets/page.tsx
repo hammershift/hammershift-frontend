@@ -161,15 +161,15 @@ function MarketCard({ market }: { market: Market }) {
 
         {/* YES / NO price bar */}
         <div className="flex rounded-lg overflow-hidden h-10 mb-3">
-          <div className="flex-1 flex items-center justify-center gap-1 bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-l-lg">
-            <span className="text-[#00D4AA] font-bold text-sm">YES</span>
-            <span className="text-[#00D4AA] font-bold text-lg font-['JetBrains_Mono',_monospace]">
+          <div className="flex-1 min-w-0 flex items-center justify-center gap-1 bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-l-lg overflow-hidden">
+            <span className="text-[#00D4AA] font-bold text-sm shrink-0">YES</span>
+            <span className="text-[#00D4AA] font-bold text-base font-['JetBrains_Mono',_monospace] truncate">
               {(market.yesPrice * 100).toFixed(0)}¢
             </span>
           </div>
-          <div className="flex-1 flex items-center justify-center gap-1 bg-[#E94560]/10 border border-[#E94560]/30 rounded-r-lg">
-            <span className="text-[#E94560] font-bold text-sm">NO</span>
-            <span className="text-[#E94560] font-bold text-lg font-['JetBrains_Mono',_monospace]">
+          <div className="flex-1 min-w-0 flex items-center justify-center gap-1 bg-[#E94560]/10 border border-[#E94560]/30 rounded-r-lg overflow-hidden">
+            <span className="text-[#E94560] font-bold text-sm shrink-0">NO</span>
+            <span className="text-[#E94560] font-bold text-base font-['JetBrains_Mono',_monospace] truncate">
               {(market.noPrice * 100).toFixed(0)}¢
             </span>
           </div>
@@ -182,7 +182,7 @@ function MarketCard({ market }: { market: Market }) {
           </span>
           <button
             onClick={handleTradeClick}
-            className="bg-[#00D4AA] text-black text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-[#00D4AA]/90 active:scale-95 transition-all duration-150"
+            className="bg-[#00D4AA] text-black text-xs font-bold px-3 rounded-lg hover:bg-[#00D4AA]/90 active:scale-95 transition-all duration-150 min-h-[44px] touch-manipulation inline-flex items-center"
           >
             Trade →
           </button>
@@ -208,8 +208,8 @@ function FilterTab({
       onClick={onClick}
       className={
         active
-          ? 'bg-[#00D4AA] text-black font-semibold rounded-full px-4 py-1.5 text-sm transition-all duration-150'
-          : 'border border-[#1E2A36] text-gray-400 hover:text-white hover:border-[#00D4AA]/30 rounded-full px-4 py-1.5 text-sm transition-all duration-150'
+          ? 'bg-[#00D4AA] text-black font-semibold rounded-full px-4 py-1.5 text-sm transition-all duration-150 whitespace-nowrap shrink-0 min-h-[44px] touch-manipulation'
+          : 'border border-[#1E2A36] text-gray-400 hover:text-white hover:border-[#00D4AA]/30 rounded-full px-4 py-1.5 text-sm transition-all duration-150 whitespace-nowrap shrink-0 min-h-[44px] touch-manipulation'
       }
     >
       {label}
@@ -339,7 +339,7 @@ export default function MarketsPage() {
         </div>
 
         {/* ── Filter tabs ── */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex overflow-x-auto gap-2 mb-6 pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
           {TABS.map((tab) => (
             <FilterTab
               key={tab}

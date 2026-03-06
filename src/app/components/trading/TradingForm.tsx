@@ -89,7 +89,7 @@ export function TradingForm({
           <button
             type="button"
             onClick={() => setSide('BUY')}
-            className={`rounded-md px-4 py-2 font-semibold transition-colors ${
+            className={`rounded-md px-4 min-h-[44px] font-semibold transition-colors touch-manipulation ${
               side === 'BUY'
                 ? 'bg-trading-yes text-white'
                 : 'text-gray-400 hover:text-white'
@@ -100,7 +100,7 @@ export function TradingForm({
           <button
             type="button"
             onClick={() => setSide('SELL')}
-            className={`rounded-md px-4 py-2 font-semibold transition-colors ${
+            className={`rounded-md px-4 min-h-[44px] font-semibold transition-colors touch-manipulation ${
               side === 'SELL'
                 ? 'bg-trading-no text-white'
                 : 'text-gray-400 hover:text-white'
@@ -119,7 +119,7 @@ export function TradingForm({
             <button
               type="button"
               onClick={() => setOutcome('YES')}
-              className={`rounded-lg border-2 px-4 py-3 font-semibold transition-all ${
+              className={`rounded-lg border-2 px-4 py-3 font-semibold transition-all touch-manipulation min-h-[44px] ${
                 outcome === 'YES'
                   ? 'border-trading-yes bg-trading-yes/10 text-trading-yes'
                   : 'border-gray-700 text-gray-400 hover:border-gray-600'
@@ -133,7 +133,7 @@ export function TradingForm({
             <button
               type="button"
               onClick={() => setOutcome('NO')}
-              className={`rounded-lg border-2 px-4 py-3 font-semibold transition-all ${
+              className={`rounded-lg border-2 px-4 py-3 font-semibold transition-all touch-manipulation min-h-[44px] ${
                 outcome === 'NO'
                   ? 'border-trading-no bg-trading-no/10 text-trading-no'
                   : 'border-gray-700 text-gray-400 hover:border-gray-600'
@@ -155,7 +155,7 @@ export function TradingForm({
           <select
             value={orderType}
             onChange={(e) => setOrderType(e.target.value as 'LIMIT' | 'MARKET')}
-            className="w-full rounded-lg border border-gray-700 bg-trading-bg-secondary px-4 py-2.5 text-white focus:border-trading-yes focus:outline-none focus:ring-2 focus:ring-trading-yes/20"
+            className="w-full rounded-lg border border-gray-700 bg-trading-bg-secondary px-4 py-2.5 text-base text-white focus:border-trading-yes focus:outline-none focus:ring-2 focus:ring-trading-yes/20 touch-manipulation"
           >
             <option value="LIMIT">Limit Order</option>
             <option value="MARKET">Market Order</option>
@@ -179,7 +179,7 @@ export function TradingForm({
                 max="0.99"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full rounded-lg border border-gray-700 bg-trading-bg-secondary py-2.5 pl-8 pr-4 font-mono text-white focus:border-trading-yes focus:outline-none focus:ring-2 focus:ring-trading-yes/20"
+                className="w-full rounded-lg border border-gray-700 bg-trading-bg-secondary py-2.5 pl-8 pr-4 text-base font-mono text-white focus:border-trading-yes focus:outline-none focus:ring-2 focus:ring-trading-yes/20"
                 placeholder="0.50"
               />
             </div>
@@ -200,7 +200,7 @@ export function TradingForm({
             min="1"
             value={size}
             onChange={(e) => setSize(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-trading-bg-secondary px-4 py-2.5 font-mono text-white focus:border-trading-yes focus:outline-none focus:ring-2 focus:ring-trading-yes/20"
+            className="w-full rounded-lg border border-gray-700 bg-trading-bg-secondary px-4 py-2.5 text-base font-mono text-white focus:border-trading-yes focus:outline-none focus:ring-2 focus:ring-trading-yes/20"
             placeholder="10"
           />
         </div>
@@ -246,7 +246,7 @@ export function TradingForm({
         <button
           type="submit"
           disabled={loading}
-          className={`w-full rounded-lg py-3 font-semibold text-white transition-all ${
+          className={`w-full rounded-lg py-3 min-h-[44px] font-semibold text-white transition-all touch-manipulation ${
             side === 'BUY'
               ? 'bg-trading-yes hover:bg-trading-yes/90'
               : 'bg-trading-no hover:bg-trading-no/90'

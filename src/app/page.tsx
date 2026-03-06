@@ -261,14 +261,14 @@ export default async function HomePage() {
             )}
 
             {/* CTAs */}
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="/free_play">
-                <Button className="bg-[#E94560] px-8 py-6 text-lg text-white hover:bg-[#E94560]/90">
+            <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+              <Link href="/free_play" className="w-full touch-manipulation sm:w-auto">
+                <Button className="w-full bg-[#E94560] px-8 py-6 text-lg text-white hover:bg-[#E94560]/90 sm:w-auto">
                   Make Your First Prediction
                 </Button>
               </Link>
-              <Link href="#live-auctions">
-                <Button variant="outline" className="border-[#E94560] px-8 py-6 text-lg text-[#E94560] hover:bg-[#E94560] hover:text-white">
+              <Link href="#live-auctions" className="w-full touch-manipulation sm:w-auto">
+                <Button variant="outline" className="w-full border-[#E94560] px-8 py-6 text-lg text-[#E94560] hover:bg-[#E94560] hover:text-white sm:w-auto">
                   Browse Live Auctions
                 </Button>
               </Link>
@@ -304,7 +304,7 @@ export default async function HomePage() {
               )}
               <a
                 href={`/auctions/car_view_page/${featuredCar._id}`}
-                className="inline-block rounded-lg bg-[#E94560] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#E94560]/90"
+                className="inline-flex min-h-[44px] touch-manipulation items-center rounded-lg bg-[#E94560] px-6 font-semibold text-white transition-colors hover:bg-[#E94560]/90"
               >
                 Make Your Pick →
               </a>
@@ -465,8 +465,8 @@ export default async function HomePage() {
             <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
               Join Velocity Markets today and start predicting auction prices to win prizes.
             </p>
-            <Link href="/create_account">
-              <Button className="bg-[#E94560] px-8 py-6 text-lg text-white hover:bg-[#E94560]/90">
+            <Link href="/create_account" className="inline-block w-full touch-manipulation sm:w-auto">
+              <Button className="w-full bg-[#E94560] px-8 py-6 text-lg text-white hover:bg-[#E94560]/90 sm:w-auto">
                 Sign Up Now
               </Button>
             </Link>

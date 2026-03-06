@@ -166,6 +166,9 @@ const Navbar = () => {
               </Button>
             </Link>
             <button
+              aria-label={menuIsOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuIsOpen}
+              className="ml-2 flex min-h-[44px] min-w-[44px] items-center justify-center lg:hidden"
               onClick={() => {
                 setMenuIsOpen((prev) => !prev);
                 setMyAccountMenuOpen(false);
@@ -176,23 +179,38 @@ const Navbar = () => {
                 }
               }}
             >
-              {/* {menuIsOpen ? (
-                                <Image
-                                    src={CancelIcon}
-                                    width={24}
-                                    height={24}
-                                    alt="menu"
-                                    className="h-auto w-auto md:hidden"
-                                />
-                            ) : (
-                                <Image
-                                    src={HamburgerMenu}
-                                    width={24}
-                                    height={24}
-                                    alt="menu"
-                                    className="h-auto w-auto md:hidden"
-                                />
-                            )} */}
+              {menuIsOpen ? (
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              ) : (
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              )}
             </button>
           </div>
         )}
@@ -235,24 +253,11 @@ const Navbar = () => {
                 {dropMyAccount && <MyAccountDropdownMenu />}
               </button>
             </div>
-            <div className="sm:hidden">
+            <div className="flex items-center lg:hidden">
               <button
-                onClick={() => {
-                  setMyAccountMenuOpen((prev) => !prev);
-                  setMenuIsOpen(false);
-                  document.body.classList.remove("stop-scrolling");
-                }}
-                className="mr-4"
-              >
-                <Image
-                  src={AccountIcon}
-                  width={24}
-                  height={24}
-                  alt="account"
-                  className="h-[24px] w-[24px]"
-                />
-              </button>
-              <button
+                aria-label={menuIsOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuIsOpen}
+                className="flex min-h-[44px] min-w-[44px] items-center justify-center"
                 onClick={() => {
                   setMenuIsOpen((prev) => !prev);
                   setMyAccountMenuOpen(false);
@@ -263,23 +268,38 @@ const Navbar = () => {
                   }
                 }}
               >
-                {/* {menuIsOpen ? (
-                                        <Image
-                                            src={CancelIcon}
-                                            width={24}
-                                            height={24}
-                                            alt="menu"
-                                            className="h-auto w-auto"
-                                        />
-                                    ) : (
-                                        <Image
-                                            src={HamburgerMenu}
-                                            width={24}
-                                            height={24}
-                                            alt="menu"
-                                            className="h-auto w-auto"
-                                        />
-                                    )} */}
+                {menuIsOpen ? (
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                ) : (
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
@@ -296,6 +316,45 @@ const Navbar = () => {
           closeMyAccountMenu={closeMyAccountMenu}
           isLoggedIn={isLoggedIn}
         />
+      )}
+      {menuIsOpen && (
+        <nav
+          aria-label="Mobile navigation"
+          className="slide-in-top absolute z-40 w-full border-b border-[#1b252e] bg-[#0A0A1A]/95 backdrop-blur-sm lg:hidden"
+        >
+          {navBarList.map((data, index) => {
+            const isComingSoon = data.title.includes("COMING SOON");
+            const displayTitle = data.title
+              .replace(" (COMING SOON)", "")
+              .toUpperCase();
+            return (
+              <Link
+                key={index}
+                href={createPageUrl(data.urlString)}
+                onClick={() => {
+                  if (!isComingSoon) {
+                    closeMenu();
+                    document.body.classList.remove("stop-scrolling");
+                  }
+                }}
+                aria-disabled={isComingSoon}
+                tabIndex={isComingSoon ? -1 : undefined}
+                className={`flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-medium tracking-wider transition-colors ${
+                  isComingSoon
+                    ? "pointer-events-none opacity-40"
+                    : "hover:bg-[#1A2C3D] hover:text-[#F2CA16]"
+                }`}
+              >
+                <span>{displayTitle}</span>
+                {isComingSoon && (
+                  <span className="ml-3 rounded border border-white/20 px-1.5 py-0.5 text-[10px] tracking-widest text-white/40">
+                    SOON
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
       )}
     </div>
   );
