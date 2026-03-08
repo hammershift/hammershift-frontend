@@ -1,12 +1,12 @@
-import clientPromise from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
+import { Types } from "mongoose";
+import connectToDB from "@/lib/mongoose";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 function buildQuestion(predictedPrice: number): string {
-  const dollars = predictedPrice / 100;
-  return "Will this sell above $" + dollars.toLocaleString() + "?";
+  return "Will this sell above $" + predictedPrice.toLocaleString() + "?";
 }
 
 function buildAuctionProjection(auctionDoc: Record<string, any> | null): {
@@ -31,9 +31,9 @@ export async function GET(
   try {
     const { marketId } = await params;
 
-    let marketObjectId: ObjectId;
+    let marketObjectId: Types.ObjectId;
     try {
-      marketObjectId = new ObjectId(marketId);
+      marketObjectId = new Types.ObjectId(marketId);
     } catch {
       return NextResponse.json(
         { message: "Invalid marketId format" },
@@ -41,8 +41,8 @@ export async function GET(
       );
     }
 
-    const client = await clientPromise;
-    const db = client.db();
+    await connectToDB();
+    const db = mongoose.connection.db!;
 
     const market = await db
       .collection("polygon_markets")
@@ -61,7 +61,7 @@ export async function GET(
     if (market.auctionId) {
       // Try as ObjectId
       try {
-        const auctionObjectId = new ObjectId(market.auctionId);
+        const auctionObjectId = new Types.ObjectId(market.auctionId);
         auctionDoc = await db
           .collection("auctions")
           .findOne(
@@ -88,7 +88,7 @@ export async function GET(
     return NextResponse.json({
       _id: market._id,
       auctionId: market.auctionId,
-      question: buildQuestion(market.predictedPrice ?? 0),
+      question: market.question ?? buildQuestion(market.predictedPrice ?? 0),
       status: market.status,
       yesPrice: market.yesPrice ?? 0.5,
       noPrice: market.noPrice ?? 0.5,

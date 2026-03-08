@@ -1,12 +1,12 @@
-import clientPromise from "@/lib/mongodb";
-import { ObjectId } from "mongodb";
+import { Types } from "mongoose";
+import connectToDB from "@/lib/mongoose";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 function buildQuestion(predictedPrice: number): string {
-  const dollars = predictedPrice / 100;
-  return "Will this sell above $" + dollars.toLocaleString() + "?";
+  return "Will this sell above $" + predictedPrice.toLocaleString() + "?";
 }
 
 function buildAuctionProjection(auctionDoc: Record<string, any> | null): {
@@ -29,8 +29,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const statusParam = searchParams.get("status");
 
-    const client = await clientPromise;
-    const db = client.db();
+    await connectToDB();
+    const db = mongoose.connection.db!;
 
     const marketFilter: Record<string, any> = {};
     if (
@@ -53,10 +53,10 @@ export async function GET(req: NextRequest) {
     const auctionIds = markets.map((m) => m.auctionId).filter(Boolean);
 
     // Attempt ObjectId cast for _id lookup — some auctionIds may be ObjectId strings
-    const auctionObjectIds: ObjectId[] = [];
+    const auctionObjectIds: Types.ObjectId[] = [];
     for (const id of auctionIds) {
       try {
-        auctionObjectIds.push(new ObjectId(id));
+        auctionObjectIds.push(new Types.ObjectId(id));
       } catch {
         // Not a valid ObjectId — skip for _id lookup
       }
@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
       return {
         _id: market._id,
         auctionId: market.auctionId,
-        question: buildQuestion(market.predictedPrice ?? 0),
+        question: market.question ?? buildQuestion(market.predictedPrice ?? 0),
         status: market.status,
         yesPrice: market.yesPrice ?? 0.5,
         noPrice: market.noPrice ?? 0.5,
