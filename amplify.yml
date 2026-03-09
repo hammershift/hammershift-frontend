@@ -29,8 +29,12 @@ frontend:
         - echo "NEXT_PUBLIC_DISABLE_DEPOSIT=$NEXT_PUBLIC_DISABLE_DEPOSIT" >> .env.production
         - echo "NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID" >> .env.production
         - echo "NEXT_PUBLIC_NODE_ENV=$NEXT_PUBLIC_NODE_ENV" >> .env.production
+        - echo "NEXT_PUBLIC_PRIVY_APP_ID=$NEXT_PUBLIC_PRIVY_APP_ID" >> .env.production
+        - echo "PRIVY_APP_SECRET=$PRIVY_APP_SECRET" >> .env.production
+        - echo "NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY=$NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY" >> .env.production
     build:
       commands:
+        - export NODE_OPTIONS="--max-old-space-size=4096"
         - npm run build
   artifacts:
     baseDirectory: .next
