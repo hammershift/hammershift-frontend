@@ -2,7 +2,6 @@
 export const dynamic = 'force-dynamic';
 
 import Link from "next/link";
-import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Auctions from "@/models/auction.model";
@@ -10,17 +9,14 @@ import { Predictions } from "@/models/predictions.model";
 import Users from "@/models/user.model";
 import { startOfWeek, startOfDay, subDays } from "date-fns";
 import "./styles/app.css";
-import { Button } from "./components/ui/button";
-import { Card, CardContent } from "./components/card_component";
-import { Badge } from "./components/badge";
-import CountdownTimer from "./components/CountdownTimer";
-import { Clock, Users as UsersIcon, TrendingUp, Target, Trophy, ArrowRight } from "lucide-react";
-import { HowItWorks } from "./components/how_it_works";
+import { ArrowRight } from "lucide-react";
 import ClientHomepageTracker from "./components/ClientHomepageTracker";
-import LiveAuctionsSection from "./components/LiveAuctionsSection";
 import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import DailyHammer from "./components/DailyHammer";
+import LiveTicker from "./components/LiveTicker";
+import TrendingMarketsSection from "./components/TrendingMarketsSection";
+import AuthorityBar from "./components/AuthorityBar";
 
 // Format currency
 const USDollar = new Intl.NumberFormat('en-US', {
@@ -140,41 +136,27 @@ async function getHomePageData() {
 }
 
 export default async function HomePage() {
-  let session = null;
   let featuredAuction = null;
-  let featuredCar = null;
-  let liveAuctions: any[] = [];
-  let leaderboard: any[] = [];
-  let activityStats = {
-    predictions_today: 0,
-    active_auctions_value: 0,
-    active_players: 0
-  };
   let dailyHammer: { auctionId: string; title: string; image: string | null; deadline: string | null } | null = null;
   let error = null;
 
   try {
-    session = await getServerSession(authOptions);
+    await getServerSession(authOptions);
   } catch (err: any) {
     console.error('❌ Error getting session:', err);
-    error = `Session error: ${err.message}`;
   }
 
   try {
     const data = await getHomePageData();
     featuredAuction = data.featuredAuction;
-    featuredCar = data.featuredCar;
-    liveAuctions = data.liveAuctions;
-    leaderboard = data.leaderboard;
-    activityStats = data.activityStats;
     dailyHammer = data.dailyHammer;
   } catch (err: any) {
     console.error('❌ Error fetching homepage data:', err);
-    error = error ? `${error} | Data error: ${err.message}` : `Data error: ${err.message}`;
+    error = `Data error: ${err.message}`;
   }
 
   // If critical error, show error page
-  if (error && liveAuctions.length === 0) {
+  if (error && !featuredAuction && !dailyHammer) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0A0A1A] p-4">
         <div className="max-w-2xl rounded-lg border border-[#E94560]/30 bg-[#13202D] p-8">
@@ -200,311 +182,48 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Client-side event tracking */}
       <ClientHomepageTracker featuredAuctionId={featuredAuction?._id?.toString()} />
 
-      {/* SECTION 1: HERO */}
-      <section
-        className="relative flex min-h-[85vh] items-center justify-center bg-gradient-to-b from-[#0A0A1A] to-[#13202D]"
-      >
-        <div className="absolute inset-0 bg-[url('/images/banner-min.jpg')] bg-cover bg-center opacity-20"></div>
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/40 to-[#0F172A]" />
-        <div className="relative z-20 w-full">
-          <div className="section-container mx-auto flex flex-col items-center justify-center gap-8 px-4 py-16">
-            {/* Headline */}
-            <div className="text-center">
-              <h1 className="mb-4 text-5xl font-bold md:text-7xl">
-                <span className="text-white">Predict.</span>{" "}
-                <span className="text-[#E94560]">Compete.</span>{" "}
-                <span className="text-white">Win.</span>
-              </h1>
-              <p className="mx-auto mb-6 max-w-2xl text-xl text-gray-300 md:text-2xl">
-                Test your car knowledge against the market
-              </p>
-            </div>
+      {/* Live Activity Ticker */}
+      <LiveTicker />
 
-            {/* Activity Ticker */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm md:gap-8 md:text-base">
-              <div className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-[#E94560]" />
-                <span className="font-mono text-[#00D4AA]">{activityStats.predictions_today}</span>
-                <span className="text-gray-400">predictions today</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-[#E94560]" />
-                <span className="font-mono text-[#00D4AA]">{USDollar.format(activityStats.active_auctions_value / 1000000)}M</span>
-                <span className="text-gray-400">in auction value</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <UsersIcon className="h-5 w-5 text-[#E94560]" />
-                <span className="font-mono text-[#00D4AA]">{activityStats.active_players}</span>
-                <span className="text-gray-400">active players</span>
-              </div>
-            </div>
-
-            {/* Featured Auction Card */}
-            {featuredAuction && (
-              <Card className="w-full max-w-2xl border-[#E94560]/30 bg-[#13202D]/80 backdrop-blur-sm transition-all hover:border-[#E94560]">
-                <div className="relative h-[300px] md:h-[400px]">
-                  <Image
-                    src={featuredAuction.image || '/images/default-car.jpg'}
-                    alt={featuredAuction.title}
-                    fill
-                    priority
-                    className="rounded-t-xl object-cover"
-                  />
-                  <div className="absolute right-4 top-4">
-                    <Badge className="bg-[#E94560] text-white">Featured</Badge>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <h3 className="mb-4 text-2xl font-bold">{featuredAuction.title}</h3>
-                  <div className="mb-4 grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-sm text-gray-400">Current Bid</div>
-                      <div className="font-mono text-2xl font-bold text-[#00D4AA]">
-                        {USDollar.format(featuredAuction.sort?.price || 0)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-400">Time Left</div>
-                      <div className="flex items-center">
-                        <Clock className="mr-2 h-5 w-5 text-[#FFB547]" />
-                        {featuredAuction.sort?.deadline
-                          ? <CountdownTimer endTime={new Date(featuredAuction.sort.deadline)} />
-                          : <span className="font-mono text-sm text-gray-400">Active</span>}
-                      </div>
-                    </div>
-                  </div>
-                  <Link href={`/auctions/car_view_page/${featuredAuction._id}?mode=free_play`}>
-                    <Button className="w-full bg-[#E94560] text-white hover:bg-[#E94560]/90">
-                      Make Your Prediction
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* CTAs */}
-            <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
-              <Link href="/free_play" className="w-full touch-manipulation sm:w-auto">
-                <Button className="w-full bg-[#E94560] px-8 py-6 text-lg text-white hover:bg-[#E94560]/90 sm:w-auto">
-                  Make Your First Prediction
-                </Button>
-              </Link>
-              <Link href="#live-auctions" className="w-full touch-manipulation sm:w-auto">
-                <Button variant="outline" className="w-full border-[#E94560] px-8 py-6 text-lg text-[#E94560] hover:bg-[#E94560] hover:text-white sm:w-auto">
-                  Browse Live Auctions
-                </Button>
-              </Link>
-            </div>
-          </div>
+      {/* Hero — 45vh exchange aesthetic */}
+      <section className="relative flex h-[45vh] items-center justify-center overflow-hidden bg-[#0F172A]">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-60"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?auto=format&fit=crop&w=1920&q=80')",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/40 via-transparent to-[#0A0A1A]" />
+        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
+          <h1 className="mb-3 text-5xl font-bold tracking-tight text-white md:text-6xl">
+            Trade on the Hammer Price.
+          </h1>
+          <p className="text-lg text-gray-300 md:text-xl">
+            The prediction market for collector car auctions.
+          </p>
+          <Link
+            href="/markets"
+            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#E94560] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
+          >
+            Browse Markets <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
-      {/* SECTION 2: FEATURED CAR HERO */}
-      {featuredCar && (
-        <section className="section-container mx-auto px-4 pb-8 pt-0">
-          <div className="relative overflow-hidden rounded-xl">
-            <Image
-              src={featuredCar.image || '/images/default-car.jpg'}
-              alt={featuredCar.title}
-              width={1400}
-              height={600}
-              className="h-64 w-full object-cover md:h-96"
-              priority={false}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A1A] via-[#0A0A1A]/60 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <p className="mb-1 font-mono text-xs uppercase tracking-wider text-[#FFB547]">
-                Featured Auction
-              </p>
-              <h2 className="mb-2 text-2xl font-bold text-white md:text-4xl">
-                {featuredCar.title}
-              </h2>
-              {featuredCar.sort?.deadline && (
-                <p className="mb-4 font-mono text-sm text-gray-300">
-                  {`Ends ${new Date(featuredCar.sort.deadline).toLocaleString()}`}
-                </p>
-              )}
-              <a
-                href={`/auctions/car_view_page/${featuredCar._id}`}
-                className="inline-flex min-h-[44px] touch-manipulation items-center rounded-lg bg-[#E94560] px-6 font-semibold text-white transition-colors hover:bg-[#E94560]/90"
-              >
-                Make Your Pick →
-              </a>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* SECTION 3: LIVE AUCTIONS GRID */}
-      <section id="live-auctions" className="section-container mx-auto px-4 py-16">
-        <div className="mb-8 flex items-center justify-between">
-          <h2 className="text-3xl font-bold">Live Auctions</h2>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="border-[#E94560]/30 text-gray-300">All</Button>
-            <Button variant="ghost" size="sm" className="text-gray-400">Ending Soon</Button>
-            <Button variant="ghost" size="sm" className="text-gray-400">High Value</Button>
-            <Button variant="ghost" size="sm" className="text-gray-400">New</Button>
-          </div>
-        </div>
-
-        {/* Grid — client component handles polygon market Trade buttons */}
-        <LiveAuctionsSection auctions={liveAuctions} />
-
-        {liveAuctions.length > 12 && (
-          <div className="mt-8 text-center">
-            <Link href="/free_play">
-              <Button variant="outline" className="border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-white">
-                View All Auctions <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        )}
+      {/* Trending Markets — overlaps hero bottom */}
+      <section className="relative z-10 -mt-12 mx-auto w-full max-w-6xl px-4 pb-16">
+        <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
+        <TrendingMarketsSection />
       </section>
 
-      {/* DAILY HAMMER WIDGET */}
+      {/* Daily Hammer Widget */}
       <DailyHammer auction={dailyHammer} />
 
-      {/* SECTION 4: LEADERBOARD PREVIEW */}
-      <section className="bg-[#13202D]/50 py-16">
-        <div className="section-container mx-auto px-4">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-3xl font-bold">Top Predictors This Week</h2>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="border-[#E94560] bg-[#E94560]/20 text-[#E94560]">
-                Weekly
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400">Monthly</Button>
-              <Button variant="ghost" size="sm" className="text-gray-400">All-Time</Button>
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            {leaderboard.slice(0, 10).map((entry: any, index: number) => (
-              <div
-                key={entry._id}
-                className="flex items-center justify-between rounded-lg bg-[#0A0A1A]/50 p-4 backdrop-blur-sm transition-all hover:bg-[#0A0A1A]/80"
-              >
-                <div className="flex items-center gap-4">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-full font-bold ${
-                    index === 0 ? 'bg-[#FFB547] text-[#0A0A1A]' :
-                    index === 1 ? 'bg-[#C0C0C0] text-[#0A0A1A]' :
-                    index === 2 ? 'bg-[#CD7F32] text-[#0A0A1A]' :
-                    'bg-[#1E2A36] text-gray-400'
-                  }`}>
-                    {index + 1}
-                  </div>
-                  <div>
-                    <div className="font-semibold">{entry.username}</div>
-                    <div className="text-xs text-gray-400">{entry.predictions_count} predictions</div>
-                  </div>
-                </div>
-                <div className="font-mono text-xl font-bold text-[#00D4AA]">
-                  {entry.total_score.toLocaleString()}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link href="/leaderboard">
-              <Button variant="outline" className="border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-white">
-                View Full Leaderboard <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 5: GAME MODES */}
-      <section className="section-container mx-auto px-4 py-16">
-        <h2 className="mb-8 text-center text-3xl font-bold">Choose Your Game Mode</h2>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {/* Free Play */}
-          <Card className="border-[#1E2A36] bg-[#13202D] transition-all hover:border-[#00D4AA]">
-            <CardContent className="flex flex-col items-center p-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#00D4AA]/20">
-                <Target className="h-8 w-8 text-[#00D4AA]" />
-              </div>
-              <h3 className="mb-3 text-2xl font-bold">Free Play</h3>
-              <p className="mb-6 text-gray-400">
-                Practice your skills, no risk. Perfect for learning and building your prediction strategy.
-              </p>
-              <Link href="/free_play" className="w-full">
-                <Button className="w-full bg-[#00D4AA] text-[#0A0A1A] hover:bg-[#00D4AA]/90">
-                  Start Playing
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Tournaments */}
-          <Card className="border-[#1E2A36] bg-[#13202D] transition-all hover:border-[#E94560]">
-            <CardContent className="flex flex-col items-center p-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E94560]/20">
-                <Trophy className="h-8 w-8 text-[#E94560]" />
-              </div>
-              <h3 className="mb-3 text-2xl font-bold">Tournaments</h3>
-              <p className="mb-6 text-gray-400">
-                Compete for prizes in structured competitions. Test your skills against the best.
-              </p>
-              <Link href="/tournaments" className="w-full">
-                <Button className="w-full bg-[#E94560] text-white hover:bg-[#E94560]/90">
-                  View Tournaments
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Guess the Hammer (Coming Soon) */}
-          <Card className="border-[#1E2A36] bg-[#13202D]/50 opacity-60">
-            <CardContent className="flex flex-col items-center p-8 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFB547]/20">
-                <TrendingUp className="h-8 w-8 text-[#FFB547]" />
-              </div>
-              <h3 className="mb-3 text-2xl font-bold">Guess the Hammer</h3>
-              <p className="mb-6 text-gray-400">
-                Wager on your predictions. Higher stakes, bigger rewards.
-              </p>
-              <Button disabled className="w-full bg-gray-600 text-gray-400">
-                Coming Soon
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* SECTION 6: HOW IT WORKS */}
-      <section className="bg-[#13202D]/50 py-16">
-        <div className="section-container mx-auto px-4">
-          <HowItWorks />
-        </div>
-      </section>
-
-      {/* CTA SECTION */}
-      {!session && (
-        <section className="bg-gradient-to-r from-[#E94560]/20 to-[#00D4AA]/20 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-              Ready to <span className="text-[#E94560]">Start</span> Playing?
-            </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-300">
-              Join Velocity Markets today and start predicting auction prices to win prizes.
-            </p>
-            <Link href="/create_account" className="inline-block w-full touch-manipulation sm:w-auto">
-              <Button className="w-full bg-[#E94560] px-8 py-6 text-lg text-white hover:bg-[#E94560]/90 sm:w-auto">
-                Sign Up Now
-              </Button>
-            </Link>
-            <p className="mt-4 text-sm text-gray-400">
-              Please read our terms and conditions before signing up.
-            </p>
-          </div>
-        </section>
-      )}
+      {/* Authority Bar */}
+      <AuthorityBar />
 
       {/* Newsletter */}
       <section className="py-8">
