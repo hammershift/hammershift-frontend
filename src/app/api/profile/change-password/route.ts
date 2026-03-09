@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/mongoose";
+import Users from "@/models/user.model";
 import { hash, compare } from "bcryptjs";
 
 /**
@@ -11,8 +12,9 @@ import { hash, compare } from "bcryptjs";
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
+    const userId = session?.user?._id ?? session?.user?.id;
 
-    if (!session || !session.user?.id || !session.user?.email) {
+    if (!session || !userId || !session.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -35,26 +37,27 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
 
-    // For now, return a mock response since we don't have password stored in Users model
-    // In production, you'd verify the old password and update it
+    const user = await Users.findById(userId).select('+password');
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
 
-    // This would be the actual implementation:
-    // const user = await Users.findById(session.user.id).select('+password');
-    // if (!user || !user.password) {
-    //   return NextResponse.json({ error: "User not found" }, { status: 404 });
-    // }
+    if (!user.password) {
+      return NextResponse.json(
+        { error: "No password set — use Forgot Password to create one" },
+        { status: 400 }
+      );
+    }
 
-    // const isValidPassword = await compare(oldPassword, user.password);
-    // if (!isValidPassword) {
-    //   return NextResponse.json({ error: "Current password is incorrect" }, { status: 401 });
-    // }
+    const isValidPassword = await compare(oldPassword, user.password);
+    if (!isValidPassword) {
+      return NextResponse.json({ error: "Current password is incorrect" }, { status: 401 });
+    }
 
-    // const hashedPassword = await hash(newPassword, 10);
-    // await Users.findByIdAndUpdate(session.user.id, { password: hashedPassword });
+    const hashedPassword = await hash(newPassword, 10);
+    await Users.findByIdAndUpdate(userId, { password: hashedPassword });
 
-    return NextResponse.json({
-      message: "Password changed successfully"
-    });
+    return NextResponse.json({ message: "Password changed successfully" });
   } catch (error) {
     console.error("Error changing password:", error);
     return NextResponse.json(

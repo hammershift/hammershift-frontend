@@ -1,6 +1,6 @@
 import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,10 +17,13 @@ export async function POST(req: NextRequest) {
     }
 
     // hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
     // update password in user collection
     await db.collection('users').updateOne({ email }, { $set: { password: hashedPassword } });
+
+    // invalidate the OTP
+    await db.collection('password_reset_tokens').deleteOne({ email, otp });
 
     return NextResponse.json({ message: 'Password reset successfully.' }, { status: 200 });
   } catch (error) {

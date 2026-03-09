@@ -80,8 +80,8 @@ const CreateAccount = () => {
       const data = await response.json();
       if (response.ok) {
         setIsResetPasswordLoading(false);
-        localStorage.setItem("passwordResetEmail", resetEmail); // store the email in local storage
-        localStorage.setItem("isNewPasswordResetProcess", "true"); // set the flag for password reset flow process
+        sessionStorage.setItem("passwordResetEmail", resetEmail); // store the email in session storage
+        sessionStorage.setItem("isNewPasswordResetProcess", "true"); // set the flag for password reset flow process
         router.push("/password_reset_flow");
       } else {
         setIsResetPasswordLoading(false);

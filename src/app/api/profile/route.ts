@@ -15,14 +15,15 @@ export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user?.id) {
+    const userId = session?.user?._id ?? session?.user?.id;
+    if (!session || !userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     await connectDB();
 
     // Fetch user data
-    const user = await Users.findById(session.user.id)
+    const user = await Users.findById(userId)
       .select(
         "username fullName email about createdAt rank_title total_points email_preferences"
       )
@@ -33,10 +34,10 @@ export async function GET(req: NextRequest) {
     }
 
     // Fetch streak data
-    const streak = await Streak.findOne({ user_id: session.user.id }).lean();
+    const streak = await Streak.findOne({ user_id: userId }).lean();
 
     // Fetch badges
-    const badges = await Badge.find({ user_id: session.user.id })
+    const badges = await Badge.find({ user_id: userId })
       .sort({ earned_at: -1 })
       .lean();
 
@@ -44,7 +45,7 @@ export async function GET(req: NextRequest) {
     const accuracyAgg = await Predictions.aggregate([
       {
         $match: {
-          "user.userId": session.user.id,
+          "user.userId": userId,
           score: { $exists: true, $ne: null },
           delta_from_actual: { $ne: null },
         },
@@ -110,7 +111,7 @@ export async function GET(req: NextRequest) {
 
     const rank =
       allUsers.findIndex(
-        (u) => u._id.toString() === session.user.id.toString()
+        (u) => u._id.toString() === userId.toString()
       ) + 1;
 
     return NextResponse.json({
@@ -137,7 +138,8 @@ export async function PATCH(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user?.id) {
+    const patchUserId = session?.user?._id ?? session?.user?.id;
+    if (!session || !patchUserId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -151,7 +153,7 @@ export async function PATCH(req: NextRequest) {
     if (about !== undefined) updateData.about = about;
 
     const updatedUser = await Users.findByIdAndUpdate(
-      session.user.id,
+      patchUserId,
       updateData,
       { new: true, runValidators: true }
     ).select("username fullName about");

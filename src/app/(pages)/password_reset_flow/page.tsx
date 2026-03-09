@@ -13,7 +13,7 @@ const PasswordResetFlow = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [timer, setTimer] = useState<number | null>(60);
+  const [timer, setTimer] = useState<number | null>(600);
   const [timerStartTime, setTimerStartTime] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,7 +53,7 @@ const PasswordResetFlow = () => {
       intervalRef.current = setInterval(() => {
         const currentTime = Date.now();
         const elapsedTime = Math.floor((currentTime - startTime) / 1000);
-        const remainingTime = 60 - elapsedTime;
+        const remainingTime = 600 - elapsedTime;
 
         if (remainingTime <= 0) {
           clearInterval(intervalRef.current);
@@ -68,8 +68,8 @@ const PasswordResetFlow = () => {
     const handleNewProcess = () => {
       const newStartTime = Date.now();
       const newSessionId = newStartTime.toString();
-      localStorage.setItem('timerStartTime', newSessionId);
-      localStorage.setItem('passwordResetSessionId', newSessionId);
+      sessionStorage.setItem('timerStartTime', newSessionId);
+      sessionStorage.setItem('passwordResetSessionId', newSessionId);
       setTimerStartTime(newStartTime);
       startCountdown(newStartTime);
     };
@@ -78,27 +78,27 @@ const PasswordResetFlow = () => {
       const currentTime = Date.now();
       const timeElapsed = currentTime - startTime;
 
-      if (timeElapsed < 60000) {
+      if (timeElapsed < 600000) {
         setTimerStartTime(startTime);
         startCountdown(startTime);
       } else {
-        localStorage.removeItem('timerStartTime');
+        sessionStorage.removeItem('timerStartTime');
       }
     };
 
-    // retrieve the email from localStorage
-    const storedEmail = localStorage.getItem('passwordResetEmail');
+    // retrieve the email from sessionStorage
+    const storedEmail = sessionStorage.getItem('passwordResetEmail');
     if (!storedEmail) {
       router.push('/login_page');
       return;
     }
     setEmail(storedEmail);
 
-    // retrieve the session state (or flag) from localStorage
-    const isNewProcess = localStorage.getItem('isNewPasswordResetProcess') === 'true';
-    localStorage.removeItem('isNewPasswordResetProcess'); // clear the flag for a new process
+    // retrieve the session state (or flag) from sessionStorage
+    const isNewProcess = sessionStorage.getItem('isNewPasswordResetProcess') === 'true';
+    sessionStorage.removeItem('isNewPasswordResetProcess'); // clear the flag for a new process
 
-    const storedStartTime = localStorage.getItem('timerStartTime');
+    const storedStartTime = sessionStorage.getItem('timerStartTime');
     if (isNewProcess || !storedStartTime) {
       handleNewProcess();
     } else {
@@ -193,7 +193,7 @@ const PasswordResetFlow = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setTimer(60);
+        setTimer(600);
         // Store the current time as the timer start time
         setTimerStartTime(Date.now());
       } else {

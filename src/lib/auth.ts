@@ -1,6 +1,6 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import { User, Credentials } from "@/app/types/userTypes";
 import { NextAuthOptions, getServerSession } from "next-auth";
 import { ObjectId } from "mongodb";
@@ -69,20 +69,28 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
   },
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email", placeholder: "you@gmail.com" },
+        password: { label: "Password", type: "password" },
       },
       authorize: async (credentials: Credentials | undefined) => {
-        if (!credentials || !credentials.email)
+        if (!credentials || !credentials.email || !credentials.password)
           throw new Error("Missing credentials");
         await connectToDB();
-        const user = await Users.findOne({ email: credentials.email });
+        const user = await Users.findOne({ email: credentials.email }).select('+password');
 
-        if (user?.isBanned) throw new Error("Your account has been banned");
+        if (!user) throw new Error("Invalid credentials");
+        if (user.isBanned) throw new Error("Your account has been banned");
+        if (!user.password) throw new Error("No password set — use Forgot Password to create one");
+
+        const passwordMatch = await bcryptjs.compare(credentials.password, user.password);
+        if (!passwordMatch) throw new Error("Invalid credentials");
+
         return {
           id: user._id.toString(),
           email: user.email,
@@ -158,8 +166,8 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token, user }) {
       if (token) {
-        //session.user.id = token.id;
         session.user._id = token._id;
+        session.user.id = token._id as string;
         session.user.email = token.email;
         session.user.fullName = token.fullName;
         session.user.username = token.username;

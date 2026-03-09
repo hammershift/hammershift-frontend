@@ -1,11 +1,12 @@
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
 import mongoose from "mongoose";
+import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
-  const { email, username, fullName, provider } = data;
+  const { email, username, fullName, provider, password } = data;
 
   const lowerCaseEmail = email.toLowerCase();
 
@@ -30,7 +31,9 @@ export async function POST(req: NextRequest) {
 
     const newDate = new Date();
 
-    let newUser = {
+    const hashedPassword = password ? await bcryptjs.hash(password, 10) : undefined;
+
+    let newUser: Record<string, any> = {
       _id: new mongoose.Types.ObjectId(),
       username: username,
       fullName: fullName,
@@ -42,6 +45,10 @@ export async function POST(req: NextRequest) {
       createdAt: newDate,
       updatedAt: newDate,
     };
+
+    if (hashedPassword) {
+      newUser.password = hashedPassword;
+    }
 
 
     const user = new Users(newUser);

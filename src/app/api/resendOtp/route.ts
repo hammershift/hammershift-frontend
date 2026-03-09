@@ -1,9 +1,16 @@
 import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
-import otpGenerator from 'otp-generator';
+import { randomInt } from 'crypto';
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfter } = checkRateLimit(ip, 5, 15 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json({ message: 'Too many requests. Please try again later.' }, { status: 429, headers: { 'Retry-After': String(retryAfter) } });
+    }
+
     const data = await req.json();
     const { email } = data;
 
@@ -18,14 +25,9 @@ export async function POST(req: NextRequest) {
     }
 
     // generate a new OTP
-    const newOtp = otpGenerator.generate(6, {
-      digits: true,
-      specialChars: false,
-      upperCaseAlphabets: false,
-      lowerCaseAlphabets: false,
-    });
+    const newOtp = randomInt(100000, 999999).toString();
 
-    const newExpirationDate = new Date(new Date().getTime() + 1 * 60000);
+    const newExpirationDate = new Date(new Date().getTime() + 10 * 60000);
 
     // update the OTP in the db
     await db.collection('password_reset_tokens').updateOne({ userId: user._id }, { $set: { otp: newOtp, expires: newExpirationDate, email: user.email } }, { upsert: true });

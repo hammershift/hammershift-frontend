@@ -6,6 +6,7 @@ export interface User {
   username: string;
   fullName: string;
   email: string;
+  password?: string;
   balance: number;
   isActive: boolean;
   isBanned: boolean;
@@ -34,6 +35,7 @@ const userSchema = new Schema(
     username: { type: String, required: true },
     fullName: { type: String, required: true },
     email: { type: String, required: true },
+    password: { type: String, select: false },
     emailVerified: { type: Boolean, default: false },
     balance: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },

@@ -1,10 +1,17 @@
 import { sendOtpEmail } from '@/lib/mail';
 import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
-import otpGenerator from 'otp-generator';
+import { randomInt } from 'crypto';
+import { checkRateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfter } = checkRateLimit(ip, 5, 15 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json({ message: 'Too many requests. Please try again later.' }, { status: 429, headers: { 'Retry-After': String(retryAfter) } });
+    }
+
     const data = await req.json();
     const { email } = data;
 
@@ -19,13 +26,8 @@ export async function POST(req: NextRequest) {
     }
 
     // otp generator
-    const otp = otpGenerator.generate(6, {
-      digits: true,
-      specialChars: false,
-      upperCaseAlphabets: false,
-      lowerCaseAlphabets: false,
-    });
-    const expirationDate = new Date(new Date().getTime() + 1 * 60000);
+    const otp = randomInt(100000, 999999).toString();
+    const expirationDate = new Date(new Date().getTime() + 10 * 60000);
 
     // store it in the db
     console.log('Inserting OTP into the database');
