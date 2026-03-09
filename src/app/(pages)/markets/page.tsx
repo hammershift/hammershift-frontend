@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { BarChart2, TrendingUp, Activity, CheckCircle2, Clock } from 'lucide-react';
 import CountdownInline from '@/app/components/CountdownInline';
 import BaTLogo from '@/app/components/icons/BaTLogo';
+import MarketSparkline from '@/app/components/trading/MarketSparkline';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -148,6 +149,11 @@ function MarketCard({ market }: { market: Market }) {
         <p className="text-sm font-medium text-[#F8FAFC] line-clamp-2 leading-snug">
           {market.question}
         </p>
+
+        {/* Sparkline price momentum */}
+        <div className="w-full -mx-1">
+          <MarketSparkline marketId={market._id.toString()} yesPrice={market.yesPrice ?? 0.5} />
+        </div>
 
         {/* Countdown + real-world bid */}
         <div className="flex items-center justify-between text-xs text-slate-400">
