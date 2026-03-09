@@ -7,6 +7,7 @@ import { PredictionProvider } from "./context/PredictionContext";
 import { TournamentPredictionProvider } from "./context/TournamentPredictionContext";
 import { TournamentProvider } from "./context/TournamentContext";
 import PrivyProvider from "./components/PrivyProvider";
+import OnboardingModal from "./components/OnboardingModal";
 import "./styles/app.css";
 import "./styles/globals.css";
 import Analytics from "./components/analytics";
@@ -46,6 +47,7 @@ export default async function RootLayout({
               <TournamentPredictionProvider>
                 <TournamentProvider>
                   <Analytics />
+                  <OnboardingModal />
                   <Navbar />
                   {/* <BetaTesting /> */}
                   {children}
