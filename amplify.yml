@@ -32,11 +32,16 @@ frontend:
         - echo "NEXT_PUBLIC_PRIVY_APP_ID=$NEXT_PUBLIC_PRIVY_APP_ID" >> .env.production
         - echo "PRIVY_APP_SECRET=$PRIVY_APP_SECRET" >> .env.production
         - echo "NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY=$NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY" >> .env.production
+        - echo "CRON_SECRET=$CRON_SECRET" >> .env.production
     build:
       commands:
         - export NODE_OPTIONS="--max-old-space-size=3072"
         - export SENTRY_UPLOAD_SOURCE_MAPS=0
         - npm run build
+    postBuild:
+      commands:
+        - 'curl -s -H "x-cron-secret: $CRON_SECRET" "$NEXTAUTH_URL/api/cron/create-markets" || true'
+        - 'curl -s -H "x-cron-secret: $CRON_SECRET" "$NEXTAUTH_URL/api/cron/resolve-markets" || true'
   artifacts:
     baseDirectory: .next
     files:
