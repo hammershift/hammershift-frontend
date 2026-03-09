@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
 import CountdownInline from './CountdownInline';
 
 interface DailyHammerProps {
@@ -13,25 +14,14 @@ interface DailyHammerProps {
   } | null;
 }
 
-export default function DailyHammer({ auction }: DailyHammerProps) {
+// Inner component: only rendered when PrivyProvider is active in the tree.
+function DailyHammerWithPrivy({ auction }: DailyHammerProps) {
   const [guess, setGuess] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Privy — graceful if not configured
-  let login: (() => void) | null = null;
-  let authenticated = false;
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { usePrivy } = require('@privy-io/react-auth');
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const privy = usePrivy();
-    login = privy.login;
-    authenticated = privy.authenticated;
-  } catch {
-    // Privy not configured — fall back to NextAuth session check
-  }
+  const { login, authenticated } = usePrivy();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,9 +34,12 @@ export default function DailyHammer({ auction }: DailyHammerProps) {
     }
 
     // Auth gate: fire Privy login if not authenticated
-    if (!authenticated && login) {
+    if (!authenticated) {
       // Store pending guess in sessionStorage — user can submit after auth
-      sessionStorage.setItem('pending_guess', JSON.stringify({ auctionId: auction.auctionId, guessedPrice: parsed }));
+      sessionStorage.setItem(
+        'pending_guess',
+        JSON.stringify({ auctionId: auction.auctionId, guessedPrice: parsed })
+      );
       login();
       return;
     }
@@ -88,9 +81,72 @@ export default function DailyHammer({ auction }: DailyHammerProps) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ auctionId, guessedPrice }),
-    }).then(() => setSubmitted(true)).catch(() => {});
+    })
+      .then(() => setSubmitted(true))
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authenticated]);
 
+  return <DailyHammerUI auction={auction} guess={guess} setGuess={setGuess} submitted={submitted} loading={loading} error={error} onSubmit={handleSubmit} />;
+}
+
+// Fallback: renders without Privy — submits directly (no auth gate).
+function DailyHammerNoPrivy({ auction }: DailyHammerProps) {
+  const [guess, setGuess] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!auction) return;
+
+    const parsed = parseFloat(guess.replace(/[^0-9.]/g, ''));
+    if (isNaN(parsed) || parsed <= 0) {
+      setError('Enter a valid price');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/daily-guess', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ auctionId: auction.auctionId, guessedPrice: parsed }),
+      });
+
+      if (res.status === 409) {
+        setError('You already submitted a guess for this auction.');
+        setSubmitted(true);
+        return;
+      }
+
+      if (!res.ok) throw new Error('Failed');
+      setSubmitted(true);
+    } catch {
+      setError('Something went wrong. Try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return <DailyHammerUI auction={auction} guess={guess} setGuess={setGuess} submitted={submitted} loading={loading} error={error} onSubmit={handleSubmit} />;
+}
+
+// Shared UI — pure presentational, no hooks.
+interface DailyHammerUIProps {
+  auction: DailyHammerProps['auction'];
+  guess: string;
+  setGuess: (v: string) => void;
+  submitted: boolean;
+  loading: boolean;
+  error: string;
+  onSubmit: (e: React.FormEvent) => void;
+}
+
+function DailyHammerUI({ auction, guess, setGuess, submitted, loading, error, onSubmit }: DailyHammerUIProps) {
   if (!auction) return null;
 
   return (
@@ -125,7 +181,7 @@ export default function DailyHammer({ auction }: DailyHammerProps) {
                 <p className="text-gray-400 text-sm mt-1">Results after the auction closes.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={onSubmit} className="space-y-4">
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-mono text-lg">$</span>
                   <input
@@ -155,4 +211,14 @@ export default function DailyHammer({ auction }: DailyHammerProps) {
       </div>
     </section>
   );
+}
+
+export default function DailyHammer({ auction }: DailyHammerProps) {
+  const privyConfigured = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
+
+  if (privyConfigured) {
+    return <DailyHammerWithPrivy auction={auction} />;
+  }
+
+  return <DailyHammerNoPrivy auction={auction} />;
 }
