@@ -9,7 +9,6 @@ import { polygon } from 'viem/chains';
  *
  * @param embeddedWalletProvider - EIP-1193 provider from Privy (embeddedWallet.getEthereumProvider())
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createBiconomySmartAccount(embeddedWalletProvider: any) {
   const walletClient = createWalletClient({
     chain: polygon,
