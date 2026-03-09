@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { toSlug } from '@/lib/slug';
 import { BarChart2, TrendingUp, Activity, CheckCircle2, Clock } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -188,15 +187,6 @@ function MarketCard({ market }: { market: Market }) {
             Trade →
           </button>
         </div>
-        {market.auction?.title && (
-          <Link
-            href={`/markets/${toSlug(market.auction.title)}`}
-            className="text-xs text-slate-500 hover:text-slate-300 mt-1 block"
-            onClick={(e) => e.stopPropagation()}
-          >
-            /markets/{toSlug(market.auction.title)}
-          </Link>
-        )}
       </div>
     </Link>
   );

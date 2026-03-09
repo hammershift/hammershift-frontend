@@ -1,4 +1,6 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { Metadata } from 'next';
 import { toSlug } from '@/lib/slug';
 
@@ -17,9 +19,9 @@ interface Market {
   };
 }
 
-async function getMarketBySlug(slug: string): Promise<Market | null> {
+const getMarketBySlug = cache(async (slug: string): Promise<Market | null> => {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/polygon-markets?status=ACTIVE`, {
+  const res = await fetch(`${baseUrl}/api/polygon-markets`, {
     cache: 'no-store',
   });
   if (!res.ok) return null;
@@ -29,7 +31,7 @@ async function getMarketBySlug(slug: string): Promise<Market | null> {
       (m) => m.auction.title && toSlug(m.auction.title) === slug
     ) ?? null
   );
-}
+});
 
 export async function generateMetadata({
   params,
@@ -93,12 +95,12 @@ export default async function MarketSlugPage({
             </p>
           </div>
         </div>
-        <a
+        <Link
           href={`/trading/${market._id}`}
           className="block w-full bg-[#10B981] hover:bg-[#059669] text-black font-bold py-3 px-6 rounded-lg text-center transition-colors"
         >
           Trade This Market &rarr;
-        </a>
+        </Link>
       </div>
     </div>
   );
