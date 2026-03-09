@@ -6,6 +6,7 @@ import Navbar from "./components/navbar";
 import { PredictionProvider } from "./context/PredictionContext";
 import { TournamentPredictionProvider } from "./context/TournamentPredictionContext";
 import { TournamentProvider } from "./context/TournamentContext";
+import PrivyProvider from "./components/PrivyProvider";
 import "./styles/app.css";
 import "./styles/globals.css";
 import Analytics from "./components/analytics";
