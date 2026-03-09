@@ -9,6 +9,7 @@ import {
 } from "@/lib/data";
 import { CircleDollarSignIcon, LogOut, Settings, UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -98,7 +99,10 @@ const Navbar = () => {
   };
 
   const { data: session } = useSession();
-  const isLoggedIn = !!session;
+  const { user: privyUser, logout: privyLogout, authenticated: privyAuthenticated } = useVelocityAuth();
+  // Fall back to NextAuth session if Privy user not available
+  const activeUser = privyUser ?? session?.user;
+  const isLoggedIn = !!session || privyAuthenticated;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -240,7 +244,7 @@ const Navbar = () => {
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
                 >
-                  {session ? session.user.username?.[0]?.toUpperCase() : "U"}
+                  {activeUser ? activeUser.username?.[0]?.toUpperCase() : "U"}
                 </div>
                 {dropMyAccount && <MyAccountDropdownMenu />}
               </button>

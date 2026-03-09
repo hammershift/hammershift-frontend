@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
 import { useSession, signIn } from "next-auth/react";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 import { checkUsernameExistence } from "@/lib/data";
 interface UserExistenceResponse {
   emailExists: boolean;
@@ -35,6 +36,7 @@ const CreateAccount = () => {
   const [isResetPasswordLoading, setIsResetPasswordLoading] = useState(false);
 
   const router = useRouter();
+  const { login: privyLogin } = useVelocityAuth();
 
   // Forgot/Reset Password
   const [resetEmail, setResetEmail] = useState("");
@@ -289,6 +291,18 @@ const CreateAccount = () => {
               </div>
             </div>
           </form>
+          <div className="flex items-center gap-3 my-4">
+            <div className="flex-1 border-t border-white/10" />
+            <span className="text-xs text-slate-500">or</span>
+            <div className="flex-1 border-t border-white/10" />
+          </div>
+          <button
+            type="button"
+            onClick={() => privyLogin()}
+            className="w-full py-3 rounded-lg bg-[#10B981] text-black font-bold text-sm hover:bg-[#059669] transition-colors"
+          >
+            Continue with Email or Google
+          </button>
           {/* <div className='flex justify-between text-sm sm:text-base'>
             <div className='relative flex items-center gap-2'>
               <input

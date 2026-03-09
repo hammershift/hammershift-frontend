@@ -40,20 +40,22 @@ export default async function RootLayout({
     <html lang="en">
       {/*<body className={inter.className} */}
       <body>
-        <SessionProvider session={session}>
-          <PredictionProvider>
-            <TournamentPredictionProvider>
-              <TournamentProvider>
-                <Analytics />
-                <Navbar />
-                {/* <BetaTesting /> */}
-                {children}
-                {/* <LoadWallet /> */}
-                <Footer />
-              </TournamentProvider>
-            </TournamentPredictionProvider>
-          </PredictionProvider>
-        </SessionProvider>
+        <PrivyProvider>
+          <SessionProvider session={session}>
+            <PredictionProvider>
+              <TournamentPredictionProvider>
+                <TournamentProvider>
+                  <Analytics />
+                  <Navbar />
+                  {/* <BetaTesting /> */}
+                  {children}
+                  {/* <LoadWallet /> */}
+                  <Footer />
+                </TournamentProvider>
+              </TournamentPredictionProvider>
+            </PredictionProvider>
+          </SessionProvider>
+        </PrivyProvider>
       </body>
     </html>
   );

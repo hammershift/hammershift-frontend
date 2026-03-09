@@ -46,6 +46,11 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    const embeddedWallet = (privyUser as any).linkedAccounts?.find(
+      (a: any) => a.type === 'wallet' && a.walletClient === 'privy'
+    );
+    const embeddedWalletAddress = embeddedWallet?.address ?? null;
+
     return NextResponse.json({
       user: {
         _id: dbUser._id.toString(),
@@ -56,6 +61,7 @@ export async function GET(req: NextRequest) {
         balance: dbUser.balance,
         role: dbUser.role,
         provider: dbUser.provider ?? 'privy',
+        embeddedWalletAddress,
       },
     });
   } catch (error) {
