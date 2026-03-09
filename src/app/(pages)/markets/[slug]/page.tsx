@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { toSlug } from '@/lib/slug';
+import JsonLd from '@/app/components/JsonLd';
 
 interface Market {
   _id: string;
@@ -72,9 +73,32 @@ export default async function MarketSlugPage({
   if (!market) notFound();
 
   const yesPercent = Math.round((market.yesPrice ?? 0.5) * 100);
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://velocitymarkets.io';
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-[#F8FAFC] p-6">
+    <>
+      <JsonLd
+        financialProduct={{
+          name: `${market.auction.title} Prediction Market`,
+          description: market.question,
+          url: `${appUrl}/markets/${slug}`,
+          offers: {
+            price: market.yesPrice ?? 0.5,
+            priceCurrency: 'USDC',
+          },
+        }}
+        event={
+          market.auction.deadline
+            ? {
+                name: `${market.auction.title} — Classic Car Auction`,
+                endDate: market.auction.deadline,
+                description: `Classic car auction on Bring a Trailer. Prediction market: ${market.question}`,
+                url: `${appUrl}/markets/${slug}`,
+              }
+            : undefined
+        }
+      />
+      <div className="min-h-screen bg-[#0F172A] text-[#F8FAFC] p-6">
       <div className="max-w-2xl mx-auto pt-24">
         <p className="text-sm text-slate-400 uppercase tracking-widest mb-2">
           Prediction Market
@@ -103,5 +127,6 @@ export default async function MarketSlugPage({
         </Link>
       </div>
     </div>
+    </>
   );
 }
