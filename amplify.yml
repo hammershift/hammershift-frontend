@@ -34,7 +34,8 @@ frontend:
         - echo "NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY=$NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY" >> .env.production
     build:
       commands:
-        - export NODE_OPTIONS="--max-old-space-size=4096"
+        - export NODE_OPTIONS="--max-old-space-size=3072"
+        - export SENTRY_UPLOAD_SOURCE_MAPS=0
         - npm run build
   artifacts:
     baseDirectory: .next

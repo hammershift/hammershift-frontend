@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    experimental: {
+        cpus: 1,
+    },
     images: {
         remotePatterns: [
             {
@@ -61,7 +64,8 @@ module.exports = withSentryConfig(
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
     // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
+    // Disabled on Amplify to prevent OOM during build
+    widenClientFileUpload: false,
 
     // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
     // This can increase your server load as well as your hosting bill.
