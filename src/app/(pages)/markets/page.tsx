@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { BarChart2, TrendingUp, Activity, CheckCircle2, Clock } from 'lucide-react';
+import CountdownInline from '@/app/components/CountdownInline';
+import BaTLogo from '@/app/components/icons/BaTLogo';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -29,6 +31,7 @@ interface Market {
   winningOutcome: 'YES' | 'NO' | null;
   resolvedAt: string | null;
   createdAt: string;
+  currentBid: number | null;
   auction: MarketAuction;
 }
 
@@ -113,82 +116,81 @@ function StatusBadge({ status }: { status: MarketStatus }) {
 // ─── Market Card ──────────────────────────────────────────────────────────────
 
 function MarketCard({ market }: { market: Market }) {
-  const router = useRouter();
-
-  const handleTradeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    router.push(`/trading/${market._id}`);
-  };
-
-  const imageSrc = market.auction?.image ?? null;
-  const title = market.auction?.title ?? market.question;
+  const yesPercent = Math.round((market.yesPrice ?? 0.5) * 100);
+  const noPercent = 100 - yesPercent;
+  const yesCents = Math.round((market.yesPrice ?? 0.5) * 100);
+  const noCents = Math.round((market.noPrice ?? 0.5) * 100);
 
   return (
-    <Link
-      href={`/trading/${market._id}`}
-      className="group block rounded-xl overflow-hidden border border-[#1E2A36] hover:border-[#00D4AA]/30 transition-all duration-200 cursor-pointer bg-[#13202D] hover:bg-[#1A2C3D] hover:shadow-lg hover:shadow-[#00D4AA]/5"
-    >
-      {/* Image area */}
-      <div className="aspect-video relative bg-gradient-to-br from-[#1A2C3D] to-[#0E1923] overflow-hidden">
-        {imageSrc ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={imageSrc}
-            alt={title ?? 'Market'}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          /* Gradient placeholder when no image */
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1A2C3D] via-[#0E1923] to-[#13202D]">
-            <BarChart2 className="w-10 h-10 text-[#1E2A36]" />
-          </div>
-        )}
-        {/* Subtle dark gradient over image bottom for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#13202D]/60 via-transparent to-transparent pointer-events-none" />
-        {/* Status badge */}
-        <div className="absolute top-2 right-2">
-          <StatusBadge status={market.status} />
-        </div>
+    <div className="relative bg-[#1E293B] border border-white/5 rounded-xl overflow-hidden flex flex-col hover:border-white/20 transition-colors">
+      {/* Auction house logo + status badge */}
+      <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
+        <BaTLogo />
+        <StatusBadge status={market.status} />
       </div>
 
-      {/* Card body */}
-      <div className="p-4">
-        {/* Question */}
-        <p className="text-white font-semibold text-sm line-clamp-2 mb-3 leading-snug">
+      {/* Car image */}
+      {market.auction?.image && (
+        <div className="relative w-full h-36 bg-slate-900">
+          <Image
+            src={market.auction.image}
+            alt={market.auction.title ?? 'Auction'}
+            fill
+            className="object-cover opacity-80"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1E293B] via-transparent to-transparent" />
+        </div>
+      )}
+
+      <div className="p-4 flex flex-col gap-3 flex-1">
+        {/* Title */}
+        <p className="text-sm font-medium text-[#F8FAFC] line-clamp-2 leading-snug">
           {market.question}
         </p>
 
-        {/* YES / NO price bar */}
-        <div className="flex rounded-lg overflow-hidden h-10 mb-3">
-          <div className="flex-1 min-w-0 flex items-center justify-center gap-1 bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-l-lg overflow-hidden">
-            <span className="text-[#00D4AA] font-bold text-sm shrink-0">YES</span>
-            <span className="text-[#00D4AA] font-bold text-base font-['JetBrains_Mono',_monospace] truncate">
-              {(market.yesPrice * 100).toFixed(0)}¢
-            </span>
+        {/* Countdown + real-world bid */}
+        <div className="flex items-center justify-between text-xs text-slate-400">
+          <div className="flex items-center gap-1">
+            <span className="opacity-50">⏱</span>
+            <CountdownInline deadline={market.auction?.deadline ?? null} />
           </div>
-          <div className="flex-1 min-w-0 flex items-center justify-center gap-1 bg-[#E94560]/10 border border-[#E94560]/30 rounded-r-lg overflow-hidden">
-            <span className="text-[#E94560] font-bold text-sm shrink-0">NO</span>
-            <span className="text-[#E94560] font-bold text-base font-['JetBrains_Mono',_monospace] truncate">
-              {(market.noPrice * 100).toFixed(0)}¢
+          {market.currentBid != null && (
+            <span className="font-mono">
+              Bid: <span className="text-[#F8FAFC]">${market.currentBid.toLocaleString()}</span>
             </span>
-          </div>
+          )}
         </div>
 
-        {/* Bottom row: volume + trade button */}
-        <div className="flex items-center justify-between">
-          <span className="text-gray-500 text-xs font-['JetBrains_Mono',_monospace]">
-            Vol: ${formatVolume(market.totalVolume)}
-          </span>
-          <button
-            onClick={handleTradeClick}
-            className="bg-[#00D4AA] text-black text-xs font-bold px-3 rounded-lg hover:bg-[#00D4AA]/90 active:scale-95 transition-all duration-150 min-h-[44px] touch-manipulation inline-flex items-center"
-          >
-            Trade →
-          </button>
+        {/* YES / NO pricing */}
+        <div className="grid grid-cols-2 gap-2">
+          <Link href={`/trading/${market._id}?side=YES`}>
+            <div className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-lg p-2.5 text-center hover:bg-[#10B981]/20 transition-colors cursor-pointer">
+              <p className="text-[10px] text-[#10B981] font-semibold uppercase tracking-wider mb-0.5">YES</p>
+              <p className="font-mono text-sm font-bold text-[#F8FAFC]">
+                {yesCents}¢{' '}
+                <span className="text-[#10B981] text-xs">({yesPercent}%)</span>
+              </p>
+            </div>
+          </Link>
+          <Link href={`/trading/${market._id}?side=NO`}>
+            <div className="bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-lg p-2.5 text-center hover:bg-[#EF4444]/20 transition-colors cursor-pointer">
+              <p className="text-[10px] text-[#EF4444] font-semibold uppercase tracking-wider mb-0.5">NO</p>
+              <p className="font-mono text-sm font-bold text-[#F8FAFC]">
+                {noCents}¢{' '}
+                <span className="text-[#EF4444] text-xs">({noPercent}%)</span>
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Volume + target */}
+        <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-white/5">
+          <span>Vol: <span className="font-mono text-slate-300">${(market.totalVolume ?? 0).toLocaleString()}</span></span>
+          <span>Target: <span className="font-mono text-slate-300">${(market.predictedPrice ?? 0).toLocaleString()}</span></span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

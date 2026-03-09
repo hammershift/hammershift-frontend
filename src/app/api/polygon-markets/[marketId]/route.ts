@@ -98,6 +98,7 @@ export async function GET(
       winningOutcome: market.winningOutcome ?? null,
       resolvedAt: market.resolvedAt ?? null,
       createdAt: market.createdAt,
+      currentBid: auctionDoc?.sort?.price ?? null,
       auction,
     });
   } catch (error) {
