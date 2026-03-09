@@ -19,6 +19,8 @@ import { HowItWorks } from "./components/how_it_works";
 import ClientHomepageTracker from "./components/ClientHomepageTracker";
 import LiveAuctionsSection from "./components/LiveAuctionsSection";
 import connectToDB from "@/lib/mongoose";
+import mongoose from "mongoose";
+import DailyHammer from "./components/DailyHammer";
 
 // Format currency
 const USDollar = new Intl.NumberFormat('en-US', {
@@ -94,12 +96,31 @@ async function getHomePageData() {
       active_players
     };
 
+    // Fetch one qualifying high-profile car for Daily Hammer widget
+    const QUALIFYING_MAKES_REGEX = /ferrari|lamborghini|corvette|mercedes|bmw|maserati|alfa romeo|mustang|porsche|camaro/i;
+    const db = mongoose.connection.db!;
+    const dailyHammerAuction = await db.collection('auctions').findOne({
+      isActive: true,
+      'sort.deadline': { $gt: now },
+      title: { $regex: QUALIFYING_MAKES_REGEX },
+    }, { projection: { _id: 1, auction_id: 1, title: 1, image: 1, 'sort.deadline': 1 } });
+
+    const dailyHammer = dailyHammerAuction ? {
+      auctionId: (dailyHammerAuction.auction_id ?? dailyHammerAuction._id.toString()) as string,
+      title: dailyHammerAuction.title as string,
+      image: (dailyHammerAuction.image ?? null) as string | null,
+      deadline: (dailyHammerAuction.sort as any)?.deadline instanceof Date
+        ? ((dailyHammerAuction.sort as any).deadline as Date).toISOString()
+        : null,
+    } : null;
+
     return {
       featuredAuction: featuredAuction ? JSON.parse(JSON.stringify(featuredAuction)) : null,
       featuredCar: featuredCarJson,
       liveAuctions: liveAuctions ? JSON.parse(JSON.stringify(liveAuctions)) : [],
       leaderboard: leaderboard ? JSON.parse(JSON.stringify(leaderboard)) : [],
-      activityStats
+      activityStats,
+      dailyHammer,
     };
   } catch (error) {
     console.error('Error fetching homepage data:', error);
@@ -112,7 +133,8 @@ async function getHomePageData() {
         predictions_today: 0,
         active_auctions_value: 0,
         active_players: 0
-      }
+      },
+      dailyHammer: null,
     };
   }
 }
@@ -128,6 +150,7 @@ export default async function HomePage() {
     active_auctions_value: 0,
     active_players: 0
   };
+  let dailyHammer: { auctionId: string; title: string; image: string | null; deadline: string | null } | null = null;
   let error = null;
 
   try {
@@ -144,6 +167,7 @@ export default async function HomePage() {
     liveAuctions = data.liveAuctions;
     leaderboard = data.leaderboard;
     activityStats = data.activityStats;
+    dailyHammer = data.dailyHammer;
   } catch (err: any) {
     console.error('❌ Error fetching homepage data:', err);
     error = error ? `${error} | Data error: ${err.message}` : `Data error: ${err.message}`;
@@ -340,6 +364,9 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      {/* DAILY HAMMER WIDGET */}
+      <DailyHammer auction={dailyHammer} />
 
       {/* SECTION 4: LEADERBOARD PREVIEW */}
       <section className="bg-[#13202D]/50 py-16">
