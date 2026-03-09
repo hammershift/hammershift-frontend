@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { BarChart2, TrendingUp, Activity, CheckCircle2, Clock } from 'lucide-react';
 import CountdownInline from '@/app/components/CountdownInline';
 import BaTLogo from '@/app/components/icons/BaTLogo';
 import MarketSparkline from '@/app/components/trading/MarketSparkline';
+import TradingDrawer from '@/app/components/trading/TradingDrawer';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -116,7 +116,13 @@ function StatusBadge({ status }: { status: MarketStatus }) {
 
 // ─── Market Card ──────────────────────────────────────────────────────────────
 
-function MarketCard({ market }: { market: Market }) {
+function MarketCard({
+  market,
+  onTrade,
+}: {
+  market: Market;
+  onTrade: (market: Market, side: 'YES' | 'NO') => void;
+}) {
   const yesPercent = Math.round((market.yesPrice ?? 0.5) * 100);
   const noPercent = 100 - yesPercent;
   const yesCents = Math.round((market.yesPrice ?? 0.5) * 100);
@@ -170,24 +176,28 @@ function MarketCard({ market }: { market: Market }) {
 
         {/* YES / NO pricing */}
         <div className="grid grid-cols-2 gap-2">
-          <Link href={`/trading/${market._id}?side=YES`}>
-            <div className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-lg p-2.5 text-center hover:bg-[#10B981]/20 transition-colors cursor-pointer">
-              <p className="text-[10px] text-[#10B981] font-semibold uppercase tracking-wider mb-0.5">YES</p>
-              <p className="font-mono text-sm font-bold text-[#F8FAFC]">
-                {yesCents}¢{' '}
-                <span className="text-[#10B981] text-xs">({yesPercent}%)</span>
-              </p>
-            </div>
-          </Link>
-          <Link href={`/trading/${market._id}?side=NO`}>
-            <div className="bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-lg p-2.5 text-center hover:bg-[#EF4444]/20 transition-colors cursor-pointer">
-              <p className="text-[10px] text-[#EF4444] font-semibold uppercase tracking-wider mb-0.5">NO</p>
-              <p className="font-mono text-sm font-bold text-[#F8FAFC]">
-                {noCents}¢{' '}
-                <span className="text-[#EF4444] text-xs">({noPercent}%)</span>
-              </p>
-            </div>
-          </Link>
+          <button
+            type="button"
+            onClick={() => onTrade(market, 'YES')}
+            className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-lg p-2.5 text-center hover:bg-[#10B981]/20 transition-colors cursor-pointer"
+          >
+            <p className="text-[10px] text-[#10B981] font-semibold uppercase tracking-wider mb-0.5">YES</p>
+            <p className="font-mono text-sm font-bold text-[#F8FAFC]">
+              {yesCents}¢{' '}
+              <span className="text-[#10B981] text-xs">({yesPercent}%)</span>
+            </p>
+          </button>
+          <button
+            type="button"
+            onClick={() => onTrade(market, 'NO')}
+            className="bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-lg p-2.5 text-center hover:bg-[#EF4444]/20 transition-colors cursor-pointer"
+          >
+            <p className="text-[10px] text-[#EF4444] font-semibold uppercase tracking-wider mb-0.5">NO</p>
+            <p className="font-mono text-sm font-bold text-[#F8FAFC]">
+              {noCents}¢{' '}
+              <span className="text-[#EF4444] text-xs">({noPercent}%)</span>
+            </p>
+          </button>
         </div>
 
         {/* Volume + target */}
@@ -277,6 +287,17 @@ export default function MarketsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterTab>('ALL');
+
+  // Trading drawer state
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedMarket, setSelectedMarket] = useState<Market | null>(null);
+  const [initialSide, setInitialSide] = useState<'YES' | 'NO'>('YES');
+
+  const openDrawer = (market: Market, side: 'YES' | 'NO') => {
+    setSelectedMarket(market);
+    setInitialSide(side);
+    setDrawerOpen(true);
+  };
 
   const fetchMarkets = useCallback(async (activeFilter: FilterTab) => {
     setLoading(true);
@@ -377,10 +398,18 @@ export default function MarketsPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {markets.map((market) => (
-              <MarketCard key={market._id} market={market} />
+              <MarketCard key={market._id} market={market} onTrade={openDrawer} />
             ))}
           </div>
         )}
+
+        {/* ── Trading Drawer ── */}
+        <TradingDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          market={selectedMarket}
+          initialSide={initialSide}
+        />
 
         {/* ── Footer result count ── */}
         {!loading && markets.length > 0 && (
