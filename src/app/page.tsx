@@ -184,7 +184,9 @@ export default async function HomePage() {
         className="relative flex min-h-[85vh] items-center justify-center bg-gradient-to-b from-[#0A0A1A] to-[#13202D]"
       >
         <div className="absolute inset-0 bg-[url('/images/banner-min.jpg')] bg-cover bg-center opacity-20"></div>
-        <div className="relative z-10 w-full">
+        {/* Dark gradient overlay */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/60 via-black/40 to-[#0F172A]" />
+        <div className="relative z-20 w-full">
           <div className="section-container mx-auto flex flex-col items-center justify-center gap-8 px-4 py-16">
             {/* Headline */}
             <div className="text-center">

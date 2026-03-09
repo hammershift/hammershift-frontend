@@ -39,9 +39,7 @@ const Navbar = () => {
   const navBarList = [
     { title: "Home", urlString: "" },
     { title: "Free Play", urlString: "Free Play" },
-    { title: "Tournaments (COMING SOON)", urlString: "Tournaments" },
     { title: "Markets", urlString: "markets" },
-    { title: "Guess the Hammer (COMING SOON)", urlString: "Price Is Right" },
   ];
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -139,13 +137,7 @@ const Navbar = () => {
                 <Link
                   key={index}
                   href={createPageUrl(data.urlString)}
-                  className={`transition-colors hover:text-[#F2CA16] ${
-                    data.title.includes("COMING SOON")
-                      ? "pointer-events-none opacity-50"
-                      : ""
-                  }`}
-                  aria-disabled={data.title.includes("COMING SOON")}
-                  tabIndex={data.title.includes("COMING SOON") ? -1 : undefined}
+                  className="transition-colors hover:text-[#F2CA16]"
                 >
                   {data.title.toUpperCase()}
                 </Link>
@@ -322,38 +314,19 @@ const Navbar = () => {
           aria-label="Mobile navigation"
           className="slide-in-top absolute z-40 w-full border-b border-[#1b252e] bg-[#0A0A1A]/95 backdrop-blur-sm lg:hidden"
         >
-          {navBarList.map((data, index) => {
-            const isComingSoon = data.title.includes("COMING SOON");
-            const displayTitle = data.title
-              .replace(" (COMING SOON)", "")
-              .toUpperCase();
-            return (
-              <Link
-                key={index}
-                href={createPageUrl(data.urlString)}
-                onClick={() => {
-                  if (!isComingSoon) {
-                    closeMenu();
-                    document.body.classList.remove("stop-scrolling");
-                  }
-                }}
-                aria-disabled={isComingSoon}
-                tabIndex={isComingSoon ? -1 : undefined}
-                className={`flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-medium tracking-wider transition-colors ${
-                  isComingSoon
-                    ? "pointer-events-none opacity-40"
-                    : "hover:bg-[#1A2C3D] hover:text-[#F2CA16]"
-                }`}
-              >
-                <span>{displayTitle}</span>
-                {isComingSoon && (
-                  <span className="ml-3 rounded border border-white/20 px-1.5 py-0.5 text-[10px] tracking-widest text-white/40">
-                    SOON
-                  </span>
-                )}
-              </Link>
-            );
-          })}
+          {navBarList.map((data, index) => (
+            <Link
+              key={index}
+              href={createPageUrl(data.urlString)}
+              onClick={() => {
+                closeMenu();
+                document.body.classList.remove("stop-scrolling");
+              }}
+              className="flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#1A2C3D] hover:text-[#F2CA16]"
+            >
+              <span>{data.title.toUpperCase()}</span>
+            </Link>
+          ))}
         </nav>
       )}
     </div>
