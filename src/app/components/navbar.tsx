@@ -40,9 +40,8 @@ const Navbar = () => {
   const logoUrl =
     "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
   const navBarList = [
-    { title: "Home", urlString: "" },
-    { title: "Free Play", urlString: "Free Play" },
     { title: "Markets", urlString: "markets" },
+    { title: "Leaderboard", urlString: "leaderboard" },
   ];
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -101,7 +100,7 @@ const Navbar = () => {
   };
 
   const { data: session } = useSession();
-  const { user: privyUser, logout: privyLogout, authenticated: privyAuthenticated } = useVelocityAuth();
+  const { user: privyUser, logout: privyLogout, authenticated: privyAuthenticated, embeddedWalletAddress } = useVelocityAuth();
   // Fall back to NextAuth session if Privy user not available
   const activeUser = privyUser ?? session?.user;
   const isLoggedIn = !!session || privyAuthenticated;
@@ -216,6 +215,11 @@ const Navbar = () => {
           <div className="flex items-center justify-center">
             {/* Buttons for logged in accounts */}
             <div className="flex items-center justify-center gap-4 px-4">
+              {embeddedWalletAddress && privyUser?.balance != null && (
+                <span className="hidden font-mono text-sm text-[#00D4AA] sm:block">
+                  ${privyUser.balance.toFixed(2)} USDC
+                </span>
+              )}
               <button
                 onClick={() => {
                   setDepositOpen(true);
