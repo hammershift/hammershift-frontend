@@ -9,6 +9,8 @@ import {
 } from "@/lib/data";
 import { CircleDollarSignIcon, LogOut, Settings, UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
+import DepositModal from "@/app/components/DepositModal";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,6 +36,7 @@ const Navbar = () => {
   const [dropPredictions, setDropPredictions] = useState(false);
   const [dropMyAccount, setDropMyAccount] = useState(false);
   const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
+  const [depositOpen, setDepositOpen] = useState(false);
   const logoUrl =
     "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
   const navBarList = [
@@ -98,7 +101,10 @@ const Navbar = () => {
   };
 
   const { data: session } = useSession();
-  const isLoggedIn = !!session;
+  const { user: privyUser, logout: privyLogout, authenticated: privyAuthenticated } = useVelocityAuth();
+  // Fall back to NextAuth session if Privy user not available
+  const activeUser = privyUser ?? session?.user;
+  const isLoggedIn = !!session || privyAuthenticated;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -211,6 +217,16 @@ const Navbar = () => {
             {/* Buttons for logged in accounts */}
             <div className="flex items-center justify-center gap-4 px-4">
               <button
+                onClick={() => {
+                  setDepositOpen(true);
+                  setDropPredictions(false);
+                  setDropMyAccount(false);
+                }}
+                className="hidden rounded-md bg-[#10B981] px-3 py-1.5 text-xs font-bold text-black transition-colors hover:bg-[#059669] sm:block"
+              >
+                Deposit
+              </button>
+              <button
                 id="predictions-button"
                 onClick={() => {
                   setDropPredictions((prev) => !prev);
@@ -240,7 +256,7 @@ const Navbar = () => {
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
                 >
-                  {session ? session.user.username?.[0]?.toUpperCase() : "U"}
+                  {activeUser ? activeUser.username?.[0]?.toUpperCase() : "U"}
                 </div>
                 {dropMyAccount && <MyAccountDropdownMenu />}
               </button>
@@ -327,8 +343,21 @@ const Navbar = () => {
               <span>{data.title.toUpperCase()}</span>
             </Link>
           ))}
+          {isLoggedIn && (
+            <button
+              onClick={() => {
+                closeMenu();
+                document.body.classList.remove("stop-scrolling");
+                setDepositOpen(true);
+              }}
+              className="flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-bold tracking-wider text-[#10B981] transition-colors hover:bg-[#1A2C3D]"
+            >
+              Deposit USDC
+            </button>
+          )}
         </nav>
       )}
+      <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} />
     </div>
   );
 };

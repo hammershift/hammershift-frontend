@@ -7,9 +7,13 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/app/components/ui/sheet';
+import { useWallets } from '@privy-io/react-auth';
+import { createBiconomySmartAccount, MARKET_ABI, PaymasterMode } from '@/lib/biconomy';
+import { encodeFunctionData, parseUnits } from 'viem';
 
 interface Market {
   _id: string;
+  contractAddress?: string; // optional — may not exist on all markets yet
   question: string;
   yesPrice: number;
   noPrice: number;
@@ -34,6 +38,8 @@ export default function TradingDrawer({
   const [amount, setAmount] = useState('');
   const [isPlacing, setIsPlacing] = useState(false);
 
+  const { wallets } = useWallets();
+
   // Sync side when initialSide prop changes (new market opened)
   useEffect(() => {
     setSide(initialSide);
@@ -52,10 +58,61 @@ export default function TradingDrawer({
   const isValidAmount = !isNaN(amountNum) && amountNum > 0;
 
   const handleTrade = async () => {
-    if (!isValidAmount) return;
-    // TODO E1.T3: replace with Biconomy AA gasless transaction
+    if (!amount || !market) return;
     setIsPlacing(true);
+
     try {
+      // If no contract address yet, fall back to the existing trading page
+      if (!market.contractAddress) {
+        window.location.href = `/trading/${market._id}?side=${side}`;
+        return;
+      }
+
+      // Get the Privy embedded wallet
+      const embeddedWallet = wallets.find((w) => w.walletClientType === 'privy');
+      if (!embeddedWallet) {
+        // No embedded wallet available — fall back
+        window.location.href = `/trading/${market._id}?side=${side}`;
+        return;
+      }
+
+      await embeddedWallet.switchChain(137); // Polygon mainnet
+      const provider = await embeddedWallet.getEthereumProvider();
+
+      // Create the Biconomy ERC-4337 Smart Account wrapping the Privy wallet
+      const smartAccount = await createBiconomySmartAccount(provider);
+
+      // Encode the on-chain buyShares call
+      const outcomeIndex = side === 'YES' ? 0 : 1;
+      const usdcAmount = parseUnits(amount, 6); // USDC has 6 decimals
+
+      const data = encodeFunctionData({
+        abi: MARKET_ABI,
+        functionName: 'buyShares',
+        args: [outcomeIndex, usdcAmount],
+      });
+
+      // Submit gasless transaction via Biconomy Paymaster (SPONSORED mode)
+      const userOpResponse = await smartAccount.sendTransaction(
+        {
+          to: market.contractAddress as `0x${string}`,
+          data,
+        },
+        {
+          paymasterServiceData: {
+            mode: PaymasterMode.SPONSORED,
+          },
+        }
+      );
+
+      const { transactionHash } = await userOpResponse.waitForTxHash();
+      console.log('Trade executed:', transactionHash);
+
+      // TODO: Call /api/polygon-markets/[marketId]/trade to record the trade in DB
+      onClose();
+    } catch (err: unknown) {
+      console.error('Trade execution failed:', err);
+      // Fall back to the existing trading page on any error
       window.location.href = `/trading/${market._id}?side=${side}`;
     } finally {
       setIsPlacing(false);
