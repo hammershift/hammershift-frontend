@@ -35,8 +35,15 @@ export async function GET(req: NextRequest) {
     const now = new Date();
 
     // Auto-resolve any ACTIVE markets whose closesAt has passed (lazy resolver)
+    // Handle both BSON Date and ISO string stored values
     await db.collection("polygon_markets").updateMany(
-      { status: "ACTIVE", closesAt: { $lt: now } },
+      {
+        status: "ACTIVE",
+        $or: [
+          { closesAt: { $lt: now } },
+          { closesAt: { $lt: now.toISOString() } },
+        ],
+      },
       { $set: { status: "RESOLVED", resolvedAt: now, updatedAt: now } }
     );
 

@@ -283,7 +283,7 @@ function EmptyState({ filter }: { filter: FilterTab }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function MarketsPage() {
-  const [markets, setMarkets] = useState<Market[]>([]);
+  const [allMarkets, setAllMarkets] = useState<Market[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterTab>('ALL');
@@ -299,34 +299,35 @@ export default function MarketsPage() {
     setDrawerOpen(true);
   };
 
-  const fetchMarkets = useCallback(async (activeFilter: FilterTab) => {
+  const fetchMarkets = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const url =
-        activeFilter === 'ALL'
-          ? '/api/polygon-markets'
-          : `/api/polygon-markets?status=${activeFilter}`;
-      const res = await fetch(url);
+      const res = await fetch('/api/polygon-markets');
       if (!res.ok) {
         throw new Error(`Failed to load markets (${res.status})`);
       }
       const data: Market[] = await res.json();
-      setMarkets(Array.isArray(data) ? data : []);
+      setAllMarkets(Array.isArray(data) ? data : []);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred.';
       setError(message);
-      setMarkets([]);
+      setAllMarkets([]);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchMarkets(filter);
-  }, [filter, fetchMarkets]);
+    fetchMarkets();
+  }, [fetchMarkets]);
 
-  const stats = computeStats(markets);
+  const markets =
+    filter === 'ALL'
+      ? allMarkets
+      : allMarkets.filter((m) => m.status === filter);
+
+  const stats = computeStats(allMarkets);
 
   const TABS: FilterTab[] = ['ALL', 'ACTIVE', 'RESOLVED', 'PENDING'];
 
@@ -369,14 +370,21 @@ export default function MarketsPage() {
 
         {/* ── Filter tabs ── */}
         <div className="flex overflow-x-auto gap-2 mb-6 pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
-          {TABS.map((tab) => (
-            <FilterTab
-              key={tab}
-              label={tab.charAt(0) + tab.slice(1).toLowerCase()}
-              active={filter === tab}
-              onClick={() => setFilter(tab)}
-            />
-          ))}
+          {TABS.map((tab) => {
+            const count =
+              tab === 'ALL'
+                ? allMarkets.length
+                : allMarkets.filter((m) => m.status === tab).length;
+            const label = `${tab.charAt(0) + tab.slice(1).toLowerCase()}${!loading && count > 0 ? ` (${count})` : ''}`;
+            return (
+              <FilterTab
+                key={tab}
+                label={label}
+                active={filter === tab}
+                onClick={() => setFilter(tab)}
+              />
+            );
+          })}
         </div>
 
         {/* ── Error banner ── */}
