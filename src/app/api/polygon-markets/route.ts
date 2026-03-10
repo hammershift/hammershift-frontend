@@ -107,30 +107,56 @@ export async function GET(req: NextRequest) {
     }
 
     const enriched = markets.map((market) => {
-      const auctionDoc =
-        auctionMap.get(market.auctionId) ?? null;
+      const auctionDoc = auctionMap.get(market.auctionId) ?? null;
       const auction = buildAuctionProjection(auctionDoc);
+
+      // If the auction deadline has passed but the market is still ACTIVE, resolve it
+      const auctionDeadline = auctionDoc?.sort?.deadline
+        ? new Date(auctionDoc.sort.deadline)
+        : null;
+      const shouldResolve =
+        market.status === "ACTIVE" &&
+        auctionDeadline !== null &&
+        auctionDeadline < now;
+      const status = shouldResolve ? "RESOLVED" : market.status;
 
       return {
         _id: market._id,
         auctionId: market.auctionId,
         question: market.question ?? buildQuestion(market.predictedPrice ?? 0),
-        status: market.status,
+        status,
         yesPrice: market.yesPrice ?? 0.5,
         noPrice: market.noPrice ?? 0.5,
         totalVolume: market.totalVolume ?? 0,
         totalLiquidity: market.totalLiquidity ?? 0,
         predictedPrice: market.predictedPrice,
         winningOutcome: market.winningOutcome ?? null,
-        resolvedAt: market.resolvedAt ?? null,
+        resolvedAt: market.resolvedAt ?? (shouldResolve ? now : null),
         createdAt: market.createdAt,
         currentBid: auctionDoc?.sort?.price ?? null,
         auction,
+        _shouldResolve: shouldResolve,
       };
     });
 
+    // Persist any newly-resolved markets back to the DB (fire-and-forget)
+    const toResolveIds = enriched
+      .filter((m) => m._shouldResolve)
+      .map((m) => m._id);
+    if (toResolveIds.length > 0) {
+      db.collection("polygon_markets")
+        .updateMany(
+          { _id: { $in: toResolveIds } },
+          { $set: { status: "RESOLVED", resolvedAt: now, updatedAt: now } }
+        )
+        .catch(() => {}); // fire-and-forget, don't block response
+    }
+
+    // Strip internal flag before returning
+    const output = enriched.map(({ _shouldResolve: _, ...rest }) => rest);
+
     // Sort: ACTIVE first, then by createdAt descending
-    enriched.sort((a, b) => {
+    output.sort((a, b) => {
       if (a.status === "ACTIVE" && b.status !== "ACTIVE") return -1;
       if (a.status !== "ACTIVE" && b.status === "ACTIVE") return 1;
       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -138,7 +164,7 @@ export async function GET(req: NextRequest) {
       return dateB - dateA;
     });
 
-    return NextResponse.json(enriched);
+    return NextResponse.json(output);
   } catch (error) {
     console.error("GET /api/polygon-markets - Internal server error:", error);
     return NextResponse.json(

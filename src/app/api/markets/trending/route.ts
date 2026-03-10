@@ -15,10 +15,6 @@ export async function GET() {
   const markets = await db.collection('polygon_markets')
     .find({
       status: 'ACTIVE',
-      $or: [
-        { closesAt: { $gt: now } },
-        { closesAt: { $exists: false } },
-      ],
     })
     .sort({ totalVolume: -1 })
     .limit(4)
@@ -48,25 +44,31 @@ export async function GET() {
     auctionMap.set(a._id.toString(), a);
   }
 
-  const enriched = markets.map((m) => {
-    const auction = auctionMap.get(m.auctionId);
-    return {
-      _id: m._id.toString(),
-      auctionId: m.auctionId,
-      question: m.question,
-      status: m.status,
-      yesPrice: m.yesPrice ?? 0.5,
-      noPrice: m.noPrice ?? 0.5,
-      totalVolume: m.totalVolume ?? 0,
-      predictedPrice: m.predictedPrice ?? 0,
-      closesAt: m.closesAt ?? null,
-      auction: {
-        title: auction?.title ?? m.title ?? null,
-        image: auction?.image ?? m.imageUrl ?? null,
-        deadline: auction?.sort?.deadline ?? m.closesAt ?? null,
-      },
-    };
-  });
+  const enriched = markets
+    .map((m) => {
+      const auction = auctionMap.get(m.auctionId);
+      const deadline = auction?.sort?.deadline ?? m.closesAt ?? null;
+      const deadlineDate = deadline ? new Date(deadline) : null;
+      // Skip markets whose auction has already ended
+      if (deadlineDate && deadlineDate < now) return null;
+      return {
+        _id: m._id.toString(),
+        auctionId: m.auctionId,
+        question: m.question,
+        status: m.status,
+        yesPrice: m.yesPrice ?? 0.5,
+        noPrice: m.noPrice ?? 0.5,
+        totalVolume: m.totalVolume ?? 0,
+        predictedPrice: m.predictedPrice ?? 0,
+        closesAt: m.closesAt ?? null,
+        auction: {
+          title: auction?.title ?? m.title ?? null,
+          image: auction?.image ?? m.imageUrl ?? null,
+          deadline,
+        },
+      };
+    })
+    .filter(Boolean);
 
   return NextResponse.json(enriched);
 }
