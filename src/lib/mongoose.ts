@@ -1,31 +1,57 @@
 import mongoose from "mongoose";
 
 const uri = process.env.MONGODB_URI;
-// DB_NAME is optional — if not set, Mongoose uses the database name from the URI path.
-// The MONGODB_URI already contains the correct database (e.g. .../dev?...).
-// Do NOT default to 'hammershift' — that causes a mismatch with the admin panel DB.
 const dbName = process.env.DB_NAME || undefined;
+
+// Cache the connection across serverless invocations using the global object.
+// Without this, every Lambda cold start opens a new connection and they pile up.
+declare global {
+  // eslint-disable-next-line no-var
+  var _mongooseCache: {
+    conn: typeof mongoose | null;
+    promise: Promise<typeof mongoose> | null;
+  };
+}
+
+const cache = global._mongooseCache ?? { conn: null, promise: null };
+global._mongooseCache = cache;
 
 const connectToDB = async () => {
   if (!uri) {
-    console.error('⚠️ MONGODB_URI environment variable is not defined');
-    console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('MONGO') || k.includes('DB')));
+    console.error("⚠️ MONGODB_URI environment variable is not defined");
     throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
   }
 
-  try {
-    if (mongoose.connection.readyState >= 1) {
-      // Already connected or connecting
-      return;
-    }
+  // Return existing connection if healthy
+  if (cache.conn && mongoose.connection.readyState === 1) {
+    return cache.conn;
+  }
 
-    const connectOptions = dbName ? { dbName } : {};
-    await mongoose.connect(uri, connectOptions);
-    console.log(`✅ MongoDB connected to database: ${dbName ?? '(from URI)'}`);
+  // Reuse in-flight connection promise (prevents parallel connect() calls)
+  if (!cache.promise) {
+    const opts: mongoose.ConnectOptions = {
+      ...(dbName ? { dbName } : {}),
+      maxPoolSize: 5,       // Keep pool small — M0 free tier has a 500 connection cap
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 30000,
+    };
+
+    cache.promise = mongoose.connect(uri, opts).then((m) => {
+      console.log(`✅ MongoDB connected (pool ≤5): ${dbName ?? "(from URI)"}`);
+      return m;
+    });
+  }
+
+  try {
+    cache.conn = await cache.promise;
   } catch (err) {
-    console.error('❌ MongoDB connection error:', err);
+    // Reset so the next request retries
+    cache.promise = null;
+    console.error("❌ MongoDB connection error:", err);
     throw err;
   }
+
+  return cache.conn;
 };
 
 export default connectToDB;

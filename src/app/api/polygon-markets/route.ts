@@ -10,6 +10,10 @@ const QUALIFYING_MAKES = [
   "maserati", "alfa romeo", "mustang", "porsche", "camaro",
 ];
 
+// Throttle auto-create to once per minute per Lambda container
+let lastAutoCreate = 0;
+const AUTO_CREATE_INTERVAL_MS = 60_000;
+
 function buildQuestion(predictedPrice: number): string {
   return "Will this sell above $" + predictedPrice.toLocaleString() + "?";
 }
@@ -84,8 +88,11 @@ export async function GET(req: NextRequest) {
 
     const now = new Date();
 
-    // Auto-create markets for any live qualifying auctions not yet tracked
-    await autoCreateMissingMarkets(db, now);
+    // Auto-create markets for any live qualifying auctions not yet tracked (throttled)
+    if (Date.now() - lastAutoCreate > AUTO_CREATE_INTERVAL_MS) {
+      lastAutoCreate = Date.now();
+      autoCreateMissingMarkets(db, now).catch(() => {});
+    }
 
     // Auto-resolve any ACTIVE markets whose closesAt has passed (lazy resolver)
     // Handle both BSON Date and ISO string stored values
