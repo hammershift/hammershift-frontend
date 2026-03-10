@@ -35,7 +35,7 @@ frontend:
         - echo "CRON_SECRET=$CRON_SECRET" >> .env.production
     build:
       commands:
-        - export NODE_OPTIONS="--max-old-space-size=3072"
+        - export NODE_OPTIONS="--max-old-space-size=6144"
         - export SENTRY_UPLOAD_SOURCE_MAPS=0
         - npm run build
     postBuild:
