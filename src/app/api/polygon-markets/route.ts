@@ -94,19 +94,6 @@ export async function GET(req: NextRequest) {
       autoCreateMissingMarkets(db, now).catch(() => {});
     }
 
-    // Auto-resolve any ACTIVE markets whose closesAt has passed (lazy resolver)
-    // Handle both BSON Date and ISO string stored values
-    await db.collection("polygon_markets").updateMany(
-      {
-        status: "ACTIVE",
-        $or: [
-          { closesAt: { $lt: now } },
-          { closesAt: { $lt: now.toISOString() } },
-        ],
-      },
-      { $set: { status: "RESOLVED", resolvedAt: now, updatedAt: now } }
-    );
-
     const marketFilter: Record<string, any> = {};
     if (
       statusParam &&
@@ -170,50 +157,25 @@ export async function GET(req: NextRequest) {
       const auctionDoc = auctionMap.get(market.auctionId) ?? null;
       const auction = buildAuctionProjection(auctionDoc);
 
-      // If the auction deadline has passed but the market is still ACTIVE, resolve it
-      const auctionDeadline = auctionDoc?.sort?.deadline
-        ? new Date(auctionDoc.sort.deadline)
-        : null;
-      const shouldResolve =
-        market.status === "ACTIVE" &&
-        auctionDeadline !== null &&
-        auctionDeadline < now;
-      const status = shouldResolve ? "RESOLVED" : market.status;
-
       return {
         _id: market._id,
         auctionId: market.auctionId,
         question: market.question ?? buildQuestion(market.predictedPrice ?? 0),
-        status,
+        status: market.status,
         yesPrice: market.yesPrice ?? 0.5,
         noPrice: market.noPrice ?? 0.5,
         totalVolume: market.totalVolume ?? 0,
         totalLiquidity: market.totalLiquidity ?? 0,
         predictedPrice: market.predictedPrice,
         winningOutcome: market.winningOutcome ?? null,
-        resolvedAt: market.resolvedAt ?? (shouldResolve ? now : null),
+        resolvedAt: market.resolvedAt ?? null,
         createdAt: market.createdAt,
         currentBid: auctionDoc?.sort?.price ?? null,
         auction,
-        _shouldResolve: shouldResolve,
       };
     });
 
-    // Persist any newly-resolved markets back to the DB (fire-and-forget)
-    const toResolveIds = enriched
-      .filter((m) => m._shouldResolve)
-      .map((m) => m._id);
-    if (toResolveIds.length > 0) {
-      db.collection("polygon_markets")
-        .updateMany(
-          { _id: { $in: toResolveIds } },
-          { $set: { status: "RESOLVED", resolvedAt: now, updatedAt: now } }
-        )
-        .catch(() => {}); // fire-and-forget, don't block response
-    }
-
-    // Strip internal flag before returning
-    const output = enriched.map(({ _shouldResolve: _, ...rest }) => rest);
+    const output = enriched;
 
     // Sort: ACTIVE first, then by createdAt descending
     output.sort((a, b) => {
