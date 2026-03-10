@@ -5,8 +5,58 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
+const QUALIFYING_MAKES = [
+  "ferrari", "lamborghini", "corvette", "mercedes", "bmw",
+  "maserati", "alfa romeo", "mustang", "porsche", "camaro",
+];
+
 function buildQuestion(predictedPrice: number): string {
   return "Will this sell above $" + predictedPrice.toLocaleString() + "?";
+}
+
+async function autoCreateMissingMarkets(
+  db: mongoose.mongo.Db,
+  now: Date
+) {
+  try {
+    // Find live qualifying auctions from scraper (deadline-based, no isActive flag)
+    const liveAuctions = await db!
+      .collection("auctions")
+      .find({
+        "sort.deadline": { $gt: now },
+        $or: QUALIFYING_MAKES.map((make) => ({
+          title: { $regex: make, $options: "i" },
+        })),
+      })
+      .project({ _id: 1, auction_id: 1, title: 1, image: 1, "sort.price": 1, "sort.deadline": 1 })
+      .toArray();
+
+    for (const auction of liveAuctions) {
+      const auctionId = auction.auction_id ?? auction._id.toString();
+      const existing = await db!.collection("polygon_markets").findOne({ auctionId });
+      if (existing) continue;
+      const predictedPrice = auction.sort?.price ?? 0;
+      await db!.collection("polygon_markets").insertOne({
+        auctionId,
+        question: `Will this sell above $${predictedPrice.toLocaleString()}?`,
+        status: "ACTIVE",
+        yesPrice: 0.5,
+        noPrice: 0.5,
+        totalVolume: 0,
+        totalLiquidity: 0,
+        predictedPrice,
+        winningOutcome: null,
+        resolvedAt: null,
+        closesAt: auction.sort?.deadline ?? null,
+        imageUrl: auction.image ?? null,
+        title: auction.title ?? null,
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+  } catch {
+    // Non-critical — don't fail the main request
+  }
 }
 
 function buildAuctionProjection(auctionDoc: Record<string, any> | null): {
@@ -33,6 +83,9 @@ export async function GET(req: NextRequest) {
     const db = mongoose.connection.db!;
 
     const now = new Date();
+
+    // Auto-create markets for any live qualifying auctions not yet tracked
+    await autoCreateMissingMarkets(db, now);
 
     // Auto-resolve any ACTIVE markets whose closesAt has passed (lazy resolver)
     // Handle both BSON Date and ISO string stored values

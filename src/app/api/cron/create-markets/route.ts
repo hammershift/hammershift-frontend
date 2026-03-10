@@ -26,9 +26,8 @@ export async function GET(req: Request) {
 
   const now = new Date();
 
-  // 1. Find qualifying live auctions
+  // 1. Find qualifying live auctions — use deadline only, not isActive flag
   const qualifyingAuctions = await db.collection('auctions').find({
-    isActive: true,
     'sort.deadline': { $gt: now },
     $or: QUALIFYING_MAKES.map((make) => ({
       title: { $regex: make, $options: 'i' },
