@@ -39,8 +39,6 @@ export default function TrendingMarketsClient({ markets }: Props) {
   let login: (() => void) | null = null;
   let authenticated = false;
   try {
-    // Dynamic import to avoid crashing when Privy is unconfigured
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const privy = require('@privy-io/react-auth').usePrivy();
     login = privy.login;
     authenticated = privy.authenticated;
