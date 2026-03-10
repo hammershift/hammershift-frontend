@@ -32,12 +32,27 @@ export async function GET(req: NextRequest) {
     await connectToDB();
     const db = mongoose.connection.db!;
 
+    const now = new Date();
+
+    // Auto-resolve any ACTIVE markets whose closesAt has passed (lazy resolver)
+    await db.collection("polygon_markets").updateMany(
+      { status: "ACTIVE", closesAt: { $lt: now } },
+      { $set: { status: "RESOLVED", resolvedAt: now, updatedAt: now } }
+    );
+
     const marketFilter: Record<string, any> = {};
     if (
       statusParam &&
       ["ACTIVE", "RESOLVED", "PENDING", "DISPUTED"].includes(statusParam)
     ) {
       marketFilter.status = statusParam;
+    }
+    // When fetching ACTIVE markets, only return ones whose auction hasn't closed
+    if (marketFilter.status === "ACTIVE") {
+      marketFilter.$or = [
+        { closesAt: { $gt: now } },
+        { closesAt: { $exists: false } },
+      ];
     }
 
     const markets = await db
