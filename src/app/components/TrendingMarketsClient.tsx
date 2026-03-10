@@ -35,22 +35,8 @@ export default function TrendingMarketsClient({ markets }: Props) {
   const [selectedSide, setSelectedSide] = useState<'YES' | 'NO'>('YES');
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Privy may not be available if env var is unset — handle gracefully
-  let login: (() => void) | null = null;
-  let authenticated = false;
-  try {
-    const privy = require('@privy-io/react-auth').usePrivy();
-    login = privy.login;
-    authenticated = privy.authenticated;
-  } catch {
-    // Privy not configured
-  }
-
   function handleTrade(market: TrendingMarket, outcome: 'YES' | 'NO') {
-    if (!authenticated && login) {
-      login();
-      return;
-    }
+    // Open the drawer regardless of auth — the drawer handles login gating
     // Map to the DrawerMarket shape TradingDrawer expects
     const drawerMarket: DrawerMarket = {
       _id: market._id,
