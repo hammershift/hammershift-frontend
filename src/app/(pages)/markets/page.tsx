@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
-import { BarChart2, TrendingUp, Activity, CheckCircle2, Clock } from 'lucide-react';
+import { BarChart2, TrendingUp, Activity, CheckCircle2, Clock, Search, X, ChevronDown } from 'lucide-react';
 import CountdownInline from '@/app/components/CountdownInline';
 import BaTLogo from '@/app/components/icons/BaTLogo';
 import MarketSparkline from '@/app/components/trading/MarketSparkline';
@@ -12,6 +12,7 @@ import TradingDrawer from '@/app/components/trading/TradingDrawer';
 
 type MarketStatus = 'ACTIVE' | 'RESOLVED' | 'PENDING' | 'DISPUTED';
 type FilterTab = 'ALL' | 'ACTIVE' | 'RESOLVED' | 'PENDING';
+type SortKey = 'deadline' | 'volume' | 'newest' | 'price_yes' | 'price_no';
 
 interface MarketAuction {
   title: string | null;
@@ -261,15 +262,17 @@ function StatPill({
 
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
-function EmptyState({ filter }: { filter: FilterTab }) {
-  const message =
-    filter === 'ALL'
-      ? 'No markets yet'
-      : `No ${filter.toLowerCase()} markets`;
-  const subtitle =
-    filter === 'ALL'
-      ? 'Markets will appear here once they are created.'
-      : 'Try switching to a different filter.';
+function EmptyState({ filter, hasSearch }: { filter: FilterTab; hasSearch?: boolean }) {
+  const message = hasSearch
+    ? 'No results'
+    : filter === 'ALL'
+    ? 'No markets yet'
+    : `No ${filter.toLowerCase()} markets`;
+  const subtitle = hasSearch
+    ? 'Try a different search term or clear the filter.'
+    : filter === 'ALL'
+    ? 'Markets will appear here once they are created.'
+    : 'Try switching to a different filter.';
 
   return (
     <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
@@ -322,10 +325,48 @@ export default function MarketsPage() {
     fetchMarkets();
   }, [fetchMarkets]);
 
-  const markets =
-    filter === 'ALL'
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState<SortKey>('deadline');
+
+  const markets = useMemo(() => {
+    let result = filter === 'ALL'
       ? allMarkets
       : allMarkets.filter((m) => m.status === filter);
+
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(
+        (m) =>
+          m.auction?.title?.toLowerCase().includes(q) ||
+          m.question?.toLowerCase().includes(q)
+      );
+    }
+
+    result = [...result].sort((a, b) => {
+      switch (sort) {
+        case 'volume':
+          return (b.totalVolume ?? 0) - (a.totalVolume ?? 0);
+        case 'newest':
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case 'price_yes':
+          return (b.yesPrice ?? 0.5) - (a.yesPrice ?? 0.5);
+        case 'price_no':
+          return (b.noPrice ?? 0.5) - (a.noPrice ?? 0.5);
+        case 'deadline': {
+          const da = a.auction?.deadline ? new Date(a.auction.deadline).getTime() : Infinity;
+          const db = b.auction?.deadline ? new Date(b.auction.deadline).getTime() : Infinity;
+          // ACTIVE markets with soonest deadline first; resolved sink to bottom
+          if (a.status === 'ACTIVE' && b.status !== 'ACTIVE') return -1;
+          if (a.status !== 'ACTIVE' && b.status === 'ACTIVE') return 1;
+          return da - db;
+        }
+        default:
+          return 0;
+      }
+    });
+
+    return result;
+  }, [allMarkets, filter, search, sort]);
 
   const stats = computeStats(allMarkets);
 
@@ -368,6 +409,45 @@ export default function MarketsPage() {
           )}
         </div>
 
+        {/* ── Search + Sort ── */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-4">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by car or question…"
+              className="w-full bg-[#13202D] border border-[#1E2A36] rounded-lg pl-9 pr-9 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4AA]/50 transition-colors"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Sort */}
+          <div className="relative">
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              className="appearance-none bg-[#13202D] border border-[#1E2A36] rounded-lg px-4 pr-9 py-2.5 text-sm text-white focus:outline-none focus:border-[#00D4AA]/50 transition-colors cursor-pointer"
+            >
+              <option value="deadline">Ending soonest</option>
+              <option value="volume">Highest volume</option>
+              <option value="newest">Newest</option>
+              <option value="price_yes">YES price ↑</option>
+              <option value="price_no">NO price ↑</option>
+            </select>
+          </div>
+        </div>
+
         {/* ── Filter tabs ── */}
         <div className="flex overflow-x-auto gap-2 mb-6 pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
           {TABS.map((tab) => {
@@ -402,7 +482,7 @@ export default function MarketsPage() {
             ))}
           </div>
         ) : markets.length === 0 ? (
-          <EmptyState filter={filter} />
+          <EmptyState filter={filter} hasSearch={!!search} />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {markets.map((market) => (
@@ -423,7 +503,8 @@ export default function MarketsPage() {
         {!loading && markets.length > 0 && (
           <p className="mt-8 text-center text-gray-600 text-xs">
             {markets.length} {markets.length === 1 ? 'market' : 'markets'} shown
-            {filter !== 'ALL' && ` · filtered by ${filter.toLowerCase()}`}
+            {filter !== 'ALL' && ` · ${filter.toLowerCase()}`}
+            {search && ` · "${search}"`}
           </p>
         )}
 

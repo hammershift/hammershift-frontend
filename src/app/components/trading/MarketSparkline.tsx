@@ -18,7 +18,7 @@ export default function MarketSparkline({ marketId, yesPrice }: Props) {
       .catch(() => setData(null));
   }, [marketId]);
 
-  if (!data) {
+  if (!data || !Array.isArray(data)) {
     return <div className="h-10 w-full bg-white/5 rounded animate-pulse" />;
   }
 
