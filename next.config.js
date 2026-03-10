@@ -42,38 +42,21 @@ const nextConfig = {
     }
 }
 
-module.exports = nextConfig;
-
-// Injected content via Sentry wizard below
-
-const { withSentryConfig } = require("@sentry/nextjs");
-
-module.exports = withSentryConfig(
-  module.exports,
-  {
-    // For all available options, see:
-    // https://www.npmjs.com/package/@sentry/webpack-plugin#options
-
-    org: "velocity-markets",
-    project: "javascript-nextjs",
-
-    // Only print logs for uploading source maps in CI
-    silent: !process.env.CI,
-
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    // Disabled on Amplify to prevent OOM during build
-    widenClientFileUpload: false,
-
-    // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-    // This can increase your server load as well as your hosting bill.
-    // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-    // side errors will fail.
-    tunnelRoute: "/monitoring",
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-  }
-);
+// Skip Sentry webpack plugin in CI (Amplify) — it adds ~800MB of build memory overhead.
+// Sentry runtime error tracking still works; only source map uploads are skipped.
+if (process.env.CI) {
+  module.exports = nextConfig;
+} else {
+  const { withSentryConfig } = require("@sentry/nextjs");
+  module.exports = withSentryConfig(
+    nextConfig,
+    {
+      org: "velocity-markets",
+      project: "javascript-nextjs",
+      silent: true,
+      widenClientFileUpload: false,
+      tunnelRoute: "/monitoring",
+      disableLogger: true,
+    }
+  );
+}
