@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+import { computeMarketRiskFields } from "@/lib/marketRiskSetup";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,8 @@ async function autoCreateMissingMarkets(
       const existing = await db!.collection("polygon_markets").findOne({ auctionId });
       if (existing) continue;
       const predictedPrice = auction.sort?.price ?? 0;
+      const closesAt: Date | null = auction.sort?.deadline ?? null;
+      const riskFields = computeMarketRiskFields(closesAt, predictedPrice);
       await db!.collection("polygon_markets").insertOne({
         auctionId,
         question: `Will this sell above $${predictedPrice.toLocaleString()}?`,
@@ -53,11 +56,12 @@ async function autoCreateMissingMarkets(
         predictedPrice,
         winningOutcome: null,
         resolvedAt: null,
-        closesAt: auction.sort?.deadline ?? null,
+        closesAt,
         imageUrl: auction.image ?? null,
         title: auction.title ?? null,
         createdAt: now,
         updatedAt: now,
+        ...riskFields,
       });
     }
   } catch {
