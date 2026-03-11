@@ -5,21 +5,29 @@
  *
  * Flow:
  *  1. Authenticate via NextAuth session
- *  2. Validate market is ACTIVE and has initialized pool reserves
+ *  2. Validate market exists and is ACTIVE (status only — pool read deferred to transaction)
  *  3. Validate user has sufficient balance
- *  4. Run AMM math to quote shares (including slippage guard)
- *  5. Execute all DB writes atomically via MongoDB client session + transaction:
- *     a. Debit user wallet (atomic findOneAndUpdate with balance check)
- *     b. Update pool reserves and market prices
- *     c. Upsert polygon_positions (add to existing position or create new)
- *     d. Insert polygon_trades record
- *     e. Insert transaction record (audit trail)
- *  6. Return trade receipt
+ *  4. Execute all DB writes atomically via MongoDB client session + transaction:
+ *     a. Re-read pool state inside transaction (serializes concurrent access)
+ *     b. Run AMM math with fresh pool state (including slippage guard)
+ *     c. Debit user wallet (atomic findOneAndUpdate with balance check)
+ *     d. Update pool reserves and market prices
+ *     e. Upsert polygon_positions (add to existing position or create new)
+ *     f. Insert polygon_trades record
+ *     g. Insert transaction record (audit trail)
+ *  5. Return trade receipt
  *
  * Atomicity strategy:
  *   MongoDB multi-document transactions require a replica set. If the cluster
  *   does not support sessions (standalone dev), we fall back to compensating
  *   writes with an explicit rollback sequence. The fallback is clearly marked.
+ *
+ * Race condition fix (B-7):
+ *   Pool state is re-read WITH the MongoDB session inside the transaction
+ *   boundary. This means the DB serializes concurrent trades — two concurrent
+ *   requests cannot both read the same pool state and corrupt k = yesPool * noPool.
+ *   The pre-transaction market load is kept only for status validation (404/422)
+ *   so that we can return early before opening a session at all.
  *
  * Error handling:
  *   Any failure after wallet debit but before completion triggers a compensating
@@ -155,10 +163,14 @@ export async function POST(
     return NextResponse.json({ message: riskCheck.reason }, { status: 422 });
   }
 
-  // ── 4. Load market ────────────────────────────────────────────────────────
+  // ── 4. Load market (status validation only) ───────────────────────────────
+  // We only check existence and status here. Pool state is intentionally NOT
+  // read at this point — it will be re-read inside the transaction to prevent
+  // the AMM race condition (B-7). Reading pool here would give a stale snapshot
+  // that could be overwritten by a concurrent trade before we commit.
   const market = await db
     .collection("polygon_markets")
-    .findOne({ _id: marketObjectId });
+    .findOne({ _id: marketObjectId }, { projection: { status: 1 } });
 
   if (!market) {
     return NextResponse.json({ message: "Market not found" }, { status: 404 });
@@ -169,20 +181,6 @@ export async function POST(
       { status: 422 }
     );
   }
-
-  // Ensure pool reserves exist — reject if missing rather than silently defaulting.
-  const yesPool: number | null = market.yesPool ?? null;
-  const noPool: number | null = market.noPool ?? null;
-
-  if (!yesPool || !noPool || yesPool <= 0 || noPool <= 0) {
-    return NextResponse.json(
-      { message: "Market pool is not initialized. Contact support." },
-      { status: 500 }
-    );
-  }
-
-  const poolYes = yesPool as number;
-  const poolNo = noPool as number;
 
   // ── 5. Load user and check balance ────────────────────────────────────────
   const user = await db
@@ -203,21 +201,9 @@ export async function POST(
     );
   }
 
-  // ── 6. AMM quote ──────────────────────────────────────────────────────────
-  let quote: ReturnType<typeof quoteTradeExact>;
-  try {
-    quote = quoteTradeExact(
-      { yesPool: poolYes, noPool: poolNo },
-      outcome,
-      usdcAmount,
-      maxSlippage
-    );
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "AMM calculation failed";
-    return NextResponse.json({ message }, { status: 422 });
-  }
-
-  // ── 7. Atomic writes ──────────────────────────────────────────────────────
+  // ── 6. Atomic writes ──────────────────────────────────────────────────────
+  // NOTE: AMM quote is computed INSIDE the transaction (or compensating writes)
+  // after re-reading pool state. This is the B-7 race condition fix.
   const now = new Date();
   const tradeId = new ObjectId();
 
@@ -226,13 +212,15 @@ export async function POST(
   // (e.g., standalone MongoDB in local dev without a replica set).
   let dbSession: ClientSession | null = null;
   let walletDebited = false;
+  // quote is populated by executeTradeWrites / executeCompensatingWrites
+  let quote: ReturnType<typeof quoteTradeExact> | null = null;
 
   try {
     dbSession = client.startSession();
 
     try {
       await dbSession.withTransaction(async () => {
-        await executeTradeWrites(
+        quote = await executeTradeWrites(
           db,
           dbSession!,
           {
@@ -243,7 +231,7 @@ export async function POST(
             userId,
             outcome,
             usdcAmount,
-            quote,
+            maxSlippage,
             now,
           }
         );
@@ -254,9 +242,19 @@ export async function POST(
       throw txErr;
     }
   } catch (sessionErr: unknown) {
+    const errMsg = sessionErr instanceof Error ? sessionErr.message : String(sessionErr);
+
+    // Slippage exceeded or pool not initialized — user-facing 422, not a 500.
+    if (
+      errMsg.includes("Slippage") ||
+      errMsg.includes("zero or negative shares") ||
+      errMsg.includes("not initialized")
+    ) {
+      return NextResponse.json({ message: errMsg }, { status: 422 });
+    }
+
     // If the error is "Transaction numbers are only allowed on a replica set member"
     // we fall back to sequential compensating writes.
-    const errMsg = sessionErr instanceof Error ? sessionErr.message : String(sessionErr);
     const isNoReplicaSet =
       errMsg.includes("replica set") ||
       errMsg.includes("Transaction") ||
@@ -273,7 +271,7 @@ export async function POST(
 
     // ── Fallback: compensating writes (no replica set) ──────────────────────
     try {
-      await executeCompensatingWrites(
+      quote = await executeCompensatingWrites(
         db,
         {
           tradeId,
@@ -283,11 +281,22 @@ export async function POST(
           userId,
           outcome,
           usdcAmount,
-          quote,
+          maxSlippage,
           now,
         }
       );
-    } catch (fallbackErr) {
+    } catch (fallbackErr: unknown) {
+      const fallbackMsg = fallbackErr instanceof Error ? fallbackErr.message : String(fallbackErr);
+
+      // Slippage / pool errors from compensating path are also 422s
+      if (
+        fallbackMsg.includes("Slippage") ||
+        fallbackMsg.includes("zero or negative shares") ||
+        fallbackMsg.includes("not initialized")
+      ) {
+        return NextResponse.json({ message: fallbackMsg }, { status: 422 });
+      }
+
       console.error(
         "POST /api/polygon-markets/[marketId]/trade - compensating write error:",
         fallbackErr
@@ -305,7 +314,12 @@ export async function POST(
     }
   }
 
-  // ── 8. Post-trade risk bookkeeping (fire-and-forget) ─────────────────────
+  // Guard: quote must be set by this point (transaction or compensating path).
+  if (!quote) {
+    return NextResponse.json({ message: "Trade failed — quote unavailable" }, { status: 500 });
+  }
+
+  // ── 7. Post-trade risk bookkeeping (fire-and-forget) ─────────────────────
   // Record in rate limit collection and update market_positions running total.
   // Write any flags emitted during validation.
   // Run opposing-sides collusion check.
@@ -331,7 +345,7 @@ export async function POST(
     console.error("detectOpposingSidesCollusion failed (non-fatal):", err)
   );
 
-  // ── 9. Return receipt ─────────────────────────────────────────────────────
+  // ── 8. Return receipt ─────────────────────────────────────────────────────
   return NextResponse.json(
     {
       tradeId: tradeId.toHexString(),
@@ -360,20 +374,47 @@ interface WriteParams {
   userId: string;
   outcome: "YES" | "NO";
   usdcAmount: number;
-  quote: ReturnType<typeof quoteTradeExact>;
+  maxSlippage: number;
   now: Date;
 }
 
 /**
  * Execute all trade writes inside a MongoDB transaction session.
  * The session is passed through to each collection write.
+ *
+ * Pool state is re-read WITH the session at the top of this function so that
+ * the DB serializes concurrent reads — fixing the B-7 AMM race condition.
+ * Returns the computed quote so the route handler can build the response.
  */
 async function executeTradeWrites(
   db: ReturnType<typeof import("mongodb").MongoClient.prototype.db>,
   session: ClientSession,
   p: WriteParams
-): Promise<void> {
-  const { tradeId, userObjectId, marketObjectId, marketId, userId, outcome, usdcAmount, quote, now } = p;
+): Promise<ReturnType<typeof quoteTradeExact>> {
+  const { tradeId, userObjectId, marketObjectId, marketId, userId, outcome, usdcAmount, maxSlippage, now } = p;
+
+  // ── Re-read pool state inside the transaction (B-7 fix) ──────────────────
+  // Using the session here means MongoDB holds a read lock on this document
+  // within the transaction, preventing concurrent trades from corrupting k.
+  const freshMarket = await db.collection("polygon_markets").findOne(
+    { _id: marketObjectId, status: "ACTIVE" },
+    { projection: { yesPool: 1, noPool: 1 }, session: session ?? undefined }
+  );
+  if (!freshMarket) {
+    throw new Error("Market not found or no longer ACTIVE");
+  }
+  const poolYes = freshMarket.yesPool as number;
+  const poolNo = freshMarket.noPool as number;
+  if (!poolYes || !poolNo || poolYes <= 0 || poolNo <= 0) {
+    throw new Error("Market pool is not initialized");
+  }
+
+  const quote = quoteTradeExact(
+    { yesPool: poolYes, noPool: poolNo },
+    outcome,
+    usdcAmount,
+    maxSlippage
+  );
 
   // ── a. Debit wallet (atomic balance check + deduct) ──────────────────────
   const debitResult = await db.collection("users").findOneAndUpdate(
@@ -444,7 +485,7 @@ async function executeTradeWrites(
             ],
           },
           updatedAt: now,
-          // createdAt: only set on insert (handled by $setOnInsert below)
+          // createdAt: only set on insert (handled by separate update below)
         },
       },
     ],
@@ -502,18 +543,46 @@ async function executeTradeWrites(
     },
     { session }
   );
+
+  return quote;
 }
 
 /**
  * Compensating writes fallback for environments without replica set support.
  * These are sequential and NOT atomic. If any step fails after wallet debit,
  * compensatingCreditWallet() is called by the caller.
+ *
+ * Pool state is re-read at the top of this function (same B-7 pattern as the
+ * transactional path) so that callers cannot pass in a stale pre-computed quote.
+ * Returns the computed quote so the route handler can build the response.
  */
 async function executeCompensatingWrites(
   db: ReturnType<typeof import("mongodb").MongoClient.prototype.db>,
   p: WriteParams
-): Promise<void> {
-  const { tradeId, userObjectId, marketObjectId, outcome, usdcAmount, quote, now } = p;
+): Promise<ReturnType<typeof quoteTradeExact>> {
+  const { tradeId, userObjectId, marketObjectId, outcome, usdcAmount, maxSlippage, now } = p;
+
+  // Re-read pool state (best-effort without a session — no true isolation here,
+  // but still better than using a value read before this function was called).
+  const freshMarket = await db.collection("polygon_markets").findOne(
+    { _id: marketObjectId, status: "ACTIVE" },
+    { projection: { yesPool: 1, noPool: 1 } }
+  );
+  if (!freshMarket) {
+    throw new Error("Market not found or no longer ACTIVE");
+  }
+  const poolYes = freshMarket.yesPool as number;
+  const poolNo = freshMarket.noPool as number;
+  if (!poolYes || !poolNo || poolYes <= 0 || poolNo <= 0) {
+    throw new Error("Market pool is not initialized");
+  }
+
+  const quote = quoteTradeExact(
+    { yesPool: poolYes, noPool: poolNo },
+    outcome,
+    usdcAmount,
+    maxSlippage
+  );
 
   // a. Debit wallet
   const debitResult = await db.collection("users").findOneAndUpdate(
@@ -604,6 +673,8 @@ async function executeCompensatingWrites(
     marketId: marketObjectId,
     transactionDate: now,
   });
+
+  return quote;
 }
 
 /**
