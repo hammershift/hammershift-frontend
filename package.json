@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:indexes": "ts-node --project tsconfig.json scripts/create-market-indexes.ts"
+    "db:indexes": "ts-node --project tsconfig.json scripts/create-market-indexes.ts",
+    "db:backfill-markets": "ts-node --project tsconfig.json scripts/backfill-legacy-markets.ts"
   },
   "dependencies": {
     "@biconomy/account": "^4.5.7",
