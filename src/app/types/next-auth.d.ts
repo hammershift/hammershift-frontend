@@ -56,11 +56,13 @@ declare module 'next-auth' {
 
   interface Session {
     user: {
+      _id?: string;
       id: string;
       name?: string;
       fullName?: string;
       email?: string;
       image?: string;
+      role?: string;
       isActive?: boolean;
       balance?: number;
       isBanned?: boolean;
@@ -73,15 +75,18 @@ declare module 'next-auth' {
 
 declare module 'next-auth/jwt' {
   interface JWT {
+    _id?: string;
     id?: string;
     name?: string;
     fullName?: string;
     email?: string;
     image?: string;
+    role?: string;
     isActive?: boolean;
     balance?: number;
     isBanned?: boolean;
     username?: string;
+    about?: string;
     createdAt?: Date;
   }
 }

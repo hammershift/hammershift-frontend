@@ -1,3 +1,4 @@
+import { sendOtpEmail } from '@/lib/mail';
 import clientPromise from '@/lib/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
 import { randomInt } from 'crypto';
@@ -32,7 +33,12 @@ export async function POST(req: NextRequest) {
     // update the OTP in the db
     await db.collection('password_reset_tokens').updateOne({ userId: user._id }, { $set: { otp: newOtp, expires: newExpirationDate, email: user.email } }, { upsert: true });
 
-    // TODO: Send the new OTP via email
+    // send the new OTP via email
+    const emailResult = await sendOtpEmail({ to: user.email, otp: newOtp });
+    if (!emailResult.success) {
+      console.error('Failed to resend OTP email:', emailResult.error);
+      return NextResponse.json({ message: 'Failed to send OTP email' }, { status: 500 });
+    }
 
     return NextResponse.json({ message: 'A new OTP has been sent to your email' }, { status: 200 });
   } catch (error) {

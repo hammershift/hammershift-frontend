@@ -176,6 +176,8 @@ export const authOptions: NextAuthOptions = {
         session.user.provider = token.provider;
         session.user.isNewUser = token.isNewUser;
         session.user.emailExists = token.emailExists;
+        session.user.balance = token.balance as number ?? 500;
+        session.user.isActive = token.isActive as boolean ?? true;
         // session.user.stripeCustomerId = token.stripeCustomerId;
       }
       return session;
@@ -227,13 +229,15 @@ export const authOptions: NextAuthOptions = {
           token.createdAt = dbUser.createdAt;
         }
 
-        if (dbUser.isActive === undefined) {
+        if (!dbUser.isActive) {
           dbUser.isActive = true;
           dbUser.balance = 500;
           await Users.updateOne(
             { email: token.email },
             { $set: { isActive: true, balance: 500 } }
           );
+          token.isActive = true;
+          token.balance = 500;
         }
       }
 
