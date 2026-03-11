@@ -1,7 +1,16 @@
 // src/app/api/cron/create-markets/route.ts
+//
+// Creates prediction markets for qualifying live BaT auctions.
+//
+// Changed from original:
+//   - Injects risk fields at creation via computeMarketRiskFields()
+//   - tradingClosesAt written at creation (4 hours before closesAt)
+//   - riskTier, positionCapUSDC, oracleStatus written at creation
+
 import { NextResponse } from 'next/server';
 import connectToDB from '@/lib/mongoose';
 import mongoose from 'mongoose';
+import { computeMarketRiskFields } from '@/lib/marketRiskSetup';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +19,6 @@ const QUALIFYING_MAKES = [
   'maserati', 'alfa romeo', 'mustang', 'porsche', 'camaro',
 ];
 
-// Simple secret to prevent public triggering. Set CRON_SECRET in Amplify env vars.
 function isAuthorized(req: Request): boolean {
   const secret = req.headers.get('x-cron-secret');
   return secret === process.env.CRON_SECRET;
@@ -26,7 +34,6 @@ export async function GET(req: Request) {
 
   const now = new Date();
 
-  // 1. Find qualifying live auctions — use deadline only, not isActive flag
   const qualifyingAuctions = await db.collection('auctions').find({
     'sort.deadline': { $gt: now },
     $or: QUALIFYING_MAKES.map((make) => ({
@@ -47,7 +54,6 @@ export async function GET(req: Request) {
   for (const auction of qualifyingAuctions) {
     const auctionId = auction.auction_id ?? auction._id.toString();
 
-    // 2. Check if market already exists (idempotent)
     const existing = await db.collection('polygon_markets').findOne({ auctionId });
     if (existing) {
       skipped++;
@@ -55,24 +61,33 @@ export async function GET(req: Request) {
     }
 
     const predictedPrice = auction.sort?.price ?? 0;
+    const closesAt: Date | null = auction.sort?.deadline
+      ? new Date(auction.sort.deadline)
+      : null;
 
-    // 3. Create the market
+    // Compute all risk fields at creation time — never recomputed later
+    const riskFields = computeMarketRiskFields(closesAt, predictedPrice);
+
     await db.collection('polygon_markets').insertOne({
       auctionId,
       question: `Will this sell above $${predictedPrice.toLocaleString()}?`,
       status: 'ACTIVE',
       yesPrice: 0.5,
       noPrice: 0.5,
+      yesPool: 50,
+      noPool: 50,
       totalVolume: 0,
       totalLiquidity: 0,
       predictedPrice,
       winningOutcome: null,
       resolvedAt: null,
-      closesAt: auction.sort?.deadline ?? null,
+      closesAt,
       imageUrl: auction.image ?? null,
       title: auction.title ?? null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      // Risk fields
+      ...riskFields,
+      createdAt: now,
+      updatedAt: now,
     });
 
     created++;

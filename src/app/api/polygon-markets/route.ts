@@ -46,6 +46,8 @@ async function autoCreateMissingMarkets(
         status: "ACTIVE",
         yesPrice: 0.5,
         noPrice: 0.5,
+        yesPool: 50,
+        noPool: 50,
         totalVolume: 0,
         totalLiquidity: 0,
         predictedPrice,
