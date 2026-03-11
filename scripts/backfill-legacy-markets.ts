@@ -22,7 +22,7 @@
  * patched documents are never touched again.
  */
 
-import { MongoClient, Document } from "mongodb";
+import { MongoClient } from "mongodb";
 import * as dotenv from "dotenv";
 
 dotenv.config({ path: ".env.local" });
@@ -155,7 +155,8 @@ async function backfill(): Promise<void> {
     ],
   };
 
-  const riskCursor = col.find<Document>(riskQuery, {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const riskCursor = col.find<any>(riskQuery, {
     projection: { _id: 1, closesAt: 1, predictedPrice: 1 },
   });
 
