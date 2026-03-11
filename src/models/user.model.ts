@@ -27,6 +27,7 @@ export interface User {
     result_notifications?: boolean;
     marketing?: boolean;
   };
+  stripeCustomerId?: string | null;
 }
 
 const userSchema = new Schema(
@@ -64,6 +65,7 @@ const userSchema = new Schema(
       result_notifications: { type: Boolean, default: true },
       marketing: { type: Boolean, default: false }
     },
+    stripeCustomerId: { type: String, default: null },
     createdAt: Date,
     updatedAt: Date,
   },

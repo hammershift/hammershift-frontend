@@ -41,9 +41,20 @@ export async function POST(req: NextRequest) {
         const invoiceId = invoice.id;
         const invoiceURL = invoice.hosted_invoice_url;
 
-        stripeCustomerId = invoice.customer;
+        stripeCustomerId = invoice.customer as string;
         amountPaid = invoice.amount_paid / 100;
         userId = invoice.metadata?.userId;
+
+        const matchedUser = await db
+          .collection("users")
+          .findOne({ stripeCustomerId: stripeCustomerId });
+
+        if (!matchedUser) {
+          console.warn(
+            `invoice.payment_succeeded: no user found for stripeCustomerId ${stripeCustomerId}. Skipping balance update and transaction record.`
+          );
+          break;
+        }
 
         const updateUserBalance = await db
           .collection("users")
@@ -57,7 +68,7 @@ export async function POST(req: NextRequest) {
         );
 
         const successfulDepositTransaction = new Transaction({
-          userID: new mongoose.Types.ObjectId(userId),
+          userID: matchedUser._id,
           transactionType: "deposit",
           amount: amountPaid,
           type: "+",
@@ -71,7 +82,7 @@ export async function POST(req: NextRequest) {
           .collection("transactions")
           .insertOne(successfulDepositTransaction);
         console.log(
-          `Created successful deposit transaction for user id: ${userId} with stripe ID: ${stripeCustomerId} and invoice ID: ${invoiceId}:`,
+          `Created successful deposit transaction for user id: ${String(matchedUser._id)} with stripe ID: ${stripeCustomerId} and invoice ID: ${invoiceId}:`,
           createSuccessfulDepositTransaction
         );
         break;
