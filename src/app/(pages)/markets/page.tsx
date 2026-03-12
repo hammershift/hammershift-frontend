@@ -289,7 +289,7 @@ export default function MarketsPage() {
   const [allMarkets, setAllMarkets] = useState<Market[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterTab>('ALL');
+  const [filter, setFilter] = useState<FilterTab>('ACTIVE');
 
   // Trading drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -329,9 +329,20 @@ export default function MarketsPage() {
   const [sort, setSort] = useState<SortKey>('deadline');
 
   const markets = useMemo(() => {
-    let result = filter === 'ALL'
-      ? allMarkets
-      : allMarkets.filter((m) => m.status === filter);
+    const nowMs = Date.now();
+    // A market is "live" if its auction deadline is in the future (or unknown)
+    const isLive = (m: Market) =>
+      !m.auction?.deadline || new Date(m.auction.deadline).getTime() > nowMs;
+
+    let result: Market[];
+    if (filter === 'ALL') {
+      // Exclude stale ACTIVE markets whose auction closed but cron hasn't processed yet
+      result = allMarkets.filter((m) => m.status !== 'ACTIVE' || isLive(m));
+    } else if (filter === 'ACTIVE') {
+      result = allMarkets.filter((m) => m.status === 'ACTIVE' && isLive(m));
+    } else {
+      result = allMarkets.filter((m) => m.status === filter);
+    }
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -451,9 +462,14 @@ export default function MarketsPage() {
         {/* ── Filter tabs ── */}
         <div className="flex overflow-x-auto gap-2 mb-6 pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
           {TABS.map((tab) => {
+            const nowMs = Date.now();
+            const isLive = (m: Market) =>
+              !m.auction?.deadline || new Date(m.auction.deadline).getTime() > nowMs;
             const count =
               tab === 'ALL'
-                ? allMarkets.length
+                ? allMarkets.filter((m) => m.status !== 'ACTIVE' || isLive(m)).length
+                : tab === 'ACTIVE'
+                ? allMarkets.filter((m) => m.status === 'ACTIVE' && isLive(m)).length
                 : allMarkets.filter((m) => m.status === tab).length;
             const label = `${tab.charAt(0) + tab.slice(1).toLowerCase()}${!loading && count > 0 ? ` (${count})` : ''}`;
             return (
