@@ -10,6 +10,7 @@ import {
 import { useSession } from 'next-auth/react';
 import { useWallets } from '@privy-io/react-auth';
 import { useVelocityAuth } from '@/hooks/useVelocityAuth';
+import { usePolygonUSDCBalance } from '@/hooks/usePolygonUSDCBalance';
 import { createBiconomySmartAccount, MARKET_ABI, PaymasterMode } from '@/lib/biconomy';
 import { encodeFunctionData, parseUnits } from 'viem';
 
@@ -72,7 +73,8 @@ export default function TradingDrawer({
 
   const { data: session } = useSession();
   const { wallets } = useWallets();
-  const { authenticated: privyAuthenticated } = useVelocityAuth();
+  const { authenticated: privyAuthenticated, embeddedWalletAddress } = useVelocityAuth();
+  const { balance: usdcBalance, refetch: refetchBalance } = usePolygonUSDCBalance(embeddedWalletAddress);
 
   // User is authenticated if they have a NextAuth session OR are logged in via Privy
   const isAuthenticated = !!session?.user || privyAuthenticated;
@@ -137,6 +139,10 @@ export default function TradingDrawer({
   const color = side === 'YES' ? '#10B981' : '#EF4444';
   const amountNum = parseFloat(amount);
   const isValidAmount = !isNaN(amountNum) && amountNum >= 1 && amountNum <= 10000;
+
+  // On-chain balance guard: only relevant when market has a contractAddress
+  const isOnChainMarket = !!market.contractAddress;
+  const hasInsufficientBalance = isOnChainMarket && isValidAmount && amountNum > usdcBalance;
 
   // POST to the REST trade API (used for markets without contractAddress, and to
   // record trades in DB after on-chain execution)
@@ -214,6 +220,8 @@ export default function TradingDrawer({
           // Record the trade in DB after on-chain execution
           const receipt = await postRestTrade();
           setTradeReceipt(receipt);
+          // Refresh on-chain balance display after successful trade
+          await refetchBalance();
           return;
         }
       }
@@ -351,6 +359,13 @@ export default function TradingDrawer({
                 className="w-full bg-[#0F172A] border border-white/10 rounded-lg py-3 pl-7 pr-4 text-[#F8FAFC] font-mono text-sm focus:outline-none focus:border-white/30"
               />
             </div>
+            {isOnChainMarket && (
+              <p className={`text-sm font-mono mt-1.5 ${hasInsufficientBalance ? 'text-[#E94560]' : 'text-gray-400'}`}>
+                {hasInsufficientBalance
+                  ? 'Insufficient USDC balance'
+                  : `Available: $${usdcBalance.toFixed(2)} USDC`}
+              </p>
+            )}
           </div>
 
           {/* Live AMM quote preview */}
@@ -419,7 +434,7 @@ export default function TradingDrawer({
           {/* CTA */}
           <button
             onClick={handleTrade}
-            disabled={!isValidAmount || isPlacing}
+            disabled={!isValidAmount || isPlacing || hasInsufficientBalance}
             className="w-full py-4 rounded-lg font-bold text-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               backgroundColor: color,

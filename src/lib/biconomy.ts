@@ -134,6 +134,14 @@ export const MARKET_ABI = [
   },
 ] as const;
 
+/**
+ * USDC contract address for the active chain.
+ * Reads from NEXT_PUBLIC_VELOCITY_MARKETS_USDC so other modules can import
+ * this constant without repeating the env var access.
+ */
+export const USDC_CONTRACT_ADDRESS = process.env
+  .NEXT_PUBLIC_VELOCITY_MARKETS_USDC as `0x${string}` | undefined;
+
 /** Minimal ERC20 ABI for USDC approval before buyShares */
 export const ERC20_APPROVE_ABI = [
   {

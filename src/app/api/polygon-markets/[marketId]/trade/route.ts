@@ -168,9 +168,11 @@ export async function POST(
   // read at this point — it will be re-read inside the transaction to prevent
   // the AMM race condition (B-7). Reading pool here would give a stale snapshot
   // that could be overwritten by a concurrent trade before we commit.
+  // contractAddress is fetched here to distinguish on-chain vs off-chain trades
+  // so we can skip the DB balance debit for Path A (on-chain).
   const market = await db
     .collection("polygon_markets")
-    .findOne({ _id: marketObjectId }, { projection: { status: 1 } });
+    .findOne({ _id: marketObjectId }, { projection: { status: 1, contractAddress: 1 } });
 
   if (!market) {
     return NextResponse.json({ message: "Market not found" }, { status: 404 });
@@ -182,23 +184,34 @@ export async function POST(
     );
   }
 
-  // ── 5. Load user and check balance ────────────────────────────────────────
-  const user = await db
-    .collection("users")
-    .findOne({ _id: userObjectId }, { projection: { balance: 1 } });
+  // Determine if this trade is backed by an on-chain contract.
+  // On-chain trades (Path A): USDC is spent directly by the smart contract —
+  // no DB balance debit should occur. The on-chain balance is the source of truth.
+  // Off-chain trades (Path B): no contractAddress — DB balance is the ledger.
+  const isOnChain = typeof market.contractAddress === "string" && market.contractAddress.length > 0;
 
-  if (!user) {
-    return NextResponse.json({ message: "User not found" }, { status: 404 });
-  }
-  if (typeof user.balance !== "number" || user.balance < usdcAmount) {
-    return NextResponse.json(
-      {
-        message: "Insufficient balance",
-        required: usdcAmount,
-        available: user.balance ?? 0,
-      },
-      { status: 422 }
-    );
+  // ── 5. Load user and check balance ────────────────────────────────────────
+  // For on-chain trades the DB balance check is skipped entirely — the smart
+  // contract will revert if the user's on-chain USDC is insufficient.
+  // For off-chain trades (Path B) we still gate on the DB balance.
+  if (!isOnChain) {
+    const user = await db
+      .collection("users")
+      .findOne({ _id: userObjectId }, { projection: { balance: 1 } });
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    if (typeof user.balance !== "number" || user.balance < usdcAmount) {
+      return NextResponse.json(
+        {
+          message: "Insufficient balance",
+          required: usdcAmount,
+          available: user.balance ?? 0,
+        },
+        { status: 422 }
+      );
+    }
   }
 
   // ── 6. Atomic writes ──────────────────────────────────────────────────────
@@ -233,6 +246,7 @@ export async function POST(
             usdcAmount,
             maxSlippage,
             now,
+            isOnChain,
           }
         );
       });
@@ -283,6 +297,7 @@ export async function POST(
           usdcAmount,
           maxSlippage,
           now,
+          isOnChain,
         }
       );
     } catch (fallbackErr: unknown) {
@@ -376,6 +391,9 @@ interface WriteParams {
   usdcAmount: number;
   maxSlippage: number;
   now: Date;
+  /** True when the market has a contractAddress — USDC is spent on-chain,
+   *  so the DB user balance must NOT be debited. */
+  isOnChain: boolean;
 }
 
 /**
@@ -391,7 +409,7 @@ async function executeTradeWrites(
   session: ClientSession,
   p: WriteParams
 ): Promise<ReturnType<typeof quoteTradeExact>> {
-  const { tradeId, userObjectId, marketObjectId, marketId, userId, outcome, usdcAmount, maxSlippage, now } = p;
+  const { tradeId, userObjectId, marketObjectId, marketId, userId, outcome, usdcAmount, maxSlippage, now, isOnChain } = p;
 
   // ── Re-read pool state inside the transaction (B-7 fix) ──────────────────
   // Using the session here means MongoDB holds a read lock on this document
@@ -417,20 +435,25 @@ async function executeTradeWrites(
   );
 
   // ── a. Debit wallet (atomic balance check + deduct) ──────────────────────
-  const debitResult = await db.collection("users").findOneAndUpdate(
-    {
-      _id: userObjectId,
-      balance: { $gte: usdcAmount }, // guard: only deduct if still sufficient
-    },
-    {
-      $inc: { balance: -usdcAmount },
-      $set: { updatedAt: now },
-    },
-    { session, returnDocument: "after" }
-  );
+  // On-chain trades: USDC is spent directly by the smart contract on Polygon.
+  // The DB balance is NOT the source of truth for these markets — skip the debit.
+  // Off-chain trades (Path B): DB balance is the ledger — debit atomically.
+  if (!isOnChain) {
+    const debitResult = await db.collection("users").findOneAndUpdate(
+      {
+        _id: userObjectId,
+        balance: { $gte: usdcAmount }, // guard: only deduct if still sufficient
+      },
+      {
+        $inc: { balance: -usdcAmount },
+        $set: { updatedAt: now },
+      },
+      { session, returnDocument: "after" }
+    );
 
-  if (!debitResult) {
-    throw new Error("Insufficient balance — concurrent debit detected");
+    if (!debitResult) {
+      throw new Error("Insufficient balance — concurrent debit detected");
+    }
   }
 
   // ── b. Update market pool and prices ─────────────────────────────────────
@@ -581,7 +604,7 @@ async function executeCompensatingWrites(
   db: ReturnType<typeof import("mongodb").MongoClient.prototype.db>,
   p: WriteParams
 ): Promise<ReturnType<typeof quoteTradeExact>> {
-  const { tradeId, userObjectId, marketObjectId, outcome, usdcAmount, maxSlippage, now } = p;
+  const { tradeId, userObjectId, marketObjectId, outcome, usdcAmount, maxSlippage, now, isOnChain } = p;
 
   // Re-read pool state (best-effort without a session — no true isolation here,
   // but still better than using a value read before this function was called).
@@ -606,13 +629,17 @@ async function executeCompensatingWrites(
   );
 
   // a. Debit wallet
-  const debitResult = await db.collection("users").findOneAndUpdate(
-    { _id: userObjectId, balance: { $gte: usdcAmount } },
-    { $inc: { balance: -usdcAmount }, $set: { updatedAt: now } },
-    { returnDocument: "after" }
-  );
-  if (!debitResult) {
-    throw new Error("Insufficient balance — concurrent debit detected");
+  // On-chain trades: USDC is spent on-chain — skip DB balance debit.
+  // Off-chain trades (Path B): DB balance is the ledger — debit here.
+  if (!isOnChain) {
+    const debitResult = await db.collection("users").findOneAndUpdate(
+      { _id: userObjectId, balance: { $gte: usdcAmount } },
+      { $inc: { balance: -usdcAmount }, $set: { updatedAt: now } },
+      { returnDocument: "after" }
+    );
+    if (!debitResult) {
+      throw new Error("Insufficient balance — concurrent debit detected");
+    }
   }
 
   // b. Update market pool

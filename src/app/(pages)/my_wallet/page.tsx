@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
+import { usePolygonUSDCBalance } from "@/hooks/usePolygonUSDCBalance";
 import PaymentForm from "@/app/components/payment_form";
-import { ACHDepositForm } from "@/app/components/ACHDepositForm";
 import Image from "next/image";
-import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import DepositIcon from "../../../../public/images/arrow-up.svg";
 import WithdrawalIcon from "../../../../public/images/arrow-down-2.svg";
@@ -57,14 +58,21 @@ const MyWalletPage = () => {
     useState(false);
   const [showFailedLoadNotification, setShowFailedLoadNotification] =
     useState(false);
-  const [showACHForm, setShowACHForm] = useState(false);
 
   const isDisabled = process.env.NEXT_PUBLIC_DISABLE_DEPOSIT;
 
   const { data: session } = useSession();
   const userId = session?.user.id;
   const userEmail = session?.user.email;
-  //const userStripeId = session?.user.stripeCustomerId;
+
+  // On-chain USDC balance via Privy embedded wallet
+  const { embeddedWalletAddress } = useVelocityAuth();
+  const {
+    balance: onChainBalance,
+    loading: balLoading,
+    error: balError,
+    refetch: refetchBalance,
+  } = usePolygonUSDCBalance(embeddedWalletAddress);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -144,6 +152,8 @@ const MyWalletPage = () => {
   const handleClosePaymentModal = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsPaymentModalOpen(false);
+    // Refresh on-chain balance after deposit flow closes
+    refetchBalance();
   };
 
   const handleCloseWithdrawModal = (e: { preventDefault: () => void }) => {
@@ -199,14 +209,14 @@ const MyWalletPage = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsSmallScreen(window.innerWidth <= 768); // Adjust the width as needed
+      setIsSmallScreen(window.innerWidth <= 768);
     };
 
-    handleResize(); // Check screen size on initial render
-    window.addEventListener("resize", handleResize); // Add resize event listener
+    handleResize();
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize); // Clean up event listener on unmount
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -214,20 +224,33 @@ const MyWalletPage = () => {
     <div className="section-container flex flex-col justify-evenly max-sm:w-full">
       <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full">
         <h2 className="p-4 text-3xl font-bold">My Wallet</h2>
-        <div className="flex flex-col gap-1 rounded-md bg-[#49C74233] p-4">
+
+        {/* Primary balance card: on-chain USDC */}
+        <div className="flex flex-col gap-1 rounded-md bg-[#0A0A1A] border border-[#00D4AA]/30 p-4 mb-3">
           <div className="flex items-center justify-between rounded-md max-sm:flex-col">
             <div className="flex max-sm:self-start">
               <Image alt="wallet" src={WalletIcon} />
               <div className="px-4">
-                {" "}
-                {loading ? (
-                  <p className="text-xl">Loading</p>
+                {balLoading ? (
+                  <p className="text-xl font-mono animate-pulse text-white/60">
+                    Loading…
+                  </p>
+                ) : balError ? (
+                  <p className="text-xl font-mono text-red-400">--</p>
                 ) : (
-                  <p className="text-xl font-bold">
-                    ${walletBalance.toFixed(2)}
+                  <p className="text-2xl font-bold font-mono text-[#00D4AA]">
+                    ${onChainBalance.toFixed(2)}
                   </p>
                 )}
-                <p className="text-sm text-white/70">Balance</p>
+                <p className="text-xs text-[#00D4AA]/70 mt-0.5">
+                  USDC on Polygon
+                </p>
+                {embeddedWalletAddress && (
+                  <p className="text-xs text-white/30 mt-0.5 font-mono">
+                    {embeddedWalletAddress.slice(0, 6)}…
+                    {embeddedWalletAddress.slice(-4)}
+                  </p>
+                )}
               </div>
             </div>
             <div>
@@ -268,34 +291,40 @@ const MyWalletPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Secondary balance: DB/platform balance */}
+        {walletBalance > 0 && (
+          <div className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#49C74233] mb-3">
+            <p className="text-sm text-white/50">Platform balance:</p>
+            {loading ? (
+              <p className="text-sm text-white/50 animate-pulse">Loading…</p>
+            ) : (
+              <p className="text-sm font-mono text-white/70">
+                ${walletBalance.toFixed(2)}
+              </p>
+            )}
+          </div>
+        )}
       </div>
-      {/* ACH Bank Transfer deposit option */}
+
+      {/* ACH Bank Transfer — Coming Soon */}
       <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full mt-4">
         <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 mb-4">
           <div className="flex items-start justify-between">
             <div>
-              <h4 className="text-white font-medium text-sm">Bank Transfer (ACH)</h4>
-              <p className="text-[#00D4AA] text-xs mt-0.5">Save 2-3% vs card</p>
+              <h4 className="text-white font-medium text-sm">
+                Bank Transfer (ACH)
+              </h4>
+              <p className="text-white/40 text-xs mt-0.5">Coming Soon</p>
             </div>
-            <button
-              onClick={() => setShowACHForm(!showACHForm)}
-              className="text-xs bg-[#0A0A1A] border border-[#1E2A36] text-white px-3 py-1.5 rounded-lg hover:border-[#E94560]/50 transition-colors"
-            >
-              {showACHForm ? "Cancel" : "Deposit"}
-            </button>
+            <span className="text-xs bg-[#0A0A1A] border border-[#1E2A36] text-white/30 px-3 py-1.5 rounded-lg cursor-not-allowed select-none">
+              Coming Soon
+            </span>
           </div>
-          {showACHForm && (
-            <ACHDepositForm
-              onSuccess={() => {
-                setShowACHForm(false);
-                setTimeout(() => window.location.reload(), 2500);
-              }}
-              onCancel={() => setShowACHForm(false)}
-            />
-          )}
         </div>
         <p className="text-xs text-gray-500 mb-2">Pay with card instead:</p>
       </div>
+
       <div>
         {isPaymentModalOpen && (
           <PaymentForm
