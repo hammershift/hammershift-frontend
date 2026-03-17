@@ -28,6 +28,7 @@ export interface User {
     marketing?: boolean;
   };
   stripeCustomerId?: string | null;
+  embeddedWalletAddress?: string | null;
 }
 
 const userSchema = new Schema(
@@ -66,6 +67,7 @@ const userSchema = new Schema(
       marketing: { type: Boolean, default: false }
     },
     stripeCustomerId: { type: String, default: null },
+    embeddedWalletAddress: { type: String, default: null },
     createdAt: Date,
     updatedAt: Date,
   },

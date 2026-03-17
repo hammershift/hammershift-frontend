@@ -19,19 +19,26 @@ interface OtpEmailOptions {
 
 async function sendOtpEmail({ to, otp }: OtpEmailOptions): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const mailOptions: SendMailOptions = {
-    from: `"Support Team" <${FROM_ADDRESS}>`,
+    from: `"Velocity Markets" <${FROM_ADDRESS}>`,
     to,
-    subject: 'Your OTP for Password Reset',
+    subject: 'Your Velocity Markets verification code',
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
-        <h1 style="text-align: center; color: #333;">Password Reset Request</h1>
-        <p style="color: #555;">Hello,</p>
-        <p style="color: #555;">We received a password reset request for your account. Here is your One-Time Password (OTP) to proceed:</p>
-        <div style="text-align: center; margin: 20px 0;">
-          <h2 style="display: inline-block; padding: 10px 20px; border: 2px dashed #e0e0e0; border-radius: 8px; background-color: #fff; color: #333;">${otp}</h2>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 0; background-color: #0A0A1A; border-radius: 12px; overflow: hidden; border: 1px solid #1E2A36;">
+        <div style="background: linear-gradient(135deg, #0F172A 0%, #0A0A1A 100%); padding: 32px 40px; text-align: center; border-bottom: 1px solid #1E2A36;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #E94560; letter-spacing: -0.5px;">Velocity Markets</h1>
         </div>
-        <p style="color: #555;">If you did not request this, please ignore this email or contact support.</p>
-        <p style="color: #555;">Thank you,<br/>Support Team</p>
+        <div style="padding: 40px;">
+          <h2 style="color: #ffffff; font-size: 20px; margin: 0 0 8px 0;">Password Reset Code</h2>
+          <p style="color: #9CA3AF; font-size: 15px; margin: 0 0 32px 0; line-height: 1.6;">Use the code below to reset your password. This code expires in <strong style="color: #ffffff;">10 minutes</strong>.</p>
+          <div style="background: #0F172A; border: 1px solid #1E2A36; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 32px;">
+            <p style="margin: 0 0 8px 0; color: #9CA3AF; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Your verification code</p>
+            <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 40px; font-weight: 700; color: #00D4AA; letter-spacing: 8px;">${otp}</p>
+          </div>
+          <p style="color: #6B7280; font-size: 13px; line-height: 1.6; margin: 0;">If you didn't request a password reset, you can safely ignore this email. Your account remains secure.</p>
+        </div>
+        <div style="padding: 24px 40px; border-top: 1px solid #1E2A36; text-align: center;">
+          <p style="margin: 0; color: #6B7280; font-size: 12px;">© 2025 Velocity Markets. All rights reserved.</p>
+        </div>
       </div>
     `,
   };

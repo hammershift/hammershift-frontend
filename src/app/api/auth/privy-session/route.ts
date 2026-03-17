@@ -3,6 +3,7 @@ import { privyClient } from '@/lib/privy';
 import connectToDB from '@/lib/mongoose';
 import Users from '@/models/user.model';
 import mongoose from 'mongoose';
+import { sendWelcomeEmail } from '@/lib/mail';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,21 +18,30 @@ export async function GET(req: NextRequest) {
     const { userId: privyDid } = await privyClient.verifyAuthToken(token);
     const privyUser = await privyClient.getUser(privyDid);
 
-    // Resolve email from privy-linked email or Google OAuth
-    const email = privyUser.email?.address ?? privyUser.google?.email ?? null;
-    if (!email) {
+    // Resolve email from privy-linked email or Google OAuth, always lowercase
+    const rawEmail = privyUser.email?.address ?? privyUser.google?.email ?? null;
+    if (!rawEmail) {
       return NextResponse.json({ message: 'Email required' }, { status: 400 });
     }
+    const email = rawEmail.toLowerCase();
+
+    // Resolve embedded wallet address from linked accounts
+    const embeddedWallet = (privyUser as any).linkedAccounts?.find(
+      (a: any) => a.type === 'wallet' && a.walletClient === 'privy'
+    );
+    const embeddedWalletAddress: string | null = embeddedWallet?.address?.toLowerCase() ?? null;
 
     await connectToDB();
 
     let dbUser = await Users.findOne({ email });
+    let isNewUser = false;
 
     if (!dbUser) {
+      isNewUser = true;
       // Derive a display name: Google name takes priority, then email prefix
       const fullName = privyUser.google?.name ?? email.split('@')[0];
       const username =
-        email.split('@')[0] + '_' + Math.floor(Math.random() * 9999);
+        email.split('@')[0] + '_' + Math.floor(Math.random() * 9000 + 1000);
 
       dbUser = await Users.create({
         _id: new mongoose.Types.ObjectId(),
@@ -43,13 +53,28 @@ export async function GET(req: NextRequest) {
         isBanned: false,
         provider: 'privy',
         role: 'user',
+        embeddedWalletAddress,
       });
+    } else if (embeddedWalletAddress && dbUser.embeddedWalletAddress !== embeddedWalletAddress) {
+      // Persist the wallet address if it has changed or was not previously stored
+      await Users.updateOne(
+        { _id: dbUser._id },
+        { $set: { embeddedWalletAddress } }
+      );
+      dbUser.embeddedWalletAddress = embeddedWalletAddress;
     }
 
-    const embeddedWallet = (privyUser as any).linkedAccounts?.find(
-      (a: any) => a.type === 'wallet' && a.walletClient === 'privy'
-    );
-    const embeddedWalletAddress = embeddedWallet?.address ?? null;
+    // Send welcome email to new users — non-blocking
+    if (isNewUser) {
+      try {
+        await sendWelcomeEmail({
+          to: email,
+          fullName: dbUser.fullName || dbUser.username,
+        });
+      } catch (emailError) {
+        console.error('Welcome email failed (non-blocking):', emailError);
+      }
+    }
 
     return NextResponse.json({
       user: {
@@ -61,7 +86,7 @@ export async function GET(req: NextRequest) {
         balance: dbUser.balance,
         role: dbUser.role,
         provider: dbUser.provider ?? 'privy',
-        embeddedWalletAddress,
+        embeddedWalletAddress: dbUser.embeddedWalletAddress ?? embeddedWalletAddress,
       },
     });
   } catch (error) {

@@ -1,18 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createPageUrl } from "@/app/components/utils";
-import { Card } from "@/app/components/ui/card";
-import { Input } from "@/app/components/ui/input";
-import { Button } from "@/app/components/ui/button";
-import { Alert, AlertDescription } from "@/app/components/ui/alert";
-import { Checkbox } from "@/app/components/ui/checkbox";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import type { CheckedState } from "@radix-ui/react-checkbox";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 
 export default function CustomSignupPage() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const { login, authenticated } = useVelocityAuth();
+
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
@@ -24,25 +23,21 @@ export default function CustomSignupPage() {
     isOver18: false,
   });
 
-  const { data: session } = useSession();
-
+  // Redirect if already authenticated via NextAuth
   useEffect(() => {
-    const handleSession = async () => {
-      if (!session || !session.user) {
-        return;
-      } else {
-        router.push("/authenticated");
-      }
-    };
+    if (session?.user) {
+      router.push("/authenticated");
+    }
+  }, [session, router]);
 
-    const checkSession = async () => {
-      await handleSession();
-    };
+  // Redirect if already authenticated via Privy
+  useEffect(() => {
+    if (authenticated) {
+      router.push("/");
+    }
+  }, [authenticated, router]);
 
-    checkSession();
-  }, [session]);
-
-  const handleChange = (e: { target: any }) => {
+  const handleChange = (e: { target: { name: string; value: string; type: string; checked: boolean } }) => {
     const { name, value, type, checked } = e.target;
     if (name === "password") {
       const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
@@ -65,7 +60,7 @@ export default function CustomSignupPage() {
     }
   };
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
@@ -81,9 +76,7 @@ export default function CustomSignupPage() {
     try {
       const response = await fetch("/api/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: formData.email,
           username: formData.username,
@@ -102,7 +95,6 @@ export default function CustomSignupPage() {
         } else if (data.message === "Invalid email") {
           setError("Invalid email. Try a different one.");
         } else {
-          console.log(data);
           setError("Error. Please try again.");
         }
         setIsLoading(false);
@@ -110,172 +102,191 @@ export default function CustomSignupPage() {
       }
 
       router.push("/create_account_complete");
-      // const response = await fetch('/api/signup', {
-      //     method: 'POST',
-      //     headers: {
-      //         'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify({
-      //         email: formData.email,
-      //         username: formData.username,
-      //         fullName: formData.fullName,
-      //         provider: 'email',
-      //     }),
-      // });
-      // if (!response.ok) {
-      //     const data = await response.json();
-      //     if (data.message === 'Username already used') {
-      //         setError("Username is already in use. Try a different one.");
-      //     }
-      //     else if (data.message === 'Email already used') {
-      //         setError("Email is already in use. Try a different one.");
-      //     }
-      //     else if (data.message === 'Invalid email') {
-      //         setError("Invalid email. Try a different one.");
-      //     }
-      //     else {
-      //         console.log(data);
-      //         setError("Error. Please try again.");
-      //     }
-      //     setIsLoading(false);
-      //     return;
-      // }
-
-      //   const signInResponse = await authClient.signIn.username({
-      //     username: formData.username,
-      //     password: formData.password,
-      //   })
-
-      //   if (signInResponse?.error) {
-      //     setError("Sign-up successful but auto sign-in failed.");
-      //     setTimeout(() => {
-      //       router.push("/create_account_complete");
-      //     }, 2000);
-      //   } else {
-      //     router.push("/create_account_complete");
-      //   }
-    } catch (error) {
+    } catch {
       setError("Failed to create account. Please try again.");
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-md border-[#1E2A36] bg-[#13202D] p-6">
+    <div className="min-h-screen bg-[#0A0A1A] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md bg-[#0F172A] border border-[#1E2A36] rounded-2xl p-8">
+
+        {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="mb-2 text-2xl font-bold">Create Your Account</h1>
-          <p className="text-gray-400">
-            Join Velocity Markets and start predicting
+          <p className="text-[#E94560] text-sm font-semibold tracking-widest uppercase mb-3">
+            Velocity Markets
+          </p>
+          <h1 className="text-2xl font-bold text-white mb-2">Create your account</h1>
+          <p className="text-gray-400 text-sm">
+            Start predicting collector car auctions
           </p>
         </div>
 
+        {/* Google OAuth button */}
+        <button
+          type="button"
+          onClick={() => login()}
+          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-900 font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+          aria-label="Continue with Google"
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
+            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.593C4.672 4.466 6.656 3.58 9 3.58z"/>
+          </svg>
+          Continue with Google
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-6">
+          <div className="flex-1 h-px bg-[#1E2A36]" />
+          <span className="text-xs text-gray-500 uppercase tracking-widest">or sign up with email</span>
+          <div className="flex-1 h-px bg-[#1E2A36]" />
+        </div>
+
+        {/* Error alert */}
         {error && (
-          <Alert variant="destructive" className="mb-6 text-red-500">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
+          <div className="mb-5 flex items-start gap-3 bg-[#E94560]/10 border border-[#E94560]/30 rounded-xl px-4 py-3">
+            <svg className="w-4 h-4 text-[#E94560] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+            <p className="text-sm text-[#E94560]">{error}</p>
+          </div>
         )}
 
+        {/* Email/password form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-2 block text-sm font-medium">Username</label>
-            <Input
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="username" className="text-sm text-gray-400">
+              Username
+            </label>
+            <input
+              id="username"
               name="username"
+              type="text"
               value={formData.username}
               onChange={handleChange}
               required
-              className="border-[#1E2A36] bg-[#1E2A36]"
+              autoComplete="username"
+              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              placeholder="Choose a username"
             />
           </div>
-          <div>
-            <label className="mb-2 block text-sm font-medium">Password</label>
-            <Input
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="fullName" className="text-sm text-gray-400">
+              Full Name
+            </label>
+            <input
+              id="fullName"
+              name="fullName"
+              type="text"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+              autoComplete="name"
+              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              placeholder="Your full name"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="email" className="text-sm text-gray-400">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              autoComplete="email"
+              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label htmlFor="password" className="text-sm text-gray-400">
+              Password
+            </label>
+            <input
+              id="password"
               name="password"
               type="password"
               value={formData.password}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               required
-              className="border-[#1E2A36] bg-[#1E2A36]"
+              autoComplete="new-password"
+              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              placeholder="Create a password"
             />
           </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-medium">Full Name</label>
-            <Input
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-              className="border-[#1E2A36] bg-[#1E2A36]"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium">Email</label>
-            <Input
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="border-[#1E2A36] bg-[#1E2A36]"
-            />
-          </div>
-
-          <div className="space-y-4 pt-4">
-            <div className="flex items-center space-x-2">
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center gap-3">
               <Checkbox
                 id="isOver18"
                 name="isOver18"
                 checked={formData.isOver18}
-                onCheckedChange={(checked: any) =>
+                onCheckedChange={(checked: CheckedState) =>
                   handleChange({
-                    target: { name: "isOver18", type: "checkbox", checked },
+                    target: { name: "isOver18", type: "checkbox", checked: checked === true, value: "" },
                   })
                 }
+                className="border-[#1E2A36] data-[state=checked]:bg-[#E94560] data-[state=checked]:border-[#E94560]"
               />
-              <label htmlFor="isOver18" className="text-sm leading-none">
+              <label htmlFor="isOver18" className="text-sm text-gray-400 leading-none cursor-pointer select-none">
                 I confirm that I am at least 18 years old
               </label>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-start gap-3">
               <Checkbox
                 id="agreeToTerms"
                 name="agreeToTerms"
                 checked={formData.agreeToTerms}
-                onCheckedChange={(checked: any) =>
+                onCheckedChange={(checked: CheckedState) =>
                   handleChange({
-                    target: { name: "agreeToTerms", type: "checkbox", checked },
+                    target: { name: "agreeToTerms", type: "checkbox", checked: checked === true, value: "" },
                   })
                 }
+                className="border-[#1E2A36] data-[state=checked]:bg-[#E94560] data-[state=checked]:border-[#E94560] mt-0.5"
               />
-              <label htmlFor="agreeToTerms" className="text-sm leading-none">
-                I agree to the Terms of Service and Privacy Policy
+              <label htmlFor="agreeToTerms" className="text-sm text-gray-400 leading-snug cursor-pointer select-none">
+                I agree to the{" "}
+                <Link href="/terms" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors">
+                  Privacy Policy
+                </Link>
               </label>
             </div>
           </div>
 
-          <Button
+          <button
             type="submit"
-            className={`w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isLoading ? "pointer-events-none opacity-50" : ""}`}
-            aria-disabled={isLoading}
+            disabled={isLoading}
+            className="w-full bg-[#E94560] hover:bg-[#E94560]/90 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm mt-2"
           >
-            Create Account
-          </Button>
+            {isLoading ? "Creating account..." : "Create Account"}
+          </button>
         </form>
 
-        <div className="mt-4">
-          <p className="text-center text-sm text-gray-400">
-            Already have an account?{" "}
-            <Link className="p-0 text-[#F2CA16]" href="/login_page">
-              Log in
-            </Link>
-          </p>
-        </div>
-      </Card>
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/login_page" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors font-medium">
+            Log in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
