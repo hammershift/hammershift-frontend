@@ -6,6 +6,8 @@ import { useVelocityAuth } from '@/hooks/useVelocityAuth';
 interface Props {
   open: boolean;
   onClose: () => void;
+  /** Optional callback to refresh the balance after a successful deposit */
+  refetchBalance?: () => void;
 }
 
 // Extend Window to carry the Stripe Onramp vanilla SDK global
@@ -15,6 +17,7 @@ declare global {
       createSession: (options: { clientSecret: string; appearance?: Record<string, unknown> }) => {
         mount: (element: HTMLElement) => void;
         unmount: () => void;
+        addEventListener: (event: string, handler: (e: any) => void) => void;
       };
     };
   }
@@ -49,7 +52,7 @@ function loadOnrampScript(): Promise<void> {
 const AMOUNT_OPTIONS = [50, 100, 250, 500] as const;
 type AmountOption = typeof AMOUNT_OPTIONS[number];
 
-export default function DepositModal({ open, onClose }: Props) {
+export default function DepositModal({ open, onClose, refetchBalance }: Props) {
   const { embeddedWalletAddress } = useVelocityAuth();
   const [selectedAmount, setSelectedAmount] = useState<AmountOption>(100);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -57,7 +60,10 @@ export default function DepositModal({ open, onClose }: Props) {
   const [error, setError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   // Keep a ref to the mounted session so we can unmount on close
-  const sessionRef = useRef<{ unmount: () => void } | null>(null);
+  const sessionRef = useRef<{
+    unmount: () => void;
+    addEventListener: (event: string, handler: (e: any) => void) => void;
+  } | null>(null);
 
   // Fetch a new onramp client secret whenever the modal opens or amount changes
   useEffect(() => {
@@ -113,12 +119,36 @@ export default function DepositModal({ open, onClose }: Props) {
         });
         session.mount(containerRef.current);
         sessionRef.current = session;
+
+        // Listen for fulfillment completion and credit the user's balance via our backend
+        session.addEventListener('onramp_session_updated', async (event: any) => {
+          const updatedSession = event?.payload?.session ?? event?.session;
+          if (updatedSession?.status === 'fulfillment_complete') {
+            try {
+              const res = await fetch('/api/stripe/onramp-complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sessionId: updatedSession.id }),
+              });
+              if (res.ok) {
+                if (refetchBalance) {
+                  refetchBalance();
+                } else {
+                  // Fallback: reload the page so the balance header refreshes
+                  window.location.reload();
+                }
+              }
+            } catch (e) {
+              console.error('Failed to record onramp completion', e);
+            }
+          }
+        });
       })
       .catch((err) => {
         console.error('Stripe Onramp mount error:', err);
         setError('Payment widget failed to load. Please try again.');
       });
-  }, [clientSecret]);
+  }, [clientSecret, refetchBalance]);
 
   if (!open) return null;
 
