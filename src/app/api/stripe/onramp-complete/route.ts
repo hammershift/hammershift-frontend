@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { stripe } from '@/lib/stripe';
 import connectToDB from '@/lib/mongoose';
 import Users from '@/models/user.model';
 import Transaction from '@/models/transaction';
@@ -37,10 +36,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'sessionId is required' }, { status: 400 });
   }
 
-  // 3. Verify session with Stripe — cast because TS types don't include crypto.onrampSessions yet
+  // 3. Verify session with Stripe via direct REST fetch — stripe.crypto is undefined in SDK v15.x
   let onrampSession: any;
   try {
-    onrampSession = await (stripe as any).crypto.onrampSessions.retrieve(sessionId);
+    const stripeRes = await fetch(
+      `https://api.stripe.com/v1/crypto/onramp_sessions/${sessionId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
+        },
+      }
+    );
+    if (!stripeRes.ok) {
+      const errBody = await stripeRes.text();
+      console.error('onramp-complete: Stripe API returned non-OK', stripeRes.status, errBody);
+      return NextResponse.json({ message: 'Session not found' }, { status: 404 });
+    }
+    onrampSession = await stripeRes.json();
   } catch (err: any) {
     console.error('onramp-complete: Stripe session retrieval failed', err);
     return NextResponse.json({ message: 'Failed to verify session with Stripe' }, { status: 502 });

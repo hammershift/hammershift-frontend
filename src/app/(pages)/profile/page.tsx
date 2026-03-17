@@ -380,11 +380,11 @@ function Profile(props: Props) {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="min-h-screen bg-[#0A0A1A] px-4 py-8 text-white">
         <div className="flex min-h-[60vh] items-center justify-center">
           <div className="text-center">
             <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#E94560]"></div>
-            <p className="text-xl">Loading profile...</p>
+            <p className="text-gray-400">Loading profile...</p>
           </div>
         </div>
       </div>
@@ -392,10 +392,10 @@ function Profile(props: Props) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="min-h-screen bg-[#0A0A1A] px-4 py-8 text-white">
       {/* Profile Header */}
-      <div className="mb-8 overflow-hidden rounded-xl bg-[#1E2A36]">
-        <div className="h-20 bg-gradient-to-r from-[#E94560] to-[#0A0A1A]"></div>
+      <div className="mb-8 overflow-hidden rounded-2xl bg-[#0F172A] border border-[#1E2A36]">
+        <div className="h-20 bg-gradient-to-r from-[#E94560]/80 to-[#0A0A1A]"></div>
         <div className="px-8 pb-8">
           <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
             <Avatar className="h-24 w-24 border-4 border-[#13202D] shadow-lg">
@@ -435,28 +435,28 @@ function Profile(props: Props) {
         value={currentTab}
         onValueChange={(value) => setCurrentTab(value)}
       >
-        <TabsList className="mb-6 bg-[#1E2A36]">
+        <TabsList className="mb-6 bg-transparent border-b border-[#1E2A36] rounded-none w-full justify-start gap-0 p-0 h-auto">
           <TabsTrigger
             value="overview"
-            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-gray-400 data-[state=active]:border-[#E94560] data-[state=active]:text-white data-[state=active]:bg-transparent data-[state=active]:shadow-none"
           >
             Overview
           </TabsTrigger>
           <TabsTrigger
             value="predictions"
-            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-gray-400 data-[state=active]:border-[#E94560] data-[state=active]:text-white data-[state=active]:bg-transparent data-[state=active]:shadow-none"
           >
             Predictions
           </TabsTrigger>
           <TabsTrigger
             value="tournaments"
-            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-gray-400 data-[state=active]:border-[#E94560] data-[state=active]:text-white data-[state=active]:bg-transparent data-[state=active]:shadow-none"
           >
             Tournaments
           </TabsTrigger>
           <TabsTrigger
             value="settings"
-            className="data-[state=active]:bg-[#E94560] data-[state=active]:text-white"
+            className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-gray-400 data-[state=active]:border-[#E94560] data-[state=active]:text-white data-[state=active]:bg-transparent data-[state=active]:shadow-none"
           >
             Settings
           </TabsTrigger>
@@ -470,7 +470,7 @@ function Profile(props: Props) {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Hero Stats Card */}
             <div className="lg:col-span-3">
-              <Card className="border-[#1E2A36] bg-gradient-to-br from-[#1E2A36] to-[#13202D]">
+              <Card className="border-[#1E2A36] bg-[#0F172A]">
                 <CardContent className="p-6">
                   <div className="grid gap-6 md:grid-cols-5">
                     <div className="flex flex-col items-center text-center">
@@ -524,7 +524,7 @@ function Profile(props: Props) {
             {/* Column 1: Streaks & Badges */}
             <div className="space-y-6">
               {/* Streak Dashboard */}
-              <Card className="border-[#1E2A36] bg-[#13202D]">
+              <Card className="border-[#1E2A36] bg-[#0F172A]">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Flame className="h-5 w-5 text-[#FFB547]" />
@@ -565,7 +565,7 @@ function Profile(props: Props) {
               </Card>
 
               {/* Badges Grid */}
-              <Card className="border-[#1E2A36] bg-[#13202D]">
+              <Card className="border-[#1E2A36] bg-[#0F172A]">
                 <CardHeader>
                   <CardTitle>Badges & Achievements</CardTitle>
                   <p className="text-sm text-gray-400">
@@ -599,7 +599,7 @@ function Profile(props: Props) {
 
             {/* Column 2: Recent Activity */}
             <div className="lg:col-span-2 space-y-6">
-              <Card className="border-[#1E2A36] bg-[#13202D]">
+              <Card className="border-[#1E2A36] bg-[#0F172A]">
                 <CardHeader>
                   <CardTitle>Recent Predictions</CardTitle>
                 </CardHeader>
@@ -669,39 +669,39 @@ function Profile(props: Props) {
 
         {/* Tab 2: Predictions History */}
         <TabsContent value="predictions">
-          <Card className="border-[#1E2A36] bg-[#13202D]">
+          <Card className="border-[#1E2A36] bg-[#0F172A]">
             <CardHeader>
               <CardTitle>Your Predictions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col gap-4 rounded bg-[#172431]">
+              <div className="flex flex-col gap-4 rounded bg-[#0F172A]">
                 <div className="flex">
                   <button
                     onClick={() => setIsActivePrediction(true)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActivePrediction === true
-                        ? "border-white text-lg font-bold"
-                        : ""
+                        ? "border-[#E94560] text-white"
+                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
                     }`}
                   >
-                    <div>ACTIVE </div>
+                    <div>ACTIVE</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
+                      <span className="rounded bg-[#E94560] px-1.5 py-0.5 text-xs font-bold text-white">
                         {activePredictions.length}
                       </span>
                     )}
                   </button>
                   <button
                     onClick={() => setIsActivePrediction(false)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActivePrediction === false
-                        ? "border-white text-lg font-bold"
-                        : ""
+                        ? "border-[#E94560] text-white"
+                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     <div>COMPLETED</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
+                      <span className="rounded bg-[#1E2A36] px-1.5 py-0.5 text-xs font-bold text-gray-300">
                         {completedPredictions.length}
                       </span>
                     )}
@@ -776,39 +776,39 @@ function Profile(props: Props) {
 
         {/* Tab 3: Tournament History */}
         <TabsContent value="tournaments">
-          <Card className="border-[#1E2A36] bg-[#13202D]">
+          <Card className="border-[#1E2A36] bg-[#0F172A]">
             <CardHeader>
               <CardTitle>Your Tournaments</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col gap-4 rounded bg-[#172431]">
+              <div className="flex flex-col gap-4 rounded bg-[#0F172A]">
                 <div className="flex">
                   <button
                     onClick={() => setIsActiveTournament(true)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActiveTournament === true
-                        ? "border-white text-lg font-bold"
-                        : ""
-                    } `}
+                        ? "border-[#E94560] text-white"
+                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
+                    }`}
                   >
                     <div>ACTIVE</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
+                      <span className="rounded bg-[#E94560] px-1.5 py-0.5 text-xs font-bold text-white">
                         {activeTournamentPredictions.length}
                       </span>
                     )}
                   </button>
                   <button
                     onClick={() => setIsActiveTournament(false)}
-                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 ${
+                    className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActiveTournament === false
-                        ? "border-white text-lg font-bold"
-                        : ""
+                        ? "border-[#E94560] text-white"
+                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     <div>COMPLETED</div>
                     {!dataIsLoading && (
-                      <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-white">
+                      <span className="rounded bg-[#1E2A36] px-1.5 py-0.5 text-xs font-bold text-gray-300">
                         {completedTournamentPredictions.length}
                       </span>
                     )}
@@ -887,47 +887,47 @@ function Profile(props: Props) {
         <TabsContent value="settings">
           <div className="space-y-6">
             {/* Profile Settings */}
-            <Card className="border-[#1E2A36] bg-[#13202D]">
+            <Card className="border-[#1E2A36] bg-[#0F172A]">
               <CardHeader>
                 <CardTitle>Profile Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="displayName">Display Name</Label>
+                  <label className="text-sm text-gray-400 mb-1 block" htmlFor="displayName">Display Name</label>
                   <Input
                     id="displayName"
                     value={name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                     placeholder="Your display name"
-                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="username">Username</Label>
+                  <label className="text-sm text-gray-400 mb-1 block" htmlFor="username">Username</label>
                   <Input
                     id="username"
                     value={username}
                     disabled
-                    className="mt-2 border-[#1E2A36] bg-[#1E2A36] opacity-50"
+                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-gray-500 rounded-xl px-4 py-3 opacity-50 cursor-not-allowed"
                   />
-                  <p className="mt-1 text-xs text-gray-400">
+                  <p className="mt-1 text-xs text-gray-500">
                     Username cannot be changed
                   </p>
                 </div>
 
                 <div>
-                  <Label htmlFor="about">About / Bio</Label>
+                  <label className="text-sm text-gray-400 mb-1 block" htmlFor="about">About / Bio</label>
                   <TextArea
                     id="about"
                     value={about}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAbout(e.target.value)}
                     placeholder="Tell others about yourself"
-                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none resize-none"
                     rows={3}
                     maxLength={200}
                   />
-                  <p className="mt-1 text-xs text-gray-400">
+                  <p className="mt-1 text-xs text-gray-500">
                     {about.length}/200 characters
                   </p>
                 </div>
@@ -935,7 +935,7 @@ function Profile(props: Props) {
                 <Button
                   onClick={handleUpdateProfile}
                   disabled={isLoading}
-                  className="bg-[#E94560] hover:bg-[#E94560]/90"
+                  className="bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold px-6 py-3 rounded-xl"
                 >
                   {isLoading ? "Saving..." : "Save Changes"}
                 </Button>
@@ -943,7 +943,7 @@ function Profile(props: Props) {
             </Card>
 
             {/* Email Preferences */}
-            <Card className="border-[#1E2A36] bg-[#13202D]">
+            <Card className="border-[#1E2A36] bg-[#0F172A]">
               <CardHeader>
                 <CardTitle>Email Preferences</CardTitle>
               </CardHeader>
@@ -1031,7 +1031,7 @@ function Profile(props: Props) {
             </Card>
 
             {/* Notification Preferences */}
-            <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 mt-6">
+            <div className="rounded-lg border border-[#1E2A36] bg-[#0F172A] p-5 mt-6">
               <h3 className="text-white font-semibold mb-4">Notifications</h3>
               <div className="space-y-3 mb-4">
                 {([
@@ -1082,14 +1082,14 @@ function Profile(props: Props) {
             </div>
 
             {/* Change Password */}
-            <Card className="border-[#1E2A36] bg-[#13202D]">
+            <Card className="border-[#1E2A36] bg-[#0F172A]">
               <CardHeader>
                 <CardTitle>Change Password</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="oldPassword">Current Password</Label>
-                  <div className="relative mt-2">
+                  <label className="text-sm text-gray-400 mb-1 block" htmlFor="oldPassword">Current Password</label>
+                  <div className="relative mt-1">
                     <Input
                       id="oldPassword"
                       type={showPassword ? "text" : "password"}
@@ -1097,7 +1097,7 @@ function Profile(props: Props) {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setPasswords((prev) => ({ ...prev, old: e.target.value }))
                       }
-                      className="border-[#1E2A36] bg-[#0A0A1A] pr-10"
+                      className="bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 pr-10 focus:border-[#E94560] focus:outline-none"
                     />
                     <button
                       type="button"
@@ -1114,7 +1114,7 @@ function Profile(props: Props) {
                 </div>
 
                 <div>
-                  <Label htmlFor="newPassword">New Password</Label>
+                  <label className="text-sm text-gray-400 mb-1 block" htmlFor="newPassword">New Password</label>
                   <Input
                     id="newPassword"
                     type={showPassword ? "text" : "password"}
@@ -1122,12 +1122,12 @@ function Profile(props: Props) {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setPasswords((prev) => ({ ...prev, new: e.target.value }))
                     }
-                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                  <label className="text-sm text-gray-400 mb-1 block" htmlFor="confirmPassword">Confirm New Password</label>
                   <Input
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
@@ -1138,14 +1138,14 @@ function Profile(props: Props) {
                         confirm: e.target.value,
                       }))
                     }
-                    className="mt-2 border-[#1E2A36] bg-[#0A0A1A]"
+                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
 
                 <Button
                   onClick={handleChangePassword}
                   disabled={isLoading}
-                  className="bg-[#E94560] hover:bg-[#E94560]/90"
+                  className="bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold px-6 py-3 rounded-xl"
                 >
                   {isLoading ? "Changing..." : "Change Password"}
                 </Button>
@@ -1153,7 +1153,7 @@ function Profile(props: Props) {
             </Card>
 
             {/* Account Actions */}
-            <Card className="border-[#1E2A36] bg-[#13202D]">
+            <Card className="border-[#1E2A36] bg-[#0F172A]">
               <CardHeader>
                 <CardTitle>Account Actions</CardTitle>
               </CardHeader>
@@ -1161,7 +1161,7 @@ function Profile(props: Props) {
                 <Button
                   variant="outline"
                   onClick={handleExportData}
-                  className="flex w-full items-center gap-2 border-[#1E2A36]"
+                  className="flex w-full items-center gap-2 border-[#1E2A36] bg-transparent text-white hover:bg-[#1E2A36]/50 rounded-xl py-3"
                 >
                   <Download className="h-4 w-4" />
                   Export My Data

@@ -70,6 +70,9 @@ const transactionSchema = new mongoose.Schema({
   accountNumberLast4: {
     type: String,
   },
+  stripeSessionId: {
+    type: String,
+  },
 });
 
 const Transaction = mongoose.models.Transaction || mongoose.model('Transaction', transactionSchema);

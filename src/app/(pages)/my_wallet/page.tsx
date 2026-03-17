@@ -225,7 +225,7 @@ const MyWalletPage = () => {
       <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full">
         <h2 className="p-4 text-3xl font-bold">My Wallet</h2>
 
-        {/* Primary balance card: on-chain USDC */}
+        {/* Primary balance card */}
         <div className="flex flex-col gap-1 rounded-md bg-[#0A0A1A] border border-[#00D4AA]/30 p-4 mb-3">
           <div className="flex items-center justify-between rounded-md max-sm:flex-col">
             <div className="flex max-sm:self-start">
@@ -237,13 +237,17 @@ const MyWalletPage = () => {
                   </p>
                 ) : balError ? (
                   <p className="text-xl font-mono text-red-400">--</p>
-                ) : (
+                ) : embeddedWalletAddress ? (
                   <p className="text-2xl font-bold font-mono text-[#00D4AA]">
                     ${onChainBalance.toFixed(2)}
                   </p>
+                ) : (
+                  <p className="text-2xl font-bold font-mono text-[#00D4AA]">
+                    ${walletBalance.toFixed(2)}
+                  </p>
                 )}
                 <p className="text-xs text-[#00D4AA]/70 mt-0.5">
-                  USDC on Polygon
+                  {embeddedWalletAddress ? "USDC on Polygon" : "Platform Balance"}
                 </p>
                 {embeddedWalletAddress && (
                   <p className="text-xs text-white/30 mt-0.5 font-mono">
@@ -292,8 +296,8 @@ const MyWalletPage = () => {
           </div>
         </div>
 
-        {/* Secondary balance: DB/platform balance */}
-        {walletBalance > 0 && (
+        {/* Secondary balance: DB/platform balance — only shown alongside on-chain balance */}
+        {embeddedWalletAddress && walletBalance > 0 && (
           <div className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#49C74233] mb-3">
             <p className="text-sm text-white/50">Platform balance:</p>
             {loading ? (

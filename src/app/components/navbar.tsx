@@ -752,9 +752,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
           >
             <div>ACTIVE </div>
             <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
-              {!isLoading
-                ? activePredictions.length + activeTournamentPredictions.length
-                : "-"}
+              {!isLoading ? activePredictions.length : "-"}
             </span>
           </button>
           <button
@@ -1743,7 +1741,7 @@ const MobileMyWagers: React.FC<CloseMenuProps> = ({ closeMenu }) => {
           ACTIVE
           {!isLoading && (
             <span className="ml-1 rounded bg-[#f2ca16] px-1 text-xs font-bold text-[#0f1923]">
-              {activePredictions.length + activeTournamentPredictions.length}
+              {activePredictions.length}
             </span>
           )}
         </button>
