@@ -3,6 +3,7 @@ import Users from "@/models/user.model";
 import mongoose from "mongoose";
 import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from 'next/server';
+import { sendWelcomeEmail } from "@/lib/mail";
 
 export async function POST(req: NextRequest) {
   const data = await req.json();
@@ -53,6 +54,12 @@ export async function POST(req: NextRequest) {
 
     const user = new Users(newUser);
     await user.save();
+
+    try {
+      await sendWelcomeEmail({ to: lowerCaseEmail, fullName: fullName || username });
+    } catch (emailError) {
+      console.error('Welcome email failed (non-blocking):', emailError);
+    }
 
     return NextResponse.json({ message: 'User created with initial balance', user }, { status: 201 });
   } catch (error) {

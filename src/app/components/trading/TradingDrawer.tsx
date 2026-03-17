@@ -9,6 +9,7 @@ import {
 } from '@/app/components/ui/sheet';
 import { useSession } from 'next-auth/react';
 import { useWallets } from '@privy-io/react-auth';
+import { useVelocityAuth } from '@/hooks/useVelocityAuth';
 import { createBiconomySmartAccount, MARKET_ABI, PaymasterMode } from '@/lib/biconomy';
 import { encodeFunctionData, parseUnits } from 'viem';
 
@@ -71,6 +72,10 @@ export default function TradingDrawer({
 
   const { data: session } = useSession();
   const { wallets } = useWallets();
+  const { authenticated: privyAuthenticated } = useVelocityAuth();
+
+  // User is authenticated if they have a NextAuth session OR are logged in via Privy
+  const isAuthenticated = !!session?.user || privyAuthenticated;
 
   // Sync side when initialSide prop changes (new market opened)
   useEffect(() => {
@@ -153,7 +158,7 @@ export default function TradingDrawer({
   };
 
   const handleTrade = async () => {
-    if (!session?.user) {
+    if (!isAuthenticated) {
       setError('Please sign in to trade.');
       return;
     }
