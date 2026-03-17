@@ -5,3 +5,4 @@ deployments/
 .env
 typechain-types/
 *.env
+package-lock.json
