@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Card,
@@ -35,6 +34,11 @@ import { useTrackEvent } from "@/hooks/useTrackEvent";
 
 type Period = "weekly" | "monthly" | "alltime";
 
+interface BadgeEntry {
+  badge_type: string;
+  earned_at: string;
+}
+
 interface LeaderboardEntry {
   _id: string;
   userId: string;
@@ -47,6 +51,7 @@ interface LeaderboardEntry {
   current_streak: number;
   trend?: "up" | "down" | "same";
   trend_change?: number;
+  badges?: BadgeEntry[];
 }
 
 interface PeriodStats {
@@ -63,53 +68,133 @@ interface CurrentUserStats {
   current_streak: number;
 }
 
+// ---------------------------------------------------------------------------
+// Badge display helpers
+// ---------------------------------------------------------------------------
+
+const BADGE_EMOJI: Record<string, string> = {
+  first_win: "🏆",
+  hot_start: "🔥",
+  on_fire: "🔥🔥",
+  unstoppable: "⚡",
+  legend: "👑",
+  sharpshooter: "🎯",
+  centurion: "💯",
+  top_10: "🥇",
+  tournament_champion: "🎖️",
+  first_prediction: "⭐",
+  tournament_rookie: "🌱",
+};
+
+const BADGE_LABEL: Record<string, string> = {
+  first_win: "First Win",
+  hot_start: "Hot Start",
+  on_fire: "On Fire",
+  unstoppable: "Unstoppable",
+  legend: "Legend",
+  sharpshooter: "Sharpshooter",
+  centurion: "Centurion",
+  top_10: "Top 10",
+  tournament_champion: "Tournament Champion",
+  first_prediction: "First Prediction",
+  tournament_rookie: "Tournament Rookie",
+};
+
+function BadgeIcons({ badges }: { badges?: BadgeEntry[] }) {
+  if (!badges || badges.length === 0) return null;
+  return (
+    <div className="flex items-center gap-0.5">
+      {badges.slice(0, 3).map((b, i) => (
+        <span
+          key={`${b.badge_type}-${i}`}
+          title={BADGE_LABEL[b.badge_type] ?? b.badge_type}
+          className="cursor-default text-sm leading-none"
+          aria-label={BADGE_LABEL[b.badge_type] ?? b.badge_type}
+        >
+          {BADGE_EMOJI[b.badge_type] ?? "🏅"}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Page component
+// ---------------------------------------------------------------------------
+
+const ITEMS_PER_PAGE = 50;
+const SEARCH_DEBOUNCE_MS = 400;
+
 const LeaderboardPage = () => {
   const { data: session } = useSession();
   const track = useTrackEvent();
+
   const [period, setPeriod] = useState<Period>("alltime");
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [periodStats, setPeriodStats] = useState<PeriodStats>({
     total_participants: 0,
     top_score: 0,
     avg_score: 0,
   });
-  const [currentUserStats, setCurrentUserStats] = useState<CurrentUserStats | null>(null);
+  const [currentUserStats, setCurrentUserStats] =
+    useState<CurrentUserStats | null>(null);
 
-  const ITEMS_PER_PAGE = 50;
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Debounce search input -> activeSearch, reset to page 1 on new search
   useEffect(() => {
-    fetchLeaderboard();
-  }, [period, currentPage]);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setActiveSearch(searchInput);
+      setCurrentPage(1);
+    }, SEARCH_DEBOUNCE_MS);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [searchInput]);
 
-  useEffect(() => {
-    // Track leaderboard view
-    track("leaderboard_viewed", {
-      period,
-      user_rank: currentUserStats?.rank,
-    });
-  }, [period]);
-
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/leaderboard?period=${period}&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
-      );
+      const params = new URLSearchParams({
+        period,
+        page: String(currentPage),
+        limit: String(ITEMS_PER_PAGE),
+      });
+      if (activeSearch) params.set("search", activeSearch);
+
+      const response = await fetch(`/api/leaderboard?${params.toString()}`);
       if (!response.ok) throw new Error("Failed to fetch leaderboard");
 
       const data = await response.json();
       setLeaderboard(data.leaderboard || []);
-      setPeriodStats(data.periodStats || { total_participants: 0, top_score: 0, avg_score: 0 });
+      setTotal(data.total || 0);
+      setPeriodStats(
+        data.periodStats || { total_participants: 0, top_score: 0, avg_score: 0 }
+      );
       setCurrentUserStats(data.currentUserStats || null);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [period, currentPage, activeSearch]);
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
+
+  useEffect(() => {
+    track("leaderboard_viewed", {
+      period,
+      user_rank: currentUserStats?.rank,
+    });
+  }, [period]);
 
   const getMedalIcon = (rank: number) => {
     switch (rank) {
@@ -125,7 +210,8 @@ const LeaderboardPage = () => {
   };
 
   const getTrendIcon = (trend?: "up" | "down" | "same", change?: number) => {
-    if (!trend || trend === "same") return <Minus className="h-4 w-4 text-gray-500" />;
+    if (!trend || trend === "same")
+      return <Minus className="h-4 w-4 text-gray-500" />;
     if (trend === "up") {
       return (
         <div className="flex items-center gap-1 text-[#00D4AA]">
@@ -142,13 +228,9 @@ const LeaderboardPage = () => {
     );
   };
 
-  const filteredLeaderboard = searchTerm
-    ? leaderboard.filter((entry) =>
-        entry.username.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : leaderboard;
-
   const topThree = leaderboard.slice(0, 3);
+  const showPodium =
+    !loading && !activeSearch && currentPage === 1 && topThree.length === 3;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -160,52 +242,27 @@ const LeaderboardPage = () => {
 
       {/* Period Selector */}
       <div className="mb-8 flex justify-center gap-2">
-        <Button
-          variant={period === "weekly" ? "default" : "outline"}
-          onClick={() => {
-            setPeriod("weekly");
-            setCurrentPage(1);
-          }}
-          className={
-            period === "weekly"
-              ? "bg-[#E94560] hover:bg-[#E94560]/90"
-              : "border-[#1E2A36] bg-[#0A0A1A] hover:bg-[#1E2A36]"
-          }
-        >
-          Weekly
-        </Button>
-        <Button
-          variant={period === "monthly" ? "default" : "outline"}
-          onClick={() => {
-            setPeriod("monthly");
-            setCurrentPage(1);
-          }}
-          className={
-            period === "monthly"
-              ? "bg-[#E94560] hover:bg-[#E94560]/90"
-              : "border-[#1E2A36] bg-[#0A0A1A] hover:bg-[#1E2A36]"
-          }
-        >
-          Monthly
-        </Button>
-        <Button
-          variant={period === "alltime" ? "default" : "outline"}
-          onClick={() => {
-            setPeriod("alltime");
-            setCurrentPage(1);
-          }}
-          className={
-            period === "alltime"
-              ? "bg-[#E94560] hover:bg-[#E94560]/90"
-              : "border-[#1E2A36] bg-[#0A0A1A] hover:bg-[#1E2A36]"
-          }
-        >
-          All-Time
-        </Button>
+        {(["weekly", "monthly", "alltime"] as Period[]).map((p) => (
+          <Button
+            key={p}
+            variant={period === p ? "default" : "outline"}
+            onClick={() => {
+              setPeriod(p);
+              setCurrentPage(1);
+            }}
+            className={
+              period === p
+                ? "bg-[#E94560] hover:bg-[#E94560]/90"
+                : "border-[#1E2A36] bg-[#0A0A1A] hover:bg-[#1E2A36]"
+            }
+          >
+            {p === "weekly" ? "Weekly" : p === "monthly" ? "Monthly" : "All-Time"}
+          </Button>
+        ))}
       </div>
 
-      {/* Podium Section (Desktop only, top 3) */}
-      {!loading && topThree.length === 3 && (
+      {/* Podium Section (Desktop only, top 3, no search active) */}
+      {showPodium && (
         <div className="mb-12 hidden grid-cols-3 gap-4 md:grid">
           {/* 2nd Place */}
           <Card className="mt-8 border-gray-300 bg-gradient-to-br from-gray-700 to-gray-800">
@@ -225,6 +282,11 @@ const LeaderboardPage = () => {
               {topThree[1].current_streak >= 3 && (
                 <div className="mt-2">
                   <StreakIndicator currentStreak={topThree[1].current_streak} size="sm" />
+                </div>
+              )}
+              {topThree[1].badges && topThree[1].badges.length > 0 && (
+                <div className="mt-2">
+                  <BadgeIcons badges={topThree[1].badges} />
                 </div>
               )}
             </CardContent>
@@ -250,6 +312,11 @@ const LeaderboardPage = () => {
                   <StreakIndicator currentStreak={topThree[0].current_streak} size="md" />
                 </div>
               )}
+              {topThree[0].badges && topThree[0].badges.length > 0 && (
+                <div className="mt-2">
+                  <BadgeIcons badges={topThree[0].badges} />
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -273,6 +340,11 @@ const LeaderboardPage = () => {
                   <StreakIndicator currentStreak={topThree[2].current_streak} size="sm" />
                 </div>
               )}
+              {topThree[2].badges && topThree[2].badges.length > 0 && (
+                <div className="mt-2">
+                  <BadgeIcons badges={topThree[2].badges} />
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -281,15 +353,17 @@ const LeaderboardPage = () => {
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
         <div className="lg:col-span-2">
-          {/* Search Bar */}
+          {/* Search Bar — triggers server-side refetch via debounce */}
           <div className="mb-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <Input
                 type="text"
                 placeholder="Search by username..."
-                value={searchTerm}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                value={searchInput}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearchInput(e.target.value)
+                }
                 className="border-[#1E2A36] bg-[#13202D] pl-10"
               />
             </div>
@@ -298,7 +372,14 @@ const LeaderboardPage = () => {
           {/* Leaderboard Table */}
           <Card className="border-[#1E2A36] bg-[#13202D]">
             <CardHeader>
-              <CardTitle>Rankings</CardTitle>
+              <CardTitle>
+                Rankings
+                {activeSearch && (
+                  <span className="ml-2 text-sm font-normal text-gray-400">
+                    — results for &ldquo;{activeSearch}&rdquo; ({total})
+                  </span>
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
@@ -343,8 +424,8 @@ const LeaderboardPage = () => {
                             </TableCell>
                           </TableRow>
                         ))
-                    ) : filteredLeaderboard.length > 0 ? (
-                      filteredLeaderboard.map((entry) => {
+                    ) : leaderboard.length > 0 ? (
+                      leaderboard.map((entry) => {
                         const isCurrentUser =
                           session && entry.userId === session.user.id;
                         return (
@@ -394,16 +475,19 @@ const LeaderboardPage = () => {
                               </div>
                             </TableCell>
                             <TableCell className="text-center">
-                              {entry.current_streak >= 3 ? (
-                                <div className="flex justify-center">
-                                  <StreakIndicator
-                                    currentStreak={entry.current_streak}
-                                    size="sm"
-                                  />
-                                </div>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                              <div className="flex flex-col items-center gap-1">
+                                {entry.current_streak >= 3 ? (
+                                  <div className="flex justify-center">
+                                    <StreakIndicator
+                                      currentStreak={entry.current_streak}
+                                      size="sm"
+                                    />
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-500">-</span>
+                                )}
+                                <BadgeIcons badges={entry.badges} />
+                              </div>
                             </TableCell>
                             <TableCell className="text-center">
                               <div className="flex justify-center">
@@ -416,7 +500,9 @@ const LeaderboardPage = () => {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={7} className="h-24 text-center">
-                          No players found
+                          {activeSearch
+                            ? `No players found matching "${activeSearch}"`
+                            : "No players found"}
                         </TableCell>
                       </TableRow>
                     )}
@@ -425,7 +511,7 @@ const LeaderboardPage = () => {
               </div>
 
               {/* Pagination */}
-              {filteredLeaderboard.length >= ITEMS_PER_PAGE && (
+              {total > ITEMS_PER_PAGE && (
                 <div className="flex items-center justify-between border-t border-[#1E2A36] p-4">
                   <Button
                     variant="outline"
@@ -436,14 +522,12 @@ const LeaderboardPage = () => {
                     Previous
                   </Button>
                   <span className="text-sm text-gray-400">
-                    Page {currentPage}
+                    Page {currentPage} of {Math.ceil(total / ITEMS_PER_PAGE)}
                   </span>
                   <Button
                     variant="outline"
                     onClick={() => setCurrentPage((p) => p + 1)}
-                    disabled={
-                      loading || filteredLeaderboard.length < ITEMS_PER_PAGE
-                    }
+                    disabled={loading || currentPage >= Math.ceil(total / ITEMS_PER_PAGE)}
                     className="border-[#1E2A36] bg-[#0A0A1A]"
                   >
                     Next

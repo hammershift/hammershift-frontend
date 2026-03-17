@@ -17,6 +17,9 @@ import DailyHammer from "./components/DailyHammer";
 import LiveTicker from "./components/LiveTicker";
 import TrendingMarketsSection from "./components/TrendingMarketsSection";
 import AuthorityBar from "./components/AuthorityBar";
+import TopPredictors from "./components/TopPredictors";
+import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
+import { Activity, Users as UsersIcon, BarChart2 } from "lucide-react";
 
 // Format currency
 const USDollar = new Intl.NumberFormat('en-US', {
@@ -138,6 +141,8 @@ async function getHomePageData() {
 export default async function HomePage() {
   let featuredAuction = null;
   let dailyHammer: { auctionId: string; title: string; image: string | null; deadline: string | null } | null = null;
+  let leaderboard: Array<{ _id: string; username: string; total_score: number; predictions_count: number }> = [];
+  let activityStats = { predictions_today: 0, active_auctions_value: 0, active_players: 0 };
   let error = null;
 
   try {
@@ -150,6 +155,8 @@ export default async function HomePage() {
     const data = await getHomePageData();
     featuredAuction = data.featuredAuction;
     dailyHammer = data.dailyHammer;
+    leaderboard = data.leaderboard ?? [];
+    activityStats = data.activityStats;
   } catch (err: any) {
     console.error('❌ Error fetching homepage data:', err);
     error = `Data error: ${err.message}`;
@@ -213,11 +220,65 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Platform Stats Bar */}
+      <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pt-4 pb-10" aria-label="Platform statistics">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          {/* Active Markets */}
+          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E94560]/10">
+              <BarChart2 className="h-5 w-5 text-[#E94560]" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-2xl font-bold text-white tabular-nums">
+                {activityStats.active_auctions_value > 0
+                  ? new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(activityStats.active_auctions_value / 1_000_000) + "M"
+                  : "—"}
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">Total Value on Line</p>
+            </div>
+          </div>
+
+          {/* Predictions Today */}
+          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00D4AA]/10">
+              <Activity className="h-5 w-5 text-[#00D4AA]" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-2xl font-bold text-white tabular-nums">
+                {activityStats.predictions_today.toLocaleString()}
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">Predictions Today</p>
+            </div>
+          </div>
+
+          {/* Active Traders */}
+          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFB547]/10">
+              <UsersIcon className="h-5 w-5 text-[#FFB547]" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="font-mono text-2xl font-bold text-white tabular-nums">
+                {activityStats.active_players.toLocaleString()}
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">Active Traders</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Auction Hero — only when a closing-soon car exists */}
+      {featuredAuction && (
+        <FeaturedAuctionHero auction={featuredAuction} />
+      )}
+
       {/* Trending Markets — overlaps hero bottom */}
-      <section className="relative z-10 -mt-12 mx-auto w-full max-w-6xl px-4 pb-16">
+      <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-16">
         <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
         <TrendingMarketsSection />
       </section>
+
+      {/* Top Predictors This Week */}
+      <TopPredictors leaderboard={leaderboard} />
 
       {/* Daily Hammer Widget */}
       <DailyHammer auction={dailyHammer} />
