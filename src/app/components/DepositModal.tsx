@@ -46,8 +46,12 @@ function loadOnrampScript(): Promise<void> {
   });
 }
 
+const AMOUNT_OPTIONS = [50, 100, 250, 500] as const;
+type AmountOption = typeof AMOUNT_OPTIONS[number];
+
 export default function DepositModal({ open, onClose }: Props) {
   const { embeddedWalletAddress } = useVelocityAuth();
+  const [selectedAmount, setSelectedAmount] = useState<AmountOption>(100);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +59,7 @@ export default function DepositModal({ open, onClose }: Props) {
   // Keep a ref to the mounted session so we can unmount on close
   const sessionRef = useRef<{ unmount: () => void } | null>(null);
 
-  // Fetch a new onramp client secret whenever the modal opens
+  // Fetch a new onramp client secret whenever the modal opens or amount changes
   useEffect(() => {
     if (!open || !embeddedWalletAddress) return;
     setLoading(true);
@@ -65,7 +69,7 @@ export default function DepositModal({ open, onClose }: Props) {
     fetch('/api/stripe/onramp-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ walletAddress: embeddedWalletAddress, amount: 50 }),
+      body: JSON.stringify({ walletAddress: embeddedWalletAddress, amount: selectedAmount }),
     })
       .then((r) => r.json())
       .then((data) => {
@@ -77,7 +81,7 @@ export default function DepositModal({ open, onClose }: Props) {
       })
       .catch(() => setError('Network error. Please try again.'))
       .finally(() => setLoading(false));
-  }, [open, embeddedWalletAddress]);
+  }, [open, embeddedWalletAddress, selectedAmount]);
 
   // Unmount widget and reset state when modal closes
   useEffect(() => {
@@ -173,7 +177,7 @@ export default function DepositModal({ open, onClose }: Props) {
                   fetch('/api/stripe/onramp-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ walletAddress: embeddedWalletAddress, amount: 50 }),
+                    body: JSON.stringify({ walletAddress: embeddedWalletAddress, amount: selectedAmount }),
                   })
                     .then((r) => r.json())
                     .then((data) => {
@@ -196,6 +200,29 @@ export default function DepositModal({ open, onClose }: Props) {
               <p className="text-center text-sm text-slate-400">
                 Please sign in to deposit funds.
               </p>
+            </div>
+          )}
+
+          {/* Amount selector — shown when wallet is available and widget not yet loaded */}
+          {!clientSecret && !error && embeddedWalletAddress && (
+            <div className="mb-4">
+              <p className="mb-2 text-xs text-slate-400">Select amount (USD)</p>
+              <div className="grid grid-cols-4 gap-2">
+                {AMOUNT_OPTIONS.map((opt) => (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => setSelectedAmount(opt)}
+                    className={`rounded-lg border py-2 text-sm font-semibold font-mono transition-colors ${
+                      selectedAmount === opt
+                        ? 'border-[#E94560] bg-[#E94560]/10 text-[#E94560]'
+                        : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/30'
+                    }`}
+                  >
+                    ${opt}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 

@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ObjectId } from 'mongodb';
+import clientPromise from '@/lib/mongodb';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/polygon-markets/[marketId]/history
  *
- * Returns 7 deterministic synthetic YES price data points for sparkline rendering.
- * Seed is the marketId so the line is stable across re-renders.
- * Replace with real stored price history once priceHistory is tracked in DB.
+ * Returns the real stored price history for a market.
+ * Price snapshots are written on every trade execution via the trade route.
+ * If no history exists yet (brand-new market), returns a single seed point
+ * at the market's createdAt timestamp with prices at 0.5/0.5.
  */
 export async function GET(
   _req: NextRequest,
@@ -19,30 +22,39 @@ export async function GET(
     return NextResponse.json({ message: 'Missing marketId' }, { status: 400 });
   }
 
-  const points = generateSyntheticHistory(0.5, 7, marketId);
-  return NextResponse.json(points);
-}
-
-function generateSyntheticHistory(
-  endPrice: number,
-  days: number,
-  seed: string
-): { day: number; price: number }[] {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+  let marketObjectId: ObjectId;
+  try {
+    marketObjectId = new ObjectId(marketId);
+  } catch {
+    return NextResponse.json({ message: 'Invalid marketId format' }, { status: 400 });
   }
 
-  const points: { day: number; price: number }[] = [];
-  let price = Math.min(Math.max(endPrice + (((hash % 20) - 10) / 100), 0.1), 0.9);
+  const client = await clientPromise;
+  const db = client.db();
 
-  for (let d = days; d >= 0; d--) {
-    points.push({ day: d, price: parseFloat(price.toFixed(3)) });
-    hash = ((hash * 1664525 + 1013904223) | 0);
-    const delta = ((hash % 10) - 5) / 100;
-    price = Math.min(Math.max(price + delta, 0.05), 0.95);
+  const market = await db
+    .collection('polygon_markets')
+    .findOne(
+      { _id: marketObjectId },
+      { projection: { priceHistory: 1, createdAt: 1 } }
+    );
+
+  if (!market) {
+    return NextResponse.json({ message: 'Market not found' }, { status: 404 });
   }
 
-  points[points.length - 1].price = endPrice;
-  return points.reverse();
+  const history = market.priceHistory ?? [];
+
+  if (history.length === 0) {
+    return NextResponse.json([
+      {
+        timestamp: market.createdAt ?? new Date(),
+        yesPrice: 0.5,
+        noPrice: 0.5,
+        volume: 0,
+      },
+    ]);
+  }
+
+  return NextResponse.json(history);
 }

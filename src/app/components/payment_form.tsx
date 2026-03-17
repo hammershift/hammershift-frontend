@@ -1,10 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import CountryOptions from "./country_option";
 
 import CancelIcon from "../../../public/images/x-icon.svg";
 import AmexLogo from "../../../public/images/payments-logo/amex.svg";
@@ -14,15 +12,13 @@ import GooglePayLogo from "../../../public/images/payments-logo/google-pay.svg";
 import MasterCardLogo from "../../../public/images/payments-logo/mastercard.svg";
 import PaypalLogo from "../../../public/images/payments-logo/paypal.svg";
 import VisaLogo from "../../../public/images/payments-logo/visa.svg";
-import CardIcon from "../../../public/images/payments-logo/card.svg";
-import HelpIcon from "../../../public/images/payments-logo/help-icon.svg";
 import Check from "../../../public/images/check.svg";
 import EmbeddedCheckoutButton from "@/app/components/embedded_checkout_button";
 
 const PaymentForm = (props: any) => {
   const { handleClosePaymentModal, prices, userId, userEmail } = props;
 
-  const cardSaved = true;
+  const cardSaved = false;
   const [paymentChoice, setPaymentChoice] = useState<string | null>(null); //null, Credit Card, Paypal, Apple Pay, Google Pay
   const [isLoading, setIsLoading] = useState(false);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
@@ -30,15 +26,6 @@ const PaymentForm = (props: any) => {
   const [priceId, setPriceId] = useState<string | null>(null);
 
   const errorValidating = false;
-  // To test loading
-  useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-        setIsLoading(false);
-        setIsPaymentSuccessful(true);
-      }, 5000);
-    }
-  }, [isLoading]);
 
   return (
     <div className="fixed top-0">
@@ -225,68 +212,6 @@ const PaymentForm = (props: any) => {
                 {/* inputs */}
 
                 <div>
-                  {/* <label>Card Number</label>
-                <div className="bg-white/5 flex h-11 py-2.5 px-3 mt-2">
-                  <Image
-                    src={CardIcon}
-                    width={35}
-                    height={24}
-                    alt="x"
-                    className="w-[35px] h-[24px]"
-                  />
-                  <input
-                    className="bg-transparent ml-2 w-full"
-                    placeholder="0000 0000 0000 0000"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label>Expiration</label>
-                  <div className="relative bg-white/5 flex items-center h-11 py-2.5 px-3 mt-2">
-                    <input
-                      className="bg-transparent ml-2"
-                      placeholder="MM/YY"
-                    />
-                    <Image
-                      src={HelpIcon}
-                      width={20}
-                      height={20}
-                      alt="x"
-                      className="w-[20px] h-[20px] absolute right-3"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label>CVV</label>
-                  <div className="relative bg-white/5 flex items-center h-11 py-2.5 px-3 mt-2">
-                    <input
-                      className="bg-transparent ml-2"
-                      placeholder="123"
-                    />
-                    <Image
-                      src={HelpIcon}
-                      width={20}
-                      height={20}
-                      alt="x"
-                      className="w-[20px] h-[20px] absolute right-3"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[#1018280D]">
-                <div>
-                  <label>Country</label>
-                  <div className="bg-white/5 flex items-center h-11 py-2.5 px-3 mt-2">
-                    <CountryOptions />
-                  </div>
-                </div>
-                <div>
-                  <label>Zip Code</label>
-                  <div className="bg-white/5 flex items-center h-11 py-2.5 px-3 mt-2">
-                    <input className="bg-transparent ml-2 w-full" />
-                  </div>
-                </div> */}
                   <div className="bg-[#172431] p-4 rounded flex flex-col gap-4">
                     {" "}
                     <p className="p-2">
@@ -343,57 +268,45 @@ const PaymentForm = (props: any) => {
 
           {paymentChoice === "Paypal" && (
             <div>
-              <div>Paypal Payment</div>
+              <div className="text-center py-8 text-white/60">
+                PayPal payments coming soon.
+              </div>
               <div className="py-4 flex justify-end">
                 <button
                   className="btn-transparent-white"
                   onClick={() => setPaymentChoice((prev) => null)}
                 >
-                  CANCEL
-                </button>
-                <button
-                  className="btn-yellow ml-4"
-                  onClick={() => setIsLoading((prev) => true)}
-                >
-                  CONTINUE
+                  BACK
                 </button>
               </div>
             </div>
           )}
           {paymentChoice === "Apple Pay" && (
             <div>
-              <div>Apple Pay</div>
+              <div className="text-center py-8 text-white/60">
+                Apple Pay payments coming soon.
+              </div>
               <div className="py-4 flex justify-end">
                 <button
                   className="btn-transparent-white"
                   onClick={() => setPaymentChoice((prev) => null)}
                 >
-                  CANCEL
-                </button>
-                <button
-                  className="btn-yellow ml-4"
-                  onClick={() => setIsLoading((prev) => true)}
-                >
-                  CONTINUE
+                  BACK
                 </button>
               </div>
             </div>
           )}
           {paymentChoice === "Google Pay" && (
             <div>
-              <div>Google Pay</div>
+              <div className="text-center py-8 text-white/60">
+                Google Pay payments coming soon.
+              </div>
               <div className="py-4 flex justify-end">
                 <button
                   className="btn-transparent-white"
                   onClick={() => setPaymentChoice((prev) => null)}
                 >
-                  CANCEL
-                </button>
-                <button
-                  className="btn-yellow ml-4"
-                  onClick={() => setIsLoading((prev) => true)}
-                >
-                  CONTINUE
+                  BACK
                 </button>
               </div>
             </div>
@@ -451,8 +364,7 @@ const PaymentSuccessful = () => {
       <div className="text-sm sm:text-base">
         Quam temere in vitiis, legem sancimus haerentia
       </div>
-      {/* TODO: replace href */}
-      <Link href={"/"} className="mt-4">
+      <Link href={"/my_wallet"} className="mt-4">
         <div className="btn-transparent-white">BACK TO HOME</div>
       </Link>
     </div>

@@ -21,7 +21,7 @@ const transactionSchema = new mongoose.Schema({
   transactionType: {
     type: String,
     required: true,
-    enum: ['wager', 'deposit', 'withdraw', 'winnings', 'refund', 'tournament buy-in', 'processing_fee'],
+    enum: ['wager', 'deposit', 'withdraw', 'winnings', 'refund', 'tournament buy-in', 'processing_fee', 'ach_deposit'],
   },
   amount: {
     type: Number,
@@ -59,7 +59,16 @@ const transactionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['success', 'failed', 'processing'],
+    enum: ['success', 'failed', 'processing', 'pending'],
+  },
+  method: {
+    type: String,
+  },
+  routingNumberLast4: {
+    type: String,
+  },
+  accountNumberLast4: {
+    type: String,
   },
 });
 

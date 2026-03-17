@@ -41,6 +41,7 @@ import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/mongodb";
 import { calcSettlementPayout } from "@/lib/amm";
+import { sendMarketResultEmail } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -164,13 +165,32 @@ export async function GET(req: Request) {
         }
 
         // ── b. Credit user wallet ────────────────────────────────────────────
-        await db.collection("users").updateOne(
+        const updatedUser = await db.collection("users").findOneAndUpdate(
           { _id: userId },
           {
             $inc: { balance: netPayout },
             $set: { updatedAt: now },
-          }
+          },
+          { returnDocument: "after" }
         );
+
+        // ── b1. Send prediction result email to winner (non-blocking) ─────────
+        const updatedUserDoc = updatedUser && "value" in updatedUser ? updatedUser.value : updatedUser;
+        if (updatedUserDoc?.email) {
+          try {
+            await sendMarketResultEmail({
+              to: updatedUserDoc.email as string,
+              marketTitle: market.title ?? market.question ?? "a market",
+              outcome: "won",
+              amount: netPayout,
+            });
+          } catch (emailErr) {
+            console.error(
+              `settle-markets: result email failed for user ${userId.toHexString()}:`,
+              emailErr
+            );
+          }
+        }
 
         // ── c. Transaction audit record ──────────────────────────────────────
         await db.collection("transactions").insertOne({
@@ -211,7 +231,151 @@ export async function GET(req: Request) {
       }
     }
 
-    // ── 3. Mark market SETTLED only if zero failures ─────────────────────────
+    // ── 3. Mark losing positions as LOST ─────────────────────────────────────
+    // Any OPEN positions remaining for this market did not win — mark them LOST.
+    // This runs after all winners have been SETTLED (or skipped as already done),
+    // so the only remaining OPEN positions belong to losers.
+    if (result.positionsFailed === 0) {
+      await db.collection("polygon_positions").updateMany(
+        { marketId, status: "OPEN" },
+        { $set: { status: "LOST", settledAt: now, updatedAt: now } }
+      );
+
+      // ── 3a. Update streaks and award badges for winning users ──────────────
+      // Collect distinct winning user IDs from the positions we just settled.
+      const settledWinnerIds = winningPositions
+        .filter((p) => (p.shares ?? 0) > 0)
+        .map((p) => p.userId as ObjectId);
+
+      const winnerSet = new Set(settledWinnerIds.map((id) => id.toHexString()));
+
+      // Increment streak for each distinct winner
+      for (const winnerId of settledWinnerIds) {
+        try {
+          // Upsert streak document — increment current_streak, update longest if needed
+          const streakDoc = await db.collection("streaks").findOneAndUpdate(
+            { user_id: winnerId },
+            [
+              {
+                $set: {
+                  current_streak: { $add: [{ $ifNull: ["$current_streak", 0] }, 1] },
+                  longest_streak: {
+                    $max: [
+                      { $ifNull: ["$longest_streak", 0] },
+                      { $add: [{ $ifNull: ["$current_streak", 0] }, 1] },
+                    ],
+                  },
+                  last_prediction_date: now,
+                  updatedAt: now,
+                },
+              },
+            ],
+            { upsert: true, returnDocument: "after" }
+          );
+
+          const currentStreak: number = (streakDoc as { current_streak?: number } | null)?.current_streak ?? 1;
+
+          // Award FIRST_WIN badge if not already held
+          const hasFirstWin = await db.collection("badges").findOne({
+            user_id: winnerId,
+            badge_type: "first_win",
+          });
+          if (!hasFirstWin) {
+            await db.collection("badges").insertOne({
+              user_id: winnerId,
+              badge_type: "first_win",
+              earned_at: now,
+            });
+          }
+
+          // Award streak milestone badges if threshold reached and not already held
+          const streakBadges: Array<{ threshold: number; badge_type: string }> = [
+            { threshold: 3, badge_type: "hot_start" },
+            { threshold: 7, badge_type: "on_fire" },
+            { threshold: 14, badge_type: "unstoppable" },
+            { threshold: 30, badge_type: "legend" },
+          ];
+
+          for (const { threshold, badge_type } of streakBadges) {
+            if (currentStreak >= threshold) {
+              const alreadyHas = await db.collection("badges").findOne({
+                user_id: winnerId,
+                badge_type,
+              });
+              if (!alreadyHas) {
+                await db.collection("badges").insertOne({
+                  user_id: winnerId,
+                  badge_type,
+                  earned_at: now,
+                });
+              }
+            }
+          }
+        } catch (streakErr) {
+          // Non-fatal — streak/badge failure must not block settlement
+          console.error(
+            `settle-markets: streak/badge update failed for user ${winnerId.toHexString()}:`,
+            streakErr
+          );
+        }
+      }
+
+      // ── 3b. Reset streak for losing users ─────────────────────────────────
+      // Find distinct losing user IDs from positions that were just marked LOST
+      const losingPositions = await db
+        .collection("polygon_positions")
+        .find({ marketId, status: "LOST", settledAt: now })
+        .project({ userId: 1 })
+        .toArray();
+
+      const loserIds = losingPositions
+        .map((p) => p.userId as ObjectId)
+        .filter((id) => !winnerSet.has(id.toHexString()));
+
+      for (const loserId of loserIds) {
+        try {
+          await db.collection("streaks").updateOne(
+            { user_id: loserId },
+            { $set: { current_streak: 0, last_prediction_date: now, updatedAt: now } },
+            { upsert: true }
+          );
+        } catch (streakErr) {
+          console.error(
+            `settle-markets: streak reset failed for user ${loserId.toHexString()}:`,
+            streakErr
+          );
+        }
+      }
+
+      // ── 3c. Send prediction result emails to losing users (non-blocking) ────
+      for (const loserId of loserIds) {
+        try {
+          const loserUser = await db
+            .collection("users")
+            .findOne({ _id: loserId }, { projection: { email: 1 } });
+          if (loserUser?.email) {
+            // Find how much the loser staked (sum of shares as proxy for amount lost)
+            const loserPosition = losingPositions.find(
+              (p) => (p.userId as ObjectId).toHexString() === loserId.toHexString()
+            );
+            const amountLost: number = loserPosition?.shares ?? 0;
+            await sendMarketResultEmail({
+              to: loserUser.email as string,
+              marketTitle: market.title ?? market.question ?? "a market",
+              outcome: "lost",
+              amount: amountLost,
+            });
+          }
+        } catch (emailErr) {
+          console.error(
+            `settle-markets: result email failed for losing user ${loserId.toHexString()}:`,
+            emailErr
+          );
+        }
+      }
+    }
+
+    // ── 4. Mark market SETTLED only if zero failures ──────────────────────────
     // If any positions failed, leave market as RESOLVED so the next cron run
     // can retry the failed positions.
     if (result.positionsFailed === 0) {

@@ -3,7 +3,13 @@ import { stripe } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
   try {
-    const { walletAddress, amount } = await req.json();
+    const body = await req.json();
+    const { walletAddress } = body;
+    // Parse amount explicitly — coerce strings to number, fall back to 100 only when truly absent
+    const parsedAmount = body.amount !== undefined && body.amount !== null
+      ? Number(body.amount)
+      : 100;
+    const depositAmount = isNaN(parsedAmount) || parsedAmount <= 0 ? 100 : parsedAmount;
 
     if (!walletAddress) {
       return NextResponse.json({ message: 'Wallet address required' }, { status: 400 });
@@ -12,7 +18,7 @@ export async function POST(req: NextRequest) {
     const session = await (stripe as any).crypto.onrampSessions.create({
       transaction_details: {
         destination_currency: 'usdc',
-        destination_exchange_amount: String(amount ?? 50),
+        destination_exchange_amount: String(depositAmount),
         destination_network: 'polygon',
         wallet_address: walletAddress,
         wallet_addresses: { polygon: walletAddress },

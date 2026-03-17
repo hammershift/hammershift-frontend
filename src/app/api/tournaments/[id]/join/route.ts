@@ -121,7 +121,7 @@ export async function POST(
         $push: {
           users: {
             userId: session.user.id,
-            fullName: session.user.name,
+            fullName: session.user.fullName,
             username: session.user.username || session.user.email?.split('@')[0],
             role: session.user.role || 'USER'
           }

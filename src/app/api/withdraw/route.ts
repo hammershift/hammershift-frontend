@@ -46,6 +46,12 @@ export async function POST(req: NextRequest) {
 
     await transaction.save({ session: mongoSession });
 
+    await db.collection('users').updateOne(
+      { _id: userID },
+      { $inc: { balance: -amount } },
+      { session: mongoSession }
+    );
+
     await mongoSession.commitTransaction();
     mongoSession.endSession();
 

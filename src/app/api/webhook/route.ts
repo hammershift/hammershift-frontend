@@ -45,13 +45,33 @@ export async function POST(req: NextRequest) {
         amountPaid = invoice.amount_paid / 100;
         userId = invoice.metadata?.userId;
 
-        const matchedUser = await db
+        let matchedUser = await db
           .collection("users")
           .findOne({ stripeCustomerId: stripeCustomerId });
 
+        if (!matchedUser && userId) {
+          // Fallback: look up user by metadata.userId carried on the invoice
+          try {
+            const { ObjectId } = await import("mongodb");
+            matchedUser = await db
+              .collection("users")
+              .findOne({ _id: new ObjectId(userId) });
+            if (matchedUser) {
+              console.log(
+                `invoice.payment_succeeded: resolved user via metadata.userId ${userId} (stripeCustomerId ${stripeCustomerId} not matched)`
+              );
+            }
+          } catch (idErr) {
+            console.error(
+              `invoice.payment_succeeded: metadata.userId "${userId}" is not a valid ObjectId — cannot fall back`,
+              idErr
+            );
+          }
+        }
+
         if (!matchedUser) {
-          console.warn(
-            `invoice.payment_succeeded: no user found for stripeCustomerId ${stripeCustomerId}. Skipping balance update and transaction record.`
+          console.error(
+            `invoice.payment_succeeded: UNRESOLVED — no user found for stripeCustomerId "${stripeCustomerId}" and metadata.userId "${userId ?? "absent"}". Manual reconciliation required.`
           );
           break;
         }

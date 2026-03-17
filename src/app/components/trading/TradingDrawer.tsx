@@ -14,7 +14,8 @@ import { encodeFunctionData, parseUnits } from 'viem';
 
 interface Market {
   _id: string;
-  contractAddress?: string; // optional — may not exist on all markets yet
+  contractAddress?: string;   // optional — may not exist on all markets yet
+  onChainMarketId?: string;   // bytes32 keccak256(auctionId) used on-chain
   question: string;
   yesPrice: number;
   noPrice: number;
@@ -176,10 +177,18 @@ export default function TradingDrawer({
           const outcomeIndex = side === 'YES' ? 0 : 1;
           const usdcAmount = parseUnits(amount, 6); // USDC has 6 decimals
 
+          // onChainMarketId is the bytes32 keccak256(auctionId) stored on the
+          // market document. Fall back to a zero-hash if somehow absent so the
+          // call still compiles, but this should never be reached for markets
+          // that have a contractAddress set.
+          const marketIdBytes32 = (market.onChainMarketId ??
+            '0x0000000000000000000000000000000000000000000000000000000000000000') as `0x${string}`;
+
           const data = encodeFunctionData({
             abi: MARKET_ABI,
             functionName: 'buyShares',
-            args: [outcomeIndex, usdcAmount],
+            // ABI order: marketId (bytes32), outcome (uint8), usdcAmount (uint256), minSharesOut (uint256)
+            args: [marketIdBytes32, outcomeIndex, usdcAmount, BigInt(0)],
           });
 
           const userOpResponse = await smartAccount.sendTransaction(

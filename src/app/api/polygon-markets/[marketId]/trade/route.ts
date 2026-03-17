@@ -452,6 +452,27 @@ async function executeTradeWrites(
     { session }
   );
 
+  // ── b2. Append price history snapshot (capped at 500 points) ─────────────
+  await db.collection("polygon_markets").updateOne(
+    { _id: marketObjectId },
+    {
+      $push: {
+        priceHistory: {
+          $each: [
+            {
+              timestamp: now,
+              yesPrice: quote.newYesPrice,
+              noPrice: quote.newNoPrice,
+              volume: usdcAmount,
+            },
+          ],
+          $slice: -500,
+        },
+      },
+    },
+    { session }
+  );
+
   // ── c. Upsert position ────────────────────────────────────────────────────
   // Uses MongoDB's $setOnInsert + $inc to do a true upsert:
   // - If position exists: add shares and recalculate avgCostBasis
@@ -606,6 +627,26 @@ async function executeCompensatingWrites(
         updatedAt: now,
       },
       $inc: { totalVolume: usdcAmount, totalLiquidity: quote.usdcAfterFee },
+    }
+  );
+
+  // b2. Append price history snapshot (capped at 500 points)
+  await db.collection("polygon_markets").updateOne(
+    { _id: marketObjectId },
+    {
+      $push: {
+        priceHistory: {
+          $each: [
+            {
+              timestamp: now,
+              yesPrice: quote.newYesPrice,
+              noPrice: quote.newNoPrice,
+              volume: usdcAmount,
+            },
+          ],
+          $slice: -500,
+        },
+      },
     }
   );
 

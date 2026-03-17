@@ -11,6 +11,7 @@ import { NextResponse } from 'next/server';
 import connectToDB from '@/lib/mongoose';
 import mongoose from 'mongoose';
 import { computeMarketRiskFields } from '@/lib/marketRiskSetup';
+import { keccak256, stringToBytes } from 'viem';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,8 +69,12 @@ export async function GET(req: Request) {
     // Compute all risk fields at creation time — never recomputed later
     const riskFields = computeMarketRiskFields(closesAt, predictedPrice);
 
+    const onChainMarketId = keccak256(stringToBytes(auctionId));
+
     await db.collection('polygon_markets').insertOne({
       auctionId,
+      contractAddress: process.env.VELOCITY_MARKETS_CONTRACT ?? null,
+      onChainMarketId,
       question: `Will this sell above $${predictedPrice.toLocaleString()}?`,
       status: 'ACTIVE',
       yesPrice: 0.5,

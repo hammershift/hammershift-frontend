@@ -40,8 +40,21 @@ frontend:
         - npm run build
     postBuild:
       commands:
+        # -----------------------------------------------------------------------
+        # CRON JOB BOOTSTRAP
+        # These curl calls run ONCE at deploy time to initialize cron job state.
+        # For recurring execution, AWS EventBridge rules must be configured
+        # separately to hit these endpoints on a schedule:
+        #   - create-markets:  every 5 minutes
+        #   - close-trading:   every 30 minutes
+        #   - resolve-markets: every 10 minutes
+        #   - settle-markets:  every 15 minutes
+        # Each call requires the x-cron-secret header with the CRON_SECRET env var.
+        # -----------------------------------------------------------------------
         - 'curl -s -H "x-cron-secret: $CRON_SECRET" "$NEXTAUTH_URL/api/cron/create-markets" || true'
+        - 'curl -s -H "x-cron-secret: $CRON_SECRET" "$NEXTAUTH_URL/api/cron/close-trading" || true'
         - 'curl -s -H "x-cron-secret: $CRON_SECRET" "$NEXTAUTH_URL/api/cron/resolve-markets" || true'
+        - 'curl -s -H "x-cron-secret: $CRON_SECRET" "$NEXTAUTH_URL/api/cron/settle-markets" || true'
   artifacts:
     baseDirectory: .next
     files:

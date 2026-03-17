@@ -1,0 +1,24 @@
+{
+  "name": "velocity-markets-contracts",
+  "version": "1.0.0",
+  "description": "Velocity Markets CPMM prediction market smart contracts",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy.ts --network polygon-amoy",
+    "deploy:mainnet": "hardhat run scripts/deploy.ts --network polygon",
+    "verify:testnet": "hardhat verify --network polygon-amoy",
+    "verify:mainnet": "hardhat verify --network polygon",
+    "wallet:generate": "ts-node scripts/generate-wallet.ts"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "dotenv": "^16.4.5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}

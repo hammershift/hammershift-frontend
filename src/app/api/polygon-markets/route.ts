@@ -3,6 +3,7 @@ import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import { computeMarketRiskFields } from "@/lib/marketRiskSetup";
+import { keccak256, stringToBytes } from "viem";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +44,11 @@ async function autoCreateMissingMarkets(
       const predictedPrice = auction.sort?.price ?? 0;
       const closesAt: Date | null = auction.sort?.deadline ?? null;
       const riskFields = computeMarketRiskFields(closesAt, predictedPrice);
+      const onChainMarketId = keccak256(stringToBytes(auctionId));
       await db!.collection("polygon_markets").insertOne({
         auctionId,
+        contractAddress: process.env.VELOCITY_MARKETS_CONTRACT ?? null,
+        onChainMarketId,
         question: `Will this sell above $${predictedPrice.toLocaleString()}?`,
         status: "ACTIVE",
         yesPrice: 0.5,
