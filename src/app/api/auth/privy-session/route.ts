@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
         isActive: true,
         isBanned: false,
         provider: 'privy',
-        role: 'user',
+        role: 'USER',
         embeddedWalletAddress,
       });
     } else if (embeddedWalletAddress && dbUser.embeddedWalletAddress !== embeddedWalletAddress) {
