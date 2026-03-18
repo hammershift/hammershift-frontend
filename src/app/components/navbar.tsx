@@ -242,28 +242,20 @@ const Navbar = () => {
               {dropPredictions && (
                 <PredictionsDropdownMenu closeMenu={closeMenu} />
               )}
-              <button
-                id="myaccount-button"
-                className="relative"
-                onClick={() => {
-                  setDropMyAccount((prev) => !prev);
-                  setDropPredictions(false);
-                }}
-              >
-                {/* <Image
-                                src={AccountIcon}
-                                width={24}
-                                height={24}
-                                alt="account"
-                                className="h-[24px] w-[24px]"
-                            /> */}
-                <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+              <div className="relative">
+                <button
+                  id="myaccount-button"
+                  onClick={() => {
+                    setDropMyAccount((prev) => !prev);
+                    setDropPredictions(false);
+                  }}
                 >
-                  {activeUser ? activeUser.username?.[0]?.toUpperCase() : "U"}
-                </div>
-                {dropMyAccount && <MyAccountDropdownMenu />}
-              </button>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E94560] text-white font-semibold text-sm">
+                    {activeUser ? activeUser.username?.[0]?.toUpperCase() : "U"}
+                  </div>
+                </button>
+                {dropMyAccount && <MyAccountDropdownMenu closeMenu={() => setDropMyAccount(false)} />}
+              </div>
             </div>
             <div className="flex items-center lg:hidden">
               <button
@@ -1545,127 +1537,80 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
   );
 };
 
-const MyAccountDropdownMenu = () => {
-  const [walletBalance, setWalletBalance] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(true);
+const MyAccountDropdownMenu = ({ closeMenu }: { closeMenu: () => void }) => {
   const { data: session } = useSession();
+  const { user: privyUser, logout: privyLogout, authenticated: privyAuthenticated } = useVelocityAuth();
+  const activeUser = privyUser ?? session?.user;
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchWalletBalance = async () => {
-      if (session) {
-        setIsLoading(true);
-        try {
-          const res = await fetch("/api/wallet", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+  const handleNavigate = (e: React.MouseEvent, path: string) => {
+    e.stopPropagation();
+    closeMenu();
+    router.push(path);
+  };
 
-          const data = await res.json();
-          if (res.ok) {
-            setWalletBalance(data.balance);
-          } else {
-            console.error("Failed to fetch wallet balance:", data.message);
-          }
-        } catch (error) {
-          console.error("Error fetching wallet balance:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchWalletBalance();
-  }, [session]);
-
-  const handleSignOut = async () => {
+  const handleSignOut = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    closeMenu();
     try {
+      if (privyAuthenticated && typeof privyLogout === "function") {
+        await privyLogout();
+      }
       await signOut({ redirect: false });
       router.push("/");
-      console.log("User successfully logged out");
     } catch (error) {
-      console.error("Error during sign out:", error);
+      console.error("Sign out error:", error);
+      router.push("/");
     }
   };
 
   return (
-    <div className="absolute right-0 top-8 z-10 flex h-auto w-[200px] flex-col items-start justify-between rounded bg-[#1A2C3D] shadow-xl shadow-black">
-      {/* <div className="px-6 text-lg font-bold">MY ACCOUNT</div> */}
-      {/* {isLoading ? (
-                <div className="flex w-full items-center justify-center px-6">
-                    <BeatLoader color="#696969" size={10} />
-                </div>
-            ) : typeof walletBalance === "number" ? (
-                <div className="w-full px-6">
-                    <div
-                        className="flex w-full items-center gap-6 rounded bg-[#49C74233] px-6 py-4"
-                        onClick={() => router.push("/my_wallet")}
-                    >
-                        <Image
-                            src={Wallet}
-                            width={32}
-                            height={32}
-                            alt="wallet icon"
-                            className="h-8 w-8"
-                        />
-                        <div className="flex grow flex-col items-start">
-                            <span className="py-1 text-xl font-bold">
-                                ${walletBalance.toFixed(2)}
-                            </span>
-                            <span className="text-[#49C742]">My Wallet</span>
-                        </div>
-                        <Image
-                            src={ArrowRight}
-                            width={32}
-                            height={32}
-                            alt="wallet icon"
-                            className="h-8 w-8"
-                        />
-                    </div>
-                </div>
-            ) : (
-                <div className="w-full px-6">Error fetching wallet balance</div>
-            )} */}
-      <div
-        onClick={() => router.push(createPageUrl("Profile"))}
-        className="grid w-full cursor-pointer grid-cols-[auto_1fr] items-center justify-between rounded px-4 py-2 hover:bg-[#2A3A4A]"
-      >
-        <UserIcon className="h-4 w-4 text-[#F2CA16]" />
-        <span className="text-white">My Profile</span>
+    <div
+      className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-xl border border-[#1E2A36] bg-[#0F172A] shadow-2xl shadow-black/60"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* User info header */}
+      {activeUser && (
+        <div className="border-b border-[#1E2A36] px-4 py-3">
+          <p className="truncate text-sm font-semibold text-white">
+            {activeUser.username ?? activeUser.email ?? "Account"}
+          </p>
+          {activeUser.email && activeUser.username && (
+            <p className="truncate text-xs text-gray-500">{activeUser.email}</p>
+          )}
+        </div>
+      )}
+
+      {/* Menu items */}
+      <div className="py-1">
+        <button
+          type="button"
+          onClick={(e) => handleNavigate(e, "/profile")}
+          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-300 transition-colors hover:bg-[#1E2A36] hover:text-white"
+        >
+          <UserIcon className="h-4 w-4 text-gray-500" />
+          My Profile
+        </button>
+        <button
+          type="button"
+          onClick={(e) => handleNavigate(e, "/settings")}
+          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-gray-300 transition-colors hover:bg-[#1E2A36] hover:text-white"
+        >
+          <Settings className="h-4 w-4 text-gray-500" />
+          Account Settings
+        </button>
       </div>
-      <div
-        onClick={() => router.push(createPageUrl("Settings"))}
-        className="grid w-full cursor-pointer grid-cols-[auto_1fr] items-center justify-between rounded px-4 py-2 hover:bg-[#2A3A4A]"
-      >
-        <Settings className="mr-2 h-4 w-4 text-[#F2CA16]" />
-        <span className="text-white">Account Settings</span>
+
+      <div className="border-t border-[#1E2A36] py-1">
+        <button
+          type="button"
+          onClick={handleSignOut}
+          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#E94560] transition-colors hover:bg-[#E94560]/10"
+        >
+          <LogOut className="h-4 w-4" />
+          Log out
+        </button>
       </div>
-      <div
-        onClick={handleSignOut}
-        className="grid w-full cursor-pointer grid-cols-[auto_1fr] items-center justify-between rounded px-4 py-2 hover:bg-[#2A3A4A]"
-      >
-        <LogOut className="mr-2 h-4 w-4 text-[#F2CA16]" />
-        <span className="text-white">Log out</span>
-      </div>
-      {/* <div className="flex w-full flex-col items-start px-6">
-                <Link
-                    href="/profile"
-                    className="w-full rounded p-2 text-left hover:bg-white/5"
-                >
-                    Profile
-                </Link>
-                <button className="w-full rounded p-2 text-left hover:bg-white/5">
-                    Settings
-                </button>
-                <button
-                    onClick={() => handleSignOut()}
-                    className="w-full rounded p-2 text-left hover:bg-white/5"
-                >
-                    Logout
-                </button>
-            </div> */}
     </div>
   );
 };
