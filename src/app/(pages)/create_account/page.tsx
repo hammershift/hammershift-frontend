@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import type { CheckedState } from "@radix-ui/react-checkbox";
@@ -14,6 +14,7 @@ export default function CustomSignupPage() {
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPrivyLoading, setIsPrivyLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -36,6 +37,23 @@ export default function CustomSignupPage() {
       router.push("/");
     }
   }, [authenticated, router]);
+
+  const handleGoogleSignup = async () => {
+    setError("");
+    if (typeof login === "function") {
+      try {
+        setIsPrivyLoading(true);
+        await login();
+      } catch (err) {
+        console.error("Privy login error:", err);
+        signIn("google", { callbackUrl: "/" });
+      } finally {
+        setIsPrivyLoading(false);
+      }
+    } else {
+      signIn("google", { callbackUrl: "/" });
+    }
+  };
 
   const handleChange = (e: { target: { name: string; value: string; type: string; checked: boolean } }) => {
     const { name, value, type, checked } = e.target;
@@ -126,16 +144,21 @@ export default function CustomSignupPage() {
         {/* Google OAuth button */}
         <button
           type="button"
-          onClick={() => login()}
-          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-900 font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
+          onClick={handleGoogleSignup}
+          disabled={isPrivyLoading}
+          className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 font-semibold py-3 px-4 rounded-xl transition-colors text-sm"
           aria-label="Continue with Google"
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
-            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.593C4.672 4.466 6.656 3.58 9 3.58z"/>
-          </svg>
+          {isPrivyLoading ? (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-gray-900" />
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+              <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+              <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+              <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z"/>
+              <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.593C4.672 4.466 6.656 3.58 9 3.58z"/>
+            </svg>
+          )}
           Continue with Google
         </button>
 
