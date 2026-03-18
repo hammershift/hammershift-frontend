@@ -1,392 +1,263 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-
-import GoogleSocial from "../../../../public/images/social-google-logo.svg";
-import FacebookSocial from "../../../../public/images/social-facebook-logo.svg";
-import TwitterSocial from "../../../../public/images/social-twitter-logo.svg";
-import AppleSocial from "../../../../public/images/social-apple-logo.svg";
-import CancelIcon from "../../../../public/images/x-icon.svg";
-import CheckIcon from "../../../../public/images/check-black.svg";
-import Onfido from "../../../../public/images/onfido.svg";
-import SingleNeutral from "../../../../public/images/single-neutral-id-card-3.svg";
-import UserImage from "../../../../public/images/user-single-neutral-male--close-geometric-human-person-single-up-user-male.svg";
 import { useRouter } from "next/navigation";
-import PasswordInput from "@/app/components/password_input";
-import { BounceLoader, PulseLoader } from "react-spinners";
+import { signIn, useSession } from "next-auth/react";
+import { BounceLoader } from "react-spinners";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
-import { useSession, signIn } from "next-auth/react";
 import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 import { checkUsernameExistence } from "@/lib/data";
-interface UserExistenceResponse {
-  emailExists: boolean;
-}
 
-const CreateAccount = () => {
-  type createAccountPageProps = "sign in" | "reset password";
-  const [createAccountPage, setCreateAccountPage] =
-    useState<createAccountPageProps>("sign in");
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isResetPasswordLoading, setIsResetPasswordLoading] = useState(false);
+  const [isPrivyLoading, setIsPrivyLoading] = useState(false);
 
   const router = useRouter();
-  const { login: privyLogin } = useVelocityAuth();
-
-  // Forgot/Reset Password
-  const [resetEmail, setResetEmail] = useState("");
   const { data: session } = useSession();
+  const { login: privyLogin, authenticated: privyAuthenticated } =
+    useVelocityAuth();
 
+  // Redirect if already authenticated via NextAuth
   useEffect(() => {
-    const handleSession = async () => {
-      if (!session || !session.user) {
-        return;
-      } else {
-        router.push("/authenticated");
-      }
-    };
-
-    const checkSession = async () => {
-      await handleSession();
-    };
-
-    checkSession();
-  }, [session]);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]$/;
-    if (
-      e.currentTarget.name === "password" &&
-      !allowedPattern.test(e.key) &&
-      e.key.length === 1
-    ) {
-      e.preventDefault();
+    if (session?.user) {
+      router.push("/");
     }
-  };
+  }, [session, router]);
 
-  const handleResetPassword = async () => {
-    setIsResetPasswordLoading(true);
-    try {
-      const response = await fetch("/api/forgotPassword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: resetEmail }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setIsResetPasswordLoading(false);
-        sessionStorage.setItem("passwordResetEmail", resetEmail); // store the email in session storage
-        sessionStorage.setItem("isNewPasswordResetProcess", "true"); // set the flag for password reset flow process
-        router.push("/password_reset_flow");
-      } else {
-        setIsResetPasswordLoading(false);
-        setError(data.message);
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.error("Error during password reset request:", error);
-      setError(
-        "An error occurred while processing the password reset request."
-      );
+  // Redirect if authenticated via Privy
+  useEffect(() => {
+    if (privyAuthenticated) {
+      router.push("/");
     }
-  };
+  }, [privyAuthenticated, router]);
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter your username and password.");
+      return;
+    }
+
     try {
       setIsLoading(true);
       const result = await signIn("credentials", {
-        email: username,
-        password: password,
+        email: email.trim(),
+        password,
         redirect: false,
       });
 
       if (result?.error) {
-        console.log(result.error);
-        const data = await checkUsernameExistence(username);
+        const data = await checkUsernameExistence(email.trim());
         if (data.exists && !data.hasPassword) {
-          setError("Account doesn't have a password set. Please use 'Forgot Password' to create one.");
+          setError(
+            "This account has no password set. Use 'Forgot Password' to create one."
+          );
         } else {
-          setError("Invalid username or password");
+          setError("Invalid username or password.");
         }
-        setIsLoading(false);
         return;
       }
 
       router.push("/");
-      // const response = await fetch('/api/checkUserExistence', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     email: email,
-      //   }),
-      // });
-
-      // if (!response) {
-      //   setError('Invalid email. Please try again');
-      // }
-      // else {
-      //   const data: UserExistenceResponse = await response.json();
-      //   if (!data.emailExists) {
-      //     setError('Email is not registered. Please sign up first.');
-      //   }
-      //   else {
-      //     const result = await signIn('email', {
-      //       redirect: false,
-      //       email: email,
-      //       callbackUrl: '/',
-      //       authorizationParams: {
-      //         email: email
-      //       }
-      //     });
-
-      //     if (!result?.error) {
-      //       console.log('Login successful');
-      //       router.push('/login_info');
-      //       return;
-      //     }
-
-      //     if (result.error === 'Your account has been banned') {
-      //       setError('Your account has been banned. Please contact support');
-      //       return;
-      //     }
-
-      //     // for any other errors
-      //     setError('Invalid credentials. Please try again');
-      //   }
-      // }
-    } catch (error) {
-      console.error("An unexpected error occurred during login:", error);
-      setError("An unexpected error occurred");
+    } catch (err) {
+      console.error("Unexpected error during login:", err);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // for Google signin
-  // const handleGoogleSignIn = async (provider: string) => {
-  //   try {
-  //     const result = await signIn(provider, { callbackUrl: "/" });
-  //     if (result?.url) {
-  //       window.location.href = result.url;
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error during ${provider} sign in:`, error);
-  //   }
-  // };
+  const handlePrivyLogin = async () => {
+    setError("");
+    // If Privy is properly initialised (env var present), use its modal.
+    // Otherwise fall back to NextAuth Google OAuth.
+    if (typeof privyLogin === "function") {
+      try {
+        setIsPrivyLoading(true);
+        await privyLogin();
+      } catch (err) {
+        console.error("Privy login error:", err);
+        // Fall back to NextAuth Google if Privy errors
+        signIn("google", { callbackUrl: "/" });
+      } finally {
+        setIsPrivyLoading(false);
+      }
+    } else {
+      // Privy not configured — use NextAuth Google directly
+      signIn("google", { callbackUrl: "/" });
+    }
+  };
 
-  // // for Facebook sign-in
-  // const handleFacebookSignIn = async (provider: string) => {
-  //   try {
-  //     const result = await signIn("facebook", { callbackUrl: "/" });
-  //     if (result?.url) {
-  //       window.location.href = result.url;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during Facebook sign in:", error);
-  //   }
-  // };
-
-  // // for Twitter sign-in
-  // const handleTwitterSignIn = async (provider: string) => {
-  //   try {
-  //     const result = await signIn("twitter", { callbackUrl: "/" });
-  //     if (result?.url) {
-  //       window.location.href = result.url;
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during Twitter sign in:", error);
-  //   }
-  // };
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#0A0A1A]">
+        <BounceLoader color="#E94560" loading />
+      </div>
+    );
+  }
 
   return (
-    <div className="top-0 z-[-1] mt-16 flex w-screen items-center justify-center md:mt-0 md:h-screen">
-      {/* Loading */}
-      {isLoading ? (
-        <div className="flex h-full items-center justify-center">
-          <BounceLoader color="#696969" loading={isLoading} />
+    <div className="flex min-h-screen w-screen items-center justify-center bg-[#0A0A1A] px-4 py-16 md:py-0">
+      <div className="w-full max-w-md rounded-xl border border-[#1E2A36] bg-[#0F172A] p-8 shadow-2xl">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-white">Sign In</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            {"Don't have an account? "}
+            <Link
+              href="/create_account"
+              className="font-medium text-[#E94560] underline underline-offset-2 hover:text-[#ff6b82] transition-colors"
+            >
+              Create one here
+            </Link>
+          </p>
         </div>
-      ) : (
-        <div className="flex h-[505px] w-screen flex-col gap-8 px-6 pt-6 md:w-[640px]">
-          <div>
-            <div className="flex justify-between md:justify-start">
-              <div className="text-2xl font-bold md:text-4xl">Sign In</div>
-              <Image
-                onClick={() => router.push("/")}
-                src={CancelIcon}
-                width={20}
-                height={20}
-                alt=""
-                className="h-[20px] w-[20px] sm:hidden"
+
+        {/* Google / Privy OAuth button */}
+        <button
+          type="button"
+          onClick={handlePrivyLogin}
+          disabled={isPrivyLoading}
+          className="mb-6 flex w-full items-center justify-center gap-3 rounded-lg border border-[#1E2A36] bg-[#1A2332] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#243040] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isPrivyLoading ? (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+          ) : (
+            <svg
+              className="h-5 w-5"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
               />
-            </div>
-            <div className="mt-1 text-sm sm:text-base">
-              {"Don't have an account?"}
-              <Link
-                href={"/create_account"}
-                className="ml-2 text-[#F2CA16] underline"
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+          )}
+          Continue with Google
+        </button>
+
+        {/* Divider */}
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex-1 border-t border-white/10" />
+          <span className="text-xs text-slate-500">or sign in with email</span>
+          <div className="flex-1 border-t border-white/10" />
+        </div>
+
+        {/* Credentials form */}
+        <form onSubmit={handleSignIn} noValidate className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="login-email"
+              className="text-sm font-medium text-slate-300"
+            >
+              Username or Email
+            </label>
+            <Input
+              id="login-email"
+              type="text"
+              placeholder="Enter username or email"
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              name="email"
+              autoComplete="username"
+              required
+              className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-[#E94560] focus:ring-[#E94560]/20"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="login-password"
+                className="text-sm font-medium text-slate-300"
               >
-                Create an account here
+                Password
+              </label>
+              <Link
+                href="/forgot_password"
+                className="text-xs text-[#E94560] hover:text-[#ff6b82] transition-colors"
+              >
+                Forgot password?
               </Link>
             </div>
-          </div>
-          <form method="POST">
-            <div className="flex flex-col gap-6 text-sm">
-              <div className="flex flex-col gap-2">
-                <label>Username</label>
-                <Input
-                  className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5"
-                  type="text"
-                  placeholder="Enter username here"
-                  value={username}
-                  onChange={(e: { target: { value: string } }) =>
-                    setUsername(e.target.value)
-                  }
-                  name="username"
-                  autoComplete="username"
-                  required
-                />
-                <div>
-                  <label className="mr-2">Password</label>
-                  <Link
-                    href="/forgot_password"
-                    className="text-xs text-[#F2CA16]"
-                  >
-                    Forgot Password?
-                  </Link>
-                </div>
-
-                <Input
-                  className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5"
-                  type="password"
-                  value={password}
-                  placeholder={"Enter password here"}
-                  onChange={(e: { target: { value: string } }) => {
-                    const allowedPattern = /^[a-zA-Z0-9!@#$%^&*()_\-+=\[\]{}|;:',.<>?/\\]*$/;
-                    if (!allowedPattern.test(e.target.value)) return;
-                    setPassword(e.target.value)
-                  }
-                  }
-                  onKeyDown={handleKeyDown}
-                  name="password"
-                  required
-                />
-                {error && (
-                  <Alert variant="destructive" className="mt-2 text-red-500">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-                <button onClick={handleSignIn} className="btn-yellow">
-                  Sign In
-                </button>
-              </div>
-            </div>
-          </form>
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 border-t border-white/10" />
-            <span className="text-xs text-slate-500">or</span>
-            <div className="flex-1 border-t border-white/10" />
-          </div>
-          <button
-            type="button"
-            onClick={() => privyLogin()}
-            className="w-full py-3 rounded-lg bg-[#10B981] text-black font-bold text-sm hover:bg-[#059669] transition-colors"
-          >
-            Continue with Email or Google
-          </button>
-          {/* <div className='flex justify-between text-sm sm:text-base'>
-            <div className='relative flex items-center gap-2'>
-              <input
-                type='checkbox'
-                className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
-                value='All'
-              />
-              <div className='pointer-events-none absolute top-3 left-[14px] -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100'>
-                <Image src={CheckIcon} width={12} height={7} alt='dropdown arrow' className='w-[10px] h-[7px] mr-2' />
-              </div>
-              <label>Keep me logged in</label>
-            </div>
-            <button
-              className='appearance-none text-[#F2CA16] underline'
-              onClick={() => {
-                setCreateAccountPage('reset password');
+            <Input
+              id="login-password"
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const allowed = /^[a-zA-Z0-9!@#$%^&*()_\-+=[\]{}|;:',.<>?/\\]*$/;
+                if (!allowed.test(e.target.value)) return;
+                setPassword(e.target.value);
               }}
-            >
-              Forgot password
-            </button>
-          </div> */}
+              name="password"
+              autoComplete="current-password"
+              required
+              className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-[#E94560] focus:ring-[#E94560]/20"
+            />
+          </div>
 
-          {/* <div className='w-full grid grid-cols-4 gap-2 mt-8 clickable-icon'>
-            <div onClick={() => handleGoogleSignIn('google')} className='bg-white flex justify-center items-center rounded h-[48px]'>
-              <Image src={GoogleSocial} width={24} height={24} alt='google logo' className='w-6 h-6' />
-            </div>
-            <div onClick={() => handleFacebookSignIn('facebook')} className='bg-[#1877F2] flex justify-center items-center rounded h-[48px]'>
-              <Image src={FacebookSocial} width={24} height={24} alt='facebook logo' className='w-6 h-6' />
-            </div>
-            <div
-              className='bg-white flex justify-center items-center rounded h-[48px]
-            cursor-auto opacity-30 disabled'
+          {error && (
+            <Alert
+              variant="destructive"
+              className="border-red-500/30 bg-red-500/10 text-red-400"
             >
-              <Image src={AppleSocial} width={24} height={24} alt='apple logo' className='w-6 h-6' />
-            </div>
-            <div onClick={() => handleTwitterSignIn('twitter')} className='bg-[#1DA1F2] flex justify-center items-center rounded h-[48px]'>
-              <Image src={TwitterSocial} width={24} height={24} alt='twitter logo' className='w-6 h-6' />
-            </div>
-          </div> */}
-          <div className="text-center text-sm opacity-75 sm:text-base">
-            {
-              "By logging in, you agree to Velocity Market's Privacy Policy and Terms of Use."
-            }
-          </div>
-        </div>
-      )}
-      {/* {createAccountPage === 'reset password' && (
-        <div className='w-screen md:w-[640px] px-6 h-[505px] flex flex-col gap-8 pt-6'>
-          <div>
-            <div className='flex justify-between md:justify-start'>
-              <div className='font-bold text-2xl md:text-4xl'>Reset Password</div>
-            </div>
-            <div className='mt-1'>Enter your email to receive instructions on how to reset your password.</div>
-          </div>
-          <div className='flex flex-col gap-6 text-sm'>
-            <div className='flex flex-col gap-2'>
-              <label>Email</label>
-              <input className='py-2.5 px-3 bg-[#172431]' placeholder='you@email.com' value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} />
-            </div>
-          </div>
-          {isResetPasswordLoading ? (
-            <button className='btn-yellow'>
-              <PulseLoader color='#000000' size={8} />
-            </button>
-          ) : (
-            <button type='submit' className='btn-yellow' onClick={handleResetPassword}>
-              RESET
-            </button>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
-          <div>
-            Or return to
-            <button
-              className='appearance-none text-[#F2CA16] ml-2 underline'
-              onClick={() => {
-                setCreateAccountPage('sign in');
-              }}
-            >
-              Login
-            </button>
-          </div>
-        </div>
-      )} */}
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="mt-2 w-full rounded-lg bg-[#E94560] py-3 text-sm font-bold text-white transition-colors hover:bg-[#d63652] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                Signing in…
+              </span>
+            ) : (
+              "Sign In"
+            )}
+          </button>
+        </form>
+
+        {/* Footer */}
+        <p className="mt-6 text-center text-xs text-slate-500">
+          By signing in, you agree to Velocity Market&apos;s{" "}
+          <Link href="/privacy" className="underline hover:text-slate-400 transition-colors">
+            Privacy Policy
+          </Link>{" "}
+          and{" "}
+          <Link href="/terms" className="underline hover:text-slate-400 transition-colors">
+            Terms of Use
+          </Link>
+          .
+        </p>
+      </div>
     </div>
   );
 };
 
-export default CreateAccount;
+export default LoginPage;
