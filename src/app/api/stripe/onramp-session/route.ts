@@ -40,9 +40,10 @@ export async function POST(req: NextRequest) {
     const session = await response.json();
 
     if (!response.ok) {
-      console.error('Stripe onramp session error:', session);
+      const stripeError = session?.error?.message ?? JSON.stringify(session);
+      console.error('Stripe onramp session error:', stripeError);
       return NextResponse.json(
-        { message: session?.error?.message ?? 'Failed to create onramp session' },
+        { message: `Stripe error: ${stripeError}` },
         { status: response.status }
       );
     }
