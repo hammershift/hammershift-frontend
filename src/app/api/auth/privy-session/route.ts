@@ -90,7 +90,8 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('/api/auth/privy-session error:', error);
-    return NextResponse.json({ message: 'Authentication failed' }, { status: 401 });
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('/api/auth/privy-session error:', msg);
+    return NextResponse.json({ message: msg }, { status: 401 });
   }
 }

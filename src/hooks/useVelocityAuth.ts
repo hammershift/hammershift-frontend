@@ -39,6 +39,9 @@ export function useVelocityAuth() {
       if (res.ok) {
         const data = await res.json();
         setVelocityUser(data.user);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        console.error('[useVelocityAuth] privy-session failed:', res.status, data.message);
       }
       setLoading(false);
     });
