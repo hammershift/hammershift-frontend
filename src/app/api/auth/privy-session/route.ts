@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
         email,
         username,
         fullName,
-        balance: 500,
+        balance: 0,
         isActive: true,
         isBanned: false,
         provider: 'privy',
