@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useVelocityAuth } from '@/hooks/useVelocityAuth';
+import { usePrivy } from '@privy-io/react-auth';
 
 interface Props {
   open: boolean;
@@ -14,6 +15,7 @@ type AmountOption = typeof AMOUNT_OPTIONS[number];
 
 export default function DepositModal({ open, onClose, refetchBalance }: Props) {
   const { embeddedWalletAddress } = useVelocityAuth();
+  const { getAccessToken } = usePrivy();
   const [selectedAmount, setSelectedAmount] = useState<AmountOption>(100);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,21 +34,34 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
     setError(null);
 
     try {
+      const token = await getAccessToken();
+      if (!token) {
+        setError('Please sign in to deposit.');
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch('/api/stripe/onramp-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ walletAddress: embeddedWalletAddress, amount: selectedAmount }),
       });
       const data = await res.json();
 
       if (data.redirectUrl) {
-        // Open Stripe hosted onramp in new tab, close modal
+        // Store sessionId so /my_wallet can verify on return
+        if (data.sessionId) {
+          localStorage.setItem('vm_onramp_session', JSON.stringify({
+            sessionId: data.sessionId,
+            amount: selectedAmount,
+            timestamp: Date.now(),
+          }));
+        }
         window.open(data.redirectUrl, '_blank', 'noopener,noreferrer');
         onClose();
-        if (refetchBalance) {
-          // Delay refetch to give time for return
-          setTimeout(() => refetchBalance(), 3000);
-        }
       } else {
         setError(data.message ?? 'Failed to create deposit session');
       }
@@ -67,9 +82,9 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-[#1E2A36] bg-[#0F172A]">
+      <div className="w-full max-w-sm overflow-hidden rounded-2xl border border-white/[0.08] bg-[#16181f]">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#1E2A36] p-5">
+        <div className="flex items-center justify-between border-b border-white/[0.08] p-5">
           <div>
             <h2 className="text-lg font-semibold text-white">Deposit USDC</h2>
             <p className="mt-0.5 text-xs text-gray-500">
@@ -103,7 +118,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
           {embeddedWalletAddress && (
             <>
               {/* Wallet address */}
-              <div className="rounded-xl border border-[#1E2A36] bg-[#0A0A1A] px-4 py-3">
+              <div className="rounded-xl border border-white/[0.08] bg-[#0A0A1A] px-4 py-3">
                 <p className="mb-1 text-xs text-gray-500">Your Polygon wallet</p>
                 <p className="truncate font-mono text-xs text-gray-300">{embeddedWalletAddress}</p>
               </div>
@@ -120,7 +135,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
                       className={`rounded-lg border py-2 text-sm font-semibold font-mono transition-colors ${
                         selectedAmount === opt
                           ? 'border-[#E94560] bg-[#E94560]/10 text-[#E94560]'
-                          : 'border-[#1E2A36] bg-[#0A0A1A] text-gray-400 hover:border-gray-500'
+                          : 'border-white/[0.08] bg-[#0A0A1A] text-gray-400 hover:border-gray-500'
                       }`}
                     >
                       ${opt}
@@ -137,7 +152,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
               )}
 
               {/* Info */}
-              <div className="rounded-xl border border-[#1E2A36] bg-[#0A0A1A] px-4 py-3 space-y-1.5 text-xs text-gray-500">
+              <div className="rounded-xl border border-white/[0.08] bg-[#0A0A1A] px-4 py-3 space-y-1.5 text-xs text-gray-500">
                 <div className="flex items-center gap-2">
                   <span className="text-[#00D4AA]">✓</span>
                   Buy USDC with card, bank, or Apple Pay
