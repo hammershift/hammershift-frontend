@@ -38,9 +38,6 @@ export async function POST(req: NextRequest) {
       req.headers.get('x-real-ip') ??
       '127.0.0.1';
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://velocitymarkets.io';
-    const returnUrl = `${appUrl}/my_wallet`;
-
     const params = new URLSearchParams();
     params.append('transaction_details[destination_currency]', 'usdc');
     params.append('transaction_details[destination_exchange_amount]', String(depositAmount));
@@ -50,7 +47,6 @@ export async function POST(req: NextRequest) {
     params.append('transaction_details[supported_destination_currencies][]', 'usdc');
     params.append('transaction_details[supported_destination_networks][]', 'polygon');
     params.append('customer_ip_address', customerIp);
-    params.append('return_url', returnUrl);
 
     const response = await fetch('https://api.stripe.com/v1/crypto/onramp_sessions', {
       method: 'POST',
