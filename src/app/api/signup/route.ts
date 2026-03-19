@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       username: username,
       fullName: fullName,
       email: lowerCaseEmail,
-      balance: 500, //TODO: change default balance?
+      balance: 0,
       isActive: true,
       isBanned: false,
       provider: provider,
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       console.error('Welcome email failed (non-blocking):', emailError);
     }
 
-    return NextResponse.json({ message: 'User created with initial balance', user }, { status: 201 });
+    return NextResponse.json({ message: 'User created', user }, { status: 201 });
   } catch (error) {
     console.error('Error during registration process:', error);
     return NextResponse.json({ message: 'Server error during registration', error }, { status: 500 });

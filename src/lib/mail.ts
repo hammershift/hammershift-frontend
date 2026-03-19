@@ -118,7 +118,7 @@ async function sendWelcomeEmail({ to, fullName }: WelcomeEmailOptions): Promise<
           Your account is live. You are ready to start making predictions on collector car auctions and climbing the leaderboard.
         </p>
         <p style="color: #a0a0b8; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-          Your starting balance of <span style="color: #00D4AA; font-family: monospace; font-weight: bold;">$500.00</span> has been credited to your account. Use it to place your first prediction.
+          Deposit USDC to your wallet to start placing predictions and climbing the leaderboard.
         </p>
         <div style="text-align: center; margin: 32px 0;">
           <a href="https://velocitymarkets.us" style="display: inline-block; padding: 14px 32px; background-color: #E94560; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; letter-spacing: 0.3px;">
