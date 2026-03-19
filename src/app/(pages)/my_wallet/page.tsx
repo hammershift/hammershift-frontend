@@ -318,11 +318,11 @@ const MyWalletPage = () => {
               </div>
             </div>
             <div>
-              <button className="m-1 rounded-md border-2 border-yellow-500 p-1">
+              <button className="m-1 rounded-md border-2 border-[#E94560] p-1">
                 <div className="flex p-1">
                   <Image alt="arrow-down" src={ArrowDownIcon} />{" "}
                   <p
-                    className="pl-2 text-[#F2CA16]"
+                    className="pl-2 text-[#E94560]"
                     onClick={() => setIsWithdrawModalOpen(true)}
                   >
                     WITHDRAW
@@ -343,7 +343,7 @@ const MyWalletPage = () => {
                 </button>
               ) : (
                 <button
-                  className="m-1 rounded-md bg-[#F2CA16] p-1 px-3 font-bold text-black"
+                  className="m-1 rounded-md bg-[#E94560] p-1 px-3 font-bold text-white"
                   onClick={() => setIsPaymentModalOpen(true)}
                 >
                   <div className="flex p-1">
@@ -395,7 +395,7 @@ const MyWalletPage = () => {
 
       {/* ACH Bank Transfer — Coming Soon */}
       <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full mt-4">
-        <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 mb-4">
+        <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5 mb-4">
           <div className="flex items-start justify-between">
             <div>
               <h4 className="text-white font-medium text-sm">
@@ -403,7 +403,7 @@ const MyWalletPage = () => {
               </h4>
               <p className="text-white/40 text-xs mt-0.5">Coming Soon</p>
             </div>
-            <span className="text-xs bg-[#0A0A1A] border border-[#1E2A36] text-white/30 px-3 py-1.5 rounded-lg cursor-not-allowed select-none">
+            <span className="text-xs bg-[#0A0A1A] border border-white/[0.08] text-white/30 px-3 py-1.5 rounded-lg cursor-not-allowed select-none">
               Coming Soon
             </span>
           </div>
