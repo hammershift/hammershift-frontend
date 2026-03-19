@@ -46,7 +46,7 @@ const TournamentSuccessPage = () => {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[#F2CA16]"></div>
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[#E94560]"></div>
           <p className="text-gray-400">Loading your tournament entry...</p>
         </div>
       </div>
@@ -61,7 +61,7 @@ const TournamentSuccessPage = () => {
           tournament!
         </p>
         <Link href={createPageUrl("tournaments")}>
-          <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+          <Button className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
             Browse Tournaments
           </Button>
         </Link>
@@ -83,21 +83,21 @@ const TournamentSuccessPage = () => {
 
         <div className="mb-8 flex justify-center gap-6">
           <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-[#F2CA16]" />
+            <DollarSign className="h-5 w-5 text-[#E94560]" />
             <div className="text-left">
               <p className="text-sm text-gray-400">Entry Fee</p>
               <p className="font-bold">${latestTournament.buyInFee}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-[#F2CA16]" />
+            <Trophy className="h-5 w-5 text-[#E94560]" />
             <div className="text-left">
               <p className="text-sm text-gray-400">Prize Pool</p>
               <p className="font-bold">${latestTournament.prizePool}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-[#F2CA16]" />
+            <Users className="h-5 w-5 text-[#E94560]" />
             <div className="text-left">
               <p className="text-sm text-gray-400">Players</p>
               <p className="font-bold">
@@ -117,7 +117,7 @@ const TournamentSuccessPage = () => {
             if (!auction) return null;
 
             return (
-              <Card key={index} className="border-[#1E2A36] bg-[#13202D]">
+              <Card key={index} className="border-white/[0.08] bg-[#16181f]">
                 <CardContent className="p-4">
                   <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div className="flex-1 text-left">
@@ -146,7 +146,7 @@ const TournamentSuccessPage = () => {
           <Link href={"/"}>
             <Button
               variant="outline"
-              className="border-[#1E2A36] hover:bg-[#1E2A36]"
+              className="border-white/[0.08] hover:bg-[#1E2A36]"
             >
               <Home className="mr-2 h-4 w-4" />
               Back to Home

@@ -101,7 +101,7 @@ const TournamentsCard = ({
           )}
         </div>
         <div
-          className={`bg-[#1A2C3D] ${
+          className={`bg-[#16181f] ${
             pathname === "/tournaments" ? "lg:w-[650px]" : "lg:w-[416px]"
           } mt-12 w-[346px] rounded-lg p-4 pt-20 text-center`}
         >
@@ -135,10 +135,10 @@ const TournamentsCard = ({
               </div>
             </div>
           )}
-          <div className="my-3 h-40 bg-[#1A2C3D] px-2 py-1">
+          <div className="my-3 h-40 bg-[#16181f] px-2 py-1">
             {tournamentEnded ? (
               tournamentPoints && tournamentPoints.length === 0 ? (
-                <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#1A2C3D] p-4">
+                <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#16181f] p-4">
                   <div>Tournament has ended, no players joined</div>
                 </div>
               ) : (
@@ -170,7 +170,7 @@ const TournamentsCard = ({
                                 : item.user.username}{" "}
                             </div>
                           </div>
-                          <div className="font-bold text-[#F2CA16]">
+                          <div className="font-bold text-[#E94560]">
                             {item.auctionScores && item.auctionScores.length > 0
                               ? `${item.totalScore} pts.`
                               : "0 pts."}
@@ -182,7 +182,7 @@ const TournamentsCard = ({
             ) : buyInEnded ? (
               <>
                 {tournamentPoints && tournamentPoints.length === 0 ? (
-                  <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#1A2C3D] p-4">
+                  <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#16181f] p-4">
                     <div>Buy-in has ended, no players joined</div>
                   </div>
                 ) : (
@@ -210,7 +210,7 @@ const TournamentsCard = ({
                               />
                               <div>{item.user.username}</div>
                             </div>
-                            <div className="font-bold text-[#F2CA16]">
+                            <div className="font-bold text-[#E94560]">
                               {item.auctionScores &&
                               item.auctionScores.length > 0
                                 ? `${item.totalScore} pts.`
@@ -224,7 +224,7 @@ const TournamentsCard = ({
             ) : (
               <>
                 {tournamentPoints && tournamentPoints.length === 0 ? (
-                  <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#1A2C3D] p-4">
+                  <div className="my-3 flex h-36 items-center justify-center gap-2 rounded-[4px] bg-[#16181f] p-4">
                     <div className="flex items-center">
                       {" "}
                       <Image
@@ -282,7 +282,7 @@ const TournamentsCard = ({
               </button>
             ) : tournamentEnded ? (
               <button
-                className="h-10 w-full rounded-md bg-[#f2ca16] font-bold text-black"
+                className="h-10 w-full rounded-md bg-[#E94560] font-bold text-black"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 View Results 🏆

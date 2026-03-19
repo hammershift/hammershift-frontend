@@ -10,7 +10,7 @@ export default function TermsOfService() {
             <h1 className="text-3xl font-bold text-center mb-8">TERMS OF SERVICE</h1>
 
             <div className="max-w-3xl mx-auto">
-                <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+                <Card className="bg-[#16181f] border-white/[0.08] mb-8">
                     <CardHeader>
                         <CardTitle>1. ACCEPTANCE OF TERMS</CardTitle>
                     </CardHeader>
@@ -21,7 +21,7 @@ export default function TermsOfService() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+                <Card className="bg-[#16181f] border-white/[0.08] mb-8">
                     <CardHeader>
                         <CardTitle>2. ELIGIBILITY</CardTitle>
                     </CardHeader>
@@ -35,7 +35,7 @@ export default function TermsOfService() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+                <Card className="bg-[#16181f] border-white/[0.08] mb-8">
                     <CardHeader>
                         <CardTitle>3. ACCOUNT REGISTRATION</CardTitle>
                     </CardHeader>
@@ -49,7 +49,7 @@ export default function TermsOfService() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+                <Card className="bg-[#16181f] border-white/[0.08] mb-8">
                     <CardHeader>
                         <CardTitle>4. PREDICTION GAMES AND PAYMENTS</CardTitle>
                     </CardHeader>
@@ -66,7 +66,7 @@ export default function TermsOfService() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+                <Card className="bg-[#16181f] border-white/[0.08] mb-8">
                     <CardHeader>
                         <CardTitle>5. PROHIBITED CONDUCT</CardTitle>
                     </CardHeader>
@@ -86,7 +86,7 @@ export default function TermsOfService() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#13202D] border-[#1E2A36]">
+                <Card className="bg-[#16181f] border-white/[0.08]">
                     <CardHeader>
                         <CardTitle>6. CONTACT INFORMATION</CardTitle>
                     </CardHeader>
@@ -102,7 +102,7 @@ export default function TermsOfService() {
                             Last updated: June 15, 2024
                         </p>
                         <p className="mt-6">
-                            <Link href={createPageUrl("Privacy Policy")} className="text-[#F2CA16] hover:underline">
+                            <Link href={createPageUrl("Privacy Policy")} className="text-[#E94560] hover:underline">
                                 View our Privacy Policy
                             </Link>
                         </p>

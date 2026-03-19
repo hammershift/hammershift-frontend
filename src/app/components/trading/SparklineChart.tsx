@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function SparklineChart({ data, positive }: Props) {
-  const color = positive ? '#10B981' : '#EF4444';
+  const color = positive ? '#00D4AA' : '#EF4444';
 
   return (
     <ResponsiveContainer width="100%" height={40}>

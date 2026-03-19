@@ -257,7 +257,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
         <div className="w-full lg:w-2/3">
           {/* Prediction Stats Card */}
           {predictionStats.count > 0 && (
-            <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+            <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
               <CardContent className="p-6">
                 <h2 className="mb-4 text-xl font-bold">Community Predictions</h2>
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -294,7 +294,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
           )}
 
           {/* Image Gallery */}
-          <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+          <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
             <CardContent className="p-4">
               <h2 className="mb-4 text-xl font-bold">Photos</h2>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
@@ -313,12 +313,12 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
           </Card>
 
           {/* Specifications */}
-          <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+          <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
             <CardContent className="p-6">
               <h2 className="mb-4 text-xl font-bold">Specifications</h2>
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {auction.attributes?.slice(0, 12).map((attr: any, idx: number) => (
-                  <div key={idx} className="flex justify-between border-b border-[#1E2A36] pb-2">
+                  <div key={idx} className="flex justify-between border-b border-white/[0.08] pb-2">
                     <span className="text-gray-400">{attr.key}</span>
                     <span className="font-semibold">{attr.value}</span>
                   </div>
@@ -329,7 +329,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
 
           {/* Description */}
           {auction.description && auction.description.length > 0 && (
-            <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+            <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
               <CardContent className="p-6">
                 <h2 className="mb-4 text-xl font-bold">Description</h2>
                 <div className="space-y-2 text-gray-300">
@@ -343,13 +343,13 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
 
           {/* Similar Results */}
           {similarAuctions.length > 0 && (
-            <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+            <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
               <CardContent className="p-6">
                 <h2 className="mb-4 text-xl font-bold">Similar Auctions</h2>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {similarAuctions.map((similar: any) => (
                     <Link key={similar._id} href={`/auctions/car_view_page/${similar._id}?mode=free_play`}>
-                      <Card className="border-[#1E2A36] bg-[#0A0A1A] transition-all hover:border-[#E94560]">
+                      <Card className="border-white/[0.08] bg-[#0A0A1A] transition-all hover:border-[#E94560]">
                         <div className="relative h-[120px]">
                           <Image
                             src={similar.image}
@@ -384,7 +384,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
         {/* RIGHT COLUMN (35% - Sticky) */}
         <div className="w-full lg:sticky lg:top-4 lg:h-fit lg:w-1/3">
           {/* Prediction Form Card */}
-          <Card className="mb-8 border-[#E94560]/30 bg-[#13202D]">
+          <Card className="mb-8 border-[#E94560]/30 bg-[#16181f]">
             <CardContent className="p-6">
               <h2 className="mb-4 text-xl font-bold">Make Your Prediction</h2>
 
@@ -439,7 +439,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
           </Card>
 
           {/* Community Sidebar */}
-          <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+          <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
             <CardContent className="p-6">
               <h3 className="mb-4 text-lg font-bold">Recent Predictions</h3>
               <RecentPredictionsFeed
@@ -450,7 +450,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
           </Card>
 
           {/* Market Data */}
-          <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5 space-y-6 mb-8">
+          <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5 space-y-6 mb-8">
             <h3 className="text-white font-semibold text-base">Market Data</h3>
             <PriceDistribution
               predictions={predictedPrices}
@@ -464,7 +464,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
 
           {/* Top Predictors */}
           {topPredictors.length > 0 && (
-            <Card className="border-[#1E2A36] bg-[#13202D]">
+            <Card className="border-white/[0.08] bg-[#16181f]">
               <CardContent className="p-6">
                 <h3 className="mb-4 text-lg font-bold">Top Predictors</h3>
                 <div className="space-y-3">

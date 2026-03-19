@@ -48,7 +48,7 @@ const DiscoverPage = () => {
                 className="w-5 h-5 "
               />
               <span className="opacity-80 ml-2">Current Bid:</span>
-              <span className="text-[#F2CA16] ml-2 font-bold">
+              <span className="text-[#E94560] ml-2 font-bold">
                 {DiscoveryPageData.current_bid}
               </span>
               <span className="opacity-50 ml-2">{`${DiscoveryPageData.bids} bids`}</span>

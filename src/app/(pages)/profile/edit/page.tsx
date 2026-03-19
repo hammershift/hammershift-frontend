@@ -71,7 +71,7 @@ function EditProfile() {
                 SAVED
               </button>
             ) : (
-              <button className="rounded bg-[#f2ca16] px-3.5 py-2.5 text-base font-bold text-[#0f1923]">
+              <button className="rounded bg-[#E94560] px-3.5 py-2.5 text-base font-bold text-[#0f1923]">
                 SAVE
               </button>
             )}
@@ -89,7 +89,7 @@ function EditProfile() {
                   type="text"
                   name="fullName"
                   defaultValue={data?.user.name}
-                  className="mb-6 mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none sm:mb-0"
+                  className="mb-6 mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none sm:mb-0"
                   onChange={(e) =>
                     setEdits({
                       ...edits,
@@ -104,7 +104,7 @@ function EditProfile() {
               type="text"
               name="username"
               defaultValue={data?.user.username!}
-              className="mb-6 mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none"
+              className="mb-6 mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none"
               onChange={(e) =>
                 setEdits({
                   ...edits,
@@ -117,7 +117,7 @@ function EditProfile() {
               name="aboutMe"
               placeholder="Tell the community about yourself"
               defaultValue={userInfo.user?.aboutMe}
-              className="mb-5 mt-2 block w-full resize-none rounded bg-[#172431] px-3 py-2.5 outline-none"
+              className="mb-5 mt-2 block w-full resize-none rounded bg-[#16181f] px-3 py-2.5 outline-none"
               rows={10}
               onChange={(e) =>
                 setEdits({
@@ -130,7 +130,7 @@ function EditProfile() {
               <div className="w-1/2">
                 <label htmlFor="country">Country *</label>
                 <select
-                  className="mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none"
+                  className="mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none"
                   onChange={(e) => handleCountrySelect(e.target.value)}
                 >
                   <option>Select Country</option>
@@ -148,7 +148,7 @@ function EditProfile() {
               <div className="w-1/2">
                 <label htmlFor="state">State *</label>
                 <select
-                  className="mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none"
+                  className="mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none"
                   onChange={(e) =>
                     setEdits({
                       ...edits,
@@ -175,14 +175,14 @@ function EditProfile() {
           <div>
             <div className="gap-4 sm:flex">
               <label htmlFor="twitterLink" className="sm:w-[23%]">
-                <div className="rounded bg-[#172431] px-3 py-2.5">Twitter</div>
+                <div className="rounded bg-[#16181f] px-3 py-2.5">Twitter</div>
               </label>
               <div className="mb-4 flex gap-4 sm:w-[95%]">
                 <input
                   type="url"
                   name="twitterLink"
                   placeholder="https://"
-                  className="mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none sm:mt-0"
+                  className="mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none sm:mt-0"
                 ></input>
                 <button>
                   <Image src={DeleteIcon} alt="" className="w-[25px]" />
@@ -191,14 +191,14 @@ function EditProfile() {
             </div>
             <div className="gap-4 sm:flex">
               <label htmlFor="twitterLink" className="sm:w-[23%]">
-                <div className="rounded bg-[#172431] px-3 py-2.5">Website</div>
+                <div className="rounded bg-[#16181f] px-3 py-2.5">Website</div>
               </label>
               <div className="mb-4 flex gap-4 sm:w-[95%]">
                 <input
                   type="url"
                   name="websiteLink"
                   placeholder="https://"
-                  className="mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none sm:mt-0"
+                  className="mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none sm:mt-0"
                 ></input>
                 <button>
                   <Image src={DeleteIcon} alt="" className="w-[25px]" />
@@ -207,14 +207,14 @@ function EditProfile() {
             </div>
             <div className="gap-4 sm:flex">
               <label htmlFor="twitterLink" className="sm:w-[23%]">
-                <div className="rounded bg-[#172431] px-3 py-2.5">LinkedIn</div>
+                <div className="rounded bg-[#16181f] px-3 py-2.5">LinkedIn</div>
               </label>
               <div className="mb-4 flex gap-4 sm:w-[95%]">
                 <input
                   type="url"
                   name="linkedinLink"
                   placeholder="https://"
-                  className="mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none sm:mt-0"
+                  className="mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none sm:mt-0"
                 ></input>
                 <button>
                   <Image src={DeleteIcon} alt="" className="w-[25px]" />
@@ -223,7 +223,7 @@ function EditProfile() {
             </div>
             <div className="gap-4 sm:flex">
               <label htmlFor="twitterLink" className="sm:w-[23%]">
-                <div className="rounded bg-[#172431] px-3 py-2.5">
+                <div className="rounded bg-[#16181f] px-3 py-2.5">
                   BringaTrailer
                 </div>
               </label>
@@ -232,7 +232,7 @@ function EditProfile() {
                   type="url"
                   name="bringATrailerLink"
                   placeholder="https://"
-                  className="mt-2 block w-full rounded bg-[#172431] px-3 py-2.5 outline-none sm:mt-0"
+                  className="mt-2 block w-full rounded bg-[#16181f] px-3 py-2.5 outline-none sm:mt-0"
                 ></input>
                 <button>
                   <Image src={DeleteIcon} alt="" className="w-[25px]" />
@@ -244,7 +244,7 @@ function EditProfile() {
         <div className="border-b-[1px] border-b-[#1b252e] py-8">
           <div className="mb-6 text-2xl font-bold">Account</div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <div className="rounded bg-[#172431] px-3 py-2.5 sm:w-[252px]">
+            <div className="rounded bg-[#16181f] px-3 py-2.5 sm:w-[252px]">
               {userInfo.user?.email}
             </div>
             <button

@@ -368,7 +368,7 @@ const Navbar = () => {
       {menuIsOpen && (
         <nav
           aria-label="Mobile navigation"
-          className="slide-in-top absolute z-40 w-full border-b border-[#1E2A36] bg-[#0A0A1A]/95 backdrop-blur-sm lg:hidden"
+          className="slide-in-top absolute z-40 w-full border-b border-white/[0.08] bg-[#0A0A1A]/95 backdrop-blur-sm lg:hidden"
         >
           {navBarList.map((data, index) => (
             <Link
@@ -378,7 +378,7 @@ const Navbar = () => {
                 closeMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="flex min-h-[44px] w-full items-center border-t border-[#1E2A36] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#16181f] hover:text-white"
+              className="flex min-h-[44px] w-full items-center border-t border-white/[0.08] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#16181f] hover:text-white"
             >
               <span>
                 {data.title === "Markets" ? (
@@ -402,7 +402,7 @@ const Navbar = () => {
                 document.body.classList.remove("stop-scrolling");
                 setDepositOpen(true);
               }}
-              className="flex min-h-[44px] w-full items-center border-t border-[#1E2A36] px-6 py-3 text-sm font-bold tracking-wider text-[#00D4AA] transition-colors hover:bg-[#16181f]"
+              className="flex min-h-[44px] w-full items-center border-t border-white/[0.08] px-6 py-3 text-sm font-bold tracking-wider text-[#00D4AA] transition-colors hover:bg-[#16181f]"
             >
               Deposit USDC
             </button>
@@ -784,7 +784,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                             <button
                                 id="predictions-sort"
                                 type="button"
-                                className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[white]"
+                                className="text-white-900 w-[140px] truncate rounded-sm bg-[#16181f] px-2 py-1.5 text-center shadow-sm hover:bg-white/[0.06]"
                                 onClick={handleClick}
                             >
                                 {predictionSort}
@@ -1622,12 +1622,12 @@ const MyAccountDropdownMenu = ({ closeMenu }: { closeMenu: () => void }) => {
 
   return (
     <div
-      className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-xl border border-[#1E2A36] bg-[#0F172A] shadow-2xl shadow-black/60"
+      className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-xl border border-white/[0.08] bg-[#16181f] shadow-2xl shadow-black/60"
       onClick={(e) => e.stopPropagation()}
     >
       {/* User info header */}
       {activeUser && (
-        <div className="border-b border-[#1E2A36] px-4 py-3">
+        <div className="border-b border-white/[0.08] px-4 py-3">
           <p className="truncate text-sm font-semibold text-white">
             {activeUser.username ?? activeUser.email ?? "Account"}
           </p>
@@ -1657,7 +1657,7 @@ const MyAccountDropdownMenu = ({ closeMenu }: { closeMenu: () => void }) => {
         </button>
       </div>
 
-      <div className="border-t border-[#1E2A36] py-1">
+      <div className="border-t border-white/[0.08] py-1">
         <button
           type="button"
           onClick={handleSignOut}
@@ -1727,7 +1727,7 @@ const MobileMyWagers: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                     <button
                         id="myWatchlist-sort"
                         type="button"
-                        className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#172431] px-2 py-1.5 text-center text-[12px] font-bold"
+                        className="text-white-900 absolute -top-[34px] right-0 w-[110px] rounded-sm bg-[#16181f] px-2 py-1.5 text-center text-[12px] font-bold"
                         onClick={handleClick}
                     >
                         {predictionSort}

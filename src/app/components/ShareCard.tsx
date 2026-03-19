@@ -37,16 +37,16 @@ export function ShareCard({ predictionId, auctionId, auctionTitle }: ShareCardPr
     <>
       <button
         onClick={() => { setOpen(true); track("share_card_opened", { auctionId, predictionId }); }}
-        className="mt-3 w-full bg-[#1E2A36] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#2C3A4A] transition-colors border border-[#1E2A36] hover:border-[#E94560]/30"
+        className="mt-3 w-full bg-[#1E2A36] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#2C3A4A] transition-colors border border-white/[0.08] hover:border-[#E94560]/30"
       >
         Share My Pick
       </button>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-          <div className="bg-[#13202D] rounded-xl border border-[#1E2A36] p-6 w-full max-w-md">
+          <div className="bg-[#16181f] rounded-xl border border-white/[0.08] p-6 w-full max-w-md">
             <h3 className="text-white font-bold text-lg mb-4">Share Your Pick</h3>
-            <div className="rounded-lg overflow-hidden border border-[#1E2A36] mb-4 bg-[#0A0A1A] h-36 flex items-center justify-center">
+            <div className="rounded-lg overflow-hidden border border-white/[0.08] mb-4 bg-[#0A0A1A] h-36 flex items-center justify-center">
               <p className="text-gray-500 text-sm">Preview loading&hellip;</p>
             </div>
             <div className="flex gap-3 mb-3">

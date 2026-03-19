@@ -178,7 +178,7 @@ export const CommentsSection = ({
               onChange={(e: {
                 target: { value: React.SetStateAction<string> };
               }) => setComment(e.target.value)}
-              className="min-h-[100px] border-[#1E2A36] bg-[#1E2A36] focus:border-[#F2CA16]"
+              className="min-h-[100px] border-white/[0.08] bg-[#1E2A36] focus:border-[#E94560]"
             />
 
             {/* {error && (
@@ -189,7 +189,7 @@ export const CommentsSection = ({
               <Button
                 type="submit"
                 aria-disabled={isSubmitting}
-                className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
+                className={`bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 ${isSubmitting ? "opacity-50" : ""}`}
               >
                 {isSubmitting ? "Posting..." : "Post Comment"}
                 <Send className="ml-2 h-4 w-4" />
@@ -198,7 +198,7 @@ export const CommentsSection = ({
           </div>
         </form>
       ) : (
-        <div className="mb-6 rounded-md border border-[#1E2A36] bg-[#1E2A36] p-4">
+        <div className="mb-6 rounded-md border border-white/[0.08] bg-[#1E2A36] p-4">
           <p className="text-center text-gray-400">
             Please log in to leave a comment.
           </p>
@@ -229,7 +229,7 @@ export const CommentsSection = ({
           {sortDropdown && (
             <div
               ref={dropdownRef}
-              className="absolute grid rounded top-8 right-0 py-2 px-2 bg-[#172431] z-10"
+              className="absolute grid rounded top-8 right-0 py-2 px-2 bg-[#16181f] z-10"
             >
               <div
                 onClick={(e) => setSort("Newest")}
@@ -259,7 +259,7 @@ export const CommentsSection = ({
       <section>
         {isLoading ? (
           <div className="flex h-12 w-full items-center justify-center">
-            <BeatLoader color="#f2ca16" />
+            <BeatLoader color="#E94560" />
           </div>
         ) : Array.isArray(commentsList) && commentsList.length > 0 ? (
           commentsList
@@ -461,7 +461,7 @@ export const CommentCard = ({
         className="w-10 h-10 ml-2"
       /> */}
       <div
-        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#E94560] text-black`}
       >
         {username?.[0]?.toUpperCase() || "U"}
       </div>
@@ -469,7 +469,7 @@ export const CommentCard = ({
         <div className="relative flex justify-between">
           <div>
             <span className="font-bold">{username}</span>
-            <span className="ml-2 text-[#F2CA16]">User</span>
+            <span className="ml-2 text-[#E94560]">User</span>
             <span className="ml-2 opacity-50">
               {dayjs(createdAt).fromNow()}
             </span>
@@ -488,7 +488,7 @@ export const CommentCard = ({
           {dropdown && (
             <div
               ref={dropdownRef}
-              className="absolute right-0 top-8 z-10 grid rounded bg-[#172431]"
+              className="absolute right-0 top-8 z-10 grid rounded bg-[#16181f]"
             >
               <div
                 onClick={handleDeleteComment}
@@ -684,12 +684,12 @@ const ReplyInputDropdown = ({
   return (
     <div className="relative">
       <div className="relative my-3 flex">
-        {/* <div className="relative flex w-full items-center bg-[#172431] py-2.5 px-3 rounded">
+        {/* <div className="relative flex w-full items-center bg-[#16181f] py-2.5 px-3 rounded">
           <input
             type="text"
             value={reply}
             placeholder="Add a reply"
-            className="bg-[#172431] w-full"
+            className="bg-[#16181f] w-full"
             name="comment"
             onChange={(e) => setReply(e.target.value)}
           />
@@ -706,7 +706,7 @@ const ReplyInputDropdown = ({
                 onChange={(e: {
                   target: { value: React.SetStateAction<string> };
                 }) => setReply(e.target.value)}
-                className="border-[#1E2A36] bg-[#1E2A36] focus:border-[#F2CA16]"
+                className="border-white/[0.08] bg-[#1E2A36] focus:border-[#E94560]"
               />
 
               {/* {error && (
@@ -717,7 +717,7 @@ const ReplyInputDropdown = ({
                 <Button
                   type="submit"
                   aria-disabled={isSubmitting}
-                  className={`bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 ${isSubmitting ? "opacity-50" : ""}`}
+                  className={`bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 ${isSubmitting ? "opacity-50" : ""}`}
                 >
                   {isSubmitting ? "Replying..." : "Reply"}
                   <Send className="ml-2 h-4 w-4" />
@@ -848,7 +848,7 @@ const ReplyCard = ({
   return (
     <div className="mt-4 flex text-[14px] text-xs">
       <div
-        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#F2CA16] text-black`}
+        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#E94560] text-black`}
       >
         {username?.[0]?.toUpperCase() || "U"}
       </div>
@@ -856,7 +856,7 @@ const ReplyCard = ({
         <div className="relative flex justify-between">
           <div>
             <span className="font-bold">{username}</span>
-            <span className="ml-2 text-[#F2CA16]">User</span>
+            <span className="ml-2 text-[#E94560]">User</span>
             <span className="ml-2 opacity-50">
               {dayjs(createdAt).fromNow()}
             </span>
@@ -875,7 +875,7 @@ const ReplyCard = ({
           {dropdown && (
             <div
               ref={dropdownRef}
-              className="absolute right-0 top-8 z-10 grid rounded bg-[#172431]"
+              className="absolute right-0 top-8 z-10 grid rounded bg-[#16181f]"
             >
               <div
                 onClick={handleDeleteReply}
@@ -954,7 +954,7 @@ const ReplyCard = ({
 
 const AlertMessage = ({ message }: { message: string }) => {
   return (
-    <div className="mt-2 flex items-center justify-center rounded bg-[#F2CA16] px-4 py-2 text-sm text-black">
+    <div className="mt-2 flex items-center justify-center rounded bg-[#E94560] px-4 py-2 text-sm text-black">
       {message}
     </div>
   );

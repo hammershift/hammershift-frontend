@@ -167,7 +167,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
             );
           })}
         </div>
-        <div className="fixed bottom-0 z-30 w-full bg-[#172431] px-8 py-4 sm:static sm:flex sm:justify-between">
+        <div className="fixed bottom-0 z-30 w-full bg-[#16181f] px-8 py-4 sm:static sm:flex sm:justify-between">
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -182,7 +182,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
           <button
             type="submit"
             disabled={isButtonClicked}
-            className="w-full rounded bg-[#f2ca16] p-3 px-[43px] text-center font-bold text-[#0f1923] sm:w-auto"
+            className="w-full rounded bg-[#E94560] p-3 px-[43px] text-center font-bold text-[#0f1923] sm:w-auto"
           >
             BUY-IN FOR ${tournamentData.buyInFee}
           </button>
@@ -278,7 +278,7 @@ export const TournamentModalCard: React.FC<TournamentCardI> = ({
           required
           name={`auction_${String(index + 1)}`}
           type="number"
-          className="w-full rounded bg-[#172431] p-3 pl-8 outline-[3px] outline-[#273039] focus:border-white/10 focus:bg-white focus:text-black focus:outline sm:outline-[6px]"
+          className="w-full rounded bg-[#16181f] p-3 pl-8 outline-[3px] outline-[#273039] focus:border-white/10 focus:bg-white focus:text-black focus:outline sm:outline-[6px]"
         />
       </div>
     </div>

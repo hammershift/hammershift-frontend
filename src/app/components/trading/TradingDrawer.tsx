@@ -136,7 +136,7 @@ export default function TradingDrawer({
   if (!market) return null;
 
   const price = side === 'YES' ? (market.yesPrice ?? 0.5) : (market.noPrice ?? 0.5);
-  const color = side === 'YES' ? '#10B981' : '#EF4444';
+  const color = side === 'YES' ? '#00D4AA' : '#EF4444';
   const amountNum = parseFloat(amount);
   const isValidAmount = !isNaN(amountNum) && amountNum >= 1 && amountNum <= 10000;
 
@@ -240,7 +240,7 @@ export default function TradingDrawer({
 
   // Success receipt view
   if (tradeReceipt) {
-    const receiptColor = tradeReceipt.outcome === 'YES' ? '#10B981' : '#EF4444';
+    const receiptColor = tradeReceipt.outcome === 'YES' ? '#00D4AA' : '#EF4444';
     return (
       <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
         <SheetContent>
@@ -320,7 +320,7 @@ export default function TradingDrawer({
                 className={`py-3 rounded-lg font-bold text-sm transition-all ${
                   side === s
                     ? s === 'YES'
-                      ? 'bg-[#10B981] text-black'
+                      ? 'bg-[#00D4AA] text-black'
                       : 'bg-[#EF4444] text-white'
                     : 'bg-white/5 text-slate-400 hover:bg-white/10'
                 }`}
@@ -356,7 +356,7 @@ export default function TradingDrawer({
                   setAmount(e.target.value);
                   setError(null);
                 }}
-                className="w-full bg-[#0F172A] border border-white/10 rounded-lg py-3 pl-7 pr-4 text-[#F8FAFC] font-mono text-sm focus:outline-none focus:border-white/30"
+                className="w-full bg-[#16181f] border border-white/10 rounded-lg py-3 pl-7 pr-4 text-[#F8FAFC] font-mono text-sm focus:outline-none focus:border-white/30"
               />
             </div>
             {isOnChainMarket && (
@@ -376,7 +376,7 @@ export default function TradingDrawer({
           )}
 
           {quote && !quoteFetching && (
-            <div className="rounded-lg bg-[#1A2233] border border-[#1E2A36] p-3 text-xs space-y-1.5 font-mono">
+            <div className="rounded-lg bg-[#1A2233] border border-white/[0.08] p-3 text-xs space-y-1.5 font-mono">
               <div className="flex justify-between text-gray-400">
                 <span>Shares you receive</span>
                 <span className="text-white">{quote.sharesReceived.toFixed(4)}</span>
@@ -406,7 +406,7 @@ export default function TradingDrawer({
 
           {/* Fallback static order summary when no live quote is available */}
           {!quote && !quoteFetching && (
-            <div className="bg-[#0F172A] rounded-lg p-4 flex flex-col gap-2 text-sm">
+            <div className="bg-[#16181f] rounded-lg p-4 flex flex-col gap-2 text-sm">
               <div className="flex justify-between text-slate-400">
                 <span>Price per share</span>
                 <span className="font-mono" style={{ color }}>

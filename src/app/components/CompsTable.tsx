@@ -55,7 +55,7 @@ export function CompsTable({ auctionId, currentBid }: CompsTableProps) {
           return (
             <div
               key={comp._id}
-              className="flex items-center justify-between text-sm py-2 border-b border-[#1E2A36] last:border-0"
+              className="flex items-center justify-between text-sm py-2 border-b border-white/[0.08] last:border-0"
             >
               <span className="text-gray-300 truncate mr-3 text-xs">{comp.title}</span>
               <div className="flex items-center gap-2 shrink-0">

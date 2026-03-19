@@ -113,9 +113,9 @@ type SlideOneProps = {
 
 const SlideOne: React.FC<SlideOneProps> = ({ onClick }) => {
   return (
-    <div className='relative bg-[#1A2C3D] flex justify-between h-[280px] w-full sm:items-center overflow-hidden'>
+    <div className='relative bg-[#16181f] flex justify-between h-[280px] w-full sm:items-center overflow-hidden'>
       <div className='w-full mt-12 lg:mt-0 py-4 lg:py-8 px-6 sm:px-8 z-[1]'>
-        <div className='text-xs text-[#F2CA16] pb-2'>NEW PLAYERS</div>
+        <div className='text-xs text-[#E94560] pb-2'>NEW PLAYERS</div>
         <div className='font-euro text-[32px] w-[280px] md:w-4/6 md:text-[40px] leading-none'>
           500 WELCOME <br />
           CREDITS

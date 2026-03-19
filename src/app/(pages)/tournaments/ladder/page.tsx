@@ -52,8 +52,8 @@ export default function LadderPage() {
                   key={tier.id}
                   className={`flex items-center justify-between rounded-lg border p-4 transition-colors ${
                     isCurrentTier
-                      ? "border-[#E94560]/40 bg-[#13202D]"
-                      : "border-[#1E2A36] bg-[#13202D]/50"
+                      ? "border-[#E94560]/40 bg-[#16181f]"
+                      : "border-white/[0.08] bg-[#16181f]/50"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -80,7 +80,7 @@ export default function LadderPage() {
           </div>
         </div>
 
-        <div className="mt-8 rounded-lg border border-[#1E2A36] bg-[#13202D] p-5">
+        <div className="mt-8 rounded-lg border border-white/[0.08] bg-[#16181f] p-5">
           <h3 className="text-white font-semibold mb-2">How it works</h3>
           <ul className="text-gray-400 text-sm space-y-2">
             <li>• Earn points by making predictions in tournaments</li>

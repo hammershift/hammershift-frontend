@@ -206,7 +206,7 @@ export default async function HomePage() {
   if (error && !featuredAuction && !dailyHammer) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#0A0A1A] p-4">
-        <div className="max-w-2xl rounded-lg border border-[#E94560]/30 bg-[#13202D] p-8">
+        <div className="max-w-2xl rounded-lg border border-[#E94560]/30 bg-[#16181f] p-8">
           <h1 className="mb-4 text-3xl font-bold text-[#E94560]">Service Temporarily Unavailable</h1>
           <p className="mb-4 text-gray-300">
             We&apos;re experiencing technical difficulties. Our team has been notified and is working to resolve the issue.

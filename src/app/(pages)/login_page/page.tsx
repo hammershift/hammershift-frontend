@@ -105,7 +105,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen w-screen items-center justify-center bg-[#0A0A1A] px-4 py-16 md:py-0">
-      <div className="w-full max-w-md rounded-xl border border-[#1E2A36] bg-[#0F172A] p-8 shadow-2xl">
+      <div className="w-full max-w-md rounded-xl border border-white/[0.08] bg-[#16181f] p-8 shadow-2xl">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white">Sign In</h1>
@@ -125,7 +125,7 @@ const LoginPage = () => {
           type="button"
           onClick={handlePrivyLogin}
           disabled={isPrivyLoading}
-          className="mb-6 flex w-full items-center justify-center gap-3 rounded-lg border border-[#1E2A36] bg-[#1A2332] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#243040] disabled:cursor-not-allowed disabled:opacity-50"
+          className="mb-6 flex w-full items-center justify-center gap-3 rounded-lg border border-white/[0.08] bg-[#1A2332] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#243040] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isPrivyLoading ? (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -181,7 +181,7 @@ const LoginPage = () => {
               name="email"
               autoComplete="username"
               required
-              className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-[#E94560] focus:ring-[#E94560]/20"
+              className="border-white/[0.08] bg-[#1E2A36] px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-[#E94560] focus:ring-[#E94560]/20"
             />
           </div>
 
@@ -213,7 +213,7 @@ const LoginPage = () => {
               name="password"
               autoComplete="current-password"
               required
-              className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-[#E94560] focus:ring-[#E94560]/20"
+              className="border-white/[0.08] bg-[#1E2A36] px-3 py-2.5 text-white placeholder:text-slate-500 focus:border-[#E94560] focus:ring-[#E94560]/20"
             />
           </div>
 

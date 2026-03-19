@@ -156,7 +156,7 @@ export const CardWagersSection = ({ objectID }: any) => {
   return (
     <>
       {auctionWagers.length === 0 && (
-        <div className="bg-[#172431] p-4 flex gap-2 rounded-[4px] my-4">
+        <div className="bg-[#16181f] p-4 flex gap-2 rounded-[4px] my-4">
           <Image
             src={AvatarFour}
             width={24}
@@ -168,7 +168,7 @@ export const CardWagersSection = ({ objectID }: any) => {
         </div>
       )}
       {auctionWagers.length !== 0 && (
-        <div className="gap-2 bg-[#172431] p-2 sm:p-4 my-4 text-[14px] sm:text-[16px] rounded-[4px]">
+        <div className="gap-2 bg-[#16181f] p-2 sm:p-4 my-4 text-[14px] sm:text-[16px] rounded-[4px]">
           <div
             className={`flex flex-col gap-2 ${auctionWagers.length >= 3 && "mb-3"
               }`}
@@ -396,7 +396,7 @@ export const TournamentsListCard = (props: any) => {
                 alt="car"
                 className="w-5 h-5"
               />
-              <span className="text-[#F2CA16] font-bold ml-2">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
+              <span className="text-[#E94560] font-bold ml-2">{`${timerValues.days}:${timerValues.hours}:${timerValues.minutes}:${timerValues.seconds}`}</span>
             </>
           )}
         </div>

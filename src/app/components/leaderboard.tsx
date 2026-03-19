@@ -48,20 +48,20 @@ export const Leaderboard = () => {
   return (
     <section className="mx-auto py-12">
       <div className="grid">
-        {/* <Card className="border-[#1E2A36] bg-[#13202D]">
+        {/* <Card className="border-white/[0.08] bg-[#16181f]">
                     <CardHeader className="pb-3">
                         <h3 className="flex items-center gap-2 text-xl font-bold">
-                            <Trophy className="text-[#F2CA16]" />
+                            <Trophy className="text-[#E94560]" />
                             WEEKLY WINNER
                         </h3>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center gap-6">
                             <div className="relative">
-                                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#F2CA16]/20">
-                                    <Trophy className="h-10 w-10 text-[#F2CA16]" />
+                                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#E94560]/20">
+                                    <Trophy className="h-10 w-10 text-[#E94560]" />
                                 </div>
-                                <div className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#F2CA16] font-bold text-[#0C1924]">
+                                <div className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#E94560] font-bold text-[#0C1924]">
                                     1
                                 </div>
                             </div>
@@ -72,7 +72,7 @@ export const Leaderboard = () => {
                                 <div className="text-gray-400">
                                     Win Rate: {topPlayers[0].winRate}%
                                 </div>
-                                <div className="font-bold text-[#F2CA16]">
+                                <div className="font-bold text-[#E94560]">
                                     ${topPlayers[0].earnings.toLocaleString()}
                                 </div>
                             </div>
@@ -80,14 +80,14 @@ export const Leaderboard = () => {
                     </CardContent>
                 </Card> */}
 
-        <Card className="border-[#1E2A36] bg-[#13202D]">
+        <Card className="border-white/[0.08] bg-[#16181f]">
           <CardHeader className="flex flex-row items-center justify-between">
             <h3 className="flex items-center gap-2 text-xl font-bold">
-              <Users className="text-[#F2CA16]" />
+              <Users className="text-[#E94560]" />
               TOP PLAYERS
             </h3>
             <Link href={createPageUrl("leaderboard")}>
-              <Button variant="link" className="text-[#F2CA16]">
+              <Button variant="link" className="text-[#E94560]">
                 VIEW ALL
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
@@ -111,7 +111,7 @@ export const Leaderboard = () => {
                           <div
                             className={`flex h-8 w-8 items-center justify-center rounded-full ${
                               index === 0
-                                ? "bg-[#F2CA16] text-[#0C1924]"
+                                ? "bg-[#E94560] text-[#0C1924]"
                                 : index === 1
                                   ? "bg-gray-300 text-[#0C1924]"
                                   : index === 2

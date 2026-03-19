@@ -71,32 +71,32 @@ const WithdrawForm = (props: any) => {
             <label>Amount *</label>
             <div className='flex'>
               {' '}
-              <span className='rounded-sm text-white/60 bg-[#172431] h-auto py-2 md:py-2 px-2'>$</span>{' '}
-              <input type='number' className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setAmount(e.target.value)}></input>
+              <span className='rounded-sm text-white/60 bg-[#16181f] h-auto py-2 md:py-2 px-2'>$</span>{' '}
+              <input type='number' className='rounded-sm bg-[#16181f] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setAmount(e.target.value)}></input>
             </div>
           </div>
           <hr className='border-white/5' />
           <div className='flex flex-col gap-2'>
             <label>Account Name *</label>
-            <input type='text' className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setAccountName(e.target.value)}></input>
+            <input type='text' className='rounded-sm bg-[#16181f] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setAccountName(e.target.value)}></input>
           </div>
           <div className='flex flex-col gap-2'>
             <label>Account Number *</label>
             <input
               type='number'
-              className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full'
+              className='rounded-sm bg-[#16181f] h-auto py-2 md:py-2 px-2 w-full'
               onChange={(e) => setAccountNumber(e.target.value)}
             ></input>
           </div>
           <div className='flex flex-col gap-2'>
             <label>Bank Name *</label>
-            <input type='text' className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setBankName(e.target.value)}></input>
+            <input type='text' className='rounded-sm bg-[#16181f] h-auto py-2 md:py-2 px-2 w-full' onChange={(e) => setBankName(e.target.value)}></input>
           </div>
           <div className='flex flex-col gap-2'>
             <label>SWIFT Code / IBAN / ACH / Wire Routing Number *</label>
             <input
               type='text'
-              className='rounded-sm bg-[#172431] h-auto py-2 md:py-2 px-2 w-full'
+              className='rounded-sm bg-[#16181f] h-auto py-2 md:py-2 px-2 w-full'
               onChange={(e) => setWireRoutingNumber(e.target.value)}
             ></input>
           </div>

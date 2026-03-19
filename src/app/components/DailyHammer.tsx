@@ -150,14 +150,14 @@ function DailyHammerUI({ auction, guess, setGuess, submitted, loading, error, on
   if (!auction) return null;
 
   return (
-    <section className="w-full bg-[#0F172A] border-t border-[#1E2A36] py-12">
+    <section className="w-full bg-[#16181f] border-t border-white/[0.08] py-12">
       <div className="mx-auto max-w-3xl px-4">
         <div className="mb-6 text-center">
           <p className="text-xs uppercase tracking-widest text-[#FFB547] mb-1">Daily Hammer</p>
           <h2 className="text-2xl font-bold text-white">What&apos;s it worth?</h2>
         </div>
 
-        <div className="rounded-2xl overflow-hidden border border-[#1E2A36] bg-[#0A0A1A]">
+        <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0A0A1A]">
           {auction.image && (
             <div className="relative h-56 w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -190,7 +190,7 @@ function DailyHammerUI({ auction, guess, setGuess, submitted, loading, error, on
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
                     placeholder="Guess the exact hammer price..."
-                    className="w-full rounded-xl border border-[#1E2A36] bg-[#0F172A] pl-8 pr-4 py-4 font-mono text-xl text-white placeholder:text-gray-600 focus:border-[#E94560] focus:outline-none"
+                    className="w-full rounded-xl border border-white/[0.08] bg-[#0A0A1A] pl-8 pr-4 py-4 font-mono text-xl text-white placeholder:text-gray-600 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
                 {error && <p className="text-[#E94560] text-sm">{error}</p>}

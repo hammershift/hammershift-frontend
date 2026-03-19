@@ -69,7 +69,7 @@ export const LiveTournaments = () => {
         <h2 className="text-2xl font-bold">LIVE TOURNAMENTS</h2>
         <Button
           variant="outline"
-          className="border-[#F2CA16] text-[#F2CA16]"
+          className="border-[#E94560] text-[#E94560]"
           onClick={() => fetchTournaments()}
         >
           <RefreshCcw className="mr-2 h-4 w-4" />
@@ -86,7 +86,7 @@ export const LiveTournaments = () => {
               liveTournaments.length > 0 &&
               liveTournaments.map((tournament, index) => (
                 <div key={index} className="w-80 flex-shrink-0 lg:w-96">
-                  <Card className="overflow-hidden border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]">
+                  <Card className="overflow-hidden border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#E94560]">
                     <div className="relative aspect-video">
                       <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 to-transparent" />
                       <Image
@@ -108,7 +108,7 @@ export const LiveTournaments = () => {
                     <CardContent className="p-6">
                       <div className="mb-6 grid grid-cols-2 gap-4">
                         <div className="flex items-center gap-2">
-                          <DollarSign className="h-5 w-5 text-[#F2CA16]" />
+                          <DollarSign className="h-5 w-5 text-[#E94560]" />
                           <div>
                             <div className="text-gray-400> text-sm">
                               Entry Fee
@@ -121,7 +121,7 @@ export const LiveTournaments = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Trophy className="h-5 w-5 text-[#F2CA16]" />
+                          <Trophy className="h-5 w-5 text-[#E94560]" />
                           <div>
                             <div className="text-sm text-gray-400">
                               Prize Pool
@@ -134,7 +134,7 @@ export const LiveTournaments = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Clock className="h-5 w-5 text-[#F2CA16]" />
+                          <Clock className="h-5 w-5 text-[#E94560]" />
                           <div>
                             <div className="text-sm text-gray-400">Ends</div>
                             <div>
@@ -143,7 +143,7 @@ export const LiveTournaments = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Users className="h-5 w-5 text-[#F2CA16]" />
+                          <Users className="h-5 w-5 text-[#E94560]" />
                           <div>
                             <div className="text-sm text-gray-400">Players</div>
                             <div>
@@ -156,7 +156,7 @@ export const LiveTournaments = () => {
                       <Link
                         href={`${createPageUrl("tournaments")}/${tournament._id}`}
                       >
-                        <Button className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+                        <Button className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
                           {formatTimeLeft(tournament.endTime.toString()) ===
                           "Ended"
                             ? "View Details"
@@ -175,7 +175,7 @@ export const LiveTournaments = () => {
           // Loading spinner
           loading && (
             <div className="flex min-h-[30vh] items-center justify-center">
-              <Loader2 className="h-16 w-16 animate-spin" color="#F2CA16" />
+              <Loader2 className="h-16 w-16 animate-spin" color="#E94560" />
             </div>
           )
         }

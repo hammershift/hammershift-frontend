@@ -42,7 +42,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
       {tournaments.map((tournament, index) => (
         <Card
           key={tournament.tournament_id}
-          className="overflow-hidden border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]"
+          className="overflow-hidden border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#E94560]"
         >
           <div className="relative aspect-video">
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 to-transparent" />
@@ -63,7 +63,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
           <CardContent className="p-6">
             <div className="mb-6 grid grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-[#F2CA16]" />
+                <DollarSign className="h-5 w-5 text-[#E94560]" />
                 <div>
                   <div className="text-gray-400> text-sm">Entry Fee</div>
                   <div className="font-bold">
@@ -74,7 +74,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-[#F2CA16]" />
+                <Trophy className="h-5 w-5 text-[#E94560]" />
                 <div>
                   <div className="text-sm text-gray-400">Prize Pool</div>
                   <div className="font-bold">
@@ -85,14 +85,14 @@ const TournamentGrid = ({ tournaments }: IProps) => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-[#F2CA16]" />
+                <Clock className="h-5 w-5 text-[#E94560]" />
                 <div>
                   <div className="text-sm text-gray-400">Ends</div>
                   <div>{formatTimeLeft(tournament)}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-[#F2CA16]" />
+                <Users className="h-5 w-5 text-[#E94560]" />
                 <div>
                   <div className="text-sm text-gray-400">Players</div>
                   <div>
@@ -102,7 +102,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
               </div>
             </div>
             <Link href={`${createPageUrl("tournaments")}/${tournament._id}`}>
-              <Button className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+              <Button className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
                 {formatTimeLeft(tournament) === "Ended"
                   ? "View Details"
                   : tournament.type === "free_play"

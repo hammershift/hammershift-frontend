@@ -128,7 +128,7 @@ export default function CustomSignupPage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A1A] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md bg-[#0F172A] border border-[#1E2A36] rounded-2xl p-8">
+      <div className="w-full max-w-md bg-[#16181f] border border-white/[0.08] rounded-2xl p-8">
 
         {/* Header */}
         <div className="mb-8 text-center">
@@ -194,7 +194,7 @@ export default function CustomSignupPage() {
               onChange={handleChange}
               required
               autoComplete="username"
-              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
               placeholder="Choose a username"
             />
           </div>
@@ -211,7 +211,7 @@ export default function CustomSignupPage() {
               onChange={handleChange}
               required
               autoComplete="name"
-              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
               placeholder="Your full name"
             />
           </div>
@@ -228,7 +228,7 @@ export default function CustomSignupPage() {
               onChange={handleChange}
               required
               autoComplete="email"
-              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
               placeholder="you@example.com"
             />
           </div>
@@ -246,7 +246,7 @@ export default function CustomSignupPage() {
               onKeyDown={handleKeyDown}
               required
               autoComplete="new-password"
-              className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
+              className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full text-sm placeholder-gray-600 transition-colors"
               placeholder="Create a password"
             />
           </div>
@@ -262,7 +262,7 @@ export default function CustomSignupPage() {
                     target: { name: "isOver18", type: "checkbox", checked: checked === true, value: "" },
                   })
                 }
-                className="border-[#1E2A36] data-[state=checked]:bg-[#E94560] data-[state=checked]:border-[#E94560]"
+                className="border-white/[0.08] data-[state=checked]:bg-[#E94560] data-[state=checked]:border-[#E94560]"
               />
               <label htmlFor="isOver18" className="text-sm text-gray-400 leading-none cursor-pointer select-none">
                 I confirm that I am at least 18 years old
@@ -279,7 +279,7 @@ export default function CustomSignupPage() {
                     target: { name: "agreeToTerms", type: "checkbox", checked: checked === true, value: "" },
                   })
                 }
-                className="border-[#1E2A36] data-[state=checked]:bg-[#E94560] data-[state=checked]:border-[#E94560] mt-0.5"
+                className="border-white/[0.08] data-[state=checked]:bg-[#E94560] data-[state=checked]:border-[#E94560] mt-0.5"
               />
               <label htmlFor="agreeToTerms" className="text-sm text-gray-400 leading-snug cursor-pointer select-none">
                 I agree to the{" "}

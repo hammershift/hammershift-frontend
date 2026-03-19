@@ -17,7 +17,7 @@ const PasswordInput: FC<PasswordInputProps> = ({ value, onChange }) => {
     <div className='relative flex flex-col gap-2'>
       <input
         type={showPassword ? 'text' : 'password'}
-        className='py-2.5 px-3 bg-[#172431] w-full'
+        className='py-2.5 px-3 bg-[#16181f] w-full'
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder='Password'

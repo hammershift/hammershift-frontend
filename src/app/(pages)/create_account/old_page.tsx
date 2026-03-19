@@ -690,7 +690,7 @@ const CreateAccount = () => {
                 </div>
                 <div className='mt-1'>
                   Already a member?
-                  <Link href={'/login_page'} className='text-[#F2CA16] ml-2 underline'>
+                  <Link href={'/login_page'} className='text-[#E94560] ml-2 underline'>
                     Login Here
                   </Link>
                 </div>
@@ -701,7 +701,7 @@ const CreateAccount = () => {
                   <input
                     id='email'
                     type='email'
-                    className='py-2.5 px-3 bg-[#172431]'
+                    className='py-2.5 px-3 bg-[#16181f]'
                     placeholder='you@email.com'
                     value={userDetails.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
@@ -759,14 +759,14 @@ const CreateAccount = () => {
               <div className='font-bold text-4xl sm:text-[44px]'>Setup your profile</div>
               <div className='flex flex-col sm:flex-row gap-6'>
                 {/* Profile picture */}
-                <div className='bg-[#F2CA16] rounded-full w-[120px] h-[120px] flex justify-center items-center'>
+                <div className='bg-[#E94560] rounded-full w-[120px] h-[120px] flex justify-center items-center'>
                   <Image src={UserImage} width={52} height={52} alt='user profile' className='w-[52px] h-[52px]' />
                 </div>
                 {/* Full Name */}
                 <div className='flex flex-col justify-center gap-2 grow'>
                   <label>Full Name *</label>
                   <input
-                    className='py-2.5 px-3 bg-[#172431]'
+                    className='py-2.5 px-3 bg-[#16181f]'
                     placeholder='full name'
                     value={userDetails.fullName}
                     onChange={(e) => handleInputChange('fullName', e.target.value)}
@@ -780,7 +780,7 @@ const CreateAccount = () => {
               <div className='flex flex-col justify-center gap-2'>
                 <label>Username *</label>
                 <input
-                  className='py-2.5 px-3 bg-[#172431]'
+                  className='py-2.5 px-3 bg-[#16181f]'
                   value={userDetails.username}
                   onChange={(e) => handleInputChange('username', e.target.value)}
                   onBlur={() => checkUserExistence('username', userDetails.username)}
@@ -795,7 +795,7 @@ const CreateAccount = () => {
                 {/* Country */}
                 <div className='flex flex-col gap-2'>
                   <label>Country *</label>
-                  <select className='py-2.5 px-3 bg-[#172431]' value={selectedCountry?.isoCode || ''} onChange={(e) => handleCountrySelect(e.target.value)}>
+                  <select className='py-2.5 px-3 bg-[#16181f]' value={selectedCountry?.isoCode || ''} onChange={(e) => handleCountrySelect(e.target.value)}>
                     <option value=''>Select Country</option>
                     {countries.map((country) => (
                       <option key={country.isoCode} value={country.isoCode}>
@@ -810,7 +810,7 @@ const CreateAccount = () => {
                 <div className='flex flex-col gap-2'>
                   <label>State *</label>
                   <select
-                    className='py-2.5 px-3 bg-[#172431]'
+                    className='py-2.5 px-3 bg-[#16181f]'
                     value={selectedState?.isoCode || ''}
                     onChange={(e) => handleStateSelect(e.target.value)}
                     disabled={!selectedCountry}
@@ -831,7 +831,7 @@ const CreateAccount = () => {
               <div className='flex flex-col justify-center gap-2'>
                 <label>About Me</label>
                 <textarea
-                  className='py-2.5 px-3 bg-[#172431]'
+                  className='py-2.5 px-3 bg-[#16181f]'
                   placeholder='Tell the community about yourself'
                   rows={8}
                   value={userDetails.aboutMe}
@@ -863,7 +863,7 @@ const CreateAccount = () => {
                 <Image src={Onfido} width={107} height={24} alt='user profile' className='w-[107px] h-[24px]' />
               </div>
               <div className='grid gap-4'>
-                <div className='flex justify-between bg-[#172431] p-4 items-center'>
+                <div className='flex justify-between bg-[#16181f] p-4 items-center'>
                   <div className='flex items-center gap-4  rounded'>
                     <div className='w-14 h-14 bg-[#184C80] rounded flex justify-center items-center'>
                       <Image src={SingleNeutral} width={36} height={36} alt='user profile' className='w-[36px] h-[36px]' />
@@ -872,11 +872,11 @@ const CreateAccount = () => {
                   </div>
                   <input
                     type='radio'
-                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
+                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#E94560] checked:bg-[#E94560]'
                     value='All'
                   />
                 </div>
-                <div className='flex justify-between bg-[#172431] p-4 items-center'>
+                <div className='flex justify-between bg-[#16181f] p-4 items-center'>
                   <div className='flex items-center gap-4  rounded'>
                     <div className='w-14 h-14 bg-[#184C80] rounded flex justify-center items-center'>
                       <Image src={Passport} width={36} height={36} alt='user profile' className='w-[36px] h-[36px]' />
@@ -885,11 +885,11 @@ const CreateAccount = () => {
                   </div>
                   <input
                     type='radio'
-                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
+                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#E94560] checked:bg-[#E94560]'
                     value='All'
                   />
                 </div>
-                <div className='flex justify-between bg-[#172431] p-4 items-center'>
+                <div className='flex justify-between bg-[#16181f] p-4 items-center'>
                   <div className='flex items-center gap-4  rounded'>
                     <div className='w-14 h-14 bg-[#184C80] rounded flex justify-center items-center'>
                       <Image src={IDCard} width={36} height={36} alt='user profile' className='w-[36px] h-[36px]' />
@@ -898,7 +898,7 @@ const CreateAccount = () => {
                   </div>
                   <input
                     type='radio'
-                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#F2CA16] checked:bg-[#F2CA16]'
+                    className='relative peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/5 transition-opacity checked:border-[#E94560] checked:bg-[#E94560]'
                     value='All'
                   />
                 </div>

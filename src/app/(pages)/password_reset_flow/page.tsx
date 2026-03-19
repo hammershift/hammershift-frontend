@@ -205,7 +205,7 @@ const PasswordResetFlow = () => {
   };
 
   const getInputStyle = () => {
-    let baseStyle = 'py-2.5 px-3 bg-[#172431] w-full';
+    let baseStyle = 'py-2.5 px-3 bg-[#16181f] w-full';
     let borderColorStyle = '';
 
     if (isOtpLengthValid) {

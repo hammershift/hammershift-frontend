@@ -199,8 +199,8 @@ const FiltersAndSort = ({
               <button
                 id="filter-make-button"
                 type="button"
-                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
-                style={makeDropdown ? { backgroundColor: "#1A2C3D" } : {}}
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#16181f] hover:bg-[#16181f] truncate"
+                style={makeDropdown ? { backgroundColor: "#16181f" } : {}}
                 onClick={() => setMakeDropdown((prev) => !prev)}
               >
                 {filters.make[0] == "All"
@@ -223,8 +223,8 @@ const FiltersAndSort = ({
               <button
                 type="button"
                 id="filter-category-button"
-                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
-                style={categoryDropdown ? { backgroundColor: "#1A2C3D" } : {}}
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#16181f] hover:bg-[#16181f] truncate"
+                style={categoryDropdown ? { backgroundColor: "#16181f" } : {}}
                 onClick={() => setCategoryDropdown((prev) => !prev)}
               >
                 {filters.category[0] == "All"
@@ -247,8 +247,8 @@ const FiltersAndSort = ({
               <button
                 type="button"
                 id="filter-era-button"
-                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
-                style={eraDropdown ? { backgroundColor: "#1A2C3D" } : {}}
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#16181f] hover:bg-[#16181f] truncate"
+                style={eraDropdown ? { backgroundColor: "#16181f" } : {}}
                 onClick={() => setEraDropdown((prev) => !prev)}
               >
                 {filters.era[0] == "All"
@@ -271,8 +271,8 @@ const FiltersAndSort = ({
               <button
                 id="filter-location-button"
                 type="button"
-                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
-                style={locationDropdown ? { backgroundColor: "#1A2C3D" } : {}}
+                className="w-[140px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#16181f] hover:bg-[#16181f] truncate"
+                style={locationDropdown ? { backgroundColor: "#16181f" } : {}}
                 onClick={() => setLocationDropdown((prev) => !prev)}
               >
                 {filters.location[0] == "All"
@@ -295,7 +295,7 @@ const FiltersAndSort = ({
         {/* TODO: */}
         <div className="flex gap-6">
           <div
-            className={`p-2 rounded cursor-pointer ${isGridView ? "bg-[#172431]" : ""
+            className={`p-2 rounded cursor-pointer ${isGridView ? "bg-[#16181f]" : ""
               }`}
             onClick={(e) => setIsGridView(true)}
           >
@@ -308,7 +308,7 @@ const FiltersAndSort = ({
             />
           </div>
           <div
-            className={`p-2 rounded cursor-pointer ${!isGridView ? "bg-[#172431]" : ""
+            className={`p-2 rounded cursor-pointer ${!isGridView ? "bg-[#16181f]" : ""
               }`}
             onClick={(e) => setIsGridView(false)}
           >
@@ -328,10 +328,10 @@ const FiltersAndSort = ({
             <button
               id="sort-auctions-button"
               type="button"
-              className="w-[240px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5 text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
+              className="w-[240px] inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5 text-white-900 shadow-sm bg-[#16181f] hover:bg-[#16181f] truncate"
               style={
                 dropdownMenuRegular === "Sort"
-                  ? { backgroundColor: "#1A2C3D" }
+                  ? { backgroundColor: "#16181f" }
                   : {}
               }
               onClick={() =>
@@ -378,7 +378,7 @@ const FiltersAndSort = ({
       </div>
       {/* Filter Dropdown for small screens*/}
       {filterDropdownOpen && (
-        <div className="slide-in-top w-screen h-screen fixed z-40 top-0 left-0 bg-[#1A2C3D] p-4">
+        <div className="slide-in-top w-screen h-screen fixed z-40 top-0 left-0 bg-[#16181f] p-4">
           <div className="flex justify-between">
             <div>FILTER</div>
             <button onClick={() => setFilterDropdownOpen((prev) => !prev)}>
@@ -425,7 +425,7 @@ const FiltersAndSort = ({
               />
             </button>
             {dropdownMenuSmall === "Make" && (
-              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-4/5 overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#16181f] text-white p-4 h-4/5 overflow-y-auto">
                 <MakeContent columns={1} filters={filters} />
               </div>
             )}
@@ -449,7 +449,7 @@ const FiltersAndSort = ({
               />
             </button>
             {dropdownMenuSmall === "Category" && (
-              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-3/5 overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#16181f] text-white p-4 h-3/5 overflow-y-auto">
                 <CategoryContent columns={1} filters={filters} />
               </div>
             )}
@@ -473,7 +473,7 @@ const FiltersAndSort = ({
               />
             </button>
             {dropdownMenuSmall === "Era" && (
-              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-3/5 overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#16181f] text-white p-4 h-3/5 overflow-y-auto">
                 <EraContent columns={1} filters={filters} />
               </div>
             )}
@@ -497,7 +497,7 @@ const FiltersAndSort = ({
               />
             </button>
             {dropdownMenuSmall === "Location" && (
-              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#1A2C3D] text-white p-4 h-1/2 overflow-y-auto">
+              <div className="absolute left-0 z-50  w-screen origin-top-right rounded-md bg-[#16181f] text-white p-4 h-1/2 overflow-y-auto">
                 <LocationContent columns={1} filters={filters} />
               </div>
             )}
@@ -506,7 +506,7 @@ const FiltersAndSort = ({
       )}
       {/* Sort Dropdown */}
       {sortDropdownOpen && (
-        <div className="slide-in-top w-screen h-screen fixed z-50 top-0 left-0 bg-[#1A2C3D] p-4">
+        <div className="slide-in-top w-screen h-screen fixed z-50 top-0 left-0 bg-[#16181f] p-4">
           <div className="flex justify-between py-4">
             <div>SORT</div>
             <button onClick={() => setSortDropdownOpen((prev) => !prev)}>
@@ -635,7 +635,7 @@ const MakeDropdownContent = [
 
 const MakeDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
-    <div className="absolute left-0 z-10 mt-2 w-[640px] h-[362px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg">
+    <div className="absolute left-0 z-10 mt-2 w-[640px] h-[362px] origin-top-right rounded-md bg-[#16181f] text-white shadow-lg">
       <div className="p-4" role="none">
         <div className="flex items-center bg-white/5 rounded py-2 px-3">
           <Image
@@ -681,7 +681,7 @@ const MakeContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
             <input
               type="checkbox"
               className={` ${filters["make"].includes(value)
-                  ? "bg-[#f2ca16] border-[#f2ca16]"
+                  ? "bg-[#E94560] border-[#E94560]"
                   : "bg-white/5 border-white/10"
                 } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity make-checkbox`}
             />
@@ -725,7 +725,7 @@ const CategoryDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
     <>
       <div
-        className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg "
+        className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#16181f] text-white shadow-lg "
         role="menu"
         aria-labelledby="menu-button"
         tabIndex={-1}
@@ -749,7 +749,7 @@ const CategoryContent: React.FC<FiltersContentProps> = ({
             <input
               type="checkbox"
               className={` ${filters["category"].includes(value)
-                  ? "bg-[#f2ca16] border-[#f2ca16]"
+                  ? "bg-[#E94560] border-[#E94560]"
                   : "bg-white/5 border-white/10"
                 } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity category-checkbox`}
             />
@@ -794,7 +794,7 @@ const EraDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
     <div>
       <div
-        className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg "
+        className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#16181f] text-white shadow-lg "
         role="menu"
         aria-labelledby="menu-button"
         tabIndex={-1}
@@ -815,7 +815,7 @@ const EraContent: React.FC<FiltersContentProps> = ({ columns, filters }) => {
             <input
               type="checkbox"
               className={` ${filters["era"].includes(value)
-                  ? "bg-[#f2ca16] border-[#f2ca16]"
+                  ? "bg-[#E94560] border-[#E94560]"
                   : "bg-white/5 border-white/10"
                 } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity era-checkbox`}
             />
@@ -859,7 +859,7 @@ const LocationDropdownContent = [
 const LocationDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
     <div>
-      <div className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#1A2C3D] text-white shadow-lg ">
+      <div className="absolute p-4 left-0 z-10 mt-2 w-[400px] h-[312px] origin-top-right rounded-md bg-[#16181f] text-white shadow-lg ">
         <LocationContent columns={2} filters={filters} />
       </div>
     </div>
@@ -885,7 +885,7 @@ const LocationContent: React.FC<FiltersContentProps> = ({
               <input
                 type="checkbox"
                 className={` ${filters["location"].includes(value)
-                    ? "bg-[#f2ca16] border-[#f2ca16]"
+                    ? "bg-[#E94560] border-[#E94560]"
                     : "bg-white/5 border-white/10"
                   } relative peer h-5 w-5 cursor-pointer appearance-none rounded-md border transition-opacity location-checkbox`}
               />
@@ -950,7 +950,7 @@ const addSortToFilters = (
 
 const SortDropdown: React.FC<FiltersDropdownProps> = ({ filters }) => {
   return (
-    <div className="absolute right-0 z-10 mt-2 w-[320px] h-[312px]  rounded-md bg-[#1A2C3D] text-white shadow-lg ">
+    <div className="absolute right-0 z-10 mt-2 w-[320px] h-[312px]  rounded-md bg-[#16181f] text-white shadow-lg ">
       <div className="p-4">
         <SortContent filters={filters} />
       </div>

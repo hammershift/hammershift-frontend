@@ -197,7 +197,7 @@ export default function TournamentsPage() {
 
       {/* Stats Bar */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Card className="border-[#1E2A36] bg-[#13202D] p-6">
+        <Card className="border-white/[0.08] bg-[#16181f] p-6">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-[#E94560]/20 p-3">
               <Trophy className="h-6 w-6 text-[#E94560]" />
@@ -211,7 +211,7 @@ export default function TournamentsPage() {
           </div>
         </Card>
 
-        <Card className="border-[#1E2A36] bg-[#13202D] p-6">
+        <Card className="border-white/[0.08] bg-[#16181f] p-6">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-[#00D4AA]/20 p-3">
               <DollarSign className="h-6 w-6 text-[#00D4AA]" />
@@ -225,7 +225,7 @@ export default function TournamentsPage() {
           </div>
         </Card>
 
-        <Card className="border-[#1E2A36] bg-[#13202D] p-6">
+        <Card className="border-white/[0.08] bg-[#16181f] p-6">
           <div className="flex items-center gap-4">
             <div className="rounded-full bg-[#FFB547]/20 p-3">
               <Users className="h-6 w-6 text-[#FFB547]" />
@@ -311,7 +311,7 @@ export default function TournamentsPage() {
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as TypeFilter)}
-              className="w-full rounded-md border border-[#1E2A36] bg-[#13202D] p-2 text-white"
+              className="w-full rounded-md border border-white/[0.08] bg-[#16181f] p-2 text-white"
             >
               <option value="all">All Types</option>
               <option value="free_play">Free</option>
@@ -324,7 +324,7 @@ export default function TournamentsPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full rounded-md border border-[#1E2A36] bg-[#13202D] p-2 text-white"
+              className="w-full rounded-md border border-white/[0.08] bg-[#16181f] p-2 text-white"
             >
               <option value="ending_soon">Ending Soon</option>
               <option value="prize_pool">Prize Pool</option>
@@ -376,7 +376,7 @@ export default function TournamentsPage() {
           ))}
         </div>
       ) : filteredTournaments.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-[#1E2A36] bg-[#13202D] p-12 text-center">
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-white/[0.08] bg-[#16181f] p-12 text-center">
           <Trophy className="mb-4 h-16 w-16 text-gray-600" />
           <h3 className="mb-2 text-xl font-bold">No tournaments found</h3>
           <p className="mb-6 text-gray-400">

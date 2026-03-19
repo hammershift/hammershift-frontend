@@ -1,7 +1,7 @@
 export default function TournamentHero() {
     return (
         <div className="section-container">
-            <div className=" p-6 bg-[#172431] rounded">
+            <div className=" p-6 bg-[#16181f] rounded">
                 <div className=" mb-5">
                     <h3 className=" text-4xl font-bold mb-2">
                         HammerShift Tournaments: Compete, Predict, Win!

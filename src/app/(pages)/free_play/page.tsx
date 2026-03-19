@@ -143,7 +143,7 @@ const FreePlay = () => {
             <Link href={createPageUrl("Leaderboard")}>
               <Button
                 variant="outline"
-                className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto"
+                className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924] sm:w-auto"
               >
                 <Trophy className="mr-2 h-5 w-5" />
                 LEADERBOARD
@@ -202,14 +202,14 @@ const FreePlay = () => {
           <TabsList className="border-[#333333] bg-[#2C2C2C]">
             <TabsTrigger
               value="hammer"
-              className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
-              // className={`${activeTab === "hammer" ? "bg-[#F2CA16] text-[#0C1924]" : ""}`}
+              className="data-[state=active]:bg-[#E94560] data-[state=active]:text-[#0C1924]"
+              // className={`${activeTab === "hammer" ? "bg-[#E94560] text-[#0C1924]" : ""}`}
             >
               Free Guess the Hammer
             </TabsTrigger>
             <TabsTrigger
               value="tournaments"
-              className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+              className="data-[state=active]:bg-[#E94560] data-[state=active]:text-[#0C1924]"
             >
               Free Tournaments
             </TabsTrigger>
@@ -221,7 +221,7 @@ const FreePlay = () => {
             )} */}
 
             {/* Tab bar */}
-            <div className="flex overflow-x-auto border-b border-[#1E2A36] mb-6">
+            <div className="flex overflow-x-auto border-b border-white/[0.08] mb-6">
               {(["ending_soon", "active", "starting_soon", "ended"] as const).map((tab) => (
                 <button
                   key={tab}
@@ -246,7 +246,7 @@ const FreePlay = () => {
 
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#E94560]"></div>
               </div>
             ) : (
               <AuctionGrid
@@ -260,12 +260,12 @@ const FreePlay = () => {
           <TabsContent value="tournaments" className="pt-6">
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#F2CA16]"></div>
+                <div className="h-12 w-12 animate-spin rounded-full border-4 border-b-transparent border-l-transparent border-r-transparent border-t-[#E94560]"></div>
               </div>
             ) : tournaments.length > 0 ? (
               <TournamentGrid tournaments={tournaments} />
             ) : (
-              <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-12 text-center">
+              <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-12 text-center">
                 <h3 className="mb-2 text-xl font-bold">
                   No Free Tournaments Available
                 </h3>

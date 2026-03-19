@@ -8,7 +8,7 @@ export default function PrivacyPolicy() {
       <h1 className="text-3xl font-bold text-center mb-8">PRIVACY POLICY</h1>
 
       <div className="max-w-3xl mx-auto">
-        <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+        <Card className="bg-[#16181f] border-white/[0.08] mb-8">
           <CardHeader>
             <CardTitle>1. INTRODUCTION</CardTitle>
           </CardHeader>
@@ -22,7 +22,7 @@ export default function PrivacyPolicy() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+        <Card className="bg-[#16181f] border-white/[0.08] mb-8">
           <CardHeader>
             <CardTitle>2. INFORMATION WE COLLECT</CardTitle>
           </CardHeader>
@@ -49,7 +49,7 @@ export default function PrivacyPolicy() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+        <Card className="bg-[#16181f] border-white/[0.08] mb-8">
           <CardHeader>
             <CardTitle>3. HOW WE USE YOUR INFORMATION</CardTitle>
           </CardHeader>
@@ -69,7 +69,7 @@ export default function PrivacyPolicy() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+        <Card className="bg-[#16181f] border-white/[0.08] mb-8">
           <CardHeader>
             <CardTitle>4. DATA SECURITY</CardTitle>
           </CardHeader>
@@ -83,7 +83,7 @@ export default function PrivacyPolicy() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#13202D] border-[#1E2A36] mb-8">
+        <Card className="bg-[#16181f] border-white/[0.08] mb-8">
           <CardHeader>
             <CardTitle>5. YOUR RIGHTS</CardTitle>
           </CardHeader>
@@ -104,7 +104,7 @@ export default function PrivacyPolicy() {
           </CardContent>
         </Card>
 
-        <Card className="bg-[#13202D] border-[#1E2A36]">
+        <Card className="bg-[#16181f] border-white/[0.08]">
           <CardHeader>
             <CardTitle>6. CONTACT INFORMATION</CardTitle>
           </CardHeader>
@@ -120,7 +120,7 @@ export default function PrivacyPolicy() {
               Last updated: June 15, 2024
             </p>
             <p className="mt-6">
-              <Link href={createPageUrl("Terms Of Service")} className="text-[#F2CA16] hover:underline">
+              <Link href={createPageUrl("Terms Of Service")} className="text-[#E94560] hover:underline">
                 View our Terms of Service
               </Link>
             </p>
