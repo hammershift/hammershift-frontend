@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import Link from 'next/link';
 import CountdownInline from './CountdownInline';
 import LiveBadge from './LiveBadge';
+import BookmarkButton from './BookmarkButton';
 
 interface FeaturedMarket {
   _id: string;
@@ -115,7 +116,7 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
                       </div>
 
                       {/* Quick trade buttons */}
-                      <div className="flex gap-3">
+                      <div className="flex items-center gap-3">
                         <Link
                           href={`/trading/${market._id}`}
                           className="rounded-lg bg-[#00D4AA]/20 border border-[#00D4AA]/40 px-6 py-2.5 text-sm font-semibold font-mono text-[#00D4AA] hover:bg-[#00D4AA]/30 transition-colors"
@@ -128,6 +129,7 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
                         >
                           No {Math.round(market.noPrice * 100)}¢
                         </Link>
+                        <BookmarkButton marketId={market._id} className="!h-10 !w-10" />
                       </div>
                     </div>
                   </div>

@@ -7,6 +7,7 @@ import CategoryFilterBar from './CategoryFilterBar';
 import MarketSortDropdown from './MarketSortDropdown';
 import Sparkline from './Sparkline';
 import LiveBadge from './LiveBadge';
+import BookmarkButton from './BookmarkButton';
 
 // Shape expected by TradingDrawer
 interface DrawerMarket {
@@ -180,6 +181,9 @@ export default function TrendingMarketsClient({ markets }: Props) {
                     <LiveBadge />
                   </div>
                 )}
+                <div className="absolute top-2 right-2 z-10">
+                  <BookmarkButton marketId={market._id} />
+                </div>
               </div>
             )}
             <div className="flex flex-col flex-1 p-4 gap-3">
