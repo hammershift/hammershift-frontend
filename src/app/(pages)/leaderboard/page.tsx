@@ -29,6 +29,10 @@ import {
   Target,
   Award,
   Percent,
+  Zap,
+  ArrowRight,
+  Clock,
+  CheckCircle2,
 } from "lucide-react";
 import StreakIndicator from "@/app/components/StreakIndicator";
 import { useTrackEvent } from "@/hooks/useTrackEvent";
@@ -67,6 +71,17 @@ interface CurrentUserStats {
   predictions_count: number;
   accuracy: number;
   current_streak: number;
+}
+
+interface RecentActivityEntry {
+  _id: string;
+  username: string;
+  predictedPrice: number;
+  auctionTitle: string;
+  auctionId: string;
+  scored: boolean;
+  score: number | null;
+  createdAt: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -144,6 +159,8 @@ const LeaderboardPage = () => {
   });
   const [currentUserStats, setCurrentUserStats] =
     useState<CurrentUserStats | null>(null);
+  const [recentActivity, setRecentActivity] = useState<RecentActivityEntry[]>([]);
+  const [recentActivityLoading, setRecentActivityLoading] = useState(false);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -189,6 +206,18 @@ const LeaderboardPage = () => {
   useEffect(() => {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
+
+  // Fetch recent activity only when leaderboard is empty and not searching
+  useEffect(() => {
+    if (!loading && leaderboard.length === 0 && !activeSearch) {
+      setRecentActivityLoading(true);
+      fetch("/api/leaderboard/recent-activity")
+        .then((res) => res.json())
+        .then((data) => setRecentActivity(data.activity || []))
+        .catch(() => setRecentActivity([]))
+        .finally(() => setRecentActivityLoading(false));
+    }
+  }, [loading, leaderboard.length, activeSearch]);
 
   useEffect(() => {
     track("leaderboard_viewed", {
@@ -516,10 +545,39 @@ const LeaderboardPage = () => {
                       })
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={9} className="h-24 text-center">
-                          {activeSearch
-                            ? `No players found matching "${activeSearch}"`
-                            : "No players found"}
+                        <TableCell colSpan={9} className="py-0">
+                          {activeSearch ? (
+                            // Search returned nothing
+                            <div className="flex flex-col items-center gap-3 py-12 text-center">
+                              <Search className="h-10 w-10 text-gray-600" />
+                              <p className="text-gray-400">
+                                No players found matching &ldquo;{activeSearch}&rdquo;
+                              </p>
+                            </div>
+                          ) : (
+                            // Leaderboard genuinely empty — scoring hasn't run yet
+                            <div className="flex flex-col items-center gap-4 py-14 text-center">
+                              <div className="relative flex items-center justify-center">
+                                <div className="absolute h-24 w-24 rounded-full bg-[#E94560]/10" />
+                                <Trophy className="relative h-12 w-12 text-[#E94560]/60" />
+                              </div>
+                              <div className="max-w-xs space-y-1">
+                                <p className="text-lg font-semibold text-white">
+                                  Rankings coming soon
+                                </p>
+                                <p className="text-sm text-gray-400">
+                                  Leaderboard updates weekly as predictions are scored.
+                                  Be one of the first to climb the ranks.
+                                </p>
+                              </div>
+                              <Link href="/">
+                                <Button className="mt-1 gap-2 bg-[#E94560] hover:bg-[#E94560]/90">
+                                  Make Your First Prediction
+                                  <ArrowRight className="h-4 w-4" />
+                                </Button>
+                              </Link>
+                            </div>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -553,6 +611,115 @@ const LeaderboardPage = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* Recent Activity fallback — shown when leaderboard is empty and not filtering */}
+          {!loading && leaderboard.length === 0 && !activeSearch && (
+            <Card className="border-white/[0.08] bg-[#16181f]">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Zap className="h-4 w-4 text-[#FFB547]" />
+                  Recent Prediction Activity
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                {recentActivityLoading ? (
+                  <div className="space-y-0 divide-y divide-white/[0.05]">
+                    {Array(5)
+                      .fill(0)
+                      .map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex animate-pulse items-center gap-3 px-4 py-3"
+                        >
+                          <div className="h-7 w-7 rounded-full bg-[#1E2A36]" />
+                          <div className="flex-1 space-y-1.5">
+                            <div className="h-3 w-2/3 rounded bg-[#1E2A36]" />
+                            <div className="h-3 w-1/3 rounded bg-[#1E2A36]" />
+                          </div>
+                          <div className="h-4 w-16 rounded bg-[#1E2A36]" />
+                        </div>
+                      ))}
+                  </div>
+                ) : recentActivity.length === 0 ? (
+                  <div className="flex flex-col items-center gap-3 py-10 text-center">
+                    <Users className="h-8 w-8 text-gray-600" />
+                    <p className="text-sm text-gray-500">
+                      No predictions yet. Be the first!
+                    </p>
+                    <Link href="/">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 border-[#1E2A36] bg-transparent text-xs"
+                      >
+                        Browse Markets
+                        <ArrowRight className="h-3 w-3" />
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <ul className="divide-y divide-white/[0.05]">
+                    {recentActivity.map((item) => (
+                      <li
+                        key={item._id}
+                        className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02]"
+                      >
+                        {/* Avatar placeholder */}
+                        <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#E94560]/20 text-xs font-bold text-[#E94560]">
+                          {item.username?.[0]?.toUpperCase() ?? "?"}
+                        </div>
+                        {/* Description */}
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm">
+                            <span className="font-medium text-white">
+                              {item.username}
+                            </span>{" "}
+                            <span className="text-gray-400">predicted</span>{" "}
+                            <span className="font-mono text-[#FFB547]">
+                              ${item.predictedPrice.toLocaleString()}
+                            </span>
+                          </p>
+                          <p className="truncate text-xs text-gray-500">
+                            {item.auctionTitle}
+                          </p>
+                        </div>
+                        {/* Status badge */}
+                        <div className="flex-shrink-0">
+                          {item.scored ? (
+                            <div className="flex items-center gap-1 rounded-full bg-[#00D4AA]/10 px-2 py-0.5 text-xs font-mono text-[#00D4AA]">
+                              <CheckCircle2 className="h-3 w-3" />
+                              {item.score !== null
+                                ? item.score.toLocaleString()
+                                : "scored"}
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 rounded-full bg-white/[0.06] px-2 py-0.5 text-xs text-gray-500">
+                              <Clock className="h-3 w-3" />
+                              pending
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {recentActivity.length > 0 && (
+                  <div className="border-t border-white/[0.05] p-3 text-center">
+                    <Link href="/">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="gap-1.5 text-xs text-gray-400 hover:text-white"
+                      >
+                        Make a prediction to earn your spot
+                        <ArrowRight className="h-3 w-3" />
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar */}
