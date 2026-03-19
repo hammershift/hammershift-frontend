@@ -49,6 +49,8 @@ export default function AnimatedCounter({
       return;
     }
 
+    startTimeRef.current = null;
+
     const animate = (timestamp: number) => {
       if (startTimeRef.current === null) {
         startTimeRef.current = timestamp;

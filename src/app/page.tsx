@@ -27,7 +27,8 @@ async function getHomePageData() {
     await connectToDB();
 
     // Query live auctions directly from shared MongoDB
-    const db = mongoose.connection.db!;
+    const db = mongoose.connection.db;
+    if (!db) throw new Error("MongoDB connection not established");
     const now = new Date();
     const liveAuctions: any[] = await Auctions.find({
       isActive: true,
@@ -53,7 +54,7 @@ async function getHomePageData() {
       db.collection("predictions").countDocuments(),
       db.collection("polygon_markets").aggregate([
         { $group: { _id: null, total: { $sum: "$totalVolume" } } },
-      ]).toArray().then(r => (r[0]?.total ?? 0) / 100),
+      ]).toArray().then(r => (r[0]?.total ?? 0) / 100), // totalVolume stored in cents
       db.collection("auctions").countDocuments(),
     ]);
 
