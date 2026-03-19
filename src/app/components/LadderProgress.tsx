@@ -24,7 +24,7 @@ interface LadderProgressProps {
 export function LadderProgress({ data, loading }: LadderProgressProps) {
   if (loading || !data) {
     return (
-      <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5">
+      <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5">
         <div className="animate-pulse space-y-3">
           <div className="h-4 bg-[#1E2A36] rounded w-2/5" />
           <div className="h-2 bg-[#1E2A36] rounded w-full" />
@@ -50,7 +50,7 @@ export function LadderProgress({ data, loading }: LadderProgressProps) {
     : 100;
 
   return (
-    <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5">
+    <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5">
       <div className="flex items-center justify-between mb-3">
         <span className="font-bold text-base" style={{ color: currentTier.color }}>
           {currentTier.label} Tier

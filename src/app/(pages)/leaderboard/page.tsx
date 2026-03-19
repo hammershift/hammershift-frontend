@@ -229,7 +229,7 @@ const LeaderboardPage = () => {
   const getMedalIcon = (rank: number) => {
     switch (rank) {
       case 1:
-        return <Trophy className="h-5 w-5 text-[#F2CA16]" />;
+        return <Trophy className="h-5 w-5 text-[#FFB547]" />;
       case 2:
         return <Trophy className="h-5 w-5 text-gray-300" />;
       case 3:

@@ -13,7 +13,7 @@ import Link from "next/link";
 
 const WagerByCategory = () => {
   return (
-    <div className="w-full bg-[#1A2C3D] flex flex-col items-center">
+    <div className="w-full bg-[#16181f] flex flex-col items-center">
       <div className="section-container md:py-[120px]">
         <header>
           <div className="flex items-center">
@@ -41,7 +41,7 @@ const WagerByCategory = () => {
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="font-bold text-[#F2CA16]">
+                  <div className="font-bold text-[#E94560]">
                     Explore Sedans
                   </div>
                 </div>
@@ -66,7 +66,7 @@ const WagerByCategory = () => {
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="font-bold text-[#F2CA16]">
+                  <div className="font-bold text-[#E94560]">
                     Explore SUVs
                   </div>
                 </div>
@@ -94,7 +94,7 @@ const WagerByCategory = () => {
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="font-bold text-[#F2CA16]">
+                  <div className="font-bold text-[#E94560]">
                     Explore EVs & Hybrids
                   </div>
                 </div>
@@ -119,7 +119,7 @@ const WagerByCategory = () => {
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="font-bold text-[#F2CA16]">
+                  <div className="font-bold text-[#E94560]">
                     Explore Luxury
                   </div>
                 </div>
@@ -144,7 +144,7 @@ const WagerByCategory = () => {
                     Unam incolunt Belgae, aliam Aquitani, tertiam. Cras mattis
                     iudicium purus sit amet fermentum.
                   </div>
-                  <div className="font-bold text-[#F2CA16]">
+                  <div className="font-bold text-[#E94560]">
                     Explore Pickup Trucks
                   </div>
                 </div>

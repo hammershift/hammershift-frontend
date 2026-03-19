@@ -67,7 +67,7 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
                 className="h-full w-full"
                 style={{
                   background:
-                    "linear-gradient(135deg, #0F172A 0%, #1E2A36 40%, #E94560/20 100%)",
+                    "linear-gradient(135deg, #0A0A1A 0%, #16181f 40%, #E94560/20 100%)",
                 }}
                 aria-hidden="true"
               >

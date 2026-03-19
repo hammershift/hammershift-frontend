@@ -103,7 +103,7 @@ export const LiveAuctions = () => {
         <h2 className="text-2xl font-bold">LIVE AUCTIONS</h2>
         <Button
           variant="outline"
-          className="border-[#F2CA16] text-[#F2CA16]"
+          className="border-[#E94560] text-[#E94560]"
           onClick={() => fetchAuctions()}
         >
           <RefreshCcw className="mr-2 h-4 w-4" />
@@ -119,7 +119,7 @@ export const LiveAuctions = () => {
             {auctions.length > 0 &&
               auctions.map((auction, index) => (
                 <div key={index} className="w-80 flex-shrink-0 lg:w-96">
-                  <Card className="flex h-full flex-col border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]">
+                  <Card className="flex h-full flex-col border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#E94560]">
                     <div className="relative h-[240px]">
                       <Image
                         src={auction.image || defaultImage}
@@ -130,7 +130,7 @@ export const LiveAuctions = () => {
                       <div className="absolute right-2 top-2">
                         <Badge
                           variant="default"
-                          className="bg-[#F2CA16] text-[#0C1924]"
+                          className="bg-[#E94560] text-[#0C1924]"
                         >
                           {auction.attributes[2].value}
                         </Badge>
@@ -148,7 +148,7 @@ export const LiveAuctions = () => {
                             <div className="text-sm text-gray-400">
                               Current Bid
                             </div>
-                            <div className="font-bold text-[#F2CA16]">
+                            <div className="font-bold text-[#E94560]">
                               {USDollar.format(auction.attributes[0].value)}
                             </div>
                           </div>
@@ -157,7 +157,7 @@ export const LiveAuctions = () => {
                               Time Left
                             </div>
                             <div className="flex items-center">
-                              <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
+                              <Clock className="mr-1 h-4 w-4 text-[#E94560]" />
                               {formatTimeLeft(
                                 auction.sort?.deadline.toString() ?? ""
                               )}
@@ -172,7 +172,7 @@ export const LiveAuctions = () => {
                           <Link
                             href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams("free_play"))}`}
                           >
-                            <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+                            <Button className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
                               PREDICT NOW
                             </Button>
                           </Link>
@@ -188,7 +188,7 @@ export const LiveAuctions = () => {
           // Loading spinner
           loading && (
             <div className="flex min-h-[30vh] items-center justify-center">
-              <Loader2 className="h-16 w-16 animate-spin" color="#F2CA16" />
+              <Loader2 className="h-16 w-16 animate-spin" color="#E94560" />
             </div>
           )
         }

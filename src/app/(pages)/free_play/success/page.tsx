@@ -48,7 +48,7 @@ export default function FreePlaySuccessPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[#F2CA16]"></div>
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-[#E94560]"></div>
           <p className="text-gray-400">Loading your prediction...</p>
         </div>
       </div>
@@ -63,7 +63,7 @@ export default function FreePlaySuccessPage() {
           {"We couldn't find a recent prediction. Try making a new one!"}
         </p>
         <Link href={createPageUrl("free_play")}>
-          <Button className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+          <Button className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
             Make a Prediction
           </Button>
         </Link>
@@ -74,8 +74,8 @@ export default function FreePlaySuccessPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mx-auto max-w-3xl text-center">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F2CA16]/10">
-          <CheckCircle className="h-10 w-10 text-[#F2CA16]" />
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#E94560]/10">
+          <CheckCircle className="h-10 w-10 text-[#E94560]" />
         </div>
 
         <h1 className="mb-2 text-3xl font-bold">Prediction Submitted!</h1>
@@ -85,11 +85,11 @@ export default function FreePlaySuccessPage() {
           }
         </p>
 
-        <Card className="mb-8 border-[#1E2A36] bg-[#13202D]">
+        <Card className="mb-8 border-white/[0.08] bg-[#16181f]">
           <CardContent className="p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-bold">{car.title}</h2>
-              <Badge className="bg-[#F2CA16]/10 text-[#F2CA16]">
+              <Badge className="bg-[#E94560]/10 text-[#E94560]">
                 FREE PLAY
               </Badge>
             </div>
@@ -103,7 +103,7 @@ export default function FreePlaySuccessPage() {
               </div>
               <div>
                 <p className="mb-1 text-sm text-gray-400">Your Prediction</p>
-                <p className="text-2xl font-bold text-[#F2CA16]">
+                <p className="text-2xl font-bold text-[#E94560]">
                   ${prediction.predictedPrice?.toLocaleString()}
                 </p>
               </div>
@@ -115,7 +115,7 @@ export default function FreePlaySuccessPage() {
           <Link href={createPageUrl("")}>
             <Button
               variant="outline"
-              className="border-[#1E2A36] hover:bg-[#1E2A36]"
+              className="border-white/[0.08] hover:bg-[#1E2A36]"
             >
               <Home className="mr-2 h-4 w-4" />
               Back to Home
@@ -125,7 +125,7 @@ export default function FreePlaySuccessPage() {
           <Link href={createPageUrl("free_play")}>
             <Button
               variant="outline"
-              className="border-[#1E2A36] hover:bg-[#1E2A36]"
+              className="border-white/[0.08] hover:bg-[#1E2A36]"
             >
               <RefreshCw className="mr-2 h-4 w-4" />
               Make Another Prediction
@@ -133,7 +133,7 @@ export default function FreePlaySuccessPage() {
           </Link>
 
           {/* <Button
-            className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+            className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
             onClick={() => navigate.push(createPageUrl("Leaderboard"))}
           >
             <BarChart className="mr-2 h-4 w-4" />

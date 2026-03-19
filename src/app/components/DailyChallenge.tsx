@@ -69,7 +69,7 @@ export function DailyChallenge() {
   if (loading) return null;
 
   return (
-    <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-5">
+    <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5">
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-semibold text-[#FFB547]">Daily Challenge</span>
         {completed && (

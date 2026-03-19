@@ -7,7 +7,7 @@ export default function AuthorityBar() {
   ];
 
   return (
-    <div className="w-full border-t border-[#1E2A36] bg-[#0A0A1A] py-6">
+    <div className="w-full border-t border-white/[0.08] bg-[#0A0A1A] py-6">
       <div className="mx-auto max-w-5xl px-4">
         <p className="mb-4 text-center text-xs uppercase tracking-widest text-gray-400">
           Auction data sourced from

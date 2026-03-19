@@ -101,7 +101,7 @@ const NewEraWagering = () => {
                             price. Closest player wins the prize.
                         </p>
                         <button
-                            className="mt-6 py-3 px-4 font-bold bg-[#f2ca16] rounded"
+                            className="mt-6 py-3 px-4 font-bold bg-[#E94560] rounded"
                             onClick={(e) => router.push("/auctions")}
                         >
                             View games
@@ -123,7 +123,7 @@ const NewEraWagering = () => {
                             price of a curated set of car auctions.
                         </p>
                         <button
-                            className="mt-6 py-3 px-4 font-bold bg-[#f2ca16] rounded"
+                            className="mt-6 py-3 px-4 font-bold bg-[#E94560] rounded"
                             onClick={(e) => router.push("/tournaments")}
                         >
                             View tournaments

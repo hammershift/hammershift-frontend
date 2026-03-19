@@ -350,7 +350,7 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
             {isWatching ? "WATCHING" : "WATCH"}
           </button>
           {auctionEnded ? (
-            <button disabled className="btn-yellow hover:bg-[#f2ca16]">
+            <button disabled className="btn-yellow hover:bg-[#E94560]">
               ENDED 🏆
             </button>
           ) : alreadyWagered ? (
@@ -528,7 +528,7 @@ export const WinnersSection: React.FC<WinnersI> = ({ winners, price }) => {
     <div className="rounded-lg bg-[#156cc3] p-6">
       <div className="mb-6">
         <div className="mb-1 text-lg font-bold">WINNERS</div>
-        <span className="rounded bg-[#f2ca16] px-2.5 py-2 text-sm font-extrabold text-[#0f1923]">
+        <span className="rounded bg-[#E94560] px-2.5 py-2 text-sm font-extrabold text-[#0f1923]">
           Hammer Price: ${price ? new Intl.NumberFormat().format(price) : "--"}
         </span>
       </div>
@@ -744,7 +744,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
   const seller_img = ProfilePhoto;
 
   return (
-    <div className="rounded-lg bg-[#172431] p-6">
+    <div className="rounded-lg bg-[#16181f] p-6">
       <div className="flex justify-between py-2">
         <div className="text-[18px] font-bold">DETAILS</div>
         <Image

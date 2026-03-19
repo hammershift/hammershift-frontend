@@ -76,7 +76,7 @@ export function PriceDistribution({
           <YAxis hide />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#13202D",
+              backgroundColor: "#16181f",
               border: "1px solid #1E2A36",
               color: "white",
               fontSize: 12,

@@ -103,7 +103,7 @@ export default function Settings() {
         </div>
 
         {/* Tab Bar */}
-        <div className="mb-6 flex border-b border-[#1E2A36]">
+        <div className="mb-6 flex border-b border-white/[0.08]">
           <button
             className="flex items-center gap-2 border-b-2 border-[#E94560] pb-3 pr-6 text-sm font-semibold text-white"
           >
@@ -113,7 +113,7 @@ export default function Settings() {
         </div>
 
         {/* Profile Card */}
-        <div className="bg-[#0F172A] border border-[#1E2A36] rounded-2xl p-6">
+        <div className="bg-[#16181f] border border-white/[0.08] rounded-2xl p-6">
           <h2 className="text-lg font-semibold text-white mb-6">Profile Information</h2>
 
           <form onSubmit={handleProfileUpdate} className="space-y-5">
@@ -123,7 +123,7 @@ export default function Settings() {
               <input
                 value={data ? data.user.email : ""}
                 disabled
-                className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
+                className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
               />
               <p className="mt-1.5 text-xs text-gray-500">
                 Your email address cannot be changed.
@@ -136,7 +136,7 @@ export default function Settings() {
               <input
                 value={name}
                 disabled
-                className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
+                className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
               />
             </div>
 
@@ -146,7 +146,7 @@ export default function Settings() {
               <input
                 value={username}
                 disabled
-                className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
+                className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
               />
               <p className="mt-1.5 text-xs text-gray-500">Username cannot be changed.</p>
             </div>
@@ -161,7 +161,7 @@ export default function Settings() {
                 }
                 placeholder="Tell others about yourself"
                 rows={3}
-                className="bg-[#0A0A1A] border border-[#1E2A36] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full resize-none placeholder:text-gray-600 transition-colors"
+                className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-white focus:border-[#E94560] focus:outline-none w-full resize-none placeholder:text-gray-600 transition-colors"
               />
             </div>
 

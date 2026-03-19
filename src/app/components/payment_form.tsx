@@ -52,7 +52,7 @@ const PaymentForm = (props: any) => {
           {paymentChoice === null && (
             <div className="grid gap-3 ">
               <button
-                className="bg-[#172431] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
+                className="bg-[#16181f] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
                 onClick={() => setPaymentChoice((prev) => "Credit Card")}
               >
                 <div>Credit or Debit Card</div>
@@ -88,7 +88,7 @@ const PaymentForm = (props: any) => {
                 </div>
               </button>
               <button
-                className="bg-[#172431] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
+                className="bg-[#16181f] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
                 onClick={() => setPaymentChoice((prev) => "Paypal")}
               >
                 <div className="">Pay with PayPal</div>
@@ -101,7 +101,7 @@ const PaymentForm = (props: any) => {
                 />
               </button>
               <button
-                className="bg-[#172431] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
+                className="bg-[#16181f] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
                 onClick={() => setPaymentChoice((prev) => "Apple Pay")}
               >
                 <div className="">Apple Pay</div>
@@ -114,7 +114,7 @@ const PaymentForm = (props: any) => {
                 />
               </button>
               <button
-                className="bg-[#172431] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
+                className="bg-[#16181f] h-auto py-2 md:py-4 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded"
                 onClick={() => setPaymentChoice((prev) => "Google Pay")}
               >
                 <div className="">Google Pay</div>
@@ -130,7 +130,7 @@ const PaymentForm = (props: any) => {
               {cardSaved && (
                 <div className="mt-11">
                   <div className="font-bold">Add payment method</div>
-                  <button className="bg-[#172431] h-auto py-2 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded mt-3">
+                  <button className="bg-[#16181f] h-auto py-2 px-4 w-full flex flex-col sm:flex-row items-center sm:justify-between gap-2 rounded mt-3">
                     <div className="">Credit or Debit Card</div>
                     <div className="grid grid-cols-4 gap-2">
                       <Image
@@ -170,7 +170,7 @@ const PaymentForm = (props: any) => {
           {paymentChoice === "Credit Card" && (
             <div>
               <div className="rounded flex flex-col gap-4">
-                <div className="bg-[#172431] p-5 h-[60px] w-full flex items-center flex-col sm:flex-row sm:justify-between gap-2 rounded">
+                <div className="bg-[#16181f] p-5 h-[60px] w-full flex items-center flex-col sm:flex-row sm:justify-between gap-2 rounded">
                   <div className="">Credit or Debit Card</div>
                   <div className="grid grid-cols-4 gap-2">
                     <Image
@@ -212,7 +212,7 @@ const PaymentForm = (props: any) => {
                 {/* inputs */}
 
                 <div>
-                  <div className="bg-[#172431] p-4 rounded flex flex-col gap-4">
+                  <div className="bg-[#16181f] p-4 rounded flex flex-col gap-4">
                     {" "}
                     <p className="p-2">
                       How much do you want to load into your wallet?

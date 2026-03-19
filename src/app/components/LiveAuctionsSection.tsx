@@ -56,7 +56,7 @@ export default function LiveAuctionsSection({ auctions }: Props) {
         return (
           <div key={auction._id} className="relative flex cursor-pointer flex-col">
             <Link href={`/auctions/car_view_page/${auction._id}?mode=free_play`} className="block touch-manipulation">
-              <Card className="h-full border-[#1E2A36] bg-[#13202D] transition-all hover:border-[#E94560] hover:shadow-lg hover:shadow-[#E94560]/20">
+              <Card className="h-full border-white/[0.08] bg-[#16181f] transition-all hover:border-[#E94560] hover:shadow-lg hover:shadow-[#E94560]/20">
                 <div className="relative h-[200px]">
                   <Image
                     src={auction.image || "/images/default-car.jpg"}

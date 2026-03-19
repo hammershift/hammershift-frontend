@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function GuessThePriceInfoSection() {
     return (
         <div>
-            <div className="mt-8 lg:mt-16 p-6 bg-[#172431]">
+            <div className="mt-8 lg:mt-16 p-6 bg-[#16181f]">
                 <Image
                     src={LiveGamesIcon}
                     width={68}

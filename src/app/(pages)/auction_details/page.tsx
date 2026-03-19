@@ -340,7 +340,7 @@ const GuessTheHammer = () => {
           </div>
 
           <div className="space-y-2">
-            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#13202D]">
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[#16181f]">
               {car?.images_list && car?.images_list.length > 0 ? (
                 <Image
                   src={
@@ -354,7 +354,7 @@ const GuessTheHammer = () => {
                   sizes="100vw" // Example sizes, adjust if needed
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-[#13202D]">
+                <div className="flex h-full w-full items-center justify-center bg-[#16181f]">
                   <CarIcon className="h-16 w-16 text-gray-500" />
                 </div>
               )}
@@ -366,7 +366,7 @@ const GuessTheHammer = () => {
                   <button
                     key={index}
                     className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded ${
-                      selectedImage === index ? "ring-2 ring-[#F2CA16]" : ""
+                      selectedImage === index ? "ring-2 ring-[#E94560]" : ""
                     }`}
                     onClick={() => setSelectedImage(index)}
                   >
@@ -390,22 +390,22 @@ const GuessTheHammer = () => {
           </div>
 
           <Tabs defaultValue="details">
-            <TabsList className="bg-[#13202D]">
+            <TabsList className="bg-[#16181f]">
               <TabsTrigger
                 value="details"
-                className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+                className="data-[state=active]:bg-[#E94560] data-[state=active]:text-[#0C1924]"
               >
                 Details
               </TabsTrigger>
               <TabsTrigger
                 value="discussion"
-                className="data-[state=active]:bg-[#F2CA16] data-[state=active]:text-[#0C1924]"
+                className="data-[state=active]:bg-[#E94560] data-[state=active]:text-[#0C1924]"
               >
                 Discussion
               </TabsTrigger>
             </TabsList>
             <TabsContent value="details" className="space-y-6 pt-4">
-              <Card className="border-[#1E2A36] bg-[#13202D]">
+              <Card className="border-white/[0.08] bg-[#16181f]">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xl">DETAILS</CardTitle>
                 </CardHeader>
@@ -558,7 +558,7 @@ const GuessTheHammer = () => {
         </div>
 
         <div className="space-y-6">
-          <Card className="border-[#1E2A36] bg-[#13202D]">
+          <Card className="border-white/[0.08] bg-[#16181f]">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg sm:text-xl">
                 AUCTION STATUS
@@ -570,7 +570,7 @@ const GuessTheHammer = () => {
                   <div className="text-xs text-gray-400 sm:text-sm">
                     Current Bid
                   </div>
-                  <div className="text-xl font-bold text-[#F2CA16] sm:text-2xl">
+                  <div className="text-xl font-bold text-[#E94560] sm:text-2xl">
                     {USDollar.format(car?.attributes[0].value)}
                   </div>
                 </div>
@@ -627,7 +627,7 @@ const GuessTheHammer = () => {
               {car?.isActive && car?.attributes[10] && (
                 <Button
                   variant="outline"
-                  className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
+                  className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924]"
                   onClick={() => window.open(`${car.page_url}`, "_blank")}
                 >
                   <LinkIcon className="mr-2 h-4 w-4" />
@@ -660,7 +660,7 @@ const GuessTheHammer = () => {
                     </Alert>
                   )} */}
 
-                  <Card className="border-[#1E2A36] bg-[#13202D]">
+                  <Card className="border-white/[0.08] bg-[#16181f]">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-xl">FREE PLAY</CardTitle>
                     </CardHeader>
@@ -694,7 +694,7 @@ const GuessTheHammer = () => {
                                     pattern="[0-9]*"
                                     value={prediction}
                                     onChange={handlePredictionAmount}
-                                    className="border-[#1E2A36] bg-[#1E2A36] pl-8 transition-colors hover:border-[#F2CA16]"
+                                    className="border-white/[0.08] bg-[#1E2A36] pl-8 transition-colors hover:border-[#E94560]"
                                     placeholder="Enter amount"
                                   />
                                 </div>
@@ -702,7 +702,7 @@ const GuessTheHammer = () => {
                               <Button
                                 type="submit"
                                 disabled={isSubmitting || !freePlayActive}
-                                className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                                className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
                               >
                                 {isSubmitting ? (
                                   <>
@@ -718,7 +718,7 @@ const GuessTheHammer = () => {
                         </div>
                       </form>
                     </CardContent>
-                    {/* <CardFooter className="flex justify-between border-t border-[#1E2A36] pt-4">
+                    {/* <CardFooter className="flex justify-between border-t border-white/[0.08] pt-4">
                       <p className="text-sm text-gray-400">
                         {car?.free_play_start && car?.free_play_end
                           ? `Predictions open: ${new Date(car.free_play_start).toLocaleString()} - ${new Date(car.free_play_end).toLocaleString()}`
@@ -749,7 +749,7 @@ const GuessTheHammer = () => {
                     </Alert>
                   )}
 
-                  <Card className="border-[#1E2A36] bg-[#13202D] lg:col-span-2">
+                  <Card className="border-white/[0.08] bg-[#16181f] lg:col-span-2">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-xl">
                         GUESS THE HAMMER
@@ -776,7 +776,7 @@ const GuessTheHammer = () => {
                                 type="number"
                                 value={prediction}
                                 onChange={(e) => setPrediction(e.target.value)}
-                                className="border-[#1E2A36] bg-[#1E2A36] pl-8"
+                                className="border-white/[0.08] bg-[#1E2A36] pl-8"
                                 placeholder="Enter amount"
                               />
                             </div>
@@ -784,7 +784,7 @@ const GuessTheHammer = () => {
                           <Button
                             type="submit"
                             disabled={isSubmitting || !hammerGameActive}
-                            className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                            className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
                           >
                             {isSubmitting ? (
                               <>
@@ -798,7 +798,7 @@ const GuessTheHammer = () => {
                         </div>
                       </form>
                     </CardContent>
-                    <CardFooter className="flex justify-between border-t border-[#1E2A36] pt-4">
+                    <CardFooter className="flex justify-between border-t border-white/[0.08] pt-4">
                       <p className="text-sm text-gray-400">
                         {car?.hammer_game_start && car?.hammer_game_end
                           ? `Wagering open: ${new Date(car.hammer_game_start).toLocaleString()} - ${new Date(car.hammer_game_end).toLocaleString()}`
@@ -811,7 +811,7 @@ const GuessTheHammer = () => {
             </div>
           )}
 
-          <Card className="border-[#1E2A36] bg-[#13202D]">
+          <Card className="border-white/[0.08] bg-[#16181f]">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg sm:text-xl">PREDICTIONS</CardTitle>
             </CardHeader>
@@ -833,7 +833,7 @@ const GuessTheHammer = () => {
                   <div className="text-sm text-gray-400 sm:text-base">
                     Prize
                   </div>
-                  <div className="text-lg font-bold text-[#F2CA16] sm:text-xl">
+                  <div className="text-lg font-bold text-[#E94560] sm:text-xl">
                     {/*TODO: change this when paid auctions are implemented */}
                     10 points
                   </div>
@@ -886,7 +886,7 @@ const GuessTheHammer = () => {
                       //     ? "bg-purple-600 text-white"
                       //     : prediction.user?.avatar_color
                       //       ? `bg-${prediction.user.avatar_color}-500 text-white`
-                      //       : "bg-[#F2CA16]/20";
+                      //       : "bg-[#E94560]/20";
                       // };
 
                       const displayTime = () => {
@@ -913,7 +913,7 @@ const GuessTheHammer = () => {
                         >
                           <div className="flex items-center gap-4">
                             <div
-                              className={`flex h-8 w-8 items-center justify-center rounded-full md:h-10 md:w-10 ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#F2CA16] text-black"} md:text-lg`}
+                              className={`flex h-8 w-8 items-center justify-center rounded-full md:h-10 md:w-10 ${prediction.user.role == Role.AGENT ? "bg-[#A855f7] text-white" : "bg-[#E94560] text-black"} md:text-lg`}
                             >
                               {prediction.user.username?.[0]?.toUpperCase() ||
                                 "U"}
@@ -924,7 +924,7 @@ const GuessTheHammer = () => {
                                 {isCurrentUser && (
                                   <Badge
                                     variant="outline"
-                                    className="border-[#F2CA16] bg-[#F2CA16]/20 text-xs text-[#F2CA16] md:text-sm"
+                                    className="border-[#E94560] bg-[#E94560]/20 text-xs text-[#E94560] md:text-sm"
                                   >
                                     You
                                   </Badge>

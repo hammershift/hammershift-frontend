@@ -42,7 +42,7 @@ export default function Contact() {
 
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <div>
-                    <Card className="bg-[#13202D] border-[#1E2A36] h-full">
+                    <Card className="bg-[#16181f] border-white/[0.08] h-full">
                         <CardHeader>
                             <CardTitle>GET IN TOUCH</CardTitle>
                         </CardHeader>
@@ -53,7 +53,7 @@ export default function Contact() {
 
                             <div className="space-y-4">
                                 <div className="flex items-start gap-4">
-                                    <MapPin className="w-5 h-5 text-[#F2CA16] mt-1" />
+                                    <MapPin className="w-5 h-5 text-[#E94560] mt-1" />
                                     <div>
                                         <h3 className="font-medium">Location</h3>
                                         <p className="text-gray-400">San Francisco, CA</p>
@@ -61,7 +61,7 @@ export default function Contact() {
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <Mail className="w-5 h-5 text-[#F2CA16] mt-1" />
+                                    <Mail className="w-5 h-5 text-[#E94560] mt-1" />
                                     <div>
                                         <h3 className="font-medium">Email</h3>
                                         <p className="text-gray-400">rick@hammershift.com</p>
@@ -73,7 +73,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                    <Card className="bg-[#13202D] border-[#1E2A36]">
+                    <Card className="bg-[#16181f] border-white/[0.08]">
                         <CardHeader>
                             <CardTitle>SEND A MESSAGE</CardTitle>
                         </CardHeader>
@@ -100,7 +100,7 @@ export default function Contact() {
                                             value={formData.name}
                                             onChange={handleChange}
                                             required
-                                            className="bg-[#1E2A36] border-[#1E2A36]"
+                                            className="bg-[#1E2A36] border-white/[0.08]"
                                         />
                                     </div>
 
@@ -115,7 +115,7 @@ export default function Contact() {
                                             value={formData.email}
                                             onChange={handleChange}
                                             required
-                                            className="bg-[#1E2A36] border-[#1E2A36]"
+                                            className="bg-[#1E2A36] border-white/[0.08]"
                                         />
                                     </div>
 
@@ -130,13 +130,13 @@ export default function Contact() {
                                             onChange={handleChange}
                                             required
                                             rows={5}
-                                            className="bg-[#1E2A36] border-[#1E2A36]"
+                                            className="bg-[#1E2A36] border-white/[0.08]"
                                         />
                                     </div>
 
                                     <Button
                                         type="submit"
-                                        className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                                        className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
                                         disabled={isSubmitting}
                                     >
                                         {isSubmitting ? (

@@ -35,9 +35,9 @@ export const HowItWorks = () => {
                 {steps.map((step, index) => (
                     <div
                         key={index}
-                        className="relative rounded-lg border border-[#1E2A36] bg-[#13202D] p-6"
+                        className="relative rounded-lg border border-white/[0.08] bg-[#16181f] p-6"
                     >
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F2CA16] text-[#0C1924]">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#E94560] text-white">
                             {step.icon}
                         </div>
                         <h3 className="mb-2 text-xl font-bold">{step.title}</h3>
@@ -65,7 +65,7 @@ export const HowItWorks = () => {
             <div className="mt-8 flex justify-center">
                 <Link
                     href="/how_it_works"
-                    className="flex items-center text-[#F2CA16] hover:underline"
+                    className="flex items-center text-[#E94560] hover:underline"
                 >
                     Learn More
                     <BadgeInfo className="ml-2 h-4 w-4" />

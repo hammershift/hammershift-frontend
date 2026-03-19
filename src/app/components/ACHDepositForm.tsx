@@ -86,7 +86,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
           step="0.01"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full bg-[#0A0A1A] border border-[#1E2A36] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-[#E94560] outline-none"
+          className="w-full bg-[#0A0A1A] border border-white/[0.08] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-[#E94560] outline-none"
           placeholder="100.00"
           required
         />
@@ -99,7 +99,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
           maxLength={9}
           value={routingNumber}
           onChange={(e) => setRoutingNumber(e.target.value.replace(/\D/g, ""))}
-          className="w-full bg-[#0A0A1A] border border-[#1E2A36] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-[#E94560] outline-none"
+          className="w-full bg-[#0A0A1A] border border-white/[0.08] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-[#E94560] outline-none"
           placeholder="9-digit routing number"
           required
         />
@@ -111,7 +111,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
           inputMode="numeric"
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ""))}
-          className="w-full bg-[#0A0A1A] border border-[#1E2A36] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-[#E94560] outline-none"
+          className="w-full bg-[#0A0A1A] border border-white/[0.08] rounded-lg px-3 py-2 text-white font-mono text-sm focus:border-[#E94560] outline-none"
           placeholder="Account number"
           required
         />
@@ -121,7 +121,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
         <select
           value={accountType}
           onChange={(e) => setAccountType(e.target.value as "checking" | "savings")}
-          className="w-full bg-[#0A0A1A] border border-[#1E2A36] rounded-lg px-3 py-2 text-white text-sm focus:border-[#E94560] outline-none"
+          className="w-full bg-[#0A0A1A] border border-white/[0.08] rounded-lg px-3 py-2 text-white text-sm focus:border-[#E94560] outline-none"
         >
           <option value="checking">Checking</option>
           <option value="savings">Savings</option>

@@ -60,20 +60,20 @@ function computeStats(markets: Market[]) {
 
 function SkeletonCard() {
   return (
-    <div className="rounded-xl overflow-hidden border border-[#1E2A36] bg-[#13202D] animate-pulse">
+    <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-[#16181f] animate-pulse">
       {/* Image placeholder */}
-      <div className="aspect-video bg-[#1A2C3D]" />
+      <div className="aspect-video bg-[#16181f]" />
       {/* Body */}
       <div className="p-4 space-y-3">
         {/* Question lines */}
-        <div className="h-4 bg-[#1A2C3D] rounded w-full" />
-        <div className="h-4 bg-[#1A2C3D] rounded w-3/4" />
+        <div className="h-4 bg-[#16181f] rounded w-full" />
+        <div className="h-4 bg-[#16181f] rounded w-3/4" />
         {/* Price bar */}
-        <div className="h-10 bg-[#1A2C3D] rounded-lg" />
+        <div className="h-10 bg-[#16181f] rounded-lg" />
         {/* Bottom row */}
         <div className="flex justify-between items-center">
-          <div className="h-3 bg-[#1A2C3D] rounded w-20" />
-          <div className="h-7 bg-[#1A2C3D] rounded-lg w-16" />
+          <div className="h-3 bg-[#16181f] rounded w-20" />
+          <div className="h-7 bg-[#16181f] rounded-lg w-16" />
         </div>
       </div>
     </div>
@@ -180,12 +180,12 @@ function MarketCard({
           <button
             type="button"
             onClick={() => onTrade(market, 'YES')}
-            className="bg-[#10B981]/10 border border-[#10B981]/30 rounded-lg p-2.5 text-center hover:bg-[#10B981]/20 transition-colors cursor-pointer"
+            className="bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-lg p-2.5 text-center hover:bg-[#00D4AA]/20 transition-colors cursor-pointer"
           >
-            <p className="text-[10px] text-[#10B981] font-semibold uppercase tracking-wider mb-0.5">YES</p>
+            <p className="text-[10px] text-[#00D4AA] font-semibold uppercase tracking-wider mb-0.5">YES</p>
             <p className="font-mono text-sm font-bold text-[#F8FAFC]">
               {yesCents}¢{' '}
-              <span className="text-[#10B981] text-xs">({yesPercent}%)</span>
+              <span className="text-[#00D4AA] text-xs">({yesPercent}%)</span>
             </p>
           </button>
           <button
@@ -228,7 +228,7 @@ function FilterTab({
       className={
         active
           ? 'bg-[#00D4AA] text-black font-semibold rounded-full px-4 py-1.5 text-sm transition-all duration-150 whitespace-nowrap shrink-0 min-h-[44px] touch-manipulation'
-          : 'border border-[#1E2A36] text-gray-400 hover:text-white hover:border-[#00D4AA]/30 rounded-full px-4 py-1.5 text-sm transition-all duration-150 whitespace-nowrap shrink-0 min-h-[44px] touch-manipulation'
+          : 'border border-white/[0.08] text-gray-400 hover:text-white hover:border-[#00D4AA]/30 rounded-full px-4 py-1.5 text-sm transition-all duration-150 whitespace-nowrap shrink-0 min-h-[44px] touch-manipulation'
       }
     >
       {label}
@@ -250,7 +250,7 @@ function StatPill({
   valueColor?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 bg-[#13202D] border border-[#1E2A36] rounded-full px-4 py-2">
+    <div className="flex items-center gap-2 bg-[#16181f] border border-white/[0.08] rounded-full px-4 py-2">
       <span className="text-gray-500">{icon}</span>
       <span className="text-gray-400 text-sm">{label}</span>
       <span className={`font-['JetBrains_Mono',_monospace] font-bold text-sm ${valueColor}`}>
@@ -430,7 +430,7 @@ export default function MarketsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by car or question…"
-              className="w-full bg-[#13202D] border border-[#1E2A36] rounded-lg pl-9 pr-9 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4AA]/50 transition-colors"
+              className="w-full bg-[#16181f] border border-white/[0.08] rounded-lg pl-9 pr-9 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#00D4AA]/50 transition-colors"
             />
             {search && (
               <button
@@ -448,7 +448,7 @@ export default function MarketsPage() {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="appearance-none bg-[#13202D] border border-[#1E2A36] rounded-lg px-4 pr-9 py-2.5 text-sm text-white focus:outline-none focus:border-[#00D4AA]/50 transition-colors cursor-pointer"
+              className="appearance-none bg-[#16181f] border border-white/[0.08] rounded-lg px-4 pr-9 py-2.5 text-sm text-white focus:outline-none focus:border-[#00D4AA]/50 transition-colors cursor-pointer"
             >
               <option value="deadline">Ending soonest</option>
               <option value="volume">Highest volume</option>

@@ -11,7 +11,7 @@ interface DailySlateProps {
 export function DailySlate({ auctions }: DailySlateProps) {
   if (auctions.length === 0) {
     return (
-      <div className="rounded-lg border border-[#1E2A36] bg-[#13202D] p-12 text-center">
+      <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-12 text-center">
         <p className="mb-4 text-gray-400">No auctions closing in the next 24 hours.</p>
         <Link href="/free_play" className="text-sm text-[#E94560] underline">
           Browse all auctions

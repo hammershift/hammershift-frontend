@@ -101,7 +101,7 @@ const ResetPassword = () => {
               <div className="flex flex-col gap-2">
                 <label>New Password</label>
                 <Input
-                  className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5"
+                  className="border-white/[0.08] bg-[#1E2A36] px-3 py-2.5"
                   type="password"
                   name="password"
                   placeholder="New Password"
@@ -117,7 +117,7 @@ const ResetPassword = () => {
                 />
                 <label>Confirm Password</label>
                 <Input
-                  className="border-[#1E2A36] bg-[#1E2A36] px-3 py-2.5"
+                  className="border-white/[0.08] bg-[#1E2A36] px-3 py-2.5"
                   type="password"
                   name="password"
                   placeholder="Confirm Password"
@@ -146,7 +146,7 @@ const ResetPassword = () => {
                 <Button
                   variant="default"
                   type="submit"
-                  className="mt-2 w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
+                  className="mt-2 w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 sm:w-auto"
                 >
                   Reset Password
                 </Button>

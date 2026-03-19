@@ -71,7 +71,7 @@ export const AuctionGrid = ({
         .map((auction, index) => (
           <Card
             key={index}
-            className="overflow-hidden border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]"
+            className="overflow-hidden border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#E94560]"
           >
             <div className="relative">
               {/* <img
@@ -93,7 +93,7 @@ export const AuctionGrid = ({
                 className="h-48 w-full object-cover sm:h-56 md:h-64"
               />
               <div className="absolute right-2 top-2">
-                <Badge className="bg-[#F2CA16] text-[#0C1924]">
+                <Badge className="bg-[#E94560] text-[#0C1924]">
                   {auction.attributes[2].value || "Car"}
                 </Badge>
               </div>
@@ -105,14 +105,14 @@ export const AuctionGrid = ({
               <div className="mb-4 grid grid-cols-2 gap-4">
                 <div>
                   <div className="text-sm text-gray-400">Current Bid</div>
-                  <div className="font-bold text-[#F2CA16]">
+                  <div className="font-bold text-[#E94560]">
                     ${(auction.sort!.price || 0).toLocaleString()}
                   </div>
                 </div>
                 <div>
                   <div className="text-sm text-gray-400">Time Left</div>
                   <div className="flex items-center">
-                    <Clock className="mr-1 h-4 w-4 text-[#F2CA16]" />
+                    <Clock className="mr-1 h-4 w-4 text-[#E94560]" />
                     {formatTimeLeft(auction.sort!.deadline.toString())}
                   </div>
                 </div>
@@ -132,7 +132,7 @@ export const AuctionGrid = ({
                         ? "bg-green-600 hover:bg-green-700"
                         : mode === "tournament"
                           ? "bg-purple-600 hover:bg-purple-700"
-                          : "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                          : "bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
                     }
                   >
                     {mode === "price_is_right"

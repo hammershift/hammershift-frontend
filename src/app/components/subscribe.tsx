@@ -74,7 +74,7 @@ const Subscribe = () => {
     };
 
     return (
-        <div className="relative text-[#0F1923] bg-[#F2CA16] h-auto md:max-h-[664px] flex  justify-center w-full mt-[-1px] overflow-hidden">
+        <div className="relative text-[#0F1923] bg-[#E94560] h-auto md:max-h-[664px] flex  justify-center w-full mt-[-1px] overflow-hidden">
             <div className="relative mt-[350px] md:mt-0 px-4 md:px-16 w-full 2xl:w-[1440px] py-16 md:py-[174px] z-50 ">
                 <div className="grid grid-cols-1 md:grid-cols-2 ">
                     <div>
@@ -123,7 +123,7 @@ const Subscribe = () => {
                         style={{
                             transform: "skew(-28deg)",
                             // backgroundColor: '#fff'
-                            backgroundColor: "#F2CA16",
+                            backgroundColor: "#E94560",
 
                             // borderBottom: '664px solid transparent',
                             // borderLeft: '360px solid #fff'
@@ -133,21 +133,21 @@ const Subscribe = () => {
                     <div
                         style={{
                             transform: "skew(-28deg)",
-                            borderRight: "20px solid #F2CA16",
+                            borderRight: "20px solid #E94560",
                         }}
                         className="absolute h-[644px] w-[300px] top-0 right-[280px] sm:right-[250px]"
                     ></div>
                     <div
                         style={{
                             transform: "skew(-28deg)",
-                            borderRight: "20px solid #F2CA16",
+                            borderRight: "20px solid #E94560",
                         }}
                         className="absolute w-[300px] h-[644px] top-0 right-[180px] sm:right-[390px]"
                     ></div>
                     <div
                         style={{
                             borderTop: "664px solid transparent",
-                            borderRight: "360px solid #F2CA16",
+                            borderRight: "360px solid #E94560",
                         }}
                         className="absolute w-[997px] h-[644px] w-top-[2px] right-[-80px] sm:right-[-60px]"
                     ></div>
@@ -168,7 +168,7 @@ export default Subscribe;
 
 export const SubscribeSmall = () => {
     return (
-        <div className="w-full h-auto  bg-[#F2CA16] flex justify-center">
+        <div className="w-full h-auto  bg-[#E94560] flex justify-center">
             <div className="section-container flex flex-col md:flex-row justify-between items-center text-[#0F1923] py-[60px]">
                 <div>
                     <div className="text-[20px] font-bold">

@@ -167,7 +167,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
           Tournament Cancelled
         </button>
       ) : tournamentEnded ? (
-        <button disabled className="btn-yellow hover:bg-[#f2ca16]">
+        <button disabled className="btn-yellow hover:bg-[#E94560]">
           ENDED 🏆
         </button>
       ) : buyInEnded ? (
@@ -732,7 +732,7 @@ export const ArticleSection: React.FC<ArticleSectionProps> = ({
 export const TournamentInfoSection = () => {
   return (
     <div>
-      <div className="rounded-lg bg-[#172431] p-6">
+      <div className="rounded-lg bg-[#16181f] p-6">
         <Image
           src={ThropyIconBlue}
           width={68}
@@ -896,7 +896,7 @@ export const TournamentWagersSection: React.FC<TournamentWagerSectionI> = ({
 
 export const DetailsSection = (props: any) => {
   return (
-    <div className="rounded-lg bg-[#172431] p-6">
+    <div className="rounded-lg bg-[#16181f] p-6">
       <div className="flex justify-between py-2">
         <div className="text-[18px] font-bold">DETAILS</div>
         <Image

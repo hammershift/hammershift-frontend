@@ -392,7 +392,7 @@ export default function TournamentDetailPage() {
       </Button>
 
       {/* Hero Banner */}
-      <div className="mb-8 overflow-hidden rounded-xl bg-[#13202D]">
+      <div className="mb-8 overflow-hidden rounded-xl bg-[#16181f]">
         <div className="relative aspect-[3/1] min-h-[240px]">
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-black to-transparent" />
           <Image
@@ -467,7 +467,7 @@ export default function TournamentDetailPage() {
       )}
 
       {/* Tournament Rules */}
-      <Card className="mb-8 border-[#1E2A36] bg-[#13202D] p-6">
+      <Card className="mb-8 border-white/[0.08] bg-[#16181f] p-6">
         <h2 className="mb-4 text-xl font-bold">TOURNAMENT RULES</h2>
         <p className="mb-4 text-gray-300">
           In this tournament, you&apos;ll predict the final hammer price for each car
@@ -531,7 +531,7 @@ export default function TournamentDetailPage() {
             {auctions.map((auction, index) => (
               <Card
                 key={auction._id}
-                className="overflow-hidden border-[#1E2A36] bg-[#13202D]"
+                className="overflow-hidden border-white/[0.08] bg-[#16181f]"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-5">
                   <div className="relative h-48 sm:col-span-2 sm:h-auto">
@@ -579,7 +579,7 @@ export default function TournamentDetailPage() {
         {/* Right Column: Predictions & Leaderboard */}
         <div className="md:col-span-5">
           <div className="sticky top-24">
-            <Card className="border-[#1E2A36] bg-[#13202D]">
+            <Card className="border-white/[0.08] bg-[#16181f]">
               <CardContent className="p-6">
                 {!hasJoined && !tournamentEnded ? (
                   <>
@@ -702,7 +702,7 @@ export default function TournamentDetailPage() {
                                       ? "bg-gray-400 text-black"
                                       : entry.rank === 3
                                         ? "bg-[#cd7f32] text-black"
-                                        : "bg-[#13202D] text-white"
+                                        : "bg-[#16181f] text-white"
                                 }`}
                               >
                                 {entry.rank}
@@ -762,7 +762,7 @@ export default function TournamentDetailPage() {
       {/* Payment Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-          <Card className="w-full max-w-md border-[#1E2A36] bg-[#13202D] p-6">
+          <Card className="w-full max-w-md border-white/[0.08] bg-[#16181f] p-6">
             <h3 className="mb-4 text-xl font-bold">Confirm Entry Fee</h3>
             <p className="mb-6 text-gray-300">
               You are about to join this tournament with an entry fee of{" "}

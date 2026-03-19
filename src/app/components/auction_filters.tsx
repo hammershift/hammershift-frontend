@@ -83,7 +83,7 @@ export const AuctionFilters = ({ filters, setFilters }: IProps) => {
       <div className="flex gap-2">
         <Button
           variant={filters.status === "active" ? "default" : "outline"}
-          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "active" ? "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90" : ""} `}
+          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "active" ? "bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90" : ""} `}
           onClick={() => setFilters({ ...filters, status: "active" })}
         >
           Active
@@ -99,14 +99,14 @@ export const AuctionFilters = ({ filters, setFilters }: IProps) => {
         </Badge> */}
         <Button
           variant={filters.status === "ending_soon" ? "default" : "outline"}
-          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "ending_soon" ? "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90" : ""} `}
+          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "ending_soon" ? "bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90" : ""} `}
           onClick={() => setFilters({ ...filters, status: "ending_soon" })}
         >
           Ending Soon
         </Button>
         <Button
           variant={filters.status === "ended" ? "default" : "outline"}
-          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "ended" ? "bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90" : ""} `}
+          className={`w-24 cursor-pointer px-4 py-2 transition-colors ${filters.status === "ended" ? "bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90" : ""} `}
           onClick={() => setFilters({ ...filters, status: "ended" })}
         >
           Ended

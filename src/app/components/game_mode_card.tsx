@@ -23,17 +23,17 @@ export const GameModeCard = ({
     return (
         <Link href={link} className={`${title != "FREE PLAY MODE" ? 'pointer-events-none opacity-50' : ''}`}
             aria-disabled={title != "FREE PLAY MODE"}>
-            <Card className="h-full cursor-pointer border-[#1E2A36] bg-[#13202D] transition-colors hover:border-[#F2CA16]">
+            <Card className="h-full cursor-pointer border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#E94560]">
                 <CardContent className="pt-6">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F2CA16]/10">
-                        <Icon className="h-6 w-6 text-[#F2CA16]" />
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#E94560]/10">
+                        <Icon className="h-6 w-6 text-[#E94560]" />
                     </div>
                     <div className="mb-2 flex items-center gap-2">
                         <h3 className="text-xl font-bold">{title}</h3>
                         {/* {badgeText && (
                             <Badge
                                 variant="outline"
-                                className="border border-[#F2CA16]/40 bg-[#F2CA16]/20 text-[#F2CA16]"
+                                className="border border-[#E94560]/40 bg-[#E94560]/20 text-[#E94560]"
                             >
                                 {badgeText}
                             </Badge>

@@ -19,14 +19,14 @@ export default function ComingSoon() {
                     <Button
                         onClick={() => router.back()}
                         variant="outline"
-                        className="border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924]"
+                        className="border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924]"
                     >
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Go Back
                     </Button>
                     <Button
                         onClick={() => router.push(createPageUrl("Contact"))}
-                        className="bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90"
+                        className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
                     >
                         Contact Us
                     </Button>

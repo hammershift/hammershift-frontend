@@ -149,7 +149,7 @@ const TournamentsList = () => {
                         Tournaments
                     </div>
                     <select
-                        className="inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#172431] hover:bg-[#1A2C3D] truncate"
+                        className="inline-flex justify-between items-center gap-x-1.5 rounded-md px-3 py-2.5  text-white-900 shadow-sm bg-[#16181f] hover:bg-white/[0.06] truncate"
                         onChange={handleSortChange}
                     >
                         <option value="newest">Newly Listed</option>

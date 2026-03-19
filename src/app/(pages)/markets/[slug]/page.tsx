@@ -98,7 +98,7 @@ export default async function MarketSlugPage({
             : undefined
         }
       />
-      <div className="min-h-screen bg-[#0F172A] text-[#F8FAFC] p-6">
+      <div className="min-h-screen bg-[#16181f] text-[#F8FAFC] p-6">
       <div className="max-w-2xl mx-auto pt-24">
         <p className="text-sm text-slate-400 uppercase tracking-widest mb-2">
           Prediction Market
@@ -108,7 +108,7 @@ export default async function MarketSlugPage({
         <div className="flex gap-4 mb-8">
           <div className="bg-[#1E293B] rounded-lg p-4 flex-1 text-center">
             <p className="text-xs text-slate-400 mb-1">YES</p>
-            <p className="text-2xl font-mono font-bold text-[#10B981]">
+            <p className="text-2xl font-mono font-bold text-[#00D4AA]">
               {yesPercent}%
             </p>
           </div>
@@ -121,7 +121,7 @@ export default async function MarketSlugPage({
         </div>
         <Link
           href={`/trading/${market._id}`}
-          className="block w-full bg-[#10B981] hover:bg-[#059669] text-black font-bold py-3 px-6 rounded-lg text-center transition-colors"
+          className="block w-full bg-[#00D4AA] hover:bg-[#059669] text-black font-bold py-3 px-6 rounded-lg text-center transition-colors"
         >
           Trade This Market &rarr;
         </Link>

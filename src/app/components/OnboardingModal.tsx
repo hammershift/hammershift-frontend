@@ -82,7 +82,7 @@ function OnboardingModalWithPrivy() {
       role="presentation"
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-[#1E2A36] bg-[#0F172A] p-8 shadow-2xl"
+        className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#16181f] p-8 shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label="Welcome to Velocity Markets"
@@ -131,7 +131,7 @@ function OnboardingModalWithPrivy() {
             </button>
             <button
               onClick={dismiss}
-              className="w-full rounded-xl border border-[#1E2A36] py-3 text-sm text-gray-400 hover:text-white transition-colors"
+              className="w-full rounded-xl border border-white/[0.08] py-3 text-sm text-gray-400 hover:text-white transition-colors"
             >
               Skip for now
             </button>
@@ -190,7 +190,7 @@ function OnboardingModalNoPrivy() {
       role="presentation"
     >
       <div
-        className="relative w-full max-w-md rounded-2xl border border-[#1E2A36] bg-[#0F172A] p-8 shadow-2xl"
+        className="relative w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#16181f] p-8 shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label="Welcome to Velocity Markets"
@@ -234,7 +234,7 @@ function OnboardingModalNoPrivy() {
             </button>
             <button
               onClick={dismiss}
-              className="w-full rounded-xl border border-[#1E2A36] py-3 text-sm text-gray-400 hover:text-white transition-colors"
+              className="w-full rounded-xl border border-white/[0.08] py-3 text-sm text-gray-400 hover:text-white transition-colors"
             >
               Skip for now
             </button>

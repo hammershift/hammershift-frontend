@@ -17,7 +17,7 @@ export const AIStatistics = () => {
   };
 
   return (
-    <Card className="border-[#1E2A36] bg-[#13202D]">
+    <Card className="border-white/[0.08] bg-[#16181f]">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-purple-400">
           <Brain className="h-5 w-5" />

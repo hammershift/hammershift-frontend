@@ -145,7 +145,7 @@ export default function PredictionFormClient({
           placeholder="Enter amount"
           value={predictedPrice}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPredictedPrice(e.target.value)}
-          className="border-[#1E2A36] bg-[#0A0A1A] pl-7 font-mono text-lg"
+          className="border-white/[0.08] bg-[#0A0A1A] pl-7 font-mono text-lg"
           min={minPrice}
           max={maxPrice}
           disabled={isSubmitting}
@@ -187,7 +187,7 @@ export default function PredictionFormClient({
 
             <button
               type="submit"
-              className="w-full bg-[#1E2A36] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2C3A4A] transition-colors border border-[#1E2A36]"
+              className="w-full bg-[#1E2A36] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#2C3A4A] transition-colors border border-white/[0.08]"
             >
               Save Guest Pick
             </button>
@@ -207,7 +207,7 @@ export default function PredictionFormClient({
 
         {showSignupModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-            <div className="bg-[#13202D] rounded-xl border border-[#1E2A36] p-6 w-full max-w-sm">
+            <div className="bg-[#16181f] rounded-xl border border-white/[0.08] p-6 w-full max-w-sm">
               <h3 className="text-white font-bold text-xl mb-2">Save your picks</h3>
               <p className="text-gray-400 text-sm mb-6">
                 {`You've made 3 picks! Create a free account to save your predictions and see how you rank.`}

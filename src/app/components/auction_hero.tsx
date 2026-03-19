@@ -8,7 +8,7 @@ export default function AuctionHero() {
             <div className="flex flex-col items-center justify-center rounded px-4">
                 <h1 className="mb-4 text-center text-4xl font-bold md:text-6xl">
                     <span className="text-white">PREDICT.</span>{" "}
-                    <span className="text-[#F2CA16]">COMPETE.</span>{" "}
+                    <span className="text-[#E94560]">COMPETE.</span>{" "}
                     <span className="text-white">WIN.</span>
                 </h1>
                 <h3 className="mb-7 text-lg md:text-xl text-center">
@@ -33,21 +33,21 @@ export default function AuctionHero() {
                 <Link href="/free_play">
                     <Button
                         variant="default"
-                        className="w-full bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90 sm:w-auto"
+                        className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 sm:w-auto"
                     >
                         PLAY FREE GAME
                     </Button>
                 </Link>
                 <Link
                     href="/tournaments"
-                    className={`w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto ${isTournamentDisabled ? 'pointer-events-none opacity-50' : ''
+                    className={`w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924] sm:w-auto ${isTournamentDisabled ? 'pointer-events-none opacity-50' : ''
                         }`}
                     aria-disabled={isTournamentDisabled}
                     tabIndex={isTournamentDisabled ? -1 : undefined}
                 >
                     <Button
                         variant="outline"
-                        className="w-full border-[#F2CA16] text-[#F2CA16] hover:bg-[#F2CA16] hover:text-[#0C1924] sm:w-auto"
+                        className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924] sm:w-auto"
                     >
                         {"JOIN TOURNAMENT (COMING SOON)"}
                     </Button>

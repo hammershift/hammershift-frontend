@@ -398,7 +398,7 @@ function Profile(props: Props) {
         <div className="h-20 bg-gradient-to-r from-[#E94560]/80 to-[#0A0A1A]"></div>
         <div className="px-8 pb-8">
           <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
-            <Avatar className="h-24 w-24 border-4 border-[#13202D] shadow-lg">
+            <Avatar className="h-24 w-24 border-4 border-[#16181f] shadow-lg">
               <AvatarFallback className="bg-[#E94560] text-2xl text-white">
                 {getInitials(data ? data.user.name : "")}
               </AvatarFallback>
