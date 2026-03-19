@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { privyClient } from '@/lib/privy';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth guard — verify Privy bearer token
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+    try {
+      await privyClient.verifyAuthToken(authHeader.replace('Bearer ', ''));
+    } catch {
+      return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { walletAddress } = body;
     const parsedAmount = body.amount !== undefined && body.amount !== null
@@ -18,6 +32,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Stripe not configured' }, { status: 500 });
     }
 
+    // Extract real client IP from headers (AWS ALB / Amplify / Cloudfront)
+    const customerIp =
+      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+      req.headers.get('x-real-ip') ??
+      '127.0.0.1';
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://velocitymarkets.io';
     const returnUrl = `${appUrl}/my_wallet`;
 
@@ -29,6 +49,7 @@ export async function POST(req: NextRequest) {
     params.append('transaction_details[lock_wallet_address]', 'true');
     params.append('transaction_details[supported_destination_currencies][]', 'usdc');
     params.append('transaction_details[supported_destination_networks][]', 'polygon');
+    params.append('customer_ip_address', customerIp);
     params.append('return_url', returnUrl);
 
     const response = await fetch('https://api.stripe.com/v1/crypto/onramp_sessions', {
