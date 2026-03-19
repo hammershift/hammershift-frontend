@@ -135,7 +135,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar-container sticky top-0 z-50 bg-[#0A0A1A] flex items-center justify-center">
-      <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
+      <div className="flex w-full justify-between border-b-[1px] border-b-[#1E2A36] px-4 py-3 md:px-16">
         <div className="flex items-center justify-center">
           <div className="pr-4">
             <Link
@@ -175,7 +175,7 @@ const Navbar = () => {
                 <Link
                   key={index}
                   href={createPageUrl(data.urlString)}
-                  className="transition-colors hover:text-[#F2CA16]"
+                  className="transition-colors hover:text-white"
                 >
                   {data.title === "Markets" ? (
                     <span className="flex items-center gap-1.5">
@@ -196,12 +196,12 @@ const Navbar = () => {
         {!loading && !isLoggedIn && (
           <div className="flex items-center justify-center">
             <Link href="/login_page">
-              <Button className="h-10 w-20 bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+              <Button className="h-10 w-20 bg-[#E94560] text-[white] hover:bg-[#E94560]/90">
                 LOG IN
               </Button>
             </Link>
             <Link href="/create_account">
-              <Button className="ml-2 h-10 w-20 bg-[#F2CA16] text-[#0C1924] hover:bg-[#F2CA16]/90">
+              <Button className="ml-2 h-10 w-20 bg-[#E94560] text-[white] hover:bg-[#E94560]/90">
                 SIGN UP
               </Button>
             </Link>
@@ -269,7 +269,7 @@ const Navbar = () => {
                   setDropPredictions(false);
                   setDropMyAccount(false);
                 }}
-                className="hidden rounded-md bg-[#10B981] px-3 py-1.5 text-xs font-bold text-black transition-colors hover:bg-[#059669] sm:block"
+                className="hidden rounded-md bg-[#00D4AA] px-3 py-1.5 text-xs font-bold text-black transition-colors hover:bg-[#059669] sm:block"
               >
                 Deposit
               </button>
@@ -281,7 +281,7 @@ const Navbar = () => {
                   setDropMyAccount(false);
                 }}
               >
-                <CircleDollarSignIcon className="h-8 w-8 text-[#F2CA16]" />
+                <CircleDollarSignIcon className="h-8 w-8 text-[#E94560]" />
               </button>
               {dropPredictions && (
                 <PredictionsDropdownMenu closeMenu={closeMenu} />
@@ -354,8 +354,8 @@ const Navbar = () => {
         )}
         {loading && (
           <div className="flex items-center justify-end space-x-2">
-            <div className="h-10 w-20 animate-pulse rounded bg-gray-300" />
-            <div className="h-10 w-20 animate-pulse rounded bg-gray-300" />
+            <div className="h-10 w-20 animate-pulse rounded bg-white/10" />
+            <div className="h-10 w-20 animate-pulse rounded bg-white/10" />
           </div>
         )}
       </div>
@@ -368,7 +368,7 @@ const Navbar = () => {
       {menuIsOpen && (
         <nav
           aria-label="Mobile navigation"
-          className="slide-in-top absolute z-40 w-full border-b border-[#1b252e] bg-[#0A0A1A]/95 backdrop-blur-sm lg:hidden"
+          className="slide-in-top absolute z-40 w-full border-b border-[#1E2A36] bg-[#0A0A1A]/95 backdrop-blur-sm lg:hidden"
         >
           {navBarList.map((data, index) => (
             <Link
@@ -378,7 +378,7 @@ const Navbar = () => {
                 closeMenu();
                 document.body.classList.remove("stop-scrolling");
               }}
-              className="flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#1A2C3D] hover:text-[#F2CA16]"
+              className="flex min-h-[44px] w-full items-center border-t border-[#1E2A36] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#16181f] hover:text-white"
             >
               <span>
                 {data.title === "Markets" ? (
@@ -402,7 +402,7 @@ const Navbar = () => {
                 document.body.classList.remove("stop-scrolling");
                 setDepositOpen(true);
               }}
-              className="flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-bold tracking-wider text-[#10B981] transition-colors hover:bg-[#1A2C3D]"
+              className="flex min-h-[44px] w-full items-center border-t border-[#1E2A36] px-6 py-3 text-sm font-bold tracking-wider text-[#00D4AA] transition-colors hover:bg-[#16181f]"
             >
               Deposit USDC
             </button>
@@ -469,7 +469,7 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
   };
 
   return (
-    <div className="slide-in-top absolute z-50 flex h-auto w-full flex-col bg-[#1A2C3D] p-4 text-white">
+    <div className="slide-in-top absolute z-50 flex h-auto w-full flex-col bg-[#16181f] p-4 text-white">
       {/* <div className="p-1.5 text-lg font-bold">MY ACCOUNT</div> */}
       {/* {isLoading ? (
                 <div className="flex w-full items-center justify-center px-6">
@@ -772,7 +772,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
 
   return (
     <div
-      className={`my-predictions-menu absolute right-[56px] top-10 z-30 max-h-[784px] max-w-[425px] overflow-auto rounded bg-[#1A2C3D] pb-2 pt-6 shadow-xl shadow-black transition-all duration-300 ${isLoading ? "w-[300px]" : ""}`}
+      className={`my-predictions-menu absolute right-[56px] top-10 z-30 max-h-[784px] max-w-[425px] overflow-auto rounded bg-[#16181f] pb-2 pt-6 shadow-xl shadow-black transition-all duration-300 ${isLoading ? "w-[300px]" : ""}`}
     >
       <div className="flex flex-col gap-4 px-6">
         <div className="flex justify-between">
@@ -784,7 +784,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
                             <button
                                 id="predictions-sort"
                                 type="button"
-                                className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[#0f1923]"
+                                className="text-white-900 w-[140px] truncate rounded-sm bg-[#172431] px-2 py-1.5 text-center shadow-sm hover:bg-[white]"
                                 onClick={handleClick}
                             >
                                 {predictionSort}
@@ -799,7 +799,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
             autoFocus
           >
             <div>ACTIVE </div>
-            <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+            <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-[white]">
               {!isLoading ? activePredictions.length : "-"}
             </span>
           </button>
@@ -809,7 +809,7 @@ const PredictionsDropdownMenu: React.FC<CloseMenuProps> = ({ closeMenu }) => {
             className="flex w-1/2 items-center justify-center gap-2 border-b-2 border-[#314150] py-2 focus:border-white focus:font-bold"
           >
             <div>COMPLETED </div>
-            <span className="rounded bg-[#f2ca16] px-1 text-sm font-bold text-[#0f1923]">
+            <span className="rounded bg-[#E94560] px-1 text-sm font-bold text-[white]">
               {!isLoading
                 ? completedPredictions.length +
                   completedTournamentPredictions.length
@@ -1209,7 +1209,7 @@ export const PredictionsTournamentCard = ({
                 className="h-[14px] w-[14px]"
               />
               <span className="opacity-80">Place:</span>
-              <span className="font-bold text-[#F2CA16]">
+              <span className="font-bold text-[#E94560]">
                 {isActive ? "Current: " : null}
                 {pointsAndPlacing.placing
                   ? addNumberSuffix(pointsAndPlacing.placing)
@@ -1234,7 +1234,7 @@ export const PredictionsTournamentCard = ({
               </div>
             )}
             {prediction.prize && (
-              <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+              <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[white] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
                 <div className="flex gap-2">
                   <Image
                     src={MoneyBagBlack}
@@ -1423,7 +1423,7 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
                 className="h-[14px] w-[14px]"
               />
               <span className="opacity-80">My Prediction:</span>
-              <span className="font-bold text-[#F2CA16]">
+              <span className="font-bold text-[#E94560]">
                 ${new Intl.NumberFormat().format(my_prediction)}
               </span>
             </div>
@@ -1458,7 +1458,7 @@ export const PredictionsCard: React.FC<PredictionsCardProps> = ({
             )}
 
             {prize && (
-              <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[#0f1923] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
+              <div className="mt-2 flex w-full items-center justify-between rounded bg-[#49c742] p-1 text-xs font-bold text-[white] sm:mt-4 sm:gap-4 sm:p-2 sm:text-sm">
                 <div className="flex gap-2">
                   <Image
                     src={MoneyBagBlack}
@@ -1741,7 +1741,7 @@ const MobileMyWagers: React.FC<CloseMenuProps> = ({ closeMenu }) => {
         >
           ACTIVE
           {!isLoading && (
-            <span className="ml-1 rounded bg-[#f2ca16] px-1 text-xs font-bold text-[#0f1923]">
+            <span className="ml-1 rounded bg-[#E94560] px-1 text-xs font-bold text-[white]">
               {activePredictions.length}
             </span>
           )}

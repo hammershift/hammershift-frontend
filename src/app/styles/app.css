@@ -70,7 +70,7 @@ input[type='number'] {
 }
 
 option {
-  background-color: #172431;
+  background-color: #16181f;
 }
 .page-container {
   width: 100%;
@@ -85,7 +85,7 @@ option {
 }
 
 .arrow-slider:hover {
-  background-color: #f2ca16;
+  background-color: #E94560;
 }
 .btn-white {
   padding: 0.625rem 0.75rem;
@@ -96,7 +96,7 @@ option {
 }
 .btn-white:hover,
 .btn-dark:hover {
-  background-color: #f2ca16;
+  background-color: #E94560;
 }
 .btn-green {
   padding: 0.625rem 0.75rem;
@@ -117,25 +117,25 @@ option {
 .btn-yellow {
   padding: 0.625rem 0.875rem;
   color: black;
-  background-color: #f2ca16;
+  background-color: #E94560;
   border-radius: 0.25rem;
   font-weight: 700;
 }
 .btn-yellow:hover,
 .btn-yellow-thin:hover {
-  background-color: #ebcb48;
+  background-color: #E94560;
 }
 .btn-yellow-thin {
   padding: 0.375rem 0.75rem;
   color: black;
-  background-color: #f2ca16;
+  background-color: #E94560;
   border-radius: 0.25rem;
   font-weight: 700;
 }
 .btn-dark {
   padding: 16px 24px;
   color: white;
-  background-color: #172431;
+  background-color: #16181f;
   border-radius: 0.25rem;
   font-weight: 700;
 }
@@ -148,7 +148,7 @@ option {
   border: 1px solid black;
 }
 .btn-transparent:hover {
-  background-color: #0f1923;
+  background-color: #0A0A1A;
   color: white;
   font-weight: 700;
 }
@@ -161,22 +161,22 @@ option {
   border: 1px solid white;
 }
 .btn-transparent-white:hover {
-  background-color: #0f1923;
+  background-color: #0A0A1A;
   color: white;
   font-weight: 700;
 }
 
 .btn-transparent-yellow {
   padding: 10px 14px;
-  color: #f2ca16;
+  color: #E94560;
   background-color: none;
   border-radius: 4px;
   font-weight: 500;
-  border: 1px solid #f2ca16;
+  border: 1px solid #E94560;
 }
 .btn-transparent-yellow:hover {
-  background-color: #f2ca16;
-  color: #0f1923;
+  background-color: #E94560;
+  color: #0A0A1A;
   font-weight: 700;
 }
 
@@ -206,7 +206,7 @@ option {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #f2ca16;
+  background: #E94560;
 }
 
 ::-webkit-scrollbar-track {
@@ -377,7 +377,7 @@ w-screen px-4 md:px-16 pt-8 md:pt-16 2xl:w-[1440px] */
 }
 
 .section-one {
-  background: linear-gradient(-45deg, #b91f6c, #2b3b6c, #1a2c3d);
+  background: linear-gradient(-45deg, #E94560, #E94560, #0A0A1A);
   background-size: 400% 400%;
   animation: gradient 5s ease infinite;
 }
@@ -764,7 +764,7 @@ w-screen px-4 md:px-16 pt-8 md:pt-16 2xl:w-[1440px] */
 }
 
 .link-transparent-white:hover {
-  background-color: #0f1923;
+  background-color: #0A0A1A;
   color: white;
   font-weight: 700;
 }

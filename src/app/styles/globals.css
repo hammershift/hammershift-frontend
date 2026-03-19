@@ -5,12 +5,12 @@
 
 @layer base {
   :root {
-    background: #0f1923;
+    background: #0A0A1A;
     color: white;
     box-sizing: border-box;
     --pagination-color: #FFFFFF;
-    --pagination-active-bg: #F2CA16;
-    --pagination-hover-bg: #f2ca16ab;
+    --pagination-active-bg: #E94560;
+    --pagination-hover-bg: #E94560ab;
     --pagination-hover-color: #000000;
     --pagination-active-color: #000000;
     --pagination-bg: #13202D;
@@ -94,7 +94,7 @@
 }
 
 .scale-tournament-background-on-hover::after {
-  background-color: #1A2C3D;
+  background-color: #16181f;
   content: "";
   position: absolute;
   top: 0;
@@ -152,5 +152,5 @@ html {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #1b252e;
+  background: #0A0A1A;
 }

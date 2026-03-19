@@ -16,23 +16,14 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--gradient-stops))",
       },
       colors: {
-        gold: {
-          "100": "#EBCB48", //lighter yellow
-          "200": "#F2CA16", // darker yellow
-        },
-        shade: {
-          "25": "#253747",
-          "50": "#1a2c3d",
-          "100": "#172431",
-        },
-        // Polymarket-style trading colors
+        // Design system trading colors
         trading: {
-          yes: "#14B8A6", // Teal for YES
-          no: "#EF4444", // Red for NO
+          yes: "#00D4AA", // Success green
+          no: "#E94560", // Accent red
           bg: {
             primary: "#0A0A1A",
-            secondary: "#1A1B2E",
-            card: "#252739",
+            secondary: "#13202D",
+            card: "#16181f",
           },
         },
         background: "hsl(var(--background))",

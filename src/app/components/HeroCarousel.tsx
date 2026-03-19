@@ -31,8 +31,8 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
   if (markets.length === 0) {
     // Fallback: show the old static hero
     return (
-      <section className="relative flex h-[45vh] items-center justify-center overflow-hidden bg-[#0F172A]">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/40 via-transparent to-[#0A0A1A]" />
+      <section className="relative flex h-[45vh] items-center justify-center overflow-hidden bg-[#0A0A1A]">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A1A]/40 via-transparent to-[#0A0A1A]" />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <h1 className="mb-3 text-5xl font-bold tracking-tight text-white md:text-6xl">
             Trade on the Hammer Price.

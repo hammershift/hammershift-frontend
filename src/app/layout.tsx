@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.variable}>
+      <body className={`${inter.variable} font-sans`}>
         <PrivyProvider>
           <SessionProvider session={session}>
             <PredictionProvider>

@@ -42,7 +42,7 @@ export default function LiveTicker() {
   const doubled = [...items, ...items];
 
   return (
-    <div className="w-full overflow-hidden bg-[#0F172A] border-b border-[#1E2A36] py-2">
+    <div className="w-full overflow-hidden bg-[#0A0A1A] border-b border-[#1E2A36] py-2">
       <style>{`
         @keyframes ticker-scroll {
           from { transform: translateX(0); }

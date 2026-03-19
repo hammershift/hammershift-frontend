@@ -282,8 +282,8 @@ export default async function HomePage() {
 
           {/* Cars Tracked */}
           <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#3B82F6]/10">
-              <Car className="h-5 w-5 text-[#3B82F6]" aria-hidden="true" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00D4AA]/10">
+              <Car className="h-5 w-5 text-[#00D4AA]" aria-hidden="true" />
             </div>
             <div>
               <p className="text-2xl font-bold text-white">
@@ -334,29 +334,6 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
-
-      {/* Platform Stats */}
-      <section className="mx-auto w-full max-w-6xl px-4 py-12">
-        <h2 className="mb-6 text-lg font-semibold text-gray-300 text-center">Platform Performance</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <div>
-            <p className="text-3xl font-bold font-mono text-white">
-              <AnimatedCounter end={cumulativeStats.totalMarkets} format="number" />
-            </p>
-            <p className="text-xs text-gray-500 mt-1">Markets Resolved</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold font-mono text-[#00D4AA]">&mdash;</p>
-            <p className="text-xs text-gray-500 mt-1">Crowd Accuracy</p>
-          </div>
-          <div>
-            <p className="text-3xl font-bold font-mono text-white">
-              <AnimatedCounter end={cumulativeStats.carsTracked} format="abbreviated" />
-            </p>
-            <p className="text-xs text-gray-500 mt-1">Cars Tracked</p>
-          </div>
-        </div>
-      </section>
 
       {/* Authority Bar */}
       <AuthorityBar />
