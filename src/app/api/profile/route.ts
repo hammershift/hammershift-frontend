@@ -1,11 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { privyClient } from "@/lib/privy";
 import connectDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
 import { Predictions } from "@/models/predictions.model";
 import Streak from "@/models/streak.model";
 import Badge from "@/models/badge.model";
+
+export const dynamic = "force-dynamic";
+
+/** Resolve authenticated user ID from NextAuth session OR Privy Bearer token */
+async function resolveUserId(req: NextRequest): Promise<string | null> {
+  // Try NextAuth first
+  const session = await getServerSession(authOptions);
+  const sessionId = session?.user?._id ?? session?.user?.id;
+  if (sessionId) return sessionId;
+
+  // Fall back to Privy token
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ")) return null;
+  try {
+    const token = authHeader.slice(7);
+    const { userId: privyDid } = await privyClient.verifyAuthToken(token);
+    const privyUser = await privyClient.getUser(privyDid);
+    const email =
+      (privyUser.email?.address ?? privyUser.google?.email ?? "").toLowerCase();
+    if (!email) return null;
+    await connectDB();
+    const dbUser = await Users.findOne({ email }).select("_id").lean() as { _id: unknown } | null;
+    return dbUser?._id?.toString() ?? null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * GET /api/profile
@@ -13,10 +41,8 @@ import Badge from "@/models/badge.model";
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    const userId = session?.user?._id ?? session?.user?.id;
-    if (!session || !userId) {
+    const userId = await resolveUserId(req);
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -136,10 +162,8 @@ export async function GET(req: NextRequest) {
  */
 export async function PATCH(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-
-    const patchUserId = session?.user?._id ?? session?.user?.id;
-    if (!session || !patchUserId) {
+    const patchUserId = await resolveUserId(req);
+    if (!patchUserId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

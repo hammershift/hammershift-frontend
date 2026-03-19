@@ -1,6 +1,8 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
+import { usePrivy } from "@privy-io/react-auth";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
@@ -106,20 +108,38 @@ function Profile(props: Props) {
   const [notifSaved, setNotifSaved] = useState(false);
 
   const { data } = useSession();
+  const { user: privyUser, loading: privyLoading, authenticated } = useVelocityAuth();
+  const { getAccessToken } = usePrivy();
   const router = useRouter();
   const track = useTrackEvent();
 
+  // Derive display data from either Privy or NextAuth
+  const activeUser = privyUser ?? (data?.user as any);
+  const isAuthed = !!privyUser || !!data;
+
+  /** Build auth headers — Privy token if available, otherwise empty (NextAuth uses cookies) */
+  const getAuthHeaders = async (): Promise<Record<string, string>> => {
+    try {
+      const token = await getAccessToken();
+      if (token) return { Authorization: `Bearer ${token}` };
+    } catch {}
+    return {};
+  };
+
   useEffect(() => {
-    if (data) {
-      setName(data?.user.name);
-      setUsername(data?.user.username!);
+    if (privyLoading) return;
+    if (activeUser) {
+      setName(activeUser.fullName || activeUser.name || "");
+      setUsername(activeUser.username || "");
       fetchUserProfile();
+    } else if (!isAuthed) {
+      setLoading(false);
     }
-  }, [data]);
+  }, [activeUser, privyLoading]);
 
   // Migrate guest predictions to the authenticated account on first login
   useEffect(() => {
-    if (!data?.user) return;
+    if (!isAuthed) return;
     const guestPredictions = getGuestPredictions();
     if (!guestPredictions.length) return;
 
@@ -139,7 +159,7 @@ function Profile(props: Props) {
       .catch(() => {
         // Silently fail — guest predictions remain in localStorage
       });
-  }, [data]);
+  }, [isAuthed]);
 
   useEffect(() => {
     track("profile_viewed", {
@@ -152,8 +172,10 @@ function Profile(props: Props) {
   const fetchUserProfile = async () => {
     setLoading(true);
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch(`/api/profile`, {
         method: "GET",
+        headers,
       });
       if (!res.ok) throw new Error("Unable to fetch user profile");
 
@@ -180,9 +202,9 @@ function Profile(props: Props) {
   // Fetch total points
   useEffect(() => {
     async function fetchUserPoints() {
-      if (data) {
+      if (activeUser) {
         try {
-          const res = await getMyAuctionPoints(data.user.id);
+          const res = await getMyAuctionPoints(activeUser?._id || activeUser?.id);
           setUserPoints(res.total);
         } catch (error) {
           console.error("Error fetching user points:", error);
@@ -267,9 +289,10 @@ function Profile(props: Props) {
     setSuccessMessage("");
     setErrorMessage("");
     try {
+      const authHeaders = await getAuthHeaders();
       const response = await fetch(`/api/profile`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...authHeaders },
         body: JSON.stringify({
           fullName: name,
           about: about,
@@ -294,9 +317,10 @@ function Profile(props: Props) {
     setSuccessMessage("");
     setErrorMessage("");
     try {
+      const authHeaders = await getAuthHeaders();
       const response = await fetch(`/api/profile/email-preferences`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...authHeaders },
         body: JSON.stringify({ email_preferences: emailPreferences }),
       });
 
@@ -327,9 +351,10 @@ function Profile(props: Props) {
     setSuccessMessage("");
     setErrorMessage("");
     try {
+      const authHeaders = await getAuthHeaders();
       const response = await fetch(`/api/profile/change-password`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...authHeaders },
         body: JSON.stringify({
           oldPassword: passwords.old,
           newPassword: passwords.new,
@@ -352,7 +377,8 @@ function Profile(props: Props) {
 
   const handleExportData = async () => {
     try {
-      const response = await fetch(`/api/profile/export`);
+      const authHeaders = await getAuthHeaders();
+      const response = await fetch(`/api/profile/export`, { headers: authHeaders });
       if (!response.ok) throw new Error("Export failed");
 
       const blob = await response.blob();
@@ -400,14 +426,14 @@ function Profile(props: Props) {
           <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
             <Avatar className="h-24 w-24 border-4 border-[#16181f] shadow-lg">
               <AvatarFallback className="bg-[#E94560] text-2xl text-white">
-                {getInitials(data ? data.user.name : "")}
+                {getInitials(activeUser?.fullName || activeUser?.name || "")}
               </AvatarFallback>
             </Avatar>
             <div className="pt-12 md:pt-0">
               <h1 className="text-3xl font-bold">
-                {data ? data.user.name : ""}
+                {activeUser?.fullName || activeUser?.name || ""}
               </h1>
-              <p className="text-gray-400">@{data ? data.user.username : ""}</p>
+              <p className="text-gray-400">@{activeUser?.username || ""}</p>
               {profileData?.user?.rank_title && (
                 <span className="mt-2 inline-block rounded-full bg-[#E94560]/20 px-3 py-1 text-sm font-medium text-[#E94560]">
                   {profileData.user.rank_title}
