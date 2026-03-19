@@ -106,7 +106,7 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
 
                       {/* Probability */}
                       <div className="mb-4 flex items-baseline gap-3">
-                        <span className="text-4xl font-bold font-mono text-white">
+                        <span className="text-3xl md:text-4xl font-bold font-mono text-white">
                           {yesPercent}%
                         </span>
                         <span className="text-sm text-gray-400">chance</span>
@@ -153,6 +153,13 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
         .hero-carousel .swiper-button-next {
           color: rgba(255,255,255,0.5);
           --swiper-navigation-size: 28px;
+          display: none;
+        }
+        @media (min-width: 768px) {
+          .hero-carousel .swiper-button-prev,
+          .hero-carousel .swiper-button-next {
+            display: flex;
+          }
         }
         .hero-carousel .swiper-button-prev:hover,
         .hero-carousel .swiper-button-next:hover {

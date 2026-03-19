@@ -308,7 +308,7 @@ export default async function HomePage() {
               <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
               <Suspense
                 fallback={
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {Array.from({ length: 4 }).map((_, i) => (
                       <MarketCardSkeleton key={i} />
                     ))}

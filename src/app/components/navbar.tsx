@@ -134,7 +134,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="navbar-container flex items-center justify-center">
+    <div className="navbar-container sticky top-0 z-50 bg-[#0A0A1A] flex items-center justify-center">
       <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
         <div className="flex items-center justify-center">
           <div className="pr-4">

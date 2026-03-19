@@ -28,8 +28,8 @@ export default function CategoryFilterBar({
 }: CategoryFilterBarProps) {
   return (
     <div
-      className="flex items-center gap-2 overflow-x-auto pb-2"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      className="flex items-center gap-2 overflow-x-auto pb-2 flex-nowrap"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
     >
       <style jsx>{`
         div::-webkit-scrollbar {

@@ -32,12 +32,12 @@ export default function WelcomeBanner() {
 
   return (
     <div className="bg-gradient-to-r from-[#E94560]/20 to-[#FFB547]/20 border-b border-[#E94560]/30">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+      <div className="mx-auto flex flex-col sm:flex-row max-w-7xl items-start sm:items-center justify-between gap-2 sm:gap-0 px-4 py-3">
         <p className="text-sm text-gray-200">
           <span className="font-bold text-white">New here?</span>{" "}
           Predict whether collector cars sell above their estimate. Real auctions. Real rewards.
         </p>
-        <div className="flex items-center gap-4 shrink-0 ml-4">
+        <div className="flex items-center gap-4 shrink-0 sm:ml-4">
           <Link
             href="/how_it_works"
             className="whitespace-nowrap text-sm font-medium text-[#E94560] hover:text-[#E94560]/80 transition-colors"
