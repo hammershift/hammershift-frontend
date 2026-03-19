@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useVelocityAuth } from '@/hooks/useVelocityAuth';
+import { usePrivy } from '@privy-io/react-auth';
 
 interface Props {
   open: boolean;
@@ -14,6 +15,7 @@ type AmountOption = typeof AMOUNT_OPTIONS[number];
 
 export default function DepositModal({ open, onClose, refetchBalance }: Props) {
   const { embeddedWalletAddress } = useVelocityAuth();
+  const { getAccessToken } = usePrivy();
   const [selectedAmount, setSelectedAmount] = useState<AmountOption>(100);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,21 +34,34 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
     setError(null);
 
     try {
+      const token = await getAccessToken();
+      if (!token) {
+        setError('Please sign in to deposit.');
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch('/api/stripe/onramp-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ walletAddress: embeddedWalletAddress, amount: selectedAmount }),
       });
       const data = await res.json();
 
       if (data.redirectUrl) {
-        // Open Stripe hosted onramp in new tab, close modal
+        // Store sessionId so /my_wallet can verify on return
+        if (data.sessionId) {
+          localStorage.setItem('vm_onramp_session', JSON.stringify({
+            sessionId: data.sessionId,
+            amount: selectedAmount,
+            timestamp: Date.now(),
+          }));
+        }
         window.open(data.redirectUrl, '_blank', 'noopener,noreferrer');
         onClose();
-        if (refetchBalance) {
-          // Delay refetch to give time for return
-          setTimeout(() => refetchBalance(), 3000);
-        }
       } else {
         setError(data.message ?? 'Failed to create deposit session');
       }
