@@ -2,6 +2,7 @@
 export const dynamic = 'force-dynamic';
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Auctions from "@/models/auction.model";
@@ -14,6 +15,7 @@ import mongoose from "mongoose";
 import DailyHammer from "./components/DailyHammer";
 import LiveTicker from "./components/LiveTicker";
 import TrendingMarketsSection from "./components/TrendingMarketsSection";
+import MarketCardSkeleton from "./components/MarketCardSkeleton";
 import AuthorityBar from "./components/AuthorityBar";
 import TopPredictors from "./components/TopPredictors";
 import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
@@ -304,7 +306,17 @@ export default async function HomePage() {
             {/* Trending Markets */}
             <section>
               <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
-              <TrendingMarketsSection />
+              <Suspense
+                fallback={
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <MarketCardSkeleton key={i} />
+                    ))}
+                  </div>
+                }
+              >
+                <TrendingMarketsSection />
+              </Suspense>
             </section>
 
             {/* Top Predictors This Week */}

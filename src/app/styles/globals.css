@@ -133,6 +133,21 @@ body {
     rgb(var(--background-start-rgb));
 } */
 
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade-in animation for page content */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
 .navbar-container {
   position: sticky;
   top: 0;

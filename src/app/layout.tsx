@@ -11,6 +11,7 @@ import PrivyProvider from "./components/PrivyProvider";
 import "./styles/app.css";
 import "./styles/globals.css";
 import Analytics from "./components/analytics";
+import BackToTop from "./components/BackToTop";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -50,6 +51,7 @@ export default async function RootLayout({
                   {/* <BetaTesting /> */}
                   {children}
                   {/* <LoadWallet /> */}
+                  <BackToTop />
                   <Footer />
                 </TournamentProvider>
               </TournamentPredictionProvider>
