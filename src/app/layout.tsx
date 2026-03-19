@@ -1,5 +1,6 @@
 import SessionProvider from "@/providers/sessionProvider";
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { getAuthSession } from "@/lib/auth";
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
@@ -11,7 +12,7 @@ import "./styles/app.css";
 import "./styles/globals.css";
 import Analytics from "./components/analytics";
 
-// const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "Predict Classic Car Auctions – Velocity Markets",
@@ -38,8 +39,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      {/*<body className={inter.className} */}
-      <body>
+      <body className={inter.variable}>
         <PrivyProvider>
           <SessionProvider session={session}>
             <PredictionProvider>
