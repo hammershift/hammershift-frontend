@@ -5,12 +5,12 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import type { CheckedState } from "@radix-ui/react-checkbox";
-import { useVelocityAuth } from "@/hooks/useVelocityAuth";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function CustomSignupPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const { login, authenticated } = useVelocityAuth();
+  const { ready, authenticated, login } = usePrivy();
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,10 +33,10 @@ export default function CustomSignupPage() {
 
   // Redirect if already authenticated via Privy
   useEffect(() => {
-    if (authenticated) {
+    if (ready && authenticated) {
       router.push("/");
     }
-  }, [authenticated, router]);
+  }, [ready, authenticated, router]);
 
   const handleGoogleSignup = async () => {
     setError("");
