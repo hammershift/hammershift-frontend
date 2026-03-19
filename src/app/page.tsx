@@ -8,7 +8,6 @@ import Auctions from "@/models/auction.model";
 import { Predictions } from "@/models/predictions.model";
 import { startOfWeek } from "date-fns";
 import "./styles/app.css";
-import { ArrowRight } from "lucide-react";
 import ClientHomepageTracker from "./components/ClientHomepageTracker";
 import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
@@ -22,6 +21,7 @@ import { Activity, BarChart2, DollarSign, Car } from "lucide-react";
 import AnimatedCounter from "./components/AnimatedCounter";
 import WelcomeBanner from "./components/WelcomeBanner";
 import HomepageSidebar from "./components/HomepageSidebar";
+import HeroCarousel from "./components/HeroCarousel";
 
 // Server Component - Fetch data on server
 async function getHomePageData() {
@@ -105,6 +105,47 @@ async function getHomePageData() {
         : null,
     } : null;
 
+    // Hero carousel — top 5 active markets by volume
+    const heroMarkets = await db.collection('polygon_markets')
+      .find({ status: 'ACTIVE' })
+      .sort({ totalVolume: -1 })
+      .limit(5)
+      .toArray();
+
+    const heroAuctionIds = heroMarkets.map((m: any) => m.auctionId).filter(Boolean);
+    const heroObjectIds: mongoose.Types.ObjectId[] = [];
+    for (const id of heroAuctionIds) {
+      try { heroObjectIds.push(new mongoose.Types.ObjectId(id)); } catch {}
+    }
+    const heroAuctions = await db.collection('auctions').find({
+      $or: [
+        { auction_id: { $in: heroAuctionIds } },
+        ...(heroObjectIds.length ? [{ _id: { $in: heroObjectIds } }] : []),
+      ],
+    }).project({ title: 1, image: 1, sort: 1, auction_id: 1 }).toArray();
+
+    const heroAuctionMap = new Map<string, any>();
+    for (const a of heroAuctions) {
+      if (a.auction_id) heroAuctionMap.set(a.auction_id, a);
+      heroAuctionMap.set(a._id.toString(), a);
+    }
+
+    const heroMarketsEnriched = heroMarkets.map((m: any) => {
+      const auction = heroAuctionMap.get(m.auctionId);
+      return {
+        _id: m._id.toString(),
+        question: m.question,
+        yesPrice: m.yesPrice ?? 0.5,
+        noPrice: m.noPrice ?? 0.5,
+        totalVolume: m.totalVolume ?? 0,
+        auction: {
+          title: auction?.title ?? null,
+          image: auction?.image ?? null,
+          deadline: auction?.sort?.deadline ? new Date(auction.sort.deadline).toISOString() : null,
+        },
+      };
+    });
+
     return {
       featuredAuction: featuredAuction ? JSON.parse(JSON.stringify(featuredAuction)) : null,
       featuredCar: featuredCarJson,
@@ -112,6 +153,7 @@ async function getHomePageData() {
       leaderboard: leaderboard ? JSON.parse(JSON.stringify(leaderboard)) : [],
       cumulativeStats,
       dailyHammer,
+      heroMarkets: heroMarketsEnriched,
     };
   } catch (error) {
     console.error('Error fetching homepage data:', error);
@@ -127,6 +169,7 @@ async function getHomePageData() {
         carsTracked: 0,
       },
       dailyHammer: null,
+      heroMarkets: [],
     };
   }
 }
@@ -136,6 +179,7 @@ export default async function HomePage() {
   let dailyHammer: { auctionId: string; title: string; image: string | null; deadline: string | null } | null = null;
   let leaderboard: Array<{ _id: string; username: string; total_score: number; predictions_count: number }> = [];
   let cumulativeStats = { totalMarkets: 0, totalPredictions: 0, totalVolume: 0, carsTracked: 0 };
+  let heroMarkets: Array<{ _id: string; question: string; yesPrice: number; noPrice: number; totalVolume: number; auction: { title: string | null; image: string | null; deadline: string | null } }> = [];
   let error = null;
 
   try {
@@ -150,6 +194,7 @@ export default async function HomePage() {
     dailyHammer = data.dailyHammer;
     leaderboard = data.leaderboard ?? [];
     cumulativeStats = data.cumulativeStats;
+    heroMarkets = data.heroMarkets ?? [];
   } catch (err: any) {
     console.error('❌ Error fetching homepage data:', err);
     error = `Data error: ${err.message}`;
@@ -188,31 +233,8 @@ export default async function HomePage() {
       {/* Live Activity Ticker */}
       <LiveTicker />
 
-      {/* Hero — 45vh exchange aesthetic */}
-      <section className="relative flex h-[45vh] items-center justify-center overflow-hidden bg-[#0F172A]">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-60"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?auto=format&fit=crop&w=1920&q=80')",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/40 via-transparent to-[#0A0A1A]" />
-        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-          <h1 className="mb-3 text-5xl font-bold tracking-tight text-white md:text-6xl">
-            Trade on the Hammer Price.
-          </h1>
-          <p className="text-lg text-gray-300 md:text-xl">
-            The prediction market for collector car auctions.
-          </p>
-          <Link
-            href="/markets"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#E94560] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
-          >
-            Browse Markets <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      {/* Hero — Featured Market Carousel */}
+      <HeroCarousel markets={heroMarkets} />
 
       {/* Platform Stats Bar */}
       <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pt-4 pb-10" aria-label="Platform statistics">
