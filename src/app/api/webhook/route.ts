@@ -133,7 +133,91 @@ export async function POST(req: NextRequest) {
         break;
 
       default:
-        console.log(`Unhandled event type ${event.type}`);
+        if ((event.type as string) === "crypto.onramp_session_updated") {
+          const session = event.data.object as Record<string, any>;
+          const status = session.status;
+
+          if (status === "fulfillment_complete") {
+            const txDetails = session.transaction_details ?? {};
+            const usdcAmount = parseFloat(
+              txDetails.destination_crypto_amount ?? "0"
+            );
+            const walletAddress =
+              txDetails.wallet_address ??
+              txDetails.wallet_addresses?.polygon ??
+              null;
+            const stripeSessionId = session.id as string;
+
+            if (!walletAddress || usdcAmount <= 0) {
+              console.error(
+                `crypto.onramp_session_updated: missing wallet address or invalid amount. walletAddress=${walletAddress}, amount=${usdcAmount}`
+              );
+              break;
+            }
+
+            // Idempotency check
+            const existingTx = await db
+              .collection("transactions")
+              .findOne({ stripeSessionId });
+
+            if (existingTx) {
+              console.log(
+                `crypto.onramp_session_updated: duplicate — transaction already recorded for stripeSessionId=${stripeSessionId}`
+              );
+              break;
+            }
+
+            // Find user by embedded wallet address
+            const onrampUser = await db
+              .collection("users")
+              .findOne({ embeddedWalletAddress: walletAddress });
+
+            if (!onrampUser) {
+              console.error(
+                `crypto.onramp_session_updated: no user found for embeddedWalletAddress="${walletAddress}". Manual reconciliation required.`
+              );
+              break;
+            }
+
+            // Credit user balance
+            const balanceUpdate = await db
+              .collection("users")
+              .updateOne(
+                { _id: onrampUser._id },
+                { $inc: { balance: usdcAmount } }
+              );
+            console.log(
+              `crypto.onramp_session_updated: credited $${usdcAmount} to user ${String(onrampUser._id)}:`,
+              balanceUpdate
+            );
+
+            // Record transaction
+            const onrampTransaction = {
+              userID: onrampUser._id,
+              transactionType: "deposit",
+              method: "stripe_onramp",
+              amount: usdcAmount,
+              type: "+",
+              transactionDate: new Date(),
+              stripeSessionId,
+              status: "success",
+            };
+
+            const insertResult = await db
+              .collection("transactions")
+              .insertOne(onrampTransaction);
+            console.log(
+              `crypto.onramp_session_updated: recorded deposit transaction for user ${String(onrampUser._id)}, stripeSessionId=${stripeSessionId}:`,
+              insertResult
+            );
+          } else {
+            console.log(
+              `crypto.onramp_session_updated: ignoring status="${status}"`
+            );
+          }
+        } else {
+          console.log(`Unhandled event type ${event.type}`);
+        }
     }
 
     return NextResponse.json({ status: "Success", event: event.type });
