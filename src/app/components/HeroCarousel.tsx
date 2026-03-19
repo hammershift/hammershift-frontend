@@ -67,13 +67,24 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
           const yesPercent = Math.round(market.yesPrice * 100);
           return (
             <SwiperSlide key={market._id}>
-              <div className="relative h-[45vh] min-h-[350px] w-full">
-                {/* Background image with blur */}
+              <div className="relative h-[38vh] min-h-[320px] max-h-[420px] w-full">
+                {/* Background image — blurred fill + sharp cover */}
                 {market.auction?.image && (
-                  <div
-                    className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${market.auction.image})` }}
-                  />
+                  <>
+                    {/* Blurred fill to prevent letterboxing on small source images */}
+                    <img
+                      src={market.auction.image}
+                      alt=""
+                      aria-hidden="true"
+                      className="absolute inset-0 h-full w-full object-cover blur-2xl scale-110 opacity-60"
+                    />
+                    {/* Sharp image on top */}
+                    <img
+                      src={market.auction.image}
+                      alt={market.auction.title ?? ''}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                  </>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A1A]/90 via-[#0A0A1A]/70 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A1A] via-transparent to-[#0A0A1A]/30" />
