@@ -17,7 +17,7 @@ export async function GET() {
       status: 'ACTIVE',
     })
     .sort({ totalVolume: -1 })
-    .limit(4)
+    .limit(6)
     .toArray();
 
   if (markets.length === 0) {
