@@ -382,7 +382,7 @@ const LeaderboardPage = () => {
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
-        <div className="lg:col-span-2">
+        <div className={leaderboard.length === 0 && !activeSearch && !loading ? "lg:col-span-3" : "lg:col-span-2"}>
           {/* Search Bar — triggers server-side refetch via debounce */}
           <div className="mb-6">
             <div className="relative">

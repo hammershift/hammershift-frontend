@@ -3,6 +3,8 @@ import { AlertCircle, CheckCircle2, UserRound } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SetStateAction, useEffect, useState } from "react";
+import { useVelocityAuth } from "@/hooks/useVelocityAuth";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function Settings() {
   const [name, setName] = useState("");
@@ -12,7 +14,19 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { data } = useSession();
+  const { user: privyUser, loading: privyLoading } = useVelocityAuth();
+  const { getAccessToken } = usePrivy();
   const router = useRouter();
+
+  const activeUser = privyUser ?? (data?.user as any);
+
+  const getAuthHeaders = async (): Promise<Record<string, string>> => {
+    try {
+      const token = await getAccessToken();
+      if (token) return { Authorization: `Bearer ${token}` };
+    } catch {}
+    return {};
+  };
 
   const getUserInfo = async (email: string) => {
     const res = await fetch(`/api/userInfo?email=${email}`, {
@@ -27,25 +41,28 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    console.log(data);
-    if (data) {
-      setName(data?.user.name);
-      setUsername(data?.user.username!);
-      getUserInfo(data?.user.email);
-    } else {
+    if (privyLoading) return;
+    if (activeUser) {
+      setName(activeUser.fullName || activeUser.name || "");
+      setUsername(activeUser.username || "");
+      if (activeUser.email) getUserInfo(activeUser.email);
+      else setLoading(false);
+    } else if (!privyLoading) {
       router.push("/login_page");
     }
-  }, [data]);
+  }, [activeUser, privyLoading]);
 
   const handleProfileUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setMessage({ type: "", text: "" });
     setIsLoading(true);
     try {
+      const authHeaders = await getAuthHeaders();
       const response = await fetch("/api/userInfo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...authHeaders,
         },
         body: JSON.stringify({
           about: about,
@@ -121,7 +138,7 @@ export default function Settings() {
             <div>
               <label className="text-sm text-gray-400 mb-1 block">Email Address</label>
               <input
-                value={data ? data.user.email : ""}
+                value={activeUser?.email || ""}
                 disabled
                 className="bg-[#0A0A1A] border border-white/[0.08] rounded-xl px-4 py-3 text-gray-500 w-full cursor-not-allowed opacity-60"
               />
