@@ -16,6 +16,7 @@ import {
   DiscussionFeed,
   ActivityFeed,
 } from '@/app/components/trading';
+import ShareButton from '@/app/components/ShareButton';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -437,6 +438,13 @@ export default function TradingPage() {
 
         {/* Market Header */}
         <div className="mb-6">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="flex-1" />
+            <ShareButton
+              url={`${typeof window !== 'undefined' ? window.location.origin : ''}/trading/${marketId}`}
+              title={`${market.question} — ${Math.round((market.yesPrice ?? 0.5) * 100)}% say YES`}
+            />
+          </div>
           <MarketCard {...marketCardProps} className="w-full" />
         </div>
 
