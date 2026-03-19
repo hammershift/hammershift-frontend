@@ -19,11 +19,21 @@ interface DrawerMarket {
 interface TrendingMarket extends DrawerMarket {
   auctionId?: string;
   totalVolume?: number;
+  priceChange?: number | null; // percentage points change in last 24h
+  sparkData?: number[];        // last 20 yesPrice values for sparkline
   auction: {
     title: string | null;
     image: string | null;
     deadline?: string | null;
   };
+}
+
+function formatVolume(cents: number): string {
+  const dollars = cents / 100;
+  if (dollars >= 1_000_000) return `$${(dollars / 1_000_000).toFixed(1)}M`;
+  if (dollars >= 1_000) return `$${(dollars / 1_000).toFixed(1)}K`;
+  if (dollars > 0) return `$${dollars.toFixed(0)}`;
+  return "$0";
 }
 
 interface Props {
@@ -91,6 +101,23 @@ export default function TrendingMarketsClient({ markets }: Props) {
                   <CountdownInline deadline={market.auction.deadline} />
                 </p>
               )}
+              {/* Probability + Delta */}
+              {(() => {
+                const yesPercent = Math.round((market.yesPrice ?? 0.5) * 100);
+                return (
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-lg font-bold font-mono ${yesPercent > 60 ? "text-[#16c784]" : yesPercent < 40 ? "text-[#f44b5a]" : "text-gray-300"}`}>
+                      {yesPercent}% chance
+                    </span>
+                    {market.priceChange != null && market.priceChange !== 0 && (
+                      <span className={`text-xs font-mono ${market.priceChange > 0 ? "text-[#16c784]" : "text-[#f44b5a]"}`}>
+                        {market.priceChange > 0 ? "\u25B2" : "\u25BC"}{Math.abs(market.priceChange)}%
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
+
               <div className="flex gap-2 mt-auto">
                 <button
                   onClick={() => handleTrade(market, 'YES')}
@@ -105,6 +132,11 @@ export default function TrendingMarketsClient({ markets }: Props) {
                   NO {Math.round((market.noPrice ?? 0.5) * 100)}&cent;
                 </button>
               </div>
+              {(market.totalVolume ?? 0) > 0 && (
+                <div className="text-xs text-gray-500 font-mono mt-1">
+                  {formatVolume(market.totalVolume ?? 0)} Vol.
+                </div>
+              )}
             </div>
           </div>
         ))}
