@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import TradingDrawer from './trading/TradingDrawer';
 import CountdownInline from './CountdownInline';
 import CategoryFilterBar from './CategoryFilterBar';
+import MarketSortDropdown from './MarketSortDropdown';
 import Sparkline from './Sparkline';
 
 // Shape expected by TradingDrawer
@@ -47,6 +48,7 @@ export default function TrendingMarketsClient({ markets }: Props) {
   const [selectedSide, setSelectedSide] = useState<'YES' | 'NO'>('YES');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [sortBy, setSortBy] = useState('trending');
 
   const filteredMarkets = useMemo(() => {
     if (activeCategory === 'all' || activeCategory === 'trending') return markets;
@@ -83,6 +85,34 @@ export default function TrendingMarketsClient({ markets }: Props) {
     return markets;
   }, [markets, activeCategory]);
 
+  const sortedMarkets = useMemo(() => {
+    let result = [...filteredMarkets];
+    switch (sortBy) {
+      case 'ending_soon':
+        result.sort((a, b) => {
+          const da = a.auction?.deadline ? new Date(a.auction.deadline).getTime() : Infinity;
+          const db = b.auction?.deadline ? new Date(b.auction.deadline).getTime() : Infinity;
+          return da - db;
+        });
+        break;
+      case 'newest':
+        result.reverse();
+        break;
+      case 'volume':
+        result.sort((a, b) => (b.totalVolume ?? 0) - (a.totalVolume ?? 0));
+        break;
+      case 'contested':
+        result.sort((a, b) => {
+          const aDist = Math.abs((a.yesPrice ?? 0.5) - 0.5);
+          const bDist = Math.abs((b.yesPrice ?? 0.5) - 0.5);
+          return aDist - bDist;
+        });
+        break;
+      // 'trending' is default order from API
+    }
+    return result;
+  }, [filteredMarkets, sortBy]);
+
   function handleTrade(market: TrendingMarket, outcome: 'YES' | 'NO') {
     // Open the drawer regardless of auth — the drawer handles login gating
     // Map to the DrawerMarket shape TradingDrawer expects
@@ -118,13 +148,20 @@ export default function TrendingMarketsClient({ markets }: Props) {
         onCategoryChange={setActiveCategory}
       />
 
-      {filteredMarkets.length === 0 ? (
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <span>{sortedMarkets.length} market{sortedMarkets.length !== 1 ? 's' : ''}</span>
+        </div>
+        <MarketSortDropdown value={sortBy} onChange={setSortBy} />
+      </div>
+
+      {sortedMarkets.length === 0 ? (
         <div className="text-center py-12 text-gray-500 text-sm">
           No markets match this filter.
         </div>
       ) : (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {filteredMarkets.map((market) => (
+        {sortedMarkets.map((market) => (
           <div
             key={market._id}
             className="rounded-xl overflow-hidden border border-white/[0.08] bg-[#16181f] flex flex-col transition-all duration-150 hover:brightness-105 hover:border-white/[0.15]"
