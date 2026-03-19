@@ -73,10 +73,9 @@ export default function AuctionCard({ auction, compact = false }: AuctionCardPro
     >
       <article
         className={`
-          relative overflow-hidden rounded-lg border border-[#1E293B]
-          bg-[#12122A] transition-all duration-300
-          hover:border-[#E94560] hover:shadow-lg hover:shadow-[#E94560]/20
-          hover:-translate-y-1
+          relative overflow-hidden rounded-xl border border-white/[0.08]
+          bg-[#16181f] transition-all duration-150
+          hover:brightness-105 hover:border-white/[0.15]
           ${compact ? "max-w-sm" : "w-full"}
         `}
       >
@@ -87,7 +86,7 @@ export default function AuctionCard({ auction, compact = false }: AuctionCardPro
             alt={auction.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover"
             priority={false}
           />
 

@@ -126,16 +126,16 @@ export default function TrendingMarketsClient({ markets }: Props) {
         {filteredMarkets.map((market) => (
           <div
             key={market._id}
-            className="rounded-xl overflow-hidden border border-[#1E2A36] bg-[#0F172A] flex flex-col"
+            className="rounded-xl overflow-hidden border border-white/[0.08] bg-[#16181f] flex flex-col transition-all duration-150 hover:brightness-105 hover:border-white/[0.15]"
           >
             {market.auction?.image && (
-              <div className="relative h-40 w-full bg-gray-900">
+              <div className="relative aspect-video w-full bg-gray-900">
                 <img
                   src={market.auction.image}
                   alt={market.auction.title ?? ''}
                   className="h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#16181f] via-transparent to-transparent" />
               </div>
             )}
             <div className="flex flex-col flex-1 p-4 gap-3">

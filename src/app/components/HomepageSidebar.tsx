@@ -45,7 +45,7 @@ export default function HomepageSidebar() {
     <aside className="space-y-6">
       {/* Ending Soon */}
       {data.endingSoon.length > 0 && (
-        <div className="rounded-xl border border-[#1E2A36] bg-[#0F172A] p-4">
+        <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4">
           <div className="flex items-center gap-2 mb-3">
             <Clock className="h-4 w-4 text-[#FFB547]" />
             <h3 className="text-sm font-semibold text-white">Ending Soon</h3>
@@ -76,7 +76,7 @@ export default function HomepageSidebar() {
 
       {/* Most Active */}
       {data.mostActive.length > 0 && (
-        <div className="rounded-xl border border-[#1E2A36] bg-[#0F172A] p-4">
+        <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="h-4 w-4 text-[#00D4AA]" />
             <h3 className="text-sm font-semibold text-white">Most Active</h3>
@@ -102,7 +102,7 @@ export default function HomepageSidebar() {
 
       {/* Biggest Movers */}
       {data.biggestMovers.length > 0 && (
-        <div className="rounded-xl border border-[#1E2A36] bg-[#0F172A] p-4">
+        <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4">
           <div className="flex items-center gap-2 mb-3">
             <ArrowUpDown className="h-4 w-4 text-[#E94560]" />
             <h3 className="text-sm font-semibold text-white">Biggest Movers</h3>

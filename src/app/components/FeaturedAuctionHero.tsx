@@ -49,7 +49,7 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
 
       <Link
         href={`/auction_details/${auctionId}`}
-        className="group block rounded-2xl overflow-hidden border border-[#1E2A36] bg-[#0F172A] transition-all duration-200 hover:border-[#E94560]/40 hover:shadow-xl hover:shadow-[#E94560]/5"
+        className="group block rounded-xl overflow-hidden border border-white/[0.08] bg-[#16181f] transition-all duration-150 hover:brightness-105 hover:border-white/[0.15]"
         aria-label={`Featured auction: ${auction.title}`}
       >
         <div className="flex flex-col md:flex-row">
@@ -60,7 +60,7 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
               <img
                 src={auction.image!}
                 alt={auction.title}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover"
               />
             ) : (
               <div
@@ -79,8 +79,8 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
               </div>
             )}
             {/* Gradient overlay on image */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0F172A]/60 md:block hidden" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A]/80 via-transparent to-transparent md:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#16181f]/60 md:block hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#16181f]/80 via-transparent to-transparent md:hidden" />
           </div>
 
           {/* Content */}

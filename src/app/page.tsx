@@ -218,7 +218,7 @@ export default async function HomePage() {
       <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pt-4 pb-10" aria-label="Platform statistics">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {/* Markets Listed */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E94560]/10">
               <BarChart2 className="h-5 w-5 text-[#E94560]" aria-hidden="true" />
             </div>
@@ -231,7 +231,7 @@ export default async function HomePage() {
           </div>
 
           {/* Total Predictions */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00D4AA]/10">
               <Activity className="h-5 w-5 text-[#00D4AA]" aria-hidden="true" />
             </div>
@@ -244,7 +244,7 @@ export default async function HomePage() {
           </div>
 
           {/* Total Volume */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFB547]/10">
               <DollarSign className="h-5 w-5 text-[#FFB547]" aria-hidden="true" />
             </div>
@@ -257,7 +257,7 @@ export default async function HomePage() {
           </div>
 
           {/* Cars Tracked */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#3B82F6]/10">
               <Car className="h-5 w-5 text-[#3B82F6]" aria-hidden="true" />
             </div>
