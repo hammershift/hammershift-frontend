@@ -21,6 +21,7 @@ import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
 import { Activity, BarChart2, DollarSign, Car } from "lucide-react";
 import AnimatedCounter from "./components/AnimatedCounter";
 import WelcomeBanner from "./components/WelcomeBanner";
+import HomepageSidebar from "./components/HomepageSidebar";
 
 // Server Component - Fetch data on server
 async function getHomePageData() {
@@ -270,22 +271,35 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Auction Hero — only when a closing-soon car exists */}
-      {featuredAuction && (
-        <FeaturedAuctionHero auction={featuredAuction} />
-      )}
+      {/* Main content + Sidebar grid */}
+      <div className="mx-auto w-full max-w-6xl px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          {/* Left column - main content */}
+          <div className="space-y-8">
+            {/* Featured Auction Hero */}
+            {featuredAuction && <FeaturedAuctionHero auction={featuredAuction} />}
 
-      {/* Trending Markets — overlaps hero bottom */}
-      <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-16">
-        <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
-        <TrendingMarketsSection />
-      </section>
+            {/* Trending Markets */}
+            <section>
+              <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
+              <TrendingMarketsSection />
+            </section>
 
-      {/* Top Predictors This Week */}
-      <TopPredictors leaderboard={leaderboard} />
+            {/* Top Predictors This Week */}
+            <TopPredictors leaderboard={leaderboard} />
 
-      {/* Daily Hammer Widget */}
-      <DailyHammer auction={dailyHammer} />
+            {/* Daily Hammer Widget */}
+            <DailyHammer auction={dailyHammer} />
+          </div>
+
+          {/* Right column - sidebar */}
+          <div className="hidden lg:block">
+            <div className="sticky top-20">
+              <HomepageSidebar />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Authority Bar */}
       <AuthorityBar />
