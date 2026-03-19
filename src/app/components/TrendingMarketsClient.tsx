@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import TradingDrawer from './trading/TradingDrawer';
 import CountdownInline from './CountdownInline';
+import CategoryFilterBar from './CategoryFilterBar';
 
 // Shape expected by TradingDrawer
 interface DrawerMarket {
@@ -44,6 +45,42 @@ export default function TrendingMarketsClient({ markets }: Props) {
   const [selectedMarket, setSelectedMarket] = useState<DrawerMarket | null>(null);
   const [selectedSide, setSelectedSide] = useState<'YES' | 'NO'>('YES');
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  const filteredMarkets = useMemo(() => {
+    if (activeCategory === 'all' || activeCategory === 'trending') return markets;
+    if (activeCategory === 'ending_soon') {
+      return [...markets].sort((a, b) => {
+        const da = a.auction?.deadline ? new Date(a.auction.deadline).getTime() : Infinity;
+        const db = b.auction?.deadline ? new Date(b.auction.deadline).getTime() : Infinity;
+        return da - db;
+      });
+    }
+    if (activeCategory === 'new') {
+      return [...markets].reverse();
+    }
+    // Make-based filters
+    const makeMap: Record<string, RegExp> = {
+      ferrari: /ferrari/i,
+      porsche: /porsche/i,
+      mercedes: /mercedes|benz/i,
+      bmw: /bmw/i,
+      american_muscle: /mustang|camaro|corvette|challenger|charger/i,
+      jdm: /toyota|nissan|honda|mazda|subaru|mitsubishi|datsun/i,
+      classic: /\b(19[3-7]\d)\b/i,
+    };
+    if (makeMap[activeCategory]) {
+      return markets.filter((m) => makeMap[activeCategory].test(m.auction?.title ?? ''));
+    }
+    // Price-based filters
+    if (activeCategory === 'under_25k') {
+      return markets.filter((m) => (m.predictedPrice ?? 0) < 25000);
+    }
+    if (activeCategory === 'over_100k') {
+      return markets.filter((m) => (m.predictedPrice ?? 0) >= 100000);
+    }
+    return markets;
+  }, [markets, activeCategory]);
 
   function handleTrade(market: TrendingMarket, outcome: 'YES' | 'NO') {
     // Open the drawer regardless of auth — the drawer handles login gating
@@ -75,8 +112,18 @@ export default function TrendingMarketsClient({ markets }: Props) {
 
   return (
     <>
+      <CategoryFilterBar
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
+
+      {filteredMarkets.length === 0 ? (
+        <div className="text-center py-12 text-gray-500 text-sm">
+          No markets match this filter.
+        </div>
+      ) : (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {markets.map((market) => (
+        {filteredMarkets.map((market) => (
           <div
             key={market._id}
             className="rounded-xl overflow-hidden border border-[#1E2A36] bg-[#0F172A] flex flex-col"
@@ -141,6 +188,7 @@ export default function TrendingMarketsClient({ markets }: Props) {
           </div>
         ))}
       </div>
+      )}
 
       <TradingDrawer
         open={drawerOpen}
