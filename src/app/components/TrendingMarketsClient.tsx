@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import TradingDrawer from './trading/TradingDrawer';
 import CountdownInline from './CountdownInline';
 import CategoryFilterBar from './CategoryFilterBar';
+import Sparkline from './Sparkline';
 
 // Shape expected by TradingDrawer
 interface DrawerMarket {
@@ -164,6 +165,9 @@ export default function TrendingMarketsClient({ markets }: Props) {
                   </div>
                 );
               })()}
+              {market.sparkData && market.sparkData.length >= 2 && (
+                <Sparkline data={market.sparkData} width={100} height={24} />
+              )}
 
               <div className="flex gap-2 mt-auto">
                 <button

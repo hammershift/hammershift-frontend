@@ -323,6 +323,29 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* Platform Stats */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-12">
+        <h2 className="mb-6 text-lg font-semibold text-gray-300 text-center">Platform Performance</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+          <div>
+            <p className="text-3xl font-bold font-mono text-white">
+              <AnimatedCounter end={cumulativeStats.totalMarkets} format="number" />
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Markets Resolved</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold font-mono text-[#00D4AA]">&mdash;</p>
+            <p className="text-xs text-gray-500 mt-1">Crowd Accuracy</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold font-mono text-white">
+              <AnimatedCounter end={cumulativeStats.carsTracked} format="abbreviated" />
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Cars Tracked</p>
+          </div>
+        </div>
+      </section>
+
       {/* Authority Bar */}
       <AuthorityBar />
 
