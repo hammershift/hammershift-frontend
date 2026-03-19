@@ -20,6 +20,7 @@ import TopPredictors from "./components/TopPredictors";
 import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
 import { Activity, BarChart2, DollarSign, Car } from "lucide-react";
 import AnimatedCounter from "./components/AnimatedCounter";
+import WelcomeBanner from "./components/WelcomeBanner";
 
 // Server Component - Fetch data on server
 async function getHomePageData() {
@@ -181,6 +182,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col">
       <ClientHomepageTracker featuredAuctionId={featuredAuction?._id?.toString()} />
+      <WelcomeBanner />
 
       {/* Live Activity Ticker */}
       <LiveTicker />
