@@ -7,7 +7,7 @@ import { BounceLoader } from "react-spinners";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
-import { useVelocityAuth } from "@/hooks/useVelocityAuth";
+import { usePrivy } from "@privy-io/react-auth";
 import { checkUsernameExistence } from "@/lib/data";
 
 const LoginPage = () => {
@@ -19,8 +19,8 @@ const LoginPage = () => {
 
   const router = useRouter();
   const { data: session } = useSession();
-  const { login: privyLogin, authenticated: privyAuthenticated } =
-    useVelocityAuth();
+  const { ready, authenticated: privyAuthenticated, login: privyLogin } =
+    usePrivy();
 
   // Redirect if already authenticated via NextAuth
   useEffect(() => {
@@ -31,10 +31,10 @@ const LoginPage = () => {
 
   // Redirect if authenticated via Privy
   useEffect(() => {
-    if (privyAuthenticated) {
+    if (ready && privyAuthenticated) {
       router.push("/");
     }
-  }, [privyAuthenticated, router]);
+  }, [ready, privyAuthenticated, router]);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
