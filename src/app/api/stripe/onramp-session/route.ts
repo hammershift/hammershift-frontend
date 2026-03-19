@@ -39,13 +39,14 @@ export async function POST(req: NextRequest) {
       '127.0.0.1';
 
     const params = new URLSearchParams();
-    params.append('transaction_details[destination_currency]', 'usdc');
-    params.append('transaction_details[destination_exchange_amount]', String(depositAmount));
-    params.append('transaction_details[destination_network]', 'polygon');
-    params.append('transaction_details[wallet_addresses][polygon]', walletAddress);
-    params.append('transaction_details[lock_wallet_address]', 'true');
-    params.append('transaction_details[supported_destination_currencies][]', 'usdc');
-    params.append('transaction_details[supported_destination_networks][]', 'polygon');
+    params.append('wallet_addresses[polygon]', walletAddress);
+    params.append('lock_wallet_address', 'true');
+    params.append('source_currency', 'usd');
+    params.append('source_amount', String(depositAmount));
+    params.append('destination_currency', 'usdc');
+    params.append('destination_network', 'polygon');
+    params.append('destination_currencies[]', 'usdc');
+    params.append('destination_networks[]', 'polygon');
     params.append('customer_ip_address', customerIp);
 
     const response = await fetch('https://api.stripe.com/v1/crypto/onramp_sessions', {
@@ -69,7 +70,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({
-      redirectUrl: session.redirect_url,
+      redirectUrl: session.url ?? session.redirect_url,
+      clientSecret: session.client_secret,
       sessionId: session.id,
     });
   } catch (error: unknown) {
