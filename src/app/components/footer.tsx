@@ -1,98 +1,80 @@
-import React from "react";
 import Link from "next/link";
-import { createPageUrl } from "./utils";
 
-const Footer = () => {
-  const footerList = [
-    {
-      header: "Game Modes",
-      content: [
-        { title: "Free Play", urlString: "Free Play" },
-      ]
-    },
-    {
-      header: "Resources",
-      content: [
-        { title: "How It Works", urlString: "How It Works" },
-        { title: "Rules", urlString: "Rules" },
-        { title: "FAQ", urlString: "FAQ" },
-      ]
-    },
-    {
-      header: "Contact",
-      content: [
-        { title: "Contact Us", urlString: "Contact" },
-        { title: "Support", urlString: "Contact" },
-        { title: "Careers", urlString: "Coming Soon" },
-      ]
-    }];
-
-  const bottomFooterList = [
-    { title: "Terms of Service", urlString: "Terms of Service" },
-    { title: "Privacy Policy", urlString: "Privacy Policy" },
-  ]
-
-  const logoUrl =
-    "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
-
-  return (
-    <div className="bg-[#13202D] border-t border-[#1E2A36]">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div>
-            <img src={logoUrl} alt="Velocity Markets" className="h-10 mb-4 h-auto w-auto" />
-            <p className="text-gray-300 mb-4">
-              The ultimate platform for predicting classic car auction
-              outcomes.
-            </p>
-          </div>
-          {
-            footerList.map((footerContent, fcIndex) => (
-
-              <div key={fcIndex} className="text-center sm:text-left">
-                <h4 className="font-bold uppercase mb-4">{footerContent.header}</h4>
-                <div className="flex flex-col space-y-2">
-                  {
-                    footerContent.content.map((data, index) => (
-                      <Link key={index}
-                        href={createPageUrl(data.urlString)}
-                        className="hover:text-[#F2CA16]"
-                      >
-                        {data.title.toUpperCase()}
-                      </Link>
-                    ))
-                  }
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      <div className="border-t border-[#1E2A36] mt-4 pt-6 text-center text-sm text-gray-400 mx-auto px-4 py-8">
-        <p className="mb-4">
-          <strong>Risk Warning: </strong>Velocity Markets is a price
-          prediction platform for entertainment purposes. All predictions
-          involve risk and uncertainty. No information presented constitutes
-          financial advice. Users must be 18+ for free games and 21+ for
-          paid games.
-        </p>
-        <p>© 2024 Velocity Markets. All rights reserved.</p>
-        <div className="flex justify-center space-x-4 mt-2">
-          {
-            bottomFooterList.map((data, index) => (
-              <Link
-                key={index}
-                href={createPageUrl(data.urlString)}
-                className="hover:text-[#F2CA16]"
-              >
-                {data.title}
-              </Link>
-            ))
-          }
-        </div>
-      </div>
-    </div>
-  );
+const FOOTER_LINKS = {
+  Markets: [
+    { label: "Browse All", href: "/markets" },
+    { label: "Trending", href: "/markets?sort=trending" },
+    { label: "Ending Soon", href: "/markets?sort=ending_soon" },
+    { label: "Resolved", href: "/markets?status=resolved" },
+  ],
+  Learn: [
+    { label: "How It Works", href: "/how_it_works" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
+  ],
+  Community: [
+    { label: "Leaderboard", href: "/leaderboard" },
+    { label: "Discord", href: "#" },
+    { label: "Twitter / X", href: "#" },
+    { label: "Instagram", href: "#" },
+  ],
+  Company: [
+    { label: "About", href: "/about" },
+    { label: "Careers", href: "#" },
+    { label: "Contact", href: "#" },
+    { label: "Press", href: "#" },
+  ],
 };
 
-export default Footer;
+export default function Footer() {
+  return (
+    <footer className="border-t border-white/[0.08] bg-[#0A0A1A]">
+      <div className="mx-auto max-w-6xl px-4 py-12">
+        {/* Link grid */}
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          {Object.entries(FOOTER_LINKS).map(([section, links]) => (
+            <div key={section}>
+              <h4 className="mb-3 text-sm font-semibold text-white">{section}</h4>
+              <ul className="space-y-2">
+                {links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="my-8 border-t border-white/[0.05]" />
+
+        {/* Bottom bar */}
+        <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-white">Velocity Markets</p>
+            <p className="text-xs text-gray-600 mt-0.5">The prediction market for collector car auctions</p>
+          </div>
+          <p className="text-xs text-gray-600">
+            &copy; {new Date().getFullYear()} Velocity Markets. All rights reserved.
+          </p>
+        </div>
+
+        {/* Risk disclaimer */}
+        <div className="mt-6 rounded-lg bg-white/[0.02] border border-white/[0.05] px-4 py-3">
+          <p className="text-[10px] text-gray-600 leading-relaxed">
+            <strong className="text-gray-500">Risk Disclaimer:</strong> Trading on prediction markets involves risk.
+            Past performance is not indicative of future results. Only trade with funds you can afford to lose.
+            Velocity Markets is not a financial advisor and does not provide investment advice.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}

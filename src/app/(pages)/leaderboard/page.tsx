@@ -28,6 +28,7 @@ import {
   Users,
   Target,
   Award,
+  Percent,
 } from "lucide-react";
 import StreakIndicator from "@/app/components/StreakIndicator";
 import { useTrackEvent } from "@/hooks/useTrackEvent";
@@ -391,6 +392,8 @@ const LeaderboardPage = () => {
                       <TableHead className="text-right">Score</TableHead>
                       <TableHead className="text-center">Predictions</TableHead>
                       <TableHead className="text-center">Accuracy</TableHead>
+                      <TableHead className="text-center">Win Rate</TableHead>
+                      <TableHead className="text-center">Avg Return</TableHead>
                       <TableHead className="text-center">Streak</TableHead>
                       <TableHead className="text-center">Trend</TableHead>
                     </TableRow>
@@ -415,6 +418,12 @@ const LeaderboardPage = () => {
                             </TableCell>
                             <TableCell>
                               <div className="mx-auto h-4 w-16 rounded bg-[#1E2A36]"></div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="mx-auto h-4 w-12 rounded bg-[#1E2A36]"></div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="mx-auto h-4 w-14 rounded bg-[#1E2A36]"></div>
                             </TableCell>
                             <TableCell>
                               <div className="mx-auto h-4 w-16 rounded bg-[#1E2A36]"></div>
@@ -474,6 +483,14 @@ const LeaderboardPage = () => {
                                 </div>
                               </div>
                             </TableCell>
+                            <TableCell className="text-center font-mono text-gray-500">
+                              &mdash;
+                            </TableCell>
+                            <TableCell className="text-center font-mono text-[#00D4AA]">
+                              {entry.predictions_count > 0
+                                ? (entry.total_score / entry.predictions_count).toFixed(1)
+                                : '0'}
+                            </TableCell>
                             <TableCell className="text-center">
                               <div className="flex flex-col items-center gap-1">
                                 {entry.current_streak >= 3 ? (
@@ -499,7 +516,7 @@ const LeaderboardPage = () => {
                       })
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={7} className="h-24 text-center">
+                        <TableCell colSpan={9} className="h-24 text-center">
                           {activeSearch
                             ? `No players found matching "${activeSearch}"`
                             : "No players found"}

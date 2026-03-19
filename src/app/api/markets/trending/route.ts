@@ -51,16 +51,28 @@ export async function GET() {
       const deadlineDate = deadline ? new Date(deadline) : null;
       // Skip markets whose auction has already ended
       if (deadlineDate && deadlineDate < now) return null;
+      // Compute 24h price change
+      const history: { timestamp: any; yesPrice: number; noPrice: number; volume: number }[] = m.priceHistory ?? [];
+      const now24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const ref = history.find((h) => new Date(h.timestamp) >= now24h) ?? history[0];
+      const currentYes = m.yesPrice ?? 0.5;
+      const priceChange = ref ? Math.round((currentYes - ref.yesPrice) * 100) : null;
+
+      // Last 20 yesPrice values for sparkline
+      const sparkData = history.slice(-20).map((h) => h.yesPrice);
+
       return {
         _id: m._id.toString(),
         auctionId: m.auctionId,
         question: m.question,
         status: m.status,
-        yesPrice: m.yesPrice ?? 0.5,
+        yesPrice: currentYes,
         noPrice: m.noPrice ?? 0.5,
         totalVolume: m.totalVolume ?? 0,
         predictedPrice: m.predictedPrice ?? 0,
         closesAt: m.closesAt ?? null,
+        priceChange,
+        sparkData,
         auction: {
           title: auction?.title ?? m.title ?? null,
           image: auction?.image ?? m.imageUrl ?? null,

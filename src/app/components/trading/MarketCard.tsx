@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo } from 'react';
+import LiveBadge from '../LiveBadge';
 
 interface MarketCardProps {
   marketId: string;
@@ -53,6 +54,13 @@ export function MarketCard({
       <div
         className={`group relative overflow-hidden rounded-xl border border-gray-700 bg-trading-bg-card transition-all hover:border-gray-600 hover:shadow-lg hover:shadow-trading-yes/5 ${className}`}
       >
+        {/* Live Badge */}
+        {status === 'ACTIVE' && (
+          <div className="absolute left-3 top-3 z-10">
+            <LiveBadge />
+          </div>
+        )}
+
         {/* Status Badge */}
         {status === 'RESOLVED' && winningOutcome && (
           <div className="absolute right-3 top-3 z-10 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold backdrop-blur-sm">

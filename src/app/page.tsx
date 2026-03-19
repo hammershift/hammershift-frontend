@@ -2,32 +2,28 @@
 export const dynamic = 'force-dynamic';
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Auctions from "@/models/auction.model";
 import { Predictions } from "@/models/predictions.model";
-import Users from "@/models/user.model";
-import { startOfWeek, startOfDay, subDays } from "date-fns";
+import { startOfWeek } from "date-fns";
 import "./styles/app.css";
-import { ArrowRight } from "lucide-react";
 import ClientHomepageTracker from "./components/ClientHomepageTracker";
 import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import DailyHammer from "./components/DailyHammer";
 import LiveTicker from "./components/LiveTicker";
 import TrendingMarketsSection from "./components/TrendingMarketsSection";
+import MarketCardSkeleton from "./components/MarketCardSkeleton";
 import AuthorityBar from "./components/AuthorityBar";
 import TopPredictors from "./components/TopPredictors";
 import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
-import { Activity, Users as UsersIcon, BarChart2 } from "lucide-react";
-
-// Format currency
-const USDollar = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
+import { Activity, BarChart2, DollarSign, Car } from "lucide-react";
+import AnimatedCounter from "./components/AnimatedCounter";
+import WelcomeBanner from "./components/WelcomeBanner";
+import HomepageSidebar from "./components/HomepageSidebar";
+import HeroCarousel from "./components/HeroCarousel";
 
 // Server Component - Fetch data on server
 async function getHomePageData() {
@@ -35,6 +31,8 @@ async function getHomePageData() {
     await connectToDB();
 
     // Query live auctions directly from shared MongoDB
+    const db = mongoose.connection.db;
+    if (!db) throw new Error("MongoDB connection not established");
     const now = new Date();
     const liveAuctions: any[] = await Auctions.find({
       isActive: true,
@@ -54,19 +52,15 @@ async function getHomePageData() {
       return d && d > now && d < in48h;
     }) ?? null;
 
-    // Activity stats
-    const predictions_today = await Predictions.countDocuments({
-      createdAt: { $gte: startOfDay(new Date()) }
-    });
-
-    const activeAuctionsValue = await Auctions.aggregate([
-      { $match: { isActive: true } },
-      { $group: { _id: null, total: { $sum: '$sort.price' } }}
+    // Cumulative platform stats (all-time, always impressive)
+    const [totalMarkets, totalPredictions, totalVolumeResult, carsTracked] = await Promise.all([
+      db.collection("polygon_markets").countDocuments(),
+      db.collection("predictions").countDocuments(),
+      db.collection("polygon_markets").aggregate([
+        { $group: { _id: null, total: { $sum: "$totalVolume" } } },
+      ]).toArray().then(r => (r[0]?.total ?? 0) / 100), // totalVolume stored in cents
+      db.collection("auctions").countDocuments(),
     ]);
-
-    const active_players = await Users.countDocuments({
-      last_prediction_at: { $gte: subDays(new Date(), 7) }
-    });
 
     // Leaderboard (weekly top 10)
     const weekStart = startOfWeek(new Date());
@@ -89,15 +83,15 @@ async function getHomePageData() {
       { $limit: 10 }
     ]);
 
-    const activityStats = {
-      predictions_today,
-      active_auctions_value: activeAuctionsValue[0]?.total || 0,
-      active_players
+    const cumulativeStats = {
+      totalMarkets,
+      totalPredictions,
+      totalVolume: totalVolumeResult,
+      carsTracked,
     };
 
     // Fetch one qualifying high-profile car for Daily Hammer widget
     const QUALIFYING_MAKES_REGEX = /ferrari|lamborghini|corvette|mercedes|bmw|maserati|alfa romeo|mustang|porsche|camaro/i;
-    const db = mongoose.connection.db!;
     const dailyHammerAuction = await db.collection('auctions').findOne({
       isActive: true,
       'sort.deadline': { $gt: now },
@@ -113,13 +107,55 @@ async function getHomePageData() {
         : null,
     } : null;
 
+    // Hero carousel — top 5 active markets by volume
+    const heroMarkets = await db.collection('polygon_markets')
+      .find({ status: 'ACTIVE' })
+      .sort({ totalVolume: -1 })
+      .limit(5)
+      .toArray();
+
+    const heroAuctionIds = heroMarkets.map((m: any) => m.auctionId).filter(Boolean);
+    const heroObjectIds: mongoose.Types.ObjectId[] = [];
+    for (const id of heroAuctionIds) {
+      try { heroObjectIds.push(new mongoose.Types.ObjectId(id)); } catch {}
+    }
+    const heroAuctions = await db.collection('auctions').find({
+      $or: [
+        { auction_id: { $in: heroAuctionIds } },
+        ...(heroObjectIds.length ? [{ _id: { $in: heroObjectIds } }] : []),
+      ],
+    }).project({ title: 1, image: 1, sort: 1, auction_id: 1 }).toArray();
+
+    const heroAuctionMap = new Map<string, any>();
+    for (const a of heroAuctions) {
+      if (a.auction_id) heroAuctionMap.set(a.auction_id, a);
+      heroAuctionMap.set(a._id.toString(), a);
+    }
+
+    const heroMarketsEnriched = heroMarkets.map((m: any) => {
+      const auction = heroAuctionMap.get(m.auctionId);
+      return {
+        _id: m._id.toString(),
+        question: m.question,
+        yesPrice: m.yesPrice ?? 0.5,
+        noPrice: m.noPrice ?? 0.5,
+        totalVolume: m.totalVolume ?? 0,
+        auction: {
+          title: auction?.title ?? null,
+          image: auction?.image ?? null,
+          deadline: auction?.sort?.deadline ? new Date(auction.sort.deadline).toISOString() : null,
+        },
+      };
+    });
+
     return {
       featuredAuction: featuredAuction ? JSON.parse(JSON.stringify(featuredAuction)) : null,
       featuredCar: featuredCarJson,
       liveAuctions: liveAuctions ? JSON.parse(JSON.stringify(liveAuctions)) : [],
       leaderboard: leaderboard ? JSON.parse(JSON.stringify(leaderboard)) : [],
-      activityStats,
+      cumulativeStats,
       dailyHammer,
+      heroMarkets: heroMarketsEnriched,
     };
   } catch (error) {
     console.error('Error fetching homepage data:', error);
@@ -128,12 +164,14 @@ async function getHomePageData() {
       featuredCar: null,
       liveAuctions: [],
       leaderboard: [],
-      activityStats: {
-        predictions_today: 0,
-        active_auctions_value: 0,
-        active_players: 0
+      cumulativeStats: {
+        totalMarkets: 0,
+        totalPredictions: 0,
+        totalVolume: 0,
+        carsTracked: 0,
       },
       dailyHammer: null,
+      heroMarkets: [],
     };
   }
 }
@@ -142,7 +180,8 @@ export default async function HomePage() {
   let featuredAuction = null;
   let dailyHammer: { auctionId: string; title: string; image: string | null; deadline: string | null } | null = null;
   let leaderboard: Array<{ _id: string; username: string; total_score: number; predictions_count: number }> = [];
-  let activityStats = { predictions_today: 0, active_auctions_value: 0, active_players: 0 };
+  let cumulativeStats = { totalMarkets: 0, totalPredictions: 0, totalVolume: 0, carsTracked: 0 };
+  let heroMarkets: Array<{ _id: string; question: string; yesPrice: number; noPrice: number; totalVolume: number; auction: { title: string | null; image: string | null; deadline: string | null } }> = [];
   let error = null;
 
   try {
@@ -156,7 +195,8 @@ export default async function HomePage() {
     featuredAuction = data.featuredAuction;
     dailyHammer = data.dailyHammer;
     leaderboard = data.leaderboard ?? [];
-    activityStats = data.activityStats;
+    cumulativeStats = data.cumulativeStats;
+    heroMarkets = data.heroMarkets ?? [];
   } catch (err: any) {
     console.error('❌ Error fetching homepage data:', err);
     error = `Data error: ${err.message}`;
@@ -190,98 +230,133 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col">
       <ClientHomepageTracker featuredAuctionId={featuredAuction?._id?.toString()} />
+      <WelcomeBanner />
 
       {/* Live Activity Ticker */}
       <LiveTicker />
 
-      {/* Hero — 45vh exchange aesthetic */}
-      <section className="relative flex h-[45vh] items-center justify-center overflow-hidden bg-[#0F172A]">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-60"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?auto=format&fit=crop&w=1920&q=80')",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/40 via-transparent to-[#0A0A1A]" />
-        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-          <h1 className="mb-3 text-5xl font-bold tracking-tight text-white md:text-6xl">
-            Trade on the Hammer Price.
-          </h1>
-          <p className="text-lg text-gray-300 md:text-xl">
-            The prediction market for collector car auctions.
-          </p>
-          <Link
-            href="/markets"
-            className="mt-6 inline-flex items-center gap-2 rounded-lg bg-[#E94560] px-6 py-3 text-sm font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
-          >
-            Browse Markets <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      {/* Hero — Featured Market Carousel */}
+      <HeroCarousel markets={heroMarkets} />
 
       {/* Platform Stats Bar */}
       <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pt-4 pb-10" aria-label="Platform statistics">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {/* Active Markets */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {/* Markets Listed */}
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E94560]/10">
               <BarChart2 className="h-5 w-5 text-[#E94560]" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-mono text-2xl font-bold text-white tabular-nums">
-                {activityStats.active_auctions_value > 0
-                  ? new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(activityStats.active_auctions_value / 1_000_000) + "M"
-                  : "—"}
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.totalMarkets} format="number" />
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Total Value on Line</p>
+              <p className="text-xs text-gray-400 mt-0.5">Markets Listed</p>
             </div>
           </div>
 
-          {/* Predictions Today */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+          {/* Total Predictions */}
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00D4AA]/10">
               <Activity className="h-5 w-5 text-[#00D4AA]" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-mono text-2xl font-bold text-white tabular-nums">
-                {activityStats.predictions_today.toLocaleString()}
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.totalPredictions} format="abbreviated" />
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Predictions Today</p>
+              <p className="text-xs text-gray-400 mt-0.5">Total Predictions</p>
             </div>
           </div>
 
-          {/* Active Traders */}
-          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+          {/* Total Volume */}
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFB547]/10">
-              <UsersIcon className="h-5 w-5 text-[#FFB547]" aria-hidden="true" />
+              <DollarSign className="h-5 w-5 text-[#FFB547]" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-mono text-2xl font-bold text-white tabular-nums">
-                {activityStats.active_players.toLocaleString()}
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.totalVolume} format="currency" />
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Active Traders</p>
+              <p className="text-xs text-gray-400 mt-0.5">Total Volume</p>
+            </div>
+          </div>
+
+          {/* Cars Tracked */}
+          <div className="flex items-center gap-4 rounded-xl border border-white/[0.08] bg-[#16181f] px-5 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#3B82F6]/10">
+              <Car className="h-5 w-5 text-[#3B82F6]" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.carsTracked} format="number" />
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">Cars Tracked</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Auction Hero — only when a closing-soon car exists */}
-      {featuredAuction && (
-        <FeaturedAuctionHero auction={featuredAuction} />
-      )}
+      {/* Main content + Sidebar grid */}
+      <div className="mx-auto w-full max-w-6xl px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+          {/* Left column - main content */}
+          <div className="space-y-8">
+            {/* Featured Auction Hero */}
+            {featuredAuction && <FeaturedAuctionHero auction={featuredAuction} />}
 
-      {/* Trending Markets — overlaps hero bottom */}
-      <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-16">
-        <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
-        <TrendingMarketsSection />
+            {/* Trending Markets */}
+            <section>
+              <h2 className="mb-6 text-lg font-semibold text-gray-300">Trending Markets</h2>
+              <Suspense
+                fallback={
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <MarketCardSkeleton key={i} />
+                    ))}
+                  </div>
+                }
+              >
+                <TrendingMarketsSection />
+              </Suspense>
+            </section>
+
+            {/* Top Predictors This Week */}
+            <TopPredictors leaderboard={leaderboard} />
+
+            {/* Daily Hammer Widget */}
+            <DailyHammer auction={dailyHammer} />
+          </div>
+
+          {/* Right column - sidebar */}
+          <div className="hidden lg:block">
+            <div className="sticky top-20">
+              <HomepageSidebar />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Platform Stats */}
+      <section className="mx-auto w-full max-w-6xl px-4 py-12">
+        <h2 className="mb-6 text-lg font-semibold text-gray-300 text-center">Platform Performance</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+          <div>
+            <p className="text-3xl font-bold font-mono text-white">
+              <AnimatedCounter end={cumulativeStats.totalMarkets} format="number" />
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Markets Resolved</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold font-mono text-[#00D4AA]">&mdash;</p>
+            <p className="text-xs text-gray-500 mt-1">Crowd Accuracy</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold font-mono text-white">
+              <AnimatedCounter end={cumulativeStats.carsTracked} format="abbreviated" />
+            </p>
+            <p className="text-xs text-gray-500 mt-1">Cars Tracked</p>
+          </div>
+        </div>
       </section>
-
-      {/* Top Predictors This Week */}
-      <TopPredictors leaderboard={leaderboard} />
-
-      {/* Daily Hammer Widget */}
-      <DailyHammer auction={dailyHammer} />
 
       {/* Authority Bar */}
       <AuthorityBar />

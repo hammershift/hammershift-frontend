@@ -11,7 +11,12 @@ import {
   UserOpenOrders,
   UserPositions,
   TradingOrderBook,
+  MarketDetailsSection,
+  RelatedMarkets,
+  DiscussionFeed,
+  ActivityFeed,
 } from '@/app/components/trading';
+import ShareButton from '@/app/components/ShareButton';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -78,6 +83,7 @@ export default function TradingPage() {
   const [marketNotFound, setMarketNotFound] = useState(false);
   const [orderSubmitting, setOrderSubmitting] = useState(false);
   const [selectedOutcome, setSelectedOutcome] = useState<'YES' | 'NO'>('YES');
+  const [activeTab, setActiveTab] = useState<'discussion' | 'activity'>('discussion');
 
   // Derive userId from session — server stores it as _id, client type declares id.
   const userId: string | undefined =
@@ -432,6 +438,13 @@ export default function TradingPage() {
 
         {/* Market Header */}
         <div className="mb-6">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="flex-1" />
+            <ShareButton
+              url={`${typeof window !== 'undefined' ? window.location.origin : ''}/trading/${marketId}`}
+              title={`${market.question} — ${Math.round((market.yesPrice ?? 0.5) * 100)}% say YES`}
+            />
+          </div>
           <MarketCard {...marketCardProps} className="w-full" />
         </div>
 
@@ -464,7 +477,44 @@ export default function TradingPage() {
           {/* Left Column - Charts & Trades */}
           <div className="space-y-6 lg:col-span-5 order-2 lg:order-1">
             <PriceChart data={priceData} outcome={selectedOutcome} />
+            <MarketDetailsSection
+              auction={market.auction}
+              question={market.question}
+              predictedPrice={market.predictedPrice ?? 0}
+            />
             <RecentTrades trades={adaptedTrades} />
+            <RelatedMarkets currentMarketId={marketId} />
+
+            {/* Discussion / Activity Tabs */}
+            <div className="rounded-lg border border-gray-700 bg-trading-bg-card p-4">
+              <div className="flex border-b border-gray-700 mb-4">
+                <button
+                  onClick={() => setActiveTab('discussion')}
+                  className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === 'discussion'
+                      ? 'border-[#E94560] text-white'
+                      : 'border-transparent text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  Discussion
+                </button>
+                <button
+                  onClick={() => setActiveTab('activity')}
+                  className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === 'activity'
+                      ? 'border-[#E94560] text-white'
+                      : 'border-transparent text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  Activity
+                </button>
+              </div>
+              {activeTab === 'discussion' ? (
+                <DiscussionFeed marketId={marketId} />
+              ) : (
+                <ActivityFeed marketId={marketId} />
+              )}
+            </div>
           </div>
 
           {/* Middle Column - Order Book (Real-time via WebSocket) */}

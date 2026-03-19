@@ -7,3 +7,7 @@ export { RecentTrades } from './RecentTrades';
 export { UserOpenOrders} from './UserOpenOrders';
 export { UserPositions } from './UserPositions';
 export { TradingOrderBook } from './TradingOrderBook';
+export { MarketDetailsSection } from './MarketDetailsSection';
+export { RelatedMarkets } from './RelatedMarkets';
+export { DiscussionFeed } from './DiscussionFeed';
+export { ActivityFeed } from './ActivityFeed';

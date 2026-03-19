@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config: Config = {
   content: [
@@ -85,9 +86,32 @@ const config: Config = {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
-      // fontFamily: {
-      //   'euro': 'euro-star-black-extended'
-      // }
+      fontFamily: {
+        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+      },
+      fontSize: {
+        hero: [
+          "2rem",
+          { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
+        "page-title": [
+          "1.5rem",
+          { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "700" },
+        ],
+        "section-header": [
+          "1.125rem",
+          { lineHeight: "1.3", fontWeight: "600" },
+        ],
+        "card-title": [
+          "0.9375rem",
+          { lineHeight: "1.3", fontWeight: "600" },
+        ],
+        caption: ["0.75rem", { lineHeight: "1.4", fontWeight: "400" }],
+        probability: [
+          "1.25rem",
+          { lineHeight: "1", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
+      },
     },
     screens: {
       // sx: "390px",

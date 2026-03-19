@@ -7,7 +7,7 @@ import {
   getUserPointsAndPlacing,
   refundWager,
 } from "@/lib/data";
-import { CircleDollarSignIcon, LogOut, Settings, UserIcon } from "lucide-react";
+import { CircleDollarSignIcon, LogOut, Search, Settings, UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 import DepositModal from "@/app/components/DepositModal";
@@ -29,6 +29,7 @@ import WalletSmall from "../../../public/images/wallet--money-payment-finance-wa
 import { TimerProvider, useTimer } from "../context/TimerContext";
 import { Button } from "./ui/button";
 import { createPageUrl } from "./utils";
+import NotificationBell from "./NotificationBell";
 
 const Navbar = () => {
   const router = useRouter();
@@ -42,7 +43,27 @@ const Navbar = () => {
   const navBarList = [
     { title: "Markets", urlString: "markets" },
     { title: "Leaderboard", urlString: "leaderboard" },
+    { title: "How It Works", urlString: "how_it_works" },
   ];
+  const [searchQuery, setSearchQuery] = useState("");
+
+  function handleSearch(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(`/markets?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
+  }
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        document.getElementById("nav-search")?.focus();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const predictionsButton = document.getElementById("predictions-button");
@@ -113,7 +134,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="navbar-container flex items-center justify-center">
+    <div className="navbar-container sticky top-0 z-50 bg-[#0A0A1A] flex items-center justify-center">
       <div className="flex w-full justify-between border-b-[1px] border-b-[#1b252e] px-4 py-3 md:px-16">
         <div className="flex items-center justify-center">
           <div className="pr-4">
@@ -137,6 +158,18 @@ const Navbar = () => {
         </div>
         <div className="flex items-center justify-center">
           <div className="relative hidden items-center justify-center lg:flex">
+            <div className="relative mr-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <input
+                id="nav-search"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearch}
+                placeholder="Search markets..."
+                className="w-64 rounded-lg bg-white/[0.08] border border-white/10 py-2 pl-9 pr-3 text-sm text-white placeholder-gray-500 outline-none focus:border-[#E94560]/50 focus:ring-1 focus:ring-[#E94560]/30 transition-colors"
+              />
+            </div>
             <nav className="flex items-center justify-center space-x-8">
               {navBarList.map((data, index) => (
                 <Link
@@ -144,7 +177,17 @@ const Navbar = () => {
                   href={createPageUrl(data.urlString)}
                   className="transition-colors hover:text-[#F2CA16]"
                 >
-                  {data.title.toUpperCase()}
+                  {data.title === "Markets" ? (
+                    <span className="flex items-center gap-1.5">
+                      {data.title.toUpperCase()}
+                      <span className="flex items-center gap-1 rounded-full bg-[#16c784]/20 px-1.5 py-0.5 text-[10px] font-bold text-[#16c784]">
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#16c784] animate-pulse" />
+                        LIVE
+                      </span>
+                    </span>
+                  ) : (
+                    data.title.toUpperCase()
+                  )}
                 </Link>
               ))}
             </nav>
@@ -230,6 +273,7 @@ const Navbar = () => {
               >
                 Deposit
               </button>
+              <NotificationBell />
               <button
                 id="predictions-button"
                 onClick={() => {
@@ -336,7 +380,19 @@ const Navbar = () => {
               }}
               className="flex min-h-[44px] w-full items-center border-t border-[#1b252e] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#1A2C3D] hover:text-[#F2CA16]"
             >
-              <span>{data.title.toUpperCase()}</span>
+              <span>
+                {data.title === "Markets" ? (
+                  <span className="flex items-center gap-1.5">
+                    {data.title.toUpperCase()}
+                    <span className="flex items-center gap-1 rounded-full bg-[#16c784]/20 px-1.5 py-0.5 text-[10px] font-bold text-[#16c784]">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#16c784] animate-pulse" />
+                      LIVE
+                    </span>
+                  </span>
+                ) : (
+                  data.title.toUpperCase()
+                )}
+              </span>
             </Link>
           ))}
           {isLoggedIn && (
