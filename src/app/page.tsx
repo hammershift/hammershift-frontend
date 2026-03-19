@@ -6,8 +6,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Auctions from "@/models/auction.model";
 import { Predictions } from "@/models/predictions.model";
-import Users from "@/models/user.model";
-import { startOfWeek, startOfDay, subDays } from "date-fns";
+import { startOfWeek } from "date-fns";
 import "./styles/app.css";
 import { ArrowRight } from "lucide-react";
 import ClientHomepageTracker from "./components/ClientHomepageTracker";
@@ -19,15 +18,8 @@ import TrendingMarketsSection from "./components/TrendingMarketsSection";
 import AuthorityBar from "./components/AuthorityBar";
 import TopPredictors from "./components/TopPredictors";
 import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
-import { Activity, Users as UsersIcon, BarChart2 } from "lucide-react";
-
-// Format currency
-const USDollar = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
+import { Activity, BarChart2, DollarSign, Car } from "lucide-react";
+import AnimatedCounter from "./components/AnimatedCounter";
 
 // Server Component - Fetch data on server
 async function getHomePageData() {
@@ -35,6 +27,7 @@ async function getHomePageData() {
     await connectToDB();
 
     // Query live auctions directly from shared MongoDB
+    const db = mongoose.connection.db!;
     const now = new Date();
     const liveAuctions: any[] = await Auctions.find({
       isActive: true,
@@ -54,19 +47,15 @@ async function getHomePageData() {
       return d && d > now && d < in48h;
     }) ?? null;
 
-    // Activity stats
-    const predictions_today = await Predictions.countDocuments({
-      createdAt: { $gte: startOfDay(new Date()) }
-    });
-
-    const activeAuctionsValue = await Auctions.aggregate([
-      { $match: { isActive: true } },
-      { $group: { _id: null, total: { $sum: '$sort.price' } }}
+    // Cumulative platform stats (all-time, always impressive)
+    const [totalMarkets, totalPredictions, totalVolumeResult, carsTracked] = await Promise.all([
+      db.collection("polygon_markets").countDocuments(),
+      db.collection("predictions").countDocuments(),
+      db.collection("polygon_markets").aggregate([
+        { $group: { _id: null, total: { $sum: "$totalVolume" } } },
+      ]).toArray().then(r => (r[0]?.total ?? 0) / 100),
+      db.collection("auctions").countDocuments(),
     ]);
-
-    const active_players = await Users.countDocuments({
-      last_prediction_at: { $gte: subDays(new Date(), 7) }
-    });
 
     // Leaderboard (weekly top 10)
     const weekStart = startOfWeek(new Date());
@@ -89,15 +78,15 @@ async function getHomePageData() {
       { $limit: 10 }
     ]);
 
-    const activityStats = {
-      predictions_today,
-      active_auctions_value: activeAuctionsValue[0]?.total || 0,
-      active_players
+    const cumulativeStats = {
+      totalMarkets,
+      totalPredictions,
+      totalVolume: totalVolumeResult,
+      carsTracked,
     };
 
     // Fetch one qualifying high-profile car for Daily Hammer widget
     const QUALIFYING_MAKES_REGEX = /ferrari|lamborghini|corvette|mercedes|bmw|maserati|alfa romeo|mustang|porsche|camaro/i;
-    const db = mongoose.connection.db!;
     const dailyHammerAuction = await db.collection('auctions').findOne({
       isActive: true,
       'sort.deadline': { $gt: now },
@@ -118,7 +107,7 @@ async function getHomePageData() {
       featuredCar: featuredCarJson,
       liveAuctions: liveAuctions ? JSON.parse(JSON.stringify(liveAuctions)) : [],
       leaderboard: leaderboard ? JSON.parse(JSON.stringify(leaderboard)) : [],
-      activityStats,
+      cumulativeStats,
       dailyHammer,
     };
   } catch (error) {
@@ -128,10 +117,11 @@ async function getHomePageData() {
       featuredCar: null,
       liveAuctions: [],
       leaderboard: [],
-      activityStats: {
-        predictions_today: 0,
-        active_auctions_value: 0,
-        active_players: 0
+      cumulativeStats: {
+        totalMarkets: 0,
+        totalPredictions: 0,
+        totalVolume: 0,
+        carsTracked: 0,
       },
       dailyHammer: null,
     };
@@ -142,7 +132,7 @@ export default async function HomePage() {
   let featuredAuction = null;
   let dailyHammer: { auctionId: string; title: string; image: string | null; deadline: string | null } | null = null;
   let leaderboard: Array<{ _id: string; username: string; total_score: number; predictions_count: number }> = [];
-  let activityStats = { predictions_today: 0, active_auctions_value: 0, active_players: 0 };
+  let cumulativeStats = { totalMarkets: 0, totalPredictions: 0, totalVolume: 0, carsTracked: 0 };
   let error = null;
 
   try {
@@ -156,7 +146,7 @@ export default async function HomePage() {
     featuredAuction = data.featuredAuction;
     dailyHammer = data.dailyHammer;
     leaderboard = data.leaderboard ?? [];
-    activityStats = data.activityStats;
+    cumulativeStats = data.cumulativeStats;
   } catch (err: any) {
     console.error('❌ Error fetching homepage data:', err);
     error = `Data error: ${err.message}`;
@@ -222,45 +212,56 @@ export default async function HomePage() {
 
       {/* Platform Stats Bar */}
       <section className="relative z-10 mx-auto w-full max-w-6xl px-4 pt-4 pb-10" aria-label="Platform statistics">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {/* Active Markets */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {/* Markets Listed */}
           <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#E94560]/10">
               <BarChart2 className="h-5 w-5 text-[#E94560]" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-mono text-2xl font-bold text-white tabular-nums">
-                {activityStats.active_auctions_value > 0
-                  ? new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(activityStats.active_auctions_value / 1_000_000) + "M"
-                  : "—"}
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.totalMarkets} format="number" />
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Total Value on Line</p>
+              <p className="text-xs text-gray-400 mt-0.5">Markets Listed</p>
             </div>
           </div>
 
-          {/* Predictions Today */}
+          {/* Total Predictions */}
           <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#00D4AA]/10">
               <Activity className="h-5 w-5 text-[#00D4AA]" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-mono text-2xl font-bold text-white tabular-nums">
-                {activityStats.predictions_today.toLocaleString()}
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.totalPredictions} format="abbreviated" />
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Predictions Today</p>
+              <p className="text-xs text-gray-400 mt-0.5">Total Predictions</p>
             </div>
           </div>
 
-          {/* Active Traders */}
+          {/* Total Volume */}
           <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#FFB547]/10">
-              <UsersIcon className="h-5 w-5 text-[#FFB547]" aria-hidden="true" />
+              <DollarSign className="h-5 w-5 text-[#FFB547]" aria-hidden="true" />
             </div>
             <div>
-              <p className="font-mono text-2xl font-bold text-white tabular-nums">
-                {activityStats.active_players.toLocaleString()}
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.totalVolume} format="currency" />
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">Active Traders</p>
+              <p className="text-xs text-gray-400 mt-0.5">Total Volume</p>
+            </div>
+          </div>
+
+          {/* Cars Tracked */}
+          <div className="flex items-center gap-4 rounded-xl border border-[#1E2A36] bg-[#0F172A] px-5 py-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#3B82F6]/10">
+              <Car className="h-5 w-5 text-[#3B82F6]" aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">
+                <AnimatedCounter end={cumulativeStats.carsTracked} format="number" />
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">Cars Tracked</p>
             </div>
           </div>
         </div>
