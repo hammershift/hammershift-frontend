@@ -11,6 +11,8 @@ import {
   UserOpenOrders,
   UserPositions,
   TradingOrderBook,
+  MarketDetailsSection,
+  RelatedMarkets,
 } from '@/app/components/trading';
 
 // ---------------------------------------------------------------------------
@@ -464,7 +466,13 @@ export default function TradingPage() {
           {/* Left Column - Charts & Trades */}
           <div className="space-y-6 lg:col-span-5 order-2 lg:order-1">
             <PriceChart data={priceData} outcome={selectedOutcome} />
+            <MarketDetailsSection
+              auction={market.auction}
+              question={market.question}
+              predictedPrice={market.predictedPrice ?? 0}
+            />
             <RecentTrades trades={adaptedTrades} />
+            <RelatedMarkets currentMarketId={marketId} />
           </div>
 
           {/* Middle Column - Order Book (Real-time via WebSocket) */}
