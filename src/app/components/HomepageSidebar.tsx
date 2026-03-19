@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Clock, TrendingUp, ArrowUpDown } from 'lucide-react';
 import CountdownInline from './CountdownInline';
+import WeeklyChallenge from './WeeklyChallenge';
 
 interface SidebarMarket {
   _id: string;
@@ -129,6 +130,9 @@ export default function HomepageSidebar() {
           </div>
         </div>
       )}
+
+      {/* Weekly Challenge */}
+      <WeeklyChallenge />
     </aside>
   );
 }
