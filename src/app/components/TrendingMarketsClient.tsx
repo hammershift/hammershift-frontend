@@ -201,11 +201,11 @@ export default function TrendingMarketsClient({ markets }: Props) {
                 const yesPercent = Math.round((market.yesPrice ?? 0.5) * 100);
                 return (
                   <div className="flex items-baseline gap-2">
-                    <span className={`text-lg font-bold font-mono ${yesPercent > 60 ? "text-[#16c784]" : yesPercent < 40 ? "text-[#f44b5a]" : "text-gray-300"}`}>
+                    <span className={`text-lg font-bold font-mono ${yesPercent > 60 ? "text-[#00D4AA]" : yesPercent < 40 ? "text-[#E94560]" : "text-gray-300"}`}>
                       {yesPercent}% chance
                     </span>
                     {market.priceChange != null && market.priceChange !== 0 && (
-                      <span className={`text-xs font-mono ${market.priceChange > 0 ? "text-[#16c784]" : "text-[#f44b5a]"}`}>
+                      <span className={`text-xs font-mono ${market.priceChange > 0 ? "text-[#00D4AA]" : "text-[#E94560]"}`}>
                         {market.priceChange > 0 ? "\u25B2" : "\u25BC"}{Math.abs(market.priceChange)}%
                       </span>
                     )}

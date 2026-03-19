@@ -371,7 +371,7 @@ export default function TradingPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-trading-bg-primary">
         <div className="flex flex-col items-center gap-4">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-700 border-t-[#00D4AA]" />
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-white/[0.08] border-t-[#00D4AA]" />
           <p className="text-sm text-gray-400">Loading market data...</p>
         </div>
       </div>
@@ -438,8 +438,7 @@ export default function TradingPage() {
 
         {/* Market Header */}
         <div className="mb-6">
-          <div className="flex items-start justify-between gap-3 mb-2">
-            <div className="flex-1" />
+          <div className="flex items-start justify-end gap-3 mb-2">
             <ShareButton
               url={`${typeof window !== 'undefined' ? window.location.origin : ''}/trading/${marketId}`}
               title={`${market.question} — ${Math.round((market.yesPrice ?? 0.5) * 100)}% say YES`}
@@ -449,7 +448,7 @@ export default function TradingPage() {
         </div>
 
         {/* Outcome Selector */}
-        <div className="mb-6 flex items-center gap-2 rounded-lg border border-gray-700 bg-trading-bg-card p-2">
+        <div className="mb-6 flex items-center gap-2 rounded-lg border border-white/[0.08] bg-trading-bg-card p-2">
           <button
             onClick={() => setSelectedOutcome('YES')}
             className={`flex-1 rounded-md px-4 min-h-[44px] font-semibold transition-colors touch-manipulation ${
@@ -486,8 +485,8 @@ export default function TradingPage() {
             <RelatedMarkets currentMarketId={marketId} />
 
             {/* Discussion / Activity Tabs */}
-            <div className="rounded-lg border border-gray-700 bg-trading-bg-card p-4">
-              <div className="flex border-b border-gray-700 mb-4">
+            <div className="rounded-lg border border-white/[0.08] bg-trading-bg-card p-4">
+              <div className="flex border-b border-white/[0.08] mb-4">
                 <button
                   onClick={() => setActiveTab('discussion')}
                   className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
@@ -536,7 +535,7 @@ export default function TradingPage() {
                 loading={orderSubmitting}
               />
             ) : (
-              <div className="flex w-full items-center justify-center rounded-lg border border-gray-700 bg-trading-bg-card px-6 py-10 sm:p-8">
+              <div className="flex w-full items-center justify-center rounded-lg border border-white/[0.08] bg-trading-bg-card px-6 py-10 sm:p-8">
                 <p className="text-center text-sm text-gray-400 max-w-xs">
                   <span className="mb-2 block font-semibold text-white text-base">
                     Sign in to trade

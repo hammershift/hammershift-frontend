@@ -394,7 +394,7 @@ function Profile(props: Props) {
   return (
     <div className="min-h-screen bg-[#0A0A1A] px-4 py-8 text-white">
       {/* Profile Header */}
-      <div className="mb-8 overflow-hidden rounded-2xl bg-[#0F172A] border border-[#1E2A36]">
+      <div className="mb-8 overflow-hidden rounded-2xl bg-[#16181f] border border-white/[0.08]">
         <div className="h-20 bg-gradient-to-r from-[#E94560]/80 to-[#0A0A1A]"></div>
         <div className="px-8 pb-8">
           <div className="-mt-12 flex flex-col items-start gap-6 md:flex-row md:items-center">
@@ -435,7 +435,7 @@ function Profile(props: Props) {
         value={currentTab}
         onValueChange={(value) => setCurrentTab(value)}
       >
-        <TabsList className="mb-6 bg-transparent border-b border-[#1E2A36] rounded-none w-full justify-start gap-0 p-0 h-auto">
+        <TabsList className="mb-6 bg-transparent border-b border-white/[0.08] rounded-none w-full justify-start gap-0 p-0 h-auto">
           <TabsTrigger
             value="overview"
             className="rounded-none border-b-2 border-transparent px-4 pb-3 pt-0 text-gray-400 data-[state=active]:border-[#E94560] data-[state=active]:text-white data-[state=active]:bg-transparent data-[state=active]:shadow-none"
@@ -470,7 +470,7 @@ function Profile(props: Props) {
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Hero Stats Card */}
             <div className="lg:col-span-3">
-              <Card className="border-[#1E2A36] bg-[#0F172A]">
+              <Card className="border-white/[0.08] bg-[#16181f]">
                 <CardContent className="p-6">
                   <div className="grid gap-6 md:grid-cols-5">
                     <div className="flex flex-col items-center text-center">
@@ -524,7 +524,7 @@ function Profile(props: Props) {
             {/* Column 1: Streaks & Badges */}
             <div className="space-y-6">
               {/* Streak Dashboard */}
-              <Card className="border-[#1E2A36] bg-[#0F172A]">
+              <Card className="border-white/[0.08] bg-[#16181f]">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Flame className="h-5 w-5 text-[#FFB547]" />
@@ -565,7 +565,7 @@ function Profile(props: Props) {
               </Card>
 
               {/* Badges Grid */}
-              <Card className="border-[#1E2A36] bg-[#0F172A]">
+              <Card className="border-white/[0.08] bg-[#16181f]">
                 <CardHeader>
                   <CardTitle>Badges & Achievements</CardTitle>
                   <p className="text-sm text-gray-400">
@@ -599,7 +599,7 @@ function Profile(props: Props) {
 
             {/* Column 2: Recent Activity */}
             <div className="lg:col-span-2 space-y-6">
-              <Card className="border-[#1E2A36] bg-[#0F172A]">
+              <Card className="border-white/[0.08] bg-[#16181f]">
                 <CardHeader>
                   <CardTitle>Recent Predictions</CardTitle>
                 </CardHeader>
@@ -613,7 +613,7 @@ function Profile(props: Props) {
                       {completedPredictions.slice(0, 5).map((prediction: any) => (
                         <div
                           key={prediction._id}
-                          className="flex items-center gap-4 rounded-lg border border-[#1E2A36] bg-[#0A0A1A] p-4"
+                          className="flex items-center gap-4 rounded-lg border border-white/[0.08] bg-[#0A0A1A] p-4"
                         >
                           <Image
                             src={prediction.auctionImage}
@@ -669,19 +669,19 @@ function Profile(props: Props) {
 
         {/* Tab 2: Predictions History */}
         <TabsContent value="predictions">
-          <Card className="border-[#1E2A36] bg-[#0F172A]">
+          <Card className="border-white/[0.08] bg-[#16181f]">
             <CardHeader>
               <CardTitle>Your Predictions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col gap-4 rounded bg-[#0F172A]">
+              <div className="flex flex-col gap-4 rounded bg-[#16181f]">
                 <div className="flex">
                   <button
                     onClick={() => setIsActivePrediction(true)}
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActivePrediction === true
                         ? "border-[#E94560] text-white"
-                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
+                        : "border-white/[0.08] text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     <div>ACTIVE</div>
@@ -696,7 +696,7 @@ function Profile(props: Props) {
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActivePrediction === false
                         ? "border-[#E94560] text-white"
-                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
+                        : "border-white/[0.08] text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     <div>COMPLETED</div>
@@ -776,19 +776,19 @@ function Profile(props: Props) {
 
         {/* Tab 3: Tournament History */}
         <TabsContent value="tournaments">
-          <Card className="border-[#1E2A36] bg-[#0F172A]">
+          <Card className="border-white/[0.08] bg-[#16181f]">
             <CardHeader>
               <CardTitle>Your Tournaments</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col gap-4 rounded bg-[#0F172A]">
+              <div className="flex flex-col gap-4 rounded bg-[#16181f]">
                 <div className="flex">
                   <button
                     onClick={() => setIsActiveTournament(true)}
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActiveTournament === true
                         ? "border-[#E94560] text-white"
-                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
+                        : "border-white/[0.08] text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     <div>ACTIVE</div>
@@ -803,7 +803,7 @@ function Profile(props: Props) {
                     className={`flex w-1/2 items-center justify-center gap-2 border-b-2 py-3 text-sm font-semibold transition-colors ${
                       isActiveTournament === false
                         ? "border-[#E94560] text-white"
-                        : "border-[#1E2A36] text-gray-400 hover:text-gray-300"
+                        : "border-white/[0.08] text-gray-400 hover:text-gray-300"
                     }`}
                   >
                     <div>COMPLETED</div>
@@ -887,7 +887,7 @@ function Profile(props: Props) {
         <TabsContent value="settings">
           <div className="space-y-6">
             {/* Profile Settings */}
-            <Card className="border-[#1E2A36] bg-[#0F172A]">
+            <Card className="border-white/[0.08] bg-[#16181f]">
               <CardHeader>
                 <CardTitle>Profile Information</CardTitle>
               </CardHeader>
@@ -899,7 +899,7 @@ function Profile(props: Props) {
                     value={name}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                     placeholder="Your display name"
-                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
+                    className="mt-1 bg-[#0A0A1A] border-white/[0.08] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
 
@@ -909,7 +909,7 @@ function Profile(props: Props) {
                     id="username"
                     value={username}
                     disabled
-                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-gray-500 rounded-xl px-4 py-3 opacity-50 cursor-not-allowed"
+                    className="mt-1 bg-[#0A0A1A] border-white/[0.08] text-gray-500 rounded-xl px-4 py-3 opacity-50 cursor-not-allowed"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Username cannot be changed
@@ -923,7 +923,7 @@ function Profile(props: Props) {
                     value={about}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setAbout(e.target.value)}
                     placeholder="Tell others about yourself"
-                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none resize-none"
+                    className="mt-1 bg-[#0A0A1A] border-white/[0.08] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none resize-none"
                     rows={3}
                     maxLength={200}
                   />
@@ -943,7 +943,7 @@ function Profile(props: Props) {
             </Card>
 
             {/* Email Preferences */}
-            <Card className="border-[#1E2A36] bg-[#0F172A]">
+            <Card className="border-white/[0.08] bg-[#16181f]">
               <CardHeader>
                 <CardTitle>Email Preferences</CardTitle>
               </CardHeader>
@@ -1031,7 +1031,7 @@ function Profile(props: Props) {
             </Card>
 
             {/* Notification Preferences */}
-            <div className="rounded-lg border border-[#1E2A36] bg-[#0F172A] p-5 mt-6">
+            <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5 mt-6">
               <h3 className="text-white font-semibold mb-4">Notifications</h3>
               <div className="space-y-3 mb-4">
                 {([
@@ -1082,7 +1082,7 @@ function Profile(props: Props) {
             </div>
 
             {/* Change Password */}
-            <Card className="border-[#1E2A36] bg-[#0F172A]">
+            <Card className="border-white/[0.08] bg-[#16181f]">
               <CardHeader>
                 <CardTitle>Change Password</CardTitle>
               </CardHeader>
@@ -1097,7 +1097,7 @@ function Profile(props: Props) {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setPasswords((prev) => ({ ...prev, old: e.target.value }))
                       }
-                      className="bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 pr-10 focus:border-[#E94560] focus:outline-none"
+                      className="bg-[#0A0A1A] border-white/[0.08] text-white rounded-xl px-4 py-3 pr-10 focus:border-[#E94560] focus:outline-none"
                     />
                     <button
                       type="button"
@@ -1122,7 +1122,7 @@ function Profile(props: Props) {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setPasswords((prev) => ({ ...prev, new: e.target.value }))
                     }
-                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
+                    className="mt-1 bg-[#0A0A1A] border-white/[0.08] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
 
@@ -1138,7 +1138,7 @@ function Profile(props: Props) {
                         confirm: e.target.value,
                       }))
                     }
-                    className="mt-1 bg-[#0A0A1A] border-[#1E2A36] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
+                    className="mt-1 bg-[#0A0A1A] border-white/[0.08] text-white rounded-xl px-4 py-3 focus:border-[#E94560] focus:outline-none"
                   />
                 </div>
 
@@ -1153,7 +1153,7 @@ function Profile(props: Props) {
             </Card>
 
             {/* Account Actions */}
-            <Card className="border-[#1E2A36] bg-[#0F172A]">
+            <Card className="border-white/[0.08] bg-[#16181f]">
               <CardHeader>
                 <CardTitle>Account Actions</CardTitle>
               </CardHeader>
@@ -1161,7 +1161,7 @@ function Profile(props: Props) {
                 <Button
                   variant="outline"
                   onClick={handleExportData}
-                  className="flex w-full items-center gap-2 border-[#1E2A36] bg-transparent text-white hover:bg-[#1E2A36]/50 rounded-xl py-3"
+                  className="flex w-full items-center gap-2 border-white/[0.08] bg-transparent text-white hover:bg-[#1E2A36]/50 rounded-xl py-3"
                 >
                   <Download className="h-4 w-4" />
                   Export My Data

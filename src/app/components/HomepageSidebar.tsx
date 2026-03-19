@@ -66,7 +66,7 @@ export default function HomepageSidebar() {
                     </p>
                   )}
                 </div>
-                <span className="text-xs font-mono font-semibold text-[#16c784] shrink-0">
+                <span className="text-xs font-mono font-semibold text-[#00D4AA] shrink-0">
                   {Math.round(m.yesPrice * 100)}%
                 </span>
               </Link>
@@ -120,7 +120,7 @@ export default function HomepageSidebar() {
                     {Math.round(m.yesPrice * 100)}%
                   </span>
                   {m.priceChange != null && m.priceChange !== 0 && (
-                    <span className={`text-xs font-mono ${m.priceChange > 0 ? "text-[#16c784]" : "text-[#f44b5a]"}`}>
+                    <span className={`text-xs font-mono ${m.priceChange > 0 ? "text-[#00D4AA]" : "text-[#E94560]"}`}>
                       {m.priceChange > 0 ? "\u25B2" : "\u25BC"}{Math.abs(m.priceChange)}%
                     </span>
                   )}

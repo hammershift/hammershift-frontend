@@ -19,7 +19,7 @@ const RANK_STYLES: Record<number, { badge: string; text: string }> = {
 };
 
 const DEFAULT_RANK_STYLE = {
-  badge: "bg-[#1E2A36] text-gray-500 border border-[#1E2A36]",
+  badge: "bg-[#1E2A36] text-gray-500 border border-white/[0.08]",
   text: "text-gray-400",
 };
 
@@ -52,9 +52,9 @@ export default function TopPredictors({ leaderboard }: TopPredictorsProps) {
       </div>
 
       {/* Leaderboard card */}
-      <div className="rounded-2xl border border-[#1E2A36] bg-[#0F172A] overflow-hidden">
+      <div className="rounded-2xl border border-white/[0.08] bg-[#16181f] overflow-hidden">
         {/* Table header */}
-        <div className="grid grid-cols-[48px_1fr_120px_80px] items-center border-b border-[#1E2A36] px-6 py-3">
+        <div className="grid grid-cols-[48px_1fr_120px_80px] items-center border-b border-white/[0.08] px-6 py-3">
           <span className="text-xs font-semibold uppercase tracking-widest text-gray-600">
             #
           </span>
@@ -78,7 +78,7 @@ export default function TopPredictors({ leaderboard }: TopPredictorsProps) {
             return (
               <li
                 key={entry._id}
-                className="grid grid-cols-[48px_1fr_120px_80px] items-center border-b border-[#1E2A36]/50 px-6 py-4 last:border-b-0 transition-colors duration-150 hover:bg-[#1E2A36]/40"
+                className="grid grid-cols-[48px_1fr_120px_80px] items-center border-b border-white/[0.08]/50 px-6 py-4 last:border-b-0 transition-colors duration-150 hover:bg-[#1E2A36]/40"
               >
                 {/* Rank badge */}
                 <div className="flex items-center">

@@ -263,7 +263,7 @@ const LeaderboardPage = () => {
     !loading && !activeSearch && currentPage === 1 && topThree.length === 3;
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto bg-[#0A0A1A] px-4 py-12">
       {/* Header */}
       <div className="mb-8 text-center">
         <h1 className="mb-2 text-4xl font-bold">Leaderboard</h1>
@@ -283,7 +283,7 @@ const LeaderboardPage = () => {
             className={
               period === p
                 ? "bg-[#E94560] hover:bg-[#E94560]/90"
-                : "border-[#1E2A36] bg-[#0A0A1A] hover:bg-[#1E2A36]"
+                : "border-white/[0.08] bg-[#0A0A1A] hover:bg-[#1E2A36]"
             }
           >
             {p === "weekly" ? "Weekly" : p === "monthly" ? "Monthly" : "All-Time"}
@@ -295,10 +295,10 @@ const LeaderboardPage = () => {
       {showPodium && (
         <div className="mb-12 hidden grid-cols-3 gap-4 md:grid">
           {/* 2nd Place */}
-          <Card className="mt-8 border-gray-300 bg-gradient-to-br from-gray-700 to-gray-800">
+          <Card className="mt-8 border-white/[0.12] bg-gradient-to-br from-white/10 to-[#16181f]">
             <CardContent className="flex flex-col items-center p-6 text-center">
-              <Trophy className="mb-2 h-12 w-12 text-gray-300" />
-              <div className="text-5xl font-bold text-gray-300">2</div>
+              <Trophy className="mb-2 h-12 w-12 text-white/60" />
+              <div className="text-5xl font-bold text-white/60">2</div>
               <div className="mt-4 text-xl font-bold">{topThree[1].username}</div>
               <div className="font-mono text-2xl font-bold text-[#FFB547]">
                 {topThree[1].total_score.toLocaleString()}
@@ -323,10 +323,10 @@ const LeaderboardPage = () => {
           </Card>
 
           {/* 1st Place */}
-          <Card className="border-[#F2CA16] bg-gradient-to-br from-yellow-600 to-yellow-800 shadow-xl">
+          <Card className="border-[#E94560]/30 bg-gradient-to-br from-[#E94560]/20 to-[#16181f] shadow-xl">
             <CardContent className="flex flex-col items-center p-8 text-center">
-              <Trophy className="mb-2 h-16 w-16 text-[#F2CA16]" />
-              <div className="text-6xl font-bold text-[#F2CA16]">1</div>
+              <Trophy className="mb-2 h-16 w-16 text-[#E94560]" />
+              <div className="text-6xl font-bold text-[#E94560]">1</div>
               <div className="mt-4 text-2xl font-bold">{topThree[0].username}</div>
               <div className="font-mono text-3xl font-bold text-white">
                 {topThree[0].total_score.toLocaleString()}
@@ -351,10 +351,10 @@ const LeaderboardPage = () => {
           </Card>
 
           {/* 3rd Place */}
-          <Card className="mt-8 border-amber-600 bg-gradient-to-br from-amber-700 to-amber-900">
+          <Card className="mt-8 border-[#FFB547]/20 bg-gradient-to-br from-[#FFB547]/15 to-[#16181f]">
             <CardContent className="flex flex-col items-center p-6 text-center">
-              <Trophy className="mb-2 h-12 w-12 text-amber-600" />
-              <div className="text-5xl font-bold text-amber-600">3</div>
+              <Trophy className="mb-2 h-12 w-12 text-[#FFB547]" />
+              <div className="text-5xl font-bold text-[#FFB547]">3</div>
               <div className="mt-4 text-xl font-bold">{topThree[2].username}</div>
               <div className="font-mono text-2xl font-bold text-[#FFB547]">
                 {topThree[2].total_score.toLocaleString()}
@@ -394,13 +394,13 @@ const LeaderboardPage = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSearchInput(e.target.value)
                 }
-                className="border-[#1E2A36] bg-[#13202D] pl-10"
+                className="border-white/[0.08] bg-[#16181f] pl-10"
               />
             </div>
           </div>
 
           {/* Leaderboard Table */}
-          <Card className="border-[#1E2A36] bg-[#13202D]">
+          <Card className="border-white/[0.08] bg-[#16181f]">
             <CardHeader>
               <CardTitle>
                 Rankings
@@ -587,12 +587,12 @@ const LeaderboardPage = () => {
 
               {/* Pagination */}
               {total > ITEMS_PER_PAGE && (
-                <div className="flex items-center justify-between border-t border-[#1E2A36] p-4">
+                <div className="flex items-center justify-between border-t border-white/[0.08] p-4">
                   <Button
                     variant="outline"
                     onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                     disabled={currentPage === 1 || loading}
-                    className="border-[#1E2A36] bg-[#0A0A1A]"
+                    className="border-white/[0.08] bg-[#0A0A1A]"
                   >
                     Previous
                   </Button>
@@ -603,7 +603,7 @@ const LeaderboardPage = () => {
                     variant="outline"
                     onClick={() => setCurrentPage((p) => p + 1)}
                     disabled={loading || currentPage >= Math.ceil(total / ITEMS_PER_PAGE)}
-                    className="border-[#1E2A36] bg-[#0A0A1A]"
+                    className="border-white/[0.08] bg-[#0A0A1A]"
                   >
                     Next
                   </Button>
@@ -650,7 +650,7 @@ const LeaderboardPage = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="gap-1.5 border-[#1E2A36] bg-transparent text-xs"
+                        className="gap-1.5 border-white/[0.08] bg-transparent text-xs"
                       >
                         Browse Markets
                         <ArrowRight className="h-3 w-3" />
@@ -726,7 +726,7 @@ const LeaderboardPage = () => {
         <div className="space-y-6">
           {/* Your Stats Card */}
           {session && currentUserStats && (
-            <Card className="border-[#E94560] bg-[#13202D]">
+            <Card className="border-[#E94560] bg-[#16181f]">
               <CardHeader>
                 <CardTitle className="text-[#E94560]">Your Stats</CardTitle>
               </CardHeader>
@@ -774,7 +774,7 @@ const LeaderboardPage = () => {
           )}
 
           {/* Period Info Card */}
-          <Card className="border-[#1E2A36] bg-[#13202D]">
+          <Card className="border-white/[0.08] bg-[#16181f]">
             <CardHeader>
               <CardTitle>Period Stats</CardTitle>
             </CardHeader>
