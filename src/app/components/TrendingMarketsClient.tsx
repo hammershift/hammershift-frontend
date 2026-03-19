@@ -6,6 +6,7 @@ import CountdownInline from './CountdownInline';
 import CategoryFilterBar from './CategoryFilterBar';
 import MarketSortDropdown from './MarketSortDropdown';
 import Sparkline from './Sparkline';
+import LiveBadge from './LiveBadge';
 
 // Shape expected by TradingDrawer
 interface DrawerMarket {
@@ -174,6 +175,11 @@ export default function TrendingMarketsClient({ markets }: Props) {
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#16181f] via-transparent to-transparent" />
+                {market.auction?.deadline && new Date(market.auction.deadline) > new Date() && (
+                  <div className="absolute top-2 left-2 z-10">
+                    <LiveBadge />
+                  </div>
+                )}
               </div>
             )}
             <div className="flex flex-col flex-1 p-4 gap-3">

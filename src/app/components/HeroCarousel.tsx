@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import Link from 'next/link';
 import CountdownInline from './CountdownInline';
+import LiveBadge from './LiveBadge';
 
 interface FeaturedMarket {
   _id: string;
@@ -80,12 +81,17 @@ export default function HeroCarousel({ markets }: HeroCarouselProps) {
                 <div className="relative z-10 flex h-full items-center">
                   <div className="mx-auto w-full max-w-6xl px-6">
                     <div className="max-w-lg">
-                      {/* Countdown */}
-                      {market.auction?.deadline && (
-                        <p className="mb-2 text-xs font-mono text-[#FFB547] uppercase tracking-wider">
-                          Ends in <CountdownInline deadline={market.auction.deadline} />
-                        </p>
-                      )}
+                      {/* Live badge + Countdown */}
+                      <div className="flex items-center gap-2 mb-2">
+                        {market.auction?.deadline && new Date(market.auction.deadline) > new Date() && (
+                          <LiveBadge />
+                        )}
+                        {market.auction?.deadline && (
+                          <p className="text-xs font-mono text-[#FFB547] uppercase tracking-wider">
+                            Ends in <CountdownInline deadline={market.auction.deadline} />
+                          </p>
+                        )}
+                      </div>
 
                       {/* Title */}
                       <h2 className="mb-2 text-2xl font-bold text-white md:text-3xl lg:text-4xl leading-tight">
