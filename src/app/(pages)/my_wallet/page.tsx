@@ -58,6 +58,8 @@ const MyWalletPage = () => {
     useState(false);
   const [showFailedLoadNotification, setShowFailedLoadNotification] =
     useState(false);
+  const [onrampStatus, setOnrampStatus] = useState<'pending' | 'complete' | null>(null);
+  const [onrampAmount, setOnrampAmount] = useState<number>(0);
 
   const isDisabled = process.env.NEXT_PUBLIC_DISABLE_DEPOSIT;
 
@@ -205,6 +207,64 @@ const MyWalletPage = () => {
     }
   }, [success]);
 
+  // Onramp return handling
+  useEffect(() => {
+    const stored = localStorage.getItem('vm_onramp_session');
+    if (!stored) return;
+
+    try {
+      const { sessionId, amount, timestamp } = JSON.parse(stored);
+      // Expire after 1 hour
+      if (Date.now() - timestamp > 3600000) {
+        localStorage.removeItem('vm_onramp_session');
+        return;
+      }
+
+      setOnrampAmount(amount);
+      setOnrampStatus('pending');
+
+      // Poll on-chain balance every 10 seconds for up to 5 minutes
+      let attempts = 0;
+      const maxAttempts = 30;
+      const interval = setInterval(() => {
+        attempts++;
+        refetchBalance();
+        if (attempts >= maxAttempts) {
+          clearInterval(interval);
+        }
+      }, 10000);
+
+      // Try to verify via our API (succeeds once webhook has fired)
+      const checkCompletion = async () => {
+        try {
+          const res = await fetch('/api/stripe/onramp-complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId }),
+          });
+          if (res.ok) {
+            setOnrampStatus('complete');
+            localStorage.removeItem('vm_onramp_session');
+            clearInterval(interval);
+            refetchBalance();
+          }
+        } catch {
+          // Webhook hasn't fired yet — keep polling
+        }
+      };
+
+      checkCompletion();
+      const verifyInterval = setInterval(checkCompletion, 15000);
+
+      return () => {
+        clearInterval(interval);
+        clearInterval(verifyInterval);
+      };
+    } catch {
+      localStorage.removeItem('vm_onramp_session');
+    }
+  }, [refetchBalance]);
+
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
@@ -310,6 +370,28 @@ const MyWalletPage = () => {
           </div>
         )}
       </div>
+
+      {/* Onramp status banner */}
+      {onrampStatus === 'pending' && (
+        <div className="flex w-2/3 self-center max-sm:w-full">
+          <div className="w-full flex items-center gap-3 rounded-lg border border-[#FFB547]/30 bg-[#FFB547]/10 px-4 py-3 mb-3">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#FFB547]/30 border-t-[#FFB547]" />
+            <p className="text-sm text-[#FFB547]">
+              Processing your ${onrampAmount} USDC deposit… This may take a few minutes.
+            </p>
+          </div>
+        </div>
+      )}
+      {onrampStatus === 'complete' && (
+        <div className="flex w-2/3 self-center max-sm:w-full">
+          <div className="w-full flex items-center gap-3 rounded-lg border border-[#00D4AA]/30 bg-[#00D4AA]/10 px-4 py-3 mb-3">
+            <span className="text-[#00D4AA]">✓</span>
+            <p className="text-sm text-[#00D4AA]">
+              ${onrampAmount} USDC deposit complete! Your balance has been updated.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ACH Bank Transfer — Coming Soon */}
       <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full mt-4">
