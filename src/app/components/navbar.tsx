@@ -29,6 +29,7 @@ import WalletSmall from "../../../public/images/wallet--money-payment-finance-wa
 import { TimerProvider, useTimer } from "../context/TimerContext";
 import { Button } from "./ui/button";
 import { createPageUrl } from "./utils";
+import NotificationBell from "./NotificationBell";
 
 const Navbar = () => {
   const router = useRouter();
@@ -272,6 +273,7 @@ const Navbar = () => {
               >
                 Deposit
               </button>
+              <NotificationBell />
               <button
                 id="predictions-button"
                 onClick={() => {
