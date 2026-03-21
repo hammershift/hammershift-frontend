@@ -5,12 +5,17 @@ import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import type { CheckedState } from "@radix-ui/react-checkbox";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useLogin } from "@privy-io/react-auth";
 
 export default function CustomSignupPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const { ready, authenticated, login } = usePrivy();
+  const { ready, authenticated } = usePrivy();
+  const { login } = useLogin({
+    onComplete: () => {
+      router.push("/");
+    },
+  });
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState<boolean>(false);

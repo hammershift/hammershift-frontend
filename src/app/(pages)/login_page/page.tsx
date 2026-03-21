@@ -7,7 +7,7 @@ import { BounceLoader } from "react-spinners";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Input } from "@/app/components/ui/input";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useLogin } from "@privy-io/react-auth";
 import { checkUsernameExistence } from "@/lib/data";
 
 const LoginPage = () => {
@@ -19,8 +19,12 @@ const LoginPage = () => {
 
   const router = useRouter();
   const { data: session } = useSession();
-  const { ready, authenticated: privyAuthenticated, login: privyLogin } =
-    usePrivy();
+  const { ready, authenticated: privyAuthenticated } = usePrivy();
+  const { login: privyLogin } = useLogin({
+    onComplete: () => {
+      router.push("/");
+    },
+  });
 
   // Redirect if already authenticated via NextAuth
   useEffect(() => {
