@@ -59,6 +59,7 @@
     "otp-generator": "^4.0.1",
     "postcss": "^8.5.8",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "qrcode.react": "^4.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-responsive-pagination": "^2.10.5",
