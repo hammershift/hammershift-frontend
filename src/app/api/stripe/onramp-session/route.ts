@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     params.append('wallet_addresses[polygon]', walletAddress);
     params.append('lock_wallet_address', 'true');
     params.append('source_currency', 'usd');
-    params.append('source_amount', String(depositAmount));
+    params.append('destination_amount', String(depositAmount));
     params.append('destination_currency', 'usdc');
     params.append('destination_network', 'polygon');
     params.append('destination_currencies[]', 'usdc');
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const stripeError = session?.error?.message ?? JSON.stringify(session);
-      console.error('Stripe onramp session error:', stripeError);
+      console.error('Stripe onramp session error:', stripeError, 'Full response:', JSON.stringify(session));
       return NextResponse.json(
         { message: `Stripe error: ${stripeError}` },
         { status: response.status }
