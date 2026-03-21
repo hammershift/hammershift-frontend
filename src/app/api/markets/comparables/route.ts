@@ -23,13 +23,15 @@ export async function GET(req: NextRequest) {
   await connectToDB();
   const db = mongoose.connection.db!;
 
-  // Query sold auctions (status=2) for same make/model
+  // Query sold auctions for same make/model.
+  // sort.price > 0 is the reliable "sold" indicator — the status attribute
+  // is NOT 2 for sold auctions (most are status=1 with a final price).
+  // Model uses contains-match since the attribute stores the full model string.
   const auctions = await db.collection('auctions').find({
     attributes: {
       $all: [
         { $elemMatch: { key: 'make', value: { $regex: new RegExp(`^${escapeRegex(make)}$`, 'i') } } },
         { $elemMatch: { key: 'model', value: { $regex: new RegExp(escapeRegex(model), 'i') } } },
-        { $elemMatch: { key: 'status', value: 2 } },
       ],
     },
     'sort.price': { $gt: 0 },
