@@ -17,6 +17,7 @@ import {
   ActivityFeed,
 } from '@/app/components/trading';
 import ShareButton from '@/app/components/ShareButton';
+import { ComparableSales } from '@/app/components/trading/ComparableSales';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -39,6 +40,7 @@ interface MarketData {
     title: string | null;
     image: string | null;
     deadline: string | null;
+    attributes?: Array<{ key: string; value: any }>;
   };
 }
 
@@ -480,6 +482,10 @@ export default function TradingPage() {
               auction={market.auction}
               question={market.question}
               predictedPrice={market.predictedPrice ?? 0}
+            />
+            <ComparableSales
+              make={market.auction?.attributes?.find((a) => a.key === 'make')?.value ?? null}
+              model={market.auction?.attributes?.find((a) => a.key === 'model')?.value ?? null}
             />
             <RecentTrades trades={adaptedTrades} />
             <RelatedMarkets currentMarketId={marketId} />
