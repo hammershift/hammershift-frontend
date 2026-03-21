@@ -13,6 +13,7 @@ function buildAuctionProjection(auctionDoc: Record<string, any> | null): {
   title: string | null;
   image: string | null;
   deadline: Date | null;
+  attributes?: Array<{ key: string; value: any }>;
 } {
   if (!auctionDoc) {
     return { title: null, image: null, deadline: null };
@@ -21,6 +22,7 @@ function buildAuctionProjection(auctionDoc: Record<string, any> | null): {
     title: auctionDoc.title ?? null,
     image: auctionDoc.image ?? null,
     deadline: auctionDoc.sort?.deadline ?? null,
+    attributes: auctionDoc.attributes ?? undefined,
   };
 }
 
@@ -66,7 +68,7 @@ export async function GET(
           .collection("auctions")
           .findOne(
             { _id: auctionObjectId },
-            { projection: { title: 1, image: 1, sort: 1, auction_id: 1 } }
+            { projection: { title: 1, image: 1, sort: 1, auction_id: 1, attributes: 1 } }
           );
       } catch {
         // Not a valid ObjectId — fall through to string match
@@ -78,7 +80,7 @@ export async function GET(
           .collection("auctions")
           .findOne(
             { auction_id: market.auctionId },
-            { projection: { title: 1, image: 1, sort: 1, auction_id: 1 } }
+            { projection: { title: 1, image: 1, sort: 1, auction_id: 1, attributes: 1 } }
           );
       }
     }

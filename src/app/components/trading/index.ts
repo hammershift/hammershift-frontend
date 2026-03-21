@@ -11,3 +11,4 @@ export { MarketDetailsSection } from './MarketDetailsSection';
 export { RelatedMarkets } from './RelatedMarkets';
 export { DiscussionFeed } from './DiscussionFeed';
 export { ActivityFeed } from './ActivityFeed';
+export { ComparableSales } from './ComparableSales';
