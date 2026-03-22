@@ -90,7 +90,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Deposit USDC"
+      aria-label="Add Funds"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
@@ -98,9 +98,9 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/[0.08] p-5">
           <div>
-            <h2 className="text-lg font-semibold text-white">Deposit USDC</h2>
+            <h2 className="text-lg font-semibold text-white">Add Funds</h2>
             <p className="mt-0.5 text-xs text-gray-500">
-              Funds go directly to your Polygon wallet
+              Funds are deposited to your Velocity Markets account
             </p>
           </div>
           <button
@@ -122,7 +122,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
           {!embeddedWalletAddress && (
             <div className="flex h-32 items-center justify-center">
               <p className="text-center text-sm text-gray-500">
-                Sign in with Google to get a wallet and deposit.
+                Sign in to create your account and add funds.
               </p>
             </div>
           )}
@@ -151,19 +151,13 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
                       : 'text-gray-500 hover:text-gray-300'
                   }`}
                 >
-                  Transfer USDC
+                  Transfer Crypto
                 </button>
               </div>
 
               {/* ── Buy with Card tab ── */}
               {tab === 'card' && (
                 <>
-                  {/* Wallet address */}
-                  <div className="rounded-xl border border-white/[0.08] bg-[#0A0A1A] px-4 py-3">
-                    <p className="mb-1 text-xs text-gray-500">Your Polygon wallet</p>
-                    <p className="truncate font-mono text-xs text-gray-300">{embeddedWalletAddress}</p>
-                  </div>
-
                   {/* Amount selector */}
                   <div>
                     <p className="mb-2 text-xs text-gray-500">Select amount (USD)</p>
@@ -192,19 +186,26 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
                     </p>
                   )}
 
-                  {/* Info */}
-                  <div className="rounded-xl border border-white/[0.08] bg-[#0A0A1A] px-4 py-3 space-y-1.5 text-xs text-gray-500">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#00D4AA]">✓</span>
-                      Buy USDC with card, bank, or Apple Pay
+                  {/* Trust signals */}
+                  <div className="rounded-xl border border-white/[0.08] bg-[#0A0A1A] px-4 py-3 space-y-2">
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      <span>Secure checkout powered by <span className="font-semibold text-gray-300">Stripe</span></span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#00D4AA]">✓</span>
-                      Delivered to your Polygon wallet instantly
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      </svg>
+                      <span>Card, bank transfer, Apple Pay, or Google Pay</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[#00D4AA]">✓</span>
-                      Powered by Stripe
+                    <div className="flex items-center gap-2 text-xs text-gray-400">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span>Funds available in your account instantly</span>
                     </div>
                   </div>
 
@@ -218,27 +219,38 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                        Creating session…
+                        Creating secure session…
                       </span>
                     ) : (
-                      `Continue to Stripe →`
+                      <span className="flex items-center justify-center gap-2">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Continue to Secure Checkout
+                      </span>
                     )}
                   </button>
 
                   <p className="text-center text-xs text-gray-600">
-                    Opens in a new tab. Return here when complete.
+                    Opens Stripe in a new tab. Your payment details never touch our servers.
                   </p>
                 </>
               )}
 
-              {/* ── Transfer USDC tab ── */}
+              {/* ── Transfer Crypto tab ── */}
               {tab === 'transfer' && (
                 <>
+                  {/* Explainer for crypto users */}
+                  <p className="text-xs text-gray-500">
+                    Already have USDC? Send it directly to your Velocity Markets account address below.
+                  </p>
+
                   {/* Network + Token badges */}
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-[#0A0A1A] px-3 py-1 text-xs text-gray-300">
                       <span className="h-2 w-2 rounded-full bg-[#8247E5]" />
-                      Polygon
+                      Polygon Network
                     </span>
                     <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-[#0A0A1A] px-3 py-1 text-xs text-gray-300">
                       <span className="h-2 w-2 rounded-full bg-[#2775CA]" />
@@ -260,7 +272,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
 
                   {/* Address + Copy */}
                   <div className="rounded-xl border border-white/[0.08] bg-[#0A0A1A] px-4 py-3">
-                    <p className="mb-1.5 text-xs text-gray-500">Your Polygon wallet address</p>
+                    <p className="mb-1.5 text-xs text-gray-500">Your deposit address (Polygon)</p>
                     <div className="flex items-center gap-2">
                       <p className="min-w-0 flex-1 truncate font-mono text-xs text-gray-300">
                         {embeddedWalletAddress}
@@ -277,17 +289,23 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
 
                   {/* Warning */}
                   <div className="rounded-xl border border-[#FFB547]/20 bg-[#FFB547]/5 px-4 py-3">
-                    <p className="text-xs text-[#FFB547]">
-                      Only send <span className="font-semibold">USDC on Polygon</span>. Sending other tokens or using other networks will result in lost funds.
+                    <p className="text-xs font-semibold text-[#FFB547] mb-1">Important</p>
+                    <p className="text-xs text-[#FFB547]/80">
+                      Only send <span className="font-semibold text-[#FFB547]">USDC on the Polygon network</span>. Sending other tokens or using a different network may result in permanent loss of funds.
                     </p>
                   </div>
 
                   {/* Info */}
                   <p className="text-center text-xs text-gray-500">
-                    Your balance updates automatically once the transfer confirms.
+                    Your balance updates automatically once the transfer confirms on the network.
                   </p>
                 </>
               )}
+
+              {/* Disclaimer — shown on both tabs */}
+              <p className="text-center text-[10px] leading-relaxed text-gray-600">
+                Velocity Markets holds funds as USDC, a regulated US dollar stablecoin. Your funds are not FDIC insured. By depositing, you agree to our Terms of Service.
+              </p>
             </>
           )}
         </div>

@@ -307,7 +307,7 @@ const MyWalletPage = () => {
                   </p>
                 )}
                 <p className="text-xs text-[#00D4AA]/70 mt-0.5">
-                  {embeddedWalletAddress ? "USDC on Polygon" : "Platform Balance"}
+                  {embeddedWalletAddress ? "Velocity Markets Balance" : "Platform Balance"}
                 </p>
                 {embeddedWalletAddress && (
                   <p className="text-xs text-white/30 mt-0.5 font-mono">
@@ -356,6 +356,22 @@ const MyWalletPage = () => {
           </div>
         </div>
 
+        {/* Trust signals */}
+        <div className="flex flex-wrap items-center gap-3 px-4 py-2 mb-1">
+          <span className="inline-flex items-center gap-1.5 text-[10px] text-gray-500">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            Secured by Stripe
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-[10px] text-gray-500">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+            Funds held as USDC stablecoin
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-[10px] text-gray-500">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            Withdraw anytime
+          </span>
+        </div>
+
         {/* Secondary balance: DB/platform balance — only shown alongside on-chain balance */}
         {embeddedWalletAddress && walletBalance > 0 && (
           <div className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#49C74233] mb-3">
@@ -377,7 +393,7 @@ const MyWalletPage = () => {
           <div className="w-full flex items-center gap-3 rounded-lg border border-[#FFB547]/30 bg-[#FFB547]/10 px-4 py-3 mb-3">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#FFB547]/30 border-t-[#FFB547]" />
             <p className="text-sm text-[#FFB547]">
-              Processing your ${onrampAmount} USDC deposit… This may take a few minutes.
+              Processing your ${onrampAmount} deposit… This may take a few minutes.
             </p>
           </div>
         </div>
@@ -387,7 +403,7 @@ const MyWalletPage = () => {
           <div className="w-full flex items-center gap-3 rounded-lg border border-[#00D4AA]/30 bg-[#00D4AA]/10 px-4 py-3 mb-3">
             <span className="text-[#00D4AA]">✓</span>
             <p className="text-sm text-[#00D4AA]">
-              ${onrampAmount} USDC deposit complete! Your balance has been updated.
+              ${onrampAmount} deposit complete! Your balance has been updated.
             </p>
           </div>
         </div>
