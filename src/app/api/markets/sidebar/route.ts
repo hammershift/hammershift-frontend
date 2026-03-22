@@ -73,14 +73,18 @@ export async function GET() {
     .filter(m => !m.closesAt || new Date(m.closesAt) > now)
     .slice(0, 5);
 
-  // Biggest movers: compute price change from priceHistory
-  const allActive = await db.collection('polygon_markets')
-    .find({ status: 'ACTIVE' })
-    .project({ question: 1, yesPrice: 1, auctionId: 1, priceHistory: 1, totalVolume: 1, closesAt: 1 })
+  // Biggest movers: use aggregation to compute price delta server-side
+  // Only fetch markets that have priceHistory (potential movers), limit to top 20 by volume
+  // to avoid scanning the entire collection
+  const now24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const moverCandidates = await db.collection('polygon_markets')
+    .find({ status: 'ACTIVE', 'priceHistory.0': { $exists: true } })
+    .sort({ totalVolume: -1 })
+    .limit(20)
+    .project({ question: 1, yesPrice: 1, auctionId: 1, priceHistory: 1, closesAt: 1 })
     .toArray();
 
-  const now24h = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const withDelta = allActive.map(m => {
+  const withDelta = moverCandidates.map(m => {
     const history = (m.priceHistory ?? []) as any[];
     const ref = history.find((h: any) => new Date(h.timestamp) >= now24h) ?? history[0];
     const priceChange = ref ? Math.round(((m.yesPrice ?? 0.5) - (ref.yesPrice ?? 0.5)) * 100) : 0;

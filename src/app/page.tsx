@@ -34,13 +34,71 @@ async function getHomePageData() {
     const db = mongoose.connection.db;
     if (!db) throw new Error("MongoDB connection not established");
     const now = new Date();
-    const liveAuctions: any[] = await Auctions.find({
-      isActive: true,
-      "sort.deadline": { $gt: now },
-    })
-      .sort({ "sort.deadline": 1 })
-      .limit(12)
-      .lean();
+    const weekStart = startOfWeek(now);
+    const QUALIFYING_MAKES_REGEX = /ferrari|lamborghini|corvette|mercedes|bmw|maserati|alfa romeo|mustang|porsche|camaro/i;
+
+    // Run ALL independent queries in parallel
+    const [
+      liveAuctions,
+      totalMarkets,
+      totalPredictions,
+      totalVolumeResult,
+      carsTracked,
+      leaderboard,
+      dailyHammerAuction,
+      heroMarkets,
+    ] = await Promise.all([
+      // Live auctions
+      Auctions.find({
+        isActive: true,
+        "sort.deadline": { $gt: now },
+      })
+        .sort({ "sort.deadline": 1 })
+        .limit(12)
+        .lean() as Promise<any[]>,
+
+      // Cumulative stats
+      db.collection("polygon_markets").countDocuments(),
+      db.collection("predictions").countDocuments(),
+      db.collection("polygon_markets").aggregate([
+        { $group: { _id: null, total: { $sum: "$totalVolume" } } },
+      ]).toArray().then(r => (r[0]?.total ?? 0) / 100),
+      db.collection("auctions").countDocuments(),
+
+      // Leaderboard (weekly top 10)
+      Predictions.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: weekStart },
+            score: { $exists: true, $ne: null }
+          }
+        },
+        {
+          $group: {
+            _id: '$user.userId',
+            total_score: { $sum: '$score' },
+            predictions_count: { $sum: 1 },
+            username: { $first: '$user.username' }
+          }
+        },
+        { $sort: { total_score: -1 } },
+        { $limit: 10 }
+      ]),
+
+      // Daily Hammer
+      db.collection('auctions').findOne({
+        isActive: true,
+        'sort.deadline': { $gt: now },
+        title: { $regex: QUALIFYING_MAKES_REGEX },
+      }, { projection: { _id: 1, auction_id: 1, title: 1, image: 1, 'sort.deadline': 1 } }),
+
+      // Hero carousel markets
+      db.collection('polygon_markets')
+        .find({ status: 'ACTIVE' })
+        .sort({ totalVolume: -1 })
+        .limit(5)
+        .toArray(),
+    ]);
 
     // Featured auction = first (soonest deadline) from live list
     const featuredAuction = liveAuctions[0] ?? null;
@@ -52,51 +110,12 @@ async function getHomePageData() {
       return d && d > now && d < in48h;
     }) ?? null;
 
-    // Cumulative platform stats (all-time, always impressive)
-    const [totalMarkets, totalPredictions, totalVolumeResult, carsTracked] = await Promise.all([
-      db.collection("polygon_markets").countDocuments(),
-      db.collection("predictions").countDocuments(),
-      db.collection("polygon_markets").aggregate([
-        { $group: { _id: null, total: { $sum: "$totalVolume" } } },
-      ]).toArray().then(r => (r[0]?.total ?? 0) / 100), // totalVolume stored in cents
-      db.collection("auctions").countDocuments(),
-    ]);
-
-    // Leaderboard (weekly top 10)
-    const weekStart = startOfWeek(new Date());
-    const leaderboard = await Predictions.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: weekStart },
-          score: { $exists: true, $ne: null }
-        }
-      },
-      {
-        $group: {
-          _id: '$user.userId',
-          total_score: { $sum: '$score' },
-          predictions_count: { $sum: 1 },
-          username: { $first: '$user.username' }
-        }
-      },
-      { $sort: { total_score: -1 } },
-      { $limit: 10 }
-    ]);
-
     const cumulativeStats = {
       totalMarkets,
       totalPredictions,
       totalVolume: totalVolumeResult,
       carsTracked,
     };
-
-    // Fetch one qualifying high-profile car for Daily Hammer widget
-    const QUALIFYING_MAKES_REGEX = /ferrari|lamborghini|corvette|mercedes|bmw|maserati|alfa romeo|mustang|porsche|camaro/i;
-    const dailyHammerAuction = await db.collection('auctions').findOne({
-      isActive: true,
-      'sort.deadline': { $gt: now },
-      title: { $regex: QUALIFYING_MAKES_REGEX },
-    }, { projection: { _id: 1, auction_id: 1, title: 1, image: 1, 'sort.deadline': 1 } });
 
     const dailyHammer = dailyHammerAuction ? {
       auctionId: (dailyHammerAuction.auction_id ?? dailyHammerAuction._id.toString()) as string,
@@ -107,13 +126,7 @@ async function getHomePageData() {
         : null,
     } : null;
 
-    // Hero carousel — top 5 active markets by volume
-    const heroMarkets = await db.collection('polygon_markets')
-      .find({ status: 'ACTIVE' })
-      .sort({ totalVolume: -1 })
-      .limit(5)
-      .toArray();
-
+    // Enrich hero markets with auction data (single batch query)
     const heroAuctionIds = heroMarkets.map((m: any) => m.auctionId).filter(Boolean);
     const heroObjectIds: mongoose.Types.ObjectId[] = [];
     for (const id of heroAuctionIds) {
