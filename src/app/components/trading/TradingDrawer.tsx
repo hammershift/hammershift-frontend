@@ -446,9 +446,14 @@ export default function TradingDrawer({
               : `Buy ${side} — $${isValidAmount ? amount : '0'} USDC`}
           </button>
 
-          <p className="text-xs text-slate-500 text-center">
-            Gas fees sponsored by Velocity Markets
-          </p>
+          <div className="space-y-1.5 text-center">
+            <p className="text-xs text-slate-500">
+              No gas fees — transactions are sponsored by Velocity Markets
+            </p>
+            <p className="text-[10px] text-slate-600">
+              Trades are settled in USDC, a regulated US dollar stablecoin. Not FDIC insured.
+            </p>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

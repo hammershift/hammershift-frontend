@@ -260,7 +260,7 @@ const Navbar = () => {
             <div className="flex items-center justify-center gap-4 px-4">
               {embeddedWalletAddress && privyUser?.balance != null && (
                 <span className="hidden font-mono text-sm text-[#00D4AA] sm:block">
-                  ${privyUser.balance.toFixed(2)} USDC
+                  ${privyUser.balance.toFixed(2)}
                 </span>
               )}
               <button
@@ -404,7 +404,7 @@ const Navbar = () => {
               }}
               className="flex min-h-[44px] w-full items-center border-t border-white/[0.08] px-6 py-3 text-sm font-bold tracking-wider text-[#00D4AA] transition-colors hover:bg-[#16181f]"
             >
-              Deposit USDC
+              Add Funds
             </button>
           )}
         </nav>
