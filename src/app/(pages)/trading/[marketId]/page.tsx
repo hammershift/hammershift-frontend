@@ -193,22 +193,22 @@ export default function TradingPage() {
   }, [fetchMarketData, fetchUserOrders, fetchUserPositions, fetchRecentTrades]);
 
   // -------------------------------------------------------------------------
-  // Auto-refresh market data every 15 seconds
+  // Auto-refresh market data every 30 seconds
   // -------------------------------------------------------------------------
   useEffect(() => {
     const interval = setInterval(() => {
       fetchMarketData();
-    }, 15000);
+    }, 30000);
     return () => clearInterval(interval);
   }, [fetchMarketData]);
 
   // -------------------------------------------------------------------------
-  // Poll recent trades every 5 seconds (order book is real-time via WebSocket)
+  // Poll recent trades every 15 seconds (order book is real-time via WebSocket)
   // -------------------------------------------------------------------------
   useEffect(() => {
     const interval = setInterval(() => {
       fetchRecentTrades();
-    }, 5000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [fetchRecentTrades]);
 
