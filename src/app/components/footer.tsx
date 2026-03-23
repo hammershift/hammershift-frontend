@@ -10,8 +10,8 @@ const FOOTER_LINKS = {
   Learn: [
     { label: "How It Works", href: "/how_it_works" },
     { label: "FAQ", href: "/faq" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms_of_service" },
+    { label: "Privacy Policy", href: "/privacy_policy" },
   ],
   Community: [
     { label: "Leaderboard", href: "/leaderboard" },
@@ -20,7 +20,7 @@ const FOOTER_LINKS = {
     { label: "Instagram", href: "#" },
   ],
   Company: [
-    { label: "About", href: "/about" },
+    { label: "About", href: "/how_it_works" },
     { label: "Careers", href: "#" },
     { label: "Contact", href: "#" },
     { label: "Press", href: "#" },
