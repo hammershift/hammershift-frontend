@@ -37,9 +37,12 @@ export async function GET(req: NextRequest) {
     }
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
-      const car = await Auctions.findOne({
-        $and: [{ _id: auction_id }, { isActive: true }],
-      });
+      // Try by _id first, then by auction_id field — supports both MongoDB ObjectId
+      // and BaT numeric auction IDs (e.g. from Twitter links)
+      let car = await Auctions.findOne({ _id: auction_id });
+      if (!car) {
+        car = await Auctions.findOne({ auction_id: auction_id });
+      }
       return NextResponse.json(car);
     }
     // api/cars?tournament_id=123123 to get cars by tournament id

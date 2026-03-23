@@ -231,7 +231,10 @@ const GuessTheHammer = () => {
           }
 
           try {
-            const predictionData = await getPredictionData(auctionId);
+            // Use the car's real _id for prediction lookups — the URL `id` param
+            // may be a BaT numeric auction_id which isn't a valid ObjectId
+            const predictionKey = response?._id?.toString() ?? auctionId;
+            const predictionData = await getPredictionData(predictionKey);
             if (session?.user) {
               const sorted = predictionData.sort(
                 (a: Prediction, b: Prediction) => {
@@ -259,9 +262,9 @@ const GuessTheHammer = () => {
             // const userData = await getUserData();
             if (session?.user && auctionId) {
               try {
-                //TODO get user specific prediction, maybe filter just from the predictions array
+                const predictionKey = response?._id?.toString() ?? auctionId;
                 const existingPredictions = await getPredictionDataFilter(
-                  auctionId,
+                  predictionKey,
                   "free_play",
                   session.user.username!
                 );
@@ -270,7 +273,7 @@ const GuessTheHammer = () => {
                   setHasSubmitted(true);
                   setUserPrediction(existingPredictions[0]);
                   setPrediction(
-                    existingPredictions[0].predicted_price?.toString() || ""
+                    existingPredictions[0].predictedPrice?.toString() || ""
                   );
                 }
               } catch (e) {
