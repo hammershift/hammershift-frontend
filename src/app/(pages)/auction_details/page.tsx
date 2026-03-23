@@ -415,61 +415,61 @@ const GuessTheHammer = () => {
                 <CardContent>
                   {/*TODO: change this to not using attributes */}
                   <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                    {car?.attributes[2] && (
+                    {car?.attributes?.[2] && (
                       <div>
                         <div className="text-sm text-gray-400">Make</div>
-                        <div>{car?.attributes[2].value}</div>
+                        <div>{car?.attributes?.[2].value}</div>
                       </div>
                     )}
-                    {car?.attributes[3] && (
+                    {car?.attributes?.[3] && (
                       <div>
                         <div className="text-sm text-gray-400">Model</div>
-                        <div>{car?.attributes[3].value}</div>
+                        <div>{car?.attributes?.[3].value}</div>
                       </div>
                     )}
-                    {car?.attributes[1] && (
+                    {car?.attributes?.[1] && (
                       <div>
                         <div className="text-sm text-gray-400">Year</div>
-                        <div>{car?.attributes[1].value}</div>
+                        <div>{car?.attributes?.[1].value}</div>
                       </div>
                     )}
-                    {car?.attributes[8] && (
+                    {car?.attributes?.[8] && (
                       <div>
                         <div className="text-sm text-gray-400">Location</div>
                         <div className="flex items-center gap-1">
                           <MapPin className="h-3 w-3 text-gray-400" />
-                          {car?.attributes[8].value}
+                          {car?.attributes?.[8].value}
                         </div>
                       </div>
                     )}
-                    {car?.attributes[7] && (
+                    {car?.attributes?.[7] && (
                       <div>
                         <div className="text-sm text-gray-400">Seller</div>
-                        <div>{car?.attributes[7].value}</div>
+                        <div>{car?.attributes?.[7].value}</div>
                       </div>
                     )}
-                    {car?.attributes[10] && (
+                    {car?.attributes?.[10] && (
                       <div>
                         <div className="text-sm text-gray-400">Lot #</div>
                         <div className="flex items-center gap-1">
                           <Hash className="h-3 w-3 text-gray-400" />
-                          {car?.attributes[10].value}
+                          {car?.attributes?.[10].value}
                         </div>
                       </div>
                     )}
                     {/*Add mileage to attributes */}
-                    {car?.listing_details[1] && (
+                    {car?.listing_details?.[1] && (
                       <div>
                         <div className="text-sm text-gray-400">Mileage</div>
-                        <div>{car?.listing_details[1]}</div>
+                        <div>{car?.listing_details?.[1]}</div>
                       </div>
                     )}
-                    {car?.attributes[11] && (
+                    {car?.attributes?.[11] && (
                       <div>
                         <div className="text-sm text-gray-400">
                           Listing Type
                         </div>
-                        <div>{car?.attributes[11].value}</div>
+                        <div>{car?.attributes?.[11].value}</div>
                       </div>
                     )}
                   </div>
@@ -627,7 +627,7 @@ const GuessTheHammer = () => {
                 </div>
               </div>
 
-              {car?.isActive && car?.attributes[10] && (
+              {car?.isActive && car?.attributes?.[10] && (
                 <Button
                   variant="outline"
                   className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924]"
