@@ -11,6 +11,7 @@ import { NextResponse } from 'next/server';
 import connectToDB from '@/lib/mongoose';
 import mongoose from 'mongoose';
 import { computeMarketRiskFields } from '@/lib/marketRiskSetup';
+import { computeLinePrice } from '@/lib/pricingEngine';
 import { keccak256, stringToBytes } from 'viem';
 
 export const dynamic = 'force-dynamic';
@@ -61,7 +62,14 @@ export async function GET(req: Request) {
       continue;
     }
 
-    const predictedPrice = auction.sort?.price ?? 0;
+    // Use pricing engine for comparable-based prediction; fall back to current bid
+    let predictedPrice = auction.sort?.price ?? 0;
+    try {
+      if (auction.title) {
+        const pricing = await computeLinePrice(auction.title);
+        if (pricing.linePrice > 0) predictedPrice = pricing.linePrice;
+      }
+    } catch { /* fall back to current bid */ }
     const closesAt: Date | null = auction.sort?.deadline
       ? new Date(auction.sort.deadline)
       : null;

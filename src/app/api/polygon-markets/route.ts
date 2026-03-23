@@ -3,6 +3,7 @@ import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import { computeMarketRiskFields } from "@/lib/marketRiskSetup";
+import { computeLinePrice } from "@/lib/pricingEngine";
 import { keccak256, stringToBytes } from "viem";
 
 export const dynamic = "force-dynamic";
@@ -41,7 +42,14 @@ async function autoCreateMissingMarkets(
       const auctionId = auction.auction_id ?? auction._id.toString();
       const existing = await db!.collection("polygon_markets").findOne({ auctionId });
       if (existing) continue;
-      const predictedPrice = auction.sort?.price ?? 0;
+      // Use pricing engine for comparable-based prediction; fall back to current bid
+      let predictedPrice = auction.sort?.price ?? 0;
+      try {
+        if (auction.title) {
+          const pricing = await computeLinePrice(auction.title);
+          if (pricing.linePrice > 0) predictedPrice = pricing.linePrice;
+        }
+      } catch { /* fall back to current bid */ }
       const closesAt: Date | null = auction.sort?.deadline ?? null;
       const riskFields = computeMarketRiskFields(closesAt, predictedPrice);
       const onChainMarketId = keccak256(stringToBytes(auctionId));
