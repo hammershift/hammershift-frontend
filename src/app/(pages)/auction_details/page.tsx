@@ -66,6 +66,7 @@ const GuessTheHammer = () => {
   const [selectedImage, setSelectedImage] = useState<number>(0);
   const [error, setError] = useState<string>("");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [agentPrediction, setAgentPrediction] = useState<any>(null);
 
   const freePlayActive = true; // TODO: add check if auction is active and current date isn't 1 day before the deadline
   const { data: session } = useSession();
@@ -209,6 +210,14 @@ const GuessTheHammer = () => {
           const response = await getCarData(auctionId);
           if (response) {
             setCar(response);
+            // Fetch agent prediction for this auction
+            try {
+              const agentRes = await fetch(`/api/agent/prediction/${response.auction_id || auctionId}`);
+              if (agentRes.ok) {
+                const agentData = await agentRes.json();
+                if (agentData.prediction) setAgentPrediction(agentData.prediction);
+              }
+            } catch (e) { /* non-fatal */ }
           } else {
             setCar({
               _id: auctionId,
@@ -627,7 +636,7 @@ const GuessTheHammer = () => {
                 </div>
               </div>
 
-              {car?.isActive && car?.attributes?.[10] && (
+              {car?.page_url && (
                 <Button
                   variant="outline"
                   className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924]"
@@ -639,6 +648,63 @@ const GuessTheHammer = () => {
               )}
             </CardContent>
           </Card>
+
+          {agentPrediction && (
+            <Card className="border-[#E94560]/30 bg-gradient-to-br from-[#1a1025] to-[#16181f]">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                  <span className="text-lg">🤖</span> AI PREDICTION
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <div className="text-xs text-gray-400">Predicted Sale Price</div>
+                    <div className="font-mono text-2xl font-bold text-[#E94560]">
+                      {USDollar.format(agentPrediction.predictedPrice)}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div>
+                      <div className="text-xs text-gray-400">Confidence</div>
+                      <div className={`text-sm font-semibold capitalize ${
+                        agentPrediction.confidence === 'high' ? 'text-[#00D4AA]' :
+                        agentPrediction.confidence === 'medium' ? 'text-[#FFB547]' : 'text-gray-400'
+                      }`}>
+                        {agentPrediction.confidence === 'high' ? '🟢' :
+                         agentPrediction.confidence === 'medium' ? '🟡' : '🔴'}{' '}
+                        {agentPrediction.confidence}
+                      </div>
+                    </div>
+                    {agentPrediction.grade && (
+                      <div>
+                        <div className="text-xs text-gray-400">Grade</div>
+                        <div className={`text-sm font-bold ${
+                          agentPrediction.grade === 'A' ? 'text-[#00D4AA]' :
+                          agentPrediction.grade === 'B' ? 'text-[#00D4AA]' :
+                          agentPrediction.grade === 'C' ? 'text-[#FFB547]' :
+                          agentPrediction.grade === 'D' ? 'text-[#FFB547]' : 'text-[#E94560]'
+                        }`}>
+                          {agentPrediction.grade}
+                        </div>
+                      </div>
+                    )}
+                    {agentPrediction.finalPrice && (
+                      <div>
+                        <div className="text-xs text-gray-400">Sold For</div>
+                        <div className="font-mono text-sm font-semibold text-white">
+                          {USDollar.format(agentPrediction.finalPrice)}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Powered by Velocity Agent · <a href="/velocity-agent" className="text-[#E94560] hover:underline">View Dashboard</a>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {car?.isActive && (
             <div className="mb-8">
