@@ -571,7 +571,7 @@ const GuessTheHammer = () => {
                     Current Bid
                   </div>
                   <div className="text-xl font-bold text-[#E94560] sm:text-2xl">
-                    {USDollar.format(car?.attributes[0].value)}
+                    {USDollar.format(car?.sort?.price ?? car?.attributes?.[0]?.value ?? 0)}
                   </div>
                 </div>
                 <div>
