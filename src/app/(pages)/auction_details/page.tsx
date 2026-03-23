@@ -584,14 +584,14 @@ const GuessTheHammer = () => {
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4 text-gray-400" />
                     <div className="text-base sm:text-lg">
-                      {car && formatTimeLeft(car?.sort!.deadline.toString())}
+                      {car && formatTimeLeft(car?.sort?.deadline?.toString())}
                     </div>
                   </div>
                 </div>
                 <div>
                   <div className="text-xs text-gray-400 sm:text-sm">Bids</div>
                   <div className="text-base sm:text-lg">
-                    {car?.sort!.bids || 0}
+                    {car?.sort?.bids || 0}
                   </div>
                 </div>
                 <div>
