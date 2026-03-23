@@ -10,15 +10,17 @@ import mongoose from "mongoose";
 
 const KNOWN_MAKES = [
   "Aston Martin", "Alfa Romeo", "Mercedes-Benz", "Land Rover", "Rolls-Royce",
-  "De Tomaso", "Austin-Healey", "Acura", "Audi", "Bentley", "BMW", "Bugatti",
-  "Buick", "Cadillac", "Chevrolet", "Chrysler", "Datsun", "DeLorean", "Dodge",
+  "De Tomaso", "Austin-Healey", "International Harvester",
+  "Acura", "Audi", "Auburn", "Bentley", "BMW", "Bugatti",
+  "Buick", "Cadillac", "Chevrolet", "Chrysler", "Citroën", "Cord",
+  "Datsun", "DeLorean", "Dodge", "Duesenberg",
   "Eagle", "Ferrari", "Fiat", "Ford", "Genesis", "GMC", "Honda", "Hummer",
   "Hyundai", "Infiniti", "Isuzu", "Jaguar", "Jeep", "Kia", "Lamborghini",
   "Lancia", "Lexus", "Lincoln", "Lotus", "Maserati", "Mazda", "McLaren",
-  "Mercury", "Mini", "Mitsubishi", "Nissan", "Oldsmobile", "Opel", "Pagani",
+  "Mercury", "MG", "Mini", "Mitsubishi", "Morgan", "Nissan", "Oldsmobile", "Opel", "Pagani",
   "Peugeot", "Plymouth", "Pontiac", "Porsche", "Ram", "Renault", "Saab",
-  "Saturn", "Scion", "Shelby", "Subaru", "Suzuki", "Tesla", "Toyota",
-  "Triumph", "Volkswagen", "Volvo",
+  "Saturn", "Scion", "Shelby", "Studebaker", "Subaru", "Suzuki", "Tesla", "Toyota",
+  "Triumph", "Tucker", "Volkswagen", "Volvo",
 ];
 
 const makesByLength = [...KNOWN_MAKES].sort((a, b) => b.length - a.length);
@@ -31,12 +33,13 @@ interface ParsedTitle {
   year: number | null;
   make: string | null;
   model: string | null;
+  trim: string | null;
   mileage: number | null;
   noReserve: boolean;
 }
 
 function parseBatTitle(title: string): ParsedTitle {
-  if (!title) return { year: null, make: null, model: null, mileage: null, noReserve: false };
+  if (!title) return { year: null, make: null, model: null, trim: null, mileage: null, noReserve: false };
 
   const yearMatch = title.match(/\b(19[2-9]\d|20[0-2]\d)\b/);
   const year = yearMatch ? parseInt(yearMatch[1], 10) : null;
@@ -55,6 +58,7 @@ function parseBatTitle(title: string): ParsedTitle {
   const make = makeMatch ? makeMatch[1] : null;
 
   let model: string | null = null;
+  let trim: string | null = null;
   if (year != null && make) {
     const ymRegex = new RegExp(
       `${year}\\s+${make.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+`, "i"
@@ -68,11 +72,15 @@ function parseBatTitle(title: string): ParsedTitle {
         .replace(/\b\d-[Ss]peed\b/g, "")
         .replace(/\bmodified\b/gi, "")
         .trim();
-      if (after) model = after.split(/\s+/)[0] || null;
+      if (after) {
+        const parts = after.split(/\s+/);
+        model = parts[0] || null;
+        trim = parts.length > 1 ? parts.slice(1).join(" ").trim() || null : null;
+      }
     }
   }
 
-  return { year, make, model, mileage, noReserve };
+  return { year, make, model, trim, mileage, noReserve };
 }
 
 // ---------- Comparable Sales Query ----------
@@ -248,11 +256,28 @@ export async function computeLinePrice(title: string): Promise<PricingResult> {
   const db = mongoose.connection.db;
   if (!db) return fallback;
 
-  // Find comps with year filter, then broaden if needed
+  // Build a specific model string that includes trim for narrower matching
+  // e.g. "911 S/T" instead of just "911", "M5" stays "M5"
+  const specificModel = parsed.trim
+    ? `${parsed.model} ${parsed.trim.split(/\s+/).slice(0, 2).join(" ")}`
+    : parsed.model;
+
+  // Find comps with year filter, then broaden progressively
   const yearRange: [number, number] | undefined = parsed.year
     ? [parsed.year - 5, parsed.year + 5] : undefined;
-  let comps = await findComparableSales(db, parsed.make, parsed.model, yearRange);
 
+  // Stage 1: Narrow search (model + trim, within year range)
+  let comps = specificModel !== parsed.model
+    ? await findComparableSales(db, parsed.make, specificModel, yearRange)
+    : [];
+
+  // Stage 2: Model-only within year range
+  if (comps.length < 5) {
+    const modelComps = await findComparableSales(db, parsed.make, parsed.model, yearRange);
+    if (modelComps.length > comps.length) comps = modelComps;
+  }
+
+  // Stage 3: Model-only, no year filter
   if (comps.length < 5) {
     const broader = await findComparableSales(db, parsed.make, parsed.model);
     if (broader.length > comps.length) comps = broader;
