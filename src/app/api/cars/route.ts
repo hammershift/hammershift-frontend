@@ -37,9 +37,12 @@ export async function GET(req: NextRequest) {
     }
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
-      // Try by _id first, then by auction_id field — supports both MongoDB ObjectId
-      // and BaT numeric auction IDs (e.g. from Twitter links)
-      let car = await Auctions.findOne({ _id: auction_id });
+      // Try by _id first (if it looks like a valid ObjectId), then by auction_id field
+      // — supports both MongoDB ObjectId and BaT numeric auction IDs (e.g. from Twitter links)
+      let car = null;
+      if (mongoose.isValidObjectId(auction_id)) {
+        car = await Auctions.findOne({ _id: auction_id });
+      }
       if (!car) {
         car = await Auctions.findOne({ auction_id: auction_id });
       }
