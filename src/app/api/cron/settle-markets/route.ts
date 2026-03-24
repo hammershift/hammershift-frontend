@@ -66,6 +66,8 @@ interface SettlementResult {
   totalNetPayout: number;
   totalFeeCollected: number;
   settled: boolean;
+  mode: "normal" | "refund";
+  reason?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -108,134 +110,247 @@ export async function GET(req: Request) {
       totalNetPayout: 0,
       totalFeeCollected: 0,
       settled: false,
+      mode: "normal",
     };
 
-    // Find all OPEN winning positions for this market
-    const winningPositions = await db
+    // ── 0. Calculate real money deposited on this market ─────────────────────
+    // Only real user trades count — the virtual pool seed is NOT real money.
+    const tradesAgg = await db
+      .collection("polygon_trades")
+      .aggregate([
+        { $match: { marketId } },
+        { $group: { _id: null, realDeposits: { $sum: "$usdcSpent" } } },
+      ])
+      .toArray();
+    const realDeposits = tradesAgg[0]?.realDeposits ?? 0;
+
+    // Find ALL open positions (winners and losers)
+    const allOpenPositions = await db
       .collection("polygon_positions")
-      .find({
-        marketId,
-        outcome: winningOutcome,
-        status: "OPEN",
-      })
+      .find({ marketId, status: "OPEN" })
       .toArray();
 
-    // Process each position
-    for (const position of winningPositions) {
-      const positionId = position._id as ObjectId;
-      const userId = position.userId as ObjectId;
-      const shares: number = position.shares ?? 0;
+    const winningPositions = allOpenPositions.filter(
+      (p) => p.outcome === winningOutcome
+    );
+    const losingPositions = allOpenPositions.filter(
+      (p) => p.outcome !== winningOutcome
+    );
 
-      if (shares <= 0) {
-        // Zero-share position — mark settled, no payout
-        await db
-          .collection("polygon_positions")
-          .updateOne(
-            { _id: positionId, status: "OPEN" },
-            { $set: { status: "SETTLED", settledAt: now, payout: 0, updatedAt: now } }
-          )
-          .catch(() => {});
-        continue;
-      }
+    // Calculate total payout winners would need
+    const totalWinnerShares = winningPositions.reduce(
+      (sum, p) => sum + (p.shares ?? 0),
+      0
+    );
+    const totalWinnerPayout = calcSettlementPayout(totalWinnerShares);
 
-      const { grossPayout, fee, netPayout } = calcSettlementPayout(shares);
+    // ── SOLVENCY CHECK ──────────────────────────────────────────────────────
+    // If real deposits can't cover winner payouts, trigger refund mode.
+    // This prevents paying winners with phantom seed money.
+    const canCoverPayouts = realDeposits >= totalWinnerPayout.netPayout;
 
-      try {
-        // ── a. Mark position SETTLED (idempotent: OPEN guard) ───────────────
-        const settleResult = await db
-          .collection("polygon_positions")
-          .findOneAndUpdate(
-            { _id: positionId, status: "OPEN" }, // guard prevents double-settlement
-            {
-              $set: {
-                status: "SETTLED",
-                settledAt: now,
-                grossPayout,
-                settlementFee: fee,
-                payout: netPayout,
-                updatedAt: now,
+    if (!canCoverPayouts && realDeposits > 0) {
+      // ── REFUND MODE ─────────────────────────────────────────────────────
+      // Not enough on the losing side to pay winners.
+      // Refund everyone their original totalCost (minus the 2% entry fee
+      // which was already collected).
+      result.mode = "refund";
+      result.reason = `Insufficient liquidity: $${realDeposits.toFixed(2)} real deposits vs $${totalWinnerPayout.netPayout.toFixed(2)} needed for payouts`;
+
+      console.warn(
+        `settle-markets: REFUND MODE for market ${marketId.toHexString()} — ${result.reason}`
+      );
+
+      for (const position of allOpenPositions) {
+        const positionId = position._id as ObjectId;
+        const userId = position.userId as ObjectId;
+        const refundAmount: number = position.totalCost ?? 0;
+
+        if (refundAmount <= 0) {
+          await db
+            .collection("polygon_positions")
+            .updateOne(
+              { _id: positionId, status: "OPEN" },
+              { $set: { status: "REFUNDED", settledAt: now, payout: 0, updatedAt: now } }
+            )
+            .catch(() => {});
+          continue;
+        }
+
+        try {
+          // Mark position REFUNDED
+          const refundResult = await db
+            .collection("polygon_positions")
+            .findOneAndUpdate(
+              { _id: positionId, status: "OPEN" },
+              {
+                $set: {
+                  status: "REFUNDED",
+                  settledAt: now,
+                  payout: refundAmount,
+                  refundReason: "insufficient_liquidity",
+                  updatedAt: now,
+                },
               },
+              { returnDocument: "after" }
+            );
+
+          if (!refundResult) continue;
+
+          // Credit back the original cost
+          await db.collection("users").findOneAndUpdate(
+            { _id: userId },
+            {
+              $inc: { balance: refundAmount },
+              $set: { updatedAt: now },
+            }
+          );
+
+          // Audit trail
+          await db.collection("transactions").insertOne({
+            userID: userId,
+            transactionType: "refund",
+            amount: refundAmount,
+            type: "+",
+            status: "success",
+            marketId,
+            positionId,
+            refundReason: "insufficient_liquidity",
+            transactionDate: now,
+          });
+
+          result.positionsSettled++;
+          result.totalNetPayout += refundAmount;
+        } catch (refundErr) {
+          console.error(
+            `settle-markets: refund failed for position ${positionId.toHexString()}:`,
+            refundErr
+          );
+          result.positionsFailed++;
+        }
+      }
+    } else if (realDeposits === 0) {
+      // ── NO REAL TRADES — just close all positions with $0 payout ────────
+      result.mode = "refund";
+      result.reason = "No real trades on this market";
+
+      await db.collection("polygon_positions").updateMany(
+        { marketId, status: "OPEN" },
+        { $set: { status: "SETTLED", settledAt: now, payout: 0, updatedAt: now } }
+      );
+    } else {
+      // ── NORMAL SETTLEMENT — real deposits cover payouts ─────────────────
+      result.mode = "normal";
+
+      for (const position of winningPositions) {
+        const positionId = position._id as ObjectId;
+        const userId = position.userId as ObjectId;
+        const shares: number = position.shares ?? 0;
+
+        if (shares <= 0) {
+          await db
+            .collection("polygon_positions")
+            .updateOne(
+              { _id: positionId, status: "OPEN" },
+              { $set: { status: "SETTLED", settledAt: now, payout: 0, updatedAt: now } }
+            )
+            .catch(() => {});
+          continue;
+        }
+
+        const { grossPayout, fee, netPayout } = calcSettlementPayout(shares);
+
+        try {
+          // ── a. Mark position SETTLED (idempotent: OPEN guard) ─────────────
+          const settleResult = await db
+            .collection("polygon_positions")
+            .findOneAndUpdate(
+              { _id: positionId, status: "OPEN" },
+              {
+                $set: {
+                  status: "SETTLED",
+                  settledAt: now,
+                  grossPayout,
+                  settlementFee: fee,
+                  payout: netPayout,
+                  updatedAt: now,
+                },
+              },
+              { returnDocument: "after" }
+            );
+
+          if (!settleResult) continue;
+
+          // ── b. Credit user wallet ──────────────────────────────────────────
+          const updatedUser = await db.collection("users").findOneAndUpdate(
+            { _id: userId },
+            {
+              $inc: { balance: netPayout },
+              $set: { updatedAt: now },
             },
             { returnDocument: "after" }
           );
 
-        if (!settleResult) {
-          // Position was already settled by a previous run — skip
-          continue;
-        }
-
-        // ── b. Credit user wallet ────────────────────────────────────────────
-        const updatedUser = await db.collection("users").findOneAndUpdate(
-          { _id: userId },
-          {
-            $inc: { balance: netPayout },
-            $set: { updatedAt: now },
-          },
-          { returnDocument: "after" }
-        );
-
-        // ── b1. Send prediction result email to winner (non-blocking) ─────────
-        const updatedUserDoc = updatedUser && "value" in updatedUser ? updatedUser.value : updatedUser;
-        if (updatedUserDoc?.email) {
-          try {
-            await sendMarketResultEmail({
-              to: updatedUserDoc.email as string,
-              marketTitle: market.title ?? market.question ?? "a market",
-              outcome: "won",
-              amount: netPayout,
-            });
-          } catch (emailErr) {
-            console.error(
-              `settle-markets: result email failed for user ${userId.toHexString()}:`,
-              emailErr
-            );
+          // ── b1. Send result email to winner (non-blocking) ─────────────────
+          const updatedUserDoc = updatedUser && "value" in updatedUser ? updatedUser.value : updatedUser;
+          if (updatedUserDoc?.email) {
+            try {
+              await sendMarketResultEmail({
+                to: updatedUserDoc.email as string,
+                marketTitle: market.title ?? market.question ?? "a market",
+                outcome: "won",
+                amount: netPayout,
+              });
+            } catch (emailErr) {
+              console.error(
+                `settle-markets: result email failed for user ${userId.toHexString()}:`,
+                emailErr
+              );
+            }
           }
+
+          // ── c. Transaction audit record ────────────────────────────────────
+          await db.collection("transactions").insertOne({
+            userID: userId,
+            transactionType: "prediction_payout",
+            amount: netPayout,
+            type: "+",
+            status: "success",
+            marketId,
+            positionId,
+            grossPayout,
+            settlementFee: fee,
+            winningOutcome,
+            transactionDate: now,
+          });
+
+          // ── d. Fee ledger entry ────────────────────────────────────────────
+          await db.collection("fee_ledger").insertOne({
+            type: "settlement_fee",
+            marketId,
+            userId,
+            positionId,
+            amount: fee,
+            grossPayout,
+            createdAt: now,
+          });
+
+          result.positionsSettled++;
+          result.totalNetPayout += netPayout;
+          result.totalFeeCollected += fee;
+        } catch (positionErr) {
+          console.error(
+            `settle-markets: failed to settle position ${positionId.toHexString()} in market ${marketId.toHexString()}:`,
+            positionErr
+          );
+          result.positionsFailed++;
         }
-
-        // ── c. Transaction audit record ──────────────────────────────────────
-        await db.collection("transactions").insertOne({
-          userID: userId,
-          transactionType: "prediction_payout",
-          amount: netPayout,
-          type: "+",
-          status: "success",
-          marketId,
-          positionId,
-          grossPayout,
-          settlementFee: fee,
-          winningOutcome,
-          transactionDate: now,
-        });
-
-        // ── d. Fee ledger entry ──────────────────────────────────────────────
-        await db.collection("fee_ledger").insertOne({
-          type: "settlement_fee",
-          marketId,
-          userId,
-          positionId,
-          amount: fee,
-          grossPayout,
-          createdAt: now,
-        });
-
-        result.positionsSettled++;
-        result.totalNetPayout += netPayout;
-        result.totalFeeCollected += fee;
-      } catch (positionErr) {
-        // Log but do not abort — other positions still get settled
-        console.error(
-          `settle-markets: failed to settle position ${positionId.toHexString()} in market ${marketId.toHexString()}:`,
-          positionErr
-        );
-        result.positionsFailed++;
       }
     }
 
-    // ── 3. Mark losing positions as LOST ─────────────────────────────────────
-    // Any OPEN positions remaining for this market did not win — mark them LOST.
-    // This runs after all winners have been SETTLED (or skipped as already done),
-    // so the only remaining OPEN positions belong to losers.
-    if (result.positionsFailed === 0) {
+    // ── 3. Mark losing positions as LOST (only in normal mode) ────────────────
+    // In refund mode, all positions were already handled above.
+    if (result.positionsFailed === 0 && result.mode === "normal") {
       await db.collection("polygon_positions").updateMany(
         { marketId, status: "OPEN" },
         { $set: { status: "LOST", settledAt: now, updatedAt: now } }
