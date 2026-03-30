@@ -33,21 +33,21 @@ export default function AuctionHero() {
                 <Link href="/free_play">
                     <Button
                         variant="default"
-                        className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 sm:w-auto"
+                        className="w-full bg-[#01696F] text-white hover:bg-[#0C4E54] sm:w-auto"
                     >
                         PLAY FREE GAME
                     </Button>
                 </Link>
                 <Link
                     href="/tournaments"
-                    className={`w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924] sm:w-auto ${isTournamentDisabled ? 'pointer-events-none opacity-50' : ''
+                    className={`w-full border-[#01696F] text-[#01696F] hover:bg-[#01696F] hover:text-white sm:w-auto ${isTournamentDisabled ? 'pointer-events-none opacity-50' : ''
                         }`}
                     aria-disabled={isTournamentDisabled}
                     tabIndex={isTournamentDisabled ? -1 : undefined}
                 >
                     <Button
                         variant="outline"
-                        className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924] sm:w-auto"
+                        className="w-full border-[#01696F] text-[#01696F] hover:bg-[#01696F] hover:text-white sm:w-auto"
                     >
                         {"JOIN TOURNAMENT (COMING SOON)"}
                     </Button>

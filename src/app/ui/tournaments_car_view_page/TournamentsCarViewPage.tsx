@@ -162,7 +162,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
       {canceledTournament ? (
         <button
           disabled
-          className="flex items-center gap-2 rounded bg-white px-3.5 py-2.5 font-bold text-[#0f1923]"
+          className="flex items-center gap-2 rounded bg-[#1a1a1a] border border-[#2a2a2a] px-3.5 py-2.5 font-bold text-white"
         >
           Tournament Cancelled
         </button>
@@ -173,7 +173,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
       ) : buyInEnded ? (
         <button
           disabled
-          className="flex items-center gap-2 rounded bg-white px-3.5 py-2.5 font-bold text-[#0f1923]"
+          className="flex items-center gap-2 rounded bg-[#1a1a1a] border border-[#2a2a2a] px-3.5 py-2.5 font-bold text-white"
         >
           Buy-in period has ended
         </button>
@@ -181,7 +181,7 @@ export const TournamentButtons: React.FC<TournamentButtonsI> = ({
         <button
           type="button"
           disabled
-          className="flex items-center gap-2 rounded bg-white px-3.5 py-2.5 font-bold text-[#0f1923]"
+          className="flex items-center gap-2 rounded bg-[#1a1a1a] border border-[#2a2a2a] px-3.5 py-2.5 font-bold text-white"
         >
           JOINED{" "}
           <Image

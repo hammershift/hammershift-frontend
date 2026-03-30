@@ -269,7 +269,7 @@ export default function TradingDrawer({
       <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
         <SheetContent>
           <SheetHeader>
-            <p className="text-xs text-slate-400 uppercase tracking-widest">
+            <p className="text-xs text-slate-400 uppercase tracking-wide">
               Trade Confirmed
             </p>
             <SheetTitle>{market.auction.title ?? 'Market'}</SheetTitle>
@@ -327,7 +327,7 @@ export default function TradingDrawer({
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent>
         <SheetHeader>
-          <p className="text-xs text-slate-400 uppercase tracking-widest">
+          <p className="text-xs text-slate-400 uppercase tracking-wide">
             Prediction Market
           </p>
           <SheetTitle>{market.auction.title ?? 'Market'}</SheetTitle>

@@ -214,7 +214,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
                     type="button"
                     onClick={handleDeposit}
                     disabled={loading}
-                    className="w-full rounded-xl bg-[#E94560] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#E94560]/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full rounded-xl bg-[#01696F] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0C4E54] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">
@@ -260,7 +260,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
 
                   {/* QR Code */}
                   <div className="flex justify-center">
-                    <div className="rounded-xl bg-white p-3">
+                    <div className="rounded-xl bg-[#1a1a1a] p-3">
                       <QRCodeSVG
                         value={embeddedWalletAddress}
                         size={160}

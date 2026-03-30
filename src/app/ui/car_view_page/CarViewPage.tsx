@@ -357,7 +357,7 @@ export const WatchAndWagerButtons: React.FC<WatchAndWagerButtonsProps> = ({
             <button
               type="button"
               disabled
-              className="flex items-center gap-2 rounded bg-white px-3.5 py-2.5 font-bold text-[#0f1923]"
+              className="flex items-center gap-2 rounded bg-[#1a1a1a] border border-[#2a2a2a] px-3.5 py-2.5 font-bold text-white"
             >
               WAGERED{" "}
               <Image
@@ -566,7 +566,7 @@ export const WinnersSection: React.FC<WinnersI> = ({ winners, price }) => {
                   </div>
                 </div>
               </div>
-              <div className="rounded bg-white px-1.5 py-1 text-sm font-extrabold text-[#0f1923]">
+              <div className="rounded bg-[#1a1a1a] px-1.5 py-1 text-sm font-extrabold text-white">
                 ${new Intl.NumberFormat().format(winner.priceGuessed)}
               </div>
             </div>

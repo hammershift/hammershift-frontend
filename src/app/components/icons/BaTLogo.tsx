@@ -2,7 +2,7 @@
 export default function BaTLogo({ className }: { className?: string }) {
   return (
     <span
-      className={`font-mono text-xs font-bold text-orange-400 tracking-widest uppercase ${className ?? ''}`}
+      className={`font-mono text-xs font-bold text-orange-400 tracking-wide uppercase ${className ?? ''}`}
     >
       BaT
     </span>

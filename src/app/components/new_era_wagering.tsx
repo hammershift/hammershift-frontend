@@ -85,7 +85,7 @@ const NewEraWagering = () => {
 
             {pathname === "/live" ? (
                 <div className="options grid cols-1 lg:grid-cols-2 gap-6 md:gap-[64px] px-4 md:px-16 pt-16 sm:pt-[120px] w-screen 2xl:w-[1440px] self-center">
-                    <div className=" bg-white rounded-lg text-center py-[80px] px-[56px]">
+                    <div className=" bg-[#1a1a1a] rounded-lg text-center py-[80px] px-[56px]">
                         <Image
                             src={LiveGamesIcon}
                             width={180}
@@ -101,13 +101,13 @@ const NewEraWagering = () => {
                             price. Closest player wins the prize.
                         </p>
                         <button
-                            className="mt-6 py-3 px-4 font-bold bg-[#E94560] rounded"
+                            className="mt-6 py-3 px-4 font-bold bg-[#01696F] rounded"
                             onClick={(e) => router.push("/auctions")}
                         >
                             View games
                         </button>
                     </div>
-                    <div className="bg-white rounded-lg text-center py-[80px] px-[56px]">
+                    <div className="bg-[#1a1a1a] rounded-lg text-center py-[80px] px-[56px]">
                         <Image
                             src={TournamentsIcon}
                             width={180}
@@ -123,7 +123,7 @@ const NewEraWagering = () => {
                             price of a curated set of car auctions.
                         </p>
                         <button
-                            className="mt-6 py-3 px-4 font-bold bg-[#E94560] rounded"
+                            className="mt-6 py-3 px-4 font-bold bg-[#01696F] rounded"
                             onClick={(e) => router.push("/tournaments")}
                         >
                             View tournaments
@@ -132,7 +132,7 @@ const NewEraWagering = () => {
                 </div>
             ) : (
                 <div className="options grid cols-1 lg:grid-cols-3 gap-6 px-4 md:px-16 pt-16 sm:pt-[120px] w-screen 2xl:w-[1440px] self-center">
-                    <div className=" bg-white rounded-lg text-center py-[32px] px-[24px]">
+                    <div className=" bg-[#1a1a1a] rounded-lg text-center py-[32px] px-[24px]">
                         <Image
                             src={LiveGamesIcon}
                             width={68}
@@ -154,7 +154,7 @@ const NewEraWagering = () => {
                             View games
                         </button>
                     </div>
-                    <div className="bg-white rounded-lg text-center py-[32px] px-[24px]">
+                    <div className="bg-[#1a1a1a] rounded-lg text-center py-[32px] px-[24px]">
                         <Image
                             src={TeamBattlesIcon}
                             width={68}
@@ -176,7 +176,7 @@ const NewEraWagering = () => {
                             Coming soon!
                         </button>
                     </div>
-                    <div className="bg-white rounded-lg text-center py-[32px] px-[24px]">
+                    <div className="bg-[#1a1a1a] rounded-lg text-center py-[32px] px-[24px]">
                         <Image
                             src={TournamentsIcon}
                             width={68}

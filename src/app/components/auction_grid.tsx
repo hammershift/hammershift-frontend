@@ -132,7 +132,7 @@ export const AuctionGrid = ({
                         ? "bg-green-600 hover:bg-green-700"
                         : mode === "tournament"
                           ? "bg-purple-600 hover:bg-purple-700"
-                          : "bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90"
+                          : "bg-[#01696F] text-white hover:bg-[#0C4E54]"
                     }
                   >
                     {mode === "price_is_right"

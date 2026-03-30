@@ -13,7 +13,7 @@ export default function MarketCardSkeleton() {
         {/* Buttons */}
         <div className="flex gap-2">
           <div className="flex-1 h-9 bg-[#00D4AA]/10 rounded-lg" />
-          <div className="flex-1 h-9 bg-[#E94560]/10 rounded-lg" />
+          <div className="flex-1 h-9 bg-[#01696F]/10 rounded-lg" />
         </div>
       </div>
     </div>

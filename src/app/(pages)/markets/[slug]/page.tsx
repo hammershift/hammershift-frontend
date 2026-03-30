@@ -100,7 +100,7 @@ export default async function MarketSlugPage({
       />
       <div className="min-h-screen bg-[#16181f] text-[#F8FAFC] p-6">
       <div className="max-w-2xl mx-auto pt-24">
-        <p className="text-sm text-slate-400 uppercase tracking-widest mb-2">
+        <p className="text-sm text-slate-400 uppercase tracking-wide mb-2">
           Prediction Market
         </p>
         <h1 className="text-3xl font-bold mb-4">{market.auction.title}</h1>

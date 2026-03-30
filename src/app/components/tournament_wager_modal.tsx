@@ -123,7 +123,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
               className="h-[32px] w-[32px]"
             />
             <div>
-              <div className="text-xs font-semibold tracking-widest text-[#40ab3d]">
+              <div className="text-xs font-semibold tracking-wide text-[#40ab3d]">
                 POTENTIAL PRIZE
               </div>
               <div className="text-lg">
@@ -146,7 +146,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
               className="h-[32px] w-[32px]"
             />
             <div>
-              <div className="text-xs font-semibold tracking-widest text-[#40ab3d]">
+              <div className="text-xs font-semibold tracking-wide text-[#40ab3d]">
                 TOURNAMENT ENDS
               </div>
               <div className="text-lg">{formattedDateString}</div>

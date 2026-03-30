@@ -275,21 +275,21 @@ const TournamentsCard = ({
           <div>
             {canceledTournament ? (
               <button
-                className="h-10 w-full rounded-md bg-white font-bold text-black"
+                className="h-10 w-full rounded-md bg-[#01696F] font-bold text-white"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 Tournament Cancelled
               </button>
             ) : tournamentEnded ? (
               <button
-                className="h-10 w-full rounded-md bg-[#E94560] font-bold text-black"
+                className="h-10 w-full rounded-md bg-[#01696F] font-bold text-white"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 View Results 🏆
               </button>
             ) : (
               <button
-                className="h-10 w-full rounded-md bg-white font-bold text-black"
+                className="h-10 w-full rounded-md bg-[#01696F] font-bold text-white"
                 onClick={() => router.push(`/tournaments/${tournament_id}`)}
               >
                 {/* View Results */}

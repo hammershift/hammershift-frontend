@@ -109,7 +109,7 @@ function OnboardingModalWithPrivy() {
         </div>
 
         {/* Step label */}
-        <p className="mb-2 text-xs font-mono uppercase tracking-widest text-[#FFB547]">
+        <p className="mb-2 text-xs font-mono uppercase tracking-wide text-[#FFB547]">
           Step {step + 1} of {STEPS.length}
         </p>
 
@@ -125,7 +125,7 @@ function OnboardingModalWithPrivy() {
           <div className="flex flex-col gap-3">
             <button
               onClick={handleConnect}
-              className="w-full rounded-xl bg-[#E94560] py-3 font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
+              className="w-full rounded-xl bg-[#01696F] py-3 font-semibold text-white hover:bg-[#0C4E54] transition-colors"
             >
               Connect with Email →
             </button>
@@ -139,7 +139,7 @@ function OnboardingModalWithPrivy() {
         ) : (
           <button
             onClick={handleNext}
-            className="w-full rounded-xl bg-[#E94560] py-3 font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
+            className="w-full rounded-xl bg-[#01696F] py-3 font-semibold text-white hover:bg-[#0C4E54] transition-colors"
           >
             Next →
           </button>
@@ -214,7 +214,7 @@ function OnboardingModalNoPrivy() {
           ))}
         </div>
 
-        <p className="mb-2 text-xs font-mono uppercase tracking-widest text-[#FFB547]">
+        <p className="mb-2 text-xs font-mono uppercase tracking-wide text-[#FFB547]">
           Step {step + 1} of {STEPS.length}
         </p>
 
@@ -228,7 +228,7 @@ function OnboardingModalNoPrivy() {
           <div className="flex flex-col gap-3">
             <button
               onClick={dismiss}
-              className="w-full rounded-xl bg-[#E94560] py-3 font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
+              className="w-full rounded-xl bg-[#01696F] py-3 font-semibold text-white hover:bg-[#0C4E54] transition-colors"
             >
               Get Started →
             </button>
@@ -242,7 +242,7 @@ function OnboardingModalNoPrivy() {
         ) : (
           <button
             onClick={handleNext}
-            className="w-full rounded-xl bg-[#E94560] py-3 font-semibold text-white hover:bg-[#E94560]/90 transition-colors"
+            className="w-full rounded-xl bg-[#01696F] py-3 font-semibold text-white hover:bg-[#0C4E54] transition-colors"
           >
             Next →
           </button>

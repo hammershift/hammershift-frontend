@@ -74,7 +74,7 @@ const Subscribe = () => {
     };
 
     return (
-        <div className="relative text-[#0F1923] bg-[#E94560] h-auto md:max-h-[664px] flex  justify-center w-full mt-[-1px] overflow-hidden">
+        <div className="relative text-[#0F1923] bg-[#01696F] h-auto md:max-h-[664px] flex  justify-center w-full mt-[-1px] overflow-hidden">
             <div className="relative mt-[350px] md:mt-0 px-4 md:px-16 w-full 2xl:w-[1440px] py-16 md:py-[174px] z-50 ">
                 <div className="grid grid-cols-1 md:grid-cols-2 ">
                     <div>
@@ -168,7 +168,7 @@ export default Subscribe;
 
 export const SubscribeSmall = () => {
     return (
-        <div className="w-full h-auto  bg-[#E94560] flex justify-center">
+        <div className="w-full h-auto  bg-[#01696F] flex justify-center">
             <div className="section-container flex flex-col md:flex-row justify-between items-center text-[#0F1923] py-[60px]">
                 <div>
                     <div className="text-[20px] font-bold">

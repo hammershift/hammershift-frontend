@@ -130,7 +130,7 @@ export const LiveAuctions = () => {
                       <div className="absolute right-2 top-2">
                         <Badge
                           variant="default"
-                          className="bg-[#E94560] text-[#0C1924]"
+                          className="bg-[#01696F] text-white"
                         >
                           {auction.attributes[2].value}
                         </Badge>
@@ -172,7 +172,7 @@ export const LiveAuctions = () => {
                           <Link
                             href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams("free_play"))}`}
                           >
-                            <Button className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
+                            <Button className="bg-[#01696F] text-white hover:bg-[#0C4E54]">
                               PREDICT NOW
                             </Button>
                           </Link>

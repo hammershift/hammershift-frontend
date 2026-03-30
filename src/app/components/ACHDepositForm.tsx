@@ -137,7 +137,7 @@ export function ACHDepositForm({ onSuccess, onCancel }: ACHDepositFormProps) {
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 bg-[#E94560] text-white py-2 px-4 rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-[#E94560]/90 transition-colors"
+          className="flex-1 bg-[#01696F] text-white py-2 px-4 rounded-lg text-sm font-semibold disabled:opacity-50 hover:bg-[#0C4E54] transition-colors"
         >
           {submitting ? "Submitting..." : "Deposit via Bank Transfer"}
         </button>

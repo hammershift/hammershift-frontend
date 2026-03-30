@@ -55,16 +55,16 @@ export default function TopPredictors({ leaderboard }: TopPredictorsProps) {
       <div className="rounded-2xl border border-white/[0.08] bg-[#16181f] overflow-hidden">
         {/* Table header */}
         <div className="grid grid-cols-[48px_1fr_120px_80px] items-center border-b border-white/[0.08] px-6 py-3">
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-600">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
             #
           </span>
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-600">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-600">
             Predictor
           </span>
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-600 text-right">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-600 text-right">
             Score
           </span>
-          <span className="text-xs font-semibold uppercase tracking-widest text-gray-600 text-right">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-600 text-right">
             Picks
           </span>
         </div>
