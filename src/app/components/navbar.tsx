@@ -41,7 +41,9 @@ const Navbar = () => {
   const logoUrl =
     "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
   const navBarList = [
-    { title: "Markets", urlString: "markets" },
+    { title: "Tournaments", urlString: "tournaments" },
+    { title: "Guess the Hammer", urlString: "price_is_right" },
+    { title: "Free Play", urlString: "markets" },
     { title: "Leaderboard", urlString: "leaderboard" },
     { title: "How It Works", urlString: "how_it_works" },
   ];

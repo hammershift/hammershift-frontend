@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import {
   BarChart3,
   Bot,
@@ -297,13 +298,13 @@ export default function HowItWorks() {
               Browse live markets, study the AI prediction, and trade on what you
               think a car will sell for. Your knowledge of the market is your edge.
             </p>
-            <a
+            <Link
               href="/markets"
               className="inline-flex items-center gap-2 bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
             >
               Browse Markets
               <TrendingUp className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
         </div>
 
