@@ -95,6 +95,23 @@ async function getPageData() {
     }
   }
 
+  // Get user's graded guesses for share links
+  let userGradedGuesses: Record<string, string> = {};
+  if (userId) {
+    const gradedGuesses = await db
+      .collection("guesstehammers")
+      .find({
+        user: new mongoose.Types.ObjectId(userId),
+        auction: { $in: resultAuctionIds },
+        status: { $in: ["graded", "paid"] },
+      })
+      .project({ auction: 1 })
+      .toArray();
+    for (const g of gradedGuesses) {
+      userGradedGuesses[g.auction.toHexString()] = g._id.toHexString();
+    }
+  }
+
   // Get user balance
   let userBalance = 0;
   if (userId) {
@@ -138,6 +155,7 @@ async function getPageData() {
               "Anonymous",
             winnerGuess: r.winner?.guessedPrice,
             winnerPrize: r.winner?.prizePaid ?? 0,
+            userGuessId: userGradedGuesses[r._id.toHexString()] || undefined,
           };
         })
       )

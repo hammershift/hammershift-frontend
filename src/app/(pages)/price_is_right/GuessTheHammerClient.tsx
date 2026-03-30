@@ -13,6 +13,7 @@ import {
   DollarSign,
   Target,
   Medal,
+  Share2,
 } from "lucide-react";
 
 interface AuctionCard {
@@ -35,6 +36,7 @@ interface RecentResult {
   winnerName: string;
   winnerGuess: number;
   winnerPrize: number;
+  userGuessId?: string;
 }
 
 interface Props {
@@ -362,6 +364,15 @@ export default function GuessTheHammerClient({
                       <div className="text-xs font-mono text-[#00D4AA] mt-0.5">
                         Won {formatCurrency(result.winnerPrize)}
                       </div>
+                    )}
+                    {result.userGuessId && (
+                      <Link
+                        href={`/results/${result.userGuessId}?type=guess`}
+                        className="mt-1 inline-flex items-center gap-1 text-xs text-gray-400 hover:text-white transition"
+                      >
+                        <Share2 className="w-3 h-3" />
+                        Share
+                      </Link>
                     )}
                   </div>
                 </div>
