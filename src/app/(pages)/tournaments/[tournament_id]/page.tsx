@@ -68,6 +68,58 @@ export default function TournamentDetailPage() {
   const [success, setSuccess] = useState<string>("");
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<string>("Free");
+  const [countdown, setCountdown] = useState<string>("");
+
+  // Countdown timer
+  useEffect(() => {
+    if (!tournament) return;
+    const target = new Date(tournament.endTime);
+    const now = new Date();
+    const startTime = new Date(tournament.startTime);
+    const isUpcoming = startTime > now;
+
+    function updateCountdown() {
+      const ref = isUpcoming ? startTime : target;
+      const diff = ref.getTime() - Date.now();
+      if (diff <= 0) {
+        setCountdown(isUpcoming ? "Starting now" : "Ended");
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+      setCountdown(
+        days > 0
+          ? `${days}d ${hours}h ${minutes}m`
+          : `${hours}h ${minutes}m ${seconds}s`
+      );
+    }
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [tournament]);
+
+  // Leaderboard polling every 30s during active tournament
+  useEffect(() => {
+    if (!tournament) return;
+    const now = new Date();
+    const isActive = new Date(tournament.startTime) <= now && new Date(tournament.endTime) > now;
+    if (!isActive) return;
+
+    const poll = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/tournaments/${tournament._id}/leaderboard`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.leaderboard) setLeaderboard(data.leaderboard);
+        }
+      } catch {}
+    }, 30000);
+
+    return () => clearInterval(poll);
+  }, [tournament]);
 
   // Track page view
   useEffect(() => {
@@ -238,7 +290,24 @@ export default function TournamentDetailPage() {
       return;
     }
 
-    // Check entry fee for paid tournaments
+    // Tier-based entry check
+    const hasTiers = tournament.entryTiers && tournament.entryTiers.length > 0;
+    if (hasTiers) {
+      const tier = tournament.entryTiers!.find((t: any) => t.name === selectedTier);
+      if (tier && tier.buyInAmount > 0) {
+        if ((session.user.balance || 0) < tier.buyInAmount) {
+          setError("Insufficient balance for this tier");
+          return;
+        }
+        setShowPaymentModal(true);
+        return;
+      }
+      // Free tier — join directly
+      await joinTournament();
+      return;
+    }
+
+    // Legacy: check entry fee for paid tournaments
     if (tournament.type === "paid" && tournament.buyInFee > 0) {
       if ((session.user.balance || 0) < tournament.buyInFee) {
         setError("Insufficient balance");
@@ -260,9 +329,11 @@ export default function TournamentDetailPage() {
     setSubmitting(true);
 
     try {
+      const hasTiers = tournament.entryTiers && tournament.entryTiers.length > 0;
       const response = await fetch(`/api/tournaments/${tournament._id}/join`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(hasTiers ? { tierName: selectedTier } : {}),
       });
 
       const data = await response.json();
@@ -451,6 +522,52 @@ export default function TournamentDetailPage() {
         </div>
       </div>
 
+      {/* Countdown */}
+      {countdown && (
+        <div className="mb-6 rounded-xl border border-[#E94560]/20 bg-[#E94560]/5 p-4 text-center">
+          <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">
+            {new Date(tournament.startTime) > new Date() ? "Starts in" : "Time remaining"}
+          </p>
+          <p className="font-mono text-2xl font-bold text-white">{countdown}</p>
+        </div>
+      )}
+
+      {/* Entry Tier Selection */}
+      {!hasJoined && !tournamentEnded && tournament.entryTiers && tournament.entryTiers.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-lg font-bold text-white mb-3">Choose Your Entry Tier</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {(tournament.entryTiers as any[]).map((tier: any) => (
+              <button
+                key={tier.name}
+                onClick={() => setSelectedTier(tier.name)}
+                className={`rounded-xl border p-4 text-left transition ${
+                  selectedTier === tier.name
+                    ? "border-[#FFB547] bg-[#FFB547]/10"
+                    : "border-white/[0.08] bg-[#16181f] hover:border-white/[0.14]"
+                }`}
+              >
+                <div className="font-bold text-white mb-1">{tier.name}</div>
+                <div className="font-mono text-lg text-[#FFB547]">
+                  {tier.buyInAmount === 0 ? "Free" : `$${tier.buyInAmount}`}
+                </div>
+                {tier.prizeMultiplier > 0 && (
+                  <div className="text-xs text-gray-400 mt-1">
+                    {tier.prizeMultiplier}x prize multiplier
+                  </div>
+                )}
+                <div className="text-xs text-gray-400 mt-1">
+                  {tier.currentEntries}/{tier.maxEntries} spots
+                </div>
+                {tier.currentEntries >= tier.maxEntries && (
+                  <div className="text-xs text-[#E94560] mt-1 font-semibold">FULL</div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Alerts */}
       {error && (
         <Alert variant="destructive" className="mb-6">
@@ -548,7 +665,7 @@ export default function TournamentDetailPage() {
                       <div>
                         <div className="text-xs text-gray-400">Current Bid</div>
                         <div className="font-['JetBrains_Mono'] font-bold text-[#00D4AA]">
-                          ${auction.attributes[0].value.toLocaleString()}
+                          ${(auction.sort?.price ?? auction.attributes?.[0]?.value ?? 0).toLocaleString()}
                         </div>
                       </div>
                       <div>

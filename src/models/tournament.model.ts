@@ -1,6 +1,14 @@
 import mongoose, { Document, Schema, model, models, Types } from "mongoose";
 import paginate from "mongoose-paginate-v2";
 
+export interface EntryTier {
+  name: string;
+  buyInAmount: number;
+  prizeMultiplier: number;
+  maxEntries: number;
+  currentEntries: number;
+}
+
 export interface Tournament {
   _id: string;
   tournament_id: number;
@@ -20,6 +28,9 @@ export interface Tournament {
   scoring_version?: 'v1' | 'v2';
   featured_image?: string;
   haveWinners: boolean;
+  entryTiers?: EntryTier[];
+  rakePercent?: number;
+  calculatedPrizePool?: number;
 }
 export interface TournamentDocument extends Document {
   _id: Types.ObjectId;
@@ -48,6 +59,9 @@ export interface TournamentDocument extends Document {
   featured_image?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  entryTiers?: EntryTier[];
+  rakePercent?: number;
+  calculatedPrizePool?: number;
   haveWinners: boolean;
 }
 
@@ -147,6 +161,15 @@ const tournamentSchema = new mongoose.Schema(
     scoring_version: { type: String, enum: ['v1', 'v2'], default: 'v2' },
     featured_image: { type: String },
     haveWinners: { type: Boolean, required: true, default: false },
+    entryTiers: [{
+      name:           { type: String },
+      buyInAmount:    { type: Number },
+      prizeMultiplier: { type: Number },
+      maxEntries:     { type: Number },
+      currentEntries: { type: Number, default: 0 },
+    }],
+    rakePercent: { type: Number, default: 10, min: 0, max: 50 },
+    calculatedPrizePool: { type: Number, default: 0 },
   },
   {
     collection: "tournaments",
