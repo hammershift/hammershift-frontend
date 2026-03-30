@@ -1,29 +1,167 @@
+export const dynamic = "force-dynamic";
 
-import React, { useState, useEffect } from 'react';
+import { Suspense } from "react";
+import connectToDB from "@/lib/mongoose";
+import Auctions from "@/models/auction.model";
+import mongoose from "mongoose";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import GuessTheHammerClient from "./GuessTheHammerClient";
 
-export default function PriceIsRight() {
-    return (
-        <div className="container mx-auto px-4 py-12">
-            <div className="bg-gradient-to-r from-[#399645] to-[#287A34] -mx-4 px-4 py-10 mb-8">
-                <div className="container mx-auto">
-                    <h1 className="text-3xl font-bold mb-2 text-white">GUESS THE HAMMER</h1>
-                    <p className="text-green-100">Test your knowledge with real money predictions</p>
-                </div>
-            </div>
+async function getPageData() {
+  await connectToDB();
+  const db = mongoose.connection.db!;
+  const now = new Date();
+  const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
-            <div className="bg-green-900/20 border border-green-800/30 rounded-md p-4 mb-8">
-                <p className="text-green-400">
-                    <strong>Important:</strong> All wagering activities on Velocity Markets involve financial risk.
-                    A 12% platform fee is applied to winnings. You should not wager with funds you cannot afford to lose.
-                    Predictions are based solely on your opinion, and Velocity Markets makes no guarantees regarding accuracy or outcomes.
-                </p>
-            </div>
+  // Active auctions ending within 48 hours
+  const activeAuctions = await Auctions.find({
+    "sort.deadline": { $gt: now, $lt: in48h },
+  })
+    .sort({ "sort.deadline": 1 })
+    .limit(24)
+    .lean();
 
-            <div className="flex justify-between items-center justify-center mb-6">
-                <div className="flex justify-center items-center w-full">
-                    <div className="text-5xl font-bold mb-1">COMING SOON</div>
-                </div>
-            </div>
-        </div>
-    );
-};
+  // Count guesses per auction
+  const auctionIds = activeAuctions.map((a: any) => a._id);
+  const guessCounts = await db
+    .collection("guesstehammers")
+    .aggregate([
+      { $match: { auction: { $in: auctionIds } } },
+      { $group: { _id: "$auction", count: { $sum: 1 } } },
+    ])
+    .toArray();
+  const guessCountMap = new Map(
+    guessCounts.map((g) => [g._id.toHexString(), g.count])
+  );
+
+  // Recent graded results (last 10 auctions)
+  const recentResults = await db
+    .collection("guesstehammers")
+    .aggregate([
+      { $match: { status: { $in: ["graded", "paid"] } } },
+      { $sort: { updatedAt: -1 } },
+      {
+        $group: {
+          _id: "$auction",
+          actualPrice: { $first: "$actualPrice" },
+          totalEntries: { $sum: 1 },
+          winner: { $first: "$$ROOT" },
+        },
+      },
+      { $limit: 10 },
+    ])
+    .toArray();
+
+  // Enrich results with auction titles
+  const resultAuctionIds = recentResults.map((r) => r._id);
+  const resultAuctions = await db
+    .collection("auctions")
+    .find({ _id: { $in: resultAuctionIds } })
+    .project({ title: 1, image: 1, sort: 1 })
+    .toArray();
+  const auctionMap = new Map(
+    resultAuctions.map((a) => [a._id.toHexString(), a])
+  );
+
+  // Get winner usernames
+  const winnerUserIds = recentResults
+    .filter((r) => r.winner?.user)
+    .map((r) => r.winner.user);
+  const winnerUsers = await db
+    .collection("users")
+    .find({ _id: { $in: winnerUserIds } })
+    .project({ username: 1, fullName: 1 })
+    .toArray();
+  const winnerUserMap = new Map(
+    winnerUsers.map((u) => [u._id.toHexString(), u])
+  );
+
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
+  // Get user's existing guesses on active auctions
+  let userGuesses: Record<string, number> = {};
+  if (userId) {
+    const guesses = await db
+      .collection("guesstehammers")
+      .find({
+        user: new mongoose.Types.ObjectId(userId),
+        auction: { $in: auctionIds },
+      })
+      .toArray();
+    for (const g of guesses) {
+      userGuesses[g.auction.toHexString()] = g.guessedPrice;
+    }
+  }
+
+  // Get user balance
+  let userBalance = 0;
+  if (userId) {
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new mongoose.Types.ObjectId(userId) });
+    userBalance = user?.balance ?? 0;
+  }
+
+  return {
+    auctions: JSON.parse(
+      JSON.stringify(
+        activeAuctions.map((a: any) => ({
+          _id: a._id.toString(),
+          auctionId: a.auction_id,
+          title: a.title,
+          image: a.image,
+          deadline: a.sort?.deadline,
+          currentBid: a.sort?.price ?? 0,
+          bids: a.sort?.bids ?? 0,
+          guessCount: guessCountMap.get(a._id.toString()) ?? 0,
+        }))
+      )
+    ),
+    recentResults: JSON.parse(
+      JSON.stringify(
+        recentResults.map((r) => {
+          const auction = auctionMap.get(r._id.toHexString());
+          const winnerUser = r.winner?.user
+            ? winnerUserMap.get(r.winner.user.toHexString())
+            : null;
+          return {
+            auctionId: r._id.toString(),
+            title: (auction as any)?.title ?? "Unknown",
+            image: (auction as any)?.image ?? null,
+            actualPrice: r.actualPrice,
+            totalEntries: r.totalEntries,
+            winnerName:
+              (winnerUser as any)?.username ||
+              (winnerUser as any)?.fullName ||
+              "Anonymous",
+            winnerGuess: r.winner?.guessedPrice,
+            winnerPrize: r.winner?.prizePaid ?? 0,
+          };
+        })
+      )
+    ),
+    userGuesses,
+    userBalance,
+    isAuthenticated: !!userId,
+  };
+}
+
+export default async function PriceIsRightPage() {
+  const data = await getPageData();
+
+  return (
+    <div className="min-h-screen bg-[#0A0A1A]">
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center min-h-[50vh]">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        }
+      >
+        <GuessTheHammerClient {...data} />
+      </Suspense>
+    </div>
+  );
+}
