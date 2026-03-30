@@ -252,11 +252,11 @@ const LoginPage = () => {
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-slate-500">
           By signing in, you agree to Velocity Market&apos;s{" "}
-          <Link href="/privacy" className="underline hover:text-slate-400 transition-colors">
+          <Link href="/privacy_policy" className="underline hover:text-slate-400 transition-colors">
             Privacy Policy
           </Link>{" "}
           and{" "}
-          <Link href="/terms" className="underline hover:text-slate-400 transition-colors">
+          <Link href="/terms_of_service" className="underline hover:text-slate-400 transition-colors">
             Terms of Use
           </Link>
           .

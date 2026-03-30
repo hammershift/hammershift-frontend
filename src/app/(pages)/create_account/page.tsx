@@ -288,11 +288,11 @@ export default function CustomSignupPage() {
               />
               <label htmlFor="agreeToTerms" className="text-sm text-gray-400 leading-snug cursor-pointer select-none">
                 I agree to the{" "}
-                <Link href="/terms" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors">
+                <Link href="/terms_of_service" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors">
+                <Link href="/privacy_policy" className="text-[#E94560] hover:text-[#E94560]/80 transition-colors">
                   Privacy Policy
                 </Link>
               </label>
