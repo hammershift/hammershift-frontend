@@ -61,6 +61,7 @@ interface TradeRequestBody {
   outcome: "YES" | "NO";
   usdcAmount: number;
   maxSlippage: number;
+  isVirtual?: boolean;
 }
 
 function validateBody(body: unknown): TradeRequestBody {
@@ -89,6 +90,7 @@ function validateBody(body: unknown): TradeRequestBody {
     outcome: b.outcome,
     usdcAmount: b.usdcAmount,
     maxSlippage: b.maxSlippage,
+    isVirtual: b.isVirtual === true,
   };
 }
 
@@ -140,7 +142,7 @@ export async function POST(
     return NextResponse.json({ message }, { status: 400 });
   }
 
-  const { outcome, usdcAmount, maxSlippage } = body;
+  const { outcome, usdcAmount, maxSlippage, isVirtual } = body;
 
   const callerIp = getClientIp(req as unknown as Request);
   const deviceFingerprint = req.headers.get("x-device-fp") ?? null;
@@ -193,21 +195,26 @@ export async function POST(
   // ── 5. Load user and check balance ────────────────────────────────────────
   // For on-chain trades the DB balance check is skipped entirely — the smart
   // contract will revert if the user's on-chain USDC is insufficient.
+  // For virtual trades, check virtualBalance instead of real wallet.
   // For off-chain trades (Path B) we still gate on the DB balance.
   if (!isOnChain) {
+    const balanceField = isVirtual ? "virtualBalance" : "balance";
     const user = await db
       .collection("users")
-      .findOne({ _id: userObjectId }, { projection: { balance: 1 } });
+      .findOne({ _id: userObjectId }, { projection: { [balanceField]: 1 } });
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    if (typeof user.balance !== "number" || user.balance < usdcAmount) {
+    const availableBalance: number = isVirtual
+      ? (user.virtualBalance ?? 10000)
+      : (user.balance ?? 0);
+    if (availableBalance < usdcAmount) {
       return NextResponse.json(
         {
-          message: "Insufficient balance",
+          message: isVirtual ? "Insufficient Velocity Points" : "Insufficient balance",
           required: usdcAmount,
-          available: user.balance ?? 0,
+          available: availableBalance,
         },
         { status: 422 }
       );
@@ -247,6 +254,7 @@ export async function POST(
             maxSlippage,
             now,
             isOnChain,
+            isVirtual: isVirtual ?? false,
           }
         );
       });
@@ -298,6 +306,7 @@ export async function POST(
           maxSlippage,
           now,
           isOnChain,
+          isVirtual: isVirtual ?? false,
         }
       );
     } catch (fallbackErr: unknown) {
@@ -394,6 +403,8 @@ interface WriteParams {
   /** True when the market has a contractAddress — USDC is spent on-chain,
    *  so the DB user balance must NOT be debited. */
   isOnChain: boolean;
+  /** True for free play trades — deduct virtualBalance instead of real balance */
+  isVirtual: boolean;
 }
 
 /**
@@ -409,7 +420,7 @@ async function executeTradeWrites(
   session: ClientSession,
   p: WriteParams
 ): Promise<ReturnType<typeof quoteTradeExact>> {
-  const { tradeId, userObjectId, marketObjectId, marketId, userId, outcome, usdcAmount, maxSlippage, now, isOnChain } = p;
+  const { tradeId, userObjectId, marketObjectId, marketId, userId, outcome, usdcAmount, maxSlippage, now, isOnChain, isVirtual } = p;
 
   // ── Re-read pool state inside the transaction (B-7 fix) ──────────────────
   // Using the session here means MongoDB holds a read lock on this document
@@ -437,22 +448,29 @@ async function executeTradeWrites(
   // ── a. Debit wallet (atomic balance check + deduct) ──────────────────────
   // On-chain trades: USDC is spent directly by the smart contract on Polygon.
   // The DB balance is NOT the source of truth for these markets — skip the debit.
+  // Virtual trades: debit virtualBalance and increment virtualWagered.
   // Off-chain trades (Path B): DB balance is the ledger — debit atomically.
   if (!isOnChain) {
+    const balanceField = isVirtual ? "virtualBalance" : "balance";
+    const incUpdate: Record<string, number> = { [balanceField]: -usdcAmount };
+    if (isVirtual) incUpdate.virtualWagered = usdcAmount;
+
     const debitResult = await db.collection("users").findOneAndUpdate(
       {
         _id: userObjectId,
-        balance: { $gte: usdcAmount }, // guard: only deduct if still sufficient
+        [balanceField]: { $gte: usdcAmount },
       },
       {
-        $inc: { balance: -usdcAmount },
+        $inc: incUpdate,
         $set: { updatedAt: now },
       },
       { session, returnDocument: "after" }
     );
 
     if (!debitResult) {
-      throw new Error("Insufficient balance — concurrent debit detected");
+      throw new Error(isVirtual
+        ? "Insufficient Velocity Points — concurrent debit detected"
+        : "Insufficient balance — concurrent debit detected");
     }
   }
 
@@ -516,6 +534,7 @@ async function executeTradeWrites(
           marketId: marketObjectId,
           outcome,
           status: "OPEN",
+          isVirtual: isVirtual || false,
           shares: {
             $add: [{ $ifNull: ["$shares", 0] }, quote.sharesReceived],
           },
@@ -529,7 +548,6 @@ async function executeTradeWrites(
             ],
           },
           updatedAt: now,
-          // createdAt: only set on insert (handled by separate update below)
         },
       },
     ],
@@ -566,27 +584,30 @@ async function executeTradeWrites(
       usdcAfterFee: quote.usdcAfterFee,
       fee: quote.fee,
       slippagePct: quote.slippagePct,
-      txHash: null, // on-chain txHash — null for off-chain trades
+      txHash: null,
       status: "FILLED",
+      isVirtual: isVirtual || false,
       createdAt: now,
     },
     { session }
   );
 
-  // ── e. Insert transaction audit record ────────────────────────────────────
-  await db.collection("transactions").insertOne(
-    {
-      userID: userObjectId,
-      transactionType: "prediction_buy",
-      amount: usdcAmount,
-      type: "-",
-      status: "success",
-      relatedTradeId: tradeId,
-      marketId: marketObjectId,
-      transactionDate: now,
-    },
-    { session }
-  );
+  // ── e. Insert transaction audit record (skip for virtual trades) ──────────
+  if (!isVirtual) {
+    await db.collection("transactions").insertOne(
+      {
+        userID: userObjectId,
+        transactionType: "prediction_buy",
+        amount: usdcAmount,
+        type: "-",
+        status: "success",
+        relatedTradeId: tradeId,
+        marketId: marketObjectId,
+        transactionDate: now,
+      },
+      { session }
+    );
+  }
 
   return quote;
 }
@@ -604,7 +625,7 @@ async function executeCompensatingWrites(
   db: ReturnType<typeof import("mongodb").MongoClient.prototype.db>,
   p: WriteParams
 ): Promise<ReturnType<typeof quoteTradeExact>> {
-  const { tradeId, userObjectId, marketObjectId, outcome, usdcAmount, maxSlippage, now, isOnChain } = p;
+  const { tradeId, userObjectId, marketObjectId, outcome, usdcAmount, maxSlippage, now, isOnChain, isVirtual } = p;
 
   // Re-read pool state (best-effort without a session — no true isolation here,
   // but still better than using a value read before this function was called).
@@ -630,15 +651,22 @@ async function executeCompensatingWrites(
 
   // a. Debit wallet
   // On-chain trades: USDC is spent on-chain — skip DB balance debit.
+  // Virtual trades: debit virtualBalance and increment virtualWagered.
   // Off-chain trades (Path B): DB balance is the ledger — debit here.
   if (!isOnChain) {
+    const balanceField = isVirtual ? "virtualBalance" : "balance";
+    const incUpdate: Record<string, number> = { [balanceField]: -usdcAmount };
+    if (isVirtual) incUpdate.virtualWagered = usdcAmount;
+
     const debitResult = await db.collection("users").findOneAndUpdate(
-      { _id: userObjectId, balance: { $gte: usdcAmount } },
-      { $inc: { balance: -usdcAmount }, $set: { updatedAt: now } },
+      { _id: userObjectId, [balanceField]: { $gte: usdcAmount } },
+      { $inc: incUpdate, $set: { updatedAt: now } },
       { returnDocument: "after" }
     );
     if (!debitResult) {
-      throw new Error("Insufficient balance — concurrent debit detected");
+      throw new Error(isVirtual
+        ? "Insufficient Velocity Points — concurrent debit detected"
+        : "Insufficient balance — concurrent debit detected");
     }
   }
 
@@ -687,6 +715,7 @@ async function executeCompensatingWrites(
           marketId: marketObjectId,
           outcome,
           status: "OPEN",
+          isVirtual: isVirtual || false,
           shares: { $add: [{ $ifNull: ["$shares", 0] }, quote.sharesReceived] },
           totalCost: { $add: [{ $ifNull: ["$totalCost", 0] }, usdcAmount] },
           avgCostBasis: {
@@ -727,20 +756,23 @@ async function executeCompensatingWrites(
     slippagePct: quote.slippagePct,
     txHash: null,
     status: "FILLED",
+    isVirtual: isVirtual || false,
     createdAt: now,
   });
 
-  // e. Transaction audit
-  await db.collection("transactions").insertOne({
-    userID: userObjectId,
-    transactionType: "prediction_buy",
-    amount: usdcAmount,
-    type: "-",
-    status: "success",
-    relatedTradeId: tradeId,
-    marketId: marketObjectId,
-    transactionDate: now,
-  });
+  // e. Transaction audit (skip for virtual trades)
+  if (!isVirtual) {
+    await db.collection("transactions").insertOne({
+      userID: userObjectId,
+      transactionType: "prediction_buy",
+      amount: usdcAmount,
+      type: "-",
+      status: "success",
+      relatedTradeId: tradeId,
+      marketId: marketObjectId,
+      transactionDate: now,
+    });
+  }
 
   return quote;
 }

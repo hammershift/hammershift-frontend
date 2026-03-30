@@ -413,6 +413,11 @@ export default function TradingPage() {
     <div className="min-h-screen bg-trading-bg-primary p-4 md:p-6">
       <div className="mx-auto max-w-[1600px]">
 
+        {/* Free Play Notice */}
+        <div className="mb-4 text-center text-sm text-gray-400">
+          You are playing with Velocity Points — no real money involved
+        </div>
+
         {/* Status Banners */}
         {market.status === 'RESOLVED' && (
           <div className="mb-4 rounded-xl border border-[#00D4AA]/30 bg-[#00D4AA]/10 p-4">

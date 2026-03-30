@@ -14,6 +14,25 @@ import { usePolygonUSDCBalance } from '@/hooks/usePolygonUSDCBalance';
 import { createBiconomySmartAccount, MARKET_ABI, PaymasterMode } from '@/lib/biconomy';
 import { encodeFunctionData, parseUnits } from 'viem';
 
+function useVirtualBalance() {
+  const [balance, setBalance] = useState(10000);
+  const [loading, setLoading] = useState(true);
+  const refetch = useCallback(async () => {
+    try {
+      const res = await fetch('/api/virtual-balance');
+      if (res.ok) {
+        const data = await res.json();
+        setBalance(data.virtualBalance ?? 10000);
+      }
+    } catch { /* ignore */ }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { refetch(); }, [refetch]);
+
+  return { balance, loading, refetch };
+}
+
 interface Market {
   _id: string;
   contractAddress?: string;   // optional — may not exist on all markets yet
@@ -75,6 +94,7 @@ export default function TradingDrawer({
   const { wallets } = useWallets();
   const { authenticated: privyAuthenticated, embeddedWalletAddress } = useVelocityAuth();
   const { balance: usdcBalance, refetch: refetchBalance } = usePolygonUSDCBalance(embeddedWalletAddress);
+  const { balance: virtualBalance, refetch: refetchVirtual } = useVirtualBalance();
 
   // User is authenticated if they have a NextAuth session OR are logged in via Privy
   const isAuthenticated = !!session?.user || privyAuthenticated;
@@ -140,9 +160,11 @@ export default function TradingDrawer({
   const amountNum = parseFloat(amount);
   const isValidAmount = !isNaN(amountNum) && amountNum >= 1 && amountNum <= 10000;
 
-  // On-chain balance guard: only relevant when market has a contractAddress
+  // Balance guard: virtual balance for free play, USDC for on-chain
   const isOnChainMarket = !!market.contractAddress;
-  const hasInsufficientBalance = isOnChainMarket && isValidAmount && amountNum > usdcBalance;
+  const hasInsufficientBalance = isValidAmount && (
+    isOnChainMarket ? amountNum > usdcBalance : amountNum > virtualBalance
+  );
 
   // POST to the REST trade API (used for markets without contractAddress, and to
   // record trades in DB after on-chain execution)
@@ -154,6 +176,7 @@ export default function TradingDrawer({
         outcome: side,
         usdcAmount: amountNum,
         maxSlippage: 0.05,
+        isVirtual: !isOnChainMarket,
       }),
     });
     const data = await res.json();
@@ -229,6 +252,7 @@ export default function TradingDrawer({
       // Path B — REST-only trade (no contractAddress, or no embedded wallet)
       const receipt = await postRestTrade();
       setTradeReceipt(receipt);
+      await refetchVirtual();
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Trade failed. Please try again.';
@@ -336,10 +360,10 @@ export default function TradingDrawer({
             ))}
           </div>
 
-          {/* USDC amount input */}
+          {/* Amount input */}
           <div>
             <label className="text-xs text-slate-400 uppercase tracking-wider mb-2 block">
-              Amount (USDC)
+              {isOnChainMarket ? 'Amount (USDC)' : 'Amount (Velocity Points)'}
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-sm">
@@ -359,13 +383,15 @@ export default function TradingDrawer({
                 className="w-full bg-[#16181f] border border-white/10 rounded-lg py-3 pl-7 pr-4 text-[#F8FAFC] font-mono text-sm focus:outline-none focus:border-white/30"
               />
             </div>
-            {isOnChainMarket && (
-              <p className={`text-sm font-mono mt-1.5 ${hasInsufficientBalance ? 'text-[#E94560]' : 'text-gray-400'}`}>
-                {hasInsufficientBalance
+            <p className={`text-sm font-mono mt-1.5 ${hasInsufficientBalance ? 'text-[#E94560]' : 'text-gray-400'}`}>
+              {isOnChainMarket
+                ? (hasInsufficientBalance
                   ? 'Insufficient USDC balance'
-                  : `Available: $${usdcBalance.toFixed(2)} USDC`}
-              </p>
-            )}
+                  : `Available: $${usdcBalance.toFixed(2)} USDC`)
+                : (hasInsufficientBalance
+                  ? 'Insufficient Velocity Points'
+                  : `Available: ${virtualBalance.toLocaleString()} VP`)}
+            </p>
           </div>
 
           {/* Live AMM quote preview */}
@@ -443,16 +469,26 @@ export default function TradingDrawer({
           >
             {isPlacing
               ? 'Placing...'
-              : `Buy ${side} — $${isValidAmount ? amount : '0'} USDC`}
+              : isOnChainMarket
+                ? `Buy ${side} — $${isValidAmount ? amount : '0'} USDC`
+                : `Buy ${side} — ${isValidAmount ? amount : '0'} VP`}
           </button>
 
           <div className="space-y-1.5 text-center">
-            <p className="text-xs text-slate-500">
-              No gas fees — transactions are sponsored by Velocity Markets
-            </p>
-            <p className="text-[10px] text-slate-600">
-              Trades are settled in USDC, a regulated US dollar stablecoin. Not FDIC insured.
-            </p>
+            {isOnChainMarket ? (
+              <>
+                <p className="text-xs text-slate-500">
+                  No gas fees — transactions are sponsored by Velocity Markets
+                </p>
+                <p className="text-[10px] text-slate-600">
+                  Trades are settled in USDC, a regulated US dollar stablecoin. Not FDIC insured.
+                </p>
+              </>
+            ) : (
+              <p className="text-xs text-gray-400">
+                You are playing with Velocity Points — no real money involved
+              </p>
+            )}
           </div>
         </div>
       </SheetContent>

@@ -42,6 +42,10 @@ const wagerSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    isVirtual: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

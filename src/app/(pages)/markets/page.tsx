@@ -131,10 +131,11 @@ function MarketCard({
 
   return (
     <div className="relative bg-[#1E293B] border border-white/5 rounded-xl overflow-hidden flex flex-col hover:border-white/20 transition-colors">
-      {/* Auction house logo + status badge */}
+      {/* Auction house logo + status badge + free play badge */}
       <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
         <BaTLogo />
         <StatusBadge status={market.status} />
+        <span className="bg-[#01696F] text-white text-xs font-medium rounded-full px-3 py-1">Free to Play</span>
       </div>
 
       {/* Car image */}
@@ -383,18 +384,58 @@ export default function MarketsPage() {
 
   const TABS: FilterTab[] = ['ALL', 'ACTIVE', 'RESOLVED', 'PENDING'];
 
+  // Virtual balance state
+  const [virtualBalance, setVirtualBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch('/api/virtual-balance')
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => { if (data) setVirtualBalance(data.virtualBalance); })
+      .catch(() => {});
+  }, []);
+
+  const [showPointsInfo, setShowPointsInfo] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#0E1923]">
+      {/* FREE PLAY Banner */}
+      <div className="bg-[#01696F] text-white py-3 px-6 text-center font-semibold">
+        FREE PLAY — Predict auction outcomes with Velocity Points. No real money required.
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
 
         {/* ── Header ── */}
         <div className="mb-8">
-          <h1 className="text-white text-3xl font-bold mb-2">
-            Prediction Markets
-          </h1>
-          <p className="text-gray-400 text-base mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-white text-3xl font-bold">
+              Prediction Markets
+            </h1>
+            {virtualBalance !== null && (
+              <div className="flex items-center gap-2 bg-[#16181f] border border-[#FFC553]/30 rounded-full px-5 py-2">
+                <span className="text-gray-400 text-sm">Velocity Points</span>
+                <span className="font-mono font-bold text-[#FFC553]">
+                  {virtualBalance.toLocaleString()}
+                </span>
+              </div>
+            )}
+          </div>
+          <p className="text-gray-400 text-base mb-4">
             Trade YES or NO on automotive auction outcomes. Prices reflect the crowd&apos;s probability estimate.
           </p>
+
+          {/* How Points Work */}
+          <button
+            onClick={() => setShowPointsInfo(!showPointsInfo)}
+            className="text-sm text-[#01696F] hover:text-[#01898F] transition-colors mb-4"
+          >
+            {showPointsInfo ? 'Hide' : 'How Points Work'}
+          </button>
+          {showPointsInfo && (
+            <div className="mb-4 rounded-lg border border-[#01696F]/30 bg-[#01696F]/10 px-4 py-3 text-sm text-gray-300">
+              Velocity Points are virtual — they have no cash value. Play for bragging rights and leaderboard rank! Your 10,000 starting points refresh if you run low.
+            </div>
+          )}
 
           {/* Stat pills */}
           {!loading && !error && (

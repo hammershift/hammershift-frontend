@@ -162,6 +162,21 @@ const LeaderboardPage = () => {
   const [recentActivity, setRecentActivity] = useState<RecentActivityEntry[]>([]);
   const [recentActivityLoading, setRecentActivityLoading] = useState(false);
 
+  // Free Play Rankings
+  const [mode, setMode] = useState<"predictions" | "freeplay">("predictions");
+  const [freePlayBoard, setFreePlayBoard] = useState<Array<{
+    rank: number;
+    _id: string;
+    displayName: string;
+    username: string;
+    totalPredictions: number;
+    virtualProfit: number;
+    winRate: number;
+    totalVirtualWagered: number;
+    totalVirtualWon: number;
+  }>>([]);
+  const [freePlayLoading, setFreePlayLoading] = useState(false);
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounce search input -> activeSearch, reset to page 1 on new search
@@ -226,6 +241,18 @@ const LeaderboardPage = () => {
     });
   }, [period]);
 
+  // Fetch free play leaderboard
+  useEffect(() => {
+    if (mode === "freeplay") {
+      setFreePlayLoading(true);
+      fetch("/api/leaderboard/free-play")
+        .then((res) => res.json())
+        .then((data) => setFreePlayBoard(data.leaderboard ?? []))
+        .catch(() => setFreePlayBoard([]))
+        .finally(() => setFreePlayLoading(false));
+    }
+  }, [mode]);
+
   const getMedalIcon = (rank: number) => {
     switch (rank) {
       case 1:
@@ -270,6 +297,99 @@ const LeaderboardPage = () => {
         <p className="text-gray-400">Top predictors across Velocity Markets</p>
       </div>
 
+      {/* Mode Toggle */}
+      <div className="mb-6 flex justify-center gap-2">
+        <Button
+          variant={mode === "predictions" ? "default" : "outline"}
+          onClick={() => setMode("predictions")}
+          className={
+            mode === "predictions"
+              ? "bg-[#E94560] hover:bg-[#E94560]/90"
+              : "border-white/[0.08] bg-[#0A0A1A] hover:bg-[#1E2A36]"
+          }
+        >
+          Prediction Rankings
+        </Button>
+        <Button
+          variant={mode === "freeplay" ? "default" : "outline"}
+          onClick={() => setMode("freeplay")}
+          className={
+            mode === "freeplay"
+              ? "bg-[#01696F] hover:bg-[#01696F]/90"
+              : "border-white/[0.08] bg-[#0A0A1A] hover:bg-[#1E2A36]"
+          }
+        >
+          Free Play Rankings
+        </Button>
+      </div>
+
+      {mode === "freeplay" ? (
+        /* Free Play Leaderboard */
+        <Card className="border-white/[0.08] bg-[#16181f]">
+          <CardHeader>
+            <CardTitle>Free Play Rankings</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-[#1E2A36]">
+                    <TableHead className="w-16">Rank</TableHead>
+                    <TableHead>Player</TableHead>
+                    <TableHead className="text-center">Predictions</TableHead>
+                    <TableHead className="text-center">Win Rate</TableHead>
+                    <TableHead className="text-right">Virtual Profit</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {freePlayLoading ? (
+                    Array(5)
+                      .fill(0)
+                      .map((_, i) => (
+                        <TableRow key={i} className="animate-pulse">
+                          <TableCell><div className="h-4 w-8 rounded bg-[#1E2A36]" /></TableCell>
+                          <TableCell><div className="h-4 w-32 rounded bg-[#1E2A36]" /></TableCell>
+                          <TableCell><div className="mx-auto h-4 w-16 rounded bg-[#1E2A36]" /></TableCell>
+                          <TableCell><div className="mx-auto h-4 w-16 rounded bg-[#1E2A36]" /></TableCell>
+                          <TableCell><div className="ml-auto h-4 w-20 rounded bg-[#1E2A36]" /></TableCell>
+                        </TableRow>
+                      ))
+                  ) : freePlayBoard.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="py-12 text-center text-gray-400">
+                        No free play data yet. Be the first to play!
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    freePlayBoard.map((entry) => (
+                      <TableRow key={entry._id} className="hover:bg-[#1E2A36]/50">
+                        <TableCell className="font-mono font-bold">
+                          {entry.rank <= 3 ? getMedalIcon(entry.rank) : entry.rank}
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {entry.displayName || entry.username || "Anonymous"}
+                        </TableCell>
+                        <TableCell className="text-center font-mono">
+                          {entry.totalPredictions}
+                        </TableCell>
+                        <TableCell className="text-center font-mono">
+                          {entry.winRate}%
+                        </TableCell>
+                        <TableCell className={`text-right font-mono font-bold ${
+                          entry.virtualProfit > 0 ? "text-[#FFC553]" : entry.virtualProfit < 0 ? "text-[#E94560]" : "text-gray-400"
+                        }`}>
+                          {entry.virtualProfit > 0 ? "+" : ""}{entry.virtualProfit.toLocaleString()} VP
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+      <>
       {/* Period Selector */}
       <div className="mb-8 flex justify-center gap-2">
         {(["weekly", "monthly", "alltime"] as Period[]).map((p) => (
@@ -816,6 +936,8 @@ const LeaderboardPage = () => {
           </Card>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };
