@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -87,6 +88,9 @@ export default function GuessTheHammerClient({
   userBalance,
   isAuthenticated,
 }: Props) {
+  const { data: session } = useSession();
+  const loggedIn = isAuthenticated || !!session;
+
   const [activeTab, setActiveTab] = useState<"play" | "results" | "leaderboard">("play");
   const [isVirtual, setIsVirtual] = useState(true);
   const [selectedAuction, setSelectedAuction] = useState<AuctionCard | null>(null);
@@ -191,7 +195,7 @@ export default function GuessTheHammerClient({
             Play for Cash (${ENTRY_FEE})
           </button>
         </div>
-        {isAuthenticated && (
+        {loggedIn && (
           <div className="text-sm text-gray-400">
             Balance:{" "}
             <span className="font-mono text-white">
@@ -288,8 +292,8 @@ export default function GuessTheHammerClient({
                       ) : (
                         <button
                           onClick={() => {
-                            if (!isAuthenticated) {
-                              window.location.href = "/login_page";
+                            if (!loggedIn) {
+                              window.location.href = "/login_page?redirect=/price_is_right";
                               return;
                             }
                             setSelectedAuction(auction);

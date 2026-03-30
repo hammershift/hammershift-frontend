@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { BounceLoader } from "react-spinners";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
@@ -18,27 +18,29 @@ const LoginPage = () => {
   const [isPrivyLoading, setIsPrivyLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
   const { data: session } = useSession();
   const { ready, authenticated: privyAuthenticated } = usePrivy();
   const { login: privyLogin } = useLogin({
     onComplete: () => {
-      router.push("/");
+      router.push(redirectTo);
     },
   });
 
   // Redirect if already authenticated via NextAuth
   useEffect(() => {
     if (session?.user) {
-      router.push("/");
+      router.push(redirectTo);
     }
-  }, [session, router]);
+  }, [session, router, redirectTo]);
 
   // Redirect if authenticated via Privy
   useEffect(() => {
     if (ready && privyAuthenticated) {
-      router.push("/");
+      router.push(redirectTo);
     }
-  }, [ready, privyAuthenticated, router]);
+  }, [ready, privyAuthenticated, router, redirectTo]);
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +71,7 @@ const LoginPage = () => {
         return;
       }
 
-      router.push("/");
+      router.push(redirectTo);
     } catch (err) {
       console.error("Unexpected error during login:", err);
       setError("An unexpected error occurred. Please try again.");
@@ -89,13 +91,13 @@ const LoginPage = () => {
       } catch (err) {
         console.error("Privy login error:", err);
         // Fall back to NextAuth Google if Privy errors
-        signIn("google", { callbackUrl: "/" });
+        signIn("google", { callbackUrl: redirectTo });
       } finally {
         setIsPrivyLoading(false);
       }
     } else {
       // Privy not configured — use NextAuth Google directly
-      signIn("google", { callbackUrl: "/" });
+      signIn("google", { callbackUrl: redirectTo });
     }
   };
 
