@@ -29,6 +29,9 @@ export interface User {
   };
   stripeCustomerId?: string | null;
   embeddedWalletAddress?: string | null;
+  virtualBalance?: number;
+  virtualWagered?: number;
+  virtualWon?: number;
 }
 
 const userSchema = new Schema(
@@ -68,6 +71,9 @@ const userSchema = new Schema(
     },
     stripeCustomerId: { type: String, default: null },
     embeddedWalletAddress: { type: String, default: null },
+    virtualBalance: { type: Number, default: 10000 },
+    virtualWagered: { type: Number, default: 0 },
+    virtualWon: { type: Number, default: 0 },
     createdAt: Date,
     updatedAt: Date,
   },

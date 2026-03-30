@@ -281,11 +281,16 @@ export async function GET(req: Request) {
 
           if (!settleResult) continue;
 
-          // ── b. Credit user wallet ──────────────────────────────────────────
+          // ── b. Credit user wallet (or virtualBalance for free play) ──────
+          const positionIsVirtual = position.isVirtual === true;
+          const creditField = positionIsVirtual ? "virtualBalance" : "balance";
+          const incUpdate: Record<string, number> = { [creditField]: netPayout };
+          if (positionIsVirtual) incUpdate.virtualWon = netPayout;
+
           const updatedUser = await db.collection("users").findOneAndUpdate(
             { _id: userId },
             {
-              $inc: { balance: netPayout },
+              $inc: incUpdate,
               $set: { updatedAt: now },
             },
             { returnDocument: "after" }
@@ -309,31 +314,33 @@ export async function GET(req: Request) {
             }
           }
 
-          // ── c. Transaction audit record ────────────────────────────────────
-          await db.collection("transactions").insertOne({
-            userID: userId,
-            transactionType: "prediction_payout",
-            amount: netPayout,
-            type: "+",
-            status: "success",
-            marketId,
-            positionId,
-            grossPayout,
-            settlementFee: fee,
-            winningOutcome,
-            transactionDate: now,
-          });
+          // ── c. Transaction audit record (skip for virtual) ─────────────────
+          if (!positionIsVirtual) {
+            await db.collection("transactions").insertOne({
+              userID: userId,
+              transactionType: "prediction_payout",
+              amount: netPayout,
+              type: "+",
+              status: "success",
+              marketId,
+              positionId,
+              grossPayout,
+              settlementFee: fee,
+              winningOutcome,
+              transactionDate: now,
+            });
 
-          // ── d. Fee ledger entry ────────────────────────────────────────────
-          await db.collection("fee_ledger").insertOne({
-            type: "settlement_fee",
-            marketId,
-            userId,
-            positionId,
-            amount: fee,
-            grossPayout,
-            createdAt: now,
-          });
+            // ── d. Fee ledger entry ──────────────────────────────────────────
+            await db.collection("fee_ledger").insertOne({
+              type: "settlement_fee",
+              marketId,
+              userId,
+              positionId,
+              amount: fee,
+              grossPayout,
+              createdAt: now,
+            });
+          }
 
           result.positionsSettled++;
           result.totalNetPayout += netPayout;
