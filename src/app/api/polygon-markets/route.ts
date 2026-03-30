@@ -9,8 +9,9 @@ import { keccak256, stringToBytes } from "viem";
 export const dynamic = "force-dynamic";
 
 const QUALIFYING_MAKES = [
-  "ferrari", "lamborghini", "corvette", "mercedes", "bmw",
-  "maserati", "alfa romeo", "mustang", "porsche", "camaro",
+  "ferrari", "lamborghini", "bugatti", "mclaren", "porsche",
+  "corvette", "camaro", "mustang", "mercedes", "bmw",
+  "alfa romeo", "fiat", "volvo", "pagani", "cobra",
 ];
 
 // Throttle auto-create to once per minute per Lambda container
