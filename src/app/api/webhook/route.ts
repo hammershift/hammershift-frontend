@@ -107,6 +107,75 @@ export async function POST(req: NextRequest) {
         );
         break;
 
+      case "checkout.session.completed":
+        const checkoutSession = event.data.object as Record<string, any>;
+        const depositType = checkoutSession.metadata?.type;
+
+        if (depositType === "usd_deposit") {
+          const depositUserId = checkoutSession.metadata?.userId;
+          const depositAmount = parseFloat(
+            checkoutSession.metadata?.depositAmount ?? "0"
+          );
+          const checkoutSessionId = checkoutSession.id as string;
+
+          if (!depositUserId || depositAmount <= 0) {
+            console.error(
+              `checkout.session.completed: missing userId or invalid amount. userId=${depositUserId}, amount=${depositAmount}`
+            );
+            break;
+          }
+
+          // Idempotency check
+          const existingCheckoutTx = await db
+            .collection("transactions")
+            .findOne({ stripeSessionId: checkoutSessionId });
+
+          if (existingCheckoutTx) {
+            console.log(
+              `checkout.session.completed: duplicate — transaction already recorded for sessionId=${checkoutSessionId}`
+            );
+            break;
+          }
+
+          // Credit user balance (USD)
+          const { ObjectId: ObjId } = await import("mongodb");
+          const depositBalanceUpdate = await db
+            .collection("users")
+            .updateOne(
+              { _id: new ObjId(depositUserId) },
+              { $inc: { balance: depositAmount } }
+            );
+          console.log(
+            `checkout.session.completed: credited $${depositAmount} USD to user ${depositUserId}:`,
+            depositBalanceUpdate
+          );
+
+          // Record transaction
+          const depositTransaction = {
+            userID: new ObjId(depositUserId),
+            transactionType: "deposit",
+            method: "stripe_checkout",
+            amount: depositAmount,
+            type: "+",
+            transactionDate: new Date(),
+            stripeSessionId: checkoutSessionId,
+            status: "success",
+          };
+
+          const depositInsertResult = await db
+            .collection("transactions")
+            .insertOne(depositTransaction);
+          console.log(
+            `checkout.session.completed: recorded deposit transaction for user ${depositUserId}:`,
+            depositInsertResult
+          );
+        } else {
+          console.log(
+            `checkout.session.completed: non-deposit session, ignoring`
+          );
+        }
+        break;
+
       case "payment_intent.payment_failed":
         const paymentIntent = event.data.object;
         stripeCustomerId = paymentIntent.customer;
