@@ -15,7 +15,8 @@ import {
   AlertCircle,
   CheckCircle,
   Lock,
-  Loader2
+  Loader2,
+  Share2,
 } from "lucide-react";
 import { Card, CardContent } from "@/app/components/ui/card";
 import { Button } from "@/app/components/ui/button";
@@ -843,6 +844,20 @@ export default function TournamentDetailPage() {
                             </div>
                           </div>
                         ))}
+                      </div>
+                    )}
+
+                    {/* Share result link for ended tournaments */}
+                    {tournamentEnded && session && leaderboard.some(e => e.user_id === session.user.id) && (
+                      <div className="mt-4 rounded-lg border border-[#01696F]/30 bg-[#01696F]/10 p-3 text-center">
+                        <p className="text-sm text-gray-300 mb-2">Share your tournament result</p>
+                        <Link
+                          href={`/tournaments`}
+                          className="inline-flex items-center gap-2 text-sm font-medium text-[#01696F] hover:text-[#00d4aa] transition"
+                        >
+                          <Share2 className="w-4 h-4" />
+                          View & Share Results
+                        </Link>
                       </div>
                     )}
 
