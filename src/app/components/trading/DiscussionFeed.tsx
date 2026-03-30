@@ -47,7 +47,7 @@ export function DiscussionFeed({ marketId }: DiscussionFeedProps) {
           <button
             type="submit"
             disabled={!newComment.trim()}
-            className="rounded-lg bg-[#E94560] px-3 py-2 text-sm text-white disabled:opacity-30 hover:bg-[#E94560]/80 transition-colors"
+            className="rounded-lg bg-[#01696F] px-3 py-2 text-sm text-white disabled:opacity-30 hover:bg-[#0C4E54] transition-colors"
           >
             <Send className="h-4 w-4" />
           </button>

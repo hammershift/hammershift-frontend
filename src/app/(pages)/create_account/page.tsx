@@ -137,7 +137,7 @@ export default function CustomSignupPage() {
 
         {/* Header */}
         <div className="mb-8 text-center">
-          <p className="text-[#E94560] text-sm font-semibold tracking-widest uppercase mb-3">
+          <p className="text-[#E94560] text-sm font-semibold tracking-wide uppercase mb-3">
             Velocity Markets
           </p>
           <h1 className="text-2xl font-bold text-white mb-2">Create your account</h1>
@@ -170,7 +170,7 @@ export default function CustomSignupPage() {
         {/* Divider */}
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-[#1E2A36]" />
-          <span className="text-xs text-gray-500 uppercase tracking-widest">or sign up with email</span>
+          <span className="text-xs text-gray-500 uppercase tracking-wide">or sign up with email</span>
           <div className="flex-1 h-px bg-[#1E2A36]" />
         </div>
 

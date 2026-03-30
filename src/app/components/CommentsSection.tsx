@@ -189,7 +189,7 @@ export const CommentsSection = ({
               <Button
                 type="submit"
                 aria-disabled={isSubmitting}
-                className={`bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 ${isSubmitting ? "opacity-50" : ""}`}
+                className={`bg-[#01696F] text-white hover:bg-[#0C4E54] ${isSubmitting ? "opacity-50" : ""}`}
               >
                 {isSubmitting ? "Posting..." : "Post Comment"}
                 <Send className="ml-2 h-4 w-4" />
@@ -461,7 +461,7 @@ export const CommentCard = ({
         className="w-10 h-10 ml-2"
       /> */}
       <div
-        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#E94560] text-black`}
+        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#01696F] text-white`}
       >
         {username?.[0]?.toUpperCase() || "U"}
       </div>
@@ -717,7 +717,7 @@ const ReplyInputDropdown = ({
                 <Button
                   type="submit"
                   aria-disabled={isSubmitting}
-                  className={`bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90 ${isSubmitting ? "opacity-50" : ""}`}
+                  className={`bg-[#01696F] text-white hover:bg-[#0C4E54] ${isSubmitting ? "opacity-50" : ""}`}
                 >
                   {isSubmitting ? "Replying..." : "Reply"}
                   <Send className="ml-2 h-4 w-4" />
@@ -848,7 +848,7 @@ const ReplyCard = ({
   return (
     <div className="mt-4 flex text-[14px] text-xs">
       <div
-        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#E94560] text-black`}
+        className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#01696F] text-white`}
       >
         {username?.[0]?.toUpperCase() || "U"}
       </div>
@@ -954,7 +954,7 @@ const ReplyCard = ({
 
 const AlertMessage = ({ message }: { message: string }) => {
   return (
-    <div className="mt-2 flex items-center justify-center rounded bg-[#E94560] px-4 py-2 text-sm text-black">
+    <div className="mt-2 flex items-center justify-center rounded bg-[#01696F] px-4 py-2 text-sm text-white">
       {message}
     </div>
   );

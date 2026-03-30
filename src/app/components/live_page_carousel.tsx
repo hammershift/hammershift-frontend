@@ -228,7 +228,7 @@ const SlideOne = ({ carData }: any) => {
             onClick={(e) =>
               router.push(`/auctions/car_view_page/${carData.auction_id}`)
             }
-            className="font-bold text-black bg-[#E94560] py-[10px] w-full rounded mb-3"
+            className="font-bold text-white bg-[#01696F] py-[10px] w-full rounded mb-3"
           >
             BUY IN FOR $10
           </button>

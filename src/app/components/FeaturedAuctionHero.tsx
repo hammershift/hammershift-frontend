@@ -38,7 +38,7 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
       aria-label="Featured Auction"
     >
       <div className="mb-4 flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E94560]/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-[#E94560] border border-[#E94560]/20">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E94560]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#E94560] border border-[#E94560]/20">
           <span
             className="h-1.5 w-1.5 rounded-full bg-[#E94560] animate-pulse"
             aria-hidden="true"
@@ -86,7 +86,7 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
           {/* Content */}
           <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-500">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
                 Featured Auction
               </p>
               <h3 className="text-xl font-bold leading-snug text-white md:text-2xl group-hover:text-gray-100 transition-colors">
@@ -122,7 +122,7 @@ export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProp
 
             {/* CTA */}
             <div className="mt-8">
-              <span className="inline-flex items-center gap-2 rounded-xl bg-[#E94560] px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-[#E94560]/90">
+              <span className="inline-flex items-center gap-2 rounded-xl bg-[#01696F] px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-[#0C4E54]">
                 Trade Now
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </span>

@@ -102,7 +102,7 @@ const TournamentGrid = ({ tournaments }: IProps) => {
               </div>
             </div>
             <Link href={`${createPageUrl("tournaments")}/${tournament._id}`}>
-              <Button className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
+              <Button className="w-full bg-[#01696F] text-white hover:bg-[#0C4E54]">
                 {formatTimeLeft(tournament) === "Ended"
                   ? "View Details"
                   : tournament.type === "free_play"

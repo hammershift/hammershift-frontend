@@ -276,7 +276,7 @@ export default function TournamentCard({
             font-semibold transition-all
             ${
               ctaConfig.variant === "primary"
-                ? "bg-[#E94560] text-white hover:bg-[#ff5571]"
+                ? "bg-[#01696F] text-white hover:bg-[#0C4E54]"
                 : ctaConfig.variant === "success"
                   ? "bg-[#00D4AA] text-[#0A0A1A] hover:bg-[#00f5c4]"
                   : "bg-[#1A1A3E] text-[#94A3B8]"

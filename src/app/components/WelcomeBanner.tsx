@@ -31,16 +31,16 @@ export default function WelcomeBanner() {
   if (!visible) return null;
 
   return (
-    <div className="bg-gradient-to-r from-[#E94560]/20 to-[#FFB547]/20 border-b border-[#E94560]/30">
+    <div className="bg-gradient-to-r from-[#01696F]/20 to-[#FFB547]/20 border-b border-[#01696F]/30">
       <div className="mx-auto flex flex-col sm:flex-row max-w-7xl items-start sm:items-center justify-between gap-2 sm:gap-0 px-4 py-3">
         <p className="text-sm text-gray-200">
           <span className="font-bold text-white">New here?</span>{" "}
-          Predict whether collector cars sell above their estimate. Real auctions. Real rewards.
+          Predict car auction prices and compete for real prizes. Three game modes to choose from.
         </p>
         <div className="flex items-center gap-4 shrink-0 sm:ml-4">
           <Link
             href="/how_it_works"
-            className="whitespace-nowrap text-sm font-medium text-[#E94560] hover:text-[#E94560]/80 transition-colors"
+            className="whitespace-nowrap text-sm font-medium text-[#01696F] hover:text-[#01696F]/80 transition-colors"
           >
             Learn How It Works &rarr;
           </Link>

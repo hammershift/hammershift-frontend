@@ -169,7 +169,7 @@ const Navbar = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearch}
                 placeholder="Search markets..."
-                className="w-64 rounded-lg bg-white/[0.08] border border-white/10 py-2 pl-9 pr-3 text-sm text-white placeholder-gray-500 outline-none focus:border-[#E94560]/50 focus:ring-1 focus:ring-[#E94560]/30 transition-colors"
+                className="w-64 rounded-lg bg-white/[0.08] border border-white/10 py-2 pl-9 pr-3 text-sm text-white placeholder-gray-500 outline-none focus:border-[#01696F]/50 focus:ring-1 focus:ring-[#01696F]/30 transition-colors"
               />
             </div>
             <nav className="flex items-center justify-center space-x-8">
@@ -198,12 +198,12 @@ const Navbar = () => {
         {!loading && !isLoggedIn && (
           <div className="flex items-center justify-center">
             <Link href="/login_page">
-              <Button className="h-10 w-20 bg-[#E94560] text-[white] hover:bg-[#E94560]/90">
+              <Button className="h-10 w-20 bg-[#01696F] text-white hover:bg-[#0C4E54]">
                 LOG IN
               </Button>
             </Link>
             <Link href="/create_account">
-              <Button className="ml-2 h-10 w-20 bg-[#E94560] text-[white] hover:bg-[#E94560]/90">
+              <Button className="ml-2 h-10 w-20 bg-[#01696F] text-white hover:bg-[#0C4E54]">
                 SIGN UP
               </Button>
             </Link>

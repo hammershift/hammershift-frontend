@@ -37,7 +37,7 @@ export const HowItWorks = () => {
                         key={index}
                         className="relative rounded-lg border border-white/[0.08] bg-[#16181f] p-6"
                     >
-                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#E94560] text-white">
+                        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#01696F] text-white">
                             {step.icon}
                         </div>
                         <h3 className="mb-2 text-xl font-bold">{step.title}</h3>

@@ -165,7 +165,7 @@ export default function PredictionFormClient({
             </p>
             <Link
               href="/api/auth/signin"
-              className="inline-block bg-[#E94560] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#E94560]/90 transition-colors"
+              className="inline-block bg-[#01696F] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#0C4E54] transition-colors"
             >
               Create Free Account
             </Link>
@@ -194,7 +194,7 @@ export default function PredictionFormClient({
 
             <Link
               href="/api/auth/signin"
-              className="block w-full text-center bg-[#E94560] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#E94560]/90 transition-colors"
+              className="block w-full text-center bg-[#01696F] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-[#0C4E54] transition-colors"
             >
               Sign In to Submit for Real
             </Link>
@@ -214,7 +214,7 @@ export default function PredictionFormClient({
               </p>
               <Link
                 href="/api/auth/signin"
-                className="block w-full bg-[#E94560] text-white py-3 px-4 rounded-lg text-center font-semibold mb-3 hover:bg-[#E94560]/90 transition-colors"
+                className="block w-full bg-[#01696F] text-white py-3 px-4 rounded-lg text-center font-semibold mb-3 hover:bg-[#0C4E54] transition-colors"
               >
                 Sign Up — {"It's Free"}
               </Link>
@@ -256,7 +256,7 @@ export default function PredictionFormClient({
 
       <Button
         type="submit"
-        className="w-full bg-[#E94560] text-white hover:bg-[#E94560]/90"
+        className="w-full bg-[#01696F] text-white hover:bg-[#0C4E54]"
         disabled={isSubmitting}
       >
         {isSubmitting ? (

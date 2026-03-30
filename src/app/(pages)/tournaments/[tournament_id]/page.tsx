@@ -525,7 +525,7 @@ export default function TournamentDetailPage() {
       {/* Countdown */}
       {countdown && (
         <div className="mb-6 rounded-xl border border-[#E94560]/20 bg-[#E94560]/5 p-4 text-center">
-          <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">
+          <p className="text-xs uppercase tracking-wide text-gray-400 mb-1">
             {new Date(tournament.startTime) > new Date() ? "Starts in" : "Time remaining"}
           </p>
           <p className="font-mono text-2xl font-bold text-white">{countdown}</p>

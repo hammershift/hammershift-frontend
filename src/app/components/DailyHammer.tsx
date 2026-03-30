@@ -200,7 +200,7 @@ function DailyHammerUI({ auction, guess, setGuess, submitted, loading, error, on
                 <button
                   type="submit"
                   disabled={loading || !guess}
-                  className="w-full rounded-xl bg-[#E94560] py-4 font-semibold text-white disabled:opacity-50 hover:bg-[#E94560]/90 transition-colors"
+                  className="w-full rounded-xl bg-[#01696F] py-4 font-semibold text-white disabled:opacity-50 hover:bg-[#0C4E54] transition-colors"
                 >
                   {loading ? 'Submitting...' : 'Submit Guess \u2192'}
                 </button>

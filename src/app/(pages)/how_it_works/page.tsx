@@ -22,7 +22,7 @@ export default function HowItWorks() {
 
         {/* Header */}
         <div className="text-center mb-16">
-          <p className="text-[#E94560] text-sm font-mono font-semibold tracking-widest uppercase mb-3">
+          <p className="text-[#E94560] text-sm font-mono font-semibold tracking-wide uppercase mb-3">
             Platform Guide
           </p>
           <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-5">
@@ -319,7 +319,7 @@ function SectionHeader({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3 mb-6 mt-14 first:mt-0">
       <div className="h-px flex-1 bg-white/[0.06]" />
-      <span className="text-xs font-mono font-semibold text-white/40 tracking-widest uppercase">
+      <span className="text-xs font-mono font-semibold text-white/40 tracking-wide uppercase">
         {label}
       </span>
       <div className="h-px flex-1 bg-white/[0.06]" />
@@ -344,12 +344,12 @@ function StepCard({
         <div className="w-12 h-12 rounded-xl bg-[#E94560]/10 border border-[#E94560]/20 text-[#E94560] flex items-center justify-center">
           {icon}
         </div>
-        <span className="font-mono text-xs text-white/30 font-semibold tracking-widest">
+        <span className="font-mono text-xs text-white/30 font-semibold tracking-wide">
           {step}
         </span>
       </div>
       <div className="flex-1 min-w-0">
-        <h3 className="text-base font-bold text-white tracking-widest mb-2 uppercase">
+        <h3 className="text-base font-bold text-white tracking-wide mb-2 uppercase">
           {title}
         </h3>
         <p className="text-gray-400 leading-relaxed text-sm md:text-base">
@@ -371,7 +371,7 @@ function InfoCard({
 }) {
   return (
     <div className="bg-[#16181f] border border-white/[0.08] rounded-xl p-6 hover:border-white/[0.14] transition-colors duration-200 mb-4">
-      <h3 className="flex items-center gap-2.5 text-base font-bold text-white uppercase tracking-widest mb-4">
+      <h3 className="flex items-center gap-2.5 text-base font-bold text-white uppercase tracking-wide mb-4">
         {icon}
         {title}
       </h3>

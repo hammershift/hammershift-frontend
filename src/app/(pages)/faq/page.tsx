@@ -12,7 +12,7 @@ export default function FAQ() {
     <div className="min-h-screen bg-[#0A0A1A]">
       <div className="container mx-auto px-4 py-12 max-w-3xl">
         <div className="text-center mb-12">
-          <p className="text-[#E94560] text-sm font-mono font-semibold tracking-widest uppercase mb-3">
+          <p className="text-[#E94560] text-sm font-mono font-semibold tracking-wide uppercase mb-3">
             Support
           </p>
           <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
@@ -23,7 +23,7 @@ export default function FAQ() {
         {/* ── General ─────────────────────────────────────────────── */}
         <Card className="bg-[#16181f] border-white/[0.08] mb-6">
           <div className="p-6">
-            <h2 className="text-lg font-bold text-white uppercase tracking-widest mb-4">
+            <h2 className="text-lg font-bold text-white uppercase tracking-wide mb-4">
               General
             </h2>
             <Accordion type="single" collapsible className="w-full">
@@ -60,7 +60,7 @@ export default function FAQ() {
         {/* ── Trading ─────────────────────────────────────────────── */}
         <Card className="bg-[#16181f] border-white/[0.08] mb-6">
           <div className="p-6">
-            <h2 className="text-lg font-bold text-white uppercase tracking-widest mb-4">
+            <h2 className="text-lg font-bold text-white uppercase tracking-wide mb-4">
               Trading
             </h2>
             <Accordion type="single" collapsible className="w-full">
@@ -102,7 +102,7 @@ export default function FAQ() {
         {/* ── Settlement ──────────────────────────────────────────── */}
         <Card className="bg-[#16181f] border-white/[0.08] mb-6">
           <div className="p-6">
-            <h2 className="text-lg font-bold text-white uppercase tracking-widest mb-4">
+            <h2 className="text-lg font-bold text-white uppercase tracking-wide mb-4">
               Settlement &amp; Payouts
             </h2>
             <Accordion type="single" collapsible className="w-full">
@@ -139,7 +139,7 @@ export default function FAQ() {
         {/* ── Fees & Payments ─────────────────────────────────────── */}
         <Card className="bg-[#16181f] border-white/[0.08] mb-6">
           <div className="p-6">
-            <h2 className="text-lg font-bold text-white uppercase tracking-widest mb-4">
+            <h2 className="text-lg font-bold text-white uppercase tracking-wide mb-4">
               Fees &amp; Payments
             </h2>
             <Accordion type="single" collapsible className="w-full">

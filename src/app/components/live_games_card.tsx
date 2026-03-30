@@ -63,11 +63,11 @@ const LiveGamesCard: React.FC<any> = ({
                 className="w-auto flex flex-row sm:flex-col items-center justify-center hover:scale-110 transform transition-all duration-100"
             >
                 <div className="w-[120px] sm:w-[200px] h-[138px] sm:h-[218px] pt-3 relative">
-                    <div className="w-[61px] z-50 h-[36px] bg-red-500 rounded-s-full rounded-e-full flex justify-center items-center absolute bottom-0 left-[30px] sm:left-[70px]">
+                    <div className="w-[61px] z-50 h-[36px] bg-[#01696F] rounded-s-full rounded-e-full flex justify-center items-center absolute bottom-0 left-[30px] sm:left-[70px]">
                         LIVE
                     </div>
                     <div className="flex justify-center items-center">
-                        <div className="absolute rounded-full w-[130px] sm:w-[200px] h-[130px] sm:h-[200px] bg-red-500"></div>
+                        <div className="absolute rounded-full w-[130px] sm:w-[200px] h-[130px] sm:h-[200px] bg-[#01696F]"></div>
                         <div className="relative w-[120px] sm:w-[185px] h-[120px] sm:h-[185px]">
                             {images_list
                                 .slice(0, 5)
