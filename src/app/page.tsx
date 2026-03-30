@@ -19,7 +19,7 @@ import MarketCardSkeleton from "./components/MarketCardSkeleton";
 import AuthorityBar from "./components/AuthorityBar";
 import TopPredictors from "./components/TopPredictors";
 import FeaturedAuctionHero from "./components/FeaturedAuctionHero";
-import { Activity, BarChart2, DollarSign, Car } from "lucide-react";
+import { Activity, BarChart2, DollarSign, Car, Trophy, Gauge, TrendingUp } from "lucide-react";
 import AnimatedCounter from "./components/AnimatedCounter";
 import WelcomeBanner from "./components/WelcomeBanner";
 import HomepageSidebar from "./components/HomepageSidebar";
@@ -305,6 +305,42 @@ export default async function HomePage() {
               <p className="text-xs text-gray-400 mt-0.5">Cars Tracked</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Game Mode CTAs */}
+      <section className="mx-auto w-full max-w-6xl px-4 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Link
+            href="/tournaments"
+            className="group flex flex-col items-center gap-3 rounded-xl border border-[#E94560]/20 bg-[#E94560]/5 p-6 text-center transition hover:border-[#E94560]/40 hover:bg-[#E94560]/10"
+          >
+            <Trophy className="h-8 w-8 text-[#E94560] group-hover:scale-110 transition-transform" />
+            <div>
+              <h3 className="text-lg font-bold text-white">Tournaments</h3>
+              <p className="text-xs text-gray-400 mt-1">Compete for real prizes in curated events</p>
+            </div>
+          </Link>
+          <Link
+            href="/price_is_right"
+            className="group flex flex-col items-center gap-3 rounded-xl border border-[#FFB547]/20 bg-[#FFB547]/5 p-6 text-center transition hover:border-[#FFB547]/40 hover:bg-[#FFB547]/10"
+          >
+            <Gauge className="h-8 w-8 text-[#FFB547] group-hover:scale-110 transition-transform" />
+            <div>
+              <h3 className="text-lg font-bold text-white">Guess the Hammer</h3>
+              <p className="text-xs text-gray-400 mt-1">Predict exact sale prices for bonus points</p>
+            </div>
+          </Link>
+          <Link
+            href="/markets"
+            className="group flex flex-col items-center gap-3 rounded-xl border border-[#00D4AA]/20 bg-[#00D4AA]/5 p-6 text-center transition hover:border-[#00D4AA]/40 hover:bg-[#00D4AA]/10"
+          >
+            <TrendingUp className="h-8 w-8 text-[#00D4AA] group-hover:scale-110 transition-transform" />
+            <div>
+              <h3 className="text-lg font-bold text-white">Free Play</h3>
+              <p className="text-xs text-gray-400 mt-1">Trade prediction markets — no entry fee</p>
+            </div>
+          </Link>
         </div>
       </section>
 
