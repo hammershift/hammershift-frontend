@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import connectToDB from "@/lib/mongoose";
 import Tournaments from "@/models/tournament.model";
 import Users from "@/models/user.model";
+import { calculatePrizePool } from "@/lib/tournamentPricing";
 
 export const dynamic = "force-dynamic";
 
@@ -83,8 +84,68 @@ export async function POST(
       );
     }
 
-    // Handle entry fee for paid tournaments
-    if (tournament.type === 'paid' && tournament.buyInFee > 0) {
+    // Handle entry fee — tier-based or legacy
+    const body = await request.json().catch(() => ({}));
+    const tierName: string | undefined = body.tierName;
+
+    const hasTiers = tournament.entryTiers && tournament.entryTiers.length > 0;
+
+    if (hasTiers && tierName && tournament.entryTiers) {
+      // ── Tier-based entry ──────────────────────────────────────────────
+      const tierIndex = tournament.entryTiers.findIndex(
+        (t: any) => t.name === tierName
+      );
+      if (tierIndex === -1) {
+        return NextResponse.json(
+          { error: "Invalid tier" },
+          { status: 400 }
+        );
+      }
+
+      const tier = tournament.entryTiers[tierIndex] as any;
+
+      if (tier.currentEntries >= tier.maxEntries) {
+        return NextResponse.json(
+          { error: "This tier is full" },
+          { status: 400 }
+        );
+      }
+
+      if (tier.buyInAmount > 0) {
+        const user = await Users.findById(session.user.id);
+        if (!user) {
+          return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
+        if (user.balance < tier.buyInAmount) {
+          return NextResponse.json({ error: "Insufficient balance" }, { status: 400 });
+        }
+
+        // Deduct tier buy-in
+        await Users.findByIdAndUpdate(
+          session.user.id,
+          { $inc: { balance: -tier.buyInAmount } }
+        );
+      }
+
+      // Increment tier currentEntries
+      const tierUpdateKey = `entryTiers.${tierIndex}.currentEntries`;
+      await Tournaments.findByIdAndUpdate(id, {
+        $inc: { [tierUpdateKey]: 1 },
+      });
+
+      // Recalculate prize pool
+      const refreshed = await Tournaments.findById(id);
+      if (refreshed?.entryTiers) {
+        const newPrizePool = calculatePrizePool(
+          refreshed.entryTiers as any[],
+          refreshed.rakePercent ?? 10
+        );
+        await Tournaments.findByIdAndUpdate(id, {
+          $set: { calculatedPrizePool: newPrizePool },
+        });
+      }
+    } else if (tournament.type === "paid" && tournament.buyInFee > 0) {
+      // ── Legacy single buy-in entry ────────────────────────────────────
       const user = await Users.findById(session.user.id);
 
       if (!user) {

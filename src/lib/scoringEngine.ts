@@ -154,3 +154,38 @@ export function calculateDelta(
 ): number {
   return Math.round((predictedPrice - actualPrice) * 100) / 100;
 }
+
+/**
+ * Tournament V2 scoring with Price is Right penalty.
+ * Going over the actual price doubles the error penalty.
+ */
+export function scoreTournamentV2(
+  predictions: Array<{ auctionId: string; predictedPrice: number; actualPrice: number }>
+): {
+  totalScore: number;
+  perAuction: Array<{
+    auctionId: string;
+    accuracy: number;
+    error: number;
+    penalizedError: number;
+    points: number;
+  }>;
+} {
+  const perAuction = predictions.map((p) => {
+    const error = Math.abs(p.predictedPrice - p.actualPrice);
+    const penalizedError = p.predictedPrice > p.actualPrice ? error * 2 : error;
+    const accuracy = Math.max(0, (1 - penalizedError / p.actualPrice) * 100);
+    const points = Math.round(accuracy * 10);
+
+    return {
+      auctionId: p.auctionId,
+      accuracy: Math.round(accuracy * 100) / 100,
+      error,
+      penalizedError,
+      points,
+    };
+  });
+
+  const totalScore = perAuction.reduce((sum, a) => sum + a.points, 0);
+  return { totalScore, perAuction };
+}
