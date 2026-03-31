@@ -73,31 +73,37 @@ export default async function MarketSlugPage({
   if (!market) notFound();
 
   const yesPercent = Math.round((market.yesPrice ?? 0.5) * 100);
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://velocitymarkets.io';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.velocity-markets.com';
 
   return (
     <>
       <JsonLd
-        financialProduct={{
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FinancialProduct",
           name: `${market.auction.title} Prediction Market`,
           description: market.question,
           url: `${appUrl}/markets/${slug}`,
           offers: {
+            "@type": "Offer",
             price: market.yesPrice ?? 0.5,
-            priceCurrency: 'USD',
+            priceCurrency: "USD",
           },
         }}
-        event={
-          market.auction.deadline
-            ? {
-                name: `${market.auction.title} — Classic Car Auction`,
-                endDate: market.auction.deadline,
-                description: `Classic car auction on Bring a Trailer. Prediction market: ${market.question}`,
-                url: `${appUrl}/markets/${slug}`,
-              }
-            : undefined
-        }
       />
+      {market.auction.deadline && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Event",
+            name: `${market.auction.title} — Classic Car Auction`,
+            endDate: market.auction.deadline,
+            description: `Classic car auction on Bring a Trailer. Prediction market: ${market.question}`,
+            url: `${appUrl}/markets/${slug}`,
+            eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+          }}
+        />
+      )}
       <div className="min-h-screen bg-[#16181f] text-[#F8FAFC] p-6">
       <div className="max-w-2xl mx-auto pt-24">
         <p className="text-sm text-slate-400 uppercase tracking-wide mb-2">
