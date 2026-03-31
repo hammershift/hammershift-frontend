@@ -25,13 +25,13 @@ const FOOTER_LINKS = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.08] bg-[#0A0A1A]">
+    <footer role="contentinfo" aria-label="Site footer" className="border-t border-white/[0.08] bg-[#0A0A1A]">
       <div className="mx-auto max-w-6xl px-4 py-12">
         {/* Link grid */}
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {Object.entries(FOOTER_LINKS).map(([section, links]) => (
-            <div key={section}>
-              <h4 className="mb-3 text-sm font-semibold text-white">{section}</h4>
+            <nav key={section} aria-label={`${section} navigation`}>
+              <h3 className="mb-3 text-sm font-semibold text-white">{section}</h3>
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
@@ -44,7 +44,7 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
 

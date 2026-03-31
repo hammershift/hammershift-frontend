@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/api/", "/profile/", "/my_wallet/"],
     },
-    sitemap: "https://velocity-markets.com/sitemap.xml",
+    sitemap: "https://www.velocity-markets.com/sitemap.xml",
   };
 }

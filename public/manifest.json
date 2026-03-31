@@ -1,0 +1,16 @@
+{
+  "name": "Velocity Markets",
+  "short_name": "Velocity",
+  "description": "Predict car auction prices and win real prizes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A1A",
+  "theme_color": "#E94560",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

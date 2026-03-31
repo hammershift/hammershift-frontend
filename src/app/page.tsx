@@ -23,6 +23,7 @@ import CountdownTimer from "./components/CountdownTimer";
 import AnimatedCounter from "./components/AnimatedCounter";
 import { Button } from "./components/ui/button";
 import { Trophy, Clock, DollarSign, Users as UsersIcon, Hash } from "lucide-react";
+import JsonLd from "./components/JsonLd";
 
 interface HomepageData {
   activeTournaments: number;
@@ -330,6 +331,32 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Velocity Markets",
+          url: "https://www.velocity-markets.com",
+          description:
+            "Predict hammer prices of collector car auctions. Join tournaments, guess the price, and win real prizes.",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://www.velocity-markets.com/markets?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Velocity Markets",
+          url: "https://www.velocity-markets.com",
+          logo: "https://www.velocity-markets.com/logo.png",
+          description:
+            "The prediction market for collector car auctions. Predict prices on Bring a Trailer, Mecum, RM Sotheby's, and more.",
+        }}
+      />
       <ClientHomepageTracker featuredAuctionId={undefined} />
 
       {/* Live Activity Ticker */}
@@ -369,7 +396,7 @@ export default async function HomePage() {
       </section>
 
       {/* ───────── Stats Bar ───────── */}
-      <section className="border-y border-white/10 bg-black/50 py-6">
+      <section aria-label="Platform statistics" className="border-y border-white/10 bg-black/50 py-6">
         <div className="container mx-auto grid grid-cols-2 gap-4 px-4 text-center md:grid-cols-4">
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-white font-mono tabular-nums md:text-3xl">
@@ -544,7 +571,7 @@ export default async function HomePage() {
       )}
 
       {/* ───────── Trending Auctions ───────── */}
-      <section className="py-16">
+      <section aria-label="Trending prediction markets" className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8 flex items-center justify-between">
             <h2 className="text-3xl font-bold text-white">Trending Auctions</h2>
@@ -689,7 +716,7 @@ export default async function HomePage() {
       </section>
 
       {/* ───────── Newsletter ───────── */}
-      <section className="py-16 bg-[#111111]">
+      <section aria-label="Newsletter signup" className="py-16 bg-[#111111]">
         <div className="container mx-auto px-4 text-center">
           <h2 className="mb-3 text-2xl font-bold text-white">
             Stay in the Loop

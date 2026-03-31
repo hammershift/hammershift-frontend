@@ -163,17 +163,19 @@ const Navbar = () => {
           <div className="relative hidden items-center justify-center lg:flex">
             <div className="relative mr-6">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+              <label htmlFor="nav-search" className="sr-only">Search markets</label>
               <input
                 id="nav-search"
-                type="text"
+                type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearch}
                 placeholder="Search markets..."
+                aria-label="Search markets"
                 className="w-64 rounded-lg bg-white/[0.08] border border-white/10 py-2 pl-9 pr-3 text-sm text-white placeholder-gray-500 outline-none focus:border-[#01696F]/50 focus:ring-1 focus:ring-[#01696F]/30 transition-colors"
               />
             </div>
-            <nav className="flex items-center justify-center space-x-8">
+            <nav aria-label="Main navigation" className="flex items-center justify-center space-x-8">
               {navBarList.map((data, index) => (
                 <Link
                   key={index}

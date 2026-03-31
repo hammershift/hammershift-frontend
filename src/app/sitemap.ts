@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const BASE_URL = "https://velocity-markets.com";
+  const BASE_URL = "https://www.velocity-markets.com";
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
