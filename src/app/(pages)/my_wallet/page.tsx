@@ -327,23 +327,17 @@ const MyWalletPage = () => {
             <div className="flex max-sm:self-start">
               <Image alt="wallet" src={WalletIcon} />
               <div className="px-4">
-                {balLoading ? (
+                {loading || balLoading ? (
                   <p className="text-xl font-mono animate-pulse text-white/60">
                     Loading…
                   </p>
-                ) : balError ? (
-                  <p className="text-xl font-mono text-red-400">--</p>
-                ) : embeddedWalletAddress ? (
-                  <p className="text-2xl font-bold font-mono text-[#00D4AA]">
-                    ${onChainBalance.toFixed(2)}
-                  </p>
                 ) : (
                   <p className="text-2xl font-bold font-mono text-[#00D4AA]">
-                    ${walletBalance.toFixed(2)}
+                    ${(walletBalance + (embeddedWalletAddress ? onChainBalance : 0)).toFixed(2)}
                   </p>
                 )}
                 <p className="text-xs text-[#00D4AA]/70 mt-0.5">
-                  {embeddedWalletAddress ? "Velocity Markets Balance" : "Platform Balance"}
+                  Velocity Markets Balance
                 </p>
                 {embeddedWalletAddress && (
                   <p className="text-xs text-white/30 mt-0.5 font-mono">
@@ -408,16 +402,18 @@ const MyWalletPage = () => {
           </span>
         </div>
 
-        {/* Secondary balance: DB/platform balance — only shown alongside on-chain balance */}
-        {embeddedWalletAddress && walletBalance > 0 && (
-          <div className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#49C74233] mb-3">
-            <p className="text-sm text-white/50">Platform balance:</p>
-            {loading ? (
-              <p className="text-sm text-white/50 animate-pulse">Loading…</p>
-            ) : (
-              <p className="text-sm font-mono text-white/70">
-                ${walletBalance.toFixed(2)}
-              </p>
+        {/* Balance breakdown — shown when both on-chain and platform balances exist */}
+        {embeddedWalletAddress && (walletBalance > 0 || onChainBalance > 0) && (
+          <div className="flex flex-wrap items-center gap-4 px-4 py-2 rounded-md bg-[#49C74233] mb-3">
+            {walletBalance > 0 && (
+              <span className="text-sm text-white/50">
+                Platform: <span className="font-mono text-white/70">${walletBalance.toFixed(2)}</span>
+              </span>
+            )}
+            {onChainBalance > 0 && (
+              <span className="text-sm text-white/50">
+                On-chain USDC: <span className="font-mono text-white/70">${onChainBalance.toFixed(2)}</span>
+              </span>
             )}
           </div>
         )}
