@@ -12,6 +12,7 @@ import TwitterProvider from "next-auth/providers/twitter";
 import EmailProvider from "next-auth/providers/email";
 import connectToDB from "./mongoose";
 import Users from "@/models/user.model";
+import { privyClient } from "./privy";
 
 async function doesEmailExist(email: string): Promise<boolean> {
   await connectToDB();
@@ -98,6 +99,53 @@ export const authOptions: NextAuthOptions = {
           fullName: user.fullName,
           provider: user.provider,
         };
+      },
+    }),
+    CredentialsProvider({
+      id: "privy-bridge",
+      name: "Privy Bridge",
+      credentials: {
+        privyToken: { type: "text" },
+      },
+      authorize: async (credentials) => {
+        if (!credentials?.privyToken) return null;
+        try {
+          const { userId: privyDid } = await privyClient.verifyAuthToken(credentials.privyToken);
+          const privyUser = await privyClient.getUser(privyDid);
+          const rawEmail = privyUser.email?.address ?? privyUser.google?.email ?? null;
+          if (!rawEmail) return null;
+          const email = rawEmail.toLowerCase();
+
+          await connectToDB();
+          let dbUser = await Users.findOne({ email });
+
+          if (!dbUser) {
+            const fullName = privyUser.google?.name ?? email.split("@")[0];
+            const username = email.split("@")[0] + "_" + Math.floor(Math.random() * 9000 + 1000);
+            dbUser = await Users.create({
+              _id: new ObjectId(),
+              email,
+              username,
+              fullName,
+              balance: 0,
+              isActive: true,
+              isBanned: false,
+              provider: "privy",
+              role: "USER",
+            });
+          }
+
+          return {
+            id: dbUser._id.toString(),
+            email: dbUser.email,
+            username: dbUser.username,
+            fullName: dbUser.fullName,
+            provider: dbUser.provider ?? "privy",
+          };
+        } catch (err) {
+          console.error("privy-bridge authorize error:", err);
+          return null;
+        }
       },
     }),
     EmailProvider({

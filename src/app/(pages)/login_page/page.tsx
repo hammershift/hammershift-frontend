@@ -21,9 +21,21 @@ const LoginPage = () => {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/";
   const { data: session } = useSession();
-  const { ready, authenticated: privyAuthenticated } = usePrivy();
+  const { ready, authenticated: privyAuthenticated, getAccessToken } = usePrivy();
   const { login: privyLogin } = useLogin({
-    onComplete: () => {
+    onComplete: async () => {
+      // Bridge Privy session into NextAuth so server-side APIs work
+      try {
+        const token = await getAccessToken();
+        if (token) {
+          await signIn("privy-bridge", {
+            privyToken: token,
+            redirect: false,
+          });
+        }
+      } catch (err) {
+        console.error("Privy→NextAuth bridge failed:", err);
+      }
       router.push(redirectTo);
     },
   });
