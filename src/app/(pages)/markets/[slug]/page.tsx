@@ -84,7 +84,7 @@ export default async function MarketSlugPage({
           url: `${appUrl}/markets/${slug}`,
           offers: {
             price: market.yesPrice ?? 0.5,
-            priceCurrency: 'USDC',
+            priceCurrency: 'USD',
           },
         }}
         event={

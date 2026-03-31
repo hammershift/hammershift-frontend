@@ -16,7 +16,7 @@ const STEPS = [
   {
     emoji: '💰',
     title: 'How do trades work?',
-    body: 'Buy YES or NO shares in USDC. Shares resolve to $1.00 if correct, $0 if wrong. No gas fees.',
+    body: 'Buy YES or NO shares with USD. Shares resolve to $1.00 if correct, $0 if wrong.',
     isFinal: false,
   },
   {

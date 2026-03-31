@@ -195,7 +195,7 @@ function DailyHammerUI({ auction, guess, setGuess, submitted, loading, error, on
                 </div>
                 {error && <p className="text-[#E94560] text-sm">{error}</p>}
                 <p className="text-xs text-gray-500 text-center">
-                  Closest exact guess wins $50 in USDC trading credits.
+                  Closest exact guess wins $50 in trading credits.
                 </p>
                 <button
                   type="submit"

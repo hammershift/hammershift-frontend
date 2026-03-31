@@ -236,7 +236,7 @@ export async function validateTrade(
     const shortfall = (usdcAmount - userBalance).toFixed(2);
     return {
       valid: false,
-      reason: `Insufficient balance. You need $${shortfall} more USDC to place this trade.`,
+      reason: `Insufficient balance. You need $${shortfall} more to place this trade.`,
     };
   }
 
