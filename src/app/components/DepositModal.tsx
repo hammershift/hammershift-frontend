@@ -18,7 +18,7 @@ type Tab = 'usd' | 'crypto';
 type CryptoSubTab = 'card' | 'transfer';
 
 export default function DepositModal({ open, onClose, refetchBalance }: Props) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { embeddedWalletAddress } = useVelocityAuth();
   const { getAccessToken } = usePrivy();
 
@@ -125,6 +125,7 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
   if (!open) return null;
 
   const isLoggedIn = !!session?.user;
+  const isLoading = status === 'loading';
 
   return (
     <div
@@ -156,7 +157,11 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
         </div>
 
         <div className="p-5 space-y-5">
-          {!isLoggedIn ? (
+          {isLoading ? (
+            <div className="flex h-32 items-center justify-center">
+              <span className="h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            </div>
+          ) : !isLoggedIn ? (
             <div className="flex h-32 items-center justify-center">
               <p className="text-center text-sm text-gray-500">
                 Sign in to add funds to your account.
