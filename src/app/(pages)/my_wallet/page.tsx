@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 import { usePolygonUSDCBalance } from "@/hooks/usePolygonUSDCBalance";
 import PaymentForm from "@/app/components/payment_form";
+import DepositModal from "@/app/components/DepositModal";
 import Image from "next/image";
 import { usePathname, useSearchParams } from "next/navigation";
 
@@ -58,6 +59,7 @@ const MyWalletPage = () => {
     useState(false);
   const [showFailedLoadNotification, setShowFailedLoadNotification] =
     useState(false);
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
   const [onrampStatus, setOnrampStatus] = useState<'pending' | 'complete' | null>(null);
   const [onrampAmount, setOnrampAmount] = useState<number>(0);
 
@@ -79,6 +81,9 @@ const MyWalletPage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const success = searchParams.get("success");
+  const depositStatus = searchParams.get("deposit");
+  const depositSessionId = searchParams.get("session_id");
+  const depositAmount = searchParams.get("amount");
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -98,18 +103,20 @@ const MyWalletPage = () => {
 
   useEffect(() => {
     const fetchUserTransactions = async () => {
-      if (!userId) {
-        console.error("User ID is undefined");
-        return;
+      if (!userId) return;
+      try {
+        const res = await fetch(`/api/transaction?userID=${userId}`, {
+          method: "GET",
+        });
+        if (!res.ok) {
+          console.error("Unable to fetch user transactions:", res.status);
+          return;
+        }
+        const data = await res.json();
+        setUserTransactions(data);
+      } catch (err) {
+        console.error("Error fetching user transactions:", err);
       }
-      const res = await fetch(`/api/transaction?userID=${userId}`, {
-        method: "GET",
-      });
-      if (!res.ok) {
-        throw new Error("Unable to fetch user transactions");
-      }
-      const data = await res.json();
-      setUserTransactions(data);
     };
     fetchUserTransactions();
   }, [userId]);
@@ -206,6 +213,35 @@ const MyWalletPage = () => {
       return () => clearTimeout(timeoutId);
     }
   }, [success]);
+
+  // Stripe Checkout return — verify and credit deposit
+  const [checkoutVerified, setCheckoutVerified] = useState<'pending' | 'success' | 'failed' | null>(null);
+  useEffect(() => {
+    if (depositStatus !== 'success' || !depositSessionId) return;
+    setCheckoutVerified('pending');
+    fetch('/api/stripe/verify-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: depositSessionId }),
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (data.credited) {
+          setCheckoutVerified('success');
+          // Refresh balance
+          if (session) {
+            const balRes = await fetch('/api/wallet');
+            if (balRes.ok) {
+              const balData = await balRes.json();
+              setWalletBalance(balData.balance);
+            }
+          }
+        } else {
+          setCheckoutVerified('failed');
+        }
+      })
+      .catch(() => setCheckoutVerified('failed'));
+  }, [depositStatus, depositSessionId, session]);
 
   // Onramp return handling
   useEffect(() => {
@@ -332,23 +368,23 @@ const MyWalletPage = () => {
               {isDisabled === "true" ? (
                 <button
                   className="m-1 rounded-md bg-[#929292] p-1 px-3 font-bold text-black"
-                  onClick={() => setIsPaymentModalOpen(true)}
+                  onClick={() => setIsDepositModalOpen(true)}
                   disabled
                   title="Temporarily disabled"
                 >
                   <div className="flex p-1">
                     <Image alt="deposit" src={PlusIcon} />{" "}
-                    <p className="pl-2">LOAD</p>
+                    <p className="pl-2">DEPOSIT</p>
                   </div>
                 </button>
               ) : (
                 <button
                   className="m-1 rounded-md bg-[#E94560] p-1 px-3 font-bold text-white"
-                  onClick={() => setIsPaymentModalOpen(true)}
+                  onClick={() => setIsDepositModalOpen(true)}
                 >
                   <div className="flex p-1">
                     <Image alt="deposit" src={PlusIcon} />{" "}
-                    <p className="pl-2">LOAD</p>
+                    <p className="pl-2">DEPOSIT</p>
                   </div>
                 </button>
               )}
@@ -409,6 +445,38 @@ const MyWalletPage = () => {
         </div>
       )}
 
+      {/* Checkout deposit status banner */}
+      {checkoutVerified === 'pending' && (
+        <div className="flex w-2/3 self-center max-sm:w-full">
+          <div className="w-full flex items-center gap-3 rounded-lg border border-[#FFB547]/30 bg-[#FFB547]/10 px-4 py-3 mb-3">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#FFB547]/30 border-t-[#FFB547]" />
+            <p className="text-sm text-[#FFB547]">
+              Verifying your ${depositAmount ?? ''} deposit…
+            </p>
+          </div>
+        </div>
+      )}
+      {checkoutVerified === 'success' && (
+        <div className="flex w-2/3 self-center max-sm:w-full">
+          <div className="w-full flex items-center gap-3 rounded-lg border border-[#00D4AA]/30 bg-[#00D4AA]/10 px-4 py-3 mb-3">
+            <span className="text-[#00D4AA]">&#10003;</span>
+            <p className="text-sm text-[#00D4AA]">
+              ${depositAmount ?? ''} deposit confirmed! Your balance has been updated.
+            </p>
+          </div>
+        </div>
+      )}
+      {checkoutVerified === 'failed' && (
+        <div className="flex w-2/3 self-center max-sm:w-full">
+          <div className="w-full flex items-center gap-3 rounded-lg border border-[#E94560]/30 bg-[#E94560]/10 px-4 py-3 mb-3">
+            <span className="text-[#E94560]">!</span>
+            <p className="text-sm text-[#E94560]">
+              Could not verify deposit. If you completed payment, your balance will update shortly.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* ACH Bank Transfer — Coming Soon */}
       <div className="flex w-2/3 flex-col justify-center self-center rounded-md max-sm:w-full mt-4">
         <div className="rounded-lg border border-white/[0.08] bg-[#16181f] p-5 mb-4">
@@ -427,19 +495,13 @@ const MyWalletPage = () => {
         <p className="text-xs text-gray-500 mb-2">Pay with card instead:</p>
       </div>
 
-      <div>
-        {isPaymentModalOpen && (
-          <PaymentForm
-            handleClosePaymentModal={handleClosePaymentModal}
-            prices={prices}
-            userId={userId}
-            userEmail={userEmail}
-            setShowSuccessfulLoadNotification={() =>
-              showNotification(setShowSuccessfulLoadNotification)
-            }
-          />
-        )}
-      </div>
+      <DepositModal
+        open={isDepositModalOpen}
+        onClose={() => {
+          setIsDepositModalOpen(false);
+          refetchBalance();
+        }}
+      />
       <div>
         {isWithdrawModalOpen && (
           <WithdrawForm
