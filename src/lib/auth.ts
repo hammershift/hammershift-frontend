@@ -16,7 +16,9 @@ import { privyClient } from "./privy";
 
 async function doesEmailExist(email: string): Promise<boolean> {
   await connectToDB();
-  const user = await Users.findOne({ email });
+  const user = await Users.findOne({
+    email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+  });
   return !!user;
 }
 
@@ -244,15 +246,14 @@ export const authOptions: NextAuthOptions = {
       // }
 
       await connectToDB();
-      const dbUser = await Users.findOne({ email: token.email });
+      const emailRegex = new RegExp(`^${token.email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+      const dbUser = await Users.findOne({ email: { $regex: emailRegex } });
 
-      if (existingUser) {
+      if (dbUser) {
         token.fullName = dbUser.fullName;
         token.username = dbUser.username;
-        // token.image = dbUser.image;
         token.isActive = dbUser.isActive;
         token.balance = dbUser.balance;
-        // token.stripeCustomerId = dbUser.stripeCustomerId;
         token.isBanned = dbUser.isBanned;
         token.about = dbUser.about;
         token._id = dbUser._id.toString();
@@ -260,7 +261,7 @@ export const authOptions: NextAuthOptions = {
         if (!dbUser.createdAt) {
           const createdAt = new Date();
           await Users.updateOne(
-            { email: token.email },
+            { _id: dbUser._id },
             { $set: { createdAt } }
           );
           token.createdAt = createdAt;
@@ -269,20 +270,19 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (!dbUser.isActive) {
-          dbUser.isActive = true;
           await Users.updateOne(
-            { email: token.email },
+            { _id: dbUser._id },
             { $set: { isActive: true } }
           );
           token.isActive = true;
           token.balance = dbUser.balance ?? 0;
         }
-      }
 
-      await Users.updateOne(
-        { email: token.email },
-        { $set: { updatedAt: new Date() } }
-      );
+        await Users.updateOne(
+          { _id: dbUser._id },
+          { $set: { updatedAt: new Date() } }
+        );
+      }
 
       return token;
     },
