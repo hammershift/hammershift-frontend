@@ -5,49 +5,46 @@ import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const session = await getAuthSession();
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const rawId = (session.user as any)._id ?? (session.user as any).id;
-  if (!rawId) {
-    // _id not yet set in JWT — fall back to email lookup
-    const email = session.user?.email;
-    if (!email) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
-    }
-    try {
-      const client = await clientPromise;
-      const db = client.db();
-      const emailRegex = new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
-      const user = await db.collection("users").findOne({ email: { $regex: emailRegex } });
-      if (!user) {
-        return NextResponse.json({ message: "User not found" }, { status: 404 });
-      }
-      return NextResponse.json({ balance: user.balance ?? 0 });
-    } catch (error) {
-      console.error("GET User Wallet (email fallback) error:", error);
-      return NextResponse.json({ message: "Internal server error" }, { status: 500 });
-    }
-  }
-
-  const userID = new mongoose.Types.ObjectId(rawId as string);
-
   try {
     const client = await clientPromise;
     const db = client.db();
 
-    // retrieve the user's balance from the users collection
-    const user = await db.collection("users").findOne({ _id: userID });
-    if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    // Try _id first (fastest path)
+    const rawId = (session.user as any)._id ?? (session.user as any).id;
+    if (rawId) {
+      const userID = new mongoose.Types.ObjectId(rawId as string);
+      const user = await db.collection("users").findOne({ _id: userID });
+      if (user) {
+        return NextResponse.json({ balance: user.balance ?? 0 });
+      }
+      console.warn("wallet: _id lookup failed for", rawId);
     }
 
-    return NextResponse.json({ balance: user.balance ?? 0 });
+    // Fallback to email lookup
+    const email = session.user?.email;
+    if (email) {
+      const emailRegex = new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+      const user = await db.collection("users").findOne({ email: { $regex: emailRegex } });
+      if (user) {
+        return NextResponse.json({ balance: user.balance ?? 0 });
+      }
+      console.warn("wallet: email lookup failed for", email);
+    }
+
+    // Last resort: log full session for debugging
+    console.error("wallet: no user found. session.user keys:", Object.keys(session.user || {}), "email:", email, "_id:", rawId);
+    return NextResponse.json({ message: "User not found" }, { status: 404 });
   } catch (error) {
-    console.error("GET User Wallet - Internal server error:", error);
+    console.error("GET User Wallet error:", error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }
