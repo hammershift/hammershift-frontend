@@ -123,25 +123,25 @@ const MyWalletPage = () => {
 
   useEffect(() => {
     const fetchWalletBalance = async () => {
+      if (!session) return;
       setLoading(true);
-      if (session) {
-        try {
-          const res = await fetch("/api/wallet", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setWalletBalance(data.balance);
-            setLoading(false);
-          } else {
-            console.error("Failed to fetch wallet balance:", data.message);
-          }
-        } catch (error) {
-          console.error("Error fetching wallet balance:", error);
+      try {
+        const res = await fetch("/api/wallet", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setWalletBalance(data.balance ?? 0);
+        } else {
+          console.error("Failed to fetch wallet balance:", data.message);
         }
+      } catch (error) {
+        console.error("Error fetching wallet balance:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchWalletBalance();
