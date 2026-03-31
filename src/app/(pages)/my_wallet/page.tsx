@@ -364,7 +364,7 @@ const MyWalletPage = () => {
           </span>
           <span className="inline-flex items-center gap-1.5 text-[10px] text-gray-500">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-            Funds held as USDC stablecoin
+            Funds held in USD
           </span>
           <span className="inline-flex items-center gap-1.5 text-[10px] text-gray-500">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
