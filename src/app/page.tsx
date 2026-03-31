@@ -64,6 +64,12 @@ interface HomepageData {
     price: number;
     soldDate: string | null;
   }>;
+  cumulativeStats: {
+    carsTracked: number;
+    totalPredictions: number;
+    totalVolume: number;
+    totalMarkets: number;
+  };
 }
 
 function formatCurrency(amount: number): string {
@@ -91,6 +97,10 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     recentWinnerTournaments,
     userRankResult,
     recentSalesRaw,
+    carsTracked,
+    totalPredictions,
+    totalMarkets,
+    totalVolumeResult,
   ] = await Promise.all([
     // Active tournament count
     Tournaments.countDocuments({ isActive: true }),
@@ -172,6 +182,20 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
       .limit(20)
       .project({ title: 1, 'sort.price': 1, 'sort.deadline': 1 })
       .toArray(),
+
+    // Cumulative stats: cars tracked
+    db.collection('auctions').countDocuments(),
+
+    // Cumulative stats: total predictions
+    db.collection('predictions').countDocuments(),
+
+    // Cumulative stats: total markets
+    db.collection('polygon_markets').countDocuments(),
+
+    // Cumulative stats: total volume
+    db.collection('polygon_markets').aggregate([
+      { $group: { _id: null, total: { $sum: '$totalVolume' } } },
+    ]).toArray(),
   ]);
 
   // Calculate weekly prize pool
@@ -243,6 +267,12 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     trendingAuctions: JSON.parse(JSON.stringify(trendingAuctions)),
     recentWinners,
     recentSales,
+    cumulativeStats: {
+      carsTracked,
+      totalPredictions,
+      totalMarkets,
+      totalVolume: totalVolumeResult[0]?.total ?? 0,
+    },
   };
 }
 
@@ -257,6 +287,7 @@ export default async function HomePage() {
     trendingAuctions: [],
     recentWinners: [],
     recentSales: [],
+    cumulativeStats: { carsTracked: 0, totalPredictions: 0, totalVolume: 0, totalMarkets: 0 },
   };
   let error: string | null = null;
 
@@ -342,18 +373,26 @@ export default async function HomePage() {
         <div className="container mx-auto grid grid-cols-2 gap-4 px-4 text-center md:grid-cols-4">
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-white font-mono tabular-nums md:text-3xl">
-              <AnimatedCounter end={data.activeTournaments} format="number" />
+              <AnimatedCounter end={data.cumulativeStats.carsTracked} format="abbreviated" />
             </div>
             <div className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-              Active Tournaments
+              Cars Tracked
             </div>
           </div>
           <div className="flex flex-col items-center">
             <div className="text-2xl font-bold text-[#FFC553] font-mono tabular-nums md:text-3xl">
-              {formatCurrency(data.weeklyPrizePool)}
+              <AnimatedCounter end={data.cumulativeStats.totalPredictions} format="abbreviated" />
             </div>
             <div className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-              This Week&apos;s Prizes
+              Total Predictions
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="text-2xl font-bold text-white font-mono tabular-nums md:text-3xl">
+              <AnimatedCounter end={data.cumulativeStats.totalMarkets} format="abbreviated" />
+            </div>
+            <div className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+              Markets Listed
             </div>
           </div>
           <div className="flex flex-col items-center">
@@ -362,14 +401,6 @@ export default async function HomePage() {
             </div>
             <div className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
               Total Players
-            </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="text-2xl font-bold text-white font-mono tabular-nums md:text-3xl">
-              {data.userRank ? `#${data.userRank}` : "Join Now"}
-            </div>
-            <div className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500">
-              Your Rank
             </div>
           </div>
         </div>
@@ -497,11 +528,11 @@ export default async function HomePage() {
           <div className="container mx-auto px-4 text-center">
             <Trophy className="mx-auto mb-4 h-12 w-12 text-[#01696F]/50" />
             <h2 className="mb-2 text-2xl font-bold text-white">
-              Tournaments Coming Soon
+              Next Tournament Starts Soon
             </h2>
             <p className="text-gray-400">
-              New tournaments are posted weekly. Check back soon or browse free
-              play markets.
+              Tournaments run weekly with cash prizes. Browse free play markets
+              while you wait.
             </p>
             <Link href="/markets" className="mt-6 inline-block">
               <Button className="bg-[#01696F] px-6 py-3 text-white hover:bg-[#0C4E54]">

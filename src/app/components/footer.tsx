@@ -15,15 +15,11 @@ const FOOTER_LINKS = {
   ],
   Community: [
     { label: "Leaderboard", href: "/leaderboard" },
-    { label: "Discord", href: "#" },
-    { label: "Twitter / X", href: "#" },
-    { label: "Instagram", href: "#" },
+    { label: "Tournaments", href: "/tournaments" },
+    { label: "Guess the Hammer", href: "/price_is_right" },
   ],
   Company: [
     { label: "About", href: "/how_it_works" },
-    { label: "Careers", href: "#" },
-    { label: "Contact", href: "#" },
-    { label: "Press", href: "#" },
   ],
 };
 

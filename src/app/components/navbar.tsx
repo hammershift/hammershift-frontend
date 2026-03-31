@@ -154,6 +154,7 @@ const Navbar = () => {
                 height={32}
                 alt="Velocity Markets"
                 className="h-auto w-60 sm:block"
+                priority
               />
             </Link>
           </div>
