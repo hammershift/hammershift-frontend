@@ -117,22 +117,13 @@ export const authOptions: NextAuthOptions = {
           const email = rawEmail.toLowerCase();
 
           await connectToDB();
-          let dbUser = await Users.findOne({ email });
+          // Case-insensitive email lookup to avoid duplicate accounts
+          const dbUser = await Users.findOne({ email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') } });
 
           if (!dbUser) {
-            const fullName = privyUser.google?.name ?? email.split("@")[0];
-            const username = email.split("@")[0] + "_" + Math.floor(Math.random() * 9000 + 1000);
-            dbUser = await Users.create({
-              _id: new ObjectId(),
-              email,
-              username,
-              fullName,
-              balance: 0,
-              isActive: true,
-              isBanned: false,
-              provider: "privy",
-              role: "USER",
-            });
+            // Don't auto-create — user should sign up first or use privy-session route
+            console.error("privy-bridge: no DB user found for email", email);
+            return null;
           }
 
           return {
