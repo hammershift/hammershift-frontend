@@ -264,9 +264,9 @@ const Navbar = () => {
             {/* Buttons for logged in accounts */}
             <div className="flex items-center justify-center gap-4 px-4">
               {embeddedWalletAddress && privyUser?.balance != null && (
-                <span className="hidden font-mono text-sm text-[#00D4AA] sm:block">
+                <Link href="/my_wallet" className="hidden font-mono text-sm text-[#00D4AA] hover:text-[#00E4BA] transition-colors sm:block">
                   ${privyUser.balance.toFixed(2)}
-                </span>
+                </Link>
               )}
               <button
                 onClick={() => {
@@ -401,16 +401,28 @@ const Navbar = () => {
             </Link>
           ))}
           {isLoggedIn && (
-            <button
-              onClick={() => {
-                closeMenu();
-                document.body.classList.remove("stop-scrolling");
-                setDepositOpen(true);
-              }}
-              className="flex min-h-[44px] w-full items-center border-t border-white/[0.08] px-6 py-3 text-sm font-bold tracking-wider text-[#00D4AA] transition-colors hover:bg-[#16181f]"
-            >
-              Add Funds
-            </button>
+            <>
+              <Link
+                href="/my_wallet"
+                onClick={() => {
+                  closeMenu();
+                  document.body.classList.remove("stop-scrolling");
+                }}
+                className="flex min-h-[44px] w-full items-center border-t border-white/[0.08] px-6 py-3 text-sm font-medium tracking-wider transition-colors hover:bg-[#16181f] hover:text-white"
+              >
+                MY WALLET
+              </Link>
+              <button
+                onClick={() => {
+                  closeMenu();
+                  document.body.classList.remove("stop-scrolling");
+                  setDepositOpen(true);
+                }}
+                className="flex min-h-[44px] w-full items-center border-t border-white/[0.08] px-6 py-3 text-sm font-bold tracking-wider text-[#00D4AA] transition-colors hover:bg-[#16181f]"
+              >
+                ADD FUNDS
+              </button>
+            </>
           )}
         </nav>
       )}
@@ -501,6 +513,13 @@ const MyAccountMenu: React.FC<MyAccountMenuProps> = ({
             ) : (
                 <div className="w-full px-6">Error fetching wallet balance</div>
             )} */}
+      <Link
+        href="/my_wallet"
+        className="w-full p-1.5 hover:bg-white/5"
+        onClick={closeMyAccountMenu}
+      >
+        My Wallet
+      </Link>
       <Link
         href="/profile"
         className="w-full p-1.5 hover:bg-white/5"
