@@ -29,17 +29,36 @@ interface HeroCarouselProps {
 
 export default function HeroCarousel({ markets }: HeroCarouselProps) {
   if (markets.length === 0) {
-    // Fallback: show the old static hero
     return (
-      <section className="relative flex h-[45vh] items-center justify-center overflow-hidden bg-[#0A0A1A]">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A1A]/40 via-transparent to-[#0A0A1A]" />
+      <section className="relative flex min-h-[50vh] items-center justify-center overflow-hidden bg-[#0A0A1A]">
+        <div className="absolute inset-0">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[800px] rounded-full bg-[#F2CA16]/[0.04] blur-[120px]" />
+          <div className="absolute right-1/4 top-1/3 h-[300px] w-[300px] rounded-full bg-[#00D4AA]/[0.03] blur-[100px]" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0A0A1A]" />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-          <h1 className="mb-3 text-5xl font-bold tracking-tight text-white md:text-6xl">
-            Trade on the Hammer Price.
+          <h1 className="mb-3 text-5xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl">
+            Predict Car Auction Prices.{' '}
+            <span className="text-[#F2CA16]">Win Real Prizes.</span>
           </h1>
-          <p className="text-lg text-gray-300 md:text-xl">
-            The prediction market for collector car auctions.
+          <p className="mx-auto mt-4 max-w-xl text-lg text-gray-300 md:text-xl">
+            Join tournaments, guess the hammer price, and compete against car enthusiasts
+            on the world&apos;s first automotive prediction platform.
           </p>
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <Link
+              href="/tournaments"
+              className="rounded-full bg-[#00D4AA] px-8 py-3 text-sm font-semibold text-black transition hover:bg-[#00B894]"
+            >
+              Enter a Tournament
+            </Link>
+            <Link
+              href="/price_is_right"
+              className="rounded-full border border-white/20 px-8 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/[0.05]"
+            >
+              Play Free
+            </Link>
+          </div>
         </div>
       </section>
     );
