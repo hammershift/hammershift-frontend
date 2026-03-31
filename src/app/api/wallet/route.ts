@@ -11,7 +11,29 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const userID = new mongoose.Types.ObjectId(session.user._id as string);
+  const rawId = (session.user as any)._id ?? (session.user as any).id;
+  if (!rawId) {
+    // _id not yet set in JWT — fall back to email lookup
+    const email = session.user?.email;
+    if (!email) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+    try {
+      const client = await clientPromise;
+      const db = client.db();
+      const emailRegex = new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
+      const user = await db.collection("users").findOne({ email: { $regex: emailRegex } });
+      if (!user) {
+        return NextResponse.json({ message: "User not found" }, { status: 404 });
+      }
+      return NextResponse.json({ balance: user.balance ?? 0 });
+    } catch (error) {
+      console.error("GET User Wallet (email fallback) error:", error);
+      return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+    }
+  }
+
+  const userID = new mongoose.Types.ObjectId(rawId as string);
 
   try {
     const client = await clientPromise;
@@ -23,7 +45,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ balance: user.balance });
+    return NextResponse.json({ balance: user.balance ?? 0 });
   } catch (error) {
     console.error("GET User Wallet - Internal server error:", error);
     return NextResponse.json(
