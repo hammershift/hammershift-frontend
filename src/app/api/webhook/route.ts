@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
         const updateUserBalance = await db
           .collection("users")
           .updateOne(
-            { stripeCustomerId: stripeCustomerId },
+            { _id: matchedUser!._id },
             { $inc: { balance: amountPaid } }
           );
         console.log(

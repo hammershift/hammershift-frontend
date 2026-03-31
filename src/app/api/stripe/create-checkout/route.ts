@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
         depositAmount: String(amount),
         type: "usd_deposit",
       },
-      success_url: `${baseUrl}/my_wallet?deposit=success&amount=${amount}`,
+      success_url: `${baseUrl}/my_wallet?deposit=success&amount=${amount}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/my_wallet?deposit=cancelled`,
     });
 
