@@ -59,6 +59,11 @@ interface HomepageData {
     prize: number;
     tournamentName: string;
   }>;
+  recentSales: Array<{
+    title: string;
+    price: number;
+    soldDate: string | null;
+  }>;
 }
 
 function formatCurrency(amount: number): string {
@@ -85,6 +90,7 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     trendingAuctions,
     recentWinnerTournaments,
     userRankResult,
+    recentSalesRaw,
   ] = await Promise.all([
     // Active tournament count
     Tournaments.countDocuments({ isActive: true }),
@@ -157,6 +163,15 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
           },
         ])
       : Promise.resolve([]),
+
+    // Recent sales for ticker
+    db
+      .collection('auctions')
+      .find({ isActive: false, 'sort.price': { $gt: 0 } })
+      .sort({ 'sort.deadline': -1 })
+      .limit(20)
+      .project({ title: 1, 'sort.price': 1, 'sort.deadline': 1 })
+      .toArray(),
   ]);
 
   // Calculate weekly prize pool
@@ -210,6 +225,12 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     if (recentWinners.length >= 5) break;
   }
 
+  const recentSales = recentSalesRaw.map((a: any) => ({
+    title: a.title ?? 'Unknown',
+    price: a.sort?.price ?? 0,
+    soldDate: a.sort?.deadline ? new Date(a.sort.deadline).toISOString() : null,
+  }));
+
   return {
     activeTournaments,
     weeklyPrizePool,
@@ -221,6 +242,7 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     featuredAuctions: JSON.parse(JSON.stringify(featuredAuctions)),
     trendingAuctions: JSON.parse(JSON.stringify(trendingAuctions)),
     recentWinners,
+    recentSales,
   };
 }
 
@@ -234,6 +256,7 @@ export default async function HomePage() {
     featuredAuctions: [],
     trendingAuctions: [],
     recentWinners: [],
+    recentSales: [],
   };
   let error: string | null = null;
 
@@ -279,7 +302,7 @@ export default async function HomePage() {
       <ClientHomepageTracker featuredAuctionId={undefined} />
 
       {/* Live Activity Ticker */}
-      <LiveTicker />
+      <LiveTicker sales={data.recentSales} />
 
       {/* ───────── Hero Section ───────── */}
       <section className="relative flex min-h-[80vh] items-center bg-gradient-to-br from-[#0d0d0d] via-[#111111] to-[#0d0d0d]">
