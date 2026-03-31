@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     const client = await clientPromise;
     const db = client.db();
 
-    const userID = new mongoose.Types.ObjectId(session.user._id as string);
+    const userID = new mongoose.Types.ObjectId((session.user as any)._id ?? (session.user as any).id);
 
     // retrieve the user and check their balance
     const user = await db.collection("users").findOne({ _id: userID });
