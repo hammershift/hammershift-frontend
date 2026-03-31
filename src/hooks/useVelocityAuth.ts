@@ -1,7 +1,8 @@
 'use client';
 
 import { usePrivy } from '@privy-io/react-auth';
-import { useEffect, useState } from 'react';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect, useState, useRef } from 'react';
 
 interface VelocityUser {
   _id: string;
@@ -17,8 +18,30 @@ interface VelocityUser {
 
 export function useVelocityAuth() {
   const { ready, authenticated, user, logout, login, getAccessToken } = usePrivy();
+  const { data: nextAuthSession, status: nextAuthStatus } = useSession();
   const [velocityUser, setVelocityUser] = useState<VelocityUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const bridgingRef = useRef(false);
+
+  // Bridge Privy → NextAuth when Privy is authenticated but NextAuth is not
+  useEffect(() => {
+    if (!ready || !authenticated || nextAuthStatus === 'loading') return;
+    if (nextAuthSession?.user || bridgingRef.current) return;
+
+    bridgingRef.current = true;
+    getAccessToken().then(async (token) => {
+      if (!token) {
+        bridgingRef.current = false;
+        return;
+      }
+      try {
+        await signIn('privy-bridge', { privyToken: token, redirect: false });
+      } catch (err) {
+        console.error('[useVelocityAuth] privy→nextauth bridge failed:', err);
+      }
+      bridgingRef.current = false;
+    });
+  }, [ready, authenticated, nextAuthSession, nextAuthStatus, getAccessToken]);
 
   useEffect(() => {
     if (!ready) return;
