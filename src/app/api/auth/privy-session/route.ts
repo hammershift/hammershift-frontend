@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
     await connectToDB();
 
-    let dbUser = await Users.findOne({ email });
+    let dbUser = await Users.findOne({ email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') } });
     let isNewUser = false;
 
     if (!dbUser) {
