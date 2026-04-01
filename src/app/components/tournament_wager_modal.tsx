@@ -156,7 +156,7 @@ const TournamentWagerModal: React.FC<TournamentWagerI> = ({
         <div className="mb-[94px] px-6 sm:mb-0 sm:max-h-[488px] sm:overflow-y-auto sm:px-8">
           {auctionData.map((auction, index: number) => {
             return (
-              <TimerProvider key={auction._id} deadline={auction.sort.deadline}>
+              <TimerProvider key={auction._id} deadline={new Date(new Date(auction.sort.deadline).getTime() + 24 * 60 * 60 * 1000)}>
                 <TournamentModalCard
                   auction={auction}
                   handleInputs={handleInputs}

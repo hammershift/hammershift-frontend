@@ -63,7 +63,12 @@ const getSourceBadgeConfig = (source: string) => {
 export default function AuctionCard({ auction, compact = false }: AuctionCardProps) {
   const sourceBadge = getSourceBadgeConfig(auction.source_badge || "bat");
   const currentBid = auction.sort?.price || 0;
-  const endTime = auction.sort?.deadline || new Date();
+  // Scraper offsets sort.deadline by -1 day from BaT's actual end time.
+  // Add 24h back so the countdown shows the real deadline.
+  const rawDeadline = auction.sort?.deadline
+    ? new Date(auction.sort.deadline)
+    : new Date();
+  const endTime = new Date(rawDeadline.getTime() + 24 * 60 * 60 * 1000);
   const predictionCount = auction.prediction_count || 0;
 
   return (

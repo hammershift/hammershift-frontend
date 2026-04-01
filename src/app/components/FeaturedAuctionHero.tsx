@@ -28,7 +28,11 @@ const USDollar = new Intl.NumberFormat("en-US", {
 
 export default function FeaturedAuctionHero({ auction }: FeaturedAuctionHeroProps) {
   const auctionId = auction.auction_id ?? auction._id;
-  const deadline = auction.sort?.deadline ?? null;
+  // Scraper offsets sort.deadline by -1 day; add 24h for display
+  const rawDeadline = auction.sort?.deadline ?? null;
+  const deadline = rawDeadline
+    ? new Date(new Date(rawDeadline).getTime() + 24 * 60 * 60 * 1000).toISOString()
+    : null;
   const currentBid = auction.sort?.price ?? null;
   const hasImage = Boolean(auction.image);
 

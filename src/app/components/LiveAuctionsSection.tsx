@@ -89,7 +89,7 @@ export default function LiveAuctionsSection({ auctions }: Props) {
                         <Clock className="mr-1 h-3 w-3 text-[#FFB547]" />
                         {auction.sort?.deadline ? (
                           <CountdownTimer
-                            endTime={new Date(auction.sort.deadline)}
+                            endTime={new Date(new Date(auction.sort.deadline).getTime() + 24 * 60 * 60 * 1000)}
                             size="sm"
                           />
                         ) : (

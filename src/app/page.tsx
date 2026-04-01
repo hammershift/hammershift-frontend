@@ -614,7 +614,7 @@ export default async function HomePage() {
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           <CountdownTimer
-                            endTime={new Date(auction.sort.deadline)}
+                            endTime={new Date(new Date(auction.sort.deadline).getTime() + 24 * 60 * 60 * 1000)}
                             size="sm"
                           />
                         </span>
