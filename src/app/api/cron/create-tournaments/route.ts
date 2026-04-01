@@ -296,16 +296,18 @@ export async function GET(req: Request) {
     await connectToDB();
 
     const now = new Date();
+    const recentCutoff = new Date(now.getTime() - 48 * 60 * 60 * 1000); // Include auctions ended up to 48h ago
     const lookahead = new Date(now.getTime() + LOOKAHEAD_DAYS * 24 * 60 * 60 * 1000);
 
-    // 1. Fetch upcoming qualifying auctions
+    // 1. Fetch qualifying auctions: future deadline OR ended within last 48h
     const auctions = await Auctions.find({
-      "sort.deadline": { $gt: now, $lt: lookahead },
+      "sort.deadline": { $gt: recentCutoff },
       $or: QUALIFYING_MAKES.map((make) => ({
         title: { $regex: make, $options: "i" },
       })),
     })
       .sort({ "sort.deadline": 1 })
+      .limit(200)
       .lean() as AuctionDoc[];
 
     if (auctions.length < MIN_AUCTIONS_PER_TOURNAMENT) {
