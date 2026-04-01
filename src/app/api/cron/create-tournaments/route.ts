@@ -309,7 +309,6 @@ export async function GET(req: Request) {
       .lean() as AuctionDoc[];
 
     if (auctions.length < MIN_AUCTIONS_PER_TOURNAMENT) {
-      // Diagnostics: figure out what's filtering them out
       const totalAuctions = await Auctions.countDocuments();
       const withFutureDeadline = await Auctions.countDocuments({ "sort.deadline": { $gt: now } });
       const withDeadlineInWindow = await Auctions.countDocuments({ "sort.deadline": { $gt: now, $lt: lookahead } });
