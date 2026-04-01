@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 export async function refundTournamentWagers(tournamentWagerIDs: ObjectId[]): Promise<void> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   try {
     const tournamentWagers = await db

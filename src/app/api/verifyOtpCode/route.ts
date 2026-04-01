@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     // connect to DB
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     // check OTP code record in the collection
     const otpCodeRecord = await db.collection('password_reset_tokens').findOne({ otp });

@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const payload = await req.text();
   const signature = req.headers.get("Stripe-Signature");
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   let stripeCustomerId;
   let amountPaid;

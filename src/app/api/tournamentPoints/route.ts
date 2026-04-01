@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 // export async function GET(req: NextRequest) {
 //   try {
 //     const client = await clientPromise;
-//     const db = client.db();
+//     const db = client.db(process.env.DB_NAME || undefined);
 //     const limit = Number(req.nextUrl.searchParams.get('limit'));
 //     const tournament_id = req.nextUrl.searchParams.get('tournament_id');
 //     const user_id = req.nextUrl.searchParams.get('user_id');
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     const limit = Number(req.nextUrl.searchParams.get('limit'));
     const tournament_id = req.nextUrl.searchParams.get('tournament_id');
     const user_id = req.nextUrl.searchParams.get('user_id');

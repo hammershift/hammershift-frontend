@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 
 export async function createWinningTransaction(userID: ObjectId, amount: number): Promise<ObjectId> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   const transaction = new Transaction({
     userID,

@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
     try {
         const client = await clientPromise;
-        const db = client.db();
+        const db = client.db(process.env.DB_NAME || undefined);
 
         const winners = await db.collection('transactions').find({ transactionType: "winnings" }).sort({ userID: 1 }).toArray();
 

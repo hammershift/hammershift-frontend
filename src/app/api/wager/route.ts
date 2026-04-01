@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   }
 
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
   const mongoSession = client.startSession();
 
   let transactionCommitted = false;
@@ -202,7 +202,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     const id = req.nextUrl.searchParams.get("id");
 
     if (!id) {

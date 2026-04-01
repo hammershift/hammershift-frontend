@@ -34,7 +34,7 @@ import EmailModel from '@/models/email.model';
 export async function POST(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     const { email } = await req.json();
 
     const existingEmail = await db.collection('emails').findOne({ email });
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     // retrieve all emails
     const emails = await db

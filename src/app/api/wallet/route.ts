@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     // Try _id first (fastest path)
     const rawId = (session.user as any)._id ?? (session.user as any).id;
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     const userID = new mongoose.Types.ObjectId((session.user as any)._id ?? (session.user as any).id);
 

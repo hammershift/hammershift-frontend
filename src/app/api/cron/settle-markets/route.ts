@@ -80,7 +80,7 @@ export async function GET(req: Request) {
   }
 
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
   const now = new Date();
 
   // Find all markets that are RESOLVED with a winningOutcome but not yet SETTLED

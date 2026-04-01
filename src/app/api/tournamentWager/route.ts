@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
   const mongoSession = client.startSession();
 
   let transactionCommitted = false;
@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     const tournamentID = req.nextUrl.searchParams.get("tournament_id");
     const userID = req.nextUrl.searchParams.get("user_id");
 

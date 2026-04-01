@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const convertedAuctionID = new mongoose.Types.ObjectId(auctionID);
 
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     // check if the auction is unsuccessful
     const auction = await db

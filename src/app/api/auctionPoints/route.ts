@@ -6,7 +6,7 @@ import AuctionPoints from "@/models/auction_points";
 export async function GET(req: NextRequest) {
   try {
     // const client = await clientPromise;
-    // const db = client.db();
+    // const db = client.db(process.env.DB_NAME || undefined);
     await connectToDB();
     const limit = Number(req.nextUrl.searchParams.get("limit"));
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     const { userID, auctionID, points } = await req.json();
 
     const updateResult = await db.collection("auction_points").updateOne(

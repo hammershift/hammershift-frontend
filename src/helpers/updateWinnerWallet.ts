@@ -9,7 +9,7 @@ export async function updateWinnerWallet(userID: ObjectId, amount: number): Prom
     session.startTransaction();
 
     // retrieve the current balance and update it within the transaction
-    const user = await client.db().collection('users').findOne({ _id: userID }, { session });
+    const user = await client.db(process.env.DB_NAME || undefined).collection('users').findOne({ _id: userID }, { session });
     const currentBalance = user?.balance ?? 0; // 0 if balance does not exist
     const newBalance = currentBalance + amount;
 
