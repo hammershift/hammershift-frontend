@@ -36,8 +36,11 @@ export async function GET(req: Request) {
 
   const now = new Date();
 
+  // Scraper offsets sort.deadline by -1 day from BaT's actual end time.
+  // Look back 24h to catch auctions that are still live on BaT.
+  const liveThreshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
   const qualifyingAuctions = await db.collection('auctions').find({
-    'sort.deadline': { $gt: now },
+    'sort.deadline': { $gt: liveThreshold },
     $or: QUALIFYING_MAKES.map((make) => ({
       title: { $regex: make, $options: 'i' },
     })),
@@ -70,8 +73,9 @@ export async function GET(req: Request) {
         if (pricing.linePrice > 0) predictedPrice = pricing.linePrice;
       }
     } catch { /* fall back to current bid */ }
+    // Add 24h back to get the real BaT deadline for market close time
     const closesAt: Date | null = auction.sort?.deadline
-      ? new Date(auction.sort.deadline)
+      ? new Date(new Date(auction.sort.deadline).getTime() + 24 * 60 * 60 * 1000)
       : null;
 
     // Compute all risk fields at creation time — never recomputed later
