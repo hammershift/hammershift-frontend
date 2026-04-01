@@ -14,6 +14,21 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
+  // Temporary debug mode: /api/wallet?debug=1
+  const debug = req.nextUrl.searchParams.get("debug") === "1";
+  if (debug) {
+    const u = session.user as any;
+    return NextResponse.json({
+      _debug: true,
+      session_id: u?._id ?? null,
+      session_user_id: u?.id ?? null,
+      session_email: u?.email ?? null,
+      session_keys: Object.keys(u || {}),
+      session_provider: u?.provider ?? null,
+      session_username: u?.username ?? null,
+    });
+  }
+
   try {
     const client = await clientPromise;
     const db = client.db();
