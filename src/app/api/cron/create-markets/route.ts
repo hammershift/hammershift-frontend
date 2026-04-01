@@ -55,13 +55,26 @@ export async function GET(req: Request) {
 
   let created = 0;
   let skipped = 0;
+  let reactivated = 0;
 
   for (const auction of qualifyingAuctions) {
     const auctionId = auction.auction_id ?? auction._id.toString();
 
     const existing = await db.collection('polygon_markets').findOne({ auctionId });
     if (existing) {
-      skipped++;
+      // If existing market is stale (wrong closesAt or not ACTIVE), fix it
+      const correctClosesAt = auction.sort?.deadline
+        ? new Date(new Date(auction.sort.deadline).getTime() + 24 * 60 * 60 * 1000)
+        : null;
+      if (correctClosesAt && (existing.status !== 'ACTIVE' || !existing.closesAt || Math.abs(new Date(existing.closesAt).getTime() - correctClosesAt.getTime()) > 60000)) {
+        await db.collection('polygon_markets').updateOne(
+          { _id: existing._id },
+          { $set: { closesAt: correctClosesAt, status: 'ACTIVE', updatedAt: now } }
+        );
+        reactivated++;
+      } else {
+        skipped++;
+      }
       continue;
     }
 
@@ -110,5 +123,5 @@ export async function GET(req: Request) {
     created++;
   }
 
-  return NextResponse.json({ ok: true, created, skipped, total: qualifyingAuctions.length });
+  return NextResponse.json({ ok: true, created, reactivated, skipped, total: qualifyingAuctions.length });
 }
