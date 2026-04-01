@@ -132,6 +132,12 @@ interface Cluster {
   buyInFee: number;
 }
 
+// Scraper offsets sort.deadline by -1 day. Add 24h to get real deadline.
+const DAY_MS = 24 * 60 * 60 * 1000;
+function realDeadline(d: Date | undefined): number {
+  return d ? new Date(d).getTime() + DAY_MS : 0;
+}
+
 function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
   const clusters: Cluster[] = [];
   const usedIds = new Set<string>();
@@ -162,8 +168,8 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
     if (group.length < MIN_AUCTIONS_PER_TOURNAMENT) continue;
     const sorted = group.sort((a, b) => b.excitement - a.excitement);
     const selected = sorted.slice(0, MAX_AUCTIONS_PER_TOURNAMENT);
-    const earliest = new Date(Math.min(...selected.map((a) => new Date(a.sort?.deadline ?? 0).getTime())));
-    const latest = new Date(Math.max(...selected.map((a) => new Date(a.sort?.deadline ?? 0).getTime())));
+    const earliest = new Date(Math.min(...selected.map((a) => realDeadline(a.sort?.deadline))));
+    const latest = new Date(Math.max(...selected.map((a) => realDeadline(a.sort?.deadline))));
     const avgPrice = selected.reduce((s, a) => s + a.price, 0) / selected.length;
     clusters.push({
       theme: "make",
@@ -188,7 +194,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
     if (group.length < MIN_AUCTIONS_PER_TOURNAMENT) continue;
     const sorted = group.sort((a, b) => b.excitement - a.excitement);
     const selected = sorted.slice(0, MAX_AUCTIONS_PER_TOURNAMENT);
-    const latest = new Date(Math.max(...selected.map((a) => new Date(a.sort?.deadline ?? 0).getTime())));
+    const latest = new Date(Math.max(...selected.map((a) => realDeadline(a.sort?.deadline))));
     clusters.push({
       theme: "country",
       name: generateName("country", { country }),
@@ -212,7 +218,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
     if (group.length < MIN_AUCTIONS_PER_TOURNAMENT) continue;
     const sorted = group.sort((a, b) => b.excitement - a.excitement);
     const selected = sorted.slice(0, MAX_AUCTIONS_PER_TOURNAMENT);
-    const latest = new Date(Math.max(...selected.map((a) => new Date(a.sort?.deadline ?? 0).getTime())));
+    const latest = new Date(Math.max(...selected.map((a) => realDeadline(a.sort?.deadline))));
     clusters.push({
       theme: "era",
       name: generateName("era", { era }),
@@ -236,7 +242,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
     if (group.length < MIN_AUCTIONS_PER_TOURNAMENT) continue;
     const sorted = group.sort((a, b) => b.excitement - a.excitement);
     const selected = sorted.slice(0, MAX_AUCTIONS_PER_TOURNAMENT);
-    const latest = new Date(Math.max(...selected.map((a) => new Date(a.sort?.deadline ?? 0).getTime())));
+    const latest = new Date(Math.max(...selected.map((a) => realDeadline(a.sort?.deadline))));
     const tierInfo = PRICE_TIERS.find((t) => t.label === tier)!;
     clusters.push({
       theme: "price",
@@ -257,7 +263,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
   const topExcitement = [...annotated].sort((a, b) => b.excitement - a.excitement);
   if (topExcitement.length >= MIN_AUCTIONS_PER_TOURNAMENT) {
     const selected = topExcitement.slice(0, MAX_AUCTIONS_PER_TOURNAMENT);
-    const latest = new Date(Math.max(...selected.map((a) => new Date(a.sort?.deadline ?? 0).getTime())));
+    const latest = new Date(Math.max(...selected.map((a) => realDeadline(a.sort?.deadline))));
     clusters.push({
       theme: "mixed",
       name: generateName("mixed", {}),

@@ -28,10 +28,12 @@ async function autoCreateMissingMarkets(
 ) {
   try {
     // Find live qualifying auctions from scraper (deadline-based, no isActive flag)
+    // Scraper offsets sort.deadline by -1 day; look back 24h to catch live auctions
+    const liveThreshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const liveAuctions = await db!
       .collection("auctions")
       .find({
-        "sort.deadline": { $gt: now },
+        "sort.deadline": { $gt: liveThreshold },
         $or: QUALIFYING_MAKES.map((make) => ({
           title: { $regex: make, $options: "i" },
         })),
@@ -51,7 +53,10 @@ async function autoCreateMissingMarkets(
           if (pricing.linePrice > 0) predictedPrice = pricing.linePrice;
         }
       } catch { /* fall back to current bid */ }
-      const closesAt: Date | null = auction.sort?.deadline ?? null;
+      // Add 24h back to get real BaT deadline for market close time
+      const closesAt: Date | null = auction.sort?.deadline
+        ? new Date(new Date(auction.sort.deadline).getTime() + 24 * 60 * 60 * 1000)
+        : null;
       const riskFields = computeMarketRiskFields(closesAt, predictedPrice);
       const onChainMarketId = keccak256(stringToBytes(auctionId));
       await db!.collection("polygon_markets").insertOne({
