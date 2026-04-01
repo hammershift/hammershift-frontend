@@ -26,6 +26,7 @@ interface AuctionCard {
   currentBid: number;
   bids: number;
   guessCount: number;
+  status: "live" | "ended";
 }
 
 interface RecentResult {
@@ -81,6 +82,103 @@ function CountdownTimer({ deadline }: { deadline: string }) {
   return <span className="font-mono text-sm">{timeLeft}</span>;
 }
 
+function AuctionCardItem({
+  auction,
+  alreadyGuessed,
+  guessedPrice,
+  loggedIn,
+  onSelect,
+}: {
+  auction: AuctionCard;
+  alreadyGuessed: boolean;
+  guessedPrice?: number;
+  loggedIn: boolean;
+  onSelect: () => void;
+}) {
+  const isLive = auction.status === "live";
+
+  return (
+    <div
+      className={`bg-[#16181f] border rounded-xl overflow-hidden transition group ${
+        isLive
+          ? "border-white/[0.08] hover:border-white/[0.14]"
+          : "border-white/[0.05] opacity-80"
+      }`}
+    >
+      {/* Image */}
+      <div className="relative h-44 bg-[#0A0A1A]">
+        {auction.image ? (
+          <Image
+            src={auction.image}
+            alt={auction.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <Gavel className="w-8 h-8 text-gray-600" />
+          </div>
+        )}
+        {/* Status badge */}
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          {isLive ? (
+            <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-[#00D4AA] animate-pulse" />
+              <Clock className="w-3.5 h-3.5 text-[#00D4AA]" />
+              <CountdownTimer deadline={auction.deadline} />
+            </div>
+          ) : (
+            <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1.5">
+              <span className="font-mono text-sm text-gray-400">Ended</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <h3 className="text-sm font-semibold text-white line-clamp-2 mb-3 min-h-[2.5rem]">
+          {auction.title}
+        </h3>
+
+        <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+          <div className="flex items-center gap-1">
+            <DollarSign className="w-3.5 h-3.5" />
+            <span className="font-mono text-white">
+              {formatCurrency(auction.currentBid)}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Users className="w-3.5 h-3.5" />
+            <span>{auction.guessCount} guesses</span>
+          </div>
+        </div>
+
+        {alreadyGuessed ? (
+          <div className="bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3 text-center">
+            <p className="text-xs text-[#00D4AA]">Your guess</p>
+            <p className="font-mono font-bold text-white">
+              {formatCurrency(guessedPrice!)}
+            </p>
+          </div>
+        ) : isLive ? (
+          <button
+            onClick={onSelect}
+            className="w-full bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold py-2.5 rounded-lg transition text-sm"
+          >
+            Make Your Guess
+          </button>
+        ) : (
+          <div className="text-center py-2 text-xs text-gray-500">
+            Auction ended — awaiting results
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function GuessTheHammerClient({
   auctions,
   recentResults,
@@ -99,6 +197,9 @@ export default function GuessTheHammerClient({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [localGuesses, setLocalGuesses] = useState(userGuesses);
+
+  const liveAuctions = auctions.filter((a) => a.status === "live");
+  const endedAuctions = auctions.filter((a) => a.status === "ended");
 
   const submitGuess = useCallback(async () => {
     if (!selectedAuction || !guessPrice) return;
@@ -143,7 +244,7 @@ export default function GuessTheHammerClient({
   }, [selectedAuction, guessPrice, isVirtual]);
 
   const tabs = [
-    { key: "play" as const, label: "Active Auctions", icon: <Gavel className="w-4 h-4" /> },
+    { key: "play" as const, label: `Auctions (${auctions.length})`, icon: <Gavel className="w-4 h-4" /> },
     { key: "results" as const, label: "Recent Results", icon: <Trophy className="w-4 h-4" /> },
     { key: "leaderboard" as const, label: "Leaderboard", icon: <Medal className="w-4 h-4" /> },
   ];
@@ -223,7 +324,7 @@ export default function GuessTheHammerClient({
         ))}
       </div>
 
-      {/* Active Auctions Tab */}
+      {/* Auctions Tab */}
       {activeTab === "play" && (
         <>
           {auctions.length === 0 ? (
@@ -233,83 +334,65 @@ export default function GuessTheHammerClient({
               <p className="text-sm mt-2">Check back later for new auctions to predict</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {auctions.map((auction) => {
-                const alreadyGuessed = auction._id in localGuesses;
-                return (
-                  <div
-                    key={auction._id}
-                    className="bg-[#16181f] border border-white/[0.08] rounded-xl overflow-hidden hover:border-white/[0.14] transition group"
-                  >
-                    {/* Image */}
-                    <div className="relative h-44 bg-[#0A0A1A]">
-                      {auction.image ? (
-                        <Image
-                          src={auction.image}
-                          alt={auction.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full">
-                          <Gavel className="w-8 h-8 text-gray-600" />
-                        </div>
-                      )}
-                      {/* Countdown badge */}
-                      <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-[#E94560]" />
-                        <CountdownTimer deadline={auction.deadline} />
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-4">
-                      <h3 className="text-sm font-semibold text-white line-clamp-2 mb-3 min-h-[2.5rem]">
-                        {auction.title}
-                      </h3>
-
-                      <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
-                        <div className="flex items-center gap-1">
-                          <DollarSign className="w-3.5 h-3.5" />
-                          <span className="font-mono text-white">
-                            {formatCurrency(auction.currentBid)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="w-3.5 h-3.5" />
-                          <span>{auction.guessCount} guesses</span>
-                        </div>
-                      </div>
-
-                      {alreadyGuessed ? (
-                        <div className="bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3 text-center">
-                          <p className="text-xs text-[#00D4AA]">Your guess</p>
-                          <p className="font-mono font-bold text-white">
-                            {formatCurrency(localGuesses[auction._id])}
-                          </p>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            if (!loggedIn) {
-                              window.location.href = "/login_page?redirect=/price_is_right";
-                              return;
-                            }
-                            setSelectedAuction(auction);
-                            setError(null);
-                            setSuccess(null);
-                            setGuessPrice("");
-                          }}
-                          className="w-full bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold py-2.5 rounded-lg transition text-sm"
-                        >
-                          Make Your Guess
-                        </button>
-                      )}
-                    </div>
+            <div className="space-y-8">
+              {/* Live Auctions */}
+              {liveAuctions.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="h-2 w-2 rounded-full bg-[#00D4AA] animate-pulse" />
+                    <h2 className="text-lg font-bold text-white">
+                      Live Now
+                    </h2>
+                    <span className="text-sm text-gray-400">({liveAuctions.length})</span>
                   </div>
-                );
-              })}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {liveAuctions.map((auction) => (
+                      <AuctionCardItem
+                        key={auction._id}
+                        auction={auction}
+                        alreadyGuessed={auction._id in localGuesses}
+                        guessedPrice={localGuesses[auction._id]}
+                        loggedIn={loggedIn}
+                        onSelect={() => {
+                          if (!loggedIn) {
+                            window.location.href = "/login_page?redirect=/price_is_right";
+                            return;
+                          }
+                          setSelectedAuction(auction);
+                          setError(null);
+                          setSuccess(null);
+                          setGuessPrice("");
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Recently Ended */}
+              {endedAuctions.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Clock className="w-4 h-4 text-gray-500" />
+                    <h2 className="text-lg font-bold text-white">
+                      Recently Ended
+                    </h2>
+                    <span className="text-sm text-gray-400">({endedAuctions.length})</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {endedAuctions.map((auction) => (
+                      <AuctionCardItem
+                        key={auction._id}
+                        auction={auction}
+                        alreadyGuessed={auction._id in localGuesses}
+                        guessedPrice={localGuesses[auction._id]}
+                        loggedIn={loggedIn}
+                        onSelect={() => {}}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </>
