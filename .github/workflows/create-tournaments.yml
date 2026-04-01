@@ -1,0 +1,28 @@
+name: Create Tournaments
+
+on:
+  schedule:
+    # Monday and Thursday at 8:00 AM ET (12:00 UTC)
+    - cron: '0 12 * * 1,4'
+  workflow_dispatch: # Manual trigger from GitHub UI
+
+jobs:
+  create-tournaments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger tournament creation
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_URL }}/api/cron/create-tournaments")
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Status: $http_code"
+          echo "Response: $body"
+
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Tournament creation failed with status $http_code"
+            exit 1
+          fi
