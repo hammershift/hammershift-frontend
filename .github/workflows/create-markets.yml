@@ -1,0 +1,28 @@
+name: Create Prediction Markets
+
+on:
+  schedule:
+    # Every 6 hours: midnight, 6am, noon, 6pm ET
+    - cron: '0 4,10,16,22 * * *'
+  workflow_dispatch: # Manual trigger from GitHub UI
+
+jobs:
+  create-markets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger market creation
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_URL }}/api/cron/create-markets")
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Status: $http_code"
+          echo "Response: $body"
+
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Market creation failed with status $http_code"
+            exit 1
+          fi
