@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
   }
 
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
   const mongoSession = client.startSession();
 
   try {

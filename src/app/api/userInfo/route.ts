@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
 
 //   try {
 //     const client = await clientPromise;
-//     const db = client.db();
+//     const db = client.db(process.env.DB_NAME || undefined);
 //     const objectIdUserId = new ObjectId(userId);
 
 //     const updatedUser = await db.collection('users').findOneAndUpdate(
@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
 
 //   try {
 //     const client = await clientPromise;
-//     const db = client.db();
+//     const db = client.db(process.env.DB_NAME || undefined);
 //     const objectIdUserId = new ObjectId(userId);
 
 //     const deleteResult = await db.collection('users').deleteOne({ _id: objectIdUserId });

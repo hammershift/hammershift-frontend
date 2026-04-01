@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 async function getMarketData(marketId: string) {
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     const market = await db
       .collection("polygon_markets")
       .findOne(

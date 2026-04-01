@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
     try {
         const client = await clientPromise;
-        const db = client.db();
+        const db = client.db(process.env.DB_NAME || undefined);
         const { userID } = await req.json();
 
         const user = await db.collection('users').findOne(

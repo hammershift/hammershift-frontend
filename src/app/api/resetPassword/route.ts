@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     // connect to DB
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     // verify OTP
     const otpRecord = await db.collection('password_reset_tokens').findOne({ email, otp });

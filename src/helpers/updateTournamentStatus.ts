@@ -16,7 +16,7 @@ interface TournamentWager {
 
 export async function updateTournamentStatus(): Promise<{ tournamentId: string; status: number }[]> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   const activeTournaments: Tournament[] = (await db.collection('tournaments').find({ status: 1 }).toArray()) as Tournament[];
   const updatedTournaments = [];

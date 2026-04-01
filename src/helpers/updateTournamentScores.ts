@@ -25,7 +25,7 @@ type Auction = {
 
 export async function updateTournamentScores(tournamentId: string): Promise<void> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   const tournamentWagersArray: TournamentWager[] = (await db
     .collection('tournament_wagers')

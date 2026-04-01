@@ -24,7 +24,7 @@ interface TournamentWager {
 
 export async function processTournamentWinners(tournamentId: string): Promise<void> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   const tournament = await db.collection('tournaments').findOne({ _id: new ObjectId(tournamentId) });
   if (!tournament) {

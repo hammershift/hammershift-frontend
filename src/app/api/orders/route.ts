@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     }
 
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     const orders = await db
       .collection("polygon_orders")
@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     }
 
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
 
     // Validate market exists and is ACTIVE
     let marketObjectId: ObjectId;

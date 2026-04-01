@@ -143,7 +143,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     // const userId = new ObjectId("65824ed1db2ea85500c815d9");
     const userId = new ObjectId(session.user.id);
 
@@ -251,7 +251,7 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(process.env.DB_NAME || undefined);
     // const userId = new ObjectId(session.user.id);
 
     const commentData = await db

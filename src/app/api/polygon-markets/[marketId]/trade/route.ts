@@ -149,7 +149,7 @@ export async function POST(
   const ctx: TradeContext = { callerIp, deviceFingerprint: deviceFingerprint ?? undefined };
 
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
 
   // ── 3a. Minimum trade interval check (60 seconds) ─────────────────────────
   // Fast O(1) indexed check — runs before loading market or running AMM math.

@@ -42,7 +42,7 @@ export async function POST(
   }
 
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(process.env.DB_NAME || undefined);
   const now = new Date();
 
   const market = await db
