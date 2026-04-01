@@ -125,9 +125,9 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
       .sort({ startTime: 1 })
       .lean(),
 
-    // Trending auctions: qualifying makes with future deadline (no admin activation needed)
+    // Trending auctions: qualifying makes, still live (scraper offsets deadline by -1 day)
     Auctions.find({
-      "sort.deadline": { $gt: now },
+      "sort.deadline": { $gt: new Date(now.getTime() - 24 * 60 * 60 * 1000) },
       $or: [
         ...[
           "ferrari", "lamborghini", "bugatti", "mclaren", "porsche",

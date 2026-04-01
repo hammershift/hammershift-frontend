@@ -14,9 +14,10 @@ async function getDailyAuctions() {
   try {
     await connectToDB();
     const now = new Date();
-    const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    // Scraper offsets sort.deadline by -1 day, so look back 24h to catch live auctions
+    const lookback = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const auctions = await Auctions.find({
-      "sort.deadline": { $gt: now, $lt: in24h },
+      "sort.deadline": { $gt: lookback },
       $or: QUALIFYING_MAKES.map((make) => ({
         title: { $regex: make, $options: "i" },
       })),
