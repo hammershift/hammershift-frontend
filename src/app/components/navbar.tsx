@@ -7,7 +7,7 @@ import {
   getUserPointsAndPlacing,
   refundWager,
 } from "@/lib/data";
-import { CircleDollarSignIcon, LogOut, Search, Settings, UserIcon } from "lucide-react";
+import { BarChart3, LogOut, Search, Settings, UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useVelocityAuth } from "@/hooks/useVelocityAuth";
 import DepositModal from "@/app/components/DepositModal";
@@ -286,7 +286,7 @@ const Navbar = () => {
                   setDropMyAccount(false);
                 }}
               >
-                <CircleDollarSignIcon className="h-8 w-8 text-[#E94560]" />
+                <BarChart3 className="h-6 w-6 text-[#E94560] hover:text-[#E94560]/80 transition" aria-label="My Predictions" />
               </button>
               {dropPredictions && (
                 <PredictionsDropdownMenu closeMenu={closeMenu} />

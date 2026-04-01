@@ -14,15 +14,23 @@ const QUALIFYING_MAKES = [
   "alfa romeo", "fiat", "volvo", "pagani", "cobra",
 ];
 
+// Scraper stores sort.deadline as -1 day from BaT's actual end time.
+const DAY_MS = 24 * 60 * 60 * 1000;
+const LOCK_HOURS = 12; // Guessing locks this many hours before end
+
 async function getPageData() {
   await connectToDB();
   const db = mongoose.connection.db!;
   const now = new Date();
-  // Scraper offsets sort.deadline by -1 day from BaT's actual end time.
-  // "Live" threshold: stored deadline > now - 24h means real deadline > now
-  const liveThreshold = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  // Show auctions from the last 7 days so page always has content
-  const recentThreshold = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  // Thresholds (all in terms of stored/raw deadline)
+  // Real deadline = raw + 24h
+  // "Open" means real deadline > now + 12h → raw > now - 12h
+  const openThreshold = new Date(now.getTime() - (DAY_MS - LOCK_HOURS * 60 * 60 * 1000));
+  // "Ending soon" means real deadline > now but ≤ now + 12h → raw > now - 24h but ≤ openThreshold
+  const liveThreshold = new Date(now.getTime() - DAY_MS);
+  // Show ended auctions from last 7 days
+  const recentThreshold = new Date(now.getTime() - 7 * DAY_MS);
 
   const makeFilter = {
     $or: QUALIFYING_MAKES.map((make) => ({
@@ -30,33 +38,40 @@ async function getPageData() {
     })),
   };
 
-  // Fetch qualifying auctions from the last 7 days
   const allAuctions = await Auctions.find({
     "sort.deadline": { $gt: recentThreshold },
     ...makeFilter,
   })
     .sort({ "sort.deadline": -1 })
-    .limit(100)
+    .limit(150)
     .lean();
 
-  // Split into live vs. recently ended
-  const liveAuctions = allAuctions.filter(
-    (a: any) => a.sort?.deadline && new Date(a.sort.deadline) > liveThreshold
-  );
-  const endedAuctions = allAuctions.filter(
-    (a: any) => !a.sort?.deadline || new Date(a.sort.deadline) <= liveThreshold
-  );
+  // Classify into 3 tiers based on real deadline
+  const open: any[] = [];
+  const endingSoon: any[] = [];
+  const ended: any[] = [];
 
-  // Show live first (soonest ending first), then recently ended
-  const activeAuctions = [
-    ...liveAuctions.sort((a: any, b: any) =>
-      new Date(a.sort?.deadline).getTime() - new Date(b.sort?.deadline).getTime()
-    ),
-    ...endedAuctions,
-  ];
+  for (const a of allAuctions) {
+    const rawDl = a.sort?.deadline ? new Date(a.sort.deadline) : null;
+    if (!rawDl) { ended.push(a); continue; }
+
+    if (rawDl > openThreshold) {
+      open.push(a); // > 12h to real end — guessing allowed
+    } else if (rawDl > liveThreshold) {
+      endingSoon.push(a); // ≤ 12h to real end — view only
+    } else {
+      ended.push(a); // past real end
+    }
+  }
+
+  // Sort: open by soonest ending first, endingSoon by soonest, ended by most recent
+  open.sort((a: any, b: any) => new Date(a.sort?.deadline).getTime() - new Date(b.sort?.deadline).getTime());
+  endingSoon.sort((a: any, b: any) => new Date(a.sort?.deadline).getTime() - new Date(b.sort?.deadline).getTime());
+
+  const orderedAuctions = [...open, ...endingSoon, ...ended];
 
   // Count guesses per auction
-  const auctionIds = activeAuctions.map((a: any) => a._id);
+  const auctionIds = orderedAuctions.map((a: any) => a._id);
   const guessCounts = await db
     .collection("guesstehammers")
     .aggregate([
@@ -154,17 +169,21 @@ async function getPageData() {
     userBalance = user?.balance ?? 0;
   }
 
+  // Determine status for each auction
+  function getStatus(a: any): "open" | "ending_soon" | "ended" {
+    if (open.includes(a)) return "open";
+    if (endingSoon.includes(a)) return "ending_soon";
+    return "ended";
+  }
+
   return {
     auctions: JSON.parse(
       JSON.stringify(
-        activeAuctions.map((a: any) => {
-          // Scraper offsets sort.deadline by -1 day from BaT's actual end time.
-          // Add 24h back so the client countdown shows the real deadline.
+        orderedAuctions.map((a: any) => {
           const rawDeadline = a.sort?.deadline;
           const displayDeadline = rawDeadline
-            ? new Date(new Date(rawDeadline).getTime() + 24 * 60 * 60 * 1000).toISOString()
+            ? new Date(new Date(rawDeadline).getTime() + DAY_MS).toISOString()
             : null;
-          const isLive = rawDeadline && new Date(rawDeadline) > liveThreshold;
           return {
             _id: a._id.toString(),
             auctionId: a.auction_id,
@@ -174,11 +193,16 @@ async function getPageData() {
             currentBid: a.sort?.price ?? 0,
             bids: a.sort?.bids ?? 0,
             guessCount: guessCountMap.get(a._id.toString()) ?? 0,
-            status: isLive ? "live" : "ended" as const,
+            status: getStatus(a),
           };
         })
       )
     ),
+    counts: {
+      open: open.length,
+      endingSoon: endingSoon.length,
+      ended: ended.length,
+    },
     recentResults: JSON.parse(
       JSON.stringify(
         recentResults.map((r) => {
