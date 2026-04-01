@@ -4,14 +4,22 @@ import { DailySlate } from "@/app/components/DailySlate";
 
 export const dynamic = "force-dynamic";
 
+const QUALIFYING_MAKES = [
+  "ferrari", "lamborghini", "bugatti", "mclaren", "porsche",
+  "corvette", "camaro", "mustang", "mercedes", "bmw",
+  "alfa romeo", "fiat", "volvo", "pagani", "cobra",
+];
+
 async function getDailyAuctions() {
   try {
     await connectToDB();
     const now = new Date();
     const in24h = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     const auctions = await Auctions.find({
-      isActive: true,
       "sort.deadline": { $gt: now, $lt: in24h },
+      $or: QUALIFYING_MAKES.map((make) => ({
+        title: { $regex: make, $options: "i" },
+      })),
     })
       .sort({ "sort.deadline": 1 })
       .lean()
