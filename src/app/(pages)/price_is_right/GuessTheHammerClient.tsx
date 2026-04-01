@@ -15,7 +15,12 @@ import {
   Target,
   Medal,
   Share2,
+  Lock,
+  Timer,
+  CheckCircle2,
 } from "lucide-react";
+
+type AuctionStatus = "open" | "ending_soon" | "ended";
 
 interface AuctionCard {
   _id: string;
@@ -26,7 +31,7 @@ interface AuctionCard {
   currentBid: number;
   bids: number;
   guessCount: number;
-  status: "live" | "ended";
+  status: AuctionStatus;
 }
 
 interface RecentResult {
@@ -43,6 +48,7 @@ interface RecentResult {
 
 interface Props {
   auctions: AuctionCard[];
+  counts: { open: number; endingSoon: number; ended: number };
   recentResults: RecentResult[];
   userGuesses: Record<string, number>;
   userBalance: number;
@@ -69,10 +75,12 @@ function CountdownTimer({ deadline }: { deadline: string }) {
         setTimeLeft("Ended");
         return;
       }
-      const h = Math.floor(diff / 3600000);
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
       const s = Math.floor((diff % 60000) / 1000);
-      setTimeLeft(`${h}h ${m}m ${s}s`);
+      if (d > 0) setTimeLeft(`${d}d ${h}h ${m}m`);
+      else setTimeLeft(`${h}h ${m}m ${s}s`);
     }
     update();
     const interval = setInterval(update, 1000);
@@ -81,6 +89,34 @@ function CountdownTimer({ deadline }: { deadline: string }) {
 
   return <span className="font-mono text-sm">{timeLeft}</span>;
 }
+
+/* ── Status badge for each auction card ─────────────────────────────── */
+
+function StatusBadge({ status, deadline }: { status: AuctionStatus; deadline: string }) {
+  if (status === "open") {
+    return (
+      <div className="bg-[#00D4AA]/20 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+        <span className="h-2 w-2 rounded-full bg-[#00D4AA] animate-pulse" />
+        <CountdownTimer deadline={deadline} />
+      </div>
+    );
+  }
+  if (status === "ending_soon") {
+    return (
+      <div className="bg-[#FFB547]/20 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+        <Lock className="w-3.5 h-3.5 text-[#FFB547]" />
+        <CountdownTimer deadline={deadline} />
+      </div>
+    );
+  }
+  return (
+    <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1.5">
+      <span className="font-mono text-sm text-gray-400">Ended</span>
+    </div>
+  );
+}
+
+/* ── Individual auction card ────────────────────────────────────────── */
 
 function AuctionCardItem({
   auction,
@@ -95,14 +131,18 @@ function AuctionCardItem({
   loggedIn: boolean;
   onSelect: () => void;
 }) {
-  const isLive = auction.status === "live";
+  const isOpen = auction.status === "open";
+  const isEndingSoon = auction.status === "ending_soon";
+  const isEnded = auction.status === "ended";
 
   return (
     <div
       className={`bg-[#16181f] border rounded-xl overflow-hidden transition group ${
-        isLive
-          ? "border-white/[0.08] hover:border-white/[0.14]"
-          : "border-white/[0.05] opacity-80"
+        isOpen
+          ? "border-[#00D4AA]/20 hover:border-[#00D4AA]/40"
+          : isEndingSoon
+          ? "border-[#FFB547]/20 hover:border-[#FFB547]/30"
+          : "border-white/[0.05] opacity-75"
       }`}
     >
       {/* Image */}
@@ -120,19 +160,8 @@ function AuctionCardItem({
             <Gavel className="w-8 h-8 text-gray-600" />
           </div>
         )}
-        {/* Status badge */}
-        <div className="absolute top-3 right-3 flex items-center gap-2">
-          {isLive ? (
-            <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-[#00D4AA] animate-pulse" />
-              <Clock className="w-3.5 h-3.5 text-[#00D4AA]" />
-              <CountdownTimer deadline={auction.deadline} />
-            </div>
-          ) : (
-            <div className="bg-black/70 backdrop-blur-sm rounded-lg px-3 py-1.5">
-              <span className="font-mono text-sm text-gray-400">Ended</span>
-            </div>
-          )}
+        <div className="absolute top-3 right-3">
+          <StatusBadge status={auction.status} deadline={auction.deadline} />
         </div>
       </div>
 
@@ -155,6 +184,7 @@ function AuctionCardItem({
           </div>
         </div>
 
+        {/* Action area */}
         {alreadyGuessed ? (
           <div className="bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3 text-center">
             <p className="text-xs text-[#00D4AA]">Your guess</p>
@@ -162,15 +192,21 @@ function AuctionCardItem({
               {formatCurrency(guessedPrice!)}
             </p>
           </div>
-        ) : isLive ? (
+        ) : isOpen ? (
           <button
             onClick={onSelect}
             className="w-full bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold py-2.5 rounded-lg transition text-sm"
           >
             Make Your Guess
           </button>
+        ) : isEndingSoon ? (
+          <div className="flex items-center justify-center gap-2 py-2.5 text-xs text-[#FFB547] bg-[#FFB547]/5 border border-[#FFB547]/10 rounded-lg">
+            <Lock className="w-3.5 h-3.5" />
+            Guessing closed — ending soon
+          </div>
         ) : (
-          <div className="text-center py-2 text-xs text-gray-500">
+          <div className="flex items-center justify-center gap-2 py-2.5 text-xs text-gray-500">
+            <CheckCircle2 className="w-3.5 h-3.5" />
             Auction ended — awaiting results
           </div>
         )}
@@ -179,8 +215,38 @@ function AuctionCardItem({
   );
 }
 
+/* ── Section header ─────────────────────────────────────────────────── */
+
+function SectionHeader({
+  icon,
+  title,
+  count,
+  color,
+  subtitle,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  count: number;
+  color: string;
+  subtitle?: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 mb-4">
+      <div className={`flex items-center gap-2 ${color}`}>
+        {icon}
+        <h2 className="text-lg font-bold text-white">{title}</h2>
+      </div>
+      <span className="text-sm text-gray-400">({count})</span>
+      {subtitle && <span className="text-xs text-gray-500 hidden sm:block">— {subtitle}</span>}
+    </div>
+  );
+}
+
+/* ── Main component ─────────────────────────────────────────────────── */
+
 export default function GuessTheHammerClient({
   auctions,
+  counts,
   recentResults,
   userGuesses,
   userBalance,
@@ -198,7 +264,8 @@ export default function GuessTheHammerClient({
   const [success, setSuccess] = useState<string | null>(null);
   const [localGuesses, setLocalGuesses] = useState(userGuesses);
 
-  const liveAuctions = auctions.filter((a) => a.status === "live");
+  const openAuctions = auctions.filter((a) => a.status === "open");
+  const endingSoonAuctions = auctions.filter((a) => a.status === "ending_soon");
   const endedAuctions = auctions.filter((a) => a.status === "ended");
 
   const submitGuess = useCallback(async () => {
@@ -244,10 +311,33 @@ export default function GuessTheHammerClient({
   }, [selectedAuction, guessPrice, isVirtual]);
 
   const tabs = [
-    { key: "play" as const, label: `Auctions (${auctions.length})`, icon: <Gavel className="w-4 h-4" /> },
-    { key: "results" as const, label: "Recent Results", icon: <Trophy className="w-4 h-4" /> },
-    { key: "leaderboard" as const, label: "Leaderboard", icon: <Medal className="w-4 h-4" /> },
+    {
+      key: "play" as const,
+      label: `Auctions (${auctions.length})`,
+      icon: <Gavel className="w-4 h-4" />,
+    },
+    {
+      key: "results" as const,
+      label: "Results",
+      icon: <Trophy className="w-4 h-4" />,
+    },
+    {
+      key: "leaderboard" as const,
+      label: "Leaderboard",
+      icon: <Medal className="w-4 h-4" />,
+    },
   ];
+
+  function handleSelect(auction: AuctionCard) {
+    if (!loggedIn) {
+      window.location.href = "/login_page?redirect=/price_is_right";
+      return;
+    }
+    setSelectedAuction(auction);
+    setError(null);
+    setSuccess(null);
+    setGuessPrice("");
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -268,7 +358,7 @@ export default function GuessTheHammerClient({
           <strong className="text-[#FFB547]">Price is Right rules</strong> — guess
           over the actual sale price and your penalty error is{" "}
           <strong className="text-white">doubled</strong>. Going under is always
-          safer!
+          safer! Guessing locks 12 hours before auction ends.
         </div>
       </div>
 
@@ -324,63 +414,54 @@ export default function GuessTheHammerClient({
         ))}
       </div>
 
-      {/* Auctions Tab */}
+      {/* ── Auctions Tab ──────────────────────────────────────────────── */}
       {activeTab === "play" && (
         <>
           {auctions.length === 0 ? (
             <div className="text-center py-20 text-gray-400">
               <Gavel className="w-12 h-12 mx-auto mb-4 opacity-30" />
-              <p className="text-lg">No auctions ending soon</p>
-              <p className="text-sm mt-2">Check back later for new auctions to predict</p>
+              <p className="text-lg">No auctions available</p>
+              <p className="text-sm mt-2">Check back soon — new auctions appear daily</p>
             </div>
           ) : (
-            <div className="space-y-8">
-              {/* Live Auctions */}
-              {liveAuctions.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="h-2 w-2 rounded-full bg-[#00D4AA] animate-pulse" />
-                    <h2 className="text-lg font-bold text-white">
-                      Live Now
-                    </h2>
-                    <span className="text-sm text-gray-400">({liveAuctions.length})</span>
-                  </div>
+            <div className="space-y-10">
+              {/* Open for Guessing */}
+              {openAuctions.length > 0 && (
+                <section>
+                  <SectionHeader
+                    icon={<span className="h-2.5 w-2.5 rounded-full bg-[#00D4AA] animate-pulse" />}
+                    title="Open for Guessing"
+                    count={openAuctions.length}
+                    color="text-[#00D4AA]"
+                    subtitle="More than 12h until auction ends"
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {liveAuctions.map((auction) => (
+                    {openAuctions.map((auction) => (
                       <AuctionCardItem
                         key={auction._id}
                         auction={auction}
                         alreadyGuessed={auction._id in localGuesses}
                         guessedPrice={localGuesses[auction._id]}
                         loggedIn={loggedIn}
-                        onSelect={() => {
-                          if (!loggedIn) {
-                            window.location.href = "/login_page?redirect=/price_is_right";
-                            return;
-                          }
-                          setSelectedAuction(auction);
-                          setError(null);
-                          setSuccess(null);
-                          setGuessPrice("");
-                        }}
+                        onSelect={() => handleSelect(auction)}
                       />
                     ))}
                   </div>
-                </div>
+                </section>
               )}
 
-              {/* Recently Ended */}
-              {endedAuctions.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    <h2 className="text-lg font-bold text-white">
-                      Recently Ended
-                    </h2>
-                    <span className="text-sm text-gray-400">({endedAuctions.length})</span>
-                  </div>
+              {/* Ending Soon (locked) */}
+              {endingSoonAuctions.length > 0 && (
+                <section>
+                  <SectionHeader
+                    icon={<Timer className="w-5 h-5 text-[#FFB547]" />}
+                    title="Ending Soon"
+                    count={endingSoonAuctions.length}
+                    color="text-[#FFB547]"
+                    subtitle="Under 12h — guessing locked"
+                  />
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {endedAuctions.map((auction) => (
+                    {endingSoonAuctions.map((auction) => (
                       <AuctionCardItem
                         key={auction._id}
                         auction={auction}
@@ -391,14 +472,47 @@ export default function GuessTheHammerClient({
                       />
                     ))}
                   </div>
-                </div>
+                </section>
+              )}
+
+              {/* Recently Ended */}
+              {endedAuctions.length > 0 && (
+                <section>
+                  <SectionHeader
+                    icon={<CheckCircle2 className="w-5 h-5 text-gray-500" />}
+                    title="Recently Ended"
+                    count={endedAuctions.length}
+                    color="text-gray-400"
+                    subtitle="Past auctions — results incoming"
+                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {endedAuctions.slice(0, 12).map((auction) => (
+                      <AuctionCardItem
+                        key={auction._id}
+                        auction={auction}
+                        alreadyGuessed={auction._id in localGuesses}
+                        guessedPrice={localGuesses[auction._id]}
+                        loggedIn={loggedIn}
+                        onSelect={() => {}}
+                      />
+                    ))}
+                  </div>
+                  {endedAuctions.length > 12 && (
+                    <button
+                      onClick={() => {/* could expand */}}
+                      className="mt-4 text-sm text-gray-400 hover:text-white transition"
+                    >
+                      Show all {endedAuctions.length} ended auctions
+                    </button>
+                  )}
+                </section>
               )}
             </div>
           )}
         </>
       )}
 
-      {/* Recent Results Tab */}
+      {/* ── Results Tab ───────────────────────────────────────────────── */}
       {activeTab === "results" && (
         <>
           {recentResults.length === 0 ? (
@@ -469,14 +583,13 @@ export default function GuessTheHammerClient({
         </>
       )}
 
-      {/* Leaderboard Tab */}
+      {/* ── Leaderboard Tab ───────────────────────────────────────────── */}
       {activeTab === "leaderboard" && <LeaderboardSection />}
 
-      {/* Guess Modal */}
+      {/* ── Guess Modal ───────────────────────────────────────────────── */}
       {selectedAuction && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-[#16181f] border border-white/[0.08] rounded-2xl w-full max-w-md overflow-hidden">
-            {/* Modal header */}
             <div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
               <h3 className="text-lg font-bold text-white">Your Prediction</h3>
               <button
@@ -487,9 +600,7 @@ export default function GuessTheHammerClient({
               </button>
             </div>
 
-            {/* Modal body */}
             <div className="p-6">
-              {/* Car info */}
               {selectedAuction.image && (
                 <div className="relative h-40 rounded-xl overflow-hidden mb-4">
                   <Image
@@ -516,7 +627,6 @@ export default function GuessTheHammerClient({
                 </span>
               </div>
 
-              {/* Price input */}
               <label className="block text-xs text-gray-400 mb-2">
                 What will this car sell for?
               </label>
@@ -538,14 +648,16 @@ export default function GuessTheHammerClient({
                 />
               </div>
 
-              {/* Fee info */}
               <div className="flex items-center justify-between text-xs text-gray-400 mb-6">
                 <span>
                   {isVirtual ? "Free play — no charge" : `Entry fee: $${ENTRY_FEE}`}
                 </span>
                 {!isVirtual && (
                   <span>
-                    Balance: <span className="font-mono text-white">{formatCurrency(userBalance)}</span>
+                    Balance:{" "}
+                    <span className="font-mono text-white">
+                      {formatCurrency(userBalance)}
+                    </span>
                   </span>
                 )}
               </div>
@@ -584,7 +696,7 @@ export default function GuessTheHammerClient({
   );
 }
 
-/* ── Leaderboard sub-component (client-side fetch) ──────────────────────── */
+/* ── Leaderboard ────────────────────────────────────────────────────── */
 
 function LeaderboardSection() {
   const [data, setData] = useState<{
@@ -596,7 +708,12 @@ function LeaderboardSection() {
       totalWinnings: number;
       isCurrentUser: boolean;
     }>;
-    myRank: { rank: number; totalGames: number; avgAccuracy: number; totalWinnings: number } | null;
+    myRank: {
+      rank: number;
+      totalGames: number;
+      avgAccuracy: number;
+      totalWinnings: number;
+    } | null;
   } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -609,9 +726,7 @@ function LeaderboardSection() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="text-center py-20 text-gray-400">Loading leaderboard...</div>
-    );
+    return <div className="text-center py-20 text-gray-400">Loading leaderboard...</div>;
   }
 
   if (!data || data.leaderboard.length === 0) {
@@ -675,8 +790,8 @@ function LeaderboardSection() {
         <div className="border-t border-white/[0.08] px-4 py-3 bg-[#E94560]/5 text-sm">
           Your rank:{" "}
           <span className="font-mono text-white">#{data.myRank.rank}</span> —{" "}
-          <span className="font-mono text-[#00D4AA]">{data.myRank.avgAccuracy}%</span> accuracy
-          across {data.myRank.totalGames} games
+          <span className="font-mono text-[#00D4AA]">{data.myRank.avgAccuracy}%</span>{" "}
+          accuracy across {data.myRank.totalGames} games
         </div>
       )}
     </div>
