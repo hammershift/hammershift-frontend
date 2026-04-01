@@ -309,10 +309,32 @@ export async function GET(req: Request) {
       .lean() as AuctionDoc[];
 
     if (auctions.length < MIN_AUCTIONS_PER_TOURNAMENT) {
+      // Diagnostics: figure out what's filtering them out
+      const totalAuctions = await Auctions.countDocuments();
+      const withFutureDeadline = await Auctions.countDocuments({ "sort.deadline": { $gt: now } });
+      const withDeadlineInWindow = await Auctions.countDocuments({ "sort.deadline": { $gt: now, $lt: lookahead } });
+      const matchingMakes = await Auctions.countDocuments({
+        $or: QUALIFYING_MAKES.map((make) => ({ title: { $regex: make, $options: "i" } })),
+      });
+      const sampleTitles = await Auctions.find({ "sort.deadline": { $gt: now } })
+        .select("title sort.deadline")
+        .limit(5)
+        .lean();
+
       return NextResponse.json({
         message: "Not enough qualifying auctions",
         auctionCount: auctions.length,
         created: 0,
+        diagnostics: {
+          totalAuctions,
+          withFutureDeadline,
+          withDeadlineInWindow,
+          matchingMakesInTitle: matchingMakes,
+          sampleFutureTitles: sampleTitles.map((a: any) => ({
+            title: a.title,
+            deadline: a.sort?.deadline,
+          })),
+        },
       });
     }
 
