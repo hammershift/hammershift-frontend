@@ -125,10 +125,16 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
       .sort({ startTime: 1 })
       .lean(),
 
-    // Trending auctions: most predictions, active, with deadline in future
+    // Trending auctions: qualifying makes with future deadline (no admin activation needed)
     Auctions.find({
-      isActive: true,
       "sort.deadline": { $gt: now },
+      $or: [
+        ...[
+          "ferrari", "lamborghini", "bugatti", "mclaren", "porsche",
+          "corvette", "camaro", "mustang", "mercedes", "bmw",
+          "alfa romeo", "fiat", "volvo", "pagani", "cobra",
+        ].map((make) => ({ title: { $regex: make, $options: "i" } })),
+      ],
     })
       .sort({ prediction_count: -1, "sort.deadline": 1 })
       .limit(8)

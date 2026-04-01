@@ -106,22 +106,32 @@ export async function GET(req: NextRequest) {
       attributeFilters.push({ $elemMatch: { key: "price", value: priceFilter } });
     }
 
+    // Use deadline + qualifying makes filter instead of admin isActive flag.
+    // This ensures all scraped auctions matching the filters show automatically.
+    const QUALIFYING_MAKES = [
+      "ferrari", "lamborghini", "bugatti", "mclaren", "porsche",
+      "corvette", "camaro", "mustang", "mercedes", "bmw",
+      "alfa romeo", "fiat", "volvo", "pagani", "cobra",
+    ];
+
     const query: any = {
-      isActive: true,
+      $or: QUALIFYING_MAKES.map((m) => ({ title: { $regex: m, $options: "i" } })),
     };
 
-    // "active" (Live Now) = isActive:true with future deadline or no deadline set.
+    // "active" (Live Now) = future deadline
     // "ending_soon" = future deadline (BaT-scraped auctions with known close times)
     // "starting_soon" = deadline more than 24h away
-    // "ended" = deadline in the past (explicit tab — only shown when user selects it)
-    if (status === "ending_soon") {
+    // "ended" = deadline in the past
+    if (status === "ended") {
+      query["sort.deadline"] = { $lt: new Date() };
+    } else if (status === "ending_soon") {
       query["sort.deadline"] = { $gt: new Date() };
     } else if (status === "starting_soon") {
       query["sort.deadline"] = { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) };
-    } else if (status === "ended") {
-      query["sort.deadline"] = { $lt: new Date() };
+    } else {
+      // "active" or no status: show auctions with future deadline
+      query["sort.deadline"] = { $gt: new Date() };
     }
-    // "active" or no status: no deadline filter — isActive is the gate
 
     if (attributeFilters.length > 0) {
       query.$and = attributeFilters.map((f) => ({ attributes: f }));

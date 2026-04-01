@@ -242,15 +242,24 @@ export async function GET(req: NextRequest) {
         $elemMatch: { key: "state", value: { $in: location } },
       });
     }
-    // NOTE: Do NOT filter by attributes.status — isActive:true is the source of truth.
-    // Admin-activated auctions from non-BaT sources may not have this attribute.
+    // Use deadline-based filter instead of admin isActive flag.
+    // All scraped auctions matching qualifying makes with future deadline show automatically.
+    const QUALIFYING_MAKES = [
+      "ferrari", "lamborghini", "bugatti", "mclaren", "porsche",
+      "corvette", "camaro", "mustang", "mercedes", "bmw",
+      "alfa romeo", "fiat", "volvo", "pagani", "cobra",
+    ];
+    const liveFilter = {
+      "sort.deadline": { $gt: new Date() },
+      $or: QUALIFYING_MAKES.map((m) => ({ title: { $regex: m, $options: "i" } })),
+    };
 
-    const totalCars = await db.collection("auctions").countDocuments(query);
+    const totalCars = await db.collection("auctions").countDocuments({ $and: [query, liveFilter] });
 
     const filteredCars = await db
       .collection("auctions")
       .find({
-        $and: [query, { isActive: true }],
+        $and: [query, liveFilter],
       })
       .limit(limit)
       .skip(offset)
