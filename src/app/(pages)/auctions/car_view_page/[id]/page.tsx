@@ -178,7 +178,11 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
   // Parse attributes
   const priceAttr = auction.attributes?.find((a: any) => a.key === 'price') || auction.sort?.price || 0;
   const currentBid = typeof priceAttr === 'object' ? priceAttr.value : auction.sort?.price || 0;
-  const deadline = auction.sort?.deadline;
+  // Scraper offsets sort.deadline by -1 day; add 24h for real deadline
+  const rawDeadline = auction.sort?.deadline;
+  const deadline = rawDeadline
+    ? new Date(new Date(rawDeadline).getTime() + 24 * 60 * 60 * 1000).toISOString()
+    : rawDeadline;
   const makeAttr = auction.attributes?.find((a: any) => a.key === 'make')?.value || 'Unknown';
   const modelAttr = auction.attributes?.find((a: any) => a.key === 'model')?.value || '';
   const yearAttr = auction.attributes?.find((a: any) => a.key === 'year')?.value || '';

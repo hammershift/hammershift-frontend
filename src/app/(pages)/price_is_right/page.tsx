@@ -135,16 +135,24 @@ async function getPageData() {
   return {
     auctions: JSON.parse(
       JSON.stringify(
-        activeAuctions.map((a: any) => ({
-          _id: a._id.toString(),
-          auctionId: a.auction_id,
-          title: a.title,
-          image: a.image,
-          deadline: a.sort?.deadline,
-          currentBid: a.sort?.price ?? 0,
-          bids: a.sort?.bids ?? 0,
-          guessCount: guessCountMap.get(a._id.toString()) ?? 0,
-        }))
+        activeAuctions.map((a: any) => {
+          // Scraper offsets sort.deadline by -1 day from BaT's actual end time.
+          // Add 24h back so the client countdown shows the real deadline.
+          const rawDeadline = a.sort?.deadline;
+          const displayDeadline = rawDeadline
+            ? new Date(new Date(rawDeadline).getTime() + 24 * 60 * 60 * 1000).toISOString()
+            : null;
+          return {
+            _id: a._id.toString(),
+            auctionId: a.auction_id,
+            title: a.title,
+            image: a.image,
+            deadline: displayDeadline,
+            currentBid: a.sort?.price ?? 0,
+            bids: a.sort?.bids ?? 0,
+            guessCount: guessCountMap.get(a._id.toString()) ?? 0,
+          };
+        })
       )
     ),
     recentResults: JSON.parse(

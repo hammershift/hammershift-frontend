@@ -76,7 +76,8 @@ const GuessTheHammer = () => {
     if (!dateString) return "No end date";
 
     try {
-      const endDate = new Date(dateString);
+      // Scraper offsets sort.deadline by -1 day; add 24h for display
+      const endDate = new Date(new Date(dateString).getTime() + 24 * 60 * 60 * 1000);
 
       if (!isValid(endDate)) {
         return "Invalid date";
