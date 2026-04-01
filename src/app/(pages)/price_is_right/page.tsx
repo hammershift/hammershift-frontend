@@ -18,17 +18,19 @@ async function getPageData() {
   await connectToDB();
   const db = mongoose.connection.db!;
   const now = new Date();
-  const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+  // Scraper offsets sort.deadline by -1 day from BaT's actual end time,
+  // so we look back 24h to catch auctions that are still live on BaT
+  const lookback = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-  // Active auctions ending within 48 hours, filtered to qualifying makes
+  // Live auctions filtered to qualifying makes
   const activeAuctions = await Auctions.find({
-    "sort.deadline": { $gt: now, $lt: in48h },
+    "sort.deadline": { $gt: lookback },
     $or: QUALIFYING_MAKES.map((make) => ({
       title: { $regex: make, $options: "i" },
     })),
   })
     .sort({ "sort.deadline": 1 })
-    .limit(24)
+    .limit(50)
     .lean();
 
   // Count guesses per auction

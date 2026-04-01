@@ -118,19 +118,18 @@ export async function GET(req: NextRequest) {
       $or: QUALIFYING_MAKES.map((m) => ({ title: { $regex: m, $options: "i" } })),
     };
 
-    // "active" (Live Now) = future deadline
-    // "ending_soon" = future deadline (BaT-scraped auctions with known close times)
-    // "starting_soon" = deadline more than 24h away
-    // "ended" = deadline in the past
+    // Scraper offsets sort.deadline by -1 day from BaT's actual end time.
+    // We compensate by looking back 24h for "live" statuses.
+    const lookback = new Date(Date.now() - 24 * 60 * 60 * 1000);
     if (status === "ended") {
-      query["sort.deadline"] = { $lt: new Date() };
+      query["sort.deadline"] = { $lt: lookback };
     } else if (status === "ending_soon") {
-      query["sort.deadline"] = { $gt: new Date() };
+      query["sort.deadline"] = { $gt: lookback };
     } else if (status === "starting_soon") {
-      query["sort.deadline"] = { $gt: new Date(Date.now() + 24 * 60 * 60 * 1000) };
-    } else {
-      // "active" or no status: show auctions with future deadline
       query["sort.deadline"] = { $gt: new Date() };
+    } else {
+      // "active" or no status: show live auctions (compensate for -1 day offset)
+      query["sort.deadline"] = { $gt: lookback };
     }
 
     if (attributeFilters.length > 0) {
