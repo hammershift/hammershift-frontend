@@ -1,0 +1,28 @@
+name: Settle Tournaments
+
+on:
+  schedule:
+    # Every 6 hours: 3am, 9am, 3pm, 9pm ET (UTC+4 offset)
+    - cron: '0 7,13,19,1 * * *'
+  workflow_dispatch: # Manual trigger from GitHub UI
+
+jobs:
+  settle-tournaments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Process tournament winners and settlements
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_URL }}/api/tournamentWinner")
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Status: $http_code"
+          echo "Response: $body"
+
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Tournament settlement failed with status $http_code"
+            exit 1
+          fi

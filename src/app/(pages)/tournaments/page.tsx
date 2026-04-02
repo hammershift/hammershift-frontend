@@ -66,16 +66,27 @@ export default function TournamentsPage() {
       try {
         setLoading(true);
 
-        // Fetch both free and paid tournaments
-        const [freeData, paidData] = await Promise.all([
+        // Fetch active (free + paid) and recently ended tournaments
+        const [freeData, paidData, recentData] = await Promise.all([
           fetch(`/api/tournaments?type=free&offset=0&limit=100&sort=newest`).then(r => r.json()),
-          fetch(`/api/tournaments?type=standard&offset=0&limit=100&sort=newest`).then(r => r.json())
+          fetch(`/api/tournaments?type=standard&offset=0&limit=100&sort=newest`).then(r => r.json()),
+          fetch(`/api/tournaments?type=recent&offset=0&limit=100&sort=newest`).then(r => r.json())
         ]);
 
-        const allTournaments = [
+        // Deduplicate by _id (active tournaments may also appear in recent)
+        const seen = new Set<string>();
+        const allTournaments: Tournament[] = [];
+        for (const t of [
           ...(freeData.tournaments || []),
-          ...(paidData.tournaments || [])
-        ];
+          ...(paidData.tournaments || []),
+          ...(recentData.tournaments || [])
+        ]) {
+          const id = t._id?.toString();
+          if (id && !seen.has(id)) {
+            seen.add(id);
+            allTournaments.push(t);
+          }
+        }
 
         setTournaments(allTournaments);
 
