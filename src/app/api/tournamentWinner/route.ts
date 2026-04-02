@@ -42,9 +42,15 @@ interface Tournament {
 }
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  // Allow cron jobs via secret header OR authenticated users
+  const cronSecret = req.headers.get('x-cron-secret');
+  const isCron = cronSecret && cronSecret === process.env.CRON_SECRET;
+
+  if (!isCron) {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
   }
 
   const client = await clientPromise;

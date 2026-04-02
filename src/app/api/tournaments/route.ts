@@ -59,6 +59,19 @@ export async function GET(req: NextRequest) {
         buyInFee: {
           $gt: 0,
         },
+        endTime: {
+          $gt: new Date(),
+        },
+      };
+    } else if (type === "recent") {
+      // Recently ended tournaments (last 30 days) for "Completed" tab
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      query = {
+        endTime: {
+          $lte: new Date(),
+          $gte: thirtyDaysAgo,
+        },
       };
     } else {
       return NextResponse.json(
