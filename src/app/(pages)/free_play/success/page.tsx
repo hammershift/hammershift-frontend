@@ -63,7 +63,7 @@ export default function FreePlaySuccessPage() {
           {"We couldn't find a recent prediction. Try making a new one!"}
         </p>
         <Link href={createPageUrl("free_play")}>
-          <Button className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
+          <Button asChild className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
             Make a Prediction
           </Button>
         </Link>
@@ -114,6 +114,7 @@ export default function FreePlaySuccessPage() {
         <div className="flex flex-col justify-center gap-4 md:flex-row">
           <Link href={createPageUrl("")}>
             <Button
+              asChild
               variant="outline"
               className="border-white/[0.08] hover:bg-[#1E2A36]"
             >
@@ -124,6 +125,7 @@ export default function FreePlaySuccessPage() {
 
           <Link href={createPageUrl("free_play")}>
             <Button
+              asChild
               variant="outline"
               className="border-white/[0.08] hover:bg-[#1E2A36]"
             >

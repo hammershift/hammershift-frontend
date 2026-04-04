@@ -166,7 +166,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
           <h2 className="mb-2 text-2xl font-bold">Auction Not Found</h2>
           <p className="text-gray-400">This auction may have been removed or does not exist.</p>
           <Link href="/free_play" className="mt-4 inline-block">
-            <Button className="bg-[#E94560]">Browse Auctions</Button>
+            <Button asChild className="bg-[#E94560]">Browse Auctions</Button>
           </Link>
         </div>
       </div>

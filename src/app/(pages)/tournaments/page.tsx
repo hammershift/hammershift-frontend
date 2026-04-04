@@ -394,7 +394,7 @@ export default function TournamentsPage() {
             Try adjusting your filters or check back later for new tournaments
           </p>
           <Link href="/auction_details">
-            <Button className="bg-[#E94560] hover:bg-[#E94560]/90">
+            <Button asChild className="bg-[#E94560] hover:bg-[#E94560]/90">
               Browse Auctions
             </Button>
           </Link>

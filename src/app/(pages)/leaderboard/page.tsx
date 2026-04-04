@@ -691,7 +691,7 @@ const LeaderboardPage = () => {
                                 </p>
                               </div>
                               <Link href="/">
-                                <Button className="mt-1 gap-2 bg-[#E94560] hover:bg-[#E94560]/90">
+                                <Button asChild className="mt-1 gap-2 bg-[#E94560] hover:bg-[#E94560]/90">
                                   Make Your First Prediction
                                   <ArrowRight className="h-4 w-4" />
                                 </Button>
@@ -768,6 +768,7 @@ const LeaderboardPage = () => {
                     </p>
                     <Link href="/">
                       <Button
+                        asChild
                         variant="outline"
                         size="sm"
                         className="gap-1.5 border-white/[0.08] bg-transparent text-xs"
@@ -827,6 +828,7 @@ const LeaderboardPage = () => {
                   <div className="border-t border-white/[0.05] p-3 text-center">
                     <Link href="/">
                       <Button
+                        asChild
                         variant="ghost"
                         size="sm"
                         className="gap-1.5 text-xs text-gray-400 hover:text-white"
@@ -885,7 +887,7 @@ const LeaderboardPage = () => {
                   </div>
                 )}
                 <Link href="/profile">
-                  <Button className="w-full bg-[#E94560] hover:bg-[#E94560]/90">
+                  <Button asChild className="w-full bg-[#E94560] hover:bg-[#E94560]/90">
                     View Profile
                   </Button>
                 </Link>

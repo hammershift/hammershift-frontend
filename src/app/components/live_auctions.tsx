@@ -173,7 +173,7 @@ export const LiveAuctions = () => {
                           <Link
                             href={`${createPageUrl("auction_details")}?id=${auction.auction_id}&${new URLSearchParams(getModeParams("free_play"))}`}
                           >
-                            <Button className="bg-[#01696F] text-white hover:bg-[#0C4E54]">
+                            <Button asChild className="bg-[#01696F] text-white hover:bg-[#0C4E54]">
                               PREDICT NOW
                             </Button>
                           </Link>

@@ -370,7 +370,7 @@ export default async function HomePage() {
 
       {/* ───────── Hero Section ───────── */}
       <section className="relative flex min-h-[80vh] items-center bg-gradient-to-br from-[#0d0d0d] via-[#111111] to-[#0d0d0d]">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#01696F]/5 via-transparent to-transparent" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#01696F]/5 via-transparent to-transparent" />
         <div className="container relative z-10 mx-auto px-4 text-center">
           <h1 className="mb-6 text-4xl font-bold text-white sm:text-5xl md:text-7xl">
             Predict Car Auction Prices.
@@ -385,12 +385,13 @@ export default async function HomePage() {
 
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link href="/tournaments">
-              <Button className="bg-[#01696F] px-8 py-4 text-lg text-white hover:bg-[#0C4E54]">
+              <Button asChild className="bg-[#01696F] px-8 py-4 text-lg text-white hover:bg-[#0C4E54]">
                 Enter a Tournament
               </Button>
             </Link>
             <Link href="/markets">
               <Button
+                asChild
                 variant="outline"
                 className="border-white/30 px-8 py-4 text-lg text-white hover:bg-white/10"
               >
@@ -548,7 +549,7 @@ export default async function HomePage() {
 
             <div className="text-center">
               <Link href={`/tournaments/${data.featuredTournament._id}`}>
-                <Button className="bg-[#01696F] px-8 py-3 text-white hover:bg-[#0C4E54]">
+                <Button asChild className="bg-[#01696F] px-8 py-3 text-white hover:bg-[#0C4E54]">
                   <Trophy className="mr-2 h-5 w-5" />
                   Enter Tournament
                 </Button>
@@ -568,7 +569,7 @@ export default async function HomePage() {
               while you wait.
             </p>
             <Link href="/markets" className="mt-6 inline-block">
-              <Button className="bg-[#01696F] px-6 py-3 text-white hover:bg-[#0C4E54]">
+              <Button asChild className="bg-[#01696F] px-6 py-3 text-white hover:bg-[#0C4E54]">
                 Browse Markets
               </Button>
             </Link>

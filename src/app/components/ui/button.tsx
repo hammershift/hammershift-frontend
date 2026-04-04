@@ -54,13 +54,18 @@ export const Button = ({
   size = "default",
   children,
   onClick,
+  asChild = false,
   ...props
-}: IProps) => {
+}: IProps & { asChild?: boolean }) => {
+  const classes = cn(buttonVariants({ variant, size, className }));
+
+  if (asChild) {
+    return <span className={classes} {...props}>{children}</span>;
+  }
+
   return (
     <button
-      className={cn(
-        buttonVariants({ variant: variant, size: size, className })
-      )}
+      className={classes}
       onClick={onClick}
       {...props}
     >

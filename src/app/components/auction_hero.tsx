@@ -32,6 +32,7 @@ export default function AuctionHero() {
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Link href="/free_play">
                     <Button
+                        asChild
                         variant="default"
                         className="w-full bg-[#01696F] text-white hover:bg-[#0C4E54] sm:w-auto"
                     >
@@ -46,6 +47,7 @@ export default function AuctionHero() {
                     tabIndex={isTournamentDisabled ? -1 : undefined}
                 >
                     <Button
+                        asChild
                         variant="outline"
                         className="w-full border-[#01696F] text-[#01696F] hover:bg-[#01696F] hover:text-white sm:w-auto"
                     >

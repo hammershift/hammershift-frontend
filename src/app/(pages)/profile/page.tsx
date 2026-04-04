@@ -681,7 +681,7 @@ function Profile(props: Props) {
                         </div>
                       ))}
                       <Link href="/profile?tab=predictions">
-                        <Button variant="outline" className="w-full">
+                        <Button asChild variant="outline" className="w-full">
                           View All Predictions
                         </Button>
                       </Link>

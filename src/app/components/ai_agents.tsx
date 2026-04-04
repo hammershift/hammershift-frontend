@@ -63,7 +63,7 @@ export const AIAgents = () => {
                     </div>
 
                     <Link href="/">
-                        <Button className="bg-purple-600 hover:bg-purple-700">
+                        <Button asChild className="bg-purple-600 hover:bg-purple-700">
                             PLAY AGAINST AI AGENTS
                         </Button>
                     </Link>
