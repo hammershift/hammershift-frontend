@@ -201,12 +201,12 @@ const Navbar = () => {
         {!loading && !isLoggedIn && (
           <div className="flex items-center justify-center">
             <Link href="/login_page">
-              <Button className="h-10 w-20 bg-[#01696F] text-white hover:bg-[#0C4E54]">
+              <Button asChild className="h-10 w-20 bg-[#01696F] text-white hover:bg-[#0C4E54]">
                 LOG IN
               </Button>
             </Link>
             <Link href="/create_account">
-              <Button className="ml-2 h-10 w-20 bg-[#01696F] text-white hover:bg-[#0C4E54]">
+              <Button asChild className="ml-2 h-10 w-20 bg-[#01696F] text-white hover:bg-[#0C4E54]">
                 SIGN UP
               </Button>
             </Link>

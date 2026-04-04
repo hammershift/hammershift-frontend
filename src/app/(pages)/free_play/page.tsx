@@ -169,6 +169,7 @@ const FreePlay = () => {
               </div>
               <Link href={createPageUrl("Leaderboard")}>
                 <Button
+                  asChild
                   variant="outline"
                   className="w-full border-[#E94560] text-[#E94560] hover:bg-[#E94560] hover:text-[#0C1924] sm:w-auto"
                 >
@@ -245,7 +246,7 @@ const FreePlay = () => {
                 No real money required.
               </p>
               <Link href="/markets">
-                <Button className="bg-[#01696F] hover:bg-[#01898F] text-white">
+                <Button asChild className="bg-[#01696F] hover:bg-[#01898F] text-white">
                   Go to Markets
                 </Button>
               </Link>

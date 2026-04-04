@@ -61,7 +61,7 @@ const TournamentSuccessPage = () => {
           tournament!
         </p>
         <Link href={createPageUrl("tournaments")}>
-          <Button className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
+          <Button asChild className="bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
             Browse Tournaments
           </Button>
         </Link>
@@ -145,6 +145,7 @@ const TournamentSuccessPage = () => {
         <div className="flex flex-col justify-center gap-4 md:flex-row">
           <Link href={"/"}>
             <Button
+              asChild
               variant="outline"
               className="border-white/[0.08] hover:bg-[#1E2A36]"
             >
@@ -156,7 +157,7 @@ const TournamentSuccessPage = () => {
           <Link
             href={`${createPageUrl("tournaments")}/${latestTournament._id}`}
           >
-            <Button className="bg-purple-600 text-white hover:bg-purple-700">
+            <Button asChild className="bg-purple-600 text-white hover:bg-purple-700">
               <Trophy className="mr-2 h-4 w-4" />
               View Tournament Details
             </Button>

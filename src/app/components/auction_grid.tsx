@@ -128,6 +128,7 @@ export const AuctionGrid = ({
                   href={`${createPageUrl("auction_details")}?id=${auction._id}&${new URLSearchParams(getModeParams(mode))}`}
                 >
                   <Button
+                    asChild
                     className={
                       mode === "price_is_right"
                         ? "bg-green-600 hover:bg-green-700"

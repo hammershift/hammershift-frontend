@@ -87,7 +87,7 @@ export const Leaderboard = () => {
               TOP PLAYERS
             </h3>
             <Link href={createPageUrl("leaderboard")}>
-              <Button variant="link" className="text-[#E94560]">
+              <Button asChild variant="link" className="text-[#E94560]">
                 VIEW ALL
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>

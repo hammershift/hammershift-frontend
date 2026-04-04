@@ -156,7 +156,7 @@ export const LiveTournaments = () => {
                       <Link
                         href={`${createPageUrl("tournaments")}/${tournament._id}`}
                       >
-                        <Button className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
+                        <Button asChild className="w-full bg-[#E94560] text-[#0C1924] hover:bg-[#E94560]/90">
                           {formatTimeLeft(tournament.endTime.toString()) ===
                           "Ended"
                             ? "View Details"
