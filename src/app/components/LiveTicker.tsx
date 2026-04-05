@@ -6,6 +6,8 @@ interface SaleItem {
   title: string;
   price: number;
   soldDate: string | null;
+  realDeadline: string | null;
+  isLive: boolean;
 }
 
 interface LiveTickerProps {
@@ -18,15 +20,22 @@ function formatPrice(dollars: number): string {
   return `$${dollars.toLocaleString()}`;
 }
 
-function timeAgo(dateStr: string | null): string {
-  if (!dateStr) return '';
-  const diff = Date.now() - new Date(dateStr).getTime();
+function timeLabel(item: SaleItem): string {
+  if (item.isLive && item.realDeadline) {
+    const diff = new Date(item.realDeadline).getTime() - Date.now();
+    if (diff <= 0) return 'ending now';
+    const hours = Math.floor(diff / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    if (hours > 24) return `${Math.floor(hours / 24)}d ${hours % 24}h left`;
+    if (hours > 0) return `${hours}h ${mins}m left`;
+    return `${mins}m left`;
+  }
+  if (!item.soldDate) return '';
+  const diff = Date.now() - new Date(item.soldDate).getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0) return 'today';
   if (days === 1) return '1 day ago';
-  if (days < 30) return `${days} days ago`;
-  const months = Math.floor(days / 30);
-  return months === 1 ? '1 month ago' : `${months} months ago`;
+  return `${days} days ago`;
 }
 
 export default function LiveTicker({ sales }: LiveTickerProps) {
@@ -71,16 +80,21 @@ export default function LiveTicker({ sales }: LiveTickerProps) {
       <div className="sales-track">
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center gap-2 text-sm">
-            <span className="text-[#F2CA16]">🔨</span>
-            <span className="text-gray-300 font-medium">{item.title}</span>
-            <span className="text-[#00D4AA] font-mono font-bold">
-              {formatPrice(item.price)}
-            </span>
-            {item.soldDate && (
-              <span className="text-gray-500 text-xs">
-                {timeAgo(item.soldDate)}
+            {item.isLive ? (
+              <span className="flex items-center gap-1">
+                <span className="h-2 w-2 rounded-full bg-[#00D4AA] animate-pulse" />
+                <span className="text-[#00D4AA] text-xs font-semibold uppercase">Live</span>
               </span>
+            ) : (
+              <span className="text-[#F2CA16]">🔨</span>
             )}
+            <span className="text-gray-300 font-medium">{item.title}</span>
+            <span className={`font-mono font-bold ${item.isLive ? 'text-[#FFB547]' : 'text-[#00D4AA]'}`}>
+              {item.isLive ? `Bid ${formatPrice(item.price)}` : formatPrice(item.price)}
+            </span>
+            <span className={`text-xs ${item.isLive ? 'text-[#E94560]' : 'text-gray-500'}`}>
+              {timeLabel(item)}
+            </span>
             <span className="text-[#1E2A36] mx-1">•</span>
           </span>
         ))}
