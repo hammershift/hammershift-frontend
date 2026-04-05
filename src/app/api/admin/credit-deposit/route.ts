@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'crypto';
 import connectToDB from '@/lib/mongoose';
 import Users from '@/models/user.model';
 import Transaction from '@/models/transaction';
 
 export const dynamic = 'force-dynamic';
+
+const ETH_ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
+const TX_HASH_RE = /^0x[0-9a-fA-F]{64}$/;
+const MAX_CREDIT = 10_000; // hard cap per transaction
+
+function secureCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+}
 
 /**
  * POST /api/admin/credit-deposit
@@ -12,34 +22,61 @@ export const dynamic = 'force-dynamic';
  * crypto transfer that wasn't auto-detected.
  *
  * Body: { walletAddress, amount, txHash, note? }
- * Auth: CRON_SECRET header (reuses existing secret for admin ops)
+ * Auth: CRON_SECRET header
  */
 export async function POST(req: NextRequest) {
-  const secret = req.headers.get('x-cron-secret');
-  if (!secret || secret !== process.env.CRON_SECRET) {
+  const secret = req.headers.get('x-cron-secret') ?? '';
+  const expected = process.env.CRON_SECRET ?? '';
+  if (!secret || !expected || !secureCompare(secret, expected)) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await req.json();
-  const { walletAddress, amount, txHash, note } = body;
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ message: 'Invalid JSON' }, { status: 400 });
+  }
 
-  if (!walletAddress || !amount || !txHash) {
+  const { walletAddress, amount, txHash, note } = body ?? {};
+
+  // Validate wallet address format (prevents ReDoS via regex injection)
+  if (!walletAddress || typeof walletAddress !== 'string' || !ETH_ADDRESS_RE.test(walletAddress)) {
     return NextResponse.json(
-      { message: 'walletAddress, amount, and txHash are required' },
+      { message: 'Invalid wallet address format' },
       { status: 400 }
     );
   }
 
+  // Validate txHash format
+  if (!txHash || typeof txHash !== 'string' || !TX_HASH_RE.test(txHash)) {
+    return NextResponse.json(
+      { message: 'Invalid transaction hash format' },
+      { status: 400 }
+    );
+  }
+
+  // Validate amount: must be positive, finite, within cap
+  const numAmount = Number(amount);
+  if (!Number.isFinite(numAmount) || numAmount <= 0 || numAmount > MAX_CREDIT) {
+    return NextResponse.json(
+      { message: `Amount must be between $0.01 and $${MAX_CREDIT}` },
+      { status: 400 }
+    );
+  }
+  // Round to 2 decimal places
+  const creditAmount = Math.round(numAmount * 100) / 100;
+
   await connectToDB();
 
-  // Find user by embedded wallet address (case-insensitive)
+  // Find user by embedded wallet address (case-insensitive, safe — already validated format)
   const user = await Users.findOne({
     embeddedWalletAddress: { $regex: new RegExp(`^${walletAddress}$`, 'i') },
   });
 
   if (!user) {
     return NextResponse.json(
-      { message: `No user found with wallet ${walletAddress}` },
+      { message: 'No user found with that wallet address' },
       { status: 404 }
     );
   }
@@ -50,40 +87,37 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       duplicate: true,
-      message: `txHash ${txHash} was already credited`,
+      message: 'This transaction was already credited',
     });
   }
 
-  // Credit balance
-  const prevBalance = user.balance ?? 0;
-  user.balance = prevBalance + Number(amount);
-  user.updatedAt = new Date();
-  await user.save();
+  // Atomic balance increment (prevents race conditions)
+  const updated = await Users.findByIdAndUpdate(
+    user._id,
+    { $inc: { balance: creditAmount }, $set: { updatedAt: new Date() } },
+    { new: true }
+  );
 
-  // Record transaction
   await Transaction.create({
     userID: user._id,
     transactionType: 'deposit',
-    amount: Number(amount),
+    amount: creditAmount,
     type: '+',
     status: 'success',
     method: 'direct_usdc_transfer',
-    stripeSessionId: txHash, // reuse for idempotency
+    stripeSessionId: txHash,
     transactionDate: new Date(),
   });
 
   console.log(
-    `[admin/credit-deposit] Credited $${amount} USDC to user ${user._id} ` +
-    `(${user.email ?? user.username ?? 'unknown'}) wallet=${walletAddress} tx=${txHash}` +
+    `[admin/credit-deposit] Credited $${creditAmount} USDC to user ${user._id} ` +
+    `wallet=${walletAddress} tx=${txHash}` +
     (note ? ` note: ${note}` : '')
   );
 
   return NextResponse.json({
     success: true,
-    userId: user._id,
-    username: user.username ?? user.email,
-    previousBalance: prevBalance,
-    newBalance: user.balance,
-    txHash,
+    credited: creditAmount,
+    newBalance: updated?.balance,
   });
 }
