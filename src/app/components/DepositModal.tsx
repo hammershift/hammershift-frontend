@@ -29,14 +29,38 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+  const [claimResult, setClaimResult] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) {
       setError(null);
       setLoading(false);
       setCopied(false);
+      setClaiming(false);
+      setClaimResult(null);
     }
   }, [open]);
+
+  const handleClaimDeposit = async () => {
+    setClaiming(true);
+    setClaimResult(null);
+    setError(null);
+    try {
+      const res = await fetch('/api/wallet/claim-deposit', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        setClaimResult(`$${data.credited} USDC credited to your account!`);
+        refetchBalance?.();
+      } else {
+        setError(data.message ?? 'Nothing to claim');
+      }
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
+      setClaiming(false);
+    }
+  };
 
   const handleCopy = useCallback(async () => {
     if (!embeddedWalletAddress) return;
@@ -406,6 +430,31 @@ export default function DepositModal({ open, onClose, refetchBalance }: Props) {
                           Only send <span className="font-semibold text-[#FFB547]">USDC on Polygon</span>. Other tokens or networks may result in permanent loss.
                         </p>
                       </div>
+
+                      {claimResult && (
+                        <p className="rounded-lg border border-[#00D4AA]/20 bg-[#00D4AA]/10 px-3 py-2 text-xs text-[#00D4AA]">
+                          {claimResult}
+                        </p>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleClaimDeposit}
+                        disabled={claiming}
+                        className="w-full rounded-xl border border-[#8247E5]/30 bg-[#8247E5]/10 py-3 text-sm font-semibold text-[#8247E5] transition-colors hover:bg-[#8247E5]/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {claiming ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#8247E5]/30 border-t-[#8247E5]" />
+                            Checking on-chain balance…
+                          </span>
+                        ) : (
+                          'Claim Deposit'
+                        )}
+                      </button>
+                      <p className="text-center text-xs text-gray-600">
+                        Already sent USDC? Click above to credit your account.
+                      </p>
                     </>
                   )}
                 </>
