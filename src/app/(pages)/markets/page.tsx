@@ -185,8 +185,7 @@ function MarketCard({
           >
             <p className="text-[10px] text-[#00D4AA] font-semibold uppercase tracking-wider mb-0.5">YES</p>
             <p className="font-mono text-sm font-bold text-[#F8FAFC]">
-              {yesCents}¢{' '}
-              <span className="text-[#00D4AA] text-xs">({yesPercent}%)</span>
+              {yesPercent}%
             </p>
           </button>
           <button
@@ -196,15 +195,14 @@ function MarketCard({
           >
             <p className="text-[10px] text-[#EF4444] font-semibold uppercase tracking-wider mb-0.5">NO</p>
             <p className="font-mono text-sm font-bold text-[#F8FAFC]">
-              {noCents}¢{' '}
-              <span className="text-[#EF4444] text-xs">({noPercent}%)</span>
+              {noPercent}%
             </p>
           </button>
         </div>
 
         {/* Volume + target */}
         <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-white/5">
-          <span>Vol: <span className="font-mono text-slate-300">${(market.totalVolume ?? 0).toLocaleString()}</span></span>
+          <span>Vol: <span className="font-mono text-slate-300">{(market.totalVolume ?? 0).toLocaleString()} VP</span></span>
           <span>Target: <span className="font-mono text-slate-300">${(market.predictedPrice ?? 0).toLocaleString()}</span></span>
         </div>
       </div>
@@ -448,7 +446,7 @@ export default function MarketsPage() {
               <StatPill
                 icon={<TrendingUp className="w-4 h-4" />}
                 label="Volume"
-                value={`$${stats.volumeFormatted}`}
+                value={`${stats.volumeFormatted} VP`}
                 valueColor="text-[#00D4AA]"
               />
               <StatPill
