@@ -12,7 +12,10 @@ const MAX_CREDIT = 10_000; // hard cap per transaction
 
 function secureCompare(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
-  return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  return timingSafeEqual(
+    new Uint8Array(Buffer.from(a)),
+    new Uint8Array(Buffer.from(b))
+  );
 }
 
 /**
