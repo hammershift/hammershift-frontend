@@ -260,6 +260,7 @@ export async function validateTrade(
   //
   // MongoDB query: aggregate current position for this user + outcome
   // -------------------------------------------------------------------------
+  let currentPosition = 0;
   if (!ctx.isVirtual) {
     const isTrusted = user.role === "trusted" || user.role === "admin";
     const isHighValue =
@@ -290,7 +291,7 @@ export async function validateTrade(
       { projection: { totalCost: 1 } }
     );
 
-    const currentPosition: number = existingPosition?.totalCost ?? 0;
+    currentPosition = existingPosition?.totalCost ?? 0;
     const projectedPosition = currentPosition + usdcAmount;
 
     if (projectedPosition > effectiveCap) {
