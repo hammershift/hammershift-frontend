@@ -41,12 +41,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { walletAddress, email, amount, txHash, note } = body ?? {};
+  const { walletAddress, email, username, amount, txHash, note } = body ?? {};
 
-  // Must provide either walletAddress or email
-  if (!walletAddress && !email) {
+  // Must provide at least one user identifier
+  if (!walletAddress && !email && !username) {
     return NextResponse.json(
-      { message: 'Provide walletAddress or email' },
+      { message: 'Provide walletAddress, email, or username' },
       { status: 400 }
     );
   }
@@ -80,15 +80,17 @@ export async function POST(req: NextRequest) {
 
   await connectToDB();
 
-  // Find user by embedded wallet address or email
+  // Find user by wallet, email, or username
   const query = walletAddress
     ? { embeddedWalletAddress: { $regex: new RegExp(`^${walletAddress}$`, 'i') } }
-    : { email: { $regex: new RegExp(`^${email}$`, 'i') } };
+    : email
+      ? { email: { $regex: new RegExp(`^${email}$`, 'i') } }
+      : { username: { $regex: new RegExp(`^${username}$`, 'i') } };
   const user = await Users.findOne(query);
 
   if (!user) {
     return NextResponse.json(
-      { message: `No user found with ${walletAddress ? 'that wallet address' : 'that email'}` },
+      { message: `No user found with ${walletAddress ? 'that wallet address' : email ? 'that email' : 'that username'}` },
       { status: 404 }
     );
   }
