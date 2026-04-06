@@ -64,6 +64,8 @@ interface HomepageData {
     title: string;
     price: number;
     soldDate: string | null;
+    realDeadline: string | null;
+    isLive: boolean;
   }>;
   cumulativeStats: {
     carsTracked: number;
@@ -256,11 +258,18 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     if (recentWinners.length >= 5) break;
   }
 
-  const recentSales = recentSalesRaw.map((a: any) => ({
-    title: a.title ?? 'Unknown',
-    price: a.sort?.price ?? 0,
-    soldDate: a.sort?.deadline ? new Date(a.sort.deadline).toISOString() : null,
-  }));
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const recentSales = recentSalesRaw.map((a: any) => {
+    const rawDeadline = a.sort?.deadline ? new Date(a.sort.deadline).getTime() : 0;
+    const realDeadline = rawDeadline + DAY_MS;
+    return {
+      title: a.title ?? 'Unknown',
+      price: a.sort?.price ?? 0,
+      soldDate: rawDeadline ? new Date(rawDeadline).toISOString() : null,
+      realDeadline: rawDeadline ? new Date(realDeadline).toISOString() : null,
+      isLive: realDeadline > Date.now(),
+    };
+  });
 
   return {
     activeTournaments,
