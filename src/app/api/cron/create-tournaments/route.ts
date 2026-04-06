@@ -175,7 +175,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
       theme: "make",
       name: generateName("make", { make: capitalize(make) }),
       description: `${selected.length} ${capitalize(make)} auctions ending this week. Predict the hammer price on each.`,
-      auctionIds: selected.map((a) => a._id.toString()),
+      auctionIds: selected.map((a) => a.auction_id ?? a._id.toString()),
       score: selected.reduce((s, a) => s + a.excitement, 0) + selected.length * 5,
       startTime: new Date(), // Starts immediately
       endTime: latest,
@@ -199,7 +199,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
       theme: "country",
       name: generateName("country", { country }),
       description: `${selected.length} ${country} cars going under the hammer. Who can predict closest?`,
-      auctionIds: selected.map((a) => a._id.toString()),
+      auctionIds: selected.map((a) => a.auction_id ?? a._id.toString()),
       score: selected.reduce((s, a) => s + a.excitement, 0) + selected.length * 3,
       startTime: new Date(),
       endTime: latest,
@@ -223,7 +223,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
       theme: "era",
       name: generateName("era", { era }),
       description: `${selected.length} cars from the ${era} era. Classic meets competition.`,
-      auctionIds: selected.map((a) => a._id.toString()),
+      auctionIds: selected.map((a) => a.auction_id ?? a._id.toString()),
       score: selected.reduce((s, a) => s + a.excitement, 0) + selected.length * 2,
       startTime: new Date(),
       endTime: latest,
@@ -251,7 +251,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
         max: tierInfo.max === Infinity ? "1M+" : (tierInfo.max / 1000).toFixed(0) + "K",
       }),
       description: `${selected.length} auctions in the ${tier.toLowerCase()} price range.`,
-      auctionIds: selected.map((a) => a._id.toString()),
+      auctionIds: selected.map((a) => a.auction_id ?? a._id.toString()),
       score: selected.reduce((s, a) => s + a.excitement, 0),
       startTime: new Date(),
       endTime: latest,
@@ -268,7 +268,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
       theme: "mixed",
       name: generateName("mixed", {}),
       description: `The ${selected.length} most exciting auctions ending this week.`,
-      auctionIds: selected.map((a) => a._id.toString()),
+      auctionIds: selected.map((a) => a.auction_id ?? a._id.toString()),
       score: selected.reduce((s, a) => s + a.excitement, 0) + 50, // Bonus: always have a mixed
       startTime: new Date(),
       endTime: latest,
@@ -357,7 +357,7 @@ export async function GET(req: Request) {
 
     // Filter out auctions already in active tournaments
     const availableAuctions = auctions.filter(
-      (a) => !existingAuctionIds.has(a._id.toString())
+      (a) => !existingAuctionIds.has(a.auction_id ?? a._id.toString())
     );
 
     if (availableAuctions.length < MIN_AUCTIONS_PER_TOURNAMENT) {
@@ -393,7 +393,7 @@ export async function GET(req: Request) {
     for (const cluster of clusters) {
       // Pick a banner image from the first auction
       const firstAuction = availableAuctions.find(
-        (a) => a._id.toString() === cluster.auctionIds[0]
+        (a) => (a.auction_id ?? a._id.toString()) === cluster.auctionIds[0]
       );
 
       const tournament = new Tournaments({
