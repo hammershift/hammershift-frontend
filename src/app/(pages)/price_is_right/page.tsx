@@ -64,8 +64,8 @@ async function getPageData() {
     }
   }
 
-  // Sort: open by soonest ending first, endingSoon by soonest, ended by most recent
-  open.sort((a: any, b: any) => new Date(a.sort?.deadline).getTime() - new Date(b.sort?.deadline).getTime());
+  // Sort: open by highest bid first (most exciting), endingSoon by soonest ending
+  open.sort((a: any, b: any) => (b.sort?.price ?? 0) - (a.sort?.price ?? 0));
   endingSoon.sort((a: any, b: any) => new Date(a.sort?.deadline).getTime() - new Date(b.sort?.deadline).getTime());
 
   const orderedAuctions = [...open, ...endingSoon, ...ended];
@@ -176,6 +176,15 @@ async function getPageData() {
     return "ended";
   }
 
+  // Extract make from title for filtering
+  function extractMake(title: string): string {
+    const t = title.toLowerCase();
+    for (const make of QUALIFYING_MAKES) {
+      if (t.includes(make)) return make.charAt(0).toUpperCase() + make.slice(1);
+    }
+    return "Other";
+  }
+
   return {
     auctions: JSON.parse(
       JSON.stringify(
@@ -194,6 +203,7 @@ async function getPageData() {
             bids: a.sort?.bids ?? 0,
             guessCount: guessCountMap.get(a._id.toString()) ?? 0,
             status: getStatus(a),
+            make: extractMake(a.title ?? ""),
           };
         })
       )

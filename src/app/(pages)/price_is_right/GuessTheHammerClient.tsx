@@ -18,6 +18,10 @@ import {
   Lock,
   Timer,
   CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  Info,
+  Filter,
 } from "lucide-react";
 
 type AuctionStatus = "open" | "ending_soon" | "ended";
@@ -32,6 +36,7 @@ interface AuctionCard {
   bids: number;
   guessCount: number;
   status: AuctionStatus;
+  make: string;
 }
 
 interface RecentResult {
@@ -263,8 +268,29 @@ export default function GuessTheHammerClient({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [localGuesses, setLocalGuesses] = useState(userGuesses);
+  const [makeFilter, setMakeFilter] = useState<string>("all");
+  const [showAllOpen, setShowAllOpen] = useState(false);
+  const [showScoring, setShowScoring] = useState(false);
 
-  const openAuctions = auctions.filter((a) => a.status === "open");
+  const FEATURED_COUNT = 20;
+
+  // Extract available makes for filter pills
+  const allOpenAuctions = auctions.filter((a) => a.status === "open");
+  const availableMakes = Array.from(new Set(allOpenAuctions.map((a) => a.make)))
+    .filter((m) => m !== "Other")
+    .sort();
+
+  // Apply make filter
+  const filteredOpen = makeFilter === "all"
+    ? allOpenAuctions
+    : allOpenAuctions.filter((a) => a.make === makeFilter);
+
+  // Show top N unless expanded or filtered
+  const openAuctions = (makeFilter !== "all" || showAllOpen)
+    ? filteredOpen
+    : filteredOpen.slice(0, FEATURED_COUNT);
+  const hasMoreOpen = makeFilter === "all" && !showAllOpen && filteredOpen.length > FEATURED_COUNT;
+
   const endingSoonAuctions = auctions.filter((a) => a.status === "ending_soon");
   const endedAuctions = auctions.filter((a) => a.status === "ended");
 
@@ -313,7 +339,7 @@ export default function GuessTheHammerClient({
   const tabs = [
     {
       key: "play" as const,
-      label: `Auctions (${auctions.length})`,
+      label: `Play (${allOpenAuctions.length})`,
       icon: <Gavel className="w-4 h-4" />,
     },
     {
@@ -351,15 +377,65 @@ export default function GuessTheHammerClient({
         </p>
       </div>
 
-      {/* Rules callout */}
-      <div className="bg-[#FFB547]/5 border border-[#FFB547]/20 rounded-xl p-4 mb-8 flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 text-[#FFB547] flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-gray-300">
-          <strong className="text-[#FFB547]">Price is Right rules</strong> — guess
-          over the actual sale price and your penalty error is{" "}
-          <strong className="text-white">doubled</strong>. Going under is always
-          safer! Guessing locks 12 hours before auction ends.
-        </div>
+      {/* How Scoring Works — collapsible */}
+      <div className="mb-8">
+        <button
+          onClick={() => setShowScoring(!showScoring)}
+          className="w-full bg-[#16181f] border border-white/[0.08] rounded-xl px-5 py-3.5 flex items-center justify-between hover:border-white/[0.15] transition"
+        >
+          <div className="flex items-center gap-2.5">
+            <Info className="w-4.5 h-4.5 text-[#FFB547]" />
+            <span className="text-sm font-semibold text-white">How Scoring Works</span>
+          </div>
+          {showScoring ? (
+            <ChevronUp className="w-4 h-4 text-gray-400" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          )}
+        </button>
+        {showScoring && (
+          <div className="mt-2 bg-[#16181f] border border-white/[0.08] rounded-xl p-5 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-[#0A0A1A] rounded-lg p-4 border border-white/[0.05]">
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="w-4 h-4 text-[#00D4AA]" />
+                  <h4 className="text-xs font-semibold text-[#00D4AA] uppercase tracking-wider">Accuracy</h4>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Your score is based on how close your guess is to the final sale price.
+                  <span className="text-white font-medium"> Closer = better.</span>
+                </p>
+              </div>
+              <div className="bg-[#0A0A1A] rounded-lg p-4 border border-white/[0.05]">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertTriangle className="w-4 h-4 text-[#E94560]" />
+                  <h4 className="text-xs font-semibold text-[#E94560] uppercase tracking-wider">Over-Guess Penalty</h4>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  <span className="text-white font-medium">Price is Right rules</span> — guess over the actual price
+                  and your error is <span className="text-[#E94560] font-bold">doubled</span>. Going under is always safer.
+                </p>
+              </div>
+              <div className="bg-[#0A0A1A] rounded-lg p-4 border border-white/[0.05]">
+                <div className="flex items-center gap-2 mb-2">
+                  <Trophy className="w-4 h-4 text-[#FFB547]" />
+                  <h4 className="text-xs font-semibold text-[#FFB547] uppercase tracking-wider">Winning</h4>
+                </div>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  <span className="text-white font-medium">Free Play:</span> earn leaderboard rank.{" "}
+                  <span className="text-white font-medium">Cash ($5):</span> closest guess wins the pot.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 pt-2 border-t border-white/[0.05]">
+              <Lock className="w-3.5 h-3.5 text-[#FFB547] flex-shrink-0" />
+              <p className="text-xs text-gray-500">
+                Guessing locks <span className="text-gray-300">12 hours</span> before auction ends — no last-second sniping.
+                Leaderboard ranks by <span className="text-gray-300">average accuracy</span> across all your graded games.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mode toggle + balance */}
@@ -426,15 +502,46 @@ export default function GuessTheHammerClient({
           ) : (
             <div className="space-y-10">
               {/* Open for Guessing */}
-              {openAuctions.length > 0 && (
+              {allOpenAuctions.length > 0 && (
                 <section>
                   <SectionHeader
                     icon={<span className="h-2.5 w-2.5 rounded-full bg-[#00D4AA] animate-pulse" />}
                     title="Open for Guessing"
-                    count={openAuctions.length}
+                    count={filteredOpen.length}
                     color="text-[#00D4AA]"
-                    subtitle="More than 12h until auction ends"
+                    subtitle={makeFilter === "all" ? "Top picks by value" : `Filtered: ${makeFilter}`}
                   />
+
+                  {/* Make filter pills */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <button
+                      onClick={() => { setMakeFilter("all"); setShowAllOpen(false); }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium transition border ${
+                        makeFilter === "all"
+                          ? "bg-[#00D4AA]/10 text-[#00D4AA] border-[#00D4AA]/30"
+                          : "bg-[#0A0A1A] text-gray-400 border-white/[0.08] hover:border-gray-500"
+                      }`}
+                    >
+                      All ({allOpenAuctions.length})
+                    </button>
+                    {availableMakes.map((make) => {
+                      const count = allOpenAuctions.filter((a) => a.make === make).length;
+                      return (
+                        <button
+                          key={make}
+                          onClick={() => { setMakeFilter(make); setShowAllOpen(false); }}
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium transition border ${
+                            makeFilter === make
+                              ? "bg-[#00D4AA]/10 text-[#00D4AA] border-[#00D4AA]/30"
+                              : "bg-[#0A0A1A] text-gray-400 border-white/[0.08] hover:border-gray-500"
+                          }`}
+                        >
+                          {make} ({count})
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {openAuctions.map((auction) => (
                       <AuctionCardItem
@@ -447,6 +554,16 @@ export default function GuessTheHammerClient({
                       />
                     ))}
                   </div>
+
+                  {hasMoreOpen && (
+                    <button
+                      onClick={() => setShowAllOpen(true)}
+                      className="mt-4 flex items-center gap-2 text-sm text-[#00D4AA] hover:text-[#00D4AA]/80 transition mx-auto"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                      Show all {filteredOpen.length} auctions
+                    </button>
+                  )}
                 </section>
               )}
 
