@@ -21,11 +21,15 @@ export async function GET(req: NextRequest) {
 
     if (auction_ids) {
       const auction_ids_split = auction_ids.split(",");
-      const auctions = await Auctions.find({
-        _id: {
-          $in: auction_ids_split,
-        },
+      // Try by _id first, then fall back to auction_id field
+      let auctions = await Auctions.find({
+        _id: { $in: auction_ids_split.filter((id: string) => mongoose.isValidObjectId(id)) },
       });
+      if (auctions.length === 0) {
+        auctions = await Auctions.find({
+          auction_id: { $in: auction_ids_split },
+        });
+      }
 
       if (auctions.length === 0) {
         return NextResponse.json(

@@ -174,14 +174,24 @@ export default function TournamentDetailPage() {
       if (!tournament) return;
 
       try {
-        // Fetch auctions by tournament auction_ids
-        const auctionPromises = tournament.auction_ids.map(async (id: string) => {
-          const response = await fetch(`/api/cars?auction_id=${id}`);
-          return response.json();
-        });
+        // Fetch auctions by tournament auction_ids (batch query)
+        const ids = tournament.auction_ids.join(",");
+        const batchRes = await fetch(`/api/cars?auction_ids=${ids}`);
+        let validAuctions: Auction[] = [];
+        if (batchRes.ok) {
+          const batchData = await batchRes.json();
+          validAuctions = Array.isArray(batchData) ? batchData.filter((a: any) => a && a._id) : [];
+        }
 
-        const auctionData = await Promise.all(auctionPromises);
-        const validAuctions = auctionData.filter(a => a && a._id);
+        // If batch returned nothing, try individual lookups (handles both ObjectId and auction_id)
+        if (validAuctions.length === 0) {
+          const auctionPromises = tournament.auction_ids.map(async (id: string) => {
+            const response = await fetch(`/api/cars?auction_id=${id}`);
+            return response.json();
+          });
+          const auctionData = await Promise.all(auctionPromises);
+          validAuctions = auctionData.filter((a: any) => a && a._id);
+        }
 
         setAuctions(validAuctions);
 
