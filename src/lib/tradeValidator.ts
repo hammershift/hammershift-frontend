@@ -101,6 +101,8 @@ export interface TradeContext {
   callerIp?: string;
   /** Device fingerprint from client header (X-Device-FP). Optional. */
   deviceFingerprint?: string;
+  /** Virtual (free play) trades skip real-money balance and position cap checks. */
+  isVirtual?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -229,19 +231,25 @@ export async function validateTrade(
   // CHECK 4: Balance sufficient
   //
   // user.balance is stored in USD dollars on the User model.
+  // Virtual (free play) trades use virtualBalance and are checked in the
+  // route handler, not here — skip for virtual.
   // -------------------------------------------------------------------------
-  const userBalance: number = user.balance ?? 0;
+  if (!ctx.isVirtual) {
+    const userBalance: number = user.balance ?? 0;
 
-  if (userBalance < usdcAmount) {
-    const shortfall = (usdcAmount - userBalance).toFixed(2);
-    return {
-      valid: false,
-      reason: `Insufficient balance. You need $${shortfall} more to place this trade.`,
-    };
+    if (userBalance < usdcAmount) {
+      const shortfall = (usdcAmount - userBalance).toFixed(2);
+      return {
+        valid: false,
+        reason: `Insufficient balance. You need $${shortfall} more to place this trade.`,
+      };
+    }
   }
 
   // -------------------------------------------------------------------------
   // CHECK 5: Position cap not exceeded
+  //
+  // Virtual (free play) trades are uncapped — skip entirely.
   //
   // Cap is the LOWER of:
   //   (a) hard dollar cap (standard: $500, trusted: $2,500)
@@ -252,62 +260,64 @@ export async function validateTrade(
   //
   // MongoDB query: aggregate current position for this user + outcome
   // -------------------------------------------------------------------------
-  const isTrusted = user.role === "trusted" || user.role === "admin";
-  const isHighValue =
-    (market.predictedPrice ?? 0) > HIGH_VALUE_PREDICTED_PRICE_USD ||
-    market.riskTier === "HIGH_VALUE";
+  if (!ctx.isVirtual) {
+    const isTrusted = user.role === "trusted" || user.role === "admin";
+    const isHighValue =
+      (market.predictedPrice ?? 0) > HIGH_VALUE_PREDICTED_PRICE_USD ||
+      market.riskTier === "HIGH_VALUE";
 
-  // Resolve dollar cap — prefer market-level override if present
-  let hardCap = isTrusted
-    ? (market.trustedUserCapUSDC ?? TRUSTED_POSITION_CAP)
-    : (market.positionCapUSDC ?? STANDARD_POSITION_CAP);
+    // Resolve dollar cap — prefer market-level override if present
+    let hardCap = isTrusted
+      ? (market.trustedUserCapUSDC ?? TRUSTED_POSITION_CAP)
+      : (market.positionCapUSDC ?? STANDARD_POSITION_CAP);
 
-  if (isHighValue) {
-    hardCap = hardCap * HIGH_VALUE_MARKET_CAP_MULTIPLIER;
-  }
+    if (isHighValue) {
+      hardCap = hardCap * HIGH_VALUE_MARKET_CAP_MULTIPLIER;
+    }
 
-  // Compute pool cap (20% of totalLiquidity)
-  const totalLiquidity: number = market.totalLiquidity ?? 0;
-  const poolCap =
-    totalLiquidity > 0
-      ? totalLiquidity * POOL_CAP_PCT
-      : hardCap; // no liquidity yet → fall back to hard cap
+    // Compute pool cap (20% of totalLiquidity)
+    const totalLiquidity: number = market.totalLiquidity ?? 0;
+    const poolCap =
+      totalLiquidity > 0
+        ? totalLiquidity * POOL_CAP_PCT
+        : hardCap; // no liquidity yet → fall back to hard cap
 
-  const effectiveCap = Math.min(hardCap, poolCap);
+    const effectiveCap = Math.min(hardCap, poolCap);
 
-  // B-1 fix: read from polygon_positions (same collection trades write to)
-  const existingPosition = await db.collection("polygon_positions").findOne(
-    { userId: userObjectId, marketId: marketObjectId, outcome, status: "OPEN" },
-    { projection: { totalCost: 1 } }
-  );
+    // B-1 fix: read from polygon_positions (same collection trades write to)
+    const existingPosition = await db.collection("polygon_positions").findOne(
+      { userId: userObjectId, marketId: marketObjectId, outcome, status: "OPEN" },
+      { projection: { totalCost: 1 } }
+    );
 
-  const currentPosition: number = existingPosition?.totalCost ?? 0;
-  const projectedPosition = currentPosition + usdcAmount;
+    const currentPosition: number = existingPosition?.totalCost ?? 0;
+    const projectedPosition = currentPosition + usdcAmount;
 
-  if (projectedPosition > effectiveCap) {
-    const remaining = Math.max(0, effectiveCap - currentPosition);
-    return {
-      valid: false,
-      reason:
-        remaining === 0
-          ? `You have reached the $${effectiveCap.toFixed(2)} position limit for ${outcome} on this market.`
-          : `This trade would exceed your $${effectiveCap.toFixed(2)} position limit. Maximum additional amount: $${remaining.toFixed(2)}.`,
-    };
-  }
+    if (projectedPosition > effectiveCap) {
+      const remaining = Math.max(0, effectiveCap - currentPosition);
+      return {
+        valid: false,
+        reason:
+          remaining === 0
+            ? `You have reached the $${effectiveCap.toFixed(2)} position limit for ${outcome} on this market.`
+            : `This trade would exceed your $${effectiveCap.toFixed(2)} position limit. Maximum additional amount: $${remaining.toFixed(2)}.`,
+      };
+    }
 
-  // Emit cap-approach flag at 80% threshold (non-blocking)
-  if (projectedPosition >= effectiveCap * CAP_APPROACH_THRESHOLD_PCT) {
-    pendingFlags.push({
-      flagType: "POSITION_CAP_APPROACHED",
-      severity: "LOW",
-      metadata: {
-        currentPosition,
-        projectedPosition,
-        effectiveCap,
-        isTrusted,
-        isHighValue,
-      },
-    });
+    // Emit cap-approach flag at 80% threshold (non-blocking)
+    if (projectedPosition >= effectiveCap * CAP_APPROACH_THRESHOLD_PCT) {
+      pendingFlags.push({
+        flagType: "POSITION_CAP_APPROACHED",
+        severity: "LOW",
+        metadata: {
+          currentPosition,
+          projectedPosition,
+          effectiveCap,
+          isTrusted,
+          isHighValue,
+        },
+      });
+    }
   }
 
   // -------------------------------------------------------------------------

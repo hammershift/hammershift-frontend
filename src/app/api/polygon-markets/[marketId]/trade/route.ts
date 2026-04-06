@@ -146,7 +146,7 @@ export async function POST(
 
   const callerIp = getClientIp(req as unknown as Request);
   const deviceFingerprint = req.headers.get("x-device-fp") ?? null;
-  const ctx: TradeContext = { callerIp, deviceFingerprint: deviceFingerprint ?? undefined };
+  const ctx: TradeContext = { callerIp, deviceFingerprint: deviceFingerprint ?? undefined, isVirtual };
 
   const client = await clientPromise;
   const db = client.db(process.env.DB_NAME || undefined);

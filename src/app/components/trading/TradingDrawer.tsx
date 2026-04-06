@@ -443,7 +443,7 @@ export default function TradingDrawer({
               <div className="flex justify-between text-slate-400">
                 <span>Price per share</span>
                 <span className="font-mono" style={{ color }}>
-                  {Math.round(price * 100)}¢
+                  {Math.round(price * 100)}%
                 </span>
               </div>
               <div className="flex justify-between text-slate-400">
