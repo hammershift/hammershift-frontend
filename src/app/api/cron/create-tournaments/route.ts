@@ -72,6 +72,7 @@ function isAuthorized(req: Request): boolean {
 // ── Helpers ─────────────────────────────────────────────────
 interface AuctionDoc {
   _id: mongoose.Types.ObjectId;
+  auction_id?: string;
   title: string;
   image: string;
   sort?: { price?: number; deadline?: Date; bids?: number };

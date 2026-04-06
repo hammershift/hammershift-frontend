@@ -293,16 +293,22 @@ export default function TradingDrawer({
               <div className="flex justify-between text-slate-400">
                 <span>Price per share</span>
                 <span className="text-white">
-                  {(tradeReceipt.pricePerShare * 100).toFixed(1)}¢
+                  {(tradeReceipt.pricePerShare * 100).toFixed(1)}%
                 </span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Platform fee</span>
-                <span className="text-[#E94560]">-${tradeReceipt.fee.toFixed(2)}</span>
+                <span className="text-[#E94560]">
+                  {isOnChainMarket ? `-$${tradeReceipt.fee.toFixed(2)}` : `-${tradeReceipt.fee.toFixed(0)} VP`}
+                </span>
               </div>
               <div className="flex justify-between font-semibold text-white border-t border-white/10 pt-2">
                 <span>Total spent</span>
-                <span>${tradeReceipt.usdcSpent.toFixed(2)} USDC</span>
+                <span>
+                  {isOnChainMarket
+                    ? `$${tradeReceipt.usdcSpent.toFixed(2)} USDC`
+                    : `${tradeReceipt.usdcSpent.toFixed(0)} VP`}
+                </span>
               </div>
             </div>
 
@@ -353,8 +359,7 @@ export default function TradingDrawer({
                 <span className="block text-xs font-mono font-normal mt-0.5">
                   {Math.round(
                     (s === 'YES' ? (market.yesPrice ?? 0.5) : (market.noPrice ?? 0.5)) * 100
-                  )}
-                  ¢
+                  )}%
                 </span>
               </button>
             ))}
@@ -367,7 +372,7 @@ export default function TradingDrawer({
             </label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-mono text-sm">
-                $
+                {isOnChainMarket ? '$' : 'VP'}
               </span>
               <input
                 type="number"
@@ -380,7 +385,7 @@ export default function TradingDrawer({
                   setAmount(e.target.value);
                   setError(null);
                 }}
-                className="w-full bg-[#16181f] border border-white/10 rounded-lg py-3 pl-7 pr-4 text-[#F8FAFC] font-mono text-sm focus:outline-none focus:border-white/30"
+                className={`w-full bg-[#16181f] border border-white/10 rounded-lg py-3 ${isOnChainMarket ? 'pl-7' : 'pl-10'} pr-4 text-[#F8FAFC] font-mono text-sm focus:outline-none focus:border-white/30`}
               />
             </div>
             <p className={`text-sm font-mono mt-1.5 ${hasInsufficientBalance ? 'text-[#E94560]' : 'text-gray-400'}`}>
@@ -409,11 +414,13 @@ export default function TradingDrawer({
               </div>
               <div className="flex justify-between text-gray-400">
                 <span>Price per share</span>
-                <span className="text-white">{(quote.pricePerShare * 100).toFixed(1)}¢</span>
+                <span className="text-white">{(quote.pricePerShare * 100).toFixed(1)}%</span>
               </div>
               <div className="flex justify-between text-gray-400">
                 <span>Platform fee (2%)</span>
-                <span className="text-[#E94560]">-${quote.fee.toFixed(2)}</span>
+                <span className="text-[#E94560]">
+                  {isOnChainMarket ? `-$${quote.fee.toFixed(2)}` : `-${quote.fee.toFixed(0)} VP`}
+                </span>
               </div>
               {quote.slippagePct > 0.01 && (
                 <div className="flex justify-between text-gray-400">
@@ -447,7 +454,11 @@ export default function TradingDrawer({
               </div>
               <div className="flex justify-between font-semibold text-[#F8FAFC] pt-2 border-t border-white/10">
                 <span>Total</span>
-                <span className="font-mono">${isValidAmount ? amount : '0'} USDC</span>
+                <span className="font-mono">
+                  {isOnChainMarket
+                    ? `$${isValidAmount ? amount : '0'} USDC`
+                    : `${isValidAmount ? amount : '0'} VP`}
+                </span>
               </div>
             </div>
           )}
