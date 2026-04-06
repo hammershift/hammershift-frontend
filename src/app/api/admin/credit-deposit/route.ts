@@ -41,10 +41,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { walletAddress, amount, txHash, note } = body ?? {};
+  const { walletAddress, email, amount, txHash, note } = body ?? {};
 
-  // Validate wallet address format (prevents ReDoS via regex injection)
-  if (!walletAddress || typeof walletAddress !== 'string' || !ETH_ADDRESS_RE.test(walletAddress)) {
+  // Must provide either walletAddress or email
+  if (!walletAddress && !email) {
+    return NextResponse.json(
+      { message: 'Provide walletAddress or email' },
+      { status: 400 }
+    );
+  }
+
+  // Validate wallet address format if provided (prevents ReDoS via regex injection)
+  if (walletAddress && (typeof walletAddress !== 'string' || !ETH_ADDRESS_RE.test(walletAddress))) {
     return NextResponse.json(
       { message: 'Invalid wallet address format' },
       { status: 400 }
@@ -72,14 +80,15 @@ export async function POST(req: NextRequest) {
 
   await connectToDB();
 
-  // Find user by embedded wallet address (case-insensitive, safe — already validated format)
-  const user = await Users.findOne({
-    embeddedWalletAddress: { $regex: new RegExp(`^${walletAddress}$`, 'i') },
-  });
+  // Find user by embedded wallet address or email
+  const query = walletAddress
+    ? { embeddedWalletAddress: { $regex: new RegExp(`^${walletAddress}$`, 'i') } }
+    : { email: { $regex: new RegExp(`^${email}$`, 'i') } };
+  const user = await Users.findOne(query);
 
   if (!user) {
     return NextResponse.json(
-      { message: 'No user found with that wallet address' },
+      { message: `No user found with ${walletAddress ? 'that wallet address' : 'that email'}` },
       { status: 404 }
     );
   }
