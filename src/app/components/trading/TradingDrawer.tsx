@@ -293,7 +293,9 @@ export default function TradingDrawer({
               <div className="flex justify-between text-slate-400">
                 <span>Price per share</span>
                 <span className="text-white">
-                  {(tradeReceipt.pricePerShare * 100).toFixed(1)}%
+                  {isOnChainMarket
+                    ? `${(tradeReceipt.pricePerShare * 100).toFixed(1)}¢`
+                    : `${(tradeReceipt.pricePerShare * 100).toFixed(1)} VP`}
                 </span>
               </div>
               <div className="flex justify-between text-slate-400">
@@ -414,7 +416,7 @@ export default function TradingDrawer({
               </div>
               <div className="flex justify-between text-gray-400">
                 <span>Price per share</span>
-                <span className="text-white">{(quote.pricePerShare * 100).toFixed(1)}%</span>
+                <span className="text-white">{(quote.pricePerShare * 100).toFixed(1)} VP</span>
               </div>
               <div className="flex justify-between text-gray-400">
                 <span>Platform fee (2%)</span>
@@ -443,7 +445,7 @@ export default function TradingDrawer({
               <div className="flex justify-between text-slate-400">
                 <span>Price per share</span>
                 <span className="font-mono" style={{ color }}>
-                  {Math.round(price * 100)}%
+                  {Math.round(price * 100)} {isOnChainMarket ? '¢' : 'VP'}
                 </span>
               </div>
               <div className="flex justify-between text-slate-400">
