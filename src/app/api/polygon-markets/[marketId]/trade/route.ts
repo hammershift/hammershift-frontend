@@ -76,11 +76,12 @@ function validateBody(body: unknown): TradeRequestBody {
   if (typeof b.usdcAmount !== "number" || b.usdcAmount <= 0) {
     throw new ValidationError("usdcAmount must be a positive number");
   }
+  const isVirt = b.isVirtual === true;
   if (b.usdcAmount < 1) {
-    throw new ValidationError("Minimum trade size is $1.00");
+    throw new ValidationError(isVirt ? "Minimum trade size is 1 VP" : "Minimum trade size is $1.00");
   }
   if (b.usdcAmount > 10_000) {
-    throw new ValidationError("Maximum single trade size is $10,000");
+    throw new ValidationError(isVirt ? "Maximum single trade size is 10,000 VP" : "Maximum single trade size is $10,000");
   }
   if (typeof b.maxSlippage !== "number" || b.maxSlippage < 0 || b.maxSlippage > 1) {
     throw new ValidationError("maxSlippage must be a number between 0 and 1");
@@ -155,9 +156,12 @@ export async function POST(
 
   // ── 3a. Minimum trade interval check (60 seconds) ─────────────────────────
   // Fast O(1) indexed check — runs before loading market or running AMM math.
-  const intervalCheck = await checkMinimumTradeInterval(userId, marketId, db);
-  if (intervalCheck.blocked) {
-    return NextResponse.json({ message: intervalCheck.reason }, { status: 429 });
+  // Virtual trades skip — no wash-trade risk with play money.
+  if (!isVirtual) {
+    const intervalCheck = await checkMinimumTradeInterval(userId, marketId, db);
+    if (intervalCheck.blocked) {
+      return NextResponse.json({ message: intervalCheck.reason }, { status: 429 });
+    }
   }
 
   // ── 3b. Risk validation pipeline ─────────────────────────────────────────
@@ -287,7 +291,7 @@ export async function POST(
     if (!isNoReplicaSet) {
       // A real error — attempt rollback if wallet was debited
       if (walletDebited) {
-        await compensatingCreditWallet(db, userObjectId, usdcAmount, tradeId, now);
+        await compensatingCreditWallet(db, userObjectId, usdcAmount, tradeId, now, isVirtual);
       }
       console.error("POST /api/polygon-markets/[marketId]/trade - transaction error:", sessionErr);
       return NextResponse.json({ message: "Trade failed — please try again" }, { status: 500 });
@@ -328,7 +332,7 @@ export async function POST(
         fallbackErr
       );
       // If wallet was debited during compensating writes, attempt credit-back
-      await compensatingCreditWallet(db, userObjectId, usdcAmount, tradeId, now).catch(() => {});
+      await compensatingCreditWallet(db, userObjectId, usdcAmount, tradeId, now, isVirtual).catch(() => {});
       return NextResponse.json(
         { message: "Trade failed during execution — funds have been returned if debited" },
         { status: 500 }
@@ -360,16 +364,19 @@ export async function POST(
     );
   }
 
-  detectOpposingSidesCollusion(
-    userId,
-    marketId,
-    outcome,
-    callerIp,
-    deviceFingerprint,
-    db
-  ).catch((err) =>
-    console.error("detectOpposingSidesCollusion failed (non-fatal):", err)
-  );
+  // Skip fraud detection for virtual trades — no financial risk
+  if (!isVirtual) {
+    detectOpposingSidesCollusion(
+      userId,
+      marketId,
+      outcome,
+      callerIp,
+      deviceFingerprint,
+      db
+    ).catch((err) =>
+      console.error("detectOpposingSidesCollusion failed (non-fatal):", err)
+    );
+  }
 
   // ── 8. Return receipt ─────────────────────────────────────────────────────
   return NextResponse.json(
@@ -788,22 +795,27 @@ async function compensatingCreditWallet(
   userObjectId: ObjectId,
   amount: number,
   tradeId: ObjectId,
-  now: Date
+  now: Date,
+  isVirtual = false
 ): Promise<void> {
+  const balanceField = isVirtual ? "virtualBalance" : "balance";
   await db.collection("users").updateOne(
     { _id: userObjectId },
-    { $inc: { balance: amount }, $set: { updatedAt: now } }
+    { $inc: { [balanceField]: amount }, $set: { updatedAt: now } }
   );
-  await db.collection("transactions").insertOne({
-    userID: userObjectId,
-    transactionType: "refund",
-    amount,
-    type: "+",
-    status: "success",
-    relatedTradeId: tradeId,
-    note: "Auto-refund: trade execution failed after wallet debit",
-    transactionDate: now,
-  });
+  // Only write audit trail for real-money refunds
+  if (!isVirtual) {
+    await db.collection("transactions").insertOne({
+      userID: userObjectId,
+      transactionType: "refund",
+      amount,
+      type: "+",
+      status: "success",
+      relatedTradeId: tradeId,
+      note: "Auto-refund: trade execution failed after wallet debit",
+      transactionDate: now,
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------
