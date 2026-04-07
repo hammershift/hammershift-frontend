@@ -324,40 +324,36 @@ export async function validateTrade(
   // -------------------------------------------------------------------------
   // CHECK 6: Rate limit — 10 trades per user per market per rolling hour
   //
-  // Count documents in trade_rate_limits where:
-  //   userId = userObjectId AND marketId = marketObjectId
-  //   AND tradedAt > (now - 1 hour)
-  //
-  // TTL index on tradedAt (expireAfterSeconds: 3600) auto-cleans old docs.
+  // Virtual trades skip — no financial risk from rapid free-play trades.
   // -------------------------------------------------------------------------
-  const oneHourAgo = new Date(now.getTime() - RATE_LIMIT_WINDOW_MS);
+  if (!ctx.isVirtual) {
+    const oneHourAgo = new Date(now.getTime() - RATE_LIMIT_WINDOW_MS);
 
-  const recentTradeCount = await db.collection("trade_rate_limits").countDocuments({
-    userId: userObjectId,
-    marketId: marketObjectId,
-    tradedAt: { $gt: oneHourAgo },
-  });
-
-  if (recentTradeCount >= RATE_LIMIT_MAX_TRADES) {
-    // Write flag before rejecting — this is the only check where we write a flag on failure
-    pendingFlags.push({
-      flagType: "RATE_LIMIT_HIT",
-      severity: "MEDIUM",
-      metadata: {
-        recentTradeCount,
-        windowMinutes: 60,
-        callerIp: ctx.callerIp ?? "unknown",
-        deviceFingerprint: ctx.deviceFingerprint ?? null,
-      },
+    const recentTradeCount = await db.collection("trade_rate_limits").countDocuments({
+      userId: userObjectId,
+      marketId: marketObjectId,
+      tradedAt: { $gt: oneHourAgo },
     });
 
-    // Fire-and-forget flag write — do not await, do not block rejection
-    writeFlags(db, userObjectId, marketObjectId, pendingFlags).catch(() => {});
+    if (recentTradeCount >= RATE_LIMIT_MAX_TRADES) {
+      pendingFlags.push({
+        flagType: "RATE_LIMIT_HIT",
+        severity: "MEDIUM",
+        metadata: {
+          recentTradeCount,
+          windowMinutes: 60,
+          callerIp: ctx.callerIp ?? "unknown",
+          deviceFingerprint: ctx.deviceFingerprint ?? null,
+        },
+      });
 
-    return {
-      valid: false,
-      reason: `You have placed ${RATE_LIMIT_MAX_TRADES} trades on this market in the last hour. Please wait before trading again.`,
-    };
+      writeFlags(db, userObjectId, marketObjectId, pendingFlags).catch(() => {});
+
+      return {
+        valid: false,
+        reason: `You have placed ${RATE_LIMIT_MAX_TRADES} trades on this market in the last hour. Please wait before trading again.`,
+      };
+    }
   }
 
   // Flag rapid trading (>5 trades in 1 hour) even if not yet at limit
@@ -384,7 +380,7 @@ export async function validateTrade(
   // -------------------------------------------------------------------------
   const minutesToClose = (tradingClosesAt.getTime() - now.getTime()) / 60_000;
 
-  if (usdcAmount >= SNIPE_THRESHOLD && minutesToClose <= SNIPE_WINDOW_MINUTES) {
+  if (!ctx.isVirtual && usdcAmount >= SNIPE_THRESHOLD && minutesToClose <= SNIPE_WINDOW_MINUTES) {
     pendingFlags.push({
       flagType: "LATE_SNIPE",
       severity: minutesToClose <= 10 ? "HIGH" : "MEDIUM",
