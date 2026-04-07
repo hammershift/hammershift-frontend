@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from '@/app/components/ui/sheet';
 import { useSession } from 'next-auth/react';
-import { useWallets } from '@privy-io/react-auth';
+import { useWallets, usePrivy } from '@privy-io/react-auth';
 import { useVelocityAuth } from '@/hooks/useVelocityAuth';
 import { usePolygonUSDCBalance } from '@/hooks/usePolygonUSDCBalance';
 import { createBiconomySmartAccount, MARKET_ABI, PaymasterMode } from '@/lib/biconomy';
@@ -92,6 +92,7 @@ export default function TradingDrawer({
 
   const { data: session } = useSession();
   const { wallets } = useWallets();
+  const { getAccessToken } = usePrivy();
   const { authenticated: privyAuthenticated, embeddedWalletAddress } = useVelocityAuth();
   const { balance: usdcBalance, refetch: refetchBalance } = usePolygonUSDCBalance(embeddedWalletAddress);
   const { balance: virtualBalance, refetch: refetchVirtual } = useVirtualBalance();
@@ -169,9 +170,15 @@ export default function TradingDrawer({
   // POST to the REST trade API (used for markets without contractAddress, and to
   // record trades in DB after on-chain execution)
   const postRestTrade = async (): Promise<TradeReceipt> => {
+    // Include Privy bearer token so the trade route can authenticate
+    // even if the NextAuth bridge session is missing or stale
+    const privyToken = await getAccessToken();
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (privyToken) headers['Authorization'] = `Bearer ${privyToken}`;
+
     const res = await fetch(`/api/polygon-markets/${market._id}/trade`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         outcome: side,
         usdcAmount: amountNum,
