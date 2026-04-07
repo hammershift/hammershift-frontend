@@ -50,8 +50,48 @@ import {
   detectOpposingSidesCollusion,
 } from "@/lib/washTradeDetector";
 import { getClientIp } from "@/lib/rateLimit";
+import { privyClient } from "@/lib/privy";
+import connectToDB from "@/lib/mongoose";
+import Users from "@/models/user.model";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * Resolve user ID from NextAuth session OR Privy bearer token fallback.
+ * The Privy→NextAuth bridge is sometimes flaky, so we accept both.
+ */
+async function resolveUserId(req: NextRequest): Promise<string | null> {
+  // Try NextAuth session first (fastest — cookie-based)
+  const session = await getAuthSession();
+  if (session?.user?._id) return session.user._id as string;
+
+  // Fallback: Privy bearer token in Authorization header
+  const authHeader = req.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ")) return null;
+
+  try {
+    const token = authHeader.slice(7);
+    const { userId: privyDid } = await privyClient.verifyAuthToken(token);
+    const privyUser = await privyClient.getUser(privyDid);
+    const rawEmail =
+      privyUser.email?.address ?? privyUser.google?.email ?? null;
+    if (!rawEmail) return null;
+    const email = rawEmail.toLowerCase();
+
+    await connectToDB();
+    const emailRegex = new RegExp(
+      `^${email.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+      "i"
+    );
+    const dbUser = await Users.findOne(
+      { email: { $regex: emailRegex } },
+      { _id: 1 }
+    );
+    return dbUser?._id?.toString() ?? null;
+  } catch {
+    return null;
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Input validation
@@ -110,13 +150,12 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ marketId: string }> }
 ) {
-  // ── 1. Auth ──────────────────────────────────────────────────────────────
-  const session = await getAuthSession();
-  if (!session?.user?._id) {
+  // ── 1. Auth (NextAuth session OR Privy bearer token fallback) ───────────
+  const userId = await resolveUserId(req);
+  if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const userId = session.user._id as string;
   let userObjectId: ObjectId;
   try {
     userObjectId = new ObjectId(userId);
