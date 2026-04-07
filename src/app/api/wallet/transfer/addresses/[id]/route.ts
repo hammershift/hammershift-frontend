@@ -12,17 +12,19 @@ export const dynamic = 'force-dynamic';
  */
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getAuthSession();
   if (!session?.user?._id) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
+  const { id } = await params;
+
   await connectToDB();
 
   const result = await VerifiedAddresses.deleteOne({
-    _id: params.id,
+    _id: id,
     userId: session.user._id,
   });
 
