@@ -348,6 +348,17 @@ const MyWalletPage = () => {
               </div>
             </div>
             <div>
+              <Link
+                href="/wallet/transfer"
+                className="inline-block m-1 rounded-md border-2 border-[#00D4AA] p-1"
+              >
+                <div className="flex p-1 items-center">
+                  <Image alt="arrow-down" src={ArrowDownIcon} />
+                  <p className="pl-2 text-[#00D4AA] text-sm font-bold">
+                    TRANSFER USDC
+                  </p>
+                </div>
+              </Link>
               <button className="m-1 rounded-md border-2 border-[#E94560] p-1">
                 <div className="flex p-1">
                   <Image alt="arrow-down" src={ArrowDownIcon} />{" "}
