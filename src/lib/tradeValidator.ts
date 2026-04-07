@@ -354,19 +354,19 @@ export async function validateTrade(
         reason: `You have placed ${RATE_LIMIT_MAX_TRADES} trades on this market in the last hour. Please wait before trading again.`,
       };
     }
-  }
 
-  // Flag rapid trading (>5 trades in 1 hour) even if not yet at limit
-  if (recentTradeCount >= 5) {
-    pendingFlags.push({
-      flagType: "RAPID_TRADING",
-      severity: "LOW",
-      metadata: {
-        recentTradeCount,
-        windowMinutes: 60,
-        callerIp: ctx.callerIp ?? "unknown",
-      },
-    });
+    // Flag rapid trading (>5 trades in 1 hour) even if not yet at limit
+    if (recentTradeCount >= 5) {
+      pendingFlags.push({
+        flagType: "RAPID_TRADING",
+        severity: "LOW",
+        metadata: {
+          recentTradeCount,
+          windowMinutes: 60,
+          callerIp: ctx.callerIp ?? "unknown",
+        },
+      });
+    }
   }
 
   // -------------------------------------------------------------------------

@@ -118,7 +118,7 @@ export default function TradingDrawer({
       setQuoteFetching(true);
       try {
         const res = await fetch(
-          `/api/polygon-markets/${marketId}/quote?outcome=${outcome}&usdcAmount=${usdcAmount}&maxSlippage=0.05`
+          `/api/polygon-markets/${marketId}/quote?outcome=${outcome}&usdcAmount=${usdcAmount}&maxSlippage=${isOnChainMarket ? 0.05 : 1}`
         );
         if (!res.ok) {
           setQuote(null);
@@ -175,7 +175,7 @@ export default function TradingDrawer({
       body: JSON.stringify({
         outcome: side,
         usdcAmount: amountNum,
-        maxSlippage: 0.05,
+        maxSlippage: isOnChainMarket ? 0.05 : 1,
         isVirtual: !isOnChainMarket,
       }),
     });
