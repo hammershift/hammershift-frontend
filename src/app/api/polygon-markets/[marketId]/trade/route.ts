@@ -142,7 +142,9 @@ export async function POST(
     return NextResponse.json({ message }, { status: 400 });
   }
 
-  const { outcome, usdcAmount, maxSlippage, isVirtual } = body;
+  const { outcome, usdcAmount, maxSlippage: rawSlippage, isVirtual } = body;
+  // Virtual (free play) trades: uncap slippage — blocking play-money trades over price impact is bad UX
+  const maxSlippage = isVirtual ? 1.0 : rawSlippage;
 
   const callerIp = getClientIp(req as unknown as Request);
   const deviceFingerprint = req.headers.get("x-device-fp") ?? null;
