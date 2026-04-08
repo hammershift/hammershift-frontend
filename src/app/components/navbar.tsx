@@ -210,53 +210,6 @@ const Navbar = () => {
                 SIGN UP
               </Button>
             </Link>
-            <button
-              aria-label={menuIsOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuIsOpen}
-              className="ml-2 flex min-h-[44px] min-w-[44px] items-center justify-center lg:hidden"
-              onClick={() => {
-                setMenuIsOpen((prev) => !prev);
-                setMyAccountMenuOpen(false);
-                if (!menuIsOpen) {
-                  document.body.classList.add("stop-scrolling");
-                } else {
-                  document.body.classList.remove("stop-scrolling");
-                }
-              }}
-            >
-              {menuIsOpen ? (
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              ) : (
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <line x1="3" y1="12" x2="21" y2="12" />
-                  <line x1="3" y1="18" x2="21" y2="18" />
-                </svg>
-              )}
-            </button>
           </div>
         )}
         {!loading && isLoggedIn && (
@@ -306,63 +259,62 @@ const Navbar = () => {
                 {dropMyAccount && <MyAccountDropdownMenu closeMenu={() => setDropMyAccount(false)} />}
               </div>
             </div>
-            <div className="flex items-center lg:hidden">
-              <button
-                aria-label={menuIsOpen ? "Close menu" : "Open menu"}
-                aria-expanded={menuIsOpen}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center"
-                onClick={() => {
-                  setMenuIsOpen((prev) => !prev);
-                  setMyAccountMenuOpen(false);
-                  if (!menuIsOpen) {
-                    document.body.classList.add("stop-scrolling");
-                  } else {
-                    document.body.classList.remove("stop-scrolling");
-                  }
-                }}
-              >
-                {menuIsOpen ? (
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <line x1="3" y1="12" x2="21" y2="12" />
-                    <line x1="3" y1="18" x2="21" y2="18" />
-                  </svg>
-                )}
-              </button>
-            </div>
           </div>
         )}
         {loading && (
-          <div className="flex items-center justify-end space-x-2">
+          <div className="hidden items-center justify-end space-x-2 lg:flex">
             <div className="h-10 w-20 animate-pulse rounded bg-white/10" />
             <div className="h-10 w-20 animate-pulse rounded bg-white/10" />
           </div>
         )}
+        {/* Mobile hamburger — always rendered, independent of auth/loading state */}
+        <button
+          aria-label={menuIsOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuIsOpen}
+          className="ml-2 flex min-h-[44px] min-w-[44px] items-center justify-center lg:hidden"
+          onClick={() => {
+            setMenuIsOpen((prev) => !prev);
+            setMyAccountMenuOpen(false);
+            if (!menuIsOpen) {
+              document.body.classList.add("stop-scrolling");
+            } else {
+              document.body.classList.remove("stop-scrolling");
+            }
+          }}
+        >
+          {menuIsOpen ? (
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          ) : (
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          )}
+        </button>
       </div>
       {myAccountMenuOpen && (
         <MyAccountMenu

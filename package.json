@@ -9,7 +9,10 @@
     "lint": "next lint",
     "db:indexes": "ts-node --project tsconfig.json scripts/create-market-indexes.ts",
     "db:backfill-markets": "ts-node --project tsconfig.json scripts/backfill-legacy-markets.ts",
-    "db:backfill-contract": "npx ts-node --project tsconfig.json scripts/backfill-contract-address.ts"
+    "db:backfill-contract": "npx ts-node --project tsconfig.json scripts/backfill-contract-address.ts",
+    "test:e2e": "npx playwright test --project=desktop-chrome",
+    "test:e2e:mobile": "npx playwright test --project=mobile-chrome",
+    "test:e2e:all": "npx playwright test"
   },
   "dependencies": {
     "@biconomy/account": "^4.5.7",
@@ -82,6 +85,7 @@
     "ws": "^8.16.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/bcrypt": "^5.0.2",
     "@types/otp-generator": "^4.0.2",
     "typescript": "^5.7.3",

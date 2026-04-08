@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,6 +24,42 @@ import {
   Filter,
 } from "lucide-react";
 
+/* ── Error boundary so a runtime crash shows a fallback, not a white screen ── */
+class GuessTheHammerErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-[50vh] flex flex-col items-center justify-center text-center px-4">
+          <Gavel className="w-12 h-12 text-gray-600 mb-4" />
+          <h2 className="text-xl font-bold text-white mb-2">
+            Something went wrong
+          </h2>
+          <p className="text-gray-400 mb-6">
+            We hit an error loading Guess the Hammer. Please try refreshing.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2.5 bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold rounded-lg transition"
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 type AuctionStatus = "open" | "ending_soon" | "ended";
 
 interface AuctionCard {
@@ -31,7 +67,7 @@ interface AuctionCard {
   auctionId: string;
   title: string;
   image: string | null;
-  deadline: string;
+  deadline: string | null;
   currentBid: number;
   bids: number;
   guessCount: number;
@@ -62,7 +98,8 @@ interface Props {
 
 const ENTRY_FEE = 5;
 
-function formatCurrency(n: number) {
+function formatCurrency(n: number | null | undefined) {
+  if (n == null || isNaN(n)) return "$0";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -70,13 +107,17 @@ function formatCurrency(n: number) {
   }).format(n);
 }
 
-function CountdownTimer({ deadline }: { deadline: string }) {
+function CountdownTimer({ deadline }: { deadline: string | null }) {
   const [timeLeft, setTimeLeft] = useState("");
 
   useEffect(() => {
+    if (!deadline) {
+      setTimeLeft("Ended");
+      return;
+    }
     function update() {
-      const diff = new Date(deadline).getTime() - Date.now();
-      if (diff <= 0) {
+      const diff = new Date(deadline!).getTime() - Date.now();
+      if (diff <= 0 || isNaN(diff)) {
         setTimeLeft("Ended");
         return;
       }
@@ -97,7 +138,7 @@ function CountdownTimer({ deadline }: { deadline: string }) {
 
 /* ── Status badge for each auction card ─────────────────────────────── */
 
-function StatusBadge({ status, deadline }: { status: AuctionStatus; deadline: string }) {
+function StatusBadge({ status, deadline }: { status: AuctionStatus; deadline: string | null }) {
   if (status === "open") {
     return (
       <div className="bg-[#00D4AA]/20 backdrop-blur-sm rounded-lg px-3 py-1.5 flex items-center gap-1.5">
@@ -194,7 +235,7 @@ function AuctionCardItem({
           <div className="bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-lg p-3 text-center">
             <p className="text-xs text-[#00D4AA]">Your guess</p>
             <p className="font-mono font-bold text-white">
-              {formatCurrency(guessedPrice!)}
+              {formatCurrency(guessedPrice)}
             </p>
           </div>
         ) : isOpen ? (
@@ -249,7 +290,15 @@ function SectionHeader({
 
 /* ── Main component ─────────────────────────────────────────────────── */
 
-export default function GuessTheHammerClient({
+export default function GuessTheHammerClient(props: Props) {
+  return (
+    <GuessTheHammerErrorBoundary>
+      <GuessTheHammerInner {...props} />
+    </GuessTheHammerErrorBoundary>
+  );
+}
+
+function GuessTheHammerInner({
   auctions,
   counts,
   recentResults,
@@ -739,9 +788,11 @@ export default function GuessTheHammerClient({
                     {formatCurrency(selectedAuction.currentBid)}
                   </span>
                 </span>
-                <span>
-                  <CountdownTimer deadline={selectedAuction.deadline} /> left
-                </span>
+                {selectedAuction.deadline && (
+                  <span>
+                    <CountdownTimer deadline={selectedAuction.deadline} /> left
+                  </span>
+                )}
               </div>
 
               <label className="block text-xs text-gray-400 mb-2">
