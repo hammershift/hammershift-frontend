@@ -4,6 +4,8 @@ import Accounts from '@/models/account.model';
 import Users from '@/models/user.model';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = "force-dynamic";
+
 //check email if exists
 export async function POST(req: NextRequest) {
   const { email } = await req.json();

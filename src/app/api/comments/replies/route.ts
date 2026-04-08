@@ -7,6 +7,8 @@ import connectToDB from "@/lib/mongoose";
 import Comments from "@/models/comment.model";
 import { getAuthSession } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 // create reply for auction URL: /api/comments/replies
 export async function POST(req: NextRequest) {
   const session = await getAuthSession();

@@ -3,6 +3,9 @@ import { Predictions } from "@/models/predictions.model";
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth";
 import { Types } from "mongoose";
+
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     await connectToDB();

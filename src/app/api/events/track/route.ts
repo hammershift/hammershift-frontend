@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import UserEvent from '@/models/userEvent.model';
 import connectToDB from '@/lib/mongoose';
 
+export const dynamic = "force-dynamic";
+
 // In-memory rate limiting map
 // Structure: Map<userId, { count: number, resetAt: number }>
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();

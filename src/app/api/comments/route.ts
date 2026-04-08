@@ -8,6 +8,8 @@ import Comments from "@/models/comment.model";
 import { Types } from "mongoose";
 import { getAuthSession } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 // create comment for auction URL: /api/comments
 export async function POST(req: NextRequest) {
   const { comment, pageID, pageType, commentID } = await req.json();
