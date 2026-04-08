@@ -5,6 +5,8 @@ import bcryptjs from "bcryptjs";
 import { NextRequest, NextResponse } from 'next/server';
 import { sendWelcomeEmail } from "@/lib/mail";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   const data = await req.json();
   const { email, username, fullName, provider, password } = data;

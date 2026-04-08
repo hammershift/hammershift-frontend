@@ -6,6 +6,8 @@ import Users from '@/models/user.model';
 import Transaction from '@/models/transaction';
 import { Types } from 'mongoose';
 
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/stripe/onramp-complete
  *

@@ -4,6 +4,9 @@ import { ObjectId } from "mongodb";
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
 import { getAuthSession } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   const session = await getAuthSession();
   if (!session) {

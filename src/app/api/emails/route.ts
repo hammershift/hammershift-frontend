@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDB from '@/lib/mongoose';
 import EmailModel from '@/models/email.model';
 
+export const dynamic = "force-dynamic";
+
 // export async function POST(req: NextRequest) {
 //   try {
 //     await connectToDB();

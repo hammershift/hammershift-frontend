@@ -5,6 +5,8 @@ import connectDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
 import { hash, compare } from "bcryptjs";
 
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/profile/change-password
  * Changes user password (requires old password verification)

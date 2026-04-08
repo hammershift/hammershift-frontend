@@ -7,6 +7,8 @@ import LeaderboardSnapshot from "@/models/leaderboardSnapshot.model";
 import Badge from "@/models/badge.model";
 import type { PipelineStage, Types } from "mongoose";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/leaderboard
  *

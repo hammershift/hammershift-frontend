@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import connectDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
 
+export const dynamic = "force-dynamic";
+
 /**
  * PATCH /api/profile/email-preferences
  * Updates user email preferences
