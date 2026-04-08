@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
-    return NextResponse.json([]);
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   await connectToDB();
