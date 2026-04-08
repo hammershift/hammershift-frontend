@@ -5,6 +5,7 @@ import Wager from "@/models/wager";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  try {
   await connectToDB();
 
   const leaderboard = await Wager.aggregate([
@@ -67,4 +68,11 @@ export async function GET() {
       ...entry,
     })),
   });
+  } catch (error) {
+    console.error("Error fetching free-play leaderboard:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch free-play leaderboard" },
+      { status: 500 }
+    );
+  }
 }
