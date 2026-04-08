@@ -66,7 +66,11 @@ async function getPageData() {
 
   // Sort: open by highest bid first (most exciting), endingSoon by soonest ending
   open.sort((a: any, b: any) => (b.sort?.price ?? 0) - (a.sort?.price ?? 0));
-  endingSoon.sort((a: any, b: any) => new Date(a.sort?.deadline).getTime() - new Date(b.sort?.deadline).getTime());
+  endingSoon.sort((a: any, b: any) => {
+    const aTime = a.sort?.deadline ? new Date(a.sort.deadline).getTime() : 0;
+    const bTime = b.sort?.deadline ? new Date(b.sort.deadline).getTime() : 0;
+    return aTime - bTime;
+  });
 
   const orderedAuctions = [...open, ...endingSoon, ...ended];
 
