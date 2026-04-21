@@ -215,11 +215,20 @@ export default function TournamentsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
-      <div className="mb-8">
-        <h1 className="mb-2 text-4xl font-bold">Tournaments</h1>
-        <p className="text-xl text-gray-400">
-          Compete against others for real prizes
-        </p>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="mb-2 text-4xl font-bold">Tournaments</h1>
+          <p className="text-xl text-gray-400">
+            Compete against others for real prizes
+          </p>
+        </div>
+        <Link
+          href="/tournaments/archive"
+          className="inline-flex items-center gap-2 rounded-lg border border-[#FFB547]/30 bg-[#FFB547]/5 px-4 py-2 text-sm font-semibold text-[#FFB547] transition-colors hover:border-[#FFB547]/60 hover:bg-[#FFB547]/10"
+        >
+          <Trophy className="h-4 w-4" />
+          View Archive
+        </Link>
       </div>
 
       {/* Stats Bar */}
