@@ -33,6 +33,8 @@ interface HomepageData {
   featuredTournament: {
     _id: string;
     name: string;
+    description?: string;
+    type?: string;
     startTime: string;
     endTime: string;
     calculatedPrizePool: number;
@@ -95,7 +97,7 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     activeTournaments,
     weeklyTournaments,
     totalPlayers,
-    featuredTournament,
+    featuredTournamentCandidates,
     trendingAuctions,
     recentWinnerTournaments,
     userRankResult,
@@ -119,12 +121,18 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
     // Total players (fast estimate)
     Users.estimatedDocumentCount(),
 
-    // Featured tournament: next upcoming or current active
-    Tournaments.findOne({
+    // Featured tournament: rank-then-pick. We fetch the pool of active
+    // tournaments that haven't ended and score them in JS so a brand-new
+    // empty free_play tournament (which naturally has buyInFee=0 and
+    // users.length=0) doesn't trump a live paid tournament with real
+    // participants. Scoring below favors live > upcoming, and engagement
+    // over empty.
+    Tournaments.find({
       isActive: true,
       endTime: { $gt: now },
     })
       .sort({ startTime: 1 })
+      .limit(20)
       .lean(),
 
     // Trending auctions: qualifying makes, still live (scraper offsets deadline by -1 day)
@@ -206,6 +214,26 @@ async function getHomepageData(userId: string | null): Promise<HomepageData> {
       { $group: { _id: null, total: { $sum: '$totalVolume' } } },
     ]).toArray(),
   ]);
+
+  // Rank featured tournament candidates:
+  //   live + engaged   → 2000+ (beats everything)
+  //   live + empty     → 1000
+  //   upcoming+engaged →  500 + users
+  //   upcoming+empty   →  100
+  // Ties broken by startTime asc (sooner is better).
+  const featuredTournament = (featuredTournamentCandidates as any[])
+    .map((t) => {
+      const start = new Date(t.startTime).getTime();
+      const end = new Date(t.endTime).getTime();
+      const isLive = start <= now.getTime() && end > now.getTime();
+      const userCount = t.users?.length || 0;
+      const hasPool = (t.calculatedPrizePool || 0) > 0 || t.buyInFee > 0;
+      let score = isLive ? 1000 : 100;
+      if (userCount > 0) score += 1000 + Math.min(userCount, 50) * 10;
+      if (hasPool) score += 200;
+      return { t, score, start };
+    })
+    .sort((a, b) => b.score - a.score || a.start - b.start)[0]?.t ?? null;
 
   // Calculate weekly prize pool
   const weeklyPrizePool = weeklyTournaments.reduce((sum, t) => {
@@ -486,86 +514,165 @@ export default async function HomePage() {
 
       {/* ───────── Featured Tournament ───────── */}
       {data.featuredTournament ? (
-        <section className="bg-[#111111] py-16">
-          <div className="container mx-auto px-4">
-            <div className="mb-8 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
-              <div>
-                <h2 className="text-3xl font-bold text-white">
-                  {data.featuredTournament.name}
-                </h2>
-                <p className="mt-1 text-gray-400">
-                  {new Date(data.featuredTournament.startTime).toLocaleDateString(
-                    "en-US",
-                    { month: "short", day: "numeric" }
-                  )}{" "}
-                  &ndash;{" "}
-                  {new Date(data.featuredTournament.endTime).toLocaleDateString(
-                    "en-US",
-                    { month: "short", day: "numeric", year: "numeric" }
-                  )}
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-3 sm:items-end">
-                <div className="font-mono text-4xl font-bold text-[#FFC553]">
-                  {formatCurrency(
-                    data.featuredTournament.calculatedPrizePool ||
-                      data.featuredTournament.buyInFee *
-                        (data.featuredTournament.users?.length || 0)
+        (() => {
+          const ft = data.featuredTournament;
+          const nowMs = Date.now();
+          const startMs = new Date(ft.startTime).getTime();
+          const endMs = new Date(ft.endTime).getTime();
+          const isLive = startMs <= nowMs && endMs > nowMs;
+          const isUpcoming = startMs > nowMs;
+          const userCount = ft.users?.length || 0;
+          const carCount = ft.auction_ids?.length || 0;
+          const isFreePlay = (ft.buyInFee || 0) === 0;
+          const prizePool =
+            ft.calculatedPrizePool ||
+            (ft.buyInFee || 0) * userCount;
+          return (
+            <section className="relative overflow-hidden bg-gradient-to-b from-[#0F0F1A] via-[#111111] to-[#0F0F1A] py-20">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(1,105,111,0.12),_transparent_55%)]" />
+              <div className="container relative mx-auto px-4">
+                {/* Eyebrow */}
+                <div className="mb-4 flex items-center justify-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[#01696F]/40 bg-[#01696F]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#00D4AA]">
+                    <Trophy className="h-3 w-3" />
+                    Featured Tournament
+                  </span>
+                  {isLive && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E94560]/40 bg-[#E94560]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#E94560]">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#E94560]" />
+                      Live Now
+                    </span>
                   )}
                 </div>
-                <p className="text-xs uppercase tracking-wide text-gray-500">
-                  Prize Pool
-                </p>
-                {new Date(data.featuredTournament.startTime) > new Date() && (
-                  <CountdownTimer
-                    endTime={new Date(data.featuredTournament.startTime)}
-                    size="sm"
-                  />
-                )}
-              </div>
-            </div>
 
-            {/* Featured auction cards */}
-            {data.featuredAuctions.length > 0 && (
-              <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-                {data.featuredAuctions.map((auction) => (
-                  <div
-                    key={auction._id}
-                    className="overflow-hidden rounded-xl border border-white/[0.08] bg-[#16181f]"
-                  >
-                    {auction.image && (
-                      <div
-                        className="h-28 bg-cover bg-center"
-                        style={{
-                          backgroundImage: `url(${auction.image})`,
-                        }}
-                      />
-                    )}
-                    <div className="p-3">
-                      <p className="line-clamp-2 text-xs font-medium text-white">
-                        {auction.title}
-                      </p>
-                      {auction.sort?.price != null && (
-                        <p className="mt-1 font-mono text-xs text-gray-400">
-                          ${auction.sort.price.toLocaleString()}
+                {/* Hero header */}
+                <div className="mb-10 text-center">
+                  <h2 className="mx-auto max-w-3xl text-4xl font-bold leading-tight text-white sm:text-5xl">
+                    {ft.name}
+                  </h2>
+                  {ft.description && (
+                    <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-400 sm:text-base">
+                      {ft.description}
+                    </p>
+                  )}
+                </div>
+
+                {/* Stat row */}
+                <div className="mx-auto mb-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+                  {/* Prize / FREE PLAY */}
+                  <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4 text-center sm:col-span-1">
+                    {isFreePlay ? (
+                      <>
+                        <div className="font-mono text-2xl font-bold text-[#00D4AA] sm:text-3xl">
+                          FREE
+                        </div>
+                        <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-500">
+                          Play · No Buy-In
                         </p>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="font-mono text-2xl font-bold text-[#FFC553] sm:text-3xl">
+                          {prizePool > 0 ? formatCurrency(prizePool) : `$${ft.buyInFee}`}
+                        </div>
+                        <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-500">
+                          {prizePool > 0 ? "Prize Pool" : "Buy-In"}
+                        </p>
+                      </>
+                    )}
                   </div>
-                ))}
-              </div>
-            )}
+                  {/* Cars */}
+                  <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4 text-center">
+                    <div className="font-mono text-2xl font-bold text-white sm:text-3xl">
+                      {carCount}
+                    </div>
+                    <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-500">
+                      {carCount === 1 ? "Car" : "Cars"}
+                    </p>
+                  </div>
+                  {/* Players */}
+                  <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4 text-center">
+                    <div className="font-mono text-2xl font-bold text-white sm:text-3xl">
+                      {userCount}
+                    </div>
+                    <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-500">
+                      {userCount === 1 ? "Player" : "Players"}
+                    </p>
+                  </div>
+                  {/* Timer */}
+                  <div className="rounded-xl border border-white/[0.08] bg-[#16181f] p-4 text-center">
+                    <div className="flex h-[36px] items-center justify-center">
+                      <CountdownTimer
+                        endTime={new Date(isUpcoming ? ft.startTime : ft.endTime)}
+                        size="sm"
+                      />
+                    </div>
+                    <p className="mt-1 text-[10px] uppercase tracking-wider text-gray-500">
+                      {isUpcoming ? "Starts In" : "Ends In"}
+                    </p>
+                  </div>
+                </div>
 
-            <div className="text-center">
-              <Link href={`/tournaments/${data.featuredTournament._id}`}>
-                <Button asChild className="bg-[#01696F] px-8 py-3 text-white hover:bg-[#0C4E54]">
-                  <Trophy className="mr-2 h-5 w-5" />
-                  Enter Tournament
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+                {/* Featured auction cards */}
+                {data.featuredAuctions.length > 0 && (
+                  <div className="mb-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+                    {data.featuredAuctions.map((auction) => (
+                      <Link
+                        key={auction._id}
+                        href={`/auctions/car_view_page/${auction._id}`}
+                        className="group overflow-hidden rounded-xl border border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#01696F]/40"
+                      >
+                        {auction.image && (
+                          <div
+                            className="h-28 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                            style={{
+                              backgroundImage: `url(${auction.image})`,
+                            }}
+                          />
+                        )}
+                        <div className="p-3">
+                          <p className="line-clamp-2 text-xs font-medium text-white">
+                            {auction.title}
+                          </p>
+                          {auction.sort?.price != null && (
+                            <p className="mt-1 font-mono text-xs text-gray-400">
+                              ${auction.sort.price.toLocaleString()}
+                            </p>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+
+                {/* CTA */}
+                <div className="text-center">
+                  <Link href={`/tournaments/${ft._id}`}>
+                    <Button
+                      asChild
+                      className="bg-[#E94560] px-8 py-3 text-base font-semibold text-white shadow-lg shadow-[#E94560]/20 hover:bg-[#E94560]/90"
+                    >
+                      <Trophy className="mr-2 h-5 w-5" />
+                      {isFreePlay ? "Play Free" : isUpcoming ? "Register Now" : "Enter Tournament"}
+                    </Button>
+                  </Link>
+                  <p className="mt-3 text-xs text-gray-500">
+                    {new Date(ft.startTime).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                    {" — "}
+                    {new Date(ft.endTime).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+              </div>
+            </section>
+          );
+        })()
       ) : (
         <section className="bg-[#111111] py-16">
           <div className="container mx-auto px-4 text-center">
@@ -604,7 +711,7 @@ export default async function HomePage() {
               {data.trendingAuctions.slice(0, 8).map((auction) => (
                 <Link
                   key={auction._id}
-                  href={`/auctions/${auction._id}`}
+                  href={`/auctions/car_view_page/${auction._id}`}
                   className="group overflow-hidden rounded-xl border border-white/[0.08] bg-[#16181f] transition-colors hover:border-[#01696F]/30"
                 >
                   {auction.image && (

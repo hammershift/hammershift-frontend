@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -466,6 +466,23 @@ export default function TournamentDetailPage() {
 
   const tournamentEnded = isTournamentEnded();
 
+  // Scraper offsets sort.deadline by -24h from the real BaT end. We
+  // compensate here so "Live vs Ended" reflects the true auction state, not
+  // the stale scraper timestamp. This keeps expired cars out of the Live
+  // column even when the tournament endTime is further out.
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const auctionRealEnd = (a: Auction): number => {
+    const raw = a.sort?.deadline;
+    if (!raw) return 0;
+    return new Date(raw).getTime() + DAY_MS;
+  };
+  const liveAuctions = auctions
+    .filter((a) => auctionRealEnd(a) > Date.now())
+    .sort((a, b) => auctionRealEnd(a) - auctionRealEnd(b));
+  const endedAuctions = auctions
+    .filter((a) => auctionRealEnd(a) <= Date.now())
+    .sort((a, b) => auctionRealEnd(b) - auctionRealEnd(a));
+
   return (
     <div className="container mx-auto px-4 py-12">
       <Button variant="ghost" className="mb-8" onClick={() => router.back()}>
@@ -652,56 +669,137 @@ export default function TournamentDetailPage() {
       <div className="grid gap-8 md:grid-cols-12">
         {/* Left Column: Auctions */}
         <div className="md:col-span-7">
-          <h2 className="mb-6 text-2xl font-bold">
-            TOURNAMENT CARS ({auctions.length})
-          </h2>
-          <div className="space-y-6">
-            {auctions.map((auction, index) => (
-              <Card
-                key={auction._id}
-                className="overflow-hidden border-white/[0.08] bg-[#16181f]"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-5">
-                  <div className="relative h-48 sm:col-span-2 sm:h-auto">
-                    <Image
-                      src={auction.image}
-                      alt={auction.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-4 sm:col-span-3">
-                    <h3 className="mb-2 font-bold">{auction.title}</h3>
-                    <div className="mb-4 grid grid-cols-2 gap-2">
-                      <div>
-                        <div className="text-xs text-gray-400">Current Bid</div>
-                        <div className="font-['JetBrains_Mono'] font-bold text-[#00D4AA]">
-                          ${(auction.sort?.price ?? auction.attributes?.[0]?.value ?? 0).toLocaleString()}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-400">Ends</div>
-                        <div className="text-sm">
-                          {auction.sort?.deadline
-                            ? formatDistanceToNow(new Date(auction.sort.deadline), {
-                                addSuffix: true
-                              })
-                            : "N/A"}
-                        </div>
-                      </div>
+          <div className="mb-6 flex items-baseline justify-between">
+            <h2 className="text-2xl font-bold">TOURNAMENT CARS</h2>
+            <p className="text-sm text-gray-400">
+              {liveAuctions.length} live · {endedAuctions.length} ended
+            </p>
+          </div>
+
+          {auctions.length === 0 ? (
+            <Card className="border-white/[0.08] bg-[#16181f] p-8 text-center">
+              <Trophy className="mx-auto mb-3 h-10 w-10 text-gray-600" />
+              <h3 className="mb-2 text-lg font-bold text-white">
+                {tournamentEnded ? "Tournament results below" : "Cars loading soon"}
+              </h3>
+              <p className="text-sm text-gray-400">
+                {tournamentEnded
+                  ? "All cars in this tournament have concluded. Check the leaderboard to see how predictions landed."
+                  : "Auction data is still syncing. Check back in a few minutes."}
+              </p>
+            </Card>
+          ) : (
+            <>
+              {/* Live auctions — primary focus, sorted by urgency */}
+              {liveAuctions.length > 0 && (
+                <div className="mb-10">
+                  {liveAuctions.length !== auctions.length && (
+                    <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#00D4AA]">
+                      <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#00D4AA]" />
+                      Live · accepting predictions
                     </div>
-                    <Link
-                      href={`/auction_details?id=${auction._id}`}
-                      className="flex items-center text-[#E94560] hover:underline"
-                    >
-                      View Details
-                      <ChevronRight className="ml-1 h-4 w-4" />
-                    </Link>
+                  )}
+                  <div className="space-y-6">
+                    {liveAuctions.map((auction) => (
+                      <Card
+                        key={auction._id}
+                        className="overflow-hidden border-white/[0.08] bg-[#16181f]"
+                      >
+                        <div className="grid grid-cols-1 sm:grid-cols-5">
+                          <div className="relative h-48 sm:col-span-2 sm:h-auto">
+                            <Image
+                              src={auction.image}
+                              alt={auction.title}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="p-4 sm:col-span-3">
+                            <h3 className="mb-2 font-bold">{auction.title}</h3>
+                            <div className="mb-4 grid grid-cols-2 gap-2">
+                              <div>
+                                <div className="text-xs text-gray-400">Current Bid</div>
+                                <div className="font-['JetBrains_Mono'] font-bold text-[#00D4AA]">
+                                  ${(auction.sort?.price ?? auction.attributes?.[0]?.value ?? 0).toLocaleString()}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-xs text-gray-400">Ends</div>
+                                <div className="text-sm">
+                                  {formatDistanceToNow(new Date(auctionRealEnd(auction)), {
+                                    addSuffix: true,
+                                  })}
+                                </div>
+                              </div>
+                            </div>
+                            <Link
+                              href={`/auctions/car_view_page/${auction._id}`}
+                              className="flex items-center text-[#E94560] hover:underline"
+                            >
+                              View Details
+                              <ChevronRight className="ml-1 h-4 w-4" />
+                            </Link>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
                 </div>
-              </Card>
-            ))}
-          </div>
+              )}
+
+              {/* Ended auctions — dimmed, collapsed visual */}
+              {endedAuctions.length > 0 && (
+                <div>
+                  <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <span className="h-1.5 w-1.5 rounded-full bg-gray-500" />
+                    Ended · results final
+                  </div>
+                  <div className="space-y-3">
+                    {endedAuctions.map((auction) => (
+                      <Card
+                        key={auction._id}
+                        className="overflow-hidden border-white/[0.04] bg-[#16181f]/60 opacity-70 transition-opacity hover:opacity-100"
+                      >
+                        <div className="grid grid-cols-[80px_1fr_auto] items-center gap-3 p-3">
+                          <div className="relative h-16 w-20 overflow-hidden rounded">
+                            <Image
+                              src={auction.image}
+                              alt={auction.title}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="truncate text-sm font-semibold text-white">
+                              {auction.title}
+                            </h3>
+                            <div className="mt-1 flex items-center gap-3 text-xs text-gray-400">
+                              <span className="font-['JetBrains_Mono'] text-[#00D4AA]">
+                                ${(auction.sort?.price ?? 0).toLocaleString()}
+                              </span>
+                              <span>
+                                Ended{" "}
+                                {formatDistanceToNow(new Date(auctionRealEnd(auction)), {
+                                  addSuffix: true,
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                          <Link
+                            href={`/auctions/car_view_page/${auction._id}`}
+                            className="text-xs text-gray-400 hover:text-[#E94560]"
+                          >
+                            View
+                            <ChevronRight className="ml-0.5 inline h-3 w-3" />
+                          </Link>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* Right Column: Predictions & Leaderboard */}

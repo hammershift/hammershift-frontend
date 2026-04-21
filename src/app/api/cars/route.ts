@@ -21,23 +21,20 @@ export async function GET(req: NextRequest) {
 
     if (auction_ids) {
       const auction_ids_split = auction_ids.split(",");
-      // Try by _id first, then fall back to auction_id field
-      let auctions = await Auctions.find({
+      const objectIdMatches = await Auctions.find({
         _id: { $in: auction_ids_split.filter((id: string) => mongoose.isValidObjectId(id)) },
       });
-      if (auctions.length === 0) {
-        auctions = await Auctions.find({
-          auction_id: { $in: auction_ids_split },
-        });
+      const auctionIdMatches = await Auctions.find({
+        auction_id: { $in: auction_ids_split },
+      });
+      const byId = new Map<string, any>();
+      for (const a of [...objectIdMatches, ...auctionIdMatches]) {
+        byId.set(String(a._id), a);
       }
-
-      if (auctions.length === 0) {
-        return NextResponse.json(
-          { message: "No auctions found" },
-          { status: 404 }
-        );
-      }
-      return NextResponse.json(auctions);
+      // Return [] with 200 when nothing is found — stale tournament auction_ids
+      // are expected; callers render an empty-state instead of treating 404 as
+      // a fetch failure.
+      return NextResponse.json(Array.from(byId.values()));
     }
     // api/cars?auction_id=213123 to get a single car
     if (auction_id) {
