@@ -431,7 +431,7 @@ export default function TradingDrawer({
                   {isOnChainMarket ? `-$${quote.fee.toFixed(2)}` : `-${quote.fee.toFixed(0)} VP`}
                 </span>
               </div>
-              {quote.slippagePct > 0.01 && (
+              {isOnChainMarket && quote.slippagePct > 0.01 && (
                 <div className="flex justify-between text-gray-400">
                   <span>Slippage</span>
                   <span
