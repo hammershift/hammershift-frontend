@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import mongoose from "mongoose";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import Auctions from "@/models/auction.model";
@@ -29,46 +30,27 @@ const USDollar = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const BACKEND_API =
-  process.env.BACKEND_API_URL ?? "https://main.d3bje0ak6q49bm.amplifyapp.com";
-
 // Server-side data fetching
 async function getAuctionData(auctionId: string, userId?: string) {
   try {
-    // 1. Try the direct car lookup endpoint on the backend
+    // Direct DB lookup — supports BOTH MongoDB _id (e.g. from tournament
+    // auction_ids, trending cards, featured lists) AND BaT numeric
+    // auction_id (e.g. from external Twitter links). Previously this page
+    // proxied through an external backend that only knew numeric IDs, so
+    // any caller passing an _id got "Auction Not Found".
+    await connectToDB();
+
     let auction: any = null;
-
-    const directRes = await fetch(
-      `${BACKEND_API}/api/cars?auction_id=${auctionId}`,
-      { cache: "no-store", headers: { Accept: "application/json" } }
-    );
-
-    if (directRes.ok) {
-      const directData = await directRes.json();
-      if (directData && directData._id) {
-        auction = directData;
-      }
+    if (mongoose.isValidObjectId(auctionId)) {
+      auction = await Auctions.findOne({ _id: auctionId }).lean().exec();
     }
-
-    // 2. Fallback: search the filter endpoint (known working)
     if (!auction) {
-      const filterRes = await fetch(
-        `${BACKEND_API}/api/auctions/filter?publicOnly=true&limit=100`,
-        { cache: "no-store", headers: { Accept: "application/json" } }
-      );
-      if (filterRes.ok) {
-        const filterData = await filterRes.json();
-        auction = (filterData.cars ?? []).find(
-          (c: any) => String(c._id) === auctionId
-        ) ?? null;
-      }
+      auction = await Auctions.findOne({ auction_id: auctionId }).lean().exec();
     }
 
     if (!auction || !auction._id) {
       return null;
     }
-
-    await connectToDB();
 
     // User's prediction (if logged in)
     const userPrediction = userId
