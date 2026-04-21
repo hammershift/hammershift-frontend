@@ -183,8 +183,10 @@ export async function POST(
   }
 
   const { outcome, usdcAmount, maxSlippage: rawSlippage, isVirtual } = body;
-  // Virtual (free play) trades: uncap slippage — blocking play-money trades over price impact is bad UX
-  const maxSlippage = isVirtual ? 1.0 : rawSlippage;
+  // Virtual (free play) trades: truly uncap slippage — 1.0 is still a cap,
+  // and thin AMM pools can easily produce >100% slippage. Use +Infinity so
+  // the AMM check `slippagePct > maxSlippage` never fires for play money.
+  const maxSlippage = isVirtual ? Number.POSITIVE_INFINITY : rawSlippage;
 
   const callerIp = getClientIp(req as unknown as Request);
   const deviceFingerprint = req.headers.get("x-device-fp") ?? null;

@@ -119,7 +119,7 @@ export default function TradingDrawer({
       setQuoteFetching(true);
       try {
         const res = await fetch(
-          `/api/polygon-markets/${marketId}/quote?outcome=${outcome}&usdcAmount=${usdcAmount}&maxSlippage=${isOnChainMarket ? 0.05 : 1}`
+          `/api/polygon-markets/${marketId}/quote?outcome=${outcome}&usdcAmount=${usdcAmount}&maxSlippage=${isOnChainMarket ? 0.05 : 1}&isVirtual=${!isOnChainMarket}`
         );
         if (!res.ok) {
           setQuote(null);
@@ -452,7 +452,9 @@ export default function TradingDrawer({
               <div className="flex justify-between text-slate-400">
                 <span>Price per share</span>
                 <span className="font-mono" style={{ color }}>
-                  {Math.round(price * 100)} {isOnChainMarket ? '¢' : 'VP'}
+                  {isOnChainMarket
+                    ? `${Math.round(price * 100)} ¢`
+                    : `${price.toFixed(2)} VP`}
                 </span>
               </div>
               <div className="flex justify-between text-slate-400">
