@@ -195,16 +195,25 @@ export default function TournamentDetailPage() {
 
         setAuctions(validAuctions);
 
-        // Initialize prediction inputs
-        const now = new Date();
+        // Initialize prediction inputs. Scraper writes sort.deadline 24h
+        // early, so real end = deadline + 24h. Predictions close 5 minutes
+        // before that real end. These constants MUST match the ones used in
+        // the render block or the two panels will disagree.
+        const DAY_MS = 24 * 60 * 60 * 1000;
+        const PREDICTION_BUFFER_MS = 5 * 60 * 1000;
+        const now = Date.now();
         setPredictions(
-          validAuctions.map((auction: Auction) => ({
-            auction_id: auction._id,
-            title: auction.title,
-            value: "",
-            hasEnded: auction.sort?.deadline ? new Date(auction.sort.deadline) < now : false,
-            hasError: false
-          }))
+          validAuctions.map((auction: Auction) => {
+            const raw = auction.sort?.deadline;
+            const closeAt = raw ? new Date(raw).getTime() + DAY_MS - PREDICTION_BUFFER_MS : 0;
+            return {
+              auction_id: auction._id,
+              title: auction.title,
+              value: "",
+              hasEnded: closeAt > 0 ? closeAt <= now : false,
+              hasError: false,
+            };
+          })
         );
 
         // Check if user already has predictions
@@ -467,20 +476,25 @@ export default function TournamentDetailPage() {
   const tournamentEnded = isTournamentEnded();
 
   // Scraper offsets sort.deadline by -24h from the real BaT end. We
-  // compensate here so "Live vs Ended" reflects the true auction state, not
-  // the stale scraper timestamp. This keeps expired cars out of the Live
-  // column even when the tournament endTime is further out.
+  // compensate so "Live vs Ended" reflects the true auction state, not
+  // the stale scraper timestamp. Predictions close PREDICTION_BUFFER_MS
+  // before the real end to avoid last-second races.
   const DAY_MS = 24 * 60 * 60 * 1000;
+  const PREDICTION_BUFFER_MS = 5 * 60 * 1000;
   const auctionRealEnd = (a: Auction): number => {
     const raw = a.sort?.deadline;
     if (!raw) return 0;
     return new Date(raw).getTime() + DAY_MS;
   };
+  const predictionCloseAt = (a: Auction): number => {
+    const end = auctionRealEnd(a);
+    return end > 0 ? end - PREDICTION_BUFFER_MS : 0;
+  };
   const liveAuctions = auctions
-    .filter((a) => auctionRealEnd(a) > Date.now())
-    .sort((a, b) => auctionRealEnd(a) - auctionRealEnd(b));
+    .filter((a) => predictionCloseAt(a) > Date.now())
+    .sort((a, b) => predictionCloseAt(a) - predictionCloseAt(b));
   const endedAuctions = auctions
-    .filter((a) => auctionRealEnd(a) <= Date.now())
+    .filter((a) => predictionCloseAt(a) <= Date.now())
     .sort((a, b) => auctionRealEnd(b) - auctionRealEnd(a));
 
   return (
@@ -655,11 +669,27 @@ export default function TournamentDetailPage() {
           </div>
         </div>
 
-        {!hasJoined && !tournamentEnded && (
+        {!hasJoined && !tournamentEnded && liveAuctions.length > 0 && (
           <div className="mt-6 rounded-lg border border-[#FFB547] bg-[#FFB547]/10 p-4">
             <p className="text-sm text-[#FFB547]">
-              <strong>Important:</strong> You must predict ALL {tournament.auction_ids.length}{" "}
-              auctions to qualify for prizes. Incomplete predictions will disqualify you.
+              <strong>Important:</strong> You must predict all {liveAuctions.length}{" "}
+              open {liveAuctions.length === 1 ? "auction" : "auctions"} to qualify for prizes.
+              Each auction closes to new predictions 5 minutes before its hammer time.
+              {endedAuctions.length > 0 && (
+                <>
+                  {" "}
+                  Predictions are already closed on {endedAuctions.length}{" "}
+                  {endedAuctions.length === 1 ? "auction" : "auctions"} and are not required.
+                </>
+              )}
+            </p>
+          </div>
+        )}
+        {!hasJoined && !tournamentEnded && liveAuctions.length === 0 && auctions.length > 0 && (
+          <div className="mt-6 rounded-lg border border-[#E94560] bg-[#E94560]/10 p-4">
+            <p className="text-sm text-[#E94560]">
+              <strong>Predictions are closed on every auction in this tournament.</strong>{" "}
+              Joining now will not qualify you for prizes.
             </p>
           </div>
         )}
@@ -696,7 +726,7 @@ export default function TournamentDetailPage() {
                   {liveAuctions.length !== auctions.length && (
                     <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#00D4AA]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#00D4AA]" />
-                      Live · accepting predictions
+                      Open for predictions · closes 5 min before hammer
                     </div>
                   )}
                   <div className="space-y-6">
@@ -752,7 +782,7 @@ export default function TournamentDetailPage() {
                 <div>
                   <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
                     <span className="h-1.5 w-1.5 rounded-full bg-gray-500" />
-                    Ended · results final
+                    Predictions closed
                   </div>
                   <div className="space-y-3">
                     {endedAuctions.map((auction) => (
@@ -778,7 +808,7 @@ export default function TournamentDetailPage() {
                                 ${(auction.sort?.price ?? 0).toLocaleString()}
                               </span>
                               <span>
-                                Ended{" "}
+                                {auctionRealEnd(auction) > Date.now() ? "Hammer" : "Ended"}{" "}
                                 {formatDistanceToNow(new Date(auctionRealEnd(auction)), {
                                   addSuffix: true,
                                 })}
@@ -837,6 +867,7 @@ export default function TournamentDetailPage() {
                       onClick={handleJoinTournament}
                       disabled={
                         submitting ||
+                        liveAuctions.length === 0 ||
                         (tournament.max_participants &&
                           tournament.users.length >= tournament.max_participants)
                       }
@@ -847,6 +878,8 @@ export default function TournamentDetailPage() {
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Joining...
                         </>
+                      ) : liveAuctions.length === 0 ? (
+                        "NO LIVE AUCTIONS"
                       ) : (
                         `JOIN TOURNAMENT (${tournament.buyInFee > 0 ? `$${tournament.buyInFee}` : "FREE"})`
                       )}
@@ -865,7 +898,7 @@ export default function TournamentDetailPage() {
                           {prediction.hasEnded ? (
                             <Alert variant="destructive">
                               <Lock className="h-4 w-4" />
-                              <AlertDescription>This auction has ended</AlertDescription>
+                              <AlertDescription>Predictions closed for this auction</AlertDescription>
                             </Alert>
                           ) : (
                             <div className="relative">
