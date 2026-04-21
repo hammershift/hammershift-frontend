@@ -23,6 +23,22 @@ type StatusFilter = 'all' | 'active' | 'upcoming' | 'completed';
 type TypeFilter = 'all' | 'free_play' | 'paid';
 type SortOption = 'ending_soon' | 'prize_pool' | 'newest';
 
+// Next tournament batch lands when the create-tournaments GitHub Action runs.
+// Schedule: Mon/Tue/Thu/Fri at 12:00 UTC (see .github/workflows/create-tournaments.yml).
+// Keep this in sync with that cron expression.
+const CRON_DAYS_UTC = [1, 2, 4, 5]; // 0=Sun ... 6=Sat
+const CRON_HOUR_UTC = 12;
+function getNextTournamentBatch(now: Date = new Date()): Date {
+  for (let i = 0; i < 8; i++) {
+    const candidate = new Date(now);
+    candidate.setUTCDate(candidate.getUTCDate() + i);
+    candidate.setUTCHours(CRON_HOUR_UTC, 0, 0, 0);
+    if (candidate <= now) continue;
+    if (CRON_DAYS_UTC.includes(candidate.getUTCDay())) return candidate;
+  }
+  return now;
+}
+
 export default function TournamentsPage() {
   const track = useTrackEvent();
 
@@ -251,6 +267,22 @@ export default function TournamentsPage() {
         </Card>
       </div>
 
+      {/* No-active banner (shown when pool has entries but none are running) */}
+      {!loading && stats.activeTournaments === 0 && tournaments.length > 0 && (
+        <div className="mb-6 rounded-md border border-[#FFB547]/30 bg-[#FFB547]/10 p-4 text-sm text-[#FFB547]">
+          <strong>No active tournaments right now.</strong> The next batch starts{" "}
+          <span className="font-semibold text-white">
+            {getNextTournamentBatch().toLocaleString(undefined, {
+              weekday: "long",
+              hour: "numeric",
+              minute: "2-digit",
+              timeZoneName: "short",
+            })}
+          </span>
+          . Browse recent results below.
+        </div>
+      )}
+
       {/* Risk Disclosure */}
       <div className="mb-8 rounded-md border border-orange-800/30 bg-orange-900/20 p-4">
         <div className="flex gap-3">
@@ -387,18 +419,34 @@ export default function TournamentsPage() {
           ))}
         </div>
       ) : filteredTournaments.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-white/[0.08] bg-[#16181f] p-12 text-center">
-          <Trophy className="mb-4 h-16 w-16 text-gray-600" />
-          <h3 className="mb-2 text-xl font-bold">No tournaments found</h3>
-          <p className="mb-6 text-gray-400">
-            Try adjusting your filters or check back later for new tournaments
-          </p>
-          <Link href="/auction_details">
-            <Button asChild className="bg-[#E94560] hover:bg-[#E94560]/90">
-              Browse Auctions
-            </Button>
-          </Link>
-        </div>
+        (() => {
+          const poolEmpty = tournaments.length === 0;
+          const next = getNextTournamentBatch();
+          const nextLabel = next.toLocaleString(undefined, {
+            weekday: "long",
+            hour: "numeric",
+            minute: "2-digit",
+            timeZoneName: "short",
+          });
+          return (
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-white/[0.08] bg-[#16181f] p-12 text-center">
+              <Trophy className="mb-4 h-16 w-16 text-gray-600" />
+              <h3 className="mb-2 text-xl font-bold">
+                {poolEmpty ? "No active tournaments right now" : "No tournaments match those filters"}
+              </h3>
+              <p className="mb-6 text-gray-400">
+                {poolEmpty
+                  ? <>The next batch of tournaments starts <span className="font-semibold text-white">{nextLabel}</span>.</>
+                  : "Try adjusting your filters or clearing the search"}
+              </p>
+              <Link href="/auction_details">
+                <Button asChild className="bg-[#E94560] hover:bg-[#E94560]/90">
+                  Browse Auctions
+                </Button>
+              </Link>
+            </div>
+          );
+        })()
       ) : (
         <>
           <TournamentGrid tournaments={paginatedTournaments} />
