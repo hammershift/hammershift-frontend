@@ -73,6 +73,16 @@ export async function GET(req: NextRequest) {
           $gte: thirtyDaysAgo,
         },
       };
+    } else if (type === "archive") {
+      // Full archive — every ended tournament. Pagination is mandatory here
+      // because the pool grows unbounded over time. Default limit=24 works
+      // for a 3-column grid; callers can raise it.
+      query = {
+        endTime: { $lte: new Date() },
+      };
+      if (!sort) {
+        sortOptions = { endTime: -1 };
+      }
     } else {
       return NextResponse.json(
         { message: "Invalid tournament type" },
