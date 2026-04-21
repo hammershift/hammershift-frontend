@@ -21,7 +21,8 @@ const QUALIFYING_MAKES = [
 
 const MIN_AUCTIONS_PER_TOURNAMENT = 3;
 const MAX_AUCTIONS_PER_TOURNAMENT = 10;
-const TARGET_TOURNAMENTS_PER_RUN = 3; // Aim for 3 tournaments per run (6/week if run 2x)
+const TARGET_TOURNAMENTS_PER_RUN = 3; // Paid tournaments picked via clustering
+const FREE_PLAY_AUCTION_COUNT = 8;   // A guaranteed free_play tournament is added on top
 const LOOKAHEAD_DAYS = 7; // Scan auctions ending in the next 7 days
 
 // Country of origin mapping for clustering
@@ -277,7 +278,7 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
     });
   }
 
-  // ── Select best non-overlapping clusters ──
+  // ── Select best non-overlapping paid clusters ──
   clusters.sort((a, b) => b.score - a.score);
   const finalClusters: Cluster[] = [];
 
@@ -288,6 +289,24 @@ function clusterAuctions(auctions: AuctionDoc[]): Cluster[] {
     if (overlapCount / cluster.auctionIds.length > 0.3) continue;
     finalClusters.push(cluster);
     for (const id of cluster.auctionIds) usedIds.add(id);
+  }
+
+  // ── Always prepend a guaranteed free_play tournament ──
+  // Free-play is allowed to overlap with paid tournaments; it's a separate pool.
+  const freePlayPool = [...annotated].sort((a, b) => b.excitement - a.excitement);
+  if (freePlayPool.length >= MIN_AUCTIONS_PER_TOURNAMENT) {
+    const selected = freePlayPool.slice(0, FREE_PLAY_AUCTION_COUNT);
+    const latest = new Date(Math.max(...selected.map((a) => realDeadline(a.sort?.deadline))));
+    finalClusters.unshift({
+      theme: "mixed",
+      name: "Free Play Weekly",
+      description: `Free to enter. Predict the hammer price on ${selected.length} featured auctions — no buy-in, play for the leaderboard.`,
+      auctionIds: selected.map((a) => a.auction_id ?? a._id.toString()),
+      score: 0,
+      startTime: new Date(),
+      endTime: latest,
+      buyInFee: 0,
+    });
   }
 
   return finalClusters;

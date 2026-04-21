@@ -13,7 +13,7 @@ interface MarketCardProps {
   volume: number;
   liquidity: number;
   yesProbability: number; // 0-1
-  status: 'PENDING' | 'ACTIVE' | 'RESOLVED';
+  status: 'PENDING' | 'ACTIVE' | 'RESOLVED' | 'VOIDED' | 'TRADING_CLOSED' | 'SETTLED';
   winningOutcome?: 'YES' | 'NO';
   endsAt?: Date;
   className?: string;
@@ -71,6 +71,16 @@ export function MarketCard({
             >
               {winningOutcome} WON
             </span>
+          </div>
+        )}
+
+        {/* Voided Badge — oracle failed, stakes refunded */}
+        {status === 'VOIDED' && (
+          <div
+            className="absolute right-3 top-3 z-10 rounded-full bg-[#FFB547]/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm"
+            title="Oracle could not capture final price in time. Open positions were refunded at cost."
+          >
+            <span className="text-[#FFB547]">VOIDED · REFUNDED</span>
           </div>
         )}
 
@@ -171,6 +181,9 @@ export function MarketCard({
             )}
             {status === 'RESOLVED' && (
               <div className="text-xs text-gray-500">Market Closed</div>
+            )}
+            {status === 'VOIDED' && (
+              <div className="text-xs text-[#FFB547]">Refunded at cost</div>
             )}
           </div>
         </div>

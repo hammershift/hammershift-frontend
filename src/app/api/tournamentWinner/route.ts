@@ -60,6 +60,20 @@ export async function GET(req: NextRequest) {
   try {
     await mongoSession.startTransaction();
 
+    // Archive modern-schema tournaments whose endTime has passed.
+    // Legacy code below uses numeric `status` (1=active, 2=completed), but tournaments
+    // created by /api/cron/create-tournaments only carry the boolean `isActive` field.
+    // Without this pass they'd remain isActive:true forever and keep showing up in
+    // the UI's active list — flip them as soon as endTime is in the past.
+    const now = new Date();
+    const archiveResult = await db.collection('tournaments').updateMany(
+      { isActive: true, endTime: { $lt: now } },
+      { $set: { isActive: false, archivedAt: now } }
+    );
+    if (archiveResult.modifiedCount > 0) {
+      console.log(`Archived ${archiveResult.modifiedCount} expired tournaments (isActive → false)`);
+    }
+
     const activeTournaments: Tournament[] = (await db.collection('tournaments').find({ status: 1 }).toArray()) as Tournament[];
     const completedTournaments: Tournament[] = (await db.collection('tournaments').find({ status: 2 }).toArray()) as Tournament[];
 
@@ -90,17 +104,17 @@ export async function GET(req: NextRequest) {
         console.log(`Tournament ${tournament._id} is still active with live auctions.`);
       } else if (playerCount <= 2 && unsuccessfulAuctionsCount < 2 && liveAuctionsCount === 0) {
         console.log(`Cancelling tournament ${tournament._id} due to insufficient buy-ins and no live auctions.`);
-        await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 3 } });
+        await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 3, isActive: false, archivedAt: new Date() } });
         await refundTournamentWagers(tournamentWagersArray.map((wager) => wager._id));
         console.log(`Tournament ${tournament._id} cancelled and refunds processed.`);
       } else if (unsuccessfulAuctionsCount >= 2 && liveAuctionsCount === 0) {
         console.log(`Cancelling tournament ${tournament._id} due to unsuccessful auctions and no live auctions.`);
-        await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 3 } });
+        await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 3, isActive: false, archivedAt: new Date() } });
         await refundTournamentWagers(tournamentWagersArray.map((wager) => wager._id));
         console.log(`Tournament ${tournament._id} cancelled and refunds processed.`);
       } else if (allAuctionsComplete && playerCount >= 3) {
         console.log(`All auctions are complete. Updating status for tournament ${tournament._id} to 2`);
-        await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 2 } });
+        await db.collection('tournaments').updateOne({ _id: tournament._id }, { $set: { status: 2, isActive: false, archivedAt: new Date() } });
       } else {
         console.log(`Tournament ${tournament._id} is still active.`);
       }
@@ -254,6 +268,8 @@ export async function GET(req: NextRequest) {
           {
             $set: {
               status: 4,
+              isActive: false,
+              archivedAt: new Date(),
               winners: tournamentWinners.map((winner) => ({
                 userID: winner.userID,
                 username: winner.username,

@@ -2,8 +2,10 @@ name: Create Tournaments
 
 on:
   schedule:
-    # Monday and Thursday at 8:00 AM ET (12:00 UTC)
-    - cron: '0 12 * * 1,4'
+    # Mon/Tue/Thu/Fri at 8:00 AM ET (12:00 UTC).
+    # Four runs/week keeps active-tournament count from dropping to zero
+    # between runs when previous tournaments end on short BaT deadlines.
+    - cron: '0 12 * * 1,2,4,5'
   workflow_dispatch: # Manual trigger from GitHub UI
 
 jobs:

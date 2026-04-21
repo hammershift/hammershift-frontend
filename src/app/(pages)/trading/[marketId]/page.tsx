@@ -27,7 +27,7 @@ interface MarketData {
   _id: string;
   auctionId: string;
   question: string;
-  status: 'PENDING' | 'ACTIVE' | 'RESOLVED';
+  status: 'PENDING' | 'ACTIVE' | 'RESOLVED' | 'TRADING_CLOSED' | 'VOIDED' | 'SETTLED';
   yesPrice: number;
   noPrice: number;
   totalVolume: number;
@@ -439,6 +439,18 @@ export default function TradingPage() {
           <div className="mb-4 rounded-xl border border-[#FFB547]/30 bg-[#FFB547]/10 p-4">
             <p className="font-semibold text-[#FFB547] break-words">
               Market not yet active — trading opens soon
+            </p>
+          </div>
+        )}
+
+        {market.status === 'VOIDED' && (
+          <div className="mb-4 rounded-xl border border-[#FFB547]/30 bg-[#FFB547]/10 p-4">
+            <p className="font-semibold text-[#FFB547] break-words">
+              Market Voided — Stakes Refunded
+            </p>
+            <p className="text-sm text-[#FFB547]/80 mt-1">
+              The oracle couldn&apos;t capture a final price in time. Every open
+              position on this market was refunded at cost back to your wallet.
             </p>
           </div>
         )}
