@@ -27,6 +27,7 @@ export async function GET(
   const outcome = searchParams.get("outcome");
   const usdcAmountStr = searchParams.get("usdcAmount");
   const maxSlippageStr = searchParams.get("maxSlippage") ?? "0.05";
+  const isVirtual = searchParams.get("isVirtual") === "true";
 
   if (outcome !== "YES" && outcome !== "NO") {
     return NextResponse.json({ message: "outcome must be YES or NO" }, { status: 400 });
@@ -37,10 +38,13 @@ export async function GET(
     return NextResponse.json({ message: "usdcAmount must be a positive number" }, { status: 400 });
   }
 
-  const maxSlippage = parseFloat(maxSlippageStr);
-  if (isNaN(maxSlippage) || maxSlippage < 0 || maxSlippage > 1) {
+  const rawSlippage = parseFloat(maxSlippageStr);
+  if (isNaN(rawSlippage) || rawSlippage < 0 || rawSlippage > 1) {
     return NextResponse.json({ message: "maxSlippage must be between 0 and 1" }, { status: 400 });
   }
+  // Virtual markets: uncap slippage. Thin pools can show >100% slippage
+  // on play money; blocking the quote breaks the Buy button.
+  const maxSlippage = isVirtual ? Number.POSITIVE_INFINITY : rawSlippage;
 
   let marketObjectId: ObjectId;
   try {

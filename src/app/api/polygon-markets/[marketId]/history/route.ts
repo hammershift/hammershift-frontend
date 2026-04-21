@@ -29,32 +29,47 @@ export async function GET(
     return NextResponse.json({ message: 'Invalid marketId format' }, { status: 400 });
   }
 
-  const client = await clientPromise;
-  const db = client.db(process.env.DB_NAME || undefined);
+  try {
+    const client = await clientPromise;
+    const db = client.db(process.env.DB_NAME || undefined);
 
-  const market = await db
-    .collection('polygon_markets')
-    .findOne(
-      { _id: marketObjectId },
-      { projection: { priceHistory: 1, createdAt: 1 } }
-    );
+    const market = await db
+      .collection('polygon_markets')
+      .findOne(
+        { _id: marketObjectId },
+        { projection: { priceHistory: 1, createdAt: 1 } }
+      );
 
-  if (!market) {
-    return NextResponse.json({ message: 'Market not found' }, { status: 404 });
-  }
+    if (!market) {
+      return NextResponse.json({ message: 'Market not found' }, { status: 404 });
+    }
 
-  const history = market.priceHistory ?? [];
+    const history = market.priceHistory ?? [];
 
-  if (history.length === 0) {
+    if (history.length === 0) {
+      return NextResponse.json([
+        {
+          timestamp: market.createdAt ?? new Date(),
+          yesPrice: 0.5,
+          noPrice: 0.5,
+          volume: 0,
+        },
+      ]);
+    }
+
+    return NextResponse.json(history);
+  } catch (err) {
+    // Sparkline charts fire a history request for every market card on /markets.
+    // A transient connection pool hiccup shouldn't blow up the whole grid — return
+    // a neutral seed point so the chart renders a flat line instead of a 500.
+    console.error('[polygon-markets/history] read failed', err);
     return NextResponse.json([
       {
-        timestamp: market.createdAt ?? new Date(),
+        timestamp: new Date(),
         yesPrice: 0.5,
         noPrice: 0.5,
         volume: 0,
       },
     ]);
   }
-
-  return NextResponse.json(history);
 }
