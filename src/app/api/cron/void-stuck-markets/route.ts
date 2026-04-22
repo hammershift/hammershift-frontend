@@ -25,6 +25,14 @@ export const dynamic = "force-dynamic";
 const STUCK_THRESHOLD_HOURS = 24;
 const STUCK_THRESHOLD_MS = STUCK_THRESHOLD_HOURS * 60 * 60 * 1000;
 
+// Amplify SSR Lambda times out near 30s. Cap both the batch size and the
+// wall-clock budget so the handler always returns a clean 200 — the cron
+// runs every 6h, so any leftover markets get picked up on the next pass.
+// The handler is fully idempotent (OPEN guards on positions, VOIDED skip
+// on markets), so stopping mid-batch is safe.
+const MAX_MARKETS_PER_RUN = 25;
+const TIME_BUDGET_MS = 22_000;
+
 function isAuthorized(req: Request): boolean {
   const secret = req.headers.get("x-cron-secret");
   return !!secret && secret === process.env.CRON_SECRET;
@@ -48,6 +56,7 @@ export async function GET(req: Request) {
   const db = client.db(process.env.DB_NAME || undefined);
   const now = new Date();
   const cutoff = new Date(now.getTime() - STUCK_THRESHOLD_MS);
+  const runStart = Date.now();
 
   const stuckMarkets = await db
     .collection("polygon_markets")
@@ -56,6 +65,7 @@ export async function GET(req: Request) {
       closesAt: { $lt: cutoff },
       status: { $nin: ["VOIDED", "SETTLED"] },
     })
+    .limit(MAX_MARKETS_PER_RUN)
     .toArray();
 
   if (stuckMarkets.length === 0) {
@@ -63,8 +73,18 @@ export async function GET(req: Request) {
   }
 
   const results: VoidResult[] = [];
+  let budgetHit = false;
 
   for (const market of stuckMarkets) {
+    if (Date.now() - runStart > TIME_BUDGET_MS) {
+      budgetHit = true;
+      console.warn(
+        `void-stuck-markets: time budget hit after ${results.length} markets — deferring ${
+          stuckMarkets.length - results.length
+        } to next run`
+      );
+      break;
+    }
     const marketId = market._id as ObjectId;
     const result: VoidResult = {
       marketId: marketId.toHexString(),
@@ -80,7 +100,13 @@ export async function GET(req: Request) {
       .find({ marketId, status: "OPEN" })
       .toArray();
 
+    let truncatedMidMarket = false;
     for (const position of openPositions) {
+      if (Date.now() - runStart > TIME_BUDGET_MS) {
+        truncatedMidMarket = true;
+        budgetHit = true;
+        break;
+      }
       const positionId = position._id as ObjectId;
       const userId = position.userId as ObjectId;
       const refundAmount: number = position.totalCost ?? 0;
@@ -148,7 +174,7 @@ export async function GET(req: Request) {
       }
     }
 
-    if (result.positionsFailed === 0) {
+    if (result.positionsFailed === 0 && !truncatedMidMarket) {
       await db.collection("polygon_markets").updateOne(
         { _id: marketId },
         {
@@ -187,9 +213,12 @@ export async function GET(req: Request) {
 
   return NextResponse.json({
     ok: true,
-    marketsProcessed: stuckMarkets.length,
+    marketsProcessed: results.length,
+    marketsQueued: stuckMarkets.length,
     marketsVoided: results.filter((r) => r.voided).length,
     totalRefunded: results.reduce((s, r) => s + r.totalRefunded, 0),
+    budgetHit,
+    durationMs: Date.now() - runStart,
     results,
   });
 }
