@@ -1,4 +1,5 @@
 "use client";
+import CohortCounter from "./CohortCounter";
 interface Props { mode: "cold" | "waitlisted"; email?: string; }
 export default function GatePageClient({ mode, email }: Props) {
   return (
@@ -10,7 +11,11 @@ export default function GatePageClient({ mode, email }: Props) {
         <p className="text-lg text-gray-300 mb-8">
           Predict auction hammer prices. Win real money. Founding cohort closes at 1,000 predictors.
         </p>
-        {mode === "cold" && <div data-testid="gate-cold">cold</div>}
+        {mode === "cold" && (
+          <div data-testid="gate-cold">
+            <CohortCounter />
+          </div>
+        )}
         {mode === "waitlisted" && <div data-testid="gate-waitlisted">waitlisted as {email}</div>}
       </div>
     </section>
