@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import connectToDB from "@/lib/mongoose";
@@ -20,6 +21,13 @@ export default async function Home() {
         referralCode={user?.referralCode}
       />
     );
+  }
+  // Pre-auth visitors who previously signed up get their dashboard back
+  // via a cookie the form sets. Any invalid cookie falls through silently
+  // to cold mode — WaitlistDashboard shows a benign error if /me 404s.
+  const waitlistCode = (await cookies()).get("vm_waitlist_code")?.value;
+  if (waitlistCode) {
+    return <GatePageClient mode="waitlisted" referralCode={waitlistCode} />;
   }
   return <GatePageClient mode="cold" />;
 }

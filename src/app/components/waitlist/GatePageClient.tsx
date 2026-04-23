@@ -3,6 +3,7 @@ import CohortCounter from "./CohortCounter";
 import BlurredSampleCards from "./BlurredSampleCards";
 import WinnersTicker from "./WinnersTicker";
 import WaitlistDashboard from "./WaitlistDashboard";
+import WaitlistSignupForm from "./WaitlistSignupForm";
 interface Props { mode: "cold" | "waitlisted"; email?: string; referralCode?: string; }
 export default function GatePageClient({ mode, email, referralCode }: Props) {
   return (
@@ -16,6 +17,7 @@ export default function GatePageClient({ mode, email, referralCode }: Props) {
         </p>
         {mode === "cold" && (
           <div data-testid="gate-cold">
+            <WaitlistSignupForm />
             <CohortCounter />
             <BlurredSampleCards />
             <WinnersTicker />
