@@ -290,11 +290,11 @@ export async function GET(req: NextRequest) {
         // Task 4.4 winner-card pattern in cron/settle-markets: raw
         // mongodb driver, per-user dedupe via existence check, inline
         // E11000 shortCode retry, and nested try/catch so no share-card
-        // failure can block tournament finalization. Writes intentionally
-        // omit mongoSession — the outer transaction only guards money
-        // state; share cards should commit immediately.
+        // failure can block tournament finalization. No session passed —
+        // matches the rest of this route; the outer transaction block
+        // is legacy and is not currently binding any writes in this file.
         try {
-          const now = new Date();
+          const cardNow = new Date();
           const tournamentIdHex = tournament._id.toString();
           const tournamentDoc = (await db
             .collection('tournaments')
@@ -384,8 +384,8 @@ export async function GET(req: NextRequest) {
                     shortCode,
                     views: 0,
                     signups: 0,
-                    createdAt: now,
-                    updatedAt: now,
+                    createdAt: cardNow,
+                    updatedAt: cardNow,
                   });
                   inserted = true;
                 } catch (insertErr) {
