@@ -1844,6 +1844,15 @@ test("opengraph-image returns PNG for any shortCode", async ({ request }) => {
 
 **Step 3: Commit** `git commit -m "feat(share): OG image route for share cards"`
 
+**Implementation deviations (approved during build):**
+- Removed `any` on card components — plan had `({ card }: any)`. Replaced with `{ payload: Record<string, unknown> }` + `str()` / `num()` / `getPayload()` narrow helpers. Reason: CLAUDE.md forbids `any`.
+- `params` typed as `Promise<{ shortCode: string }>` + awaited. Reason: Next.js 15 params are async.
+- Added `runtime = "nodejs"` explicitly. Reason: mongodb driver requires node runtime.
+- Added explicit cache-control headers: success paths get `public, immutable, no-transform, max-age=300, s-maxage=86400, stale-while-revalidate=604800`; fallback gets `public, max-age=60`. Reason: scrapers cache aggressively; short browser TTL keeps own previews fresh; short fallback TTL lets a missing card become real quickly.
+- TournamentCard accuracy: normalize fraction-or-percent payload, clamp to `[0, 100]`. Reason: defensive against bad payloads breaking layout.
+- WinnerCard marketTitle: `whiteSpace: nowrap` + `textOverflow: ellipsis`. Reason: prevent overflow on long titles.
+- E2E `TEST_BASE_URL` defaults to `http://localhost:3000` (not production). Reason: E2E should hit the dev/staging server by default; opt-in to prod.
+
 ---
 
 ### Task 4.2: `/s/[shortCode]/page.tsx` unfurl
