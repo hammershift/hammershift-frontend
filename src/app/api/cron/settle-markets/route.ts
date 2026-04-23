@@ -42,6 +42,8 @@ import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/mongodb";
 import { calcSettlementPayout } from "@/lib/amm";
 import { sendMarketResultEmail } from "@/lib/mail";
+import { toSlug } from "@/lib/slug";
+import { generateShortCode } from "@/lib/waitlist/codes";
 
 export const dynamic = "force-dynamic";
 
@@ -494,6 +496,112 @@ export async function GET(req: Request) {
             emailErr
           );
         }
+      }
+
+      // ── 3d. Winner share cards (real-money wins ≥ $10 per user) ───────────
+      // Aggregate per-user net payout for this market across ALL settled
+      // winning real-money positions (not just ones settled in this run, so
+      // retries after partial failures still pick up previously-settled wins).
+      // Per-card dedupe via existence check on (userId, type: "winner",
+      // payload.marketId) — winner cards have no unique index.
+      try {
+        const winnerAgg = await db
+          .collection("polygon_positions")
+          .aggregate<{ _id: ObjectId; totalPayout: number }>([
+            {
+              $match: {
+                marketId,
+                status: "SETTLED",
+                outcome: winningOutcome,
+                isVirtual: { $ne: true },
+              },
+            },
+            {
+              $group: {
+                _id: "$userId",
+                totalPayout: { $sum: "$payout" },
+              },
+            },
+            { $match: { totalPayout: { $gte: 10 } } },
+          ])
+          .toArray();
+
+        if (winnerAgg.length > 0) {
+          const marketIdHex = marketId.toHexString();
+          const marketTitle: string =
+            (market.title as string | undefined) ??
+            (market.question as string | undefined) ??
+            "";
+          const auctionTitle: string =
+            (market.auction as { title?: string } | undefined)?.title ?? "";
+          const marketSlug = auctionTitle ? toSlug(auctionTitle) : "";
+
+          for (const agg of winnerAgg) {
+            const winnerUserId = agg._id;
+            try {
+              // Dedupe: one winner card per (user, market).
+              const existing = await db.collection("share_cards").findOne({
+                userId: winnerUserId,
+                type: "winner",
+                "payload.marketId": marketIdHex,
+              });
+              if (existing) continue;
+
+              const winnerUser = await db
+                .collection("users")
+                .findOne(
+                  { _id: winnerUserId },
+                  { projection: { username: 1, referralCode: 1 } },
+                );
+              const username: string =
+                (winnerUser?.username as string | undefined) ?? "";
+              if (!username) continue; // no username → skip card, not catastrophic
+              const referralCode: string =
+                (winnerUser?.referralCode as string | undefined) ?? "";
+
+              // Generate unique shortCode with up to 5 collision retries.
+              let shortCode = generateShortCode();
+              for (let i = 0; i < 5; i++) {
+                const taken = await db
+                  .collection("share_cards")
+                  .findOne({ shortCode }, { projection: { _id: 1 } });
+                if (!taken) break;
+                shortCode = generateShortCode();
+              }
+
+              await db.collection("share_cards").insertOne({
+                userId: winnerUserId,
+                type: "winner",
+                payload: {
+                  payout: agg.totalPayout,
+                  pick: winningOutcome,
+                  marketId: marketIdHex,
+                  marketSlug,
+                  marketTitle,
+                  username,
+                  referralCode,
+                },
+                shortCode,
+                views: 0,
+                signups: 0,
+                createdAt: now,
+                updatedAt: now,
+              });
+            } catch (cardErr) {
+              // Per-user failure must not block other winner cards on same market.
+              console.error(
+                `settle-markets: winner share card failed for user ${winnerUserId.toHexString()} in market ${marketIdHex}:`,
+                cardErr,
+              );
+            }
+          }
+        }
+      } catch (winnerAggErr) {
+        // Aggregation failure is non-fatal — settlement is already committed.
+        console.error(
+          `settle-markets: winner share card aggregation failed for market ${marketId.toHexString()}:`,
+          winnerAggErr,
+        );
       }
     }
 
