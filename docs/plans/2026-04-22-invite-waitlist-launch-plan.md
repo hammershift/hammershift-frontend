@@ -1916,6 +1916,18 @@ export default async function UnfurlPage({ params }: { params: { shortCode: stri
 
 **Step 2: Commit** `git commit -m "feat(share): /s/:shortCode unfurl redirect + view tracking"`
 
+**Implementation deviations (approved during build):**
+- `params` typed as `Promise<...>` + awaited. Reason: Next.js 15 async params.
+- No `any` anywhere — `str` / `num` / `asPayload` narrow helpers replace `(payload as any)?.foo`. Reason: CLAUDE.md rule.
+- Routes corrected: `/markets/[slug]` + `/tournaments/[tournament_id]`, reading `marketSlug` and `tournamentId` from payload. Plan had `marketId`/`tournamentId` with wrong paths. Reason: verified actual routes on disk.
+- Single Mongo round-trip: `findOneAndUpdate` with `returnDocument: "before"` reads the card AND `$inc`s `views` atomically. Wrapped in `React.cache()` so `generateMetadata` and the page share one DB call per request. Reason: eliminates the plan's separate `updateOne` + `findOne` pair.
+- Card load and invited-check run in `Promise.all`. Reason: independent, no reason to serialize.
+- All redirect branches use `return redirect(...)`. Reason: defensive — if a future refactor replaces `redirect()` with something that doesn't throw, control can't fall through.
+- `shortCode` shape guard `/^[A-Za-z0-9_-]{4,32}$/` short-circuits bot probes before any Mongo call. Reason: cheap defense.
+- `userIsInvited` and `loadShareCard` both wrapped in try/catch → return safe defaults. Reason: fail-closed-quiet — scrapers never 500.
+- `runtime = "nodejs"` explicit. Reason: MongoDB driver requires node runtime.
+- Added Twitter `summary_large_image` card tags; description differentiated per card type. Reason: spec called for OG only, but Twitter unfurl uses the same pattern.
+
 ---
 
 ### Task 4.3: (Merged into 3.7 — welcome card creation handled by `/api/share/welcome`.) No-op task.
