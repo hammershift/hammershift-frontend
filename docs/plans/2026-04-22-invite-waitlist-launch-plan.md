@@ -1344,7 +1344,7 @@ export async function GET() {
 
 **Step 2: Implement component**
 
-> Notes: (a) `any` replaced with typed `Winner[]` + `unknown`-narrowing parser (CLAUDE.md forbids `any`; mirrors CohortCounter / BlurredSampleCards). Parser defaults `username` to `"user"` when missing or blank, so the JSX drops the `{w.username || "user"}` fallback. (b) `motion-reduce:animate-none` added to the marquee — a continuous scroll violates WCAG 2.2 AA for users with `prefers-reduced-motion: reduce`; they see a static list instead.
+> Notes: (a) `any` replaced with typed `Winner[]` + `unknown`-narrowing parser (CLAUDE.md forbids `any`; mirrors CohortCounter / BlurredSampleCards). Parser defaults `username` to `"user"` when missing or blank, so the JSX drops the `{w.username || "user"}` fallback. (b) `motion-reduce:animate-none` added to the marquee — a continuous scroll violates WCAG 2.2 AA for users with `prefers-reduced-motion: reduce`; they see a static list instead. (c) `aria-label="Recent winners"` on the outer container and the visual `doubled` array replaced with two explicit maps — the first exposed to AT, the second `aria-hidden="true"` — so screen readers announce each winner once instead of twice.
 
 ```tsx
 // src/app/components/waitlist/WinnersTicker.tsx
@@ -1380,12 +1380,26 @@ export default function WinnersTicker() {
       .catch(() => {});
   }, []);
   if (!winners.length) return null;
-  const doubled = [...winners, ...winners];
   return (
-    <div className="overflow-hidden mt-12 py-4 border-y border-[#1E2A36]" data-testid="winners-ticker">
+    <div
+      aria-label="Recent winners"
+      className="overflow-hidden mt-12 py-4 border-y border-[#1E2A36]"
+      data-testid="winners-ticker"
+    >
       <div className="flex gap-8 animate-[ticker_60s_linear_infinite] motion-reduce:animate-none whitespace-nowrap">
-        {doubled.map((w, i) => (
-          <div key={i} className="flex items-center gap-2 text-sm text-gray-300">
+        {winners.map((w, i) => (
+          <div key={`a-${i}`} className="flex items-center gap-2 text-sm text-gray-300">
+            <span className="text-[#00D4AA] font-mono">+${Math.round(w.payout)}</span>
+            <span className="text-gray-500">{w.username} on</span>
+            <span className="text-gray-300 truncate max-w-xs">{w.marketTitle}</span>
+          </div>
+        ))}
+        {winners.map((w, i) => (
+          <div
+            key={`b-${i}`}
+            aria-hidden="true"
+            className="flex items-center gap-2 text-sm text-gray-300"
+          >
             <span className="text-[#00D4AA] font-mono">+${Math.round(w.payout)}</span>
             <span className="text-gray-500">{w.username} on</span>
             <span className="text-gray-300 truncate max-w-xs">{w.marketTitle}</span>
