@@ -1753,6 +1753,15 @@ export const config = {
 
 **Step 5: Commit** `git commit -m "feat(gate): middleware.ts rewrites unauthorized paths to /"`
 
+**Implementation deviations from plan text (all approved):**
+- Drop `(token as any).isInvited` cast — `next-auth/jwt` `JWT` type is augmented with `isInvited?: boolean`, so `token?.isInvited === true` is type-safe.
+- Allowlist broadened from plan: add `/api/stripe` (checkout/onramp), `/api/webhook` (Stripe webhook, external origin), `/api/cron` (header-authed), `/api/health`, `/api/og`. Drop `/legal`, `/privacy`, `/terms`, `/og` (routes don't exist). Add real legal routes `/privacy_policy` and `/terms_of_service`.
+- Matcher broadened to also exclude fonts (`woff|woff2|ttf|otf|eot`), `css`, `js`, `map`, `txt`, `xml`, `json`, `webmanifest`, `gif` — protects `public/manifest.json`, `public/fonts/*`, static assets.
+- `LAUNCH_GATE_ENABLED` normalized case-insensitively at module scope: `/^(1|true|on|yes)$/i`.
+- Explicit `NEXTAUTH_SECRET` guard AFTER allowlist short-circuits (prevents phantom-gate on misconfig; allowlisted routes still work).
+- `gated` param value preserves full original URL (`pathname + req.nextUrl.search`) so the gate landing can reconstruct `/markets?utm_source=x` after invite.
+- E2E uses per-test inline `test.skip(condition, reason)` (idiomatic Playwright), and asserts `toHaveURL(/\/app(\?|$)/)` to lock in rewrite (not redirect) semantics. Does NOT assert the `gated` param — rewrite keeps the URL bar at the original path; `gated` only exists server-side.
+
 ---
 
 ## Phase 4 — Share cards & viral
