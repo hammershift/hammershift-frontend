@@ -17,6 +17,7 @@ test.describe("gate states", () => {
     const meRes = await request.get(
       `/api/waitlist/me?referralCode=${encodeURIComponent(referralCode)}`,
     );
+    expect(meRes.ok()).toBeTruthy();
     const me = (await meRes.json()) as { position: number };
     expect(typeof me.position).toBe("number");
     expect(me.position).toBeGreaterThan(0);
