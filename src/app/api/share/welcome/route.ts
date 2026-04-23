@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Types } from "mongoose";
 import { getAuthSession } from "@/lib/auth";
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
@@ -20,6 +21,14 @@ function isDuplicateKeyError(err: unknown): err is MongoDuplicateKeyError {
   );
 }
 
+interface LeanUser {
+  _id: Types.ObjectId;
+  username?: string;
+  badges?: string[];
+  referralCode?: string;
+  isInvited?: boolean;
+}
+
 export async function POST() {
   try {
     const session = await getAuthSession();
@@ -29,9 +38,9 @@ export async function POST() {
     }
 
     await connectToDB();
-    const user = await Users.findById(userId).select(
-      "username badges referralCode isInvited"
-    );
+    const user = await Users.findById(userId)
+      .select("username badges referralCode isInvited")
+      .lean<LeanUser | null>();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -78,7 +87,16 @@ export async function POST() {
       });
     } catch (err: unknown) {
       if (isDuplicateKeyError(err)) {
-        return NextResponse.json({ error: "Try again" }, { status: 500 });
+        // Race-loser: another concurrent request created the welcome card first.
+        // Re-read and return its shortCode to keep the caller idempotent.
+        const raced = await ShareCard.findOne({
+          userId: user._id,
+          type: "welcome",
+        }).select("shortCode");
+        if (raced?.shortCode) {
+          return NextResponse.json({ shortCode: raced.shortCode });
+        }
+        return NextResponse.json({ error: "Please retry" }, { status: 500 });
       }
       throw err;
     }

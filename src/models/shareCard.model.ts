@@ -27,5 +27,10 @@ const shareCardSchema = new Schema(
   { collection: "share_cards", timestamps: true }
 );
 
+shareCardSchema.index(
+  { userId: 1, type: 1 },
+  { unique: true, partialFilterExpression: { type: "welcome" } }
+);
+
 export const ShareCard =
   models.ShareCard || model<ShareCardDoc>("ShareCard", shareCardSchema);

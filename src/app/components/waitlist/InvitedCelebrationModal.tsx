@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const STORAGE_KEY = "vm_welcome_shown";
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 interface Welcome {
   shortCode: string;
@@ -17,10 +19,14 @@ function parseWelcome(data: unknown): Welcome | null {
 }
 
 export default function InvitedCelebrationModal() {
-  const router = useRouter();
   const [shortCode, setShortCode] = useState<string | null>(null);
   const [visible, setVisible] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
+
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const copyButtonRef = useRef<HTMLButtonElement | null>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fetch welcome share card once, unless already dismissed
   useEffect(() => {
@@ -62,6 +68,15 @@ export default function InvitedCelebrationModal() {
   }, []);
 
   const dismiss = useCallback(() => {
+    // Restore focus BEFORE unmounting so screen-reader focus is stable
+    const prev = previouslyFocusedRef.current;
+    if (prev && typeof prev.focus === "function") {
+      try {
+        prev.focus();
+      } catch {
+        // ignore focus failures
+      }
+    }
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(STORAGE_KEY, "1");
@@ -72,15 +87,64 @@ export default function InvitedCelebrationModal() {
     setVisible(false);
   }, []);
 
-  // Esc-to-close
+  // Focus management: cache previously-focused element and move focus into dialog
+  useEffect(() => {
+    if (!visible || !shortCode) return;
+    if (typeof document !== "undefined") {
+      const active = document.activeElement;
+      previouslyFocusedRef.current =
+        active instanceof HTMLElement ? active : null;
+    }
+    // Move focus to primary action (Copy link button)
+    copyButtonRef.current?.focus();
+  }, [visible, shortCode]);
+
+  // Keydown handler: Esc-to-close and Tab trap
   useEffect(() => {
     if (!visible || !shortCode) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") dismiss();
+      if (e.key === "Escape") {
+        dismiss();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const container = dialogRef.current;
+      if (!container) return;
+      const focusables = Array.from(
+        container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter(
+        (el) => !el.hasAttribute("disabled") && el.getAttribute("aria-hidden") !== "true"
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const activeEl =
+        typeof document !== "undefined" && document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      if (e.shiftKey) {
+        if (activeEl === first || !container.contains(activeEl)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (activeEl === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [visible, shortCode, dismiss]);
+
+  // Clear copied-state timer on unmount
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) {
+        clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = null;
+      }
+    };
+  }, []);
 
   if (!visible || !shortCode) return null;
 
@@ -100,7 +164,8 @@ export default function InvitedCelebrationModal() {
       .writeText(shareUrl)
       .then(() => {
         setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
+        if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = setTimeout(() => setCopied(false), 1500);
         dismiss();
       })
       .catch(() => {
@@ -109,12 +174,14 @@ export default function InvitedCelebrationModal() {
   };
 
   const handleStart = () => {
+    // Modal is mounted on /app; dismiss IS the action (no navigation needed).
     dismiss();
-    router.push("/app");
   };
 
   return (
     <div
+      data-testid="invited-modal"
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="invited-modal-title"
@@ -127,24 +194,24 @@ export default function InvitedCelebrationModal() {
         <div className="border-b border-[#1E2A36] p-5">
           <h2
             id="invited-modal-title"
-            className="text-xl font-semibold text-white"
+            className="text-xl font-semibold text-[#E94560]"
           >
-            You&apos;re in. Welcome to Velocity Markets.
+            You&apos;re in.
           </h2>
           <p className="mt-1 text-sm text-gray-400">
-            Share your welcome card and help friends skip the line.
+            Tell the world. Here&apos;s your &quot;I&apos;m in&quot; card:
           </p>
         </div>
 
         <div className="space-y-5 p-5">
           <div className="overflow-hidden rounded-xl border border-[#1E2A36] bg-[#0A0A1A]">
-            <img
+            <Image
               src={`/s/${encodeURIComponent(shortCode)}/opengraph-image`}
-              alt="Your welcome share card"
               width={1200}
               height={630}
+              alt="Your welcome share card"
+              unoptimized
               className="h-auto w-full"
-              loading="lazy"
             />
           </div>
 
@@ -156,6 +223,7 @@ export default function InvitedCelebrationModal() {
               className="flex-1 rounded border border-[#1E2A36] bg-[#0A0A1A] px-3 py-2 font-mono text-sm text-gray-200"
             />
             <button
+              ref={copyButtonRef}
               type="button"
               onClick={handleCopy}
               aria-label="Copy share link"
@@ -181,7 +249,7 @@ export default function InvitedCelebrationModal() {
               type="button"
               onClick={handleStart}
               aria-label="Start predicting on Velocity Markets"
-              className="rounded bg-[#E94560] px-4 py-2 text-sm font-semibold text-white hover:bg-[#E94560]/90 focus:outline-none focus:ring-2 focus:ring-[#E94560] focus:ring-offset-2 focus:ring-offset-[#13202D]"
+              className="rounded bg-[#1E2A36] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1E2A36]/80 focus:outline-none focus:ring-2 focus:ring-[#1E2A36] focus:ring-offset-2 focus:ring-offset-[#13202D]"
             >
               Start predicting
             </button>
