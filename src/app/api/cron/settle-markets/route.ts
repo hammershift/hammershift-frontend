@@ -503,7 +503,9 @@ export async function GET(req: Request) {
       // winning real-money positions (not just ones settled in this run, so
       // retries after partial failures still pick up previously-settled wins).
       // Per-card dedupe via existence check on (userId, type: "winner",
-      // payload.marketId) — winner cards have no unique index.
+      // payload.marketId). shortCode ALSO has a schema-level unique index
+      // (src/models/shareCard.model.ts) — collisions there are caught and
+      // retried inline below.
       try {
         const winnerAgg = await db
           .collection("polygon_positions")
@@ -532,9 +534,12 @@ export async function GET(req: Request) {
             (market.title as string | undefined) ??
             (market.question as string | undefined) ??
             "";
-          const auctionTitle: string =
-            (market.auction as { title?: string } | undefined)?.title ?? "";
-          const marketSlug = auctionTitle ? toSlug(auctionTitle) : "";
+          // polygon_markets stores `title` denormalized from auction.title at
+          // creation (see cron/create-markets). Readers resolve the detail
+          // page via `toSlug(m.auction.title)` where `m.auction` is a join
+          // result — but at rest the slug source IS `market.title`, so
+          // toSlug(market.title) === toSlug(auction.title) by construction.
+          const marketSlug = marketTitle ? toSlug(marketTitle) : "";
 
           for (const agg of winnerAgg) {
             const winnerUserId = agg._id;
@@ -559,34 +564,56 @@ export async function GET(req: Request) {
               const referralCode: string =
                 (winnerUser?.referralCode as string | undefined) ?? "";
 
-              // Generate unique shortCode with up to 5 collision retries.
-              let shortCode = generateShortCode();
-              for (let i = 0; i < 5; i++) {
-                const taken = await db
-                  .collection("share_cards")
-                  .findOne({ shortCode }, { projection: { _id: 1 } });
-                if (!taken) break;
-                shortCode = generateShortCode();
-              }
+              // Round payout to 2dp so Mongo doc mirrors displayed cents
+              // and avoids float noise in the payload.
+              const payoutRounded =
+                Math.round(agg.totalPayout * 100) / 100;
 
-              await db.collection("share_cards").insertOne({
-                userId: winnerUserId,
-                type: "winner",
-                payload: {
-                  payout: agg.totalPayout,
-                  pick: winningOutcome,
-                  marketId: marketIdHex,
-                  marketSlug,
-                  marketTitle,
-                  username,
-                  referralCode,
-                },
-                shortCode,
-                views: 0,
-                signups: 0,
-                createdAt: now,
-                updatedAt: now,
-              });
+              // Insert with inline shortCode collision retry. The schema-level
+              // unique index on shortCode means a race can surface E11000 even
+              // after a preflight find — retry on that specific code.
+              let inserted = false;
+              for (let attempt = 0; attempt < 5 && !inserted; attempt++) {
+                const shortCode = generateShortCode();
+                try {
+                  await db.collection("share_cards").insertOne({
+                    userId: winnerUserId,
+                    type: "winner",
+                    payload: {
+                      payout: payoutRounded,
+                      pick: winningOutcome,
+                      marketId: marketIdHex,
+                      marketSlug,
+                      marketTitle,
+                      username,
+                      referralCode,
+                    },
+                    shortCode,
+                    views: 0,
+                    signups: 0,
+                    createdAt: now,
+                    updatedAt: now,
+                  });
+                  inserted = true;
+                } catch (insertErr) {
+                  const code = (insertErr as { code?: number }).code;
+                  // 11000 = duplicate key. Only retry if it's the shortCode
+                  // that collided — any other duplicate (e.g. accidental
+                  // re-run race on the dedupe predicate) is terminal.
+                  const keyPattern = (
+                    insertErr as { keyPattern?: Record<string, unknown> }
+                  ).keyPattern;
+                  if (code !== 11000 || !keyPattern || !("shortCode" in keyPattern)) {
+                    throw insertErr;
+                  }
+                  // loop → regenerate
+                }
+              }
+              if (!inserted) {
+                console.error(
+                  `settle-markets: shortCode collision retries exhausted for user ${winnerUserId.toHexString()} in market ${marketIdHex}`,
+                );
+              }
             } catch (cardErr) {
               // Per-user failure must not block other winner cards on same market.
               console.error(
