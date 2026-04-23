@@ -1967,6 +1967,17 @@ if (!isVirtual && payout >= 10 && user) {
 
 **Step 3: Commit** `git commit -m "feat(share): create winner share cards on settle"`
 
+**Implementation deviations (approved during build):**
+- Raw MongoDB driver used (`db.collection("share_cards").insertOne`) — not Mongoose's `ShareCard.create`. Reason: consistent with the rest of `settle-markets/route.ts`, no `connectToDB()` required.
+- Placed as `§3d` at the END of the `positionsFailed === 0 && mode === "normal"` block. Reason: only create cards for cleanly settled markets; runs after streak/email side-effects.
+- Per-user aggregation via `polygon_positions.aggregate` on `{ status: "SETTLED", outcome: winningOutcome, isVirtual: { $ne: true } }` + `$group` by `userId` + `$match { totalPayout: { $gte: 10 } }`. Reason: one card per (user, market) regardless of how many winning positions; aggregation covers retries across multiple cron runs.
+- Dedupe via `findOne({ userId, type: "winner", "payload.marketId": hex })` before insert. Reason: winner cards have no compound unique index.
+- `marketSlug` derived from `toSlug(market.title)` — NOT `market.auction?.title`. Reason: `polygon_markets` has no nested `auction` subdoc at rest; `title` is denormalized from `auction.title` at market-creation time (see `cron/create-markets`), so `toSlug(market.title)` produces the same slug the `/markets/[slug]` reader resolves via `toSlug(m.auction.title)` post-lookup.
+- shortCode insert wrapped in 5-attempt retry that regenerates on E11000 duplicate-key (and only when `keyPattern` is `shortCode`). Reason: schema-level unique index on shortCode means a race past the preflight check can still 11000; regenerate rather than permanently lose the card.
+- Payout rounded to 2dp (`Math.round(x * 100) / 100`). Reason: cleaner payload, mirrors display rounding.
+- No `any` — all driver reads narrowed via `as T | undefined ?? default`.
+- Deferred: bulk find/insert N+1 optimization, aggregation short-circuit on empty, log on username-missing skip. Reason: matches existing sequential-per-user style in this file; winner counts are low at current scale.
+
 ---
 
 ### Task 4.5: Tournament finish card
