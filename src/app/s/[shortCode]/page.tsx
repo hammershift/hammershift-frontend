@@ -4,9 +4,11 @@
 // - Unauth / not-invited → landing with ?ref=<referralCode>&from=<shortCode>
 // - Invited → /markets/[slug] or /tournaments/[tournament_id] when the card
 //   references one; else /app.
-// - Increments share_cards.views fire-and-forget (never blocks redirect).
-// - Fail-closed-quiet: any DB/auth error → redirect to "/" so scrapers never 500.
+// - `loadShareCard` reads + increments share_cards.views in one round-trip,
+//   wrapped in React.cache() so generateMetadata and the page share one call.
+// - Fail-closed-quiet: any DB/auth error → fall back to landing redirect.
 
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import clientPromise from "@/lib/mongodb";
@@ -26,6 +28,11 @@ interface ShareCardLean {
   shortCode: string;
 }
 
+// shortCodes are issued by nanoid(10) → URL-safe charset. Reject anything
+// that doesn't match before we touch Mongo — short-circuits bot probes for
+// `/s/../../etc/passwd` and similar garbage.
+const SHORT_CODE_RE = /^[A-Za-z0-9_-]{4,32}$/;
+
 function str(v: unknown, fallback = ""): string {
   return typeof v === "string" && v.length > 0 ? v : fallback;
 }
@@ -37,21 +44,52 @@ function asPayload(v: unknown): Payload {
   return {};
 }
 
-async function getCard(shortCode: string): Promise<ShareCardLean | null> {
+// Single Mongo round-trip: atomically read the card and bump views.
+// Wrapped in React.cache() so generateMetadata + the page component
+// share exactly one DB call per request (and views increments once).
+const loadShareCard = cache(
+  async (shortCode: string): Promise<ShareCardLean | null> => {
+    if (!SHORT_CODE_RE.test(shortCode)) return null;
+    try {
+      const db = (await clientPromise).db(process.env.DB_NAME || undefined);
+      const result = await db
+        .collection("share_cards")
+        .findOneAndUpdate(
+          { shortCode },
+          { $inc: { views: 1 } },
+          { returnDocument: "before" },
+        );
+      const doc = result?.value;
+      if (!doc) return null;
+      const type = doc.type;
+      if (type !== "welcome" && type !== "winner" && type !== "tournament") {
+        return null;
+      }
+      return {
+        type,
+        payload: asPayload(doc.payload),
+        shortCode,
+      };
+    } catch (err) {
+      console.warn("[unfurl] card load failed:", err);
+      return null;
+    }
+  },
+);
+
+async function userIsInvited(): Promise<boolean> {
   try {
-    const db = (await clientPromise).db(process.env.DB_NAME || undefined);
-    const doc = await db.collection("share_cards").findOne({ shortCode });
-    if (!doc) return null;
-    const type = doc.type;
-    if (type !== "welcome" && type !== "winner" && type !== "tournament") return null;
-    return {
-      type,
-      payload: asPayload(doc.payload),
-      shortCode: str(doc.shortCode, shortCode),
-    };
+    const session = await getAuthSession();
+    const email = session?.user?.email;
+    if (!email) return false;
+    await connectToDB();
+    const user = await Users.findOne({ email }).lean<{
+      isInvited?: boolean;
+    } | null>();
+    return user?.isInvited === true;
   } catch (err) {
-    console.error("[unfurl] getCard failed:", err);
-    return null;
+    console.warn("[unfurl] invited check failed:", err);
+    return false;
   }
 }
 
@@ -61,7 +99,7 @@ export async function generateMetadata({
   params: Promise<{ shortCode: string }>;
 }): Promise<Metadata> {
   const { shortCode } = await params;
-  const card = await getCard(shortCode);
+  const card = await loadShareCard(shortCode);
 
   let title = "Velocity Markets — Invite-Only";
   let description = "Prediction markets for the internet. Invite-only beta.";
@@ -100,33 +138,6 @@ export async function generateMetadata({
   };
 }
 
-async function incrementViews(shortCode: string): Promise<void> {
-  try {
-    const db = (await clientPromise).db(process.env.DB_NAME || undefined);
-    await db
-      .collection("share_cards")
-      .updateOne({ shortCode }, { $inc: { views: 1 } });
-  } catch (err) {
-    // Fire-and-forget — never break the redirect on a counter failure.
-    console.warn("[unfurl] view increment failed:", err);
-  }
-}
-
-async function userIsInvited(): Promise<boolean> {
-  try {
-    const session = await getAuthSession();
-    const email = session?.user?.email;
-    if (!email) return false;
-    await connectToDB();
-    const user = await Users.findOne({ email })
-      .lean<{ isInvited?: boolean } | null>();
-    return user?.isInvited === true;
-  } catch (err) {
-    console.warn("[unfurl] invited check failed:", err);
-    return false;
-  }
-}
-
 export default async function UnfurlPage({
   params,
 }: {
@@ -134,25 +145,24 @@ export default async function UnfurlPage({
 }) {
   const { shortCode } = await params;
 
-  // Fire-and-forget counter before the redirect decision.
-  await incrementViews(shortCode);
-
-  const card = await getCard(shortCode);
-  const invited = await userIsInvited();
+  // Independent — run in parallel.
+  const [card, invited] = await Promise.all([
+    loadShareCard(shortCode),
+    userIsInvited(),
+  ]);
 
   if (invited && card) {
     if (card.type === "winner") {
       const slug = str(card.payload.marketSlug, "");
-      if (slug) redirect(`/markets/${encodeURIComponent(slug)}`);
-      redirect("/app");
+      return redirect(slug ? `/markets/${encodeURIComponent(slug)}` : "/app");
     }
     if (card.type === "tournament") {
       const tid = str(card.payload.tournamentId, "");
-      if (tid) redirect(`/tournaments/${encodeURIComponent(tid)}`);
-      redirect("/app");
+      return redirect(
+        tid ? `/tournaments/${encodeURIComponent(tid)}` : "/app",
+      );
     }
-    // welcome or unknown → app
-    redirect("/app");
+    return redirect("/app");
   }
 
   // Uninvited visitor: attribute to inviter's referral code when we know it.
@@ -160,5 +170,5 @@ export default async function UnfurlPage({
   const qs = new URLSearchParams();
   if (ref) qs.set("ref", ref);
   qs.set("from", shortCode);
-  redirect(`/?${qs.toString()}`);
+  return redirect(`/?${qs.toString()}`);
 }
