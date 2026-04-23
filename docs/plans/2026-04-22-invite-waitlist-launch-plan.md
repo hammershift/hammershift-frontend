@@ -1298,8 +1298,13 @@ test("blurred sample cards render 4 items", async ({ page }) => {
 **Files:**
 - Create: `src/app/components/waitlist/WinnersTicker.tsx`
 - Create: `src/app/api/waitlist/recent-winners/route.ts`
+- Modify: `src/app/styles/globals.css` (append `@keyframes ticker`)
+- Modify: `src/app/components/waitlist/GatePageClient.tsx` (cold branch only)
+- Modify: `e2e/gate-shell.spec.ts` (append ticker visibility test)
 
 **Step 1: Implement route**
+
+> Notes: (a) `revalidate = 300` dropped — `force-dynamic` already opts the route out of fetch/data caches in Next 14, and `force-dynamic` is required for AWS Amplify deploys (see MEMORY.md). Same decision as Task 2.5 cohort route and Task 3.4 sample-markets route. (b) `$match.status` changed from `"RESOLVED"` to `"SETTLED"` — verified by reading `src/app/api/cron/settle-markets/route.ts:255,272-275`: winning positions are written with `status: "SETTLED"`, `payout: netPayout`. Losing positions also get `"SETTLED"` with `payout: 0` (already excluded by `payout > 10`). Refunds use `"REFUNDED"`. `"RESOLVED"` is never written in this repo. (c) Wrapped in `try/catch` that returns `{ winners: [] }` on error — matches the waitlist surface's fail-closed-quiet pattern (`src/app/api/waitlist/signup/route.ts:83-86`).
 
 ```ts
 // src/app/api/waitlist/recent-winners/route.ts
@@ -1307,48 +1312,82 @@ import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 300;
 
 export async function GET() {
-  const db = (await clientPromise).db(process.env.DB_NAME || undefined);
-  const rows = await db.collection("polygon_positions")
-    .aggregate([
-      { $match: { status: "RESOLVED", payout: { $gt: 10 }, isVirtual: { $ne: true } } },
-      { $sort: { settledAt: -1 } },
-      { $limit: 20 },
-      { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" } },
-      { $lookup: { from: "polygon_markets", localField: "marketId", foreignField: "_id", as: "market" } },
-      { $project: {
-        payout: 1, settledAt: 1,
-        username: { $arrayElemAt: ["$user.username", 0] },
-        marketTitle: { $arrayElemAt: ["$market.title", 0] },
-      } },
-    ]).toArray();
-  return NextResponse.json({ winners: rows });
+  try {
+    const db = (await clientPromise).db(process.env.DB_NAME || undefined);
+    const rows = await db
+      .collection("polygon_positions")
+      .aggregate([
+        { $match: { status: "SETTLED", payout: { $gt: 10 }, isVirtual: { $ne: true } } },
+        { $sort: { settledAt: -1 } },
+        { $limit: 20 },
+        { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" } },
+        { $lookup: { from: "polygon_markets", localField: "marketId", foreignField: "_id", as: "market" } },
+        {
+          $project: {
+            payout: 1,
+            settledAt: 1,
+            username: { $arrayElemAt: ["$user.username", 0] },
+            marketTitle: { $arrayElemAt: ["$market.title", 0] },
+          },
+        },
+      ])
+      .toArray();
+    return NextResponse.json({ winners: rows });
+  } catch (err) {
+    console.error("waitlist/recent-winners:", err);
+    return NextResponse.json({ winners: [] });
+  }
 }
 ```
 
 **Step 2: Implement component**
+
+> Notes: (a) `any` replaced with typed `Winner[]` + `unknown`-narrowing parser (CLAUDE.md forbids `any`; mirrors CohortCounter / BlurredSampleCards). Parser defaults `username` to `"user"` when missing or blank, so the JSX drops the `{w.username || "user"}` fallback. (b) `motion-reduce:animate-none` added to the marquee — a continuous scroll violates WCAG 2.2 AA for users with `prefers-reduced-motion: reduce`; they see a static list instead.
 
 ```tsx
 // src/app/components/waitlist/WinnersTicker.tsx
 "use client";
 import { useEffect, useState } from "react";
 
+type Winner = { payout: number; username: string; marketTitle: string };
+
+function parseWinners(data: unknown): Winner[] {
+  if (typeof data !== "object" || data === null) return [];
+  const d = data as Record<string, unknown>;
+  if (!Array.isArray(d.winners)) return [];
+  const out: Winner[] = [];
+  for (const raw of d.winners) {
+    if (typeof raw !== "object" || raw === null) continue;
+    const w = raw as Record<string, unknown>;
+    if (typeof w.payout !== "number") continue;
+    out.push({
+      payout: w.payout,
+      username: typeof w.username === "string" && w.username ? w.username : "user",
+      marketTitle: typeof w.marketTitle === "string" ? w.marketTitle : "",
+    });
+  }
+  return out;
+}
+
 export default function WinnersTicker() {
-  const [winners, setWinners] = useState<any[]>([]);
+  const [winners, setWinners] = useState<Winner[]>([]);
   useEffect(() => {
-    fetch("/api/waitlist/recent-winners").then((r) => r.json()).then((d) => setWinners(d.winners || []));
+    fetch("/api/waitlist/recent-winners")
+      .then((r) => r.json() as Promise<unknown>)
+      .then((d) => setWinners(parseWinners(d)))
+      .catch(() => {});
   }, []);
   if (!winners.length) return null;
   const doubled = [...winners, ...winners];
   return (
     <div className="overflow-hidden mt-12 py-4 border-y border-[#1E2A36]" data-testid="winners-ticker">
-      <div className="flex gap-8 animate-[ticker_60s_linear_infinite] whitespace-nowrap">
+      <div className="flex gap-8 animate-[ticker_60s_linear_infinite] motion-reduce:animate-none whitespace-nowrap">
         {doubled.map((w, i) => (
           <div key={i} className="flex items-center gap-2 text-sm text-gray-300">
             <span className="text-[#00D4AA] font-mono">+${Math.round(w.payout)}</span>
-            <span className="text-gray-500">{w.username || "user"} on</span>
+            <span className="text-gray-500">{w.username} on</span>
             <span className="text-gray-300 truncate max-w-xs">{w.marketTitle}</span>
           </div>
         ))}
@@ -1358,14 +1397,25 @@ export default function WinnersTicker() {
 }
 ```
 
-Add to `src/app/styles/globals.css`:
+Append to `src/app/styles/globals.css`:
 ```css
+/* Winners ticker marquee — used by WinnersTicker.tsx */
 @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 ```
 
-**Step 3: E2E** — `expect(page.getByTestId("winners-ticker")).toBeVisible()` (skip if zero winners in staging db)
+**Step 3: E2E** — component returns `null` when the winners array is empty, so the testid is absent. The test probes the API first and skips when the staging DB has no settled winners > $10.
 
-**Step 4: Wire into `GatePageClient`**
+```ts
+test("winners ticker renders when there are winners", async ({ page, request }) => {
+  const r = await request.get("/api/waitlist/recent-winners");
+  const body = await r.json();
+  test.skip(!body.winners || body.winners.length === 0, "no settled winners in this db");
+  await page.goto("/");
+  await expect(page.getByTestId("winners-ticker")).toBeVisible();
+});
+```
+
+**Step 4: Wire into `GatePageClient`** — mount below `<BlurredSampleCards />` inside `data-testid="gate-cold"` only. Waitlisted branch untouched.
 
 **Step 5: Commit** `git commit -m "feat(gate): WinnersTicker marquee"`
 

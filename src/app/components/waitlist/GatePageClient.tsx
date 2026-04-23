@@ -1,6 +1,7 @@
 "use client";
 import CohortCounter from "./CohortCounter";
 import BlurredSampleCards from "./BlurredSampleCards";
+import WinnersTicker from "./WinnersTicker";
 interface Props { mode: "cold" | "waitlisted"; email?: string; }
 export default function GatePageClient({ mode, email }: Props) {
   return (
@@ -16,6 +17,7 @@ export default function GatePageClient({ mode, email }: Props) {
           <div data-testid="gate-cold">
             <CohortCounter />
             <BlurredSampleCards />
+            <WinnersTicker />
           </div>
         )}
         {mode === "waitlisted" && <div data-testid="gate-waitlisted">waitlisted as {email}</div>}
