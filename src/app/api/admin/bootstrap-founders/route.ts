@@ -26,17 +26,18 @@ export async function POST(req: Request) {
 
   await connectToDB();
 
-  // Idempotency guard. `badges` defaults to [] on the schema, so empty
-  // arrays don't match "founder" — this cleanly detects a prior run.
-  const existing = await Users.countDocuments({ badges: "founder" });
-  if (existing > 0) {
+  // Resumable: only operate on users who haven't been bootstrapped yet.
+  // If a prior run died partway through, a second call finishes the job
+  // instead of being locked out by a blanket "already bootstrapped" 409.
+  const users = await Users.find({ badges: { $ne: "founder" } }).lean();
+  if (users.length === 0) {
+    const existing = await Users.countDocuments({ badges: "founder" });
     return NextResponse.json(
       { error: "Already bootstrapped", founders: existing },
       { status: 409 }
     );
   }
 
-  const users = await Users.find({}).lean();
   let updated = 0;
   let failed = 0;
 
@@ -50,15 +51,17 @@ export async function POST(req: Request) {
       for (let attempt = 0; attempt < 5 && !succeeded; attempt++) {
         const code = generateReferralCode();
         try {
+          // $addToSet preserves any pre-existing badges (e.g. early_tester)
+          // that may have been added to a user before this bootstrap runs.
           await Users.updateOne(
             { _id: userId },
             {
               $set: {
                 isInvited: true,
                 invitedVia: "founding",
-                badges: ["founder"],
                 referralCode: code,
               },
+              $addToSet: { badges: "founder" },
             }
           );
           succeeded = true;
