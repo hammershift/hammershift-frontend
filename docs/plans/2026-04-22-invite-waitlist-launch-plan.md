@@ -2125,6 +2125,13 @@ main().catch((e) => { console.error(e); process.exit(1); });
 
 **Step 3: Commit** `git commit -m "chore(waitlist): staging seed script (50 fake entries)"`
 
+**Implementation deviations (2026-04-23, commit `4a49918c`):**
+
+- Added a **5-attempt E11000 retry** around each `WaitlistEntry.create` that regenerates `referralCode` only when `err.code === 11000 && "referralCode" in err.keyPattern`. Any other error propagates (including collisions on `email` — those indicate a real bug, not a retry case). Mirrors `bootstrap-founders/route.ts:45-79`.
+- On retry exhaustion (astronomically unlikely for 50 random 8-char codes) the script **throws** rather than silently skipping so `main().catch` triggers `process.exit(1)`. A partial seed is louder than a silent miscount; staging UI (cohort counter, dashboard) expects exactly 50 rows.
+- Error narrowing via `(err as { code?: number; keyPattern?: Record<string, unknown> })` — no `any`.
+- Factored the `utm.source` rotation and salt fallback into named const (`sources`, `salt`) for readability.
+
 ---
 
 ### Task 5.3: Playwright E2E — 3 gate states
