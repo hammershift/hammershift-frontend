@@ -2,8 +2,9 @@
 import CohortCounter from "./CohortCounter";
 import BlurredSampleCards from "./BlurredSampleCards";
 import WinnersTicker from "./WinnersTicker";
-interface Props { mode: "cold" | "waitlisted"; email?: string; }
-export default function GatePageClient({ mode, email }: Props) {
+import WaitlistDashboard from "./WaitlistDashboard";
+interface Props { mode: "cold" | "waitlisted"; email?: string; referralCode?: string; }
+export default function GatePageClient({ mode, email, referralCode }: Props) {
   return (
     <section className="min-h-screen bg-[#0A0A1A] text-white flex items-center justify-center p-6">
       <div className="max-w-3xl w-full">
@@ -20,7 +21,15 @@ export default function GatePageClient({ mode, email }: Props) {
             <WinnersTicker />
           </div>
         )}
-        {mode === "waitlisted" && <div data-testid="gate-waitlisted">waitlisted as {email}</div>}
+        {mode === "waitlisted" && (
+          <div data-testid="gate-waitlisted">
+            {referralCode ? (
+              <WaitlistDashboard referralCode={referralCode} />
+            ) : (
+              <span>waitlisted as {email}</span>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

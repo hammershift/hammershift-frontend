@@ -1439,8 +1439,12 @@ test("winners ticker renders when there are winners", async ({ page, request }) 
 
 **Files:**
 - Create: `src/app/components/waitlist/WaitlistDashboard.tsx`
-- Modify: `src/lib/auth.ts` (add `referralCode` + `isInvited` to JWT)
-- Modify: `src/app/types/userTypes.ts` (extend session user type)
+- Modify: `src/lib/auth.ts` (add `referralCode` + `isInvited` to JWT + session)
+- Modify: `src/app/types/next-auth.d.ts` (extend `Session.user` + `JWT` module augmentation)
+- Modify: `src/app/components/waitlist/GatePageClient.tsx` (extend Props, mount dashboard in waitlisted branch)
+- Modify: `src/app/page.tsx` (widen lean generic, pass `referralCode` down)
+
+> Notes: (a) Plan originally named `userTypes.ts` — the actual next-auth module augmentation lives in `src/app/types/next-auth.d.ts`. Corrected. (b) Because the `.d.ts` is extended, the session callback needs no `as boolean | undefined` / `as string | undefined` casts — dropped. (c) Plan's `useState<any>`-leaking fetch replaced with unknown+narrow parser (CLAUDE.md forbids `any`; mirrors CohortCounter, BlurredSampleCards, WinnersTicker). (d) Added `cancelled` flag to kill the post-unmount `setMe` race. (e) WCAG 2.2 AA: `<input>` and Copy `<button>` got `aria-label`s; button has `type="button"`; copy action swaps to "Copied" for 1.5s and announces via `aria-live="polite"` on a visually-hidden span. (f) `GatePageClient` waitlisted branch now renders `<WaitlistDashboard />` when `referralCode` is present, falling back to email-only text for legacy users without one. E2E for the dashboard lives in Task 5.3 (authenticated waitlisted session).
 
 **Step 1: Implement component**
 
@@ -1456,26 +1460,79 @@ interface Me {
   pendingReferrals: number;
 }
 
+function parseMe(data: unknown): Me | null {
+  if (typeof data !== "object" || data === null) return null;
+  const d = data as Record<string, unknown>;
+  if (typeof d.referralCode !== "string") return null;
+  if (typeof d.position !== "number") return null;
+  if (typeof d.verifiedReferrals !== "number") return null;
+  if (typeof d.pendingReferrals !== "number") return null;
+  return {
+    referralCode: d.referralCode,
+    position: d.position,
+    verifiedReferrals: d.verifiedReferrals,
+    pendingReferrals: d.pendingReferrals,
+  };
+}
+
 export default function WaitlistDashboard({ referralCode }: { referralCode: string }) {
   const [me, setMe] = useState<Me | null>(null);
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
-    const fetchMe = () => fetch(`/api/waitlist/me?referralCode=${referralCode}`).then((r) => r.json()).then(setMe).catch(() => {});
+    let cancelled = false;
+    const fetchMe = () =>
+      fetch(`/api/waitlist/me?referralCode=${referralCode}`)
+        .then((r) => r.json() as Promise<unknown>)
+        .then((d) => {
+          if (!cancelled) setMe(parseMe(d));
+        })
+        .catch(() => {});
     fetchMe();
     const id = setInterval(fetchMe, 20_000);
-    return () => clearInterval(id);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, [referralCode]);
+
   if (!me) return <div className="text-gray-400">Loading…</div>;
 
-  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/?ref=${me.referralCode}` : "";
+  const shareUrl =
+    typeof window !== "undefined" ? `${window.location.origin}/?ref=${me.referralCode}` : "";
+
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(shareUrl)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {});
+  };
+
   return (
     <div data-testid="waitlist-dashboard" className="max-w-xl">
       <div className="font-mono text-7xl text-[#E94560] mb-2">#{me.position}</div>
       <p className="text-gray-300 mb-6">Share to move up. Every verified friend = 10 spots closer.</p>
       <div className="flex gap-2 mb-4">
-        <input readOnly value={shareUrl} className="flex-1 bg-[#13202D] border border-[#1E2A36] px-3 py-2 rounded text-sm font-mono" />
+        <input
+          readOnly
+          value={shareUrl}
+          aria-label="Your share link"
+          className="flex-1 bg-[#13202D] border border-[#1E2A36] px-3 py-2 rounded text-sm font-mono"
+        />
         <button
-          onClick={() => navigator.clipboard.writeText(shareUrl)}
-          className="bg-[#E94560] px-4 py-2 rounded text-sm font-semibold">Copy</button>
+          type="button"
+          onClick={handleCopy}
+          aria-label="Copy share link"
+          className="bg-[#E94560] px-4 py-2 rounded text-sm font-semibold"
+        >
+          {copied ? "Copied" : "Copy"}
+        </button>
+        <span className="sr-only" aria-live="polite">
+          {copied ? "Share link copied" : ""}
+        </span>
       </div>
       <div className="text-sm text-gray-400">
         <span className="text-[#00D4AA] font-mono">{me.verifiedReferrals} verified</span>
@@ -1492,21 +1549,29 @@ export default function WaitlistDashboard({ referralCode }: { referralCode: stri
 }
 ```
 
-**Step 2: Extend JWT in `src/lib/auth.ts`** — inside `if (dbUser) {` block add:
+**Step 2: Extend `src/app/types/next-auth.d.ts`** — add to BOTH `Session.user` and `JWT` interfaces:
+```ts
+isInvited?: boolean;
+referralCode?: string;
+```
+
+**Step 3: Extend JWT + session callbacks in `src/lib/auth.ts`** — inside `if (dbUser) {` block of `jwt` add:
 ```ts
 token.isInvited = dbUser.isInvited === true;
 token.referralCode = dbUser.referralCode;
 ```
 
-Session callback add:
+Session callback (no casts — types are augmented):
 ```ts
-session.user.isInvited = token.isInvited as boolean | undefined;
-session.user.referralCode = token.referralCode as string | undefined;
+session.user.isInvited = token.isInvited;
+session.user.referralCode = token.referralCode;
 ```
 
-**Step 3: Mount inside `GatePageClient` waitlisted branch**
+**Step 4: Mount inside `GatePageClient` waitlisted branch** — extend `Props` with `referralCode?: string`; when present render `<WaitlistDashboard referralCode={referralCode} />` inside `data-testid="gate-waitlisted"`, otherwise keep the existing email-only fallback for legacy users.
 
-**Step 4: Commit** `git commit -m "feat(gate): WaitlistDashboard with 20s position polling"`
+**Step 5: Pass `referralCode` from `src/app/page.tsx`** — widen the lean generic to include `referralCode?: string`, pass through to the waitlisted mount.
+
+**Step 6: Commit** `git commit -m "feat(gate): WaitlistDashboard + session isInvited/referralCode"`
 
 ---
 
