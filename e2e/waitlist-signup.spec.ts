@@ -27,3 +27,18 @@ test("POST /api/waitlist/signup is case-insensitive dedupe", async ({ request })
   const bodyB = await b.json();
   expect(bodyB.referralCode).toBe((await a.json()).referralCode);
 });
+
+test("POST /api/waitlist/verify marks verifiedAt", async ({ request }) => {
+  const referrer = await (await request.post("/api/waitlist/signup", {
+    data: { email: `ref-${Date.now()}@example.com` }
+  })).json();
+  const invitee = await (await request.post("/api/waitlist/signup", {
+    data: { email: `inv-${Date.now()}@example.com`, referredByCode: referrer.referralCode }
+  })).json();
+  const v = await request.post("/api/waitlist/verify", {
+    data: { referralCode: invitee.referralCode }
+  });
+  expect(v.status()).toBe(200);
+  const body = await v.json();
+  expect(body.verifiedAt).toBeTruthy();
+});
