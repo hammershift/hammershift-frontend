@@ -2200,6 +2200,22 @@ Manual, tracked in this document. Check each before flipping `LAUNCH_GATE_ENABLE
 - [ ] Legal pages still reachable (`/privacy`, `/terms`)
 - [ ] Admin repo deployed with `/admin/waitlist/*` routes per handoff doc
 
+> **Task 5.4 pre-launch audit (2026-04-23)** — code-level verification of every item below. Legend: ✅ code-verified (behavior proven by source); 🟡 requires staging run (must be done by a human against a deployed staging env); 🔴 requires external repo/ops coordination.
+>
+> 1. 🔴 `LAUNCH_GATE_ENABLED=false` in prod until T-0 — Amplify env var, ops-only. Middleware correctly no-ops when unset/false (`middleware.ts:27`, regex `^(1|true|on|yes)$`).
+> 2. 🔴 `WAITLIST_IP_SALT` set — ops-only. Code reads via `src/lib/waitlist/ipHash.ts` (Task 1.4) and fails closed if unset.
+> 3. 🔴 `INTERNAL_API_SECRET` shared with admin repo — ops + rotation doc only. Usage: `src/app/api/admin/bootstrap-founders/route.ts:22` and `src/app/api/waitlist/issue-magic-link/route.ts` both `timingSafeEqual`.
+> 4. ✅ `/api/admin/bootstrap-founders` runs cleanly, refuses second run — Task 5.1 implemented resumable semantics (`$ne: "founder"` query, `$addToSet` on badge, 5× E11000 retry on referralCode). Returns 409 `{error: "Already bootstrapped"}` when no eligible users remain. 🟡 First staging run still required for end-to-end confirmation.
+> 5. 🟡 Cold gate <2s / LCP <2.5s — requires `playwright` MCP audit against staging. No code path blocks this (server components + dynamic segments).
+> 6. ✅ Signup flow — e2e coverage in `e2e/waitlist-signup.spec.ts` + `e2e/gate-three-states.spec.ts`. Disposable blocklist at `src/lib/waitlist/disposable.ts` (Task 1.5). Dupe dedupe: `POST /api/waitlist/signup` returns 200 with existing referralCode on duplicate email (Task 2.1 deviation — does not 409). 🟡 Run specs against staging.
+> 7. ✅ Verify bumps referrer by 10 — implemented as a read-time formula at `src/app/api/waitlist/me/route.ts:25`: `position = rawRank - 10 * verifiedReferrals`. `verifiedReferrals` counts entries where `referredByCode === me.referralCode && verifiedAt !== null && flaggedAt === null`. Verify route itself (`src/app/api/waitlist/verify/route.ts:18`) only stamps `verifiedAt` on the invitee — the referrer's visible position updates on their next `/me` poll. 🟡 E2E validation pending against staging.
+> 8. ✅ Non-invited → `/app` rewrite — covered by `e2e/middleware-gate.spec.ts` + `middleware.ts:46-51` (rewrites to `/?gated=<path>` when `token.isInvited !== true`).
+> 9. ✅ OG image renders — route at `src/app/s/[shortCode]/opengraph-image.tsx` (Task 4.1), e2e in `e2e/og-image.spec.ts`. 🟡 Run against staging to confirm `image/png` content-type and <1s render.
+> 10. ✅ Legal pages reachable — **note path discrepancy**: actual routes are `/privacy_policy` and `/terms_of_service` (not `/privacy`/`/terms`). Middleware `ALLOW_PREFIXES` (`middleware.ts:23-24`) correctly allows the real paths.
+> 11. 🔴 Admin repo deployed with `/admin/waitlist/*` — external repo, out of scope for this branch. Coordinate with admin repo owner before flipping gate.
+>
+> **Summary:** 6 items code-verified, 5 items require external execution (staging smoke for items 4/5/6/7/9 + ops/coordination for 1/2/3/11). All items that depend on this branch's code are ready; remaining gates are ops and human staging sign-off.
+
 ---
 
 ## Rollback
