@@ -39,15 +39,16 @@ Both are TDD: write the script/spec FIRST, confirm it fails, then implement, the
 ### Task 0.1: Add env vars + SVG type shim
 
 **Files:**
-- Modify: `.env.example`
+- Modify: `.env.local.example` (the repo's canonical env template)
 - Modify: `amplify.yml` (preBuild echo block)
 - Create: `src/types/svg.d.ts`
 
-**Step 1: Add env vars to `.env.example`**
+**Step 1: Append env vars to `.env.local.example` (at the bottom, under a new section header)**
 
-Append:
 ```
+# ============================================
 # Invite-only launch
+# ============================================
 LAUNCH_GATE_ENABLED=false
 WAITLIST_IP_SALT=change-me-to-32-char-random
 INTERNAL_API_SECRET=change-me
@@ -82,7 +83,7 @@ Expected: fewer SVG-related errors; no new errors introduced.
 **Step 5: Commit**
 
 ```bash
-git add .env.example amplify.yml src/types/svg.d.ts
+git add .env.local.example amplify.yml src/types/svg.d.ts
 git commit -m "chore: add LAUNCH_GATE_ENABLED + WAITLIST_IP_SALT env vars and SVG type shim"
 ```
 
@@ -140,7 +141,8 @@ git commit -m "chore: add Playwright config and e2e directory"
 
 ```ts
 // scripts/verify-waitlist-entry-model.ts
-import "dotenv/config";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import connectToDB from "../src/lib/mongoose";
 import { WaitlistEntry } from "../src/models/waitlistEntry.model";
 
@@ -217,8 +219,7 @@ waitlistEntrySchema.index({ verifiedAt: 1, invitedAt: 1 });
 waitlistEntrySchema.index({ invitedAt: 1, inviteEmailSentAt: 1 });
 
 export const WaitlistEntry =
-  (models.WaitlistEntry as ReturnType<typeof model<WaitlistEntryDoc>>) ||
-  model<WaitlistEntryDoc>("WaitlistEntry", waitlistEntrySchema);
+  models.WaitlistEntry || model<WaitlistEntryDoc>("WaitlistEntry", waitlistEntrySchema);
 ```
 
 **Step 4: Run → OK**
@@ -242,7 +243,8 @@ git commit -m "feat(waitlist): add WaitlistEntry model with indexes"
 
 ```ts
 // scripts/verify-user-invite-fields.ts
-import "dotenv/config";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import connectToDB from "../src/lib/mongoose";
 import Users from "../src/models/user.model";
 
@@ -301,7 +303,8 @@ git commit -m "feat(waitlist): add isInvited/referralCode fields to User model"
 
 ```ts
 // scripts/verify-share-card-model.ts
-import "dotenv/config";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import connectToDB from "../src/lib/mongoose";
 import { ShareCard } from "../src/models/shareCard.model";
 import { Types } from "mongoose";
@@ -357,8 +360,7 @@ const shareCardSchema = new Schema(
 );
 
 export const ShareCard =
-  (models.ShareCard as ReturnType<typeof model<ShareCardDoc>>) ||
-  model<ShareCardDoc>("ShareCard", shareCardSchema);
+  models.ShareCard || model<ShareCardDoc>("ShareCard", shareCardSchema);
 ```
 
 **Step 4: Run → OK**
@@ -495,7 +497,8 @@ export function isDisposableEmail(email: string): boolean {
 
 ```ts
 // scripts/verify-rate-limit.ts
-import "dotenv/config";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import { checkRateLimit } from "../src/lib/waitlist/rateLimit";
 
 async function main() {
@@ -1799,7 +1802,8 @@ export async function POST(req: Request) {
 
 ```ts
 // scripts/seed-waitlist-staging.ts
-import "dotenv/config";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import connectToDB from "../src/lib/mongoose";
 import { WaitlistEntry } from "../src/models/waitlistEntry.model";
 import { generateReferralCode, hashIp } from "../src/lib/waitlist/codes";
