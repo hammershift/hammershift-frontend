@@ -59,3 +59,11 @@ test("POST /api/waitlist/issue-magic-link requires x-internal-secret", async ({ 
   const r = await request.post("/api/waitlist/issue-magic-link", { data: { email: "x@example.com" } });
   expect(r.status()).toBe(401);
 });
+
+test("GET /api/waitlist/cohort returns claimed + cap", async ({ request }) => {
+  const r = await request.get("/api/waitlist/cohort");
+  expect(r.status()).toBe(200);
+  const body = await r.json();
+  expect(typeof body.claimed).toBe("number");
+  expect(body.cap).toBe(1000);
+});
