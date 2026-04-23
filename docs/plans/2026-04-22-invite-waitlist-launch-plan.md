@@ -2015,6 +2015,16 @@ for (const p of standings.slice(0, 10)) {
 
 **Step 3: Commit** `git commit -m "feat(share): tournament-finish share cards for top 10"`
 
+**Implementation deviations (2026-04-23, commits `cc63d5e5` + `b0071c64`):**
+
+- Chose raw `mongodb` driver (`db.collection("share_cards").insertOne`) instead of Mongoose `ShareCard.create` to mirror Task 4.4's settle-markets pattern. The existence-check + E11000 shortCode retry loop is copied verbatim from that block (5 attempts, only retry when `code === 11000 && "shortCode" in keyPattern`). Rationale: consistency with the only other share-card hook in the codebase.
+- Writes do **not** pass `mongoSession`. The outer `startTransaction`/`commitTransaction` scaffold in `tournamentWinner/route.ts` is effectively legacy — no existing write in that file binds a session either — so keeping share-card writes non-transactional matches the file's actual behavior.
+- Placement derived as `i + 1` from `tournamentResults.slice(0, 10)` (ascending sort in `calculateTournamentScores.ts:66` means index 0 = best finisher).
+- Accuracy is computed at insert time (the plan's `p.accuracy` field doesn't exist on `TournamentResult`): mean across successful auctions (`status !== 3`) of `max(0, 1 - |score| / finalSellingPrice)`, skipping auctions with non-positive `finalSellingPrice`, rounded to 4dp, ∈ [0, 1]. The OG renderer's `rawPct = accuracy <= 1 ? accuracy * 100 : accuracy` + clamp handles the fraction form.
+- `tournament.name` fetched via a projected `findOne({_id}, {projection:{name:1}})` rather than a type cast, because the local `Tournament` interface at lines 39–43 doesn't declare `name`.
+- Inserted a defensive `new ObjectId(result.userID)` try/catch outside the per-user try so a malformed userID is isolated to one placement rather than aborting the top-10 loop.
+- Follow-up commit `b0071c64`: renamed the inner `now` to `cardNow` (was shadowing the outer `now` at line 69) and softened the transaction-semantics comment to reflect that the outer transaction isn't actually binding any writes.
+
 ---
 
 ## Phase 5 — Migration + launch
