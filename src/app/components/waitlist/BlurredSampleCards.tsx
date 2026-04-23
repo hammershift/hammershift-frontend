@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 type MarketCard = {
   _id: string;
   title: string;
-  imageUrl?: string | null;
   yesPrice?: number;
   noPrice?: number;
 };
@@ -21,7 +20,6 @@ function parseMarkets(data: unknown): MarketCard[] {
     out.push({
       _id: String(m._id),
       title: typeof m.title === "string" ? m.title : "",
-      imageUrl: typeof m.imageUrl === "string" ? m.imageUrl : null,
       yesPrice: typeof m.yesPrice === "number" ? m.yesPrice : undefined,
       noPrice: typeof m.noPrice === "number" ? m.noPrice : undefined,
     });

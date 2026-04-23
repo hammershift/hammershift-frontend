@@ -1179,7 +1179,7 @@ test("cohort counter renders", async ({ page }) => {
 
 **Step 1: Implement route**
 
-> Note: `revalidate` dropped — `force-dynamic` already opts the route out of fetch/data caches in Next 14, and `force-dynamic` is required for AWS Amplify deploys (see MEMORY.md). Same decision as Task 2.5 cohort route.
+> Notes: (a) `revalidate` dropped — `force-dynamic` already opts the route out of fetch/data caches in Next 14, and `force-dynamic` is required for AWS Amplify deploys (see MEMORY.md). Same decision as Task 2.5 cohort route. (b) Wrapped in `try/catch` that returns `{ markets: [] }` on error — matches the waitlist surface's fail-closed-quiet pattern (`src/app/api/waitlist/signup/route.ts:83-86`). (c) `imageUrl` dropped from projection — was unused dead code per CLAUDE.md.
 
 ```ts
 // src/app/api/waitlist/sample-markets/route.ts
@@ -1189,15 +1189,20 @@ import clientPromise from "@/lib/mongodb";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const db = (await clientPromise).db(process.env.DB_NAME || undefined);
-  const markets = await db
-    .collection("polygon_markets")
-    .find({ status: "OPEN", closesAt: { $gt: new Date() } })
-    .sort({ totalVolume: -1 })
-    .limit(4)
-    .project({ title: 1, imageUrl: 1, yesPrice: 1, noPrice: 1, closesAt: 1 })
-    .toArray();
-  return NextResponse.json({ markets });
+  try {
+    const db = (await clientPromise).db(process.env.DB_NAME || undefined);
+    const markets = await db
+      .collection("polygon_markets")
+      .find({ status: "OPEN", closesAt: { $gt: new Date() } })
+      .sort({ totalVolume: -1 })
+      .limit(4)
+      .project({ title: 1, yesPrice: 1, noPrice: 1, closesAt: 1 })
+      .toArray();
+    return NextResponse.json({ markets });
+  } catch (err) {
+    console.error("waitlist/sample-markets:", err);
+    return NextResponse.json({ markets: [] });
+  }
 }
 ```
 
@@ -1213,7 +1218,6 @@ import { useEffect, useState } from "react";
 type MarketCard = {
   _id: string;
   title: string;
-  imageUrl?: string | null;
   yesPrice?: number;
   noPrice?: number;
 };
@@ -1230,7 +1234,6 @@ function parseMarkets(data: unknown): MarketCard[] {
     out.push({
       _id: String(m._id),
       title: typeof m.title === "string" ? m.title : "",
-      imageUrl: typeof m.imageUrl === "string" ? m.imageUrl : null,
       yesPrice: typeof m.yesPrice === "number" ? m.yesPrice : undefined,
       noPrice: typeof m.noPrice === "number" ? m.noPrice : undefined,
     });
