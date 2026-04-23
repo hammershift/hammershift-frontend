@@ -26,16 +26,28 @@ function parseMe(data: unknown): Me | null {
 export default function WaitlistDashboard({ referralCode }: { referralCode: string }) {
   const [me, setMe] = useState<Me | null>(null);
   const [copied, setCopied] = useState(false);
+  const [failures, setFailures] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     const fetchMe = () =>
-      fetch(`/api/waitlist/me?referralCode=${referralCode}`)
+      fetch(`/api/waitlist/me?referralCode=${encodeURIComponent(referralCode)}`, { cache: "no-store" })
         .then((r) => r.json() as Promise<unknown>)
         .then((d) => {
-          if (!cancelled) setMe(parseMe(d));
+          if (cancelled) return;
+          const parsed = parseMe(d);
+          if (parsed) {
+            setMe(parsed);
+            setFailures(0);
+          } else {
+            setFailures((n) => n + 1);
+          }
         })
-        .catch(() => {});
+        .catch((err) => {
+          if (cancelled) return;
+          console.warn("waitlist/me fetch failed", err);
+          setFailures((n) => n + 1);
+        });
     fetchMe();
     const id = setInterval(fetchMe, 20_000);
     return () => {
@@ -44,12 +56,11 @@ export default function WaitlistDashboard({ referralCode }: { referralCode: stri
     };
   }, [referralCode]);
 
-  if (!me) return <div className="text-gray-400">Loading…</div>;
-
   const shareUrl =
-    typeof window !== "undefined" ? `${window.location.origin}/?ref=${me.referralCode}` : "";
+    typeof window !== "undefined" ? `${window.location.origin}/?ref=${encodeURIComponent(referralCode)}` : "";
 
   const handleCopy = () => {
+    if (!navigator.clipboard) return;
     navigator.clipboard
       .writeText(shareUrl)
       .then(() => {
@@ -58,6 +69,17 @@ export default function WaitlistDashboard({ referralCode }: { referralCode: stri
       })
       .catch(() => {});
   };
+
+  if (!me) {
+    if (failures >= 3) {
+      return (
+        <div data-testid="waitlist-dashboard-error" className="text-gray-400">
+          Couldn&apos;t load your waitlist position. Refresh to try again.
+        </div>
+      );
+    }
+    return <div className="text-gray-400">Loading…</div>;
+  }
 
   return (
     <div data-testid="waitlist-dashboard" className="max-w-xl">
