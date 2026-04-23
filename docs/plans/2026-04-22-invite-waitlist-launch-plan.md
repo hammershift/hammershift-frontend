@@ -1053,9 +1053,10 @@ export default async function Home() {
   const session = await getAuthSession();
   if (session?.user?.email) {
     await connectToDB();
-    const user = await Users.findOne({ email: session.user.email }).lean();
+    const user = await Users.findOne({ email: session.user.email })
+      .lean<{ isInvited?: boolean } | null>();
     if (user?.isInvited) redirect("/app");
-    return <GatePageClient mode="waitlisted" email={session.user.email} referralCode={user?.referralCode} />;
+    return <GatePageClient mode="waitlisted" email={session.user.email} />;
   }
   return <GatePageClient mode="cold" />;
 }
@@ -1064,10 +1065,10 @@ export default async function Home() {
 ```tsx
 // src/app/components/waitlist/GatePageClient.tsx
 "use client";
-interface Props { mode: "cold" | "waitlisted"; email?: string; referralCode?: string; }
+interface Props { mode: "cold" | "waitlisted"; email?: string; }
 export default function GatePageClient({ mode, email }: Props) {
   return (
-    <main className="min-h-screen bg-[#0A0A1A] text-white flex items-center justify-center p-6">
+    <section className="min-h-screen bg-[#0A0A1A] text-white flex items-center justify-center p-6">
       <div className="max-w-3xl w-full">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
           Velocity Markets — <span className="text-[#E94560]">Invite-Only</span>
@@ -1078,7 +1079,7 @@ export default function GatePageClient({ mode, email }: Props) {
         {mode === "cold" && <div data-testid="gate-cold">cold</div>}
         {mode === "waitlisted" && <div data-testid="gate-waitlisted">waitlisted as {email}</div>}
       </div>
-    </main>
+    </section>
   );
 }
 ```
@@ -1088,6 +1089,9 @@ export default function GatePageClient({ mode, email }: Props) {
 ```ts
 // e2e/gate-shell.spec.ts
 import { test, expect } from "@playwright/test";
+
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test("/ shows cold gate for logged-out user", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("gate-cold")).toBeVisible();

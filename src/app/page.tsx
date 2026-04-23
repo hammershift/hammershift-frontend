@@ -11,9 +11,9 @@ export default async function Home() {
   if (session?.user?.email) {
     await connectToDB();
     const user = await Users.findOne({ email: session.user.email })
-      .lean<{ isInvited?: boolean; referralCode?: string } | null>();
+      .lean<{ isInvited?: boolean } | null>();
     if (user?.isInvited) redirect("/app");
-    return <GatePageClient mode="waitlisted" email={session.user.email} referralCode={user?.referralCode} />;
+    return <GatePageClient mode="waitlisted" email={session.user.email} />;
   }
   return <GatePageClient mode="cold" />;
 }
