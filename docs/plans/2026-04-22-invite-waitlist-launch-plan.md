@@ -2180,6 +2180,8 @@ test.describe("gate states", () => {
 
 **Step 3: Commit** `git commit -m "test(waitlist): e2e for 3 gate states"`
 
+> **Implementation deviations (Task 5.3):** (a) Added file-level `test.use({ storageState: { cookies: [], origins: [] } })` so State A runs as a genuinely cold visitor regardless of other specs' state bleed. (b) State A guarded with `test.skip(process.env.LAUNCH_GATE_ENABLED !== "true", ...)` so the test doesn't fail in non-gated environments. (c) `referralCode` URL-encoded via `encodeURIComponent` in State B GET. (d) `signupOnWaitlist` return typed as `Promise<{ email: string; referralCode: string; position: number }>` (no `any`, CLAUDE.md rule). (e) State B assertions strengthened beyond the plan's `toBe(position)` to also verify `typeof me.position === "number"` and `me.position > 0`. (f) Follow-up commit `95346782` adds `r.ok()` guard in `signupOnWaitlist` and `expect(meRes.ok()).toBeTruthy()` before `/api/waitlist/me` JSON parse — so a 400/429 from the signup API or a 404 from `/me` surfaces as a diagnosable failure instead of silent `undefined` downstream. Commits: `89a67a40` (initial) + `95346782` (diagnosability polish).
+
 ---
 
 ### Task 5.4: Pre-launch smoke checklist
