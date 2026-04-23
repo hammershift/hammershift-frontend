@@ -867,15 +867,24 @@ test("POST /api/waitlist/issue-magic-link requires x-internal-secret", async ({ 
 import { NextResponse } from "next/server";
 import connectToDB from "@/lib/mongoose";
 import { WaitlistEntry } from "@/models/waitlistEntry.model";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
 import nodemailer from "nodemailer";
 import clientPromise from "@/lib/mongodb";
 
 export const dynamic = "force-dynamic";
 
+function secureCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(
+    new Uint8Array(Buffer.from(a)),
+    new Uint8Array(Buffer.from(b))
+  );
+}
+
 export async function POST(req: Request) {
-  const secret = req.headers.get("x-internal-secret");
-  if (!secret || secret !== process.env.INTERNAL_API_SECRET) {
+  const secret = req.headers.get("x-internal-secret") ?? "";
+  const expected = process.env.INTERNAL_API_SECRET ?? "";
+  if (!secret || !expected || !secureCompare(secret, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const body = await req.json().catch(() => ({}));
@@ -888,13 +897,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Not approved" }, { status: 403 });
   }
 
-  const token = randomUUID().replace(/-/g, "");
+  const rawToken = randomUUID().replace(/-/g, "");
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-  const url = `${process.env.NEXTAUTH_URL}/api/auth/callback/email?email=${encodeURIComponent(email)}&token=${token}`;
+  const url = `${process.env.NEXTAUTH_URL}/api/auth/callback/email?email=${encodeURIComponent(email)}&token=${rawToken}`;
+
+  // NextAuth's EmailProvider stores sha256(token + NEXTAUTH_SECRET) in the
+  // verification_tokens collection and hashes the URL token the same way
+  // before lookup on callback. The raw token must appear in the email URL,
+  // but the hashed token is what gets persisted.
+  const hashedToken = createHash("sha256")
+    .update(`${rawToken}${process.env.NEXTAUTH_SECRET!}`)
+    .digest("hex");
 
   const client = await clientPromise;
   const db = client.db(process.env.DB_NAME || undefined);
-  await db.collection("verification_tokens").insertOne({ identifier: email, token, expires });
+  await db.collection("verification_tokens").insertOne({
+    identifier: email,
+    token: hashedToken,
+    expires,
+  });
 
   const transport = nodemailer.createTransport({
     host: process.env.EMAIL_SERVER_HOST!,
