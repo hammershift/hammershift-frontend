@@ -219,6 +219,8 @@ export const authOptions: NextAuthOptions = {
         session.user.emailExists = token.emailExists;
         session.user.balance = token.balance as number ?? 0;
         session.user.isActive = token.isActive as boolean ?? true;
+        session.user.isInvited = token.isInvited;
+        session.user.referralCode = token.referralCode;
         // session.user.stripeCustomerId = token.stripeCustomerId;
       }
       return session;
@@ -258,6 +260,8 @@ export const authOptions: NextAuthOptions = {
         token.about = dbUser.about;
         token._id = dbUser._id.toString();
         token.role = dbUser.role;
+        token.isInvited = dbUser.isInvited === true;
+        token.referralCode = dbUser.referralCode;
         if (!dbUser.createdAt) {
           const createdAt = new Date();
           await Users.updateOne(

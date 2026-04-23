@@ -154,3 +154,6 @@ html {
   z-index: 50;
   background: #0A0A1A;
 }
+
+/* Winners ticker marquee — used by WinnersTicker.tsx */
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }

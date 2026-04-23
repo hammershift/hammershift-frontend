@@ -6,6 +6,7 @@ import { refundTournamentWagers } from '@/helpers/refundTournamentWagers';
 import { updateWinnerWallet } from '@/helpers/updateWinnerWallet';
 import { authOptions } from '@/lib/auth';
 import clientPromise from '@/lib/mongodb';
+import { generateShortCode } from '@/lib/waitlist/codes';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth';
@@ -282,6 +283,142 @@ export async function GET(req: NextRequest) {
             },
           }
         );
+
+        // ── Tournament-finish share cards for top 10 ───────────────────────
+        // One card per top-10 finisher so they can share a
+        // `#N on Velocity Markets — XX% accuracy` unfurl. Mirrors the
+        // Task 4.4 winner-card pattern in cron/settle-markets: raw
+        // mongodb driver, per-user dedupe via existence check, inline
+        // E11000 shortCode retry, and nested try/catch so no share-card
+        // failure can block tournament finalization. No session passed —
+        // matches the rest of this route; the outer transaction block
+        // is legacy and is not currently binding any writes in this file.
+        try {
+          const cardNow = new Date();
+          const tournamentIdHex = tournament._id.toString();
+          const tournamentDoc = (await db
+            .collection('tournaments')
+            .findOne({ _id: tournament._id }, { projection: { name: 1 } })) as
+            | { name?: string }
+            | null;
+          const tournamentName: string = tournamentDoc?.name ?? '';
+
+          // finalSellingPrice lookup per auction id → per-auction accuracy.
+          const priceById = new Map<string, number>(
+            auctionsToProcess.map((a) => [a._id.toString(), Number(a.finalSellingPrice) || 0])
+          );
+          // auction status lookup — skip cancelled auctions (status 3) when
+          // computing accuracy, matching calculateTournamentScores semantics.
+          const statusById = new Map<string, number>(
+            auctionsToProcess.map((a) => [a._id.toString(), Number(a.status) || 0])
+          );
+
+          const top10 = tournamentResults.slice(0, 10);
+          for (let i = 0; i < top10.length; i++) {
+            const result = top10[i];
+            const placement = i + 1;
+            let userId: ObjectId;
+            try {
+              userId = new ObjectId(result.userID);
+            } catch (idErr) {
+              console.error(
+                `tournamentWinner: invalid userID ${result.userID} in tournament ${tournamentIdHex}:`,
+                idErr
+              );
+              continue;
+            }
+
+            try {
+              // Dedupe: one tournament card per (user, tournament).
+              const existing = await db.collection('share_cards').findOne({
+                userId,
+                type: 'tournament',
+                'payload.tournamentId': tournamentIdHex,
+              });
+              if (existing) continue;
+
+              const userDoc = await db
+                .collection('users')
+                .findOne({ _id: userId }, { projection: { username: 1, referralCode: 1 } });
+              const username: string = (userDoc?.username as string | undefined) ?? '';
+              if (!username) continue; // no username → skip, not catastrophic
+              const referralCode: string =
+                (userDoc?.referralCode as string | undefined) ?? '';
+
+              // Accuracy: mean per-auction closeness across successful auctions.
+              // score = |guessed - actual|, so per-auction accuracy = 1 - score/actual,
+              // clamped to [0, 1]. Skip auctions with status === 3 (cancelled) and
+              // auctions with a non-positive actual price (guard against div-by-zero).
+              let accSum = 0;
+              let accCount = 0;
+              for (const s of result.auctionScores) {
+                const status = statusById.get(s.auctionID);
+                if (status === 3) continue;
+                const actual = priceById.get(s.auctionID);
+                if (!actual || actual <= 0) continue;
+                const perAuction = Math.max(0, 1 - s.score / actual);
+                accSum += perAuction;
+                accCount += 1;
+              }
+              const accuracyRaw = accCount === 0 ? 0 : accSum / accCount;
+              const accuracy = Math.round(accuracyRaw * 10000) / 10000; // 4dp
+
+              // Insert with inline shortCode collision retry. The shortCode has
+              // a schema-level unique index — a race can still surface E11000
+              // after a preflight find. Any other duplicate key is terminal.
+              let inserted = false;
+              for (let attempt = 0; attempt < 5 && !inserted; attempt++) {
+                const shortCode = generateShortCode();
+                try {
+                  await db.collection('share_cards').insertOne({
+                    userId,
+                    type: 'tournament',
+                    payload: {
+                      placement,
+                      accuracy,
+                      tournamentId: tournamentIdHex,
+                      tournamentName,
+                      username,
+                      referralCode,
+                    },
+                    shortCode,
+                    views: 0,
+                    signups: 0,
+                    createdAt: cardNow,
+                    updatedAt: cardNow,
+                  });
+                  inserted = true;
+                } catch (insertErr) {
+                  const code = (insertErr as { code?: number }).code;
+                  const keyPattern = (insertErr as { keyPattern?: Record<string, unknown> })
+                    .keyPattern;
+                  if (code !== 11000 || !keyPattern || !('shortCode' in keyPattern)) {
+                    throw insertErr;
+                  }
+                  // loop → regenerate
+                }
+              }
+              if (!inserted) {
+                console.error(
+                  `tournamentWinner: shortCode collision retries exhausted for user ${userId.toHexString()} in tournament ${tournamentIdHex}`
+                );
+              }
+            } catch (cardErr) {
+              // Per-user failure must not block other tournament cards.
+              console.error(
+                `tournamentWinner: tournament share card failed for user ${userId.toHexString()} in tournament ${tournamentIdHex}:`,
+                cardErr
+              );
+            }
+          }
+        } catch (err) {
+          // Aggregation/setup failure is non-fatal — tournament finalization already committed.
+          console.error(
+            `tournamentWinner: tournament share card block failed for tournament ${tournament._id.toString()}:`,
+            err
+          );
+        }
+
         console.log(`Updated tournament status to 4 for tournamentId: ${tournament._id}`);
       }
     }

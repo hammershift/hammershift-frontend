@@ -69,6 +69,8 @@ declare module 'next-auth' {
       username?: string;
       about?: string;
       createdAt?: Date;
+      isInvited?: boolean;
+      referralCode?: string;
     } & DefaultSession['user'];
   }
 }
@@ -88,5 +90,7 @@ declare module 'next-auth/jwt' {
     username?: string;
     about?: string;
     createdAt?: Date;
+    isInvited?: boolean;
+    referralCode?: string;
   }
 }
