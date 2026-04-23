@@ -18,6 +18,14 @@ export const alt = "Velocity Markets";
 export const size = { width: 1200, height: 630 } as const;
 export const contentType = "image/png";
 
+// Cache at CDN for 1 day, allow stale-while-revalidate for a week.
+// Scrapers (Slack, Twitter, iMessage) cache aggressively — a short max-age
+// at the browser keeps our own previews fresh during dev.
+const SUCCESS_CACHE =
+  "public, immutable, no-transform, max-age=300, s-maxage=86400, stale-while-revalidate=604800";
+// Fallback: short TTL so a missing card becomes a real card quickly once written.
+const FALLBACK_CACHE = "public, max-age=60";
+
 // ---------- Narrowing helpers ----------
 
 type Payload = Record<string, unknown>;
@@ -44,29 +52,32 @@ export default async function OG({
 }) {
   const { shortCode } = await params;
 
+  const success = { ...size, headers: { "Cache-Control": SUCCESS_CACHE } };
+  const fallback = { ...size, headers: { "Cache-Control": FALLBACK_CACHE } };
+
   try {
     const client = await clientPromise;
     const db = client.db(process.env.DB_NAME || undefined);
     const card = await db.collection("share_cards").findOne({ shortCode });
 
-    if (!card) return new ImageResponse(<FallbackCard />, size);
+    if (!card) return new ImageResponse(<FallbackCard />, fallback);
 
     const payload = getPayload(card.payload);
 
     if (card.type === "welcome") {
-      return new ImageResponse(<WelcomeCard payload={payload} />, size);
+      return new ImageResponse(<WelcomeCard payload={payload} />, success);
     }
     if (card.type === "winner") {
-      return new ImageResponse(<WinnerCard payload={payload} />, size);
+      return new ImageResponse(<WinnerCard payload={payload} />, success);
     }
     if (card.type === "tournament") {
-      return new ImageResponse(<TournamentCard payload={payload} />, size);
+      return new ImageResponse(<TournamentCard payload={payload} />, success);
     }
-    return new ImageResponse(<FallbackCard />, size);
+    return new ImageResponse(<FallbackCard />, fallback);
   } catch (err) {
     // Never 500 — a broken unfurl is cached and permanently breaks shares.
     console.error("[og-image] share_cards lookup failed:", err);
-    return new ImageResponse(<FallbackCard />, size);
+    return new ImageResponse(<FallbackCard />, fallback);
   }
 }
 
@@ -177,6 +188,8 @@ function WinnerCard({ payload }: { payload: Payload }) {
             marginTop: 10,
             maxWidth: 1040,
             overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
             display: "flex",
           }}
         >
@@ -202,7 +215,10 @@ function TournamentCard({ payload }: { payload: Payload }) {
   const placement = num(payload.placement, 0);
   const accuracy = num(payload.accuracy, 0);
   const tournamentName = str(payload.tournamentName, "");
-  const accuracyPct = Math.round(accuracy * 100);
+  // Payload may send fraction (0.73) or percentage (73). Normalize fraction→pct,
+  // then clamp to [0, 100] so a bad payload can't break the card layout.
+  const rawPct = accuracy <= 1 ? accuracy * 100 : accuracy;
+  const accuracyPct = Math.max(0, Math.min(100, Math.round(rawPct)));
   return (
     <div
       style={{

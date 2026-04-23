@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const BASE = process.env.TEST_BASE_URL || "https://velocity-markets.com";
+const BASE = process.env.TEST_BASE_URL || "http://localhost:3000";
 
 // The share-card OG route must fail-closed-quiet: even when the shortCode
 // doesn't exist in the DB, it returns the FallbackCard as a 200 image/png.
