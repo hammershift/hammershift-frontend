@@ -2200,6 +2200,11 @@ Manual, tracked in this document. Check each before flipping `LAUNCH_GATE_ENABLE
 - [ ] Legal pages still reachable (`/privacy`, `/terms`)
 - [ ] Admin repo deployed with `/admin/waitlist/*` routes per handoff doc
 
+> **Post-audit P0 fixes (2026-04-23, commits `43504ae7` + `07aa496e`)** — the final branch code review caught three integration gaps per-task reviews missed:
+> 1. **Cold gate had no signup form.** Added `src/app/components/waitlist/WaitlistSignupForm.tsx` + wired into `GatePageClient.tsx`. Sets a `vm_waitlist_code` cookie on success so `src/app/page.tsx` can rehydrate the waitlisted view for pre-auth repeat visitors. E2E: `e2e/gate-signup-form.spec.ts`.
+> 2. **`?gated=` query param** was set by middleware but never consumed. Dropped (no bounce-back UX in scope for launch).
+> 3. **Bootstrap-founders scope was too broad.** Prior filter `{badges: {$ne: "founder"}}` would have converted every pre-existing user on first call. Endpoint now requires explicit `emails[]` in request body and intersects with the not-bootstrapped filter — still resumable within the allowlist, but can no longer sweep the whole collection.
+>
 > **Task 5.4 pre-launch audit (2026-04-23)** — code-level verification of every item below. Legend: ✅ code-verified (behavior proven by source); 🟡 requires staging run (must be done by a human against a deployed staging env); 🔴 requires external repo/ops coordination.
 >
 > 1. 🔴 `LAUNCH_GATE_ENABLED=false` in prod until T-0 — Amplify env var, ops-only. Middleware correctly no-ops when unset/false (`middleware.ts:27`, regex `^(1|true|on|yes)$`).
