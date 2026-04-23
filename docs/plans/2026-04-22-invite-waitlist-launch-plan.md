@@ -2071,6 +2071,13 @@ export async function POST(req: Request) {
 
 **Step 2: Commit** `git commit -m "feat(waitlist): founder bootstrap API (idempotent)"`
 
+**Implementation deviations (2026-04-23, commits `9f1b9cd2` + `020c9de6`):**
+
+- Replaced plain `header !== env` secret compare with a timing-safe `secureCompare` helper (`timingSafeEqual`) inlined from the `issue-magic-link/route.ts:10-23` pattern. Guards against missing header / missing env / mismatch uniformly — the 401 response does not distinguish the three.
+- Added a **5-attempt E11000 retry** around each `updateOne`: regenerates `referralCode` only when `err.code === 11000 && "referralCode" in err.keyPattern`. Any other error falls through to the per-user catch.
+- Added a **per-user try/catch** so one malformed doc or write error isolates to one row. Response now returns `{ ok, updated, failed }` — a `failed` counter gives the operator visibility into partial runs.
+- Follow-up commit `020c9de6`: (a) resumable — `Users.find({ badges: { $ne: "founder" } }).lean()` so a partial prior run can be re-invoked to finish the remaining users instead of being locked out by the blanket 409; when the filtered set is empty we still return 409 `Already bootstrapped` as before. (b) `$addToSet: { badges: "founder" }` instead of `$set: { badges: ["founder"] }` so any pre-existing badges (e.g. `early_tester`) are preserved rather than clobbered.
+
 ---
 
 ### Task 5.2: Staging seed script
