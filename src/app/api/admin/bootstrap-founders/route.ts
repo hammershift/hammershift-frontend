@@ -24,14 +24,39 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Require an explicit emails allowlist in the request body so this
+  // endpoint can never sweep the entire user collection. A prior version
+  // filtered only on `badges: { $ne: "founder" }` and would have converted
+  // every legacy account on first call.
+  const body = (await req.json().catch(() => ({}))) as {
+    emails?: unknown;
+  };
+  const rawEmails = Array.isArray(body.emails) ? body.emails : [];
+  const emails = rawEmails
+    .filter((e): e is string => typeof e === "string")
+    .map((e) => e.trim().toLowerCase())
+    .filter((e) => e.length > 0);
+  if (emails.length === 0) {
+    return NextResponse.json(
+      { error: "Non-empty emails[] required" },
+      { status: 400 }
+    );
+  }
+
   await connectToDB();
 
-  // Resumable: only operate on users who haven't been bootstrapped yet.
-  // If a prior run died partway through, a second call finishes the job
-  // instead of being locked out by a blanket "already bootstrapped" 409.
-  const users = await Users.find({ badges: { $ne: "founder" } }).lean();
+  // Resumable within the allowlist: operate only on allowlisted users who
+  // haven't been bootstrapped yet. A retry after partial failure finishes
+  // the job instead of being locked out by a blanket 409.
+  const users = await Users.find({
+    email: { $in: emails },
+    badges: { $ne: "founder" },
+  }).lean();
   if (users.length === 0) {
-    const existing = await Users.countDocuments({ badges: "founder" });
+    const existing = await Users.countDocuments({
+      email: { $in: emails },
+      badges: "founder",
+    });
     return NextResponse.json(
       { error: "Already bootstrapped", founders: existing },
       { status: 409 }

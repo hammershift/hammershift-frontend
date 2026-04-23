@@ -47,7 +47,6 @@ export async function middleware(req: NextRequest) {
 
   const url = req.nextUrl.clone();
   url.pathname = "/";
-  url.searchParams.set("gated", pathname + req.nextUrl.search);
   return NextResponse.rewrite(url);
 }
 
