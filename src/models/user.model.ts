@@ -32,6 +32,11 @@ export interface User {
   virtualBalance?: number;
   virtualWagered?: number;
   virtualWon?: number;
+  isInvited?: boolean;
+  invitedVia?: "founding" | "waitlist" | "direct";
+  badges?: string[];
+  referralCode?: string;
+  referredByCode?: string | null;
 }
 
 const userSchema = new Schema(
@@ -74,6 +79,11 @@ const userSchema = new Schema(
     virtualBalance: { type: Number, default: 10000 },
     virtualWagered: { type: Number, default: 0 },
     virtualWon: { type: Number, default: 0 },
+    isInvited: { type: Boolean, default: false, index: true },
+    invitedVia: { type: String, enum: ["founding", "waitlist", "direct"], default: "waitlist" },
+    badges: { type: [String], default: [] },
+    referralCode: { type: String, unique: true, sparse: true },
+    referredByCode: { type: String, default: null },
     createdAt: Date,
     updatedAt: Date,
   },
