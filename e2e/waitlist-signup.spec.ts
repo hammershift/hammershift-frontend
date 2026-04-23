@@ -42,3 +42,15 @@ test("POST /api/waitlist/verify marks verifiedAt", async ({ request }) => {
   const body = await v.json();
   expect(body.verifiedAt).toBeTruthy();
 });
+
+test("GET /api/waitlist/me returns position+stats", async ({ request }) => {
+  const s = await (await request.post("/api/waitlist/signup", {
+    data: { email: `me-${Date.now()}@example.com` }
+  })).json();
+  const me = await request.get(`/api/waitlist/me?referralCode=${s.referralCode}`);
+  expect(me.status()).toBe(200);
+  const body = await me.json();
+  expect(body.position).toBeGreaterThan(0);
+  expect(body.verifiedReferrals).toBe(0);
+  expect(body.pendingReferrals).toBe(0);
+});
