@@ -1659,6 +1659,19 @@ export default function InvitedCelebrationModal() {
 
 **Step 4: Commit** `git commit -m "feat(gate): InvitedCelebrationModal + welcome share card"`
 
+**Deploy note (race-safe idempotency):** ShareCard now has a partial unique index on `(userId, type)` filtered to `type: "welcome"`. Prod typically disables Mongoose `autoIndex`. Before traffic hits `/api/share/welcome`, run `ShareCard.syncIndexes()` or equivalent migration to build the index — otherwise concurrent POSTs can still double-create welcome cards.
+
+**Implementation deviations from plan text (all approved):**
+- Added `user.isInvited === true` guard on the share route (403 otherwise) — security hardening the plan omitted.
+- Wrapped route in try/catch with fail-closed-quiet (500 on any unexpected error).
+- On 11000 duplicate-key in `ShareCard.create`, re-read `(userId, type: "welcome")` and return its shortCode (race-safe idempotency).
+- `parseWelcome(data: unknown)` narrow parser on the client — no `any` per CLAUDE.md.
+- Modal guards `navigator.clipboard` for non-secure contexts, sets `vm_welcome_shown` on ALL exit paths (Copy, Start predicting, Not now, backdrop, Esc).
+- Full WCAG 2.2 AA focus management: initial focus into dialog, Tab/Shift+Tab trap, focus restore to previously-focused element on dismiss, Esc + click-outside close.
+- `next/image` with `unoptimized` (dynamic PNG) instead of raw `<img>` per global CLAUDE.md.
+- `handleStart` is now just `dismiss()` — no `router.push("/app")` (modal is already mounted on /app; nav would be a no-op).
+- `.lean<LeanUser>()` on user findById — skip full Mongoose hydration.
+
 ---
 
 ### Task 3.8: `middleware.ts` — the actual gate
