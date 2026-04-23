@@ -54,3 +54,8 @@ test("GET /api/waitlist/me returns position+stats", async ({ request }) => {
   expect(body.verifiedReferrals).toBe(0);
   expect(body.pendingReferrals).toBe(0);
 });
+
+test("POST /api/waitlist/issue-magic-link requires x-internal-secret", async ({ request }) => {
+  const r = await request.post("/api/waitlist/issue-magic-link", { data: { email: "x@example.com" } });
+  expect(r.status()).toBe(401);
+});
