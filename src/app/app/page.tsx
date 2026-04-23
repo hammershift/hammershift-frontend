@@ -12,6 +12,7 @@ import { Predictions } from "@/models/predictions.model";
 import { startOfWeek } from "date-fns";
 import "../styles/app.css";
 import ClientHomepageTracker from "../components/ClientHomepageTracker";
+import InvitedCelebrationModal from "../components/waitlist/InvitedCelebrationModal";
 import connectToDB from "@/lib/mongoose";
 import mongoose from "mongoose";
 import LiveTicker from "../components/LiveTicker";
@@ -374,6 +375,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
+      <InvitedCelebrationModal />
       <JsonLd
         data={{
           "@context": "https://schema.org",
