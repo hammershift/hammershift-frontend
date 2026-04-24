@@ -130,7 +130,7 @@ export default function WaitlistSignupForm() {
         <button
           type="submit"
           disabled={pending || email.trim().length === 0}
-          className="bg-[#E94560] disabled:opacity-50 disabled:cursor-not-allowed px-5 py-3 rounded font-semibold focus:outline-none focus:ring-2 focus:ring-[#E94560] focus:ring-offset-2 focus:ring-offset-[#0A0A1A]"
+          className="bg-[#E94560] text-white shadow-lg shadow-[#E94560]/30 hover:bg-[#ff5577] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:hover:bg-[#E94560] px-5 py-3 rounded font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E94560] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A0A1A]"
         >
           {pending ? "Joining…" : "Join the waitlist"}
         </button>

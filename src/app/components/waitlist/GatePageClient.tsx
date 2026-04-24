@@ -1,38 +1,59 @@
 "use client";
 import CohortCounter from "./CohortCounter";
-import BlurredSampleCards from "./BlurredSampleCards";
-import WinnersTicker from "./WinnersTicker";
+import GateFaq from "./GateFaq";
+import GateHero from "./GateHero";
+import HowItWorks from "./HowItWorks";
 import WaitlistDashboard from "./WaitlistDashboard";
 import WaitlistSignupForm from "./WaitlistSignupForm";
-interface Props { mode: "cold" | "waitlisted"; email?: string; referralCode?: string; }
+import WinnersTicker from "./WinnersTicker";
+
+interface Props {
+  mode: "cold" | "waitlisted";
+  email?: string;
+  referralCode?: string;
+}
+
 export default function GatePageClient({ mode, email, referralCode }: Props) {
   return (
-    <section className="min-h-screen bg-[#0A0A1A] text-white flex items-center justify-center p-6">
-      <div className="max-w-3xl w-full">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Velocity Markets — <span className="text-[#E94560]">Invite-Only</span>
+    <div className="bg-[#0A0A1A]">
+      {/* Suppress the site-wide chrome; the gate runs its own branding. */}
+      <style>{`
+        header[role="banner"],
+        footer[role="contentinfo"] { display: none !important; }
+      `}</style>
+
+      <GateHero>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.95] text-white mb-5">
+          Beat the auction.
+          <br />
+          <span className="text-[#E94560]">Win real money.</span>
         </h1>
-        <p className="text-lg text-gray-300 mb-8">
-          Predict auction hammer prices. Win real money. Founding cohort closes at 1,000 predictors.
+        <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl leading-relaxed">
+          Skill markets on hammer prices. Paid in USD. Founding cohort closes
+          at 1,000.
         </p>
+
         {mode === "cold" && (
           <div data-testid="gate-cold">
             <WaitlistSignupForm />
             <CohortCounter />
-            <BlurredSampleCards />
-            <WinnersTicker />
           </div>
         )}
+
         {mode === "waitlisted" && (
           <div data-testid="gate-waitlisted">
             {referralCode ? (
               <WaitlistDashboard referralCode={referralCode} />
             ) : (
-              <span>waitlisted as {email}</span>
+              <span className="text-gray-300">Waitlisted as {email}</span>
             )}
           </div>
         )}
-      </div>
-    </section>
+      </GateHero>
+
+      <WinnersTicker />
+      <HowItWorks />
+      <GateFaq />
+    </div>
   );
 }
