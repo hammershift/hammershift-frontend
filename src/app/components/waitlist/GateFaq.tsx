@@ -8,7 +8,7 @@ const ITEMS: Array<{ q: string; a: string }> = [
   },
   {
     q: "When does it open?",
-    a: "We're seating the founding cohort first. Once 1,000 predictors verify, invites roll out in waves. Refer verified friends to move up the list — every one gets you 10 spots closer.",
+    a: "We're seating the founding cohort first. Verified members get invites in waves as capacity opens up. Refer verified friends to jump the line — every one gets you 10 spots closer.",
   },
   {
     q: "What do I actually win?",
