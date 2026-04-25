@@ -1,13 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 
-type CohortState = { claimed: number; cap: number };
+type CohortState = { claimed: number };
 
 function parseCohort(data: unknown): CohortState | null {
   if (typeof data !== "object" || data === null) return null;
   const d = data as Record<string, unknown>;
-  if (typeof d.claimed !== "number" || typeof d.cap !== "number") return null;
-  return { claimed: d.claimed, cap: d.cap };
+  if (typeof d.claimed !== "number") return null;
+  return { claimed: d.claimed };
 }
 
 export default function CohortCounter() {
@@ -19,23 +19,14 @@ export default function CohortCounter() {
       .catch(() => {});
   }, []);
   if (!state) return null;
-  const pct = Math.min(100, (state.claimed / state.cap) * 100);
   return (
-    <div className="mt-3 text-sm" data-testid="cohort-counter">
-      <div className="flex justify-between text-gray-400 mb-1">
-        <span className="font-mono">{state.claimed}</span>
-        <span className="font-mono">/ {state.cap} spots claimed</span>
-      </div>
-      <div
-        role="progressbar"
-        aria-label="Founding cohort spots claimed"
-        aria-valuenow={state.claimed}
-        aria-valuemin={0}
-        aria-valuemax={state.cap}
-        className="h-1 bg-[#1E2A36] rounded overflow-hidden"
-      >
-        <div className="h-full bg-[#E94560] transition-all" style={{ width: `${pct}%` }} />
-      </div>
+    <div
+      className="mt-4 text-sm text-gray-400"
+      data-testid="cohort-counter"
+      aria-label="Predictors on the founding list"
+    >
+      <span className="font-mono text-white">{state.claimed.toLocaleString()}</span>{" "}
+      predictors on the founding list
     </div>
   );
 }

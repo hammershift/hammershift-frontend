@@ -33,7 +33,7 @@ export default function WinnersTicker() {
   return (
     <div
       aria-label="Recent winners"
-      className="overflow-hidden mt-12 py-4 border-y border-[#1E2A36]"
+      className="overflow-hidden py-3 border-y border-white/[0.06] bg-[#0A0A1A]/80 backdrop-blur-sm"
       data-testid="winners-ticker"
     >
       <div className="flex gap-8 animate-[ticker_60s_linear_infinite] motion-reduce:animate-none whitespace-nowrap">
