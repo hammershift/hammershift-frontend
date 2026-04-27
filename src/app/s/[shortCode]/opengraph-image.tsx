@@ -8,7 +8,16 @@
 // renders the FallbackCard. External unfurlers (Slack, Twitter,
 // iMessage) must never receive a 500 — a broken unfurl is cached
 // by scrapers and permanently breaks sharing.
+//
+// Satori (the renderer behind next/og) requires every <div> with
+// more than one child node to declare display:"flex" or display:"none".
+// `<div>@{name}</div>` compiles to two children ("@" and {name}) and
+// throws. To stay safe, every div in this file has an explicit display
+// AND text-bearing leaves use template literals so they hold a single
+// string child.
 
+import fs from "node:fs";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 import clientPromise from "@/lib/mongodb";
 
@@ -19,12 +28,26 @@ export const size = { width: 1200, height: 630 } as const;
 export const contentType = "image/png";
 
 // Cache at CDN for 1 day, allow stale-while-revalidate for a week.
-// Scrapers (Slack, Twitter, iMessage) cache aggressively — a short max-age
-// at the browser keeps our own previews fresh during dev.
 const SUCCESS_CACHE =
   "public, immutable, no-transform, max-age=300, s-maxage=86400, stale-while-revalidate=604800";
 // Fallback: short TTL so a missing card becomes a real card quickly once written.
 const FALLBACK_CACHE = "public, max-age=60";
+
+// ---------- Asset loading (cached at module init) ----------
+
+function loadDataUri(relativePath: string, mime: string): string | null {
+  try {
+    const abs = path.join(process.cwd(), "public", relativePath);
+    const buf = fs.readFileSync(abs);
+    return `data:${mime};base64,${buf.toString("base64")}`;
+  } catch (err) {
+    console.warn(`[og-image] failed to load ${relativePath}:`, err);
+    return null;
+  }
+}
+
+const HERO_BG_URI = loadDataUri("images/gate/hero-sonoma-sunset.jpg", "image/jpeg");
+const LOCKUP_URI = loadDataUri("images/brand/velocity-lockup-white.png", "image/png");
 
 // ---------- Narrowing helpers ----------
 
@@ -75,7 +98,6 @@ export default async function OG({
     }
     return new ImageResponse(<FallbackCard />, fallback);
   } catch (err) {
-    // Never 500 — a broken unfurl is cached and permanently breaks shares.
     console.error("[og-image] share_cards lookup failed:", err);
     return new ImageResponse(<FallbackCard />, fallback);
   }
@@ -83,28 +105,117 @@ export default async function OG({
 
 // ---------- Card components ----------
 
-function FallbackCard() {
+const SHELL_STYLE = {
+  display: "flex",
+  flexDirection: "column" as const,
+  position: "relative" as const,
+  width: 1200,
+  height: 630,
+  background: "#0A0A1A",
+  color: "#fff",
+  overflow: "hidden" as const,
+};
+
+function HeroBackground({ opacity = 0.45 }: { opacity?: number }) {
+  if (!HERO_BG_URI) return null;
   return (
     <div
       style={{
         display: "flex",
+        position: "absolute",
+        top: 0,
+        left: 0,
         width: 1200,
         height: 630,
-        background: "#0A0A1A",
-        color: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
       }}
     >
-      <div style={{ fontSize: 32, color: "#E94560", letterSpacing: 2 }}>
-        VELOCITY MARKETS
+      <img
+        src={HERO_BG_URI}
+        width={1200}
+        height={630}
+        style={{ objectFit: "cover", opacity }}
+        alt=""
+      />
+      <div
+        style={{
+          display: "flex",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: 1200,
+          height: 630,
+          background:
+            "linear-gradient(90deg, #0A0A1A 0%, rgba(10,10,26,0.85) 55%, rgba(10,10,26,0.55) 100%)",
+        }}
+      />
+    </div>
+  );
+}
+
+function BrandLockup() {
+  if (!LOCKUP_URI) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          fontSize: 28,
+          color: "#E94560",
+          letterSpacing: 3,
+          fontWeight: 700,
+        }}
+      >
+        VELOCITY
       </div>
-      <div style={{ fontSize: 72, fontWeight: 800, marginTop: 20 }}>
-        Invite-Only
-      </div>
-      <div style={{ fontSize: 24, color: "#9CA3AF", marginTop: 20 }}>
-        velocity-markets.com
+    );
+  }
+  return (
+    <div style={{ display: "flex" }}>
+      <img src={LOCKUP_URI} width={180} height={40} alt="Velocity" />
+    </div>
+  );
+}
+
+function FallbackCard() {
+  return (
+    <div style={SHELL_STYLE}>
+      <HeroBackground opacity={0.35} />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: 80,
+          width: 1200,
+          height: 630,
+          position: "relative",
+          justifyContent: "space-between",
+        }}
+      >
+        <BrandLockup />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ display: "flex", fontSize: 88, fontWeight: 800, lineHeight: 1 }}>
+            Beat the auction.
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 88,
+              fontWeight: 800,
+              lineHeight: 1,
+              color: "#E94560",
+              marginTop: 12,
+            }}
+          >
+            Win real money.
+          </div>
+        </div>
+        <div style={{ display: "flex", fontSize: 24, color: "#9CA3AF" }}>
+          velocity-markets.com
+        </div>
       </div>
     </div>
   );
@@ -112,34 +223,75 @@ function FallbackCard() {
 
 function WelcomeCard({ payload }: { payload: Payload }) {
   const username = str(payload.username, "predictor");
+  const handle = `@${username}`;
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: 1200,
-        height: 630,
-        background: "#0A0A1A",
-        color: "#fff",
-        padding: 80,
-      }}
-    >
-      <div style={{ fontSize: 32, color: "#E94560", letterSpacing: 2 }}>
-        VELOCITY MARKETS
-      </div>
-      <div style={{ fontSize: 96, fontWeight: 800, marginTop: 40 }}>I&apos;m in.</div>
-      <div style={{ fontSize: 40, color: "#9CA3AF", marginTop: 20 }}>
-        @{username}
-      </div>
+    <div style={SHELL_STYLE}>
+      <HeroBackground opacity={0.4} />
       <div
         style={{
-          marginTop: "auto",
-          fontSize: 24,
-          color: "#6B7280",
           display: "flex",
+          flexDirection: "column",
+          padding: 80,
+          width: 1200,
+          height: 630,
+          position: "relative",
+          justifyContent: "space-between",
         }}
       >
-        velocity-markets.com
+        <BrandLockup />
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 28,
+              color: "#E94560",
+              letterSpacing: 6,
+              fontWeight: 700,
+              textTransform: "uppercase",
+            }}
+          >
+            Founding member
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 200,
+              fontWeight: 800,
+              lineHeight: 0.95,
+              marginTop: 24,
+              letterSpacing: -4,
+            }}
+          >
+            I&apos;m in.
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 44,
+              color: "#fff",
+              marginTop: 28,
+              fontWeight: 600,
+            }}
+          >
+            {handle}
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}
+        >
+          <div style={{ display: "flex", fontSize: 24, color: "#9CA3AF" }}>
+            velocity-markets.com
+          </div>
+          <div style={{ display: "flex", fontSize: 22, color: "#6B7280" }}>
+            Predict car auction prices. Win real money.
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -150,61 +302,85 @@ function WinnerCard({ payload }: { payload: Payload }) {
   const payout = num(payload.payout, 0);
   const pick = str(payload.pick, "");
   const marketTitle = str(payload.marketTitle, "");
+  const handleLine = pick
+    ? `@${username} called ${pick}`
+    : `@${username}`;
+  const payoutLabel = `+$${Math.round(payout).toLocaleString("en-US")}`;
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: 1200,
-        height: 630,
-        background: "#0A0A1A",
-        color: "#fff",
-        padding: 80,
-      }}
-    >
-      <div style={{ fontSize: 32, color: "#00D4AA", letterSpacing: 2 }}>
-        WINNER
-      </div>
+    <div style={SHELL_STYLE}>
+      <HeroBackground opacity={0.3} />
       <div
         style={{
-          fontSize: 140,
-          fontWeight: 800,
-          marginTop: 20,
-          fontFamily: "monospace",
-          color: "#00D4AA",
-        }}
-      >
-        +${Math.round(payout).toLocaleString("en-US")}
-      </div>
-      <div style={{ fontSize: 36, marginTop: 20, display: "flex" }}>
-        @{username}
-        {pick ? ` called ${pick}` : ""}
-      </div>
-      {marketTitle ? (
-        <div
-          style={{
-            fontSize: 28,
-            color: "#9CA3AF",
-            marginTop: 10,
-            maxWidth: 1040,
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-            display: "flex",
-          }}
-        >
-          {marketTitle}
-        </div>
-      ) : null}
-      <div
-        style={{
-          marginTop: "auto",
-          fontSize: 24,
-          color: "#6B7280",
           display: "flex",
+          flexDirection: "column",
+          padding: 80,
+          width: 1200,
+          height: 630,
+          position: "relative",
+          justifyContent: "space-between",
         }}
       >
-        velocity-markets.com
+        <BrandLockup />
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 28,
+              color: "#00D4AA",
+              letterSpacing: 6,
+              fontWeight: 700,
+              textTransform: "uppercase",
+            }}
+          >
+            Winner
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 168,
+              fontWeight: 800,
+              lineHeight: 0.95,
+              marginTop: 16,
+              fontFamily: "monospace",
+              color: "#00D4AA",
+              letterSpacing: -4,
+            }}
+          >
+            {payoutLabel}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 36,
+              marginTop: 24,
+              color: "#fff",
+              fontWeight: 600,
+            }}
+          >
+            {handleLine}
+          </div>
+          {marketTitle ? (
+            <div
+              style={{
+                display: "flex",
+                fontSize: 26,
+                color: "#9CA3AF",
+                marginTop: 8,
+                maxWidth: 1040,
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {marketTitle}
+            </div>
+          ) : null}
+        </div>
+
+        <div style={{ display: "flex", fontSize: 24, color: "#9CA3AF" }}>
+          velocity-markets.com
+        </div>
       </div>
     </div>
   );
@@ -219,56 +395,79 @@ function TournamentCard({ payload }: { payload: Payload }) {
   // then clamp to [0, 100] so a bad payload can't break the card layout.
   const rawPct = accuracy <= 1 ? accuracy * 100 : accuracy;
   const accuracyPct = Math.max(0, Math.min(100, Math.round(rawPct)));
+  const placementLabel = `#${placement}`;
+  const meta = `@${username} · ${accuracyPct}% accuracy`;
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: 1200,
-        height: 630,
-        background: "#0A0A1A",
-        color: "#fff",
-        padding: 80,
-      }}
-    >
-      <div style={{ fontSize: 32, color: "#FFB547", letterSpacing: 2 }}>
-        TOURNAMENT FINISH
-      </div>
+    <div style={SHELL_STYLE}>
+      <HeroBackground opacity={0.3} />
       <div
         style={{
-          fontSize: 120,
-          fontWeight: 800,
-          marginTop: 20,
-          fontFamily: "monospace",
-          color: "#FFB547",
-        }}
-      >
-        #{placement}
-      </div>
-      <div style={{ fontSize: 36, marginTop: 20, display: "flex" }}>
-        @{username} · {accuracyPct}% accuracy
-      </div>
-      {tournamentName ? (
-        <div
-          style={{
-            fontSize: 28,
-            color: "#9CA3AF",
-            marginTop: 10,
-            display: "flex",
-          }}
-        >
-          {tournamentName}
-        </div>
-      ) : null}
-      <div
-        style={{
-          marginTop: "auto",
-          fontSize: 24,
-          color: "#6B7280",
           display: "flex",
+          flexDirection: "column",
+          padding: 80,
+          width: 1200,
+          height: 630,
+          position: "relative",
+          justifyContent: "space-between",
         }}
       >
-        velocity-markets.com
+        <BrandLockup />
+
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 28,
+              color: "#FFB547",
+              letterSpacing: 6,
+              fontWeight: 700,
+              textTransform: "uppercase",
+            }}
+          >
+            Tournament finish
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 168,
+              fontWeight: 800,
+              lineHeight: 0.95,
+              marginTop: 16,
+              fontFamily: "monospace",
+              color: "#FFB547",
+              letterSpacing: -4,
+            }}
+          >
+            {placementLabel}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 36,
+              marginTop: 24,
+              color: "#fff",
+              fontWeight: 600,
+            }}
+          >
+            {meta}
+          </div>
+          {tournamentName ? (
+            <div
+              style={{
+                display: "flex",
+                fontSize: 26,
+                color: "#9CA3AF",
+                marginTop: 8,
+              }}
+            >
+              {tournamentName}
+            </div>
+          ) : null}
+        </div>
+
+        <div style={{ display: "flex", fontSize: 24, color: "#9CA3AF" }}>
+          velocity-markets.com
+        </div>
       </div>
     </div>
   );
