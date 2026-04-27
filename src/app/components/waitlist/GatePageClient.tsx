@@ -1,5 +1,4 @@
 "use client";
-import CohortCounter from "./CohortCounter";
 import GateFaq from "./GateFaq";
 import GateHero from "./GateHero";
 import HowItWorks from "./HowItWorks";
@@ -36,7 +35,6 @@ export default function GatePageClient({ mode, email, referralCode }: Props) {
         {mode === "cold" && (
           <div data-testid="gate-cold">
             <WaitlistSignupForm />
-            <CohortCounter />
           </div>
         )}
 

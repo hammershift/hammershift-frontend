@@ -4,12 +4,10 @@ import { signupOnWaitlist } from "./helpers/fixtures";
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("gate states", () => {
-  test("state A: cold visitor sees hero + cohort + blurred", async ({ page }) => {
+  test("state A: cold visitor sees gate", async ({ page }) => {
     test.skip(process.env.LAUNCH_GATE_ENABLED !== "true", "Gate not enabled");
     await page.goto("/");
     await expect(page.getByTestId("gate-cold")).toBeVisible();
-    await expect(page.getByTestId("cohort-counter")).toBeVisible();
-    await expect(page.getByTestId("blurred-cards")).toBeVisible();
   });
 
   test("state B: waitlisted user via API seed", async ({ request }) => {
