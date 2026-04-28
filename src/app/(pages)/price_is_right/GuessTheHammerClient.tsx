@@ -23,6 +23,7 @@ import {
   Info,
   Filter,
 } from "lucide-react";
+import AuctionDetailsDrawer from "@/app/components/price_is_right/AuctionDetailsDrawer";
 
 /* ── Error boundary so a runtime crash shows a fallback, not a white screen ── */
 class GuessTheHammerErrorBoundary extends React.Component<
@@ -170,12 +171,14 @@ function AuctionCardItem({
   guessedPrice,
   loggedIn,
   onSelect,
+  onDetails,
 }: {
   auction: AuctionCard;
   alreadyGuessed: boolean;
   guessedPrice?: number;
   loggedIn: boolean;
   onSelect: () => void;
+  onDetails: () => void;
 }) {
   const isOpen = auction.status === "open";
   const isEndingSoon = auction.status === "ending_soon";
@@ -239,21 +242,54 @@ function AuctionCardItem({
             </p>
           </div>
         ) : isOpen ? (
-          <button
-            onClick={onSelect}
-            className="w-full bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold py-2.5 rounded-lg transition text-sm"
-          >
-            Make Your Guess
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onDetails}
+              aria-label={`View details for ${typeof auction.title === "string" ? auction.title : "auction"}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] px-3 py-2 text-sm text-gray-300 hover:text-white hover:border-white/[0.2] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E94560]"
+            >
+              <Info className="h-4 w-4" aria-hidden />
+              Details
+            </button>
+            <button
+              onClick={onSelect}
+              className="flex-1 bg-[#E94560] hover:bg-[#E94560]/90 text-white font-semibold py-2.5 rounded-lg transition text-sm"
+            >
+              Make Your Guess
+            </button>
+          </div>
         ) : isEndingSoon ? (
-          <div className="flex items-center justify-center gap-2 py-2.5 text-xs text-[#FFB547] bg-[#FFB547]/5 border border-[#FFB547]/10 rounded-lg">
-            <Lock className="w-3.5 h-3.5" />
-            Guessing closed — ending soon
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onDetails}
+              aria-label={`View details for ${typeof auction.title === "string" ? auction.title : "auction"}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] px-3 py-2 text-sm text-gray-300 hover:text-white hover:border-white/[0.2] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E94560]"
+            >
+              <Info className="h-4 w-4" aria-hidden />
+              Details
+            </button>
+            <div className="flex-1 flex items-center justify-center gap-2 py-2.5 text-xs text-[#FFB547] bg-[#FFB547]/5 border border-[#FFB547]/10 rounded-lg">
+              <Lock className="w-3.5 h-3.5" />
+              Guessing closed — ending soon
+            </div>
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-2 py-2.5 text-xs text-gray-500">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            Auction ended — awaiting results
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onDetails}
+              aria-label={`View details for ${typeof auction.title === "string" ? auction.title : "auction"}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] px-3 py-2 text-sm text-gray-300 hover:text-white hover:border-white/[0.2] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E94560]"
+            >
+              <Info className="h-4 w-4" aria-hidden />
+              Details
+            </button>
+            <div className="flex-1 flex items-center justify-center gap-2 py-2.5 text-xs text-gray-500">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Auction ended — awaiting results
+            </div>
           </div>
         )}
       </div>
@@ -320,6 +356,16 @@ function GuessTheHammerInner({
   const [makeFilter, setMakeFilter] = useState<string>("all");
   const [showAllOpen, setShowAllOpen] = useState(false);
   const [showScoring, setShowScoring] = useState(false);
+  const [detailsOpenId, setDetailsOpenId] = useState<string | null>(null);
+
+  const detailsAuction =
+    detailsOpenId === null
+      ? null
+      : auctions.find(
+          (a) =>
+            (typeof a.auctionId === "string" && a.auctionId === detailsOpenId) ||
+            (typeof a._id === "string" && a._id === detailsOpenId)
+        ) ?? null;
 
   const FEATURED_COUNT = 20;
 
@@ -600,6 +646,7 @@ function GuessTheHammerInner({
                         guessedPrice={localGuesses[auction._id]}
                         loggedIn={loggedIn}
                         onSelect={() => handleSelect(auction)}
+                        onDetails={() => setDetailsOpenId(auction._id)}
                       />
                     ))}
                   </div>
@@ -635,6 +682,7 @@ function GuessTheHammerInner({
                         guessedPrice={localGuesses[auction._id]}
                         loggedIn={loggedIn}
                         onSelect={() => {}}
+                        onDetails={() => setDetailsOpenId(auction._id)}
                       />
                     ))}
                   </div>
@@ -660,6 +708,7 @@ function GuessTheHammerInner({
                         guessedPrice={localGuesses[auction._id]}
                         loggedIn={loggedIn}
                         onSelect={() => {}}
+                        onDetails={() => setDetailsOpenId(auction._id)}
                       />
                     ))}
                   </div>
@@ -860,6 +909,21 @@ function GuessTheHammerInner({
           </div>
         </div>
       )}
+
+      {/* ── Auction Details Drawer ────────────────────────────────────── */}
+      <AuctionDetailsDrawer
+        auction={detailsAuction}
+        open={detailsOpenId !== null}
+        onOpenChange={(o) => {
+          if (!o) setDetailsOpenId(null);
+        }}
+        onMakeGuess={() => {
+          if (detailsAuction) {
+            setDetailsOpenId(null);
+            handleSelect(detailsAuction);
+          }
+        }}
+      />
     </div>
   );
 }
