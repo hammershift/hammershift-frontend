@@ -7,10 +7,20 @@ test.describe("guess the hammer — details drawer", () => {
   }) => {
     await page.goto("/price_is_right");
 
-    // Wait for the first card with a Details button to appear. If the page
-    // requires auth or returns no auctions in this environment, skip.
+    // Wait for the first card with a Details button to appear. When run
+    // against a seeded environment (E2E_HAS_DATA=1), require auctions to be
+    // present and fail loudly if they aren't — otherwise this spec silently
+    // green-skips in CI and rubber-stamps real regressions. In local dev or
+    // anywhere without a seed, allow the skip.
     const detailsButton = page.getByRole("button", { name: /^view details/i }).first();
-    if ((await detailsButton.count()) === 0) {
+    const detailsCount = await detailsButton.count();
+    if (detailsCount === 0) {
+      const requireData = process.env.E2E_HAS_DATA === "1";
+      if (requireData) {
+        throw new Error(
+          "E2E_HAS_DATA=1 but no auctions render on /price_is_right — seed required",
+        );
+      }
       test.skip(true, "No auctions on the page in this env");
     }
 
