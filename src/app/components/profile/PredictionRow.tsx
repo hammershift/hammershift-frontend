@@ -9,7 +9,7 @@ export interface PredictionRowItem {
   yourCall: string;
   status: PredictionStatus;
   modeLabel: "Tournament" | "Free-play";
-  createdAt: string; // ISO 8601
+  createdAt: string | null; // ISO 8601, or null if missing
   auctionHref?: string;
 }
 
@@ -35,11 +35,18 @@ const DATE_FMT = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 });
 
+// Returns a formatted date string, or null when the input is missing/invalid.
+// Belt-and-suspenders: callers pass null when they know the source field is
+// missing; this function additionally returns null on malformed ISO strings
+// that slip through, so the caller can drop the date span entirely.
+function formatDate(iso: string | null): string | null {
+  if (iso === null) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : DATE_FMT.format(d);
+}
+
 export default function PredictionRow({ item }: Props) {
-  const dateLabel = (() => {
-    const d = new Date(item.createdAt);
-    return Number.isNaN(d.getTime()) ? "" : DATE_FMT.format(d);
-  })();
+  const dateLabel = formatDate(item.createdAt);
 
   const inner = (
     <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-[#13202D] p-4 transition hover:border-white/[0.12]">
@@ -65,7 +72,7 @@ export default function PredictionRow({ item }: Props) {
           </span>
           <span className="mx-2 text-gray-600">·</span>
           <span>{item.modeLabel}</span>
-          {dateLabel ? (
+          {dateLabel !== null ? (
             <>
               <span className="mx-2 text-gray-600">·</span>
               <span className="font-mono tabular-nums">{dateLabel}</span>

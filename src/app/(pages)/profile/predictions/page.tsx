@@ -25,6 +25,10 @@ export const metadata = {
 };
 
 const PAGE_SIZE = 20;
+// Hard ceiling protects render latency; users with >500 predictions will see
+// only their most recent 500 in this view. If we need full history, replace
+// with cursor pagination + Mongo-side filters.
+const MAX_FETCH = 500;
 
 interface SearchParams {
   status?: string;
@@ -146,6 +150,7 @@ export default async function PredictionsPage({ searchParams }: PageProps) {
     ),
     Predictions.find(baseFilter)
       .sort({ createdAt: -1 })
+      .limit(MAX_FETCH)
       .populate({
         path: "auction_id",
         model: "Auction",
@@ -168,7 +173,7 @@ export default async function PredictionsPage({ searchParams }: PageProps) {
         yourCall: fmtUsd(Number(p.predictedPrice ?? 0)),
         status: predStatus,
         modeLabel: p.tournament_id ? "Tournament" : "Free-play",
-        createdAt: (p.createdAt ?? new Date(0)).toISOString(),
+        createdAt: p.createdAt ? p.createdAt.toISOString() : null,
         auctionHref: a.auction_id
           ? `/auction_details?id=${a.auction_id}`
           : undefined,

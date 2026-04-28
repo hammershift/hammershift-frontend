@@ -117,9 +117,16 @@ function SegmentedControl<T extends string>({
   value,
   onChange,
 }: SegmentedControlProps<T>) {
+  // We use the ARIA APG tablist pattern (not radiogroup) because these toggles
+  // change a URL filter, not a form value, and because we want a single tab
+  // stop with the active option visibly selected. Per the APG, tablist permits
+  // Tab-only navigation when the selected indicator is visible. Arrow-key
+  // cycling is not implemented here — acceptable for a filter strip where
+  // each option is a separate, visually-distinct button. If we add more
+  // options later, consider adding ArrowLeft/ArrowRight focus cycling.
   return (
     <div
-      role="radiogroup"
+      role="tablist"
       aria-label={ariaLabel}
       className="inline-flex items-center gap-1 rounded-lg bg-[#0A0A1A]/60 p-1"
     >
@@ -129,8 +136,9 @@ function SegmentedControl<T extends string>({
           <button
             key={opt.value}
             type="button"
-            role="radio"
-            aria-checked={active}
+            role="tab"
+            aria-selected={active ? "true" : "false"}
+            tabIndex={active ? 0 : -1}
             onClick={() => onChange(opt.value)}
             className={
               active
