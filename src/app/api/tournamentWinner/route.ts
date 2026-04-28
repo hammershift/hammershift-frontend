@@ -426,10 +426,30 @@ export async function GET(req: NextRequest) {
     await mongoSession.commitTransaction();
     return NextResponse.json({ message: 'Tournaments processed successfully' }, { status: 200 });
   } catch (error) {
-    await mongoSession.abortTransaction();
-    console.error('Error in POST API:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    // Log the original error FIRST so it reaches CloudWatch even if abort
+    // throws below.
+    console.error('Error in tournamentWinner:', error);
+    // Defensive abort: if startTransaction itself failed, there's no
+    // transaction to abort and the driver will throw "no transaction in
+    // progress" — which would escape this catch and produce a generic
+    // empty-body 500 in production.
+    try {
+      if (mongoSession.inTransaction()) {
+        await mongoSession.abortTransaction();
+      }
+    } catch (abortErr) {
+      console.error('tournamentWinner: abortTransaction also failed:', abortErr);
+    }
+    const detail = error instanceof Error ? error.message : String(error);
+    return NextResponse.json(
+      { message: 'Internal server error', detail },
+      { status: 500 }
+    );
   } finally {
-    mongoSession.endSession();
+    try {
+      await mongoSession.endSession();
+    } catch (endErr) {
+      console.error('tournamentWinner: endSession failed:', endErr);
+    }
   }
 }
