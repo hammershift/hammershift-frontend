@@ -52,6 +52,9 @@ export default function TournamentsPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [sortBy, setSortBy] = useState<SortOption>('ending_soon');
+  // Once the user picks a sort manually, stop auto-flipping it when the
+  // status tab changes — they overrode the default and we should respect it.
+  const [hasManualSort, setHasManualSort] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   // Ladder
@@ -146,6 +149,15 @@ export default function TournamentsPage() {
       .catch(() => {})
       .finally(() => setLadderLoading(false));
   }, []);
+
+  // Default sort follows the active tab so users don't see ancient
+  // tournaments at the top of the Completed view: completed → newest first,
+  // everything else → ending soonest. Once the user picks a sort manually,
+  // hasManualSort latches and we stop auto-flipping.
+  useEffect(() => {
+    if (hasManualSort) return;
+    setSortBy(statusFilter === 'completed' ? 'newest' : 'ending_soon');
+  }, [statusFilter, hasManualSort]);
 
   // Apply filters and sorting
   useEffect(() => {
@@ -375,7 +387,10 @@ export default function TournamentsPage() {
             <label className="mb-2 block text-sm text-gray-400">Sort By</label>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              onChange={(e) => {
+                setHasManualSort(true);
+                setSortBy(e.target.value as SortOption);
+              }}
               className="w-full rounded-md border border-white/[0.08] bg-[#16181f] p-2 text-white"
             >
               <option value="ending_soon">Ending Soon</option>
