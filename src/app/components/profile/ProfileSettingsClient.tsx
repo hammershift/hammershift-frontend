@@ -79,18 +79,18 @@ export default function ProfileSettingsClient({ user }: Props) {
     null
   );
 
-  // Cleanup any pending saved-flash timers on unmount
+  // Cleanup any pending saved-flash timers on unmount.
+  // The exhaustive-deps rule's ref-cleanup warning is meant for DOM refs;
+  // these are setTimeout handles and we want the LATEST ones cleared at
+  // unmount, not snapshots from mount time.
   useEffect(() => {
+    const profileRef = profileSavedTimerRef;
+    const emailRef = emailSavedTimerRef;
+    const securityRef = securitySavedTimerRef;
     return () => {
-      if (profileSavedTimerRef.current) {
-        clearTimeout(profileSavedTimerRef.current);
-      }
-      if (emailSavedTimerRef.current) {
-        clearTimeout(emailSavedTimerRef.current);
-      }
-      if (securitySavedTimerRef.current) {
-        clearTimeout(securitySavedTimerRef.current);
-      }
+      if (profileRef.current) clearTimeout(profileRef.current);
+      if (emailRef.current) clearTimeout(emailRef.current);
+      if (securityRef.current) clearTimeout(securityRef.current);
     };
   }, []);
 
