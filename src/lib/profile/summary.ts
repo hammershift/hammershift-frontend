@@ -1,12 +1,12 @@
 import { Types } from "mongoose";
 import connectToDB from "@/lib/mongoose";
 import { Predictions } from "@/models/predictions.model";
-import Wallet from "@/models/wallet";
 import Streak from "@/models/streak.model";
 import Badge from "@/models/badge.model";
 import { ShareCard } from "@/models/shareCard.model";
 import Transaction from "@/models/transaction";
 import Tournaments from "@/models/tournament.model";
+import { BadgeType } from "@/types/badge-types";
 
 // Side-effect import: ensure the Auction model is registered with mongoose
 // before populate("auction_id", …) runs. Without it the populate will throw
@@ -72,10 +72,6 @@ export interface ProfileSummary {
 interface AccuracyAggResult {
   _id: null;
   avg_accuracy: number;
-}
-
-interface WalletDoc {
-  balance?: number;
 }
 
 interface StreakDoc {
@@ -144,18 +140,18 @@ interface TournamentDocLite {
   endTime?: Date;
 }
 
-const BADGE_LABELS: Record<string, string> = {
-  first_prediction: "First Prediction",
-  first_win: "First Win",
-  hot_start: "Hot Start",
-  on_fire: "On Fire",
-  unstoppable: "Unstoppable",
-  legend: "Legend",
-  tournament_rookie: "Tournament Rookie",
-  tournament_champion: "Tournament Champion",
-  sharpshooter: "Sharpshooter",
-  centurion: "Centurion",
-  top_10: "Top 10",
+const BADGE_LABELS: Record<BadgeType, string> = {
+  [BadgeType.FIRST_PREDICTION]: "First Prediction",
+  [BadgeType.FIRST_WIN]: "First Win",
+  [BadgeType.HOT_START]: "Hot Start",
+  [BadgeType.ON_FIRE]: "On Fire",
+  [BadgeType.UNSTOPPABLE]: "Unstoppable",
+  [BadgeType.LEGEND]: "Legend",
+  [BadgeType.TOURNAMENT_ROOKIE]: "Tournament Rookie",
+  [BadgeType.TOURNAMENT_CHAMPION]: "Tournament Champion",
+  [BadgeType.SHARPSHOOTER]: "Sharpshooter",
+  [BadgeType.CENTURION]: "Centurion",
+  [BadgeType.TOP_10]: "Top 10",
 };
 
 function fmtUsd(n: number): string {
@@ -205,7 +201,7 @@ export async function fetchProfileSummary(userId: string): Promise<ProfileSummar
   const [
     predictionsCount,
     accuracyAgg,
-    walletDoc,
+    lifetimeEarningsAgg,
     recentPredictionsRaw,
     streakDoc,
     badgeDocs,
@@ -219,7 +215,7 @@ export async function fetchProfileSummary(userId: string): Promise<ProfileSummar
     Predictions.aggregate<AccuracyAggResult>([
       {
         $match: {
-          "user.userId": userId,
+          "user.userId": toObjectIdLike(userId),
           score: { $exists: true, $ne: null },
           delta_from_actual: { $ne: null },
         },
@@ -261,11 +257,25 @@ export async function fetchProfileSummary(userId: string): Promise<ProfileSummar
         },
       },
     ]).catch(() => [] as AccuracyAggResult[]),
-    Wallet.findOne({ userID: userId }).lean<WalletDoc | null>().catch(() => null),
+    // Lifetime winnings — sum every "+ winnings" transaction for this user.
+    Transaction.aggregate<{ _id: null; total: number }>([
+      {
+        $match: {
+          userID: toObjectIdLike(userId),
+          transactionType: "winnings",
+          type: "+",
+        },
+      },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]).catch(() => [] as Array<{ _id: null; total: number }>),
     Predictions.find({ "user.userId": userId })
       .sort({ createdAt: -1 })
       .limit(3)
-      .populate({ path: "auction_id", model: "Auction" })
+      .populate({
+        path: "auction_id",
+        model: "Auction",
+        select: "title image images_list",
+      })
       .lean<PopulatedPrediction[]>()
       .catch(() => [] as PopulatedPrediction[]),
     Streak.findOne({ user_id: userId }).lean<StreakDoc | null>().catch(() => null),
@@ -328,7 +338,8 @@ export async function fetchProfileSummary(userId: string): Promise<ProfileSummar
 
   const accuracyPct = accuracyAgg.length > 0 ? accuracyAgg[0].avg_accuracy ?? 0 : 0;
 
-  const earningsUsd = Math.round(walletDoc?.balance ?? 0);
+  const earningsUsd =
+    lifetimeEarningsAgg.length > 0 ? Math.round(lifetimeEarningsAgg[0].total) : 0;
 
   const recent: RecentPrediction[] = (recentPredictionsRaw ?? []).map((p) => {
     const auction = p.auction_id ?? null;
@@ -348,7 +359,7 @@ export async function fetchProfileSummary(userId: string): Promise<ProfileSummar
 
   const badges: RecentBadge[] = (badgeDocs ?? []).map((b) => ({
     id: String(b._id),
-    name: BADGE_LABELS[b.badge_type] ?? b.badge_type,
+    name: BADGE_LABELS[b.badge_type as BadgeType] ?? b.badge_type,
     earnedAt: b.earned_at ?? new Date(0),
   }));
 

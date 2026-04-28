@@ -13,7 +13,7 @@ interface Props {
 const STATUS_LABEL: Record<PredictionStatus, string> = {
   won: "Won",
   lost: "Lost",
-  pending: "Live",
+  pending: "Pending",
 };
 
 const STATUS_CHIP: Record<PredictionStatus, string> = {
