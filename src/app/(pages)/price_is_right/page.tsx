@@ -221,6 +221,8 @@ async function getPageData() {
             description: Array.isArray(a.description)
               ? a.description.slice(0, 8)
               : a.description,
+            descriptionTruncated:
+              Array.isArray(a.description) && a.description.length > 8,
             listing_details: a.listing_details,
             page_url: a.page_url,
             sort: a.sort,
