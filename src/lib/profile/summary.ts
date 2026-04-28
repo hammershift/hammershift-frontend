@@ -87,11 +87,10 @@ export async function fetchProfileSummary(userId: string): Promise<ProfileSummar
 
   const accuracyPct = accuracyAgg.length > 0 ? accuracyAgg[0].avg_accuracy ?? 0 : 0;
 
-  // The wallet model only tracks current balance — no lifetime winnings field
-  // exists yet. Fall back to 0; the EarningsTile will pick the right source
-  // once it lands in a later task.
-  const earningsUsd = 0;
-  void walletDoc; // explicit no-op so the wallet read isn't accidentally dropped during refactors
+  // Use current wallet balance as the starting earnings figure — same value
+  // shown on /my_wallet. If the design later wants lifetime winnings, swap
+  // the source here.
+  const earningsUsd = Math.round(walletDoc?.balance ?? 0);
 
   return {
     stats: {

@@ -70,13 +70,15 @@ export default function ProfileHero({
         <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
           <div className="shrink-0">
             {avatarUrl ? (
-              <Image
-                src={avatarUrl}
-                alt={`${displayName} avatar`}
-                width={96}
-                height={96}
-                className="rounded-full ring-2 ring-[#E94560]/40"
-              />
+              <div className="relative h-16 w-16 md:h-24 md:w-24 rounded-full overflow-hidden ring-2 ring-[#E94560]/40">
+                <Image
+                  src={avatarUrl}
+                  alt={`${displayName} avatar`}
+                  fill
+                  sizes="(max-width: 768px) 64px, 96px"
+                  className="object-cover"
+                />
+              </div>
             ) : (
               <div className="h-16 w-16 md:h-24 md:w-24 rounded-full bg-[#13202D] ring-2 ring-[#E94560]/40 flex items-center justify-center text-xl md:text-3xl font-bold text-white">
                 {initials(displayName)}
@@ -103,6 +105,7 @@ export default function ProfileHero({
                   {`Founding member since ${fmtMonth(createdAt)}`}
                 </p>
               </div>
+              {/* Spoke route — created in Task 5.1 of docs/plans/2026-04-27-profile-redesign-plan.md */}
               <Link
                 href="/profile/settings"
                 className="shrink-0 text-sm text-gray-300 hover:text-white border border-white/[0.08] rounded-lg px-3 py-2 transition"
