@@ -12,7 +12,10 @@ import CardsGalleryClient, {
 } from "@/app/components/profile/CardsGalleryClient";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Share cards · Velocity Markets" };
+export const metadata = {
+  title: "Share cards · Velocity Markets",
+  robots: { index: false, follow: false },
+};
 
 interface UserGate {
   _id: unknown;

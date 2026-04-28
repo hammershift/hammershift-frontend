@@ -13,7 +13,10 @@ import { fetchProfileSummary } from "@/lib/profile/summary";
 import { resolveBaseUrl } from "@/lib/profile/baseUrl";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Profile · Velocity Markets" };
+export const metadata = {
+  title: "Profile · Velocity Markets",
+  robots: { index: false, follow: false },
+};
 
 interface UserHubFields {
   _id: unknown;
