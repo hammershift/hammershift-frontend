@@ -82,6 +82,7 @@ export default function AuctionDetailsDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         data-testid="auction-details-drawer"
+        aria-describedby="auction-drawer-description"
         className="w-full sm:max-w-[520px] bg-[#0A0A1A] border-l border-white/[0.08] p-0 flex flex-col"
       >
         <SheetHeader className="px-5 py-4 border-b border-white/[0.06]">
@@ -89,7 +90,7 @@ export default function AuctionDetailsDrawer({
             <Info className="h-4 w-4 text-[#E94560]" aria-hidden />
             Auction details
           </SheetTitle>
-          <p className="sr-only">
+          <p id="auction-drawer-description" className="sr-only">
             Vehicle photos, specs, highlights and description
           </p>
         </SheetHeader>
@@ -152,7 +153,7 @@ export default function AuctionDetailsDrawer({
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500 mb-2">
                 Description
               </h3>
-              <div id="auction-drawer-description" className="space-y-3 text-sm text-gray-300 leading-relaxed">
+              <div id="auction-drawer-description-content" className="space-y-3 text-sm text-gray-300 leading-relaxed">
                 {visibleDescription.map((b, i) =>
                   b.kind === "p" ? (
                     <p key={i}>{b.text}</p>
@@ -170,7 +171,7 @@ export default function AuctionDetailsDrawer({
                   type="button"
                   onClick={() => setDescriptionExpanded((v) => !v)}
                   aria-expanded={descriptionExpanded}
-                  aria-controls="auction-drawer-description"
+                  aria-controls="auction-drawer-description-content"
                   className="mt-2 text-xs text-[#E94560] hover:underline focus-visible:underline focus-visible:outline-none"
                 >
                   {descriptionExpanded ? "Read less" : "Read more"}

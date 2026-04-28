@@ -114,8 +114,9 @@ export function getDescriptionBlocks(auction: AuctionLike): DescriptionBlock[] {
   if (!Array.isArray(desc)) return [];
   const out: DescriptionBlock[] = [];
   for (const block of desc) {
-    if (typeof block === "string" && block.trim().length > 0) {
-      out.push({ kind: "p", text: block });
+    if (typeof block === "string") {
+      const text = block.trim();
+      if (text.length > 0) out.push({ kind: "p", text });
     } else if (Array.isArray(block)) {
       const items = block.filter(
         (s): s is string => typeof s === "string" && s.trim().length > 0
