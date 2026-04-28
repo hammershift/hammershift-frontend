@@ -1,7 +1,7 @@
 // src/app/components/price_is_right/AuctionDetailsDrawer.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink, Info } from "lucide-react";
@@ -123,7 +123,7 @@ export default function AuctionDetailsDrawer({
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500 mb-2">
                 Highlights
               </h3>
-              <ul className="space-y-1.5 text-sm text-gray-200">
+              <ul id="auction-drawer-highlights" className="space-y-1.5 text-sm text-gray-200">
                 {visibleHighlights.map((h, i) => (
                   <li key={i} className="flex gap-2">
                     <span aria-hidden className="text-[#E94560] shrink-0">
@@ -137,7 +137,9 @@ export default function AuctionDetailsDrawer({
                 <button
                   type="button"
                   onClick={() => setShowAllHighlights((v) => !v)}
-                  className="mt-2 text-xs text-[#E94560] hover:underline"
+                  aria-expanded={showAllHighlights}
+                  aria-controls="auction-drawer-highlights"
+                  className="mt-2 text-xs text-[#E94560] hover:underline focus-visible:underline focus-visible:outline-none"
                 >
                   {showAllHighlights ? "Show fewer" : `Show ${highlights.length - MAX_HIGHLIGHTS} more`}
                 </button>
@@ -150,7 +152,7 @@ export default function AuctionDetailsDrawer({
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-500 mb-2">
                 Description
               </h3>
-              <div className="space-y-3 text-sm text-gray-300 leading-relaxed">
+              <div id="auction-drawer-description" className="space-y-3 text-sm text-gray-300 leading-relaxed">
                 {visibleDescription.map((b, i) =>
                   b.kind === "p" ? (
                     <p key={i}>{b.text}</p>
@@ -167,7 +169,9 @@ export default function AuctionDetailsDrawer({
                 <button
                   type="button"
                   onClick={() => setDescriptionExpanded((v) => !v)}
-                  className="mt-2 text-xs text-[#E94560] hover:underline"
+                  aria-expanded={descriptionExpanded}
+                  aria-controls="auction-drawer-description"
+                  className="mt-2 text-xs text-[#E94560] hover:underline focus-visible:underline focus-visible:outline-none"
                 >
                   {descriptionExpanded ? "Read less" : "Read more"}
                 </button>
@@ -193,21 +197,19 @@ export default function AuctionDetailsDrawer({
         <div
           role="region"
           aria-label="Auction actions"
-          className="border-t border-white/[0.06] bg-[#0A0A1A] px-5 py-4 space-y-3"
+          className="border-t border-white/[0.06] bg-[#0A0A1A] px-5 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] space-y-3"
         >
           {status.currentBidUsd !== null || status.deadline !== null ? (
-            <div className="flex items-center justify-between text-xs text-gray-400">
+            <div className={`flex items-center text-xs text-gray-400 ${
+              status.currentBidUsd !== null ? "justify-between" : "justify-end"
+            }`}>
               {status.currentBidUsd !== null ? (
                 <span className="font-mono tabular-nums text-white">
                   {`$${status.currentBidUsd.toLocaleString("en-US")}`}
                 </span>
-              ) : (
-                <span />
-              )}
+              ) : null}
               {status.deadline !== null ? (
-                <span className="font-mono tabular-nums">
-                  {formatTimeLeft(status.deadline)}
-                </span>
+                <Countdown deadline={status.deadline} />
               ) : null}
             </div>
           ) : null}
@@ -250,7 +252,6 @@ function Gallery({ images, altBase }: { images: Array<{ src: string }>; altBase:
           fill
           sizes="(max-width: 640px) 100vw, 520px"
           className="object-cover"
-          unoptimized
         />
       </div>
       {images.length > 1 ? (
@@ -274,7 +275,6 @@ function Gallery({ images, altBase }: { images: Array<{ src: string }>; altBase:
                 fill
                 sizes="64px"
                 className="object-cover"
-                unoptimized
               />
             </button>
           ))}
@@ -284,8 +284,23 @@ function Gallery({ images, altBase }: { images: Array<{ src: string }>; altBase:
   );
 }
 
-function formatTimeLeft(deadline: Date): string {
-  const ms = deadline.getTime() - Date.now();
+function Countdown({ deadline }: { deadline: Date }) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const target = deadline.getTime();
+    if (target <= Date.now()) return;
+    const id = setInterval(() => {
+      const t = Date.now();
+      setNow(t);
+      if (t >= target) clearInterval(id);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [deadline]);
+  return <span className="font-mono tabular-nums">{formatTimeLeft(deadline, now)}</span>;
+}
+
+function formatTimeLeft(deadline: Date, now: number = Date.now()): string {
+  const ms = deadline.getTime() - now;
   if (ms <= 0) return "Ended";
   const totalSec = Math.floor(ms / 1000);
   const days = Math.floor(totalSec / 86400);
