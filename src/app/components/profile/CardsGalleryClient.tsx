@@ -20,7 +20,7 @@ interface Props {
 
 const TYPE_LABEL: Record<CardType, string> = {
   welcome: "Welcome",
-  winner: "Win",
+  winner: "Winner",
   tournament: "Tournament",
 };
 
