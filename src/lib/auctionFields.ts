@@ -35,9 +35,11 @@ export function getAttribute(auction: AuctionLike, key: string): string | null {
   for (const raw of arr) {
     if (!isAttr(raw)) continue;
     const k = typeof raw.key === "string" ? raw.key.toLowerCase() : "";
-    if (k === lower) {
-      return typeof raw.value === "string" ? raw.value : null;
-    }
+    if (k !== lower) continue;
+    const v = raw.value;
+    if (typeof v === "string") return v;
+    if (typeof v === "number" && Number.isFinite(v)) return String(v);
+    return null;
   }
   return null;
 }
@@ -68,23 +70,33 @@ export interface GalleryImage {
  */
 export function getGallery(auction: AuctionLike): GalleryImage[] {
   const list = auction.images_list;
-  const out: GalleryImage[] = [];
+  const out: Array<{ src: string; placing: number }> = [];
   if (Array.isArray(list)) {
-    for (const item of list) {
+    list.forEach((item, idx) => {
       if (typeof item === "object" && item !== null) {
-        const src = (item as { src?: unknown }).src;
-        if (typeof src === "string" && src.length > 0) {
-          out.push({ src });
+        const obj = item as { src?: unknown; placing?: unknown };
+        if (typeof obj.src === "string" && obj.src.length > 0) {
+          const placing =
+            typeof obj.placing === "number" && Number.isFinite(obj.placing)
+              ? obj.placing
+              : idx;
+          out.push({ src: obj.src, placing });
         }
       }
-    }
+    });
   }
-  if (out.length === 0 && typeof auction.image === "string" && auction.image.length > 0) {
-    out.push({ src: auction.image });
+  out.sort((a, b) => a.placing - b.placing);
+  const result: GalleryImage[] = out.map((g) => ({ src: g.src }));
+  if (result.length === 0 && typeof auction.image === "string" && auction.image.length > 0) {
+    result.push({ src: auction.image });
   }
   // dedupe by src
   const seen = new Set<string>();
-  return out.filter((g) => (seen.has(g.src) ? false : (seen.add(g.src), true)));
+  return result.filter((g) => {
+    if (seen.has(g.src)) return false;
+    seen.add(g.src);
+    return true;
+  });
 }
 
 /**
@@ -122,9 +134,10 @@ export function getDescriptionBlocks(auction: AuctionLike): DescriptionBlock[] {
 export function getHighlights(auction: AuctionLike): string[] {
   const ld = auction.listing_details;
   if (Array.isArray(ld)) {
-    return ld.filter(
-      (s): s is string => typeof s === "string" && s.trim().length > 0
-    );
+    return ld
+      .filter((s): s is string => typeof s === "string")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
   }
   const attr = getAttribute(auction, "highlights");
   if (attr) {
@@ -147,6 +160,12 @@ export interface AuctionStatusLite {
   deadline: Date | null;
 }
 
+/**
+ * Returns current bid + deadline. Accepts either a `Date` or an ISO 8601
+ * string with timezone offset (e.g. ending in `Z` or `±HH:MM`). TZ-less
+ * strings are rejected to avoid silently parsing as local time — which
+ * would mis-render countdowns by hours depending on the server's locale.
+ */
 export function getAuctionStatus(auction: AuctionLike): AuctionStatusLite {
   const sort = auction.sort;
   if (typeof sort !== "object" || sort === null) {
@@ -155,10 +174,11 @@ export function getAuctionStatus(auction: AuctionLike): AuctionStatusLite {
   const s = sort as { price?: unknown; deadline?: unknown };
   const price = typeof s.price === "number" && Number.isFinite(s.price) ? s.price : null;
   let deadline: Date | null = null;
-  if (s.deadline instanceof Date) deadline = s.deadline;
-  else if (typeof s.deadline === "string") {
+  if (s.deadline instanceof Date) {
+    deadline = s.deadline;
+  } else if (typeof s.deadline === "string" && /(?:Z|[+-]\d{2}:?\d{2})$/.test(s.deadline)) {
     const d = new Date(s.deadline);
-    if (!isNaN(d.getTime())) deadline = d;
+    if (!Number.isNaN(d.getTime())) deadline = d;
   }
   return { currentBidUsd: price, deadline };
 }
