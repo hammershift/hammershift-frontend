@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,6 +74,14 @@ interface AuctionCard {
   guessCount: number;
   status: AuctionStatus;
   make: string;
+  // Rich fields forwarded from server projection for the details drawer.
+  // Typed as `unknown` so AuctionLike helpers can safely narrow them.
+  attributes?: unknown;
+  images_list?: unknown;
+  description?: unknown;
+  listing_details?: unknown;
+  page_url?: unknown;
+  sort?: unknown;
 }
 
 interface RecentResult {
@@ -358,14 +366,14 @@ function GuessTheHammerInner({
   const [showScoring, setShowScoring] = useState(false);
   const [detailsOpenId, setDetailsOpenId] = useState<string | null>(null);
 
-  const detailsAuction =
-    detailsOpenId === null
-      ? null
-      : auctions.find(
-          (a) =>
-            (typeof a.auctionId === "string" && a.auctionId === detailsOpenId) ||
-            (typeof a._id === "string" && a._id === detailsOpenId)
-        ) ?? null;
+  const detailsAuction = useMemo(() => {
+    if (detailsOpenId === null) return null;
+    return (
+      auctions.find(
+        (a) => typeof a._id === "string" && a._id === detailsOpenId
+      ) ?? null
+    );
+  }, [auctions, detailsOpenId]);
 
   const FEATURED_COUNT = 20;
 
@@ -919,8 +927,12 @@ function GuessTheHammerInner({
         }}
         onMakeGuess={() => {
           if (detailsAuction) {
+            // Capture target so the closure isn't stale after re-render.
+            const target = detailsAuction;
             setDetailsOpenId(null);
-            handleSelect(detailsAuction);
+            // Defer to next tick so Radix's restore-focus pass on close
+            // completes before the guess modal mounts and autoFocuses.
+            setTimeout(() => handleSelect(target), 0);
           }
         }}
       />
