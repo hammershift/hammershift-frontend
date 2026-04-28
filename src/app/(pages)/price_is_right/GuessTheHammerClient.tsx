@@ -23,6 +23,7 @@ import {
   Info,
   Filter,
 } from "lucide-react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import AuctionDetailsDrawer from "@/app/components/price_is_right/AuctionDetailsDrawer";
 
 /* ── Error boundary so a runtime crash shows a fallback, not a white screen ── */
@@ -809,20 +810,38 @@ function GuessTheHammerInner({
       {/* ── Leaderboard Tab ───────────────────────────────────────────── */}
       {activeTab === "leaderboard" && <LeaderboardSection />}
 
-      {/* ── Guess Modal ───────────────────────────────────────────────── */}
-      {selectedAuction && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#16181f] border border-white/[0.08] rounded-2xl w-full max-w-md overflow-hidden">
+      {/* ── Guess Modal (Radix Dialog: focus trap, Esc, restore focus, role) ─ */}
+      <DialogPrimitive.Root
+        open={selectedAuction !== null}
+        onOpenChange={(o) => {
+          if (!o) setSelectedAuction(null);
+        }}
+      >
+        <DialogPrimitive.Portal>
+          <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <DialogPrimitive.Content
+            aria-describedby="guess-modal-description"
+            className="fixed left-[50%] top-[50%] z-50 w-full max-w-md -translate-x-[50%] -translate-y-[50%] bg-[#16181f] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+          >
             <div className="flex items-center justify-between p-4 border-b border-white/[0.06]">
-              <h3 className="text-lg font-bold text-white">Your Prediction</h3>
-              <button
-                onClick={() => setSelectedAuction(null)}
-                className="text-gray-400 hover:text-white transition"
+              <DialogPrimitive.Title className="text-lg font-bold text-white">
+                Your Prediction
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Close
+                aria-label="Close"
+                className="text-gray-400 hover:text-white transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E94560] rounded"
               >
                 <X className="w-5 h-5" />
-              </button>
+              </DialogPrimitive.Close>
             </div>
 
+            <DialogPrimitive.Description id="guess-modal-description" className="sr-only">
+              {selectedAuction
+                ? `Enter your hammer-price guess for ${selectedAuction.title}`
+                : "Enter your hammer-price guess"}
+            </DialogPrimitive.Description>
+
+            {selectedAuction ? (
             <div className="p-6">
               {selectedAuction.image && (
                 <div className="relative h-40 rounded-xl overflow-hidden mb-4">
@@ -914,9 +933,11 @@ function GuessTheHammerInner({
                 )}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+            ) : null}
+          </DialogPrimitive.Content>
+        </DialogPrimitive.Portal>
+      </DialogPrimitive.Root>
+      {/* ── End Guess Modal ─────────────────────────────────────────────── */}
 
       {/* ── Auction Details Drawer ────────────────────────────────────── */}
       <AuctionDetailsDrawer
