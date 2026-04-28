@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import SettingsSection from "./SettingsSection";
+import DangerZone from "./DangerZone";
 
 export interface EmailPrefs {
   weekly_digest: boolean;
@@ -378,7 +379,8 @@ export default function ProfileSettingsClient({ user }: Props) {
         </div>
       </SettingsSection>
 
-      {/* 6. Danger zone — added in follow-up commit */}
+      {/* 6. Danger zone */}
+      <DangerZone username={user.username} />
     </div>
   );
 }
