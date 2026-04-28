@@ -197,7 +197,11 @@ async function getPageData() {
           const displayDeadline = rawDeadline
             ? new Date(new Date(rawDeadline).getTime() + DAY_MS).toISOString()
             : null;
-          return {
+          const status = getStatus(a);
+          // Only forward rich drawer fields for open + endingSoon — ended
+          // auctions render a slim drawer view and these payloads can be sizeable.
+          const includeRich = status === "open" || status === "ending_soon";
+          const base = {
             _id: a._id.toString(),
             auctionId: a.auction_id,
             title: a.title,
@@ -206,8 +210,20 @@ async function getPageData() {
             currentBid: a.sort?.price ?? 0,
             bids: a.sort?.bids ?? 0,
             guessCount: guessCountMap.get(a._id.toString()) ?? 0,
-            status: getStatus(a),
+            status,
             make: extractMake(a.title ?? ""),
+          };
+          if (!includeRich) return base;
+          return {
+            ...base,
+            attributes: a.attributes,
+            images_list: a.images_list,
+            description: Array.isArray(a.description)
+              ? a.description.slice(0, 8)
+              : a.description,
+            listing_details: a.listing_details,
+            page_url: a.page_url,
+            sort: a.sort,
           };
         })
       )
