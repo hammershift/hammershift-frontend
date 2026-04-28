@@ -52,6 +52,24 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Wrap the entire handler so any throw from clientPromise resolution,
+  // a Mongo query, or downstream logic produces a JSON 500 with a real
+  // detail string — not a generic empty-body 500 from Next.js. Without
+  // this, transient Atlas errors (replica-set election, idle-disconnect)
+  // surface to the cron as opaque 500s that block the workflow.
+  try {
+    return await runVoidStuckMarkets();
+  } catch (err) {
+    console.error("void-stuck-markets: handler threw:", err);
+    const detail = err instanceof Error ? err.message : String(err);
+    return NextResponse.json(
+      { ok: false, error: "Internal server error", detail },
+      { status: 500 }
+    );
+  }
+}
+
+async function runVoidStuckMarkets(): Promise<NextResponse> {
   const client = await clientPromise;
   const db = client.db(process.env.DB_NAME || undefined);
   const now = new Date();
