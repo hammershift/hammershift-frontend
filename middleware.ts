@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { bypassesGate } from "@/lib/gate";
 
 // Prefixes that always pass through the gate.
 //
@@ -43,7 +44,7 @@ export async function middleware(req: NextRequest) {
     throw new Error("NEXTAUTH_SECRET is required when LAUNCH_GATE_ENABLED is true");
   }
   const token = await getToken({ req, secret });
-  if (token?.isInvited === true) return NextResponse.next();
+  if (bypassesGate(token)) return NextResponse.next();
 
   const url = req.nextUrl.clone();
   url.pathname = "/";
