@@ -1,5 +1,5 @@
-import { Types } from "mongoose";
 import connectToDB from "@/lib/mongoose";
+import { toObjectIdLike } from "@/lib/profile/ids";
 import { Predictions } from "@/models/predictions.model";
 import Streak from "@/models/streak.model";
 import Badge from "@/models/badge.model";
@@ -422,20 +422,6 @@ function buildSevenDaySeries(
     out.push({ d: key, v: byDay.get(key) ?? 0 });
   }
   return out;
-}
-
-/**
- * Resolve a string id into a value mongoose can match against an ObjectId
- * field. Stringly-typed userIDs in some collections coexist with ObjectId
- * userIDs, but every user-relative collection we touch here stores
- * ObjectIds, so we cast via mongoose's Types.ObjectId.
- */
-function toObjectIdLike(id: string): unknown {
-  try {
-    return new Types.ObjectId(id);
-  } catch {
-    return id;
-  }
 }
 
 function buildTournamentFinishes(

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import SpokeSegmentedControl from "@/app/components/profile/SpokeSegmentedControl";
 
 export type TournamentFilter = "all" | "top10" | "wins";
 
@@ -60,8 +61,8 @@ export default function TournamentFinishesFilterBar({ filter, q }: Props) {
       data-testid="tournament-finishes-filter-bar"
       className="mt-6 flex flex-col gap-3 rounded-xl border border-white/[0.06] bg-[#13202D] p-2 md:flex-row md:items-center md:gap-2"
     >
-      <SegmentedControl
-        ariaLabel="Filter tournament finishes"
+      <SpokeSegmentedControl
+        label="Filter tournament finishes"
         options={FILTER_OPTIONS}
         value={filter}
         onChange={handleFilter}
@@ -87,49 +88,3 @@ export default function TournamentFinishesFilterBar({ filter, q }: Props) {
   );
 }
 
-interface SegmentedControlProps<T extends string> {
-  ariaLabel: string;
-  options: ReadonlyArray<{ value: T; label: string }>;
-  value: T;
-  onChange: (value: T) => void;
-}
-
-function SegmentedControl<T extends string>({
-  ariaLabel,
-  options,
-  value,
-  onChange,
-}: SegmentedControlProps<T>) {
-  // Mirrors PredictionsFilterBar: ARIA APG tablist pattern with a single
-  // tab stop on the active option. Filter strip changes URL state, not a
-  // form value. Arrow-key cycling intentionally omitted — each option is
-  // visually distinct.
-  return (
-    <div
-      role="tablist"
-      aria-label={ariaLabel}
-      className="inline-flex items-center gap-1 rounded-lg bg-[#0A0A1A]/60 p-1"
-    >
-      {options.map((opt) => {
-        const active = opt.value === value;
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            role="tab"
-            aria-selected={active ? "true" : "false"}
-            tabIndex={active ? 0 : -1}
-            onClick={() => onChange(opt.value)}
-            className={
-              active
-                ? "rounded-md bg-[#E94560] px-3 py-1 text-xs font-semibold text-white transition"
-                : "rounded-md px-3 py-1 text-xs font-medium text-gray-400 transition hover:text-white"
-            }
-          >
-            {opt.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}

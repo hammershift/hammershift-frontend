@@ -40,7 +40,7 @@ export default function TournamentFinishRow({ item }: Props) {
       aria-label={`View tournament ${item.tournamentName}`}
       className="block rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E94560]/40 focus:ring-offset-2 focus:ring-offset-[#0A0A1A]"
     >
-      <div className="flex items-center gap-4 rounded-xl border border-white/[0.06] bg-[#13202D] p-4 transition hover:border-white/[0.12]">
+      <div className="group flex items-center gap-4 rounded-xl border border-white/[0.06] bg-[#13202D] p-4 transition hover:border-white/[0.12]">
         <span
           className={`shrink-0 w-14 font-mono text-2xl font-bold tabular-nums ${placementColor}`}
         >

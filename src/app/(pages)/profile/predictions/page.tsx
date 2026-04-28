@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { Types } from "mongoose";
 import { authOptions } from "@/lib/auth";
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
@@ -10,6 +9,7 @@ import { Predictions } from "@/models/predictions.model";
 // can resolve the ref. Mirrors the pattern used in src/lib/profile/summary.ts.
 import "@/models/auction.model";
 import type { PredictionStatus } from "@/lib/profile/summary";
+import { toObjectIdLike } from "@/lib/profile/ids";
 import PredictionsFilterBar, {
   type ModeFilter,
   type StatusFilter,
@@ -17,6 +17,8 @@ import PredictionsFilterBar, {
 import PredictionRow, {
   type PredictionRowItem,
 } from "@/app/components/profile/PredictionRow";
+import SpokePagination from "@/app/components/profile/SpokePagination";
+import SpokeEmptyNoMatches from "@/app/components/profile/SpokeEmptyNoMatches";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -125,13 +127,7 @@ export default async function PredictionsPage({ searchParams }: PageProps) {
   // Mongo-side filtering: user + tournament-mode discriminator. Status & search
   // are applied in-memory after populate because they depend on populated
   // fields (auction title) and computed values (prize/score → status).
-  const userIdAsObjectId = (() => {
-    try {
-      return new Types.ObjectId(userId);
-    } catch {
-      return userId;
-    }
-  })();
+  const userIdAsObjectId = toObjectIdLike(userId);
 
   const baseFilter: Record<string, unknown> = {
     "user.userId": userIdAsObjectId,
@@ -197,7 +193,15 @@ export default async function PredictionsPage({ searchParams }: PageProps) {
   const startIdx = (safePage - 1) * PAGE_SIZE;
   const pageItems = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
-  const hasFiltersActive = status !== "all" || mode !== "all" || q.length > 0;
+  const buildPageHref = (targetPage: number): string => {
+    const qs = new URLSearchParams();
+    if (status !== "all") qs.set("status", status);
+    if (mode !== "all") qs.set("mode", mode);
+    if (q.length > 0) qs.set("q", q);
+    if (targetPage > 1) qs.set("page", String(targetPage));
+    const s = qs.toString();
+    return s ? `/profile/predictions?${s}` : "/profile/predictions";
+  };
 
   return (
     <main className="mx-auto max-w-6xl px-4 md:px-6 py-6 md:py-10">
@@ -217,7 +221,10 @@ export default async function PredictionsPage({ searchParams }: PageProps) {
       {totalUserPredictions === 0 ? (
         <EmptyNoPredictions />
       ) : pageItems.length === 0 ? (
-        <EmptyNoMatches hasFiltersActive={hasFiltersActive} />
+        <SpokeEmptyNoMatches
+          message="No predictions match these filters."
+          clearHref="/profile/predictions"
+        />
       ) : (
         <>
           <ul
@@ -231,12 +238,10 @@ export default async function PredictionsPage({ searchParams }: PageProps) {
             ))}
           </ul>
 
-          <Pagination
+          <SpokePagination
             page={safePage}
             totalPages={totalPages}
-            status={status}
-            mode={mode}
-            q={q}
+            buildHref={buildPageHref}
           />
         </>
       )}
@@ -258,103 +263,3 @@ function EmptyNoPredictions() {
   );
 }
 
-function EmptyNoMatches({
-  hasFiltersActive,
-}: {
-  hasFiltersActive: boolean;
-}) {
-  return (
-    <div className="mt-10 flex flex-col items-start gap-3 rounded-xl border border-white/[0.06] bg-[#13202D] p-6">
-      <p className="text-sm text-gray-300">
-        No predictions match these filters.
-      </p>
-      {hasFiltersActive && (
-        <Link
-          href="/profile/predictions"
-          className="text-sm text-[#E94560] hover:underline"
-        >
-          Clear filters
-        </Link>
-      )}
-    </div>
-  );
-}
-
-interface PaginationProps {
-  page: number;
-  totalPages: number;
-  status: StatusFilter;
-  mode: ModeFilter;
-  q: string;
-}
-
-function buildHref(
-  page: number,
-  status: StatusFilter,
-  mode: ModeFilter,
-  q: string
-): string {
-  const params = new URLSearchParams();
-  if (status !== "all") params.set("status", status);
-  if (mode !== "all") params.set("mode", mode);
-  if (q.length > 0) params.set("q", q);
-  if (page > 1) params.set("page", String(page));
-  const qs = params.toString();
-  return qs ? `/profile/predictions?${qs}` : "/profile/predictions";
-}
-
-function Pagination({ page, totalPages, status, mode, q }: PaginationProps) {
-  if (totalPages <= 1) return null;
-
-  const prevDisabled = page <= 1;
-  const nextDisabled = page >= totalPages;
-
-  const baseBtn =
-    "inline-flex items-center rounded-lg border border-white/[0.06] bg-[#13202D] px-3 py-1.5 text-sm transition";
-  const enabledBtn = `${baseBtn} text-white hover:border-white/[0.12]`;
-  const disabledBtn = `${baseBtn} text-gray-600 cursor-not-allowed`;
-
-  return (
-    <nav
-      aria-label="Pagination"
-      className="mt-6 flex items-center justify-between"
-    >
-      <div className="text-xs text-gray-500">
-        Page{" "}
-        <span className="font-mono tabular-nums text-gray-300">{page}</span>{" "}
-        of{" "}
-        <span className="font-mono tabular-nums text-gray-300">
-          {totalPages}
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        {prevDisabled ? (
-          <span aria-disabled="true" className={disabledBtn}>
-            &larr; Previous
-          </span>
-        ) : (
-          <Link
-            href={buildHref(page - 1, status, mode, q)}
-            className={enabledBtn}
-            rel="prev"
-          >
-            &larr; Previous
-          </Link>
-        )}
-        {nextDisabled ? (
-          <span aria-disabled="true" className={disabledBtn}>
-            Next &rarr;
-          </span>
-        ) : (
-          <Link
-            href={buildHref(page + 1, status, mode, q)}
-            className={enabledBtn}
-            rel="next"
-          >
-            Next &rarr;
-          </Link>
-        )}
-      </div>
-    </nav>
-  );
-}

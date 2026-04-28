@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import SpokeSegmentedControl from "@/app/components/profile/SpokeSegmentedControl";
 
 export type StatusFilter = "all" | "active" | "completed";
 export type ModeFilter = "all" | "free-play" | "tournament";
@@ -71,14 +72,14 @@ export default function PredictionsFilterBar({ status, mode, q }: Props) {
       data-testid="predictions-filter-bar"
       className="mt-6 flex flex-col gap-3 rounded-xl border border-white/[0.06] bg-[#13202D] p-2 md:flex-row md:items-center md:gap-2"
     >
-      <SegmentedControl
-        ariaLabel="Filter by status"
+      <SpokeSegmentedControl
+        label="Filter by status"
         options={STATUS_OPTIONS}
         value={status}
         onChange={handleStatus}
       />
-      <SegmentedControl
-        ariaLabel="Filter by mode"
+      <SpokeSegmentedControl
+        label="Filter by mode"
         options={MODE_OPTIONS}
         value={mode}
         onChange={handleMode}
@@ -104,52 +105,3 @@ export default function PredictionsFilterBar({ status, mode, q }: Props) {
   );
 }
 
-interface SegmentedControlProps<T extends string> {
-  ariaLabel: string;
-  options: ReadonlyArray<{ value: T; label: string }>;
-  value: T;
-  onChange: (value: T) => void;
-}
-
-function SegmentedControl<T extends string>({
-  ariaLabel,
-  options,
-  value,
-  onChange,
-}: SegmentedControlProps<T>) {
-  // We use the ARIA APG tablist pattern (not radiogroup) because these toggles
-  // change a URL filter, not a form value, and because we want a single tab
-  // stop with the active option visibly selected. Per the APG, tablist permits
-  // Tab-only navigation when the selected indicator is visible. Arrow-key
-  // cycling is not implemented here — acceptable for a filter strip where
-  // each option is a separate, visually-distinct button. If we add more
-  // options later, consider adding ArrowLeft/ArrowRight focus cycling.
-  return (
-    <div
-      role="tablist"
-      aria-label={ariaLabel}
-      className="inline-flex items-center gap-1 rounded-lg bg-[#0A0A1A]/60 p-1"
-    >
-      {options.map((opt) => {
-        const active = opt.value === value;
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            role="tab"
-            aria-selected={active ? "true" : "false"}
-            tabIndex={active ? 0 : -1}
-            onClick={() => onChange(opt.value)}
-            className={
-              active
-                ? "rounded-md bg-[#E94560] px-3 py-1 text-xs font-semibold text-white transition"
-                : "rounded-md px-3 py-1 text-xs font-medium text-gray-400 transition hover:text-white"
-            }
-          >
-            {opt.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}

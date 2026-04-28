@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { Types } from "mongoose";
 import { authOptions } from "@/lib/auth";
 import connectToDB from "@/lib/mongoose";
+import { toObjectIdLike } from "@/lib/profile/ids";
 import Users from "@/models/user.model";
 import Tournaments from "@/models/tournament.model";
 import { ShareCard } from "@/models/shareCard.model";
@@ -13,6 +13,8 @@ import TournamentFinishesFilterBar, {
 import TournamentFinishRow, {
   type TournamentFinishRowItem,
 } from "@/app/components/profile/TournamentFinishRow";
+import SpokePagination from "@/app/components/profile/SpokePagination";
+import SpokeEmptyNoMatches from "@/app/components/profile/SpokeEmptyNoMatches";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -60,14 +62,6 @@ interface TournamentShareCardDoc {
 function parseFilter(value: string | undefined): TournamentFilter {
   if (value === "top10" || value === "wins") return value;
   return "all";
-}
-
-function toObjectIdLike(id: string): unknown {
-  try {
-    return new Types.ObjectId(id);
-  } catch {
-    return id;
-  }
 }
 
 interface PageProps {
@@ -164,7 +158,14 @@ export default async function ProfileTournamentsPage({
   const startIdx = (safePage - 1) * PAGE_SIZE;
   const pageItems = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
-  const hasFiltersActive = filter !== "all" || q.length > 0;
+  const buildPageHref = (targetPage: number): string => {
+    const qs = new URLSearchParams();
+    if (filter !== "all") qs.set("filter", filter);
+    if (q.length > 0) qs.set("q", q);
+    if (targetPage > 1) qs.set("page", String(targetPage));
+    const s = qs.toString();
+    return s ? `/profile/tournaments?${s}` : "/profile/tournaments";
+  };
 
   return (
     <main className="mx-auto max-w-6xl px-4 md:px-6 py-6 md:py-10">
@@ -184,7 +185,10 @@ export default async function ProfileTournamentsPage({
       {totalUserFinishes === 0 ? (
         <EmptyNoFinishes />
       ) : pageItems.length === 0 ? (
-        <EmptyNoMatches hasFiltersActive={hasFiltersActive} />
+        <SpokeEmptyNoMatches
+          message="No finishes match this filter."
+          clearHref="/profile/tournaments"
+        />
       ) : (
         <>
           <ul
@@ -198,11 +202,10 @@ export default async function ProfileTournamentsPage({
             ))}
           </ul>
 
-          <Pagination
+          <SpokePagination
             page={safePage}
             totalPages={totalPages}
-            filter={filter}
-            q={q}
+            buildHref={buildPageHref}
           />
         </>
       )}
@@ -224,98 +227,3 @@ function EmptyNoFinishes() {
   );
 }
 
-function EmptyNoMatches({
-  hasFiltersActive,
-}: {
-  hasFiltersActive: boolean;
-}) {
-  return (
-    <div className="mt-10 flex flex-col items-start gap-3 rounded-xl border border-white/[0.06] bg-[#13202D] p-6">
-      <p className="text-sm text-gray-300">No finishes match this filter.</p>
-      {hasFiltersActive && (
-        <Link
-          href="/profile/tournaments"
-          className="text-sm text-[#E94560] hover:underline"
-        >
-          Clear filters
-        </Link>
-      )}
-    </div>
-  );
-}
-
-interface PaginationProps {
-  page: number;
-  totalPages: number;
-  filter: TournamentFilter;
-  q: string;
-}
-
-function buildHref(
-  page: number,
-  filter: TournamentFilter,
-  q: string
-): string {
-  const params = new URLSearchParams();
-  if (filter !== "all") params.set("filter", filter);
-  if (q.length > 0) params.set("q", q);
-  if (page > 1) params.set("page", String(page));
-  const qs = params.toString();
-  return qs ? `/profile/tournaments?${qs}` : "/profile/tournaments";
-}
-
-function Pagination({ page, totalPages, filter, q }: PaginationProps) {
-  if (totalPages <= 1) return null;
-
-  const prevDisabled = page <= 1;
-  const nextDisabled = page >= totalPages;
-
-  const baseBtn =
-    "inline-flex items-center rounded-lg border border-white/[0.06] bg-[#13202D] px-3 py-1.5 text-sm transition";
-  const enabledBtn = `${baseBtn} text-white hover:border-white/[0.12]`;
-  const disabledBtn = `${baseBtn} text-gray-600 cursor-not-allowed`;
-
-  return (
-    <nav
-      aria-label="Pagination"
-      className="mt-6 flex items-center justify-between"
-    >
-      <div className="text-xs text-gray-500">
-        Page{" "}
-        <span className="font-mono tabular-nums text-gray-300">{page}</span>{" "}
-        of{" "}
-        <span className="font-mono tabular-nums text-gray-300">
-          {totalPages}
-        </span>
-      </div>
-      <div className="flex items-center gap-2">
-        {prevDisabled ? (
-          <span aria-disabled="true" className={disabledBtn}>
-            &larr; Previous
-          </span>
-        ) : (
-          <Link
-            href={buildHref(page - 1, filter, q)}
-            className={enabledBtn}
-            rel="prev"
-          >
-            &larr; Previous
-          </Link>
-        )}
-        {nextDisabled ? (
-          <span aria-disabled="true" className={disabledBtn}>
-            Next &rarr;
-          </span>
-        ) : (
-          <Link
-            href={buildHref(page + 1, filter, q)}
-            className={enabledBtn}
-            rel="next"
-          >
-            Next &rarr;
-          </Link>
-        )}
-      </div>
-    </nav>
-  );
-}
