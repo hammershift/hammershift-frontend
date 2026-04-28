@@ -1,7 +1,7 @@
 // src/app/components/price_is_right/AuctionDetailsDrawer.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ExternalLink, Info } from "lucide-react";
@@ -57,6 +57,12 @@ export default function AuctionDetailsDrawer({
   const lot = getLot(auction);
   const highlights = getHighlights(auction);
   const descriptionBlocks = getDescriptionBlocks(auction);
+  // Source description had more blocks than we forwarded — drawer should
+  // surface a hint pointing to the full BaT page so the "Read more" toggle
+  // doesn't lie about reaching the end. Set server-side in
+  // /price_is_right/page.tsx when description.length > 8.
+  const descriptionTruncated =
+    "descriptionTruncated" in auction && auction.descriptionTruncated === true;
   const batUrl = getBaTUrl(auction);
   const status = getAuctionStatus(auction);
   const fullPageId =
@@ -166,17 +172,29 @@ export default function AuctionDetailsDrawer({
                   )
                 )}
               </div>
-              {descriptionBlocks.length > DESCRIPTION_PREVIEW_BLOCKS ? (
-                <button
-                  type="button"
-                  onClick={() => setDescriptionExpanded((v) => !v)}
-                  aria-expanded={descriptionExpanded}
-                  aria-controls="auction-drawer-description-content"
-                  className="mt-2 text-xs text-[#E94560] hover:underline focus-visible:underline focus-visible:outline-none"
-                >
-                  {descriptionExpanded ? "Read less" : "Read more"}
-                </button>
-              ) : null}
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                {descriptionBlocks.length > DESCRIPTION_PREVIEW_BLOCKS ? (
+                  <button
+                    type="button"
+                    onClick={() => setDescriptionExpanded((v) => !v)}
+                    aria-expanded={descriptionExpanded}
+                    aria-controls="auction-drawer-description-content"
+                    className="text-xs text-[#E94560] hover:underline focus-visible:underline focus-visible:outline-none"
+                  >
+                    {descriptionExpanded ? "Read less" : "Read more"}
+                  </button>
+                ) : null}
+                {descriptionTruncated && batUrl ? (
+                  <a
+                    href={batUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-gray-400 hover:text-white focus-visible:underline focus-visible:outline-none"
+                  >
+                    Full description on Bring a Trailer ↗
+                  </a>
+                ) : null}
+              </div>
             </section>
           ) : null}
 
@@ -244,6 +262,25 @@ function Gallery({ images, altBase }: { images: Array<{ src: string }>; altBase:
   const [index, setIndex] = useState(0);
   const safeIndex = Math.min(Math.max(0, index), images.length - 1);
   const primary = images[safeIndex];
+  const tablistRef = useRef<HTMLDivElement | null>(null);
+
+  // ARIA tablist keyboard pattern: arrow keys cycle, Home/End jump to ends,
+  // single tab stop on the active thumb (roving tabIndex). Auto-activates
+  // on focus to mirror the click behaviour.
+  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    let next = safeIndex;
+    if (e.key === "ArrowLeft") next = (safeIndex - 1 + images.length) % images.length;
+    else if (e.key === "ArrowRight") next = (safeIndex + 1) % images.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = images.length - 1;
+    else return;
+    e.preventDefault();
+    setIndex(next);
+    const tabs = tablistRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+    tabs?.[next]?.focus();
+    tabs?.[next]?.scrollIntoView({ inline: "nearest", block: "nearest" });
+  }
+
   return (
     <div>
       <div className="relative aspect-[16/9] bg-[#13202D]">
@@ -256,29 +293,40 @@ function Gallery({ images, altBase }: { images: Array<{ src: string }>; altBase:
         />
       </div>
       {images.length > 1 ? (
-        <div className="px-5 py-3 flex gap-2 overflow-x-auto">
-          {images.map((img, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIndex(i)}
-              aria-label={`Show photo ${i + 1} of ${images.length}`}
-              aria-current={i === safeIndex}
-              className={`relative shrink-0 w-16 h-12 rounded overflow-hidden border ${
-                i === safeIndex
-                  ? "border-[#E94560]"
-                  : "border-white/[0.08] hover:border-white/[0.2]"
-              } transition`}
-            >
-              <Image
-                src={img.src}
-                alt=""
-                fill
-                sizes="64px"
-                className="object-cover"
-              />
-            </button>
-          ))}
+        <div
+          ref={tablistRef}
+          role="tablist"
+          aria-label="Auction photo gallery"
+          onKeyDown={handleKeyDown}
+          className="px-5 py-3 flex gap-2 overflow-x-auto"
+        >
+          {images.map((img, i) => {
+            const active = i === safeIndex;
+            return (
+              <button
+                key={i}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                aria-label={`Show photo ${i + 1} of ${images.length}`}
+                tabIndex={active ? 0 : -1}
+                onClick={() => setIndex(i)}
+                className={`relative shrink-0 w-16 h-12 rounded overflow-hidden border ${
+                  active
+                    ? "border-[#E94560]"
+                    : "border-white/[0.08] hover:border-white/[0.2]"
+                } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E94560] transition`}
+              >
+                <Image
+                  src={img.src}
+                  alt=""
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                />
+              </button>
+            );
+          })}
         </div>
       ) : null}
     </div>
