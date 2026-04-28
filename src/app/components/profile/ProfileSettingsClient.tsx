@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import SettingsSection from "./SettingsSection";
 import DangerZone from "./DangerZone";
 
@@ -70,9 +70,40 @@ export default function ProfileSettingsClient({ user }: Props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [securityStatus, setSecurityStatus] = useState<SectionState>(IDLE);
 
-  function flashSaved(setter: (s: SectionState) => void): void {
+  // Per-section saved-flash timers
+  const profileSavedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const emailSavedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const securitySavedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+
+  // Cleanup any pending saved-flash timers on unmount
+  useEffect(() => {
+    return () => {
+      if (profileSavedTimerRef.current) {
+        clearTimeout(profileSavedTimerRef.current);
+      }
+      if (emailSavedTimerRef.current) {
+        clearTimeout(emailSavedTimerRef.current);
+      }
+      if (securitySavedTimerRef.current) {
+        clearTimeout(securitySavedTimerRef.current);
+      }
+    };
+  }, []);
+
+  function flashSaved(
+    setter: React.Dispatch<React.SetStateAction<SectionState>>,
+    timerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>
+  ): void {
+    if (timerRef.current) clearTimeout(timerRef.current);
     setter({ state: "saved", error: null });
-    window.setTimeout(() => setter(IDLE), 2000);
+    timerRef.current = setTimeout(() => {
+      setter(IDLE);
+      timerRef.current = null;
+    }, 2000);
   }
 
   async function readError(res: Response): Promise<string> {
@@ -105,7 +136,7 @@ export default function ProfileSettingsClient({ user }: Props) {
         setProfileStatus({ state: "error", error: await readError(res) });
         return;
       }
-      flashSaved(setProfileStatus);
+      flashSaved(setProfileStatus, profileSavedTimerRef);
     } catch {
       setProfileStatus({ state: "error", error: "Network error" });
     }
@@ -124,7 +155,7 @@ export default function ProfileSettingsClient({ user }: Props) {
         setEmailStatus({ state: "error", error: await readError(res) });
         return;
       }
-      flashSaved(setEmailStatus);
+      flashSaved(setEmailStatus, emailSavedTimerRef);
     } catch {
       setEmailStatus({ state: "error", error: "Network error" });
     }
@@ -160,7 +191,7 @@ export default function ProfileSettingsClient({ user }: Props) {
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      flashSaved(setSecurityStatus);
+      flashSaved(setSecurityStatus, securitySavedTimerRef);
     } catch {
       setSecurityStatus({ state: "error", error: "Network error" });
     }
@@ -218,7 +249,10 @@ export default function ProfileSettingsClient({ user }: Props) {
             <SaveFlag status={profileStatus} />
             <button
               type="submit"
-              disabled={profileStatus.state === "saving"}
+              disabled={
+                profileStatus.state === "saving" ||
+                profileStatus.state === "saved"
+              }
               className="rounded-lg bg-[#E94560] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#d83a55] disabled:opacity-60"
             >
               {profileStatus.state === "saving" ? "Saving…" : "Save"}
@@ -265,7 +299,10 @@ export default function ProfileSettingsClient({ user }: Props) {
             <SaveFlag status={emailStatus} />
             <button
               type="submit"
-              disabled={emailStatus.state === "saving"}
+              disabled={
+                emailStatus.state === "saving" ||
+                emailStatus.state === "saved"
+              }
               className="rounded-lg bg-[#E94560] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#d83a55] disabled:opacity-60"
             >
               {emailStatus.state === "saving" ? "Saving…" : "Save"}
@@ -349,6 +386,7 @@ export default function ProfileSettingsClient({ user }: Props) {
               type="submit"
               disabled={
                 securityStatus.state === "saving" ||
+                securityStatus.state === "saved" ||
                 oldPassword.length === 0 ||
                 newPassword.length === 0
               }

@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 
 interface Props {
   username: string;
 }
+
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 // TODO: Wire this to the real delete-account endpoint once it exists.
 // Expected contract (per profile redesign plan): DELETE /api/profile (or
@@ -20,15 +23,91 @@ export default function DangerZone({ username }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+
   const handle = username.length > 0 ? `@${username}` : "@your-handle";
   const matches = typed.trim() === handle;
   const canConfirm = matches && DELETE_ACCOUNT_API_AVAILABLE && !submitting;
 
-  function closeModal(): void {
+  const closeModal = useCallback((): void => {
+    // Restore focus BEFORE unmounting so screen-reader focus is stable
+    const prev = previouslyFocusedRef.current;
+    if (prev && typeof prev.focus === "function") {
+      try {
+        prev.focus();
+      } catch {
+        // ignore focus failures
+      }
+    }
     setOpen(false);
     setTyped("");
     setError(null);
-  }
+  }, []);
+
+  // Focus management: cache previously-focused element and move focus into the input
+  useEffect(() => {
+    if (!open) return;
+    if (typeof document !== "undefined") {
+      const active = document.activeElement;
+      previouslyFocusedRef.current =
+        active instanceof HTMLElement ? active : null;
+    }
+    inputRef.current?.focus();
+  }, [open]);
+
+  // Keydown handler: Esc-to-close and Tab trap
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeModal();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const container = dialogRef.current;
+      if (!container) return;
+      const focusables = Array.from(
+        container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+      ).filter(
+        (el) =>
+          !el.hasAttribute("disabled") &&
+          el.getAttribute("aria-hidden") !== "true"
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const activeEl =
+        typeof document !== "undefined" &&
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      if (e.shiftKey) {
+        if (activeEl === first || !container.contains(activeEl)) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (activeEl === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, closeModal]);
+
+  // Body scroll lock while modal open
+  useEffect(() => {
+    if (!open) return;
+    if (typeof document === "undefined") return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
 
   async function handleConfirm(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
@@ -88,29 +167,34 @@ export default function DangerZone({ username }: Props) {
 
       {open ? (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-labelledby="danger-zone-modal-title"
+          aria-describedby="danger-zone-modal-desc"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-          onClick={closeModal}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) closeModal();
+          }}
         >
-          <div
-            className="w-full max-w-md rounded-2xl border border-[#E94560]/40 bg-[#13202D] p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="w-full max-w-md rounded-2xl border border-[#E94560]/40 bg-[#13202D] p-6">
             <h3
               id="danger-zone-modal-title"
               className="text-lg font-semibold text-[#E94560]"
             >
               Delete account
             </h3>
-            <p className="mt-2 text-sm text-gray-300">
+            <p
+              id="danger-zone-modal-desc"
+              className="mt-2 text-sm text-gray-300"
+            >
               This cannot be undone. Type{" "}
               <span className="font-mono text-white">{handle}</span> to
               confirm.
             </p>
             <form onSubmit={handleConfirm} className="mt-4 space-y-4">
               <input
+                ref={inputRef}
                 type="text"
                 value={typed}
                 onChange={(e) => setTyped(e.target.value)}
