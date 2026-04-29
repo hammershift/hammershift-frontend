@@ -24,7 +24,7 @@ export const VerifyEmailTemplate = ({ name, url }: EmailTemplateProps) => (
     >
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png"
+          src="https://www.velocity-markets.com/images/brand/velocity-lockup-white.png"
           alt="Velocity Markets Logo"
           style={{ maxWidth: "180px", height: "auto" }}
         />
@@ -105,7 +105,7 @@ export const ResetPasswordEmailTemplate = ({ url }: EmailTemplateProps) => (
     >
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <img
-          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png"
+          src="https://www.velocity-markets.com/images/brand/velocity-lockup-white.png"
           alt="Velocity Markets Logo"
           style={{ maxWidth: "180px", height: "auto" }}
         />

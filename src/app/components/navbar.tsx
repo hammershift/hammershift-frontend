@@ -38,8 +38,7 @@ const Navbar = () => {
   const [dropMyAccount, setDropMyAccount] = useState(false);
   const [myAccountMenuOpen, setMyAccountMenuOpen] = useState(false);
   const [depositOpen, setDepositOpen] = useState(false);
-  const logoUrl =
-    "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/08c277_VelocityMarketsLogo-White.png";
+  const logoUrl = "/images/brand/velocity-lockup-white.png";
   const navBarList = [
     { title: "Tournaments", urlString: "tournaments" },
     { title: "Guess the Hammer", urlString: "price_is_right" },
