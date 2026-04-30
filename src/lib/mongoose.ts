@@ -32,7 +32,10 @@ const connectToDB = async () => {
     const opts: mongoose.ConnectOptions = {
       ...(dbName ? { dbName } : {}),
       maxPoolSize: 5,       // Keep pool small — M0 free tier has a 500 connection cap
-      serverSelectionTimeoutMS: 5000,
+      // Bumped from 5s — Atlas shared-tier idle pauses + replica-set elections
+      // routinely exceed 5s on cold starts, surfacing as cron 500s with
+      // "Server selection timed out". 15s leaves headroom under Lambda's 30s.
+      serverSelectionTimeoutMS: 15000,
       socketTimeoutMS: 30000,
     };
 
