@@ -9,7 +9,11 @@ if (!uri) {
 
 const options: MongoClientOptions = {
   maxPoolSize: 5,               // Match Mongoose — keep small for Atlas shared tier
-  serverSelectionTimeoutMS: 5000,
+  // Atlas shared-tier clusters can pause when idle and replica-set elections
+  // can briefly outlast the default. 5s was tight enough to throw on every
+  // cold start; 15s leaves comfortable headroom under the 30s Lambda budget
+  // while the cron's own per-run TIME_BUDGET (22s) still bounds total work.
+  serverSelectionTimeoutMS: 15000,
   socketTimeoutMS: 30000,
 };
 
