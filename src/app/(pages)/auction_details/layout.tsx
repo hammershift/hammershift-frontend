@@ -1,13 +1,7 @@
-import { SubscribeSmall } from "@/app/components/subscribe";
 import { gateOrPass } from "@/lib/gateOrPass";
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const gate = await gateOrPass();
   if (gate) return gate;
-  return (
-    <div className="page-container">
-      {children}
-      <SubscribeSmall />
-    </div>
-  );
+  return <>{children}</>;
 }
