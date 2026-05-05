@@ -25,10 +25,19 @@ const ALLOW_PREFIXES = [
   "/terms_of_service",
 ];
 
-const LAUNCH_GATE_ENABLED = /^(1|true|on|yes)$/i.test(process.env.LAUNCH_GATE_ENABLED ?? "");
+const RAW_GATE_ENV = process.env.LAUNCH_GATE_ENABLED ?? "";
+const LAUNCH_GATE_ENABLED = /^(1|true|on|yes)$/i.test(RAW_GATE_ENV);
+
+function diag(res: NextResponse) {
+  res.headers.set("x-gate-mw", "1");
+  res.headers.set("x-gate-enabled", String(LAUNCH_GATE_ENABLED));
+  res.headers.set("x-gate-raw-len", String(RAW_GATE_ENV.length));
+  res.headers.set("x-gate-raw-first", RAW_GATE_ENV.slice(0, 1));
+  return res;
+}
 
 export async function middleware(req: NextRequest) {
-  if (!LAUNCH_GATE_ENABLED) return NextResponse.next();
+  if (!LAUNCH_GATE_ENABLED) return diag(NextResponse.next());
 
   const { pathname } = req.nextUrl;
   if (pathname === "/") return NextResponse.next();
@@ -44,11 +53,11 @@ export async function middleware(req: NextRequest) {
     throw new Error("NEXTAUTH_SECRET is required when LAUNCH_GATE_ENABLED is true");
   }
   const token = await getToken({ req, secret });
-  if (bypassesGate(token)) return NextResponse.next();
+  if (bypassesGate(token)) return diag(NextResponse.next());
 
   const url = req.nextUrl.clone();
   url.pathname = "/";
-  return NextResponse.rewrite(url);
+  return diag(NextResponse.rewrite(url));
 }
 
 export const config = {

@@ -14,6 +14,9 @@ export async function GET() {
       NEXTAUTH_URL: !!process.env.NEXTAUTH_URL,
       NEXTAUTH_SECRET: !!process.env.NEXTAUTH_SECRET,
       GOOGLE_CLIENT_ID: !!process.env.GOOGLE_CLIENT_ID,
+      LAUNCH_GATE_ENABLED_value: process.env.LAUNCH_GATE_ENABLED ?? null,
+      LAUNCH_GATE_ENABLED_length: (process.env.LAUNCH_GATE_ENABLED ?? "").length,
+      LAUNCH_GATE_ENABLED_regex_match: /^(1|true|on|yes)$/i.test(process.env.LAUNCH_GATE_ENABLED ?? ""),
     },
     env_keys: Object.keys(process.env)
       .filter(k => !k.includes('SECRET') && !k.includes('PASSWORD') && !k.includes('KEY'))
