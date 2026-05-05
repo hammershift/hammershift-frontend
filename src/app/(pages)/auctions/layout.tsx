@@ -1,8 +1,6 @@
 import { SubscribeSmall } from "@/app/components/subscribe";
-import { requireGated } from "@/lib/requireGated";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-  await requireGated();
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="page-container">
       {children}
