@@ -196,11 +196,11 @@ export default function TournamentDetailPage() {
         setAuctions(validAuctions);
 
         // Initialize prediction inputs. Scraper writes sort.deadline 24h
-        // early, so real end = deadline + 24h. Predictions close 5 minutes
+        // early, so real end = deadline + 24h. Predictions close 1 hour
         // before that real end. These constants MUST match the ones used in
         // the render block or the two panels will disagree.
         const DAY_MS = 24 * 60 * 60 * 1000;
-        const PREDICTION_BUFFER_MS = 5 * 60 * 1000;
+        const PREDICTION_BUFFER_MS = 60 * 60 * 1000;
         const now = Date.now();
         setPredictions(
           validAuctions.map((auction: Auction) => {
@@ -480,7 +480,7 @@ export default function TournamentDetailPage() {
   // the stale scraper timestamp. Predictions close PREDICTION_BUFFER_MS
   // before the real end to avoid last-second races.
   const DAY_MS = 24 * 60 * 60 * 1000;
-  const PREDICTION_BUFFER_MS = 5 * 60 * 1000;
+  const PREDICTION_BUFFER_MS = 60 * 60 * 1000;
   const auctionRealEnd = (a: Auction): number => {
     const raw = a.sort?.deadline;
     if (!raw) return 0;
@@ -674,7 +674,7 @@ export default function TournamentDetailPage() {
             <p className="text-sm text-[#FFB547]">
               <strong>Important:</strong> You must predict all {liveAuctions.length}{" "}
               open {liveAuctions.length === 1 ? "auction" : "auctions"} to qualify for prizes.
-              Each auction closes to new predictions 5 minutes before its hammer time.
+              Predictions lock 1 hour before each auction ends.
               {endedAuctions.length > 0 && (
                 <>
                   {" "}
@@ -726,7 +726,7 @@ export default function TournamentDetailPage() {
                   {liveAuctions.length !== auctions.length && (
                     <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#00D4AA]">
                       <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#00D4AA]" />
-                      Open for predictions · closes 5 min before hammer
+                      Open for predictions · locks 1 hour before each auction ends
                     </div>
                   )}
                   <div className="space-y-6">
