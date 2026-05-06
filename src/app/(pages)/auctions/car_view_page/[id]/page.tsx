@@ -378,7 +378,7 @@ export default async function AuctionDetailPage({ params }: { params: Promise<{ 
                 <div className="text-center">
                   <Clock className="mx-auto mb-3 h-12 w-12 text-gray-400" />
                   <p className="text-gray-400">
-                    {hasEnded ? 'This auction has ended' : 'Predictions locked (less than 1 hour remaining)'}
+                    {hasEnded ? 'This auction has ended' : 'Predictions locked — auction ends in less than 1 hour'}
                   </p>
                 </div>
               ) : !session ? (

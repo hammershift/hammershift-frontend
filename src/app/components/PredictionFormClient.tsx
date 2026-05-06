@@ -200,7 +200,7 @@ export default function PredictionFormClient({
             </Link>
 
             <p className="text-center text-xs text-gray-500">
-              Predictions lock 1 hour before auction end
+              Predictions lock 1 hour before each auction ends
             </p>
           </form>
         )}
@@ -270,7 +270,7 @@ export default function PredictionFormClient({
       </Button>
 
       <p className="text-center text-xs text-gray-500">
-        Predictions lock 1 hour before auction end
+        Predictions lock 1 hour before each auction ends
       </p>
     </form>
   );
