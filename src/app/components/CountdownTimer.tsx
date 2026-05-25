@@ -111,6 +111,10 @@ export default function CountdownTimer({
       role="timer"
       aria-live="polite"
       aria-label={`Time remaining: ${formatTimeDisplay(timeRemaining)}`}
+      // Live-updating value: server-rendered Date.now() drifts from the client's
+      // by the network/hydration latency (~1-2s), which React would otherwise
+      // flag as a hydration mismatch. The useEffect tick reconciles instantly.
+      suppressHydrationWarning
     >
       {formatTimeDisplay(timeRemaining)}
     </div>

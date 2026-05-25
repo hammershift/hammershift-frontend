@@ -1,9 +1,12 @@
+import { redirect } from "next/navigation";
 import Stripe from "stripe";
+
+export const dynamic = "force-dynamic";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 async function getSession(sessionId: string) {
-  const session = await stripe.checkout.sessions.retrieve(sessionId!);
+  const session = await stripe.checkout.sessions.retrieve(sessionId);
   return session;
 }
 
@@ -16,8 +19,20 @@ async function getInvoice(invoiceId: string) {
 }
 
 export default async function CheckoutReturn({ searchParams }: any) {
-  const stripeSessionId = searchParams.session_id;
-  const stripeSession = await getSession(stripeSessionId);
+  const stripeSessionId =
+    typeof searchParams?.session_id === "string" ? searchParams.session_id : "";
+  // Direct hits to /return (typo, browser back, share) used to 500 because
+  // the Stripe SDK throws on undefined sessionId. Redirect to the wallet
+  // instead so the user lands somewhere useful.
+  if (!stripeSessionId) redirect("/my_wallet");
+
+  let stripeSession;
+  try {
+    stripeSession = await getSession(stripeSessionId);
+  } catch (err) {
+    console.error("CheckoutReturn: failed to retrieve session", stripeSessionId, err);
+    redirect("/my_wallet?checkout=invalid");
+  }
 
   if (!stripeSession.invoice || typeof stripeSession.invoice !== "string") {
     console.error("Stripe session does not have a valid invoice ID.");
