@@ -1,10 +1,22 @@
-// Event-code helpers. `EVENT_CODES_JSON` is a JSON map of {code: source}
-// (e.g. {"velocity26": "sonoma_invitational"}). Codes are matched
-// case-insensitive; the corresponding `source` is what we stamp on the
-// WaitlistEntry's utm.source for attribution.
+// Event-code helpers.
 //
-// Parsing is wrapped so a malformed env value falls back to an empty map
-// rather than 500'ing every gate hit.
+// Two env-var formats are supported, both case-insensitive on the code key:
+//
+//   1. `EVENT_CODES` — simple delimited, Amplify-friendly (no quotes).
+//        Format:  code:source[,code:source]*
+//        Example: EVENT_CODES=velocity26:sonoma_invitational
+//        Use this for production — Amplify's amplify.yml writes env vars to
+//        .env.production via `echo "VAR=$VAR" >> ...`, which mangles values
+//        containing double quotes.
+//
+//   2. `EVENT_CODES_JSON` — JSON map, useful for local dev.
+//        Format:  {"code":"source",...}
+//        Example: {"velocity26":"sonoma_invitational"}
+//
+// If both are set, EVENT_CODES wins and EVENT_CODES_JSON is layered as a
+// fallback (entries in EVENT_CODES override JSON entries of the same key).
+//
+// A malformed value never throws — it falls back to an empty map and logs.
 
 export interface EventCodeMap {
   [code: string]: string; // code is always lowercase
@@ -12,13 +24,21 @@ export interface EventCodeMap {
 
 let cached: EventCodeMap | null = null;
 
-export function loadEventCodes(): EventCodeMap {
-  if (cached) return cached;
-  const raw = process.env.EVENT_CODES_JSON;
-  if (!raw) {
-    cached = {};
-    return cached;
+function parseDelimited(raw: string): EventCodeMap {
+  const out: EventCodeMap = {};
+  for (const pair of raw.split(",")) {
+    const trimmed = pair.trim();
+    if (!trimmed) continue;
+    const idx = trimmed.indexOf(":");
+    if (idx <= 0) continue; // require both halves
+    const key = trimmed.slice(0, idx).trim().toLowerCase();
+    const val = trimmed.slice(idx + 1).trim();
+    if (key && val) out[key] = val;
   }
+  return out;
+}
+
+function parseJson(raw: string): EventCodeMap {
   try {
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     const out: EventCodeMap = {};
@@ -27,13 +47,22 @@ export function loadEventCodes(): EventCodeMap {
         out[key.toLowerCase()] = val;
       }
     }
-    cached = out;
-    return cached;
+    return out;
   } catch (err) {
     console.error("Failed to parse EVENT_CODES_JSON:", err);
-    cached = {};
-    return cached;
+    return {};
   }
+}
+
+export function loadEventCodes(): EventCodeMap {
+  if (cached) return cached;
+  const json = process.env.EVENT_CODES_JSON;
+  const delimited = process.env.EVENT_CODES;
+  const fromJson = json ? parseJson(json) : {};
+  const fromDelimited = delimited ? parseDelimited(delimited) : {};
+  // Delimited entries override JSON entries of the same key.
+  cached = { ...fromJson, ...fromDelimited };
+  return cached;
 }
 
 export function resolveEventCode(code: string): string | null {
