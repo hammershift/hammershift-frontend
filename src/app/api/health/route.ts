@@ -17,6 +17,8 @@ export async function GET() {
       LAUNCH_GATE_ENABLED_value: process.env.LAUNCH_GATE_ENABLED ?? null,
       LAUNCH_GATE_ENABLED_length: (process.env.LAUNCH_GATE_ENABLED ?? "").length,
       LAUNCH_GATE_ENABLED_regex_match: /^(1|true|on|yes)$/i.test(process.env.LAUNCH_GATE_ENABLED ?? ""),
+      EVENT_CODES_value: process.env.EVENT_CODES ?? null,
+      EVENT_CODES_length: (process.env.EVENT_CODES ?? "").length,
     },
     env_keys: Object.keys(process.env)
       .filter(k => !k.includes('SECRET') && !k.includes('PASSWORD') && !k.includes('KEY'))
