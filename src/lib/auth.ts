@@ -262,6 +262,41 @@ export const authOptions: NextAuthOptions = {
         token.role = dbUser.role;
         token.isInvited = dbUser.isInvited === true;
         token.referralCode = dbUser.referralCode;
+
+        // Event-code attendees skip the queue: their WaitlistEntry was
+        // stamped with invitedAt at signup. When they later authenticate
+        // (Google OAuth etc.), promote them to isInvited:true on first
+        // session so the gate lets them through. One-shot — subsequent
+        // logins skip the lookup because dbUser.isInvited is now true.
+        if (!dbUser.isInvited) {
+          try {
+            const { WaitlistEntry } = await import("@/models/waitlistEntry.model");
+            const entry = await WaitlistEntry.findOne({
+              email: dbUser.email,
+              invitedAt: { $ne: null },
+            }).lean<{ referralCode?: string } | null>();
+            if (entry) {
+              await Users.updateOne(
+                { _id: dbUser._id },
+                {
+                  $set: {
+                    isInvited: true,
+                    invitedVia: "event",
+                    ...(dbUser.referralCode || !entry.referralCode
+                      ? {}
+                      : { referralCode: entry.referralCode }),
+                  },
+                }
+              );
+              token.isInvited = true;
+              if (!dbUser.referralCode && entry.referralCode) {
+                token.referralCode = entry.referralCode;
+              }
+            }
+          } catch (err) {
+            console.error("auth: event-code auto-invite check failed:", err);
+          }
+        }
         if (!dbUser.createdAt) {
           const createdAt = new Date();
           await Users.updateOne(

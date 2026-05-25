@@ -4,6 +4,7 @@ import GateHero from "./GateHero";
 import HowItWorks from "./HowItWorks";
 import WaitlistDashboard from "./WaitlistDashboard";
 import WaitlistSignupForm from "./WaitlistSignupForm";
+import EventCodeInput from "./EventCodeInput";
 import WinnersTicker from "./WinnersTicker";
 
 interface Props {
@@ -34,6 +35,16 @@ export default function GatePageClient({ mode, email, referralCode }: Props) {
 
         {mode === "cold" && (
           <div data-testid="gate-cold">
+            <EventCodeInput
+              onAccepted={() => {
+                if (typeof window !== "undefined") {
+                  const el = document.querySelector('[data-testid="gate-signup-form"]');
+                  el?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  const input = el?.querySelector('input[type="email"]') as HTMLInputElement | null;
+                  input?.focus();
+                }
+              }}
+            />
             <WaitlistSignupForm />
           </div>
         )}
