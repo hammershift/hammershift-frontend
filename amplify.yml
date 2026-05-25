@@ -34,6 +34,7 @@ frontend:
         - echo "NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY=$NEXT_PUBLIC_BICONOMY_PAYMASTER_API_KEY" >> .env.production
         - echo "CRON_SECRET=$CRON_SECRET" >> .env.production
         - echo "LAUNCH_GATE_ENABLED=$LAUNCH_GATE_ENABLED" >> .env.production
+        - echo "EVENT_CODES=$EVENT_CODES" >> .env.production
         - echo "WAITLIST_IP_SALT=$WAITLIST_IP_SALT" >> .env.production
         - echo "INTERNAL_API_SECRET=$INTERNAL_API_SECRET" >> .env.production
     build:
