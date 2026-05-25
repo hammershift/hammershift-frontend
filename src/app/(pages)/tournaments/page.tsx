@@ -109,7 +109,11 @@ export default function TournamentsPage() {
 
         setTournaments(allTournaments);
 
-        // Calculate stats
+        // Calculate stats. Scope prize pool and player count to *currently
+        // live* tournaments so the labels match the numbers — the previous
+        // implementation summed across every tournament ever fetched, which
+        // showed e.g. "11 Players Competing" when zero players were in any
+        // active tournament right now.
         const now = new Date();
         const active = allTournaments.filter((t: Tournament) => {
           const start = new Date(t.startTime);
@@ -117,11 +121,11 @@ export default function TournamentsPage() {
           return t.isActive && start <= now && end >= now;
         });
 
-        const totalPrize = allTournaments
+        const totalPrize = active
           .filter((t: Tournament) => t.type === 'paid')
           .reduce((sum: number, t: Tournament) => sum + (t.prizePool || 0), 0);
 
-        const totalPlayers = allTournaments.reduce(
+        const totalPlayers = active.reduce(
           (sum: number, t: Tournament) => sum + (t.users?.length || 0),
           0
         );
