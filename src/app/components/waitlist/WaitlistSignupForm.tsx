@@ -7,6 +7,7 @@ interface SignupOk {
   referralCode: string;
   position: number;
   alreadyOnList?: boolean;
+  invited?: boolean;
 }
 
 function parseOk(data: unknown): SignupOk | null {
@@ -18,6 +19,7 @@ function parseOk(data: unknown): SignupOk | null {
     referralCode: d.referralCode,
     position: d.position,
     alreadyOnList: d.alreadyOnList === true,
+    invited: d.invited === true,
   };
 }
 
@@ -36,6 +38,29 @@ export default function WaitlistSignupForm() {
   const [pending, startTransition] = useTransition();
 
   if (signedUp) {
+    if (signedUp.invited) {
+      return (
+        <div data-testid="gate-invited-inline" aria-live="polite" className="mt-2">
+          <div className="rounded-md border border-[#00D4AA]/40 bg-[#00D4AA]/10 p-4 text-white">
+            <div className="text-lg font-semibold text-[#00D4AA] mb-1">
+              You&rsquo;re in.
+            </div>
+            <p className="text-sm text-gray-200 mb-3">
+              Welcome to Velocity Markets. Your personal referral code is{" "}
+              <code className="font-mono text-white">{signedUp.referralCode}</code>.
+              Sign in or create an account to start predicting.
+            </p>
+            <a
+              href="/login_page"
+              data-testid="gate-invited-cta"
+              className="inline-block rounded-md bg-[#E94560] px-4 py-2 text-sm font-semibold text-white hover:bg-[#E94560]/90"
+            >
+              Continue to sign in
+            </a>
+          </div>
+        </div>
+      );
+    }
     return (
       <div data-testid="gate-waitlisted-inline" aria-live="polite">
         <WaitlistDashboard referralCode={signedUp.referralCode} />
