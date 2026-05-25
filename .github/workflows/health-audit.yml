@@ -1,0 +1,31 @@
+name: Health Audit
+
+on:
+  schedule:
+    # Hourly system health check. Hits /api/cron/health-audit which returns
+    # 503 if any signal trips its FAIL threshold (stale scraper, no future
+    # auctions, no recent tournament, stuck markets, etc.). GitHub Actions
+    # emails the repo admins on any non-zero exit.
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  health-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger health-audit
+        run: |
+          response=$(curl -s -w "\n%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_URL }}/api/cron/health-audit")
+
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Status: $http_code"
+          echo "Response: $body"
+
+          if [ "$http_code" -ge 400 ]; then
+            echo "::error::Health audit failed with status $http_code"
+            exit 1
+          fi
