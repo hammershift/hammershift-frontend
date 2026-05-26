@@ -21,7 +21,10 @@ function formatK(v: number | null): string {
 }
 
 interface PageProps {
-  searchParams?: { days?: string };
+  // Next.js 15 makes searchParams an awaitable promise. Typed loosely
+  // because the route's generated `PageProps` is only available at
+  // `next build` time, not from a stand-alone `tsc --noEmit`.
+  searchParams?: Promise<{ days?: string }>;
 }
 
 export default async function AdminMetricsPage({ searchParams }: PageProps) {
@@ -30,7 +33,8 @@ export default async function AdminMetricsPage({ searchParams }: PageProps) {
     | null;
   if (!isRoleBypass(session?.user?.role)) redirect("/");
 
-  const daysRaw = searchParams?.days;
+  const resolvedSearch = (await searchParams) ?? {};
+  const daysRaw = resolvedSearch.days;
   const days = daysRaw
     ? Math.max(1, Math.min(365, parseInt(daysRaw, 10)))
     : 90;
