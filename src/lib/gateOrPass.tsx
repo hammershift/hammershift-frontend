@@ -17,7 +17,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
-import { isRoleBypass } from "@/lib/gate";
+import { isEmailBypass, isRoleBypass } from "@/lib/gate";
 import GatePageClient from "@/app/components/waitlist/GatePageClient";
 
 interface UserGateFields {
@@ -47,6 +47,10 @@ export async function gateOrPass(): Promise<React.ReactElement | null> {
     }
     return <GatePageClient mode="cold" />;
   }
+
+  // Always-allow list (partners/VIPs): pass before any DB lookup so they get
+  // in even without an invite or a fully-provisioned user record.
+  if (isEmailBypass(email)) return null;
 
   let user: UserGateFields | null = null;
   try {

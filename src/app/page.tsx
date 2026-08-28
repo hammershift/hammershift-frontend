@@ -3,7 +3,7 @@ import { getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import connectToDB from "@/lib/mongoose";
 import Users from "@/models/user.model";
-import { isRoleBypass } from "@/lib/gate";
+import { isEmailBypass, isRoleBypass } from "@/lib/gate";
 import GatePageClient from "./components/waitlist/GatePageClient";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +14,12 @@ export default async function Home() {
     await connectToDB();
     const user = await Users.findOne({ email: session.user.email })
       .lean<{ isInvited?: boolean; role?: string; referralCode?: string } | null>();
-    if (user?.isInvited === true || isRoleBypass(user?.role)) redirect("/app");
+    if (
+      user?.isInvited === true ||
+      isRoleBypass(user?.role) ||
+      isEmailBypass(session.user.email)
+    )
+      redirect("/app");
     return (
       <GatePageClient
         mode="waitlisted"
